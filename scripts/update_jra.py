@@ -71,6 +71,17 @@ def soup_action(path: str, cname: str) -> BeautifulSoup:
     return BeautifulSoup(r.content, "html.parser")
 
 
+def soup_cname_get(path: str, cname: str) -> BeautifulSoup:
+    # Public browser-facing JRADB URL. Unlike the internal POST response,
+    # this variant includes the payout section on race-result pages.
+    r = request(
+        "GET",
+        urljoin(BASE, path),
+        params={"CNAME": cname},
+    )
+    return BeautifulSoup(r.content, "html.parser")
+
+
 def page_title(soup: BeautifulSoup) -> str:
     return soup.title.get_text(" ", strip=True) if soup.title else ""
 
@@ -381,7 +392,10 @@ def main() -> None:
                 continue
 
             try:
-                race_soup = fetch_link(race_meta["link"])
+                race_soup = soup_cname_get(
+                    "/JRADB/accessS.html",
+                    link_cname(race_meta["link"]),
+                )
                 race_result = result_from_result_page(race_soup)
             except Exception as exc:
                 print(f"[JRA] {meet['venue']} {race_no}R fetch failed: {exc}", file=sys.stderr)
