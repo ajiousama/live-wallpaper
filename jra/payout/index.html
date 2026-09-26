@@ -35,14 +35,20 @@ main{width:min(1180px,100%);margin:auto}
   border-right:1px solid #bbb;border-bottom:1px solid #bbb;padding:5px 6px;text-align:center
 }
 .result-table th{background:#ecebd0;font-weight:700}
-.result-table th:nth-child(1){width:8%}
-.result-table th:nth-child(2){width:8%}
-.result-table th:nth-child(3){width:9%}
-.result-table th:nth-child(4){width:28%}
-.result-table th:nth-child(5){width:24%}
-.result-table th:nth-child(6){width:23%}
-.result-table td.horse{text-align:left;color:#0645d8;font-weight:700}
-.result-table td.jockey{text-align:left;font-weight:700}
+.result-table th:nth-child(1){width:7%}
+.result-table th:nth-child(2){width:7%}
+.result-table th:nth-child(3){width:8%}
+.result-table th:nth-child(4){width:33%}
+.result-table th:nth-child(5){width:25%}
+.result-table th:nth-child(6){width:20%}
+.result-table td.horse{
+  text-align:left;color:#0645d8;font-weight:700;
+  white-space:nowrap;word-break:keep-all;overflow:visible
+}
+.result-table td.jockey{
+  text-align:left;font-weight:700;
+  white-space:nowrap;word-break:keep-all
+}
 .rank1{font-weight:900}
 .frame{
   display:inline-grid;place-items:center;min-width:26px;height:26px;
@@ -69,12 +75,17 @@ main{width:min(1180px,100%);margin:auto}
   body{padding:2px}
   .head h1{font-size:21px}
   .tab{padding:8px 14px}
-  .result-table,.pay-table{font-size:13px}
-  .result-table th,.result-table td,.pay-table th,.pay-table td{padding:4px 3px}
-  .result-table th:nth-child(4){width:27%}
-  .result-table th:nth-child(5){width:25%}
-  .result-table th:nth-child(6){width:23%}
-  .frame{min-width:22px;height:22px}
+  .result-table,.pay-table{font-size:12px}
+  .result-table th,.result-table td,.pay-table th,.pay-table td{padding:4px 2px}
+  .result-table th:nth-child(1){width:7%}
+  .result-table th:nth-child(2){width:7%}
+  .result-table th:nth-child(3){width:8%}
+  .result-table th:nth-child(4){width:34%}
+  .result-table th:nth-child(5){width:26%}
+  .result-table th:nth-child(6){width:18%}
+  .result-table td.horse{font-size:12.5px;letter-spacing:-.02em}
+  .result-table td.jockey{font-size:11.5px;letter-spacing:-.03em}
+  .frame{min-width:20px;height:20px}
 }
 </style>
 </head>
@@ -151,7 +162,7 @@ function render(){
       '<article class="race">'+
         '<div class="race-head"><strong>'+esc(r)+'R</strong><span class="race-name">'+esc(x.race_name||"")+'</span></div>'+
         '<table class="result-table"><thead><tr>'+
-          '<th>着順</th><th>枠</th><th>馬番</th><th>馬名</th><th>騎手</th><th>タイム<br>(着差)</th>'+
+          '<th>着順</th><th>枠</th><th>馬番</th><th>馬名</th><th>騎手</th><th>タイム<br>着差</th>'+
         '</tr></thead><tbody>'+top3Rows(x.top3)+'</tbody></table>'+
         '<table class="pay-table"><tbody>'+
           payoutRow("単勝",x.payouts?.["単勝"])+
