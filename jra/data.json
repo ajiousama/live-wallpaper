@@ -1,23 +1,7 @@
 {
-  "date_label": "サンプル",
-  "updated_at": "実データ接続前",
-  "venues": [
-    {
-      "name": "中山",
-      "results": [
-        {"race":1,"jockey":"戸崎圭太","horse":"サンプルホースA"},
-        {"race":2,"jockey":"横山武史","horse":"サンプルホースB"}
-      ]
-    },
-    {
-      "name": "阪神",
-      "results": [
-        {"race":1,"jockey":"坂井瑠星","horse":"サンプルホースC"}
-      ]
-    },
-    {
-      "name": "---",
-      "results": []
-    }
-  ]
+  "source": "JRA公式",
+  "source_date": null,
+  "date_label": "取得準備中",
+  "updated_at": "Workflow実行待ち",
+  "venues": []
 }
