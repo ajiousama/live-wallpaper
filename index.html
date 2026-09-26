@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Matsuyama Live Wallpaper</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <main class="wallpaper">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">MATSUYAMA LIVE WALLPAPER</div>
+        <h1>松山 LIVE</h1>
+      </div>
+      <div class="clock">
+        <div id="clock">--:--:--</div>
+        <div id="date">----</div>
+      </div>
+    </header>
+
+    <section class="status-row">
+      <div class="pill"><span class="dot" id="health-dot"></span><span id="health">接続確認中</span></div>
+      <div class="muted">GitHub更新: <span id="updated">--</span></div>
+    </section>
+
+    <section class="grid" id="modules"></section>
+
+    <footer>
+      表示PCはGitHub上の小さなJSONだけを定期取得します。データ収集・整形はGitHub Actions側で行います。
+    </footer>
+  </main>
+  <script src="assets/app.js"></script>
+</body>
+</html>
