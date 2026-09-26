@@ -1,75 +1,46 @@
 *{box-sizing:border-box}
-:root{
-  --g0:#021009;--g1:#062417;--g2:#0a3824;--g3:#0f5233;
-  --gold:#f2d16a;--cream:#fff9e7;--muted:#aac3b2;
-  --line:rgba(222,255,231,.14);--line2:rgba(242,209,106,.28);
+html,body{margin:0;width:100%;min-height:100%;background:#f5f5f3;color:#222;font-family:"Yu Gothic UI","Meiryo",sans-serif}
+body{padding:18px}
+main{width:min(1500px,100%);margin:auto}
+.page-header{
+  display:flex;justify-content:space-between;align-items:flex-end;gap:20px;
+  background:#0a5a32;color:#fff;padding:16px 20px;border-radius:6px 6px 0 0
 }
-html,body{margin:0;width:100%;height:100%;overflow:hidden}
-body{
-  color:var(--cream);
-  font-family:"Yu Gothic UI","Meiryo","MS Gothic",sans-serif;
-  background:
-    radial-gradient(circle at 50% -10%,rgba(49,142,91,.18),transparent 36%),
-    linear-gradient(135deg,#010704,#04140c 52%,#010704);
-}
-.shell{width:100%;height:100%;display:grid;place-items:center;padding:18px}
-.panel{
-  width:min(98vw,1560px);height:min(95vh,900px);
-  display:flex;flex-direction:column;
-  border:1px solid #e6cc79;outline:4px solid #06180f;border-radius:16px;
-  background:
-    linear-gradient(90deg,rgba(255,255,255,.025),transparent 30%,rgba(0,0,0,.12)),
-    repeating-linear-gradient(8deg,var(--g2) 0 18px,var(--g3) 18px 20px,var(--g1) 20px 38px);
-  box-shadow:inset 0 0 0 3px #5d4d1d,inset 0 0 0 6px #9b7b34,0 20px 60px #000;
-  padding:16px 18px 12px;
-}
-.topbar{display:flex;justify-content:space-between;align-items:end;gap:24px;padding:6px 8px 12px;border-bottom:1px solid var(--line2)}
-.kicker{font:800 11px/1 ui-monospace,Consolas,monospace;letter-spacing:.2em;color:#c8b679;margin-bottom:7px}
-h1{margin:0;font-size:clamp(24px,2.6vw,40px);letter-spacing:.06em;text-shadow:0 2px #000}
-.right{display:flex;align-items:end;gap:18px}
-.clock{font:800 20px/1 ui-monospace,Consolas,monospace;color:#d7c58d;min-width:62px}
-.venue-tabs{display:flex;gap:8px}
+h1{margin:0;font-size:30px;letter-spacing:.03em}
+.date-label{margin-top:5px;font-size:14px;opacity:.9}
+.venue-tabs{display:flex;gap:8px;flex-wrap:wrap}
 .venue-tab{
-  border:1px solid rgba(242,209,106,.35);background:#082719;color:#bed3c5;
-  padding:7px 20px;border-radius:999px;font-weight:800;letter-spacing:.08em;
-  cursor:pointer;user-select:none
+  border:1px solid rgba(255,255,255,.45);background:#fff;color:#0a5a32;
+  padding:7px 18px;border-radius:4px;font-weight:700;cursor:pointer
 }
-.venue-tab.active{background:linear-gradient(#1a6842,#0c3d27);color:#ffe58c;border-color:#d9bb5e;box-shadow:0 0 0 1px rgba(255,230,151,.12) inset}
-.board-wrap{flex:1;min-height:0;margin:12px 0 8px;border:1px solid var(--line2);background:rgba(0,16,9,.28);overflow:hidden}
-table{width:100%;height:100%;border-collapse:collapse;table-layout:fixed;font-size:clamp(11px,1vw,16px)}
-thead{height:48px}
-th{background:linear-gradient(#145837,#082d1c);color:#ffe181;border-right:1px solid var(--line);border-bottom:2px solid rgba(242,209,106,.4);letter-spacing:.04em}
-th.r{width:4.7%;color:#fff4cc}
-th:nth-child(2){width:9%}
-th:nth-child(3){width:12%}
-th:nth-child(4){width:9%}
-th:nth-child(5){width:10%}
-th:nth-child(6){width:17%}
-th:nth-child(7){width:10%}
-th:nth-child(8){width:12%}
-th:nth-child(9){width:16.3%}
-td{
-  padding:3px 5px;text-align:center;vertical-align:middle;
-  border-right:1px solid var(--line);border-bottom:1px solid var(--line);
-  line-height:1.15;text-shadow:0 1px #000
+.venue-tab.active{background:#dcecdf}
+.race-list{
+  background:#fff;border:1px solid #cfd4d0;border-top:none;padding:14px;
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px
 }
-td:first-child{font-weight:900;color:#fff0c3;background:rgba(0,0,0,.13)}
-tbody tr:nth-child(odd){background:rgba(144,255,184,.022)}
-.hit{color:#fff}
-.num{color:#ffe074;font-weight:900}
-.yen{color:#d7f6df;font-weight:800}
-.pair{white-space:nowrap}
-.multi{display:flex;justify-content:center;gap:.4em;flex-wrap:wrap}
-.multi span{white-space:nowrap}
-.empty{color:#587161}
-footer{display:flex;justify-content:space-between;align-items:center;padding:2px 8px;color:#c4d5c9;font-size:11px}
-#venue-label{color:#f0d372;font-weight:800;letter-spacing:.08em}
-@media(max-width:1100px){
-  .shell{padding:6px}.panel{width:99vw;height:98vh;padding:10px}
-  .kicker,.clock{display:none}
-  .topbar{align-items:center;padding-bottom:8px}
-  .venue-tab{padding:6px 14px}
-  table{font-size:10px}
-  td{padding:2px 3px}
-  footer{font-size:9px}
+.race-card{border:1px solid #c8cfca;background:#fff}
+.race-title{
+  display:flex;justify-content:space-between;align-items:center;
+  background:#e8eee9;border-bottom:1px solid #c8cfca;padding:7px 10px;
+  font-weight:800;color:#164b31
+}
+.race-number{font-size:18px}
+.payout-table{width:100%;border-collapse:collapse;font-size:14px}
+.payout-table th,.payout-table td{
+  border-bottom:1px solid #e5e8e6;padding:6px 8px;vertical-align:top
+}
+.payout-table th{
+  width:72px;text-align:left;background:#fafbfa;color:#333;font-weight:700
+}
+.payout-table td{font-variant-numeric:tabular-nums}
+.payout-line{display:flex;gap:10px;flex-wrap:wrap}
+.combo{font-weight:700;color:#1f1f1f}
+.amount{color:#b40000;font-weight:800}
+.empty{color:#999}
+footer{display:flex;justify-content:space-between;color:#666;font-size:12px;padding:8px 2px}
+@media(max-width:900px){
+  body{padding:6px}
+  .page-header{align-items:flex-start;flex-direction:column}
+  .race-list{grid-template-columns:1fr;padding:8px}
+  h1{font-size:24px}
 }
