@@ -179,73 +179,123 @@ def parse_sde(link: dict) -> dict | None:
     }
 
 
-def winner_from_result_page(soup: BeautifulSoup) -> tuple[str, str, str | None] | None:
-    global DEBUG_PAYOUT_PRINTED
+def clean_text(node) -> str:
+    if not node:
+        return ""
+    return re.sub(r"\s+", " ", node.get_text(" ", strip=True)).strip()
+
+
+def cell_frame(cell) -> str:
+    text = clean_text(cell)
+    if text:
+        return text
+    img = cell.find("img") if cell else None
+    if img:
+        return (img.get("alt") or img.get("title") or "").strip()
+    return ""
+
+
+def payout_items(soup: BeautifulSoup, label: str) -> list[dict]:
+    # JRA result pages place each bet type in a dl block.
+    for tag in soup.find_all(["strong", "dt"]):
+        if clean_text(tag) != label:
+            continue
+        dl = tag.find_parent("dl")
+        if not dl:
+            continue
+        dd = dl.find("dd") or dl
+        tokens = [clean_text(p) for p in dd.find_all("p")]
+        tokens = [t for t in tokens if t and "人気" not in t]
+
+        items: list[dict] = []
+        pending_combo = None
+        for token in tokens:
+            if re.fullmatch(r"[0-9,]+円", token):
+                if pending_combo is not None:
+                    items.append({"combo": pending_combo, "amount": token})
+                    pending_combo = None
+                continue
+            # horse number or combination (e.g. 2, 2-3-8, 2→3→8)
+            if re.fullmatch(r"[0-9]+(?:[-→][0-9]+)*", token):
+                pending_combo = token
+
+        if items:
+            return items
+
+        # Fallback when paragraph markup differs.
+        text = clean_text(dd)
+        pairs = re.findall(
+            r"([0-9]+(?:[-→][0-9]+)*)\s+([0-9,]+円)",
+            text,
+        )
+        if pairs:
+            return [{"combo": combo, "amount": amount} for combo, amount in pairs]
+    return []
+
+
+def result_from_result_page(soup: BeautifulSoup) -> dict | None:
     if "パラメータエラー" in page_title(soup):
         return None
 
+    result_table = None
     for table in soup.find_all("table"):
-        header_text = table.get_text(" ", strip=True)
-        if "着順" not in header_text or "騎手名" not in header_text or "馬名" not in header_text:
-            continue
+        header_text = clean_text(table)
+        if "着順" in header_text and "騎手名" in header_text and "馬名" in header_text:
+            result_table = table
+            break
+    if not result_table:
+        return None
 
-        tbody = table.find("tbody")
-        first = tbody.find("tr") if tbody else None
-        if not first:
+    top3: list[dict] = []
+    tbody = result_table.find("tbody")
+    for row in (tbody.find_all("tr", recursive=False) if tbody else []):
+        cells = row.find_all("td", recursive=False)
+        if len(cells) < 9:
             continue
-        cells = first.find_all("td")
-        if len(cells) < 7:
-            continue
-
-        rank = cells[0].get_text(" ", strip=True)
-        if rank != "1":
+        rank_text = clean_text(cells[0])
+        m = re.match(r"([123])", rank_text)
+        if not m:
             continue
 
         horse_link = cells[3].find("a")
-        horse = (horse_link.get_text(" ", strip=True) if horse_link else cells[3].get_text(" ", strip=True))
         jockey_link = cells[6].find("a")
-        jockey = (jockey_link.get_text(" ", strip=True) if jockey_link else cells[6].get_text(" ", strip=True))
+        top3.append({
+            "position": int(m.group(1)),
+            "frame": cell_frame(cells[1]),
+            "number": clean_text(cells[2]),
+            "horse": clean_text(horse_link or cells[3]),
+            "jockey": clean_text(jockey_link or cells[6]),
+            "time": clean_text(cells[7]),
+            "margin": clean_text(cells[8]),
+        })
+        if len(top3) >= 3:
+            break
 
-        horse = re.sub(r"\s+", " ", horse).strip()
-        jockey = re.sub(r"\s+", " ", jockey).strip()
-        if horse and jockey:
-            win_payout = None
+    if not top3:
+        return None
 
-            # JRA payout DOM: .payout dl > dt("単勝") + dd .line .yen
-            for dl in soup.select(".payout dl"):
-                dt = dl.find("dt")
-                if not dt or dt.get_text(" ", strip=True) != "単勝":
-                    continue
-                yen = dl.select_one("dd .line .yen")
-                if yen:
-                    amount = re.sub(r"\s+", "", yen.get_text("", strip=True))
-                    if re.fullmatch(r"[0-9,]+円", amount):
-                        win_payout = amount
-                        break
+    caption = result_table.find("caption")
+    race_name = ""
+    if caption:
+        h2 = caption.find("h2")
+        race_name = clean_text(h2)
 
-                # DOM class may change slightly; stay inside the 単勝 block.
-                dd = dl.find("dd")
-                if dd:
-                    m = re.search(r"([0-9,]+\s*円)", dd.get_text(" ", strip=True))
-                    if m:
-                        win_payout = re.sub(r"\s+", "", m.group(1))
-                        break
+    payouts = {
+        "単勝": payout_items(soup, "単勝"),
+        "複勝": payout_items(soup, "複勝"),
+        "3連単": payout_items(soup, "3連単"),
+    }
 
-            if not DEBUG_PAYOUT_PRINTED:
-                DEBUG_PAYOUT_PRINTED = True
-                payout_nodes = soup.select(".payout")
-                print(f"[JRA DEBUG] payout_nodes={len(payout_nodes)} win_nodes={len(soup.select('.win'))}")
-                if payout_nodes:
-                    print("[JRA DEBUG] payout_html=" + str(payout_nodes[0])[:5000])
-                else:
-                    labels = [x for x in soup.find_all(string=re.compile("単勝"))]
-                    print(f"[JRA DEBUG] tan_labels={len(labels)}")
-                    for label in labels[:3]:
-                        print("[JRA DEBUG] tan_parent=" + str(label.parent)[:1200])
-            return jockey, horse, win_payout
-
-    return None
-
+    winner = top3[0]
+    return {
+        "race_name": race_name,
+        "top3": top3,
+        "payouts": payouts,
+        # Keep legacy fields for the WP2 winning-jockey board.
+        "jockey": winner.get("jockey", ""),
+        "horse": winner.get("horse", ""),
+        "win_payout": (payouts["単勝"][0]["amount"] if payouts["単勝"] else None),
+    }
 
 def load_existing() -> dict:
     try:
@@ -322,33 +372,33 @@ def main() -> None:
         venue_results = result_map.setdefault(meet["venue"], {})
         for race_meta in sorted(race_links, key=lambda x: x["race"]):
             race_no = race_meta["race"]
+            existing_race = venue_results.get(race_no, {})
+            existing_payouts = existing_race.get("payouts", {})
             if (
-                race_no in venue_results
-                and venue_results[race_no].get("jockey")
-                and venue_results[race_no].get("win_payout")
+                len(existing_race.get("top3", [])) >= 3
+                and all(existing_payouts.get(k) for k in ("単勝", "複勝", "3連単"))
             ):
                 continue
 
             try:
                 race_soup = fetch_link(race_meta["link"])
-                winner = winner_from_result_page(race_soup)
+                race_result = result_from_result_page(race_soup)
             except Exception as exc:
                 print(f"[JRA] {meet['venue']} {race_no}R fetch failed: {exc}", file=sys.stderr)
                 continue
 
-            if not winner:
+            if not race_result:
                 continue
 
-            jockey, horse, win_payout = winner
-            venue_results[race_no] = {
-                "race": race_no,
-                "jockey": jockey,
-                "horse": horse,
-                "win_payout": win_payout,
-            }
+            venue_results[race_no] = {"race": race_no, **race_result}
             changed = True
-            payout_log = f" / 単勝 {win_payout}" if win_payout else ""
-            print(f"[JRA] {meet['venue']} {race_no}R: {horse} / {jockey}{payout_log}")
+            winner = race_result["top3"][0]
+            win_items = race_result.get("payouts", {}).get("単勝", [])
+            win_log = f" / 単勝 {win_items[0]['amount']}" if win_items else ""
+            print(
+                f"[JRA] {meet['venue']} {race_no}R: "
+                f"{winner.get('horse','')} / {winner.get('jockey','')}{win_log}"
+            )
 
     data["venues"] = [
         {
