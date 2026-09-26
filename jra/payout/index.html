@@ -46,8 +46,16 @@ main{width:min(1180px,100%);margin:auto}
 .rank1{font-weight:900}
 .frame{
   display:inline-grid;place-items:center;min-width:26px;height:26px;
-  border:1px solid #999;font-weight:800;background:#fff
+  border:1px solid #888;font-weight:800
 }
+.waku1{background:#fff;color:#111}
+.waku2{background:#111;color:#fff}
+.waku3{background:#e53935;color:#fff}
+.waku4{background:#1976d2;color:#fff}
+.waku5{background:#fdd835;color:#111}
+.waku6{background:#2e7d32;color:#fff}
+.waku7{background:#fb8c00;color:#111}
+.waku8{background:#ec9ab5;color:#111}
 .pay-table{margin-top:8px}
 .pay-table th{width:86px;background:#e7e7e3;font-weight:400}
 .pay-table td{text-align:left;background:#f7f7f5}
@@ -107,7 +115,7 @@ function top3Rows(items){
     const tm=x.position===1 ? (x.time||"") : (x.margin||x.time||"");
     return '<tr>'+
       '<td class="'+(x.position===1?'rank1':'')+'">'+esc(x.position)+'</td>'+
-      '<td><span class="frame">'+esc(x.frame||"")+'</span></td>'+
+      (()=>{const fm=String(x.frame||"").match(/([1-8])/);const n=fm?fm[1]:"";return '<td><span class="frame waku'+n+'">'+esc(n)+'</span></td>'})()+
       '<td>'+esc(x.number||"")+'</td>'+
       '<td class="horse">'+esc(x.horse||"")+'</td>'+
       '<td class="jockey">'+esc(cleanJockey(x.jockey||""))+'</td>'+
