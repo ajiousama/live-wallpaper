@@ -208,24 +208,27 @@ def winner_from_result_page(soup: BeautifulSoup) -> tuple[str, str, str | None] 
         jockey = re.sub(r"\s+", " ", jockey).strip()
         if horse and jockey:
             win_payout = None
-            full_text = soup.get_text(" ", strip=True)
-            m = re.search(r"単勝\s+\d+\s+([0-9,]+円)", full_text)
-            if m:
-                win_payout = m.group(1)
-            else:
-                for label in soup.find_all(string=re.compile(r"^\s*単勝\s*$")):
-                    node = label.parent
-                    for _ in range(4):
-                        if not node:
-                            break
-                        text = node.get_text(" ", strip=True)
-                        m2 = re.search(r"([0-9,]+円)", text)
-                        if m2:
-                            win_payout = m2.group(1)
-                            break
-                        node = node.parent
-                    if win_payout:
+
+            # JRA payout DOM: .payout dl > dt("単勝") + dd .line .yen
+            for dl in soup.select(".payout dl"):
+                dt = dl.find("dt")
+                if not dt or dt.get_text(" ", strip=True) != "単勝":
+                    continue
+                yen = dl.select_one("dd .line .yen")
+                if yen:
+                    amount = re.sub(r"\s+", "", yen.get_text("", strip=True))
+                    if re.fullmatch(r"[0-9,]+円", amount):
+                        win_payout = amount
                         break
+
+                # DOM class may change slightly; stay inside the 単勝 block.
+                dd = dl.find("dd")
+                if dd:
+                    m = re.search(r"([0-9,]+\s*円)", dd.get_text(" ", strip=True))
+                    if m:
+                        win_payout = re.sub(r"\s+", "", m.group(1))
+                        break
+
             return jockey, horse, win_payout
 
     return None
