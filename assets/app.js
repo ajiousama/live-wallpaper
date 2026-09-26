@@ -4,7 +4,8 @@ const MODULE_LABELS = {
   airport: "松山空港",
   airport_bus: "空港バス",
   highway_bus: "高速・中距離バス",
-  ferry: "フェリー"
+  ferry: "フェリー",
+  jra: "JRA 勝利騎手一覧"
 };
 
 function tickClock() {
