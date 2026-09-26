@@ -3,25 +3,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>JRA 払戻情報</title>
+<title>JRA 払戻金</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<main>
-  <header class="page-header">
-    <div>
-      <h1>JRA 払戻情報</h1>
-      <div id="date-label" class="date-label">取得中</div>
-    </div>
-    <div id="venue-tabs" class="venue-tabs"></div>
+<main class="jra-page">
+  <header class="jra-head">
+    <h1>払戻金</h1>
+    <div id="date-label" class="date-label">取得中</div>
   </header>
+
+  <nav id="venue-tabs" class="venue-tabs"></nav>
 
   <section id="race-list" class="race-list"></section>
 
-  <footer>
-    <span>データ元: JRA</span>
-    <span>表示は取得結果を整形</span>
-  </footer>
+  <footer class="source-note">データ元：JRA公式</footer>
 </main>
 <script src="app.js"></script>
 </body>
