@@ -27,6 +27,9 @@ async function loadData(){
     if(!r.ok) throw new Error(r.status);
     const data=await r.json();
     const venues=data.venues||[];
+    const board=document.getElementById("board");
+    board.classList.toggle("two-venues",venues.length===2);
+    board.classList.toggle("three-venues",venues.length===3);
 
     document.getElementById("date-title").textContent=(data.date_label||"JRA")+" 勝利騎手一覧";
     document.getElementById("meeting-title").textContent=venues.length?venues.map(v=>v.name).join("・"):"開催情報取得中";
@@ -60,7 +63,7 @@ async function loadData(){
 
           const jockey=document.createElement("div");
           jockey.className="jockey";
-          jockey.textContent=item.jockey;
+          jockey.textContent=(item.jockey||"").replace(/(?<=[\u3040-\u30ff\u3400-\u9fff])\s+(?=[\u3040-\u30ff\u3400-\u9fff])/g,"");
           td.appendChild(jockey);
 
           const horse=document.createElement("span");
