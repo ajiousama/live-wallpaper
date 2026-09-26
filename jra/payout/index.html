@@ -4,185 +4,168 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
-<title>JRA 払戻金 v2</title>
+<title>JRA レース結果一覧</title>
 <style>
 *{box-sizing:border-box}
-html,body{margin:0;background:#fff;color:#222;font-family:"Meiryo","Yu Gothic",sans-serif}
-body{padding:12px}
-.jra-page{width:min(1180px,100%);margin:0 auto}
-.jra-head{
-  border-top:4px solid #006a3b;
-  border-bottom:1px solid #c8c8c8;
-  padding:12px 4px 10px;
-  display:flex;justify-content:space-between;align-items:end;gap:16px
+html,body{margin:0;background:#fff;color:#222;font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Meiryo",sans-serif}
+body{padding:8px}
+main{width:min(1180px,100%);margin:auto}
+.head{
+  border-top:5px solid #16704a;border-bottom:1px solid #bbb;
+  padding:10px 8px 9px;display:flex;justify-content:space-between;align-items:end;gap:12px
 }
-.jra-head h1{
-  margin:0;font-size:28px;font-weight:700;color:#222
+.head h1{font-size:24px;margin:0}
+#date{font-size:13px;color:#555}
+.tabs{display:flex;border-bottom:3px solid #16704a;margin:10px 0}
+.tab{
+  border:1px solid #aaa;border-bottom:0;background:linear-gradient(#fff,#eee);
+  padding:8px 22px;font-weight:700;font-size:15px;color:#222
 }
-.date-label{font-size:14px;color:#555}
-.venue-tabs{
-  display:flex;gap:0;border-bottom:3px solid #08703e;margin-top:12px
-}
-.venue-tab{
-  appearance:none;border:1px solid #bbb;border-bottom:none;
-  background:#f1f1f1;color:#333;padding:9px 26px;
-  font-size:15px;font-weight:700;cursor:pointer
-}
-.venue-tab.active{
-  background:#08703e;color:#fff;border-color:#08703e
-}
-.race-list{padding-top:12px}
-.race-block{
-  border:1px solid #cfcfcf;margin-bottom:14px;background:#fff
-}
+.tab.active{background:#16704a;color:#fff;border-color:#16704a}
+.race{border:1px solid #bbb;margin:0 0 14px;background:#fff}
 .race-head{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:8px 10px;background:#f4f4f4;border-bottom:1px solid #cfcfcf
+  display:flex;justify-content:space-between;gap:10px;align-items:center;
+  padding:8px 10px;background:linear-gradient(90deg,#f4f4dc,#fff);
+  border-bottom:1px solid #bbb
 }
-.race-head strong{font-size:18px;color:#222}
-.race-head span{font-size:13px;color:#666}
-.payout{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  border-top:1px solid #e1e1e1
+.race-head strong{font-size:18px}
+.race-name{font-weight:700;color:#444}
+.result-table,.pay-table{width:100%;border-collapse:collapse;table-layout:fixed}
+.result-table th,.result-table td,.pay-table th,.pay-table td{
+  border-right:1px solid #bbb;border-bottom:1px solid #bbb;padding:5px 6px;text-align:center
 }
-.payout dl{
-  display:grid;
-  grid-template-columns:72px 1fr;
-  margin:0;
-  border-right:1px solid #e1e1e1;
-  border-bottom:1px solid #e1e1e1;
-  min-height:48px
+.result-table th{background:#ecebd0;font-weight:700}
+.result-table th:nth-child(1){width:8%}
+.result-table th:nth-child(2){width:8%}
+.result-table th:nth-child(3){width:9%}
+.result-table th:nth-child(4){width:28%}
+.result-table th:nth-child(5){width:24%}
+.result-table th:nth-child(6){width:23%}
+.result-table td.horse{text-align:left;color:#0645d8;font-weight:700}
+.result-table td.jockey{text-align:left;font-weight:700}
+.rank1{font-weight:900}
+.frame{
+  display:inline-grid;place-items:center;min-width:26px;height:26px;
+  border:1px solid #999;font-weight:800;background:#fff
 }
-.payout dl:nth-child(even){border-right:none}
-.payout dt{
-  margin:0;padding:9px 8px;
-  background:#f6f6f6;
-  border-right:1px solid #ddd;
-  font-weight:700;color:#333
-}
-.payout dd{
-  margin:0;padding:7px 10px;
-  display:flex;align-items:center
-}
-.line{
-  display:flex;gap:10px;flex-wrap:wrap;align-items:center
-}
-.item{
-  display:inline-flex;gap:5px;align-items:baseline;white-space:nowrap
-}
-.num{font-weight:700;color:#222}
-.yen{font-weight:700;color:#c00000}
+.pay-table{margin-top:8px}
+.pay-table th{width:86px;background:#e7e7e3;font-weight:400}
+.pay-table td{text-align:left;background:#f7f7f5}
+.payline{display:flex;flex-wrap:wrap;gap:10px 16px}
+.payitem{display:inline-flex;gap:8px;align-items:baseline;white-space:nowrap}
+.combo{min-width:44px;text-align:center}
+.amount{font-weight:700}
 .empty{color:#999}
-.source-note{
-  margin-top:8px;padding-top:8px;border-top:1px solid #ddd;
-  text-align:right;font-size:11px;color:#777
+.note{font-size:11px;color:#777;text-align:right;margin-top:5px}
+@media(max-width:700px){
+  body{padding:2px}
+  .head h1{font-size:21px}
+  .tab{padding:8px 14px}
+  .result-table,.pay-table{font-size:13px}
+  .result-table th,.result-table td,.pay-table th,.pay-table td{padding:4px 3px}
+  .result-table th:nth-child(4){width:27%}
+  .result-table th:nth-child(5){width:25%}
+  .result-table th:nth-child(6){width:23%}
+  .frame{min-width:22px;height:22px}
 }
-@media(max-width:760px){
-  body{padding:4px}
-  .jra-page{width:100%}
-  .jra-head h1{font-size:22px}
-  .venue-tab{padding:8px 16px}
-  .payout{grid-template-columns:1fr}
-  .payout dl,.payout dl:nth-child(even){border-right:none}
-}
-
 </style>
 </head>
 <body>
-<main class="jra-page">
-  <header class="jra-head">
-    <h1>払戻金</h1>
-    <div id="date-label" class="date-label">取得中</div>
+<main>
+  <header class="head">
+    <h1>レース結果</h1>
+    <div id="date">取得中</div>
   </header>
-
-  <nav id="venue-tabs" class="venue-tabs"></nav>
-
-  <section id="race-list" class="race-list"></section>
-
-  <footer class="source-note">データ元：JRA公式</footer>
+  <nav id="tabs" class="tabs"></nav>
+  <section id="races"></section>
+  <div class="note">データ元：JRA公式　／　表示：1〜3着・騎手・単勝・複勝・3連単</div>
 </main>
+
 <script>
-const demo={
-  date_label:"2026年9月26日（土曜）",
-  venues:[
-    {
-      name:"中山",
-      races:Array.from({length:12},(_,i)=>({
-        r:i+1,
-        payouts:{
-          "単勝":[[String([6,8,3,2,11,5,7,4,10,9,2,6][i]),["420円","560円","290円","380円","740円","340円","210円","310円","260円","480円","340円","520円"][i]]],
-          "複勝":[["6","170円"],["3","220円"],["10","180円"]],
-          "枠連":[["3-5","1,150円"]],
-          "ワイド":[["6-10","510円"],["3-6","680円"],["3-10","740円"]],
-          "馬連":[["6-10","1,320円"]],
-          "馬単":[["6→10","2,530円"]],
-          "3連複":[["3-6-10","3,480円"]],
-          "3連単":[["6→10→3","16,920円"]]
-        }
-      }))
-    },
-    {
-      name:"阪神",
-      races:Array.from({length:12},(_,i)=>({
-        r:i+1,
-        payouts:{
-          "単勝":[[String([3,7,5,9,4,8,2,6,11,1,7,5][i]),["310円","460円","280円","620円","350円","410円","290円","530円","680円","260円","470円","390円"][i]]],
-          "複勝":[["3","150円"],["8","190円"],["12","240円"]],
-          "枠連":[["2-5","720円"]],
-          "ワイド":[["3-8","410円"],["3-12","590円"],["8-12","760円"]],
-          "馬連":[["3-8","980円"]],
-          "馬単":[["3→8","1,780円"]],
-          "3連複":[["3-8-12","2,960円"]],
-          "3連単":[["3→8→12","14,520円"]]
-        }
-      }))
-    }
-  ]
-};
-
+let DATA=null;
 let venueIndex=0;
-const order=["単勝","複勝","枠連","ワイド","馬連","馬単","3連複","3連単"];
 
-function payoutBlock(payouts){
-  return '<div class="payout">'+order.map(type=>{
-    const items=payouts?.[type]||[];
-    const html=items.length
-      ? '<div class="line">'+items.map(x=>'<span class="item"><span class="num">'+x[0]+'</span><span class="yen">'+x[1]+'</span></span>').join('')+'</div>'
-      : '<span class="empty">—</span>';
-    return '<dl><dt>'+type+'</dt><dd>'+html+'</dd></dl>';
-  }).join('')+'</div>';
+function esc(v){
+  return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
 }
-
+function cleanJockey(v){
+  return String(v||"").replace(/(?<=[\u3040-\u30ff\u3400-\u9fff])\s+(?=[\u3040-\u30ff\u3400-\u9fff])/g,"");
+}
+function payoutRow(label,items){
+  const body=(items&&items.length)
+    ? '<div class="payline">'+items.map(x=>
+        '<span class="payitem"><span class="combo">'+esc(x.combo)+'</span><span class="amount">'+esc(x.amount)+'</span></span>'
+      ).join('')+'</div>'
+    : '<span class="empty">—</span>';
+  return '<tr><th>'+label+'</th><td>'+body+'</td></tr>';
+}
+function top3Rows(items){
+  if(!items?.length){
+    return '<tr><td colspan="6" class="empty">結果取得前</td></tr>';
+  }
+  return items.slice(0,3).map(x=>{
+    const tm=x.position===1 ? (x.time||"") : (x.margin||x.time||"");
+    return '<tr>'+
+      '<td class="'+(x.position===1?'rank1':'')+'">'+esc(x.position)+'</td>'+
+      '<td><span class="frame">'+esc(x.frame||"")+'</span></td>'+
+      '<td>'+esc(x.number||"")+'</td>'+
+      '<td class="horse">'+esc(x.horse||"")+'</td>'+
+      '<td class="jockey">'+esc(cleanJockey(x.jockey||""))+'</td>'+
+      '<td>'+esc(tm)+'</td>'+
+    '</tr>';
+  }).join('');
+}
 function render(){
-  document.getElementById("date-label").textContent=demo.date_label;
+  const venues=DATA?.venues||[];
+  document.getElementById("date").textContent=DATA?.date_label||"取得中";
 
-  const tabs=document.getElementById("venue-tabs");
+  const tabs=document.getElementById("tabs");
   tabs.replaceChildren();
-  demo.venues.forEach((v,i)=>{
+  venues.forEach((v,i)=>{
     const b=document.createElement("button");
-    b.className="venue-tab"+(i===venueIndex?" active":"");
+    b.className="tab"+(i===venueIndex?" active":"");
     b.textContent=v.name;
     b.onclick=()=>{venueIndex=i;render()};
     tabs.appendChild(b);
   });
 
-  const venue=demo.venues[venueIndex];
-  document.getElementById("race-list").innerHTML=venue.races.map(r=>`
-    <article class="race-block">
-      <div class="race-head">
-        <strong>${venue.name} ${r.r}R</strong>
-        <span>払戻金</span>
-      </div>
-      ${payoutBlock(r.payouts)}
-    </article>
-  `).join("");
+  const venue=venues[venueIndex];
+  if(!venue){
+    document.getElementById("races").innerHTML='<p class="empty">結果取得中</p>';
+    return;
+  }
+
+  const byRace=new Map((venue.results||[]).map(x=>[Number(x.race),x]));
+  let html="";
+  for(let r=1;r<=12;r++){
+    const x=byRace.get(r)||{race:r,top3:[],payouts:{}};
+    html+=
+      '<article class="race">'+
+        '<div class="race-head"><strong>'+esc(r)+'R</strong><span class="race-name">'+esc(x.race_name||"")+'</span></div>'+
+        '<table class="result-table"><thead><tr>'+
+          '<th>着順</th><th>枠</th><th>馬番</th><th>馬名</th><th>騎手</th><th>タイム<br>(着差)</th>'+
+        '</tr></thead><tbody>'+top3Rows(x.top3)+'</tbody></table>'+
+        '<table class="pay-table"><tbody>'+
+          payoutRow("単勝",x.payouts?.["単勝"])+
+          payoutRow("複勝",x.payouts?.["複勝"])+
+          payoutRow("3連単",x.payouts?.["3連単"])+
+        '</tbody></table>'+
+      '</article>';
+  }
+  document.getElementById("races").innerHTML=html;
 }
-
-render();
-
+async function load(){
+  try{
+    const r=await fetch("../data.json?t="+Date.now(),{cache:"no-store"});
+    if(!r.ok) throw new Error(r.status);
+    DATA=await r.json();
+    render();
+  }catch(e){
+    document.getElementById("date").textContent="データ取得エラー";
+  }
+}
+load();
+setInterval(load,60000);
 </script>
 </body>
 </html>
