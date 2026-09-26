@@ -178,7 +178,7 @@ def parse_sde(link: dict) -> dict | None:
     }
 
 
-def winner_from_result_page(soup: BeautifulSoup) -> tuple[str, str] | None:
+def winner_from_result_page(soup: BeautifulSoup) -> tuple[str, str, str | None] | None:
     if "パラメータエラー" in page_title(soup):
         return None
 
@@ -207,7 +207,17 @@ def winner_from_result_page(soup: BeautifulSoup) -> tuple[str, str] | None:
         horse = re.sub(r"\s+", " ", horse).strip()
         jockey = re.sub(r"\s+", " ", jockey).strip()
         if horse and jockey:
-            return jockey, horse
+            win_payout = None
+            for dl in soup.find_all("dl"):
+                label = dl.find(["strong", "dt"])
+                if not label or label.get_text(" ", strip=True) != "単勝":
+                    continue
+                dd = dl.find("dd") or dl
+                m = re.search(r"([0-9,]+円)", dd.get_text(" ", strip=True))
+                if m:
+                    win_payout = m.group(1)
+                    break
+            return jockey, horse, win_payout
 
     return None
 
@@ -287,7 +297,11 @@ def main() -> None:
         venue_results = result_map.setdefault(meet["venue"], {})
         for race_meta in sorted(race_links, key=lambda x: x["race"]):
             race_no = race_meta["race"]
-            if race_no in venue_results and venue_results[race_no].get("jockey"):
+            if (
+                race_no in venue_results
+                and venue_results[race_no].get("jockey")
+                and venue_results[race_no].get("win_payout")
+            ):
                 continue
 
             try:
@@ -300,10 +314,16 @@ def main() -> None:
             if not winner:
                 continue
 
-            jockey, horse = winner
-            venue_results[race_no] = {"race": race_no, "jockey": jockey, "horse": horse}
+            jockey, horse, win_payout = winner
+            venue_results[race_no] = {
+                "race": race_no,
+                "jockey": jockey,
+                "horse": horse,
+                "win_payout": win_payout,
+            }
             changed = True
-            print(f"[JRA] {meet['venue']} {race_no}R: {horse} / {jockey}")
+            payout_log = f" / 単勝 {win_payout}" if win_payout else ""
+            print(f"[JRA] {meet['venue']} {race_no}R: {horse} / {jockey}{payout_log}")
 
     data["venues"] = [
         {
