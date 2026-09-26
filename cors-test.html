@@ -1,0 +1,12 @@
+<!doctype html><meta charset="utf-8"><title>CORS test</title><pre id="out">testing...</pre><script>
+(async()=>{
+ const u='https://iyotetsu.bus-navigation.jp/wgsys/wgs/bus.htm?tabName=signpoleTab&selectedLandmarkCatCd=&from=%E3%83%9E%E3%83%89%E3%83%B3%E3%83%8A%E3%82%B9%E3%82%BF%E3%82%B8%E3%82%A2%E3%83%A0&fromType=1&to=&toType=&locale=ja&fromlat=&fromlng=&tolat=&tolng=&fromSignpoleKey=9895&routeLayoutCd=&bsid=2&fromBusStopCd=&toBusStopCd=&mapFlag=false&existYn=N&routeKey=&nextDiagramFlag=&diaRevisedDate=&timeTableDirevtionCd=&searchDate=&searchTime=&fromBusStopKey=&toBusStopKey=&tramSearchFlg=';
+ try {
+   const r=await fetch(u,{cache:'no-store'});
+   const t=await r.text();
+   document.getElementById('out').textContent='SUCCESS '+r.status+' len='+t.length+' '+t.slice(0,100);
+ } catch(e) {
+   document.getElementById('out').textContent='ERROR '+String(e);
+ }
+})();
+</script>
