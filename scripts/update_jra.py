@@ -13,6 +13,7 @@ import requests
 from bs4 import BeautifulSoup
 
 BASE = "https://www.jra.go.jp"
+MOBILE_BASE = "https://sp.jra.jp"
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "jra" / "data.json"
 JST = ZoneInfo("Asia/Tokyo")
@@ -128,6 +129,34 @@ def fetch_link(link: dict) -> BeautifulSoup:
     return soup_get(link["url"])
 
 
+def mobile_result_cname(link: dict) -> str | None:
+    # Race-selection links use pw01sde10... with a 2-digit check value.
+    # JRA mobile result pages use sw01sde01... and the check value is
+    # consistently +0xAE (mod 256) from the selection-link value.
+    cname = link_cname(link)
+    m = re.fullmatch(r"pw01sde10(.+)/([0-9A-Fa-f]{2})", cname)
+    if not m:
+        return None
+    body, cd = m.groups()
+    mobile_cd = (int(cd, 16) + 0xAE) & 0xFF
+    return f"sw01sde01{body}/{mobile_cd:02X}"
+
+
+def soup_mobile_result(link: dict) -> BeautifulSoup | None:
+    cname = mobile_result_cname(link)
+    if not cname:
+        return None
+    r = request(
+        "GET",
+        MOBILE_BASE + "/JRADB/accessS.html",
+        params={"CNAME": cname},
+    )
+    soup = BeautifulSoup(r.content, "html.parser")
+    if "param_error" in soup.get_text(" ", strip=True):
+        return None
+    return soup
+
+
 def discover_result_landing() -> BeautifulSoup:
     # This menu parameter has been stable for years. If JRA changes it,
     # fall back to discovering the current "レース結果" action from the top page.
@@ -206,43 +235,57 @@ def cell_frame(cell) -> str:
     return ""
 
 
+PAYOUT_ORDER = ["単勝", "複勝", "枠連", "馬連", "馬単", "ワイド", "3連複", "3連単"]
+
+
 def payout_items(soup: BeautifulSoup, label: str) -> list[dict]:
-    # JRA result pages place each bet type in a dl block.
-    for tag in soup.find_all(["strong", "dt"]):
+    # First try the structured dl blocks used by desktop/mobile result pages.
+    for tag in soup.find_all(["strong", "dt", "th", "td"]):
         if clean_text(tag) != label:
             continue
+
         dl = tag.find_parent("dl")
-        if not dl:
-            continue
-        dd = dl.find("dd") or dl
-        tokens = [clean_text(p) for p in dd.find_all("p")]
-        tokens = [t for t in tokens if t and "人気" not in t]
+        if dl:
+            dd = dl.find("dd") or dl
+            tokens = [clean_text(p) for p in dd.find_all("p")]
+            tokens = [t for t in tokens if t and "人気" not in t]
+            items: list[dict] = []
+            pending_combo = None
+            for token in tokens:
+                if re.fullmatch(r"[0-9,]+円", token):
+                    if pending_combo is not None:
+                        items.append({"combo": pending_combo, "amount": token})
+                        pending_combo = None
+                    continue
+                if re.fullmatch(r"[0-9]+(?:[-→][0-9]+)*", token):
+                    pending_combo = token
+            if items:
+                return items
 
-        items: list[dict] = []
-        pending_combo = None
-        for token in tokens:
-            if re.fullmatch(r"[0-9,]+円", token):
-                if pending_combo is not None:
-                    items.append({"combo": pending_combo, "amount": token})
-                    pending_combo = None
-                continue
-            # horse number or combination (e.g. 2, 2-3-8, 2→3→8)
-            if re.fullmatch(r"[0-9]+(?:[-→][0-9]+)*", token):
-                pending_combo = token
+    # Robust fallback: parse the visible payout text between bet-type labels.
+    text = clean_text(soup)
+    payout_pos = text.find("払戻金")
+    if payout_pos >= 0:
+        text = text[payout_pos:]
+    label_pos = text.find(label)
+    if label_pos < 0:
+        return []
 
-        if items:
-            return items
+    segment = text[label_pos + len(label):]
+    later_labels = PAYOUT_ORDER[PAYOUT_ORDER.index(label) + 1:]
+    end_positions = [segment.find(x) for x in later_labels if segment.find(x) >= 0]
+    for stop_word in ("勝馬の紹介", "競走中の出来事", "・勝馬投票"):
+        p = segment.find(stop_word)
+        if p >= 0:
+            end_positions.append(p)
+    if end_positions:
+        segment = segment[:min(end_positions)]
 
-        # Fallback when paragraph markup differs.
-        text = clean_text(dd)
-        pairs = re.findall(
-            r"([0-9]+(?:[-→][0-9]+)*)\s+([0-9,]+円)",
-            text,
-        )
-        if pairs:
-            return [{"combo": combo, "amount": amount} for combo, amount in pairs]
-    return []
-
+    pairs = re.findall(
+        r"(?<![0-9])([0-9]+(?:[-→][0-9]+)*)\s+([0-9,]+円)",
+        segment,
+    )
+    return [{"combo": combo, "amount": amount} for combo, amount in pairs]
 
 def result_from_result_page(soup: BeautifulSoup) -> dict | None:
     if "パラメータエラー" in page_title(soup):
@@ -397,6 +440,29 @@ def main() -> None:
                     link_cname(race_meta["link"]),
                 )
                 race_result = result_from_result_page(race_soup)
+
+                # Payout markup is more consistently present on JRA's
+                # smartphone result page. Use it only for the three payout
+                # types shown by the wallpaper.
+                if race_result:
+                    try:
+                        mobile_soup = soup_mobile_result(race_meta["link"])
+                        if mobile_soup:
+                            race_result["payouts"] = {
+                                "単勝": payout_items(mobile_soup, "単勝"),
+                                "複勝": payout_items(mobile_soup, "複勝"),
+                                "3連単": payout_items(mobile_soup, "3連単"),
+                            }
+                            win_items = race_result["payouts"]["単勝"]
+                            race_result["win_payout"] = (
+                                win_items[0]["amount"] if win_items else None
+                            )
+                    except Exception as payout_exc:
+                        print(
+                            f"[JRA] {meet['venue']} {race_no}R mobile payout failed: "
+                            f"{payout_exc}",
+                            file=sys.stderr,
+                        )
             except Exception as exc:
                 print(f"[JRA] {meet['venue']} {race_no}R fetch failed: {exc}", file=sys.stderr)
                 continue
