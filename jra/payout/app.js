@@ -1,5 +1,5 @@
 const demo={
-  date_label:"9月26日 土曜",
+  date_label:"2026年9月26日（土曜）",
   venues:[
     {
       name:"中山",
@@ -39,18 +39,19 @@ const demo={
 let venueIndex=0;
 const order=["単勝","複勝","枠連","ワイド","馬連","馬単","3連複","3連単"];
 
-function renderPayoutRows(payouts){
-  return order.map(type=>{
+function payoutBlock(payouts){
+  return '<div class="payout">'+order.map(type=>{
     const items=payouts?.[type]||[];
-    const body=items.length
-      ? '<div class="payout-line">'+items.map(x=>'<span><span class="combo">'+x[0]+'</span> <span class="amount">'+x[1]+'</span></span>').join('')+'</div>'
+    const html=items.length
+      ? '<div class="line">'+items.map(x=>'<span class="item"><span class="num">'+x[0]+'</span><span class="yen">'+x[1]+'</span></span>').join('')+'</div>'
       : '<span class="empty">—</span>';
-    return '<tr><th>'+type+'</th><td>'+body+'</td></tr>';
-  }).join('');
+    return '<dl><dt>'+type+'</dt><dd>'+html+'</dd></dl>';
+  }).join('')+'</div>';
 }
 
 function render(){
   document.getElementById("date-label").textContent=demo.date_label;
+
   const tabs=document.getElementById("venue-tabs");
   tabs.replaceChildren();
   demo.venues.forEach((v,i)=>{
@@ -62,17 +63,15 @@ function render(){
   });
 
   const venue=demo.venues[venueIndex];
-  const list=document.getElementById("race-list");
-  list.innerHTML=venue.races.map(r=>`
-    <article class="race-card">
-      <div class="race-title">
-        <span class="race-number">${venue.name} ${r.r}R</span>
+  document.getElementById("race-list").innerHTML=venue.races.map(r=>`
+    <article class="race-block">
+      <div class="race-head">
+        <strong>${venue.name} ${r.r}R</strong>
         <span>払戻金</span>
       </div>
-      <table class="payout-table">
-        <tbody>${renderPayoutRows(r.payouts)}</tbody>
-      </table>
+      ${payoutBlock(r.payouts)}
     </article>
   `).join("");
 }
+
 render();
