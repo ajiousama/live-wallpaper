@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "generated_at_utc": null,
+  "generated_at_jst": "初回Workflow待ち",
+  "modules": {
+    "jr_matsuyama": {"status": "waiting", "detail": "取得処理未接続"},
+    "ichitsubo": {"status": "waiting", "detail": "取得処理未接続"},
+    "airport": {"status": "waiting", "detail": "取得処理未接続"},
+    "airport_bus": {"status": "waiting", "detail": "取得処理未接続"},
+    "highway_bus": {"status": "waiting", "detail": "取得処理未接続"},
+    "ferry": {"status": "waiting", "detail": "取得処理未接続"}
+  }
+}
