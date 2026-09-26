@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "generated_at": null,
+  "jr_matsuyama": [],
+  "ichitsubo": [],
+  "airport": {"departures": [], "arrivals": []},
+  "airport_bus": [],
+  "highway_bus": [],
+  "ferry": []
+}
