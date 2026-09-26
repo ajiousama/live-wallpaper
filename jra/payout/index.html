@@ -6,8 +6,90 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>JRA 払戻金</title>
-<link rel="stylesheet" href="style.css?v=202609270658">
+<title>JRA 払戻金 v2</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;background:#fff;color:#222;font-family:"Meiryo","Yu Gothic",sans-serif}
+body{padding:12px}
+.jra-page{width:min(1180px,100%);margin:0 auto}
+.jra-head{
+  border-top:4px solid #006a3b;
+  border-bottom:1px solid #c8c8c8;
+  padding:12px 4px 10px;
+  display:flex;justify-content:space-between;align-items:end;gap:16px
+}
+.jra-head h1{
+  margin:0;font-size:28px;font-weight:700;color:#222
+}
+.date-label{font-size:14px;color:#555}
+.venue-tabs{
+  display:flex;gap:0;border-bottom:3px solid #08703e;margin-top:12px
+}
+.venue-tab{
+  appearance:none;border:1px solid #bbb;border-bottom:none;
+  background:#f1f1f1;color:#333;padding:9px 26px;
+  font-size:15px;font-weight:700;cursor:pointer
+}
+.venue-tab.active{
+  background:#08703e;color:#fff;border-color:#08703e
+}
+.race-list{padding-top:12px}
+.race-block{
+  border:1px solid #cfcfcf;margin-bottom:14px;background:#fff
+}
+.race-head{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:8px 10px;background:#f4f4f4;border-bottom:1px solid #cfcfcf
+}
+.race-head strong{font-size:18px;color:#222}
+.race-head span{font-size:13px;color:#666}
+.payout{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  border-top:1px solid #e1e1e1
+}
+.payout dl{
+  display:grid;
+  grid-template-columns:72px 1fr;
+  margin:0;
+  border-right:1px solid #e1e1e1;
+  border-bottom:1px solid #e1e1e1;
+  min-height:48px
+}
+.payout dl:nth-child(even){border-right:none}
+.payout dt{
+  margin:0;padding:9px 8px;
+  background:#f6f6f6;
+  border-right:1px solid #ddd;
+  font-weight:700;color:#333
+}
+.payout dd{
+  margin:0;padding:7px 10px;
+  display:flex;align-items:center
+}
+.line{
+  display:flex;gap:10px;flex-wrap:wrap;align-items:center
+}
+.item{
+  display:inline-flex;gap:5px;align-items:baseline;white-space:nowrap
+}
+.num{font-weight:700;color:#222}
+.yen{font-weight:700;color:#c00000}
+.empty{color:#999}
+.source-note{
+  margin-top:8px;padding-top:8px;border-top:1px solid #ddd;
+  text-align:right;font-size:11px;color:#777
+}
+@media(max-width:760px){
+  body{padding:4px}
+  .jra-page{width:100%}
+  .jra-head h1{font-size:22px}
+  .venue-tab{padding:8px 16px}
+  .payout{grid-template-columns:1fr}
+  .payout dl,.payout dl:nth-child(even){border-right:none}
+}
+
+</style>
 </head>
 <body>
 <main class="jra-page">
@@ -22,6 +104,85 @@
 
   <footer class="source-note">データ元：JRA公式</footer>
 </main>
-<script src="app.js?v=202609270658"></script>
+<script>
+const demo={
+  date_label:"2026年9月26日（土曜）",
+  venues:[
+    {
+      name:"中山",
+      races:Array.from({length:12},(_,i)=>({
+        r:i+1,
+        payouts:{
+          "単勝":[[String([6,8,3,2,11,5,7,4,10,9,2,6][i]),["420円","560円","290円","380円","740円","340円","210円","310円","260円","480円","340円","520円"][i]]],
+          "複勝":[["6","170円"],["3","220円"],["10","180円"]],
+          "枠連":[["3-5","1,150円"]],
+          "ワイド":[["6-10","510円"],["3-6","680円"],["3-10","740円"]],
+          "馬連":[["6-10","1,320円"]],
+          "馬単":[["6→10","2,530円"]],
+          "3連複":[["3-6-10","3,480円"]],
+          "3連単":[["6→10→3","16,920円"]]
+        }
+      }))
+    },
+    {
+      name:"阪神",
+      races:Array.from({length:12},(_,i)=>({
+        r:i+1,
+        payouts:{
+          "単勝":[[String([3,7,5,9,4,8,2,6,11,1,7,5][i]),["310円","460円","280円","620円","350円","410円","290円","530円","680円","260円","470円","390円"][i]]],
+          "複勝":[["3","150円"],["8","190円"],["12","240円"]],
+          "枠連":[["2-5","720円"]],
+          "ワイド":[["3-8","410円"],["3-12","590円"],["8-12","760円"]],
+          "馬連":[["3-8","980円"]],
+          "馬単":[["3→8","1,780円"]],
+          "3連複":[["3-8-12","2,960円"]],
+          "3連単":[["3→8→12","14,520円"]]
+        }
+      }))
+    }
+  ]
+};
+
+let venueIndex=0;
+const order=["単勝","複勝","枠連","ワイド","馬連","馬単","3連複","3連単"];
+
+function payoutBlock(payouts){
+  return '<div class="payout">'+order.map(type=>{
+    const items=payouts?.[type]||[];
+    const html=items.length
+      ? '<div class="line">'+items.map(x=>'<span class="item"><span class="num">'+x[0]+'</span><span class="yen">'+x[1]+'</span></span>').join('')+'</div>'
+      : '<span class="empty">—</span>';
+    return '<dl><dt>'+type+'</dt><dd>'+html+'</dd></dl>';
+  }).join('')+'</div>';
+}
+
+function render(){
+  document.getElementById("date-label").textContent=demo.date_label;
+
+  const tabs=document.getElementById("venue-tabs");
+  tabs.replaceChildren();
+  demo.venues.forEach((v,i)=>{
+    const b=document.createElement("button");
+    b.className="venue-tab"+(i===venueIndex?" active":"");
+    b.textContent=v.name;
+    b.onclick=()=>{venueIndex=i;render()};
+    tabs.appendChild(b);
+  });
+
+  const venue=demo.venues[venueIndex];
+  document.getElementById("race-list").innerHTML=venue.races.map(r=>`
+    <article class="race-block">
+      <div class="race-head">
+        <strong>${venue.name} ${r.r}R</strong>
+        <span>払戻金</span>
+      </div>
+      ${payoutBlock(r.payouts)}
+    </article>
+  `).join("");
+}
+
+render();
+
+</script>
 </body>
 </html>
