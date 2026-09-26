@@ -3,48 +3,25 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="color-scheme" content="dark">
-<title>JRA 払戻一覧</title>
+<title>JRA 払戻情報</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<main class="shell">
-  <section class="panel">
-    <header class="topbar">
-      <div>
-        <div class="kicker">JRA OFFICIAL PAYOUT BOARD</div>
-        <h1 id="title">9月26日 土曜 払戻一覧</h1>
-      </div>
-      <div class="right">
-        <div id="venue-tabs" class="venue-tabs"></div>
-        <div id="clock" class="clock">--:--</div>
-      </div>
-    </header>
-
-    <div class="board-wrap">
-      <table id="payout-board">
-        <thead>
-          <tr>
-            <th class="r">R</th>
-            <th>単勝</th>
-            <th>複勝</th>
-            <th>枠連</th>
-            <th>馬連</th>
-            <th>ワイド</th>
-            <th>馬単</th>
-            <th>3連複</th>
-            <th>3連単</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+<main>
+  <header class="page-header">
+    <div>
+      <h1>JRA 払戻情報</h1>
+      <div id="date-label" class="date-label">取得中</div>
     </div>
+    <div id="venue-tabs" class="venue-tabs"></div>
+  </header>
 
-    <footer>
-      <span id="venue-label">中山</span>
-      <span class="note">※ 見本表示。実装時はJRA公式払戻データを自動反映</span>
-    </footer>
-  </section>
+  <section id="race-list" class="race-list"></section>
+
+  <footer>
+    <span>データ元: JRA</span>
+    <span>表示は取得結果を整形</span>
+  </footer>
 </main>
 <script src="app.js"></script>
 </body>
