@@ -16,6 +16,7 @@ BASE = "https://www.jra.go.jp"
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "jra" / "data.json"
 JST = ZoneInfo("Asia/Tokyo")
+DEBUG_PAYOUT_PRINTED = False
 
 VENUES = {
     "01": "札幌", "02": "函館", "03": "福島", "04": "新潟", "05": "東京",
@@ -179,6 +180,7 @@ def parse_sde(link: dict) -> dict | None:
 
 
 def winner_from_result_page(soup: BeautifulSoup) -> tuple[str, str, str | None] | None:
+    global DEBUG_PAYOUT_PRINTED
     if "パラメータエラー" in page_title(soup):
         return None
 
@@ -229,6 +231,17 @@ def winner_from_result_page(soup: BeautifulSoup) -> tuple[str, str, str | None] 
                         win_payout = re.sub(r"\s+", "", m.group(1))
                         break
 
+            if not DEBUG_PAYOUT_PRINTED:
+                DEBUG_PAYOUT_PRINTED = True
+                payout_nodes = soup.select(".payout")
+                print(f"[JRA DEBUG] payout_nodes={len(payout_nodes)} win_nodes={len(soup.select('.win'))}")
+                if payout_nodes:
+                    print("[JRA DEBUG] payout_html=" + str(payout_nodes[0])[:5000])
+                else:
+                    labels = [x for x in soup.find_all(string=re.compile("単勝"))]
+                    print(f"[JRA DEBUG] tan_labels={len(labels)}")
+                    for label in labels[:3]:
+                        print("[JRA DEBUG] tan_parent=" + str(label.parent)[:1200])
             return jockey, horse, win_payout
 
     return None
