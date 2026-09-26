@@ -2,7 +2,7 @@
   "source": "JRA公式",
   "source_date": "20260926",
   "date_label": "9月26日 土曜",
-  "updated_at": "2026-09-27 06:35 JST",
+  "updated_at": "2026-09-27 06:43 JST",
   "venues": [
     {
       "name": "中山",
@@ -10,62 +10,74 @@
         {
           "race": 1,
           "jockey": "小林 美駒",
-          "horse": "アンミツ"
+          "horse": "アンミツ",
+          "win_payout": null
         },
         {
           "race": 2,
           "jockey": "丹内 祐次",
-          "horse": "ハンサム"
+          "horse": "ハンサム",
+          "win_payout": null
         },
         {
           "race": 3,
           "jockey": "戸崎 圭太",
-          "horse": "モルスリール"
+          "horse": "モルスリール",
+          "win_payout": null
         },
         {
           "race": 4,
           "jockey": "上野 翔",
-          "horse": "コレクテイニア"
+          "horse": "コレクテイニア",
+          "win_payout": null
         },
         {
           "race": 5,
           "jockey": "杉原 誠人",
-          "horse": "フェイマスジャズ"
+          "horse": "フェイマスジャズ",
+          "win_payout": null
         },
         {
           "race": 6,
           "jockey": "原 優介",
-          "horse": "ノーブルクラウド"
+          "horse": "ノーブルクラウド",
+          "win_payout": null
         },
         {
           "race": 7,
           "jockey": "C.ルメール",
-          "horse": "ダノンファンスター"
+          "horse": "ダノンファンスター",
+          "win_payout": null
         },
         {
           "race": 8,
           "jockey": "横山 武史",
-          "horse": "ソニックブレイカー"
+          "horse": "ソニックブレイカー",
+          "win_payout": null
         },
         {
           "race": 9,
           "jockey": "C.ルメール",
-          "horse": "スタースポット"
+          "horse": "スタースポット",
+          "win_payout": null
         },
         {
           "race": 10,
           "jockey": "杉原 誠人",
-          "horse": "ジョヴィアン"
+          "horse": "ジョヴィアン",
+          "win_payout": null
         },
         {
           "race": 11,
           "jockey": "津村 明秀",
-          "horse": "サウンドムーブ"
+          "horse": "サウンドムーブ",
+          "win_payout": null
         },
         {
           "race": 12,
           "jockey": "丹内 祐次",
-          "horse": "モーゲンセン"
+          "horse": "モーゲンセン",
+          "win_payout": null
         }
       ]
     },
@@ -75,62 +87,74 @@
         {
           "race": 1,
           "jockey": "菱田 裕二",
-          "horse": "スカイメテオ"
+          "horse": "スカイメテオ",
+          "win_payout": null
         },
         {
           "race": 2,
           "jockey": "吉村 誠之助",
-          "horse": "パルパル"
+          "horse": "パルパル",
+          "win_payout": null
         },
         {
           "race": 3,
           "jockey": "岩田 望来",
-          "horse": "ニクスルーナ"
+          "horse": "ニクスルーナ",
+          "win_payout": null
         },
         {
           "race": 4,
           "jockey": "横山 典弘",
-          "horse": "ギブリ"
+          "horse": "ギブリ",
+          "win_payout": null
         },
         {
           "race": 5,
           "jockey": "川田 将雅",
-          "horse": "ネーロノワール"
+          "horse": "ネーロノワール",
+          "win_payout": null
         },
         {
           "race": 6,
           "jockey": "岩田 望来",
-          "horse": "ミランド"
+          "horse": "ミランド",
+          "win_payout": null
         },
         {
           "race": 7,
           "jockey": "松山 弘平",
-          "horse": "ランスオブヒーロー"
+          "horse": "ランスオブヒーロー",
+          "win_payout": null
         },
         {
           "race": 8,
           "jockey": "松山 弘平",
-          "horse": "エースフライト"
+          "horse": "エースフライト",
+          "win_payout": null
         },
         {
           "race": 9,
           "jockey": "三浦 皇成",
-          "horse": "エランヴィータ"
+          "horse": "エランヴィータ",
+          "win_payout": null
         },
         {
           "race": 10,
           "jockey": "田山 旺佑",
-          "horse": "ヴォーカライズ"
+          "horse": "ヴォーカライズ",
+          "win_payout": null
         },
         {
           "race": 11,
           "jockey": "斎藤 新",
-          "horse": "ヴァルツァーシャル"
+          "horse": "ヴァルツァーシャル",
+          "win_payout": null
         },
         {
           "race": 12,
           "jockey": "和田 陽希",
-          "horse": "ゴールデンバランス"
+          "horse": "ゴールデンバランス",
+          "win_payout": null
         }
       ]
     }
