@@ -1,12 +1,15 @@
-name: Deploy wallpaper to Pages
+name: Build and deploy live wallpaper
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "*/5 * * * *"
   push:
     branches: ["main"]
     paths:
       - "index.html"
       - "assets/**"
+      - "scripts/**"
       - "data/**"
       - ".nojekyll"
       - ".github/workflows/pages.yml"
@@ -17,21 +20,33 @@ permissions:
   id-token: write
 
 concurrency:
-  group: pages
+  group: live-wallpaper-pages
   cancel-in-progress: true
 
 jobs:
-  deploy:
+  build-and-deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    timeout-minutes: 5
+
     steps:
       - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Generate latest lightweight JSON
+        run: python scripts/update_data.py
+
       - uses: actions/configure-pages@v5
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: "."
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
