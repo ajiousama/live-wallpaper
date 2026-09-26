@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "transport": {
+    "data_refresh_seconds": 15,
+    "view_switch_seconds": 10,
+    "stale_after_minutes": 20,
+    "ichitsubo_arrival_alert_minutes": 3,
+    "ichitsubo_pass_alert_minutes": 2
+  },
+  "jra": {
+    "data_refresh_seconds": 60
+  }
+}
