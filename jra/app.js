@@ -66,10 +66,22 @@ async function loadData(){
           jockey.textContent=(item.jockey||"").replace(/(?<=[\u3040-\u30ff\u3400-\u9fff])\s+(?=[\u3040-\u30ff\u3400-\u9fff])/g,"");
           td.appendChild(jockey);
 
+          const detail=document.createElement("div");
+          detail.className="detail";
+
           const horse=document.createElement("span");
           horse.className="horse";
           horse.textContent=item.horse||"";
-          td.appendChild(horse);
+          detail.appendChild(horse);
+
+          if(item.win_payout){
+            const payout=document.createElement("span");
+            payout.className="win-payout";
+            payout.textContent="単勝 "+item.win_payout;
+            detail.appendChild(payout);
+          }
+
+          td.appendChild(detail);
         }else{
           td.className="pending";
           td.textContent="----";
