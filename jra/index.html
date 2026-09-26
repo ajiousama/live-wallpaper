@@ -3,32 +3,50 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
 <title>JRA 勝利騎手一覧</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<main class="wp2-frame">
-  <header>
-    <div id="date-title">JRA 勝利騎手一覧</div>
-    <div id="meeting-title">開催情報取得中</div>
-  </header>
-  <section class="board-wrap">
-    <table id="board">
-      <thead>
-        <tr>
-          <th>R</th>
-          <th id="venue-1">---</th>
-          <th id="venue-2">---</th>
-          <th id="venue-3">---</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </section>
-  <footer>
-    <span id="updated">更新: --</span>
-    <span class="hint">未確定は ----</span>
-  </footer>
+<main class="wp2-shell">
+  <div class="bezel">
+    <header class="masthead">
+      <div class="brand-block">
+        <div class="brand-kicker">JRA OFFICIAL RESULTS</div>
+        <div id="date-title" class="title">勝利騎手一覧</div>
+      </div>
+      <div class="meta-block">
+        <div id="meeting-title" class="meeting">開催情報取得中</div>
+        <div id="clock" class="clock">--:--</div>
+      </div>
+    </header>
+
+    <section class="screen">
+      <div class="screen-label">
+        <span>WINNING JOCKEYS</span>
+        <span id="progress-label">RESULT BOARD</span>
+      </div>
+
+      <div class="board-wrap">
+        <table id="board">
+          <thead>
+            <tr>
+              <th class="race-head">R</th>
+              <th id="venue-1"><span class="venue-name">---</span><span class="venue-count">0/12</span></th>
+              <th id="venue-2"><span class="venue-name">---</span><span class="venue-count">0/12</span></th>
+              <th id="venue-3"><span class="venue-name">---</span><span class="venue-count">0/12</span></th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer class="statusbar">
+      <span id="updated">更新: --</span>
+      <span class="legend"><i class="lamp"></i> JRA公式結果を5分ごとに確認</span>
+    </footer>
+  </div>
 </main>
 <script src="app.js"></script>
 </body>
