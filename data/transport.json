@@ -1,10 +1,27 @@
 {
-  "schema_version": 1,
-  "generated_at": null,
+  "schema_version": 2,
+  "generated_at_utc": null,
+  "generated_at_jst": "初回Workflow待ち",
+  "source_state": {
+    "jr": "pending",
+    "airport": "pending",
+    "airport_bus": "pending",
+    "highway_bus": "pending",
+    "ferry": "pending"
+  },
   "jr_matsuyama": [],
   "ichitsubo": [],
-  "airport": {"departures": [], "arrivals": []},
+  "airport": {
+    "departures": [],
+    "arrivals": []
+  },
   "airport_bus": [],
   "highway_bus": [],
-  "ferry": []
+  "ferry": [],
+  "now": {
+    "trains": [],
+    "buses": [],
+    "aircraft": [],
+    "vessels": []
+  }
 }
