@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark"><title>Matsuyama Transport Wallpaper</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body><main id="wallpaper">
+<header><div><div class="eyebrow">MATSUYAMA TRANSPORT NOW</div><h1 id="mode-title">松山交通案内</h1></div>
+<div class="clockbox"><div id="clock">--:--:--</div><div id="date">----</div></div></header>
+<div id="alert" class="alert hidden"></div>
+<section id="board" class="view active"><div class="grid">
+<article class="panel"><h2>JR松山駅</h2><div class="rows" data-panel="jr_matsuyama"></div></article>
+<article class="panel"><h2>松山空港 <span id="airport-mode">出発</span></h2><div class="rows" data-panel="airport"></div></article>
+<article class="panel"><h2>高速・中距離バス</h2><div class="rows" data-panel="highway_bus"></div></article>
+<article class="panel"><h2>フェリー・高速船</h2><div class="rows" data-panel="ferry"></div></article>
+</div><div class="subpanel"><h2>JR市坪駅</h2><div class="rows compact" data-panel="ichitsubo"></div></div></section>
+<section id="now" class="view"><div class="nowgrid">
+<article class="nowpanel"><h2>鉄道 NOW</h2><div data-now="trains"></div></article>
+<article class="nowpanel"><h2>高速バス NOW</h2><div data-now="buses"></div></article>
+<article class="nowpanel"><h2>飛行機 NOW</h2><div data-now="aircraft"></div></article>
+<article class="nowpanel"><h2>船 NOW</h2><div data-now="vessels"></div></article>
+</div></section>
+<footer>GitHub更新 <span id="updated">--</span> ／ 表示側は軽量JSONのみ15秒更新</footer>
+</main><script src="app.js"></script></body></html>
