@@ -183,6 +183,13 @@ def discover_result_landing() -> BeautifulSoup:
                     sde2 = sorted(set(re.findall(r"pw01sde[^'\\\"<>\\s)]+", hh)))
                     dde2 = sorted(set(re.findall(r"pw01dde[^'\\\"<>\\s)]+", hh)))
                     print(f"[JRA DEBUG] dde page {dde} -> sde={sde2[:12]} dde={dde2[:20]}")
+                    current_r1 = [x for x in dde2 if today in x and re.search(r"dde01\\d{2}\\d{4}\\d{2}\\d{2}01" + today, x)]
+                    if current_r1:
+                        d1 = current_r1[0]
+                        r1 = request("GET", BASE + "/JRADB/accessD.html", params={"CNAME": d1})
+                        s1 = sorted(set(re.findall(r"pw01sde[^'\\\"<>\\s)]+", r1.text)))
+                        s1_today = [x for x in s1 if today in x]
+                        print(f"[JRA DEBUG] current race1 {d1} -> sde_today={s1_today[:20]}")
                 except Exception as e:
                     print(f"[JRA DEBUG] dde fetch failed {dde}: {e}")
         seen: set[str] = set()
