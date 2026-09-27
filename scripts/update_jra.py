@@ -332,36 +332,91 @@ def discover_historical_landing() -> BeautifulSoup:
 
 
 
-def debug_harai_menu(today: str) -> None:
+def payout_items_from_dl(dl) -> list[dict]:
+    dd = dl.find("dd") or dl
+    tokens = [clean_text(p) for p in dd.find_all("p")]
+    items: list[dict] = []
+    pending_combo = None
+
+    for raw in tokens:
+        token = re.sub(r"\\s+", "", raw)
+        if not token or "番人気" in token:
+            continue
+        if re.fullmatch(r"[0-9,]+円", token):
+            if pending_combo is not None:
+                items.append({"combo": pending_combo, "amount": token})
+                pending_combo = None
+            continue
+        if re.fullmatch(r"[0-9]+(?:[-→][0-9]+)*", token):
+            pending_combo = token
+
+    return items
+
+
+def discover_today_payouts(today: str) -> dict[str, dict[int, dict[str, list[dict]]]]:
+    """
+    JRA's accessH payout page is the reliable current-day payout source.
+    One current hde page exists per venue/day and contains completed races
+    in race order, each with the standard eight bet types.
+    """
+    result: dict[str, dict[int, dict[str, list[dict]]]] = {}
+
     try:
-        soup = soup_action("/JRADB/accessH.html", "pw01hli00/03")
-        html = str(soup)
-        hits = sorted(set(re.findall(r"pw01h[^'\\\"<>\\s)]+", html)))
-        current = [x for x in hits if x.startswith("pw01hde01") and today in x]
-        print(f"[JRA H DEBUG] current={current}")
-        for cname in current[:2]:
-            detail = soup_action("/JRADB/accessH.html", cname)
-            print(f"[JRA H DEBUG] detail {cname} title={page_title(detail)}")
-            heads = []
-            for tag in detail.find_all(["h1","h2","h3","h4","caption","strong"]):
-                t = clean_text(tag)
-                if t and t not in heads:
-                    heads.append(t)
-            print(f"[JRA H DEBUG] heads={heads[:80]}")
-            tables = []
-            for i, table in enumerate(detail.find_all("table")[:30]):
-                t = clean_text(table)
-                if t:
-                    tables.append((i, t[:700]))
-            print(f"[JRA H DEBUG] tables={tables[:20]}")
-            dls = []
-            for i, dl in enumerate(detail.find_all("dl")[:80]):
-                t = clean_text(dl)
-                if t:
-                    dls.append((i, t[:350]))
-            print(f"[JRA H DEBUG] dls={dls[:50]}")
+        menu = soup_action("/JRADB/accessH.html", "pw01hli00/03")
     except Exception as exc:
-        print(f"[JRA H DEBUG] menu failed: {exc}", file=sys.stderr)
+        print(f"[JRA] payout menu failed: {exc}", file=sys.stderr)
+        return result
+
+    hits = cname_hits(str(menu), "pw01hde01")
+    current: list[tuple[dict, str]] = []
+    for cname in hits:
+        m = HDE_PUBLIC_RE.search(cname)
+        if not m:
+            continue
+        g = m.groupdict()
+        if g["ymd"] != today:
+            continue
+        current.append((g, cname))
+
+    for meta, cname in current:
+        venue = VENUES.get(meta["venue"], meta["venue"])
+        try:
+            detail = soup_action("/JRADB/accessH.html", cname)
+        except Exception as exc:
+            print(f"[JRA] {venue} payout detail failed: {exc}", file=sys.stderr)
+            continue
+
+        race_map: dict[int, dict[str, list[dict]]] = {}
+        race_no = 0
+        current_race: dict[str, list[dict]] | None = None
+
+        for dl in detail.find_all("dl"):
+            label_node = dl.find("strong") or dl.find("dt")
+            label = clean_text(label_node)
+            if label not in PAYOUT_ORDER:
+                continue
+
+            if label == "単勝":
+                race_no += 1
+                current_race = {k: [] for k in PAYOUT_ORDER}
+                race_map[race_no] = current_race
+
+            if current_race is None:
+                continue
+
+            current_race[label] = payout_items_from_dl(dl)
+
+        if race_map:
+            result[venue] = race_map
+            print(
+                f"[JRA] {venue} payouts: "
+                + ", ".join(
+                    f"{r}R" for r, p in race_map.items()
+                    if p.get("単勝") and p.get("3連単")
+                )
+            )
+
+    return result
 
 def clean_text(node) -> str:
     if not node:
@@ -392,7 +447,10 @@ def payout_items(soup: BeautifulSoup, label: str) -> list[dict]:
         tokens = [t for t in tokens if t and "人気" not in t]
         items: list[dict] = []
         pending_combo = None
-        for token in tokens:
+        for raw in tokens:
+            token = re.sub(r"\\s+", "", raw)
+            if "番人気" in token:
+                continue
             if re.fullmatch(r"[0-9,]+円", token):
                 if pending_combo is not None:
                     items.append({"combo": pending_combo, "amount": token})
@@ -537,7 +595,7 @@ def main() -> None:
     now = datetime.now(JST)
     today = now.strftime("%Y%m%d")
 
-    debug_harai_menu(today)
+    current_payouts = discover_today_payouts(today)
     current_meetings = discover_today_meetings(today)
     mode = "current" if current_meetings else "historical"
 
@@ -605,6 +663,28 @@ def main() -> None:
             if race_is_complete(existing_race):
                 continue
 
+            live_payouts = (
+                current_payouts.get(meet["venue"], {}).get(race_no)
+                if mode == "current"
+                else None
+            )
+
+            # If result/top-3 is already cached, accessH can complete the race
+            # without re-fetching the result page.
+            if (
+                mode == "current"
+                and len(existing_race.get("top3", [])) >= 3
+                and live_payouts
+                and live_payouts.get("単勝")
+                and live_payouts.get("3連単")
+            ):
+                existing_race["payouts"] = live_payouts
+                existing_race["win_payout"] = live_payouts["単勝"][0]["amount"]
+                venue_results[race_no] = existing_race
+                changed = True
+                print(f"[JRA] {meet['venue']} {race_no}R payout merged")
+                continue
+
             if mode == "current":
                 result_link = current_result_link(race_meta)
                 if not result_link:
@@ -618,6 +698,13 @@ def main() -> None:
                 # Historical internal links (pw01sde10) may need mobile payout fallback.
                 race_soup = soup_cname_get("/JRADB/accessS.html", cname)
                 race_result = result_from_result_page(race_soup)
+
+                if race_result and mode == "current" and live_payouts:
+                    race_result["payouts"] = live_payouts
+                    win_items = live_payouts.get("単勝", [])
+                    race_result["win_payout"] = (
+                        win_items[0]["amount"] if win_items else None
+                    )
 
                 if race_result and cname.startswith("pw01sde10"):
                     try:
@@ -642,12 +729,6 @@ def main() -> None:
 
             if not race_result:
                 continue
-
-            if mode == "current" and not race_result.get("payouts", {}).get("単勝") and race_no == 1:
-                raw_text = clean_text(race_soup)
-                pos = raw_text.find("払戻金")
-                snippet = raw_text[pos:pos + 1800] if pos >= 0 else raw_text[-1800:]
-                print(f"[JRA PAYOUT DEBUG] {meet['venue']} 1R has_harai={pos >= 0} snippet={snippet}")
 
             venue_results[race_no] = {"race": race_no, **race_result}
             changed = True
