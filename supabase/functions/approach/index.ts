@@ -718,6 +718,182 @@ async function getDisasterLive() {
   return parseDisaster(Array.isArray(history)?history:[],weather);
 }
 
+
+const P2P_EEW_URL = "https://api.p2pquake.net/v2/history?codes=556&limit=1";
+const P2P_QUAKE_URL = "https://api.p2pquake.net/v2/history?codes=551&limit=1";
+const JMA_EHIME_WARNING_URL = "https://www.jma.go.jp/bosai/warning/data/warning/380000.json";
+const MATSUYAMA_WARNING_CODE = "3820100";
+
+function parseJstDate(s: unknown) {
+  const v = String(s ?? "").trim();
+  if (!v) return NaN;
+  const normalized = v.includes("T")
+    ? v
+    : v.replace(/\//g, "-").replace(" ", "T") + "+09:00";
+  return Date.parse(normalized);
+}
+
+function scaleLabel(v: unknown) {
+  const n = Number(v);
+  const map: Record<string, string> = {
+    "-1": "不明", "0": "0", "10": "1", "20": "2", "30": "3", "40": "4",
+    "45": "5弱", "50": "5強", "55": "6弱", "60": "6強", "70": "7", "99": "程度以上"
+  };
+  return map[String(n)] ?? (Number.isFinite(n) ? String(n) : "不明");
+}
+
+function activeWarningStatus(status: unknown) {
+  const s = String(status ?? "");
+  return !!s && !/解除|なし/.test(s);
+}
+
+function warningLevelFromText(text: string) {
+  if (/レベル\s*5|特別警報|災害切迫/.test(text)) return 5;
+  if (/レベル\s*4|危険警報|危険/.test(text)) return 4;
+  if (/レベル\s*3|警報|警戒/.test(text)) return 3;
+  if (/レベル\s*2|注意報|注意/.test(text)) return 2;
+  return 0;
+}
+
+async function getDisasterLive() {
+  const [eewR, quakeR, warnR] = await Promise.allSettled([
+    fetchTimeout(P2P_EEW_URL, false, 6000),
+    fetchTimeout(P2P_QUAKE_URL, false, 6000),
+    fetchTimeout(JMA_EHIME_WARNING_URL, false, 6000),
+  ]);
+
+  let eew: any = null;
+  if (eewR.status === "fulfilled" && Array.isArray(eewR.value) && eewR.value.length) {
+    const raw: any = eewR.value[0];
+    const issueMs = parseJstDate(raw?.issue?.time ?? raw?.time);
+    const ageSec = Number.isFinite(issueMs) ? (Date.now() - issueMs) / 1000 : 999999;
+    if (ageSec <= 180 && !raw?.test) {
+      const areas = Array.isArray(raw?.areas) ? raw.areas : [];
+      const local =
+        areas.find((a: any) =>
+          /愛媛/.test(String(a?.pref ?? "")) &&
+          /(中予|松山)/.test(String(a?.name ?? ""))
+        ) ??
+        areas.find((a: any) => /愛媛/.test(String(a?.pref ?? ""))) ??
+        null;
+
+      const arrivalMs = parseJstDate(local?.arrivalTime);
+      const arrivalSeconds =
+        Number.isFinite(arrivalMs) ? Math.round((arrivalMs - Date.now()) / 1000) : null;
+      const scaleFrom = local?.scaleFrom ?? null;
+      const scaleTo = local?.scaleTo ?? null;
+
+      eew = {
+        active: !raw?.cancelled,
+        cancelled: !!raw?.cancelled,
+        eventId: String(raw?.issue?.eventId ?? ""),
+        serial: String(raw?.issue?.serial ?? ""),
+        issueTime: String(raw?.issue?.time ?? raw?.time ?? ""),
+        originTime: String(raw?.earthquake?.originTime ?? ""),
+        hypocenter: String(raw?.earthquake?.hypocenter?.name ?? ""),
+        magnitude: raw?.earthquake?.hypocenter?.magnitude ?? null,
+        depthKm: raw?.earthquake?.hypocenter?.depth ?? null,
+        latitude: raw?.earthquake?.hypocenter?.latitude ?? null,
+        longitude: raw?.earthquake?.hypocenter?.longitude ?? null,
+        localArea: local ? String(local.name ?? "") : "",
+        localPref: local ? String(local.pref ?? "") : "",
+        predictedScaleFrom: scaleFrom,
+        predictedScaleTo: scaleTo,
+        predictedScaleLabel:
+          local ? (scaleFrom === scaleTo
+            ? scaleLabel(scaleTo)
+            : `${scaleLabel(scaleFrom)}〜${scaleLabel(scaleTo)}`) : "対象地域外",
+        kindCode: local ? String(local.kindCode ?? "") : "",
+        arrivalTime: local ? String(local.arrivalTime ?? "") : "",
+        arrivalSeconds,
+        localWarning: !!local,
+      };
+    }
+  }
+
+  let earthquake: any = null;
+  if (quakeR.status === "fulfilled" && Array.isArray(quakeR.value) && quakeR.value.length) {
+    const raw: any = quakeR.value[0];
+    const quakeMs = parseJstDate(raw?.earthquake?.time);
+    const ageSec = Number.isFinite(quakeMs) ? (Date.now() - quakeMs) / 1000 : 999999;
+    const points = Array.isArray(raw?.points) ? raw.points : [];
+    const matsuyamaPoints = points.filter((p: any) =>
+      /愛媛/.test(String(p?.pref ?? "")) && /松山/.test(String(p?.addr ?? ""))
+    );
+    earthquake = {
+      recent: ageSec <= 900,
+      ageSeconds: Number.isFinite(ageSec) ? Math.max(0, Math.round(ageSec)) : null,
+      id: String(raw?.id ?? ""),
+      issueTime: String(raw?.issue?.time ?? ""),
+      time: String(raw?.earthquake?.time ?? ""),
+      hypocenter: String(raw?.earthquake?.hypocenter?.name ?? ""),
+      magnitude: raw?.earthquake?.hypocenter?.magnitude ?? null,
+      depthKm: raw?.earthquake?.hypocenter?.depth ?? null,
+      latitude: raw?.earthquake?.hypocenter?.latitude ?? null,
+      longitude: raw?.earthquake?.hypocenter?.longitude ?? null,
+      maxScale: raw?.earthquake?.maxScale ?? null,
+      maxScaleLabel: scaleLabel(raw?.earthquake?.maxScale),
+      domesticTsunami: String(raw?.earthquake?.domesticTsunami ?? ""),
+      matsuyamaScale: matsuyamaPoints.length
+        ? Math.max(...matsuyamaPoints.map((p: any) => Number(p?.scale ?? -1)))
+        : null,
+      matsuyamaScaleLabel: matsuyamaPoints.length
+        ? scaleLabel(Math.max(...matsuyamaPoints.map((p: any) => Number(p?.scale ?? -1))))
+        : "",
+    };
+  }
+
+  let weather: any = {
+    active: false,
+    level: 0,
+    headline: "",
+    reportDatetime: "",
+    publishingOffice: "",
+    warnings: [],
+  };
+  if (warnR.status === "fulfilled" && warnR.value && typeof warnR.value === "object") {
+    const raw: any = warnR.value;
+    const areaTypes = Array.isArray(raw?.areaTypes) ? raw.areaTypes : [];
+    const cityArea = areaTypes
+      .flatMap((x: any) => Array.isArray(x?.areas) ? x.areas : [])
+      .find((a: any) => String(a?.code ?? "") === MATSUYAMA_WARNING_CODE);
+    const active = (Array.isArray(cityArea?.warnings) ? cityArea.warnings : [])
+      .filter((w: any) => activeWarningStatus(w?.status))
+      .map((w: any) => ({ code: String(w?.code ?? ""), status: String(w?.status ?? "") }));
+
+    const headline = String(raw?.headlineText ?? "");
+    const soilRelated = /土砂|大雨|危険警報|特別警報/.test(headline);
+    const level = warningLevelFromText(
+      [headline, ...active.map((w: any) => w.status)].join(" ")
+    );
+    weather = {
+      active: active.length > 0 || (soilRelated && level >= 3),
+      level,
+      headline,
+      reportDatetime: String(raw?.reportDatetime ?? ""),
+      publishingOffice: String(raw?.publishingOffice ?? ""),
+      warnings: active,
+    };
+  }
+
+  let priority: "none" | "earthquake" | "weather" = "none";
+  if (eew?.active && (eew.localWarning || eew.arrivalSeconds != null)) priority = "earthquake";
+  else if (weather.active && weather.level >= 3) priority = "weather";
+  else if (earthquake?.recent && Number(earthquake?.matsuyamaScale ?? -1) >= 30) priority = "earthquake";
+
+  return {
+    ok: eewR.status === "fulfilled" || quakeR.status === "fulfilled" || warnR.status === "fulfilled",
+    source: {
+      earthquake: "P2P地震情報（気象庁情報）",
+      weather: "気象庁",
+    },
+    priority,
+    eew,
+    earthquake,
+    weather,
+  };
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: corsHeaders() });
   if (req.method !== "GET") {
