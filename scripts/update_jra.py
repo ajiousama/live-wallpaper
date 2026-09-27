@@ -334,15 +334,20 @@ def result_from_result_page(soup: BeautifulSoup) -> dict | None:
         h2 = caption.find("h2")
         race_name = clean_text(h2)
 
-    payouts = {
-        "単勝": payout_items(soup, "単勝"),
-        "複勝": payout_items(soup, "複勝"),
-        "3連単": payout_items(soup, "3連単"),
-    }
+    course = ""
+    if caption:
+        for node in caption.find_all(["p", "li", "span"]):
+            t = clean_text(node)
+            if "コース：" in t or "コース:" in t:
+                course = re.sub(r"^.*?コース[:：]\s*", "", t).strip()
+                break
+
+    payouts = {label: payout_items(soup, label) for label in PAYOUT_ORDER}
 
     winner = top3[0]
     return {
         "race_name": race_name,
+        "course": course,
         "top3": top3,
         "payouts": payouts,
         # Keep legacy fields for the WP2 winning-jockey board.
@@ -430,6 +435,7 @@ def main() -> None:
             existing_payouts = existing_race.get("payouts", {})
             if (
                 len(existing_race.get("top3", [])) >= 3
+                and all(k in existing_payouts for k in PAYOUT_ORDER)
                 and all(existing_payouts.get(k) for k in ("単勝", "複勝", "3連単"))
             ):
                 continue
@@ -442,16 +448,14 @@ def main() -> None:
                 race_result = result_from_result_page(race_soup)
 
                 # Payout markup is more consistently present on JRA's
-                # smartphone result page. Use it only for the three payout
-                # types shown by the wallpaper.
+                # smartphone result page. Read every standard bet type there.
                 if race_result:
                     try:
                         mobile_soup = soup_mobile_result(race_meta["link"])
                         if mobile_soup:
                             race_result["payouts"] = {
-                                "単勝": payout_items(mobile_soup, "単勝"),
-                                "複勝": payout_items(mobile_soup, "複勝"),
-                                "3連単": payout_items(mobile_soup, "3連単"),
+                                label: payout_items(mobile_soup, label)
+                                for label in PAYOUT_ORDER
                             }
                             win_items = race_result["payouts"]["単勝"]
                             race_result["win_payout"] = (
