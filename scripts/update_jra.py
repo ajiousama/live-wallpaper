@@ -610,6 +610,12 @@ def main() -> None:
             if not race_result:
                 continue
 
+            if mode == "current" and not race_result.get("payouts", {}).get("単勝") and race_no == 1:
+                raw_text = clean_text(race_soup)
+                pos = raw_text.find("払戻金")
+                snippet = raw_text[pos:pos + 1800] if pos >= 0 else raw_text[-1800:]
+                print(f"[JRA PAYOUT DEBUG] {meet['venue']} 1R has_harai={pos >= 0} snippet={snippet}")
+
             venue_results[race_no] = {"race": race_no, **race_result}
             changed = True
             winner = race_result["top3"][0]
