@@ -158,6 +158,7 @@ def soup_mobile_result(link: dict) -> BeautifulSoup | None:
 
 
 def discover_result_landing() -> BeautifulSoup:
+    today = datetime.now(JST).strftime("%Y%m%d")
     # JRA exposes more than one result menu (completed/past vs current-day).
     # Inspect both the stable DB menu and current top-page actions, then choose
     # the page that contains today's meeting links when available.
@@ -237,8 +238,6 @@ def discover_result_landing() -> BeautifulSoup:
 
     if not candidates:
         raise RuntimeError("JRAのレース結果開催選択ページを取得できませんでした")
-
-    today = datetime.now(JST).strftime("%Y%m%d")
 
     def page_score(soup: BeautifulSoup) -> tuple[int, str]:
         dates: list[str] = []
