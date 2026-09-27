@@ -4,7 +4,7 @@ import json
 import re
 import sys
 import time
-from datetime import date, datetime
+from datetime import datetime
 from pathlib import Path
 from urllib.parse import parse_qs, urljoin, urlparse
 from zoneinfo import ZoneInfo
@@ -17,13 +17,14 @@ MOBILE_BASE = "https://sp.jra.jp"
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "jra" / "data.json"
 JST = ZoneInfo("Asia/Tokyo")
-DEBUG_PAYOUT_PRINTED = False
 
 VENUES = {
     "01": "札幌", "02": "函館", "03": "福島", "04": "新潟", "05": "東京",
     "06": "中山", "07": "中京", "08": "京都", "09": "阪神", "10": "小倉",
 }
+VENUE_ORDER = ["中山", "阪神", "東京", "京都", "中京", "新潟", "福島", "小倉", "札幌", "函館"]
 WEEKDAY = ["月曜", "火曜", "水曜", "木曜", "金曜", "土曜", "日曜"]
+PAYOUT_ORDER = ["単勝", "複勝", "枠連", "馬連", "馬単", "ワイド", "3連複", "3連単"]
 
 ACTION_RE = re.compile(
     r"doAction\(\s*['\"]([^'\"]+)['\"]\s*,\s*['\"]([^'\"]+)['\"]",
@@ -33,7 +34,10 @@ SRL_RE = re.compile(
     r"pw01srl10(?P<venue>\d{2})(?P<year>\d{4})(?P<meet>\d{2})(?P<day>\d{2})(?P<ymd>\d{8})/(?P<cd>[0-9A-Fa-f]{2})"
 )
 SDE_RE = re.compile(
-    r"pw01sde10(?P<venue>\d{2})(?P<year>\d{4})(?P<meet>\d{2})(?P<day>\d{2})(?P<race>\d{2})(?P<ymd>\d{8})/(?P<cd>[0-9A-Fa-f]{2})"
+    r"pw01sde(?:10|01)(?P<venue>\d{2})(?P<year>\d{4})(?P<meet>\d{2})(?P<day>\d{2})(?P<race>\d{2})(?P<ymd>\d{8})/(?P<cd>[0-9A-Fa-f]{2})"
+)
+DDE_PUBLIC_RE = re.compile(
+    r"pw01dde01(?P<venue>\d{2})(?P<year>\d{4})(?P<meet>\d{2})(?P<day>\d{2})(?P<race>\d{2})(?P<ymd>\d{8})/(?P<cd>[0-9A-Fa-f]{2})"
 )
 
 session = requests.Session()
@@ -73,13 +77,7 @@ def soup_action(path: str, cname: str) -> BeautifulSoup:
 
 
 def soup_cname_get(path: str, cname: str) -> BeautifulSoup:
-    # Public browser-facing JRADB URL. Unlike the internal POST response,
-    # this variant includes the payout section on race-result pages.
-    r = request(
-        "GET",
-        urljoin(BASE, path),
-        params={"CNAME": cname},
-    )
+    r = request("GET", urljoin(BASE, path), params={"CNAME": cname})
     return BeautifulSoup(r.content, "html.parser")
 
 
@@ -117,7 +115,7 @@ def extract_links(soup: BeautifulSoup, token: str) -> list[dict]:
 
 
 def link_cname(link: dict) -> str:
-    if link["kind"] == "post":
+    if link["kind"] in ("post", "cname_get"):
         return link["cname"]
     query = parse_qs(urlparse(link["url"]).query)
     return query.get("CNAME", query.get("cname", [""]))[0]
@@ -126,131 +124,15 @@ def link_cname(link: dict) -> str:
 def fetch_link(link: dict) -> BeautifulSoup:
     if link["kind"] == "post":
         return soup_action(link["path"], link["cname"])
+    if link["kind"] == "cname_get":
+        return soup_cname_get(link["path"], link["cname"])
     return soup_get(link["url"])
 
 
-def mobile_result_cname(link: dict) -> str | None:
-    # Race-selection links use pw01sde10... with a 2-digit check value.
-    # JRA mobile result pages use sw01sde01... and the check value is
-    # consistently +0xAE (mod 256) from the selection-link value.
-    cname = link_cname(link)
-    m = re.fullmatch(r"pw01sde10(.+)/([0-9A-Fa-f]{2})", cname)
-    if not m:
-        return None
-    body, cd = m.groups()
-    mobile_cd = (int(cd, 16) + 0xAE) & 0xFF
-    return f"sw01sde01{body}/{mobile_cd:02X}"
+def cname_hits(html: str, prefix: str) -> list[str]:
+    pattern = re.compile(re.escape(prefix) + r"[^'\"<>\s)]+")
+    return sorted(set(pattern.findall(html)))
 
-
-def soup_mobile_result(link: dict) -> BeautifulSoup | None:
-    cname = mobile_result_cname(link)
-    if not cname:
-        return None
-    r = request(
-        "GET",
-        MOBILE_BASE + "/JRADB/accessS.html",
-        params={"CNAME": cname},
-    )
-    soup = BeautifulSoup(r.content, "html.parser")
-    if "param_error" in soup.get_text(" ", strip=True):
-        return None
-    return soup
-
-
-def discover_result_landing() -> BeautifulSoup:
-    today = datetime.now(JST).strftime("%Y%m%d")
-    # JRA exposes more than one result menu (completed/past vs current-day).
-    # Inspect both the stable DB menu and current top-page actions, then choose
-    # the page that contains today's meeting links when available.
-    candidates: list[BeautifulSoup] = []
-
-    try:
-        stable = soup_action("/JRADB/accessS.html", "pw01sli00/AF")
-        if extract_links(stable, "pw01srl"):
-            candidates.append(stable)
-    except Exception as exc:
-        print(f"[JRA] stable result-menu action failed: {exc}", file=sys.stderr)
-
-    try:
-        top = soup_get(BASE + "/")
-        top_html = str(top)
-        dde_hits = sorted(set(re.findall(r"pw01dde[^'\\\"<>\\s)]+", top_html)))
-        if dde_hits:
-            print(f"[JRA DEBUG] top dde count={len(dde_hits)} first={dde_hits[:8]}")
-            for dde in dde_hits[:2]:
-                try:
-                    rr = request("GET", BASE + "/JRADB/accessD.html", params={"CNAME": dde})
-                    hh = rr.text
-                    sde2 = sorted(set(re.findall(r"pw01sde[^'\\\"<>\\s)]+", hh)))
-                    dde2 = sorted(set(re.findall(r"pw01dde[^'\\\"<>\\s)]+", hh)))
-                    print(f"[JRA DEBUG] dde page {dde} -> sde={sde2[:12]} dde={dde2[:20]}")
-                    current_r1 = [x for x in dde2 if today in x and re.search(r"dde01\d{2}\d{4}\d{2}\d{2}01" + today, x)]
-                    if current_r1:
-                        d1 = current_r1[0]
-                        r1 = request("GET", BASE + "/JRADB/accessD.html", params={"CNAME": d1})
-                        s1 = sorted(set(re.findall(r"pw01sde[^'\\\"<>\\s)]+", r1.text)))
-                        s1_today = [x for x in s1 if today in x]
-                        print(f"[JRA DEBUG] current race1 {d1} -> sde_today={s1_today[:20]}")
-                except Exception as e:
-                    print(f"[JRA DEBUG] dde fetch failed {dde}: {e}")
-        seen: set[str] = set()
-        actions: list[dict] = []
-
-        # Current-day result entry points are usually attached to visible
-        # "レース結果" links on the JRA top page.
-        for a in top.find_all("a"):
-            text = a.get_text(" ", strip=True)
-            onclick = a.get("onclick") or a.get("onClick") or ""
-            m = ACTION_RE.search(onclick)
-            if not m or "accessS" not in m.group(1):
-                continue
-            if "レース結果" not in text and "結果" not in text:
-                continue
-            key = m.group(1) + "|" + m.group(2)
-            if key in seen:
-                continue
-            seen.add(key)
-            actions.append({"kind": "post", "path": m.group(1), "cname": m.group(2)})
-
-        # Some JRA layouts hide the label inside nested elements. If the
-        # labelled pass found nothing, inspect all accessS actions cautiously.
-        if not actions:
-            for a in top.find_all("a"):
-                onclick = a.get("onclick") or a.get("onClick") or ""
-                m = ACTION_RE.search(onclick)
-                if not m or "accessS" not in m.group(1):
-                    continue
-                key = m.group(1) + "|" + m.group(2)
-                if key in seen:
-                    continue
-                seen.add(key)
-                actions.append({"kind": "post", "path": m.group(1), "cname": m.group(2)})
-
-        for action in actions[:40]:
-            try:
-                page = fetch_link(action)
-            except Exception:
-                continue
-            if extract_links(page, "pw01srl"):
-                candidates.append(page)
-    except Exception as exc:
-        print(f"[JRA] top-page result discovery failed: {exc}", file=sys.stderr)
-
-    if not candidates:
-        raise RuntimeError("JRAのレース結果開催選択ページを取得できませんでした")
-
-    def page_score(soup: BeautifulSoup) -> tuple[int, str]:
-        dates: list[str] = []
-        for link in extract_links(soup, "pw01srl"):
-            m = SRL_RE.search(link_cname(link))
-            if m:
-                dates.append(m.group("ymd"))
-        return (1 if today in dates else 0, max(dates) if dates else "")
-
-    best = max(candidates, key=page_score)
-    score = page_score(best)
-    print(f"[JRA] result menu selected: today={bool(score[0])} latest={score[1]}")
-    return best
 
 def parse_srl(link: dict) -> dict | None:
     cname = link_cname(link)
@@ -275,11 +157,178 @@ def parse_sde(link: dict) -> dict | None:
     g = m.groupdict()
     return {
         "link": link,
+        "cname": cname,
         "venue_code": g["venue"],
         "venue": VENUES.get(g["venue"], g["venue"]),
+        "year": g["year"],
+        "meet": g["meet"],
+        "day": g["day"],
         "race": int(g["race"]),
         "ymd": g["ymd"],
     }
+
+
+def parse_dde(cname: str) -> dict | None:
+    m = DDE_PUBLIC_RE.search(cname)
+    if not m:
+        return None
+    g = m.groupdict()
+    return {
+        "cname": cname,
+        "venue_code": g["venue"],
+        "venue": VENUES.get(g["venue"], g["venue"]),
+        "year": g["year"],
+        "meet": g["meet"],
+        "day": g["day"],
+        "race": int(g["race"]),
+        "ymd": g["ymd"],
+    }
+
+
+def mobile_result_cname(link: dict) -> str | None:
+    cname = link_cname(link)
+    m = re.fullmatch(r"pw01sde10(.+)/([0-9A-Fa-f]{2})", cname)
+    if not m:
+        return None
+    body, cd = m.groups()
+    mobile_cd = (int(cd, 16) + 0xAE) & 0xFF
+    return f"sw01sde01{body}/{mobile_cd:02X}"
+
+
+def soup_mobile_result(link: dict) -> BeautifulSoup | None:
+    cname = mobile_result_cname(link)
+    if not cname:
+        return None
+    r = request("GET", MOBILE_BASE + "/JRADB/accessS.html", params={"CNAME": cname})
+    soup = BeautifulSoup(r.content, "html.parser")
+    if "param_error" in soup.get_text(" ", strip=True):
+        return None
+    return soup
+
+
+def discover_today_meetings(today: str) -> list[dict]:
+    """
+    Current-day confirmed results do not appear in JRA's completed-results
+    landing page until later. Discover today's live race pages from accessD:
+      top page -> one race page -> today's venue page -> all 1R-12R links.
+    """
+    try:
+        top_html = request("GET", BASE + "/").text
+    except Exception as exc:
+        print(f"[JRA] current-day top fetch failed: {exc}", file=sys.stderr)
+        return []
+
+    seeds = cname_hits(top_html, "pw01dde01")
+    if not seeds:
+        return []
+
+    first_hop: set[str] = set(seeds)
+    for cname in seeds[:6]:
+        try:
+            html = request("GET", BASE + "/JRADB/accessD.html", params={"CNAME": cname}).text
+            first_hop.update(cname_hits(html, "pw01dde01"))
+        except Exception:
+            continue
+
+    today_seed_meta = [x for x in (parse_dde(c) for c in first_hop) if x and x["ymd"] == today]
+    if not today_seed_meta:
+        return []
+
+    # Pick one valid current-day page per venue, then use its race selector
+    # to discover all 12 race pages for that venue.
+    by_venue: dict[str, dict] = {}
+    for meta in today_seed_meta:
+        old = by_venue.get(meta["venue_code"])
+        if old is None or meta["race"] == 11:
+            by_venue[meta["venue_code"]] = meta
+
+    meetings: list[dict] = []
+    for venue_code, seed in by_venue.items():
+        race_pages: dict[int, dict] = {}
+        try:
+            html = request(
+                "GET",
+                BASE + "/JRADB/accessD.html",
+                params={"CNAME": seed["cname"]},
+            ).text
+            hits = cname_hits(html, "pw01dde01")
+        except Exception as exc:
+            print(f"[JRA] {seed['venue']} current race menu failed: {exc}", file=sys.stderr)
+            hits = [seed["cname"]]
+
+        for cname in hits + [seed["cname"]]:
+            meta = parse_dde(cname)
+            if not meta:
+                continue
+            if (
+                meta["ymd"] != today
+                or meta["venue_code"] != venue_code
+                or meta["meet"] != seed["meet"]
+                or meta["day"] != seed["day"]
+            ):
+                continue
+            race_pages[meta["race"]] = meta
+
+        meetings.append({
+            "venue_code": venue_code,
+            "venue": seed["venue"],
+            "ymd": today,
+            "race_pages": [race_pages[r] for r in sorted(race_pages)],
+        })
+
+    meetings.sort(
+        key=lambda m: VENUE_ORDER.index(m["venue"]) if m["venue"] in VENUE_ORDER else 999
+    )
+    if meetings:
+        print(
+            "[JRA] current-day race menus: "
+            + ", ".join(f"{m['venue']}({len(m['race_pages'])}R)" for m in meetings)
+        )
+    return meetings
+
+
+def current_result_link(race_page: dict) -> dict | None:
+    """Return the public accessS result link only after this race is confirmed."""
+    try:
+        html = request(
+            "GET",
+            BASE + "/JRADB/accessD.html",
+            params={"CNAME": race_page["cname"]},
+        ).text
+    except Exception:
+        return None
+
+    candidates: list[tuple[int, str]] = []
+    for cname in cname_hits(html, "pw01sde"):
+        m = SDE_RE.search(cname)
+        if not m:
+            continue
+        g = m.groupdict()
+        if (
+            g["venue"] == race_page["venue_code"]
+            and g["year"] == race_page["year"]
+            and g["meet"] == race_page["meet"]
+            and g["day"] == race_page["day"]
+            and int(g["race"]) == race_page["race"]
+            and g["ymd"] == race_page["ymd"]
+        ):
+            # Prefer the public pw01sde01 form because it includes payouts.
+            candidates.append((0 if cname.startswith("pw01sde01") else 1, cname))
+
+    if not candidates:
+        return None
+    cname = sorted(candidates)[0][1]
+    return {"kind": "cname_get", "path": "/JRADB/accessS.html", "cname": cname}
+
+
+def discover_historical_landing() -> BeautifulSoup:
+    try:
+        soup = soup_action("/JRADB/accessS.html", "pw01sli00/AF")
+        if extract_links(soup, "pw01srl"):
+            return soup
+    except Exception as exc:
+        print(f"[JRA] historical result menu failed: {exc}", file=sys.stderr)
+    raise RuntimeError("JRAのレース結果開催選択ページを取得できませんでした")
 
 
 def clean_text(node) -> str:
@@ -298,34 +347,30 @@ def cell_frame(cell) -> str:
     return ""
 
 
-PAYOUT_ORDER = ["単勝", "複勝", "枠連", "馬連", "馬単", "ワイド", "3連複", "3連単"]
-
-
 def payout_items(soup: BeautifulSoup, label: str) -> list[dict]:
-    # First try the structured dl blocks used by desktop/mobile result pages.
     for tag in soup.find_all(["strong", "dt", "th", "td"]):
         if clean_text(tag) != label:
             continue
-
         dl = tag.find_parent("dl")
-        if dl:
-            dd = dl.find("dd") or dl
-            tokens = [clean_text(p) for p in dd.find_all("p")]
-            tokens = [t for t in tokens if t and "人気" not in t]
-            items: list[dict] = []
-            pending_combo = None
-            for token in tokens:
-                if re.fullmatch(r"[0-9,]+円", token):
-                    if pending_combo is not None:
-                        items.append({"combo": pending_combo, "amount": token})
-                        pending_combo = None
-                    continue
-                if re.fullmatch(r"[0-9]+(?:[-→][0-9]+)*", token):
-                    pending_combo = token
-            if items:
-                return items
+        if not dl:
+            continue
 
-    # Robust fallback: parse the visible payout text between bet-type labels.
+        dd = dl.find("dd") or dl
+        tokens = [clean_text(p) for p in dd.find_all("p")]
+        tokens = [t for t in tokens if t and "人気" not in t]
+        items: list[dict] = []
+        pending_combo = None
+        for token in tokens:
+            if re.fullmatch(r"[0-9,]+円", token):
+                if pending_combo is not None:
+                    items.append({"combo": pending_combo, "amount": token})
+                    pending_combo = None
+                continue
+            if re.fullmatch(r"[0-9]+(?:[-→][0-9]+)*", token):
+                pending_combo = token
+        if items:
+            return items
+
     text = clean_text(soup)
     payout_pos = text.find("払戻金")
     if payout_pos >= 0:
@@ -349,6 +394,7 @@ def payout_items(soup: BeautifulSoup, label: str) -> list[dict]:
         segment,
     )
     return [{"combo": combo, "amount": amount} for combo, amount in pairs]
+
 
 def result_from_result_page(soup: BeautifulSoup) -> dict | None:
     if "パラメータエラー" in page_title(soup):
@@ -388,17 +434,15 @@ def result_from_result_page(soup: BeautifulSoup) -> dict | None:
         if len(top3) >= 3:
             break
 
-    if not top3:
+    if len(top3) < 3:
         return None
 
     caption = result_table.find("caption")
     race_name = ""
+    course = ""
     if caption:
         h2 = caption.find("h2")
         race_name = clean_text(h2)
-
-    course = ""
-    if caption:
         for node in caption.find_all(["p", "li", "span"]):
             t = clean_text(node)
             if "コース：" in t or "コース:" in t:
@@ -406,18 +450,17 @@ def result_from_result_page(soup: BeautifulSoup) -> dict | None:
                 break
 
     payouts = {label: payout_items(soup, label) for label in PAYOUT_ORDER}
-
     winner = top3[0]
     return {
         "race_name": race_name,
         "course": course,
         "top3": top3,
         "payouts": payouts,
-        # Keep legacy fields for the WP2 winning-jockey board.
         "jockey": winner.get("jockey", ""),
         "horse": winner.get("horse", ""),
         "win_payout": (payouts["単勝"][0]["amount"] if payouts["単勝"] else None),
     }
+
 
 def load_existing() -> dict:
     try:
@@ -449,30 +492,50 @@ def normalize_existing(existing: dict, ymd: str, venue_names: list[str]) -> dict
     return existing
 
 
+def race_is_complete(race: dict) -> bool:
+    payouts = race.get("payouts", {})
+    return (
+        len(race.get("top3", [])) >= 3
+        and all(k in payouts for k in PAYOUT_ORDER)
+        and all(payouts.get(k) for k in ("単勝", "複勝", "3連単"))
+    )
+
+
 def main() -> None:
     now = datetime.now(JST)
     today = now.strftime("%Y%m%d")
 
-    landing = discover_result_landing()
-    srl_meta = [x for x in (parse_srl(l) for l in extract_links(landing, "pw01srl")) if x]
-    if not srl_meta:
-        raise RuntimeError("JRA開催リンク(pw01srl)が見つかりません")
+    current_meetings = discover_today_meetings(today)
+    mode = "current" if current_meetings else "historical"
 
-    available_dates = sorted({x["ymd"] for x in srl_meta if x["ymd"] <= today})
-    if not available_dates:
-        available_dates = sorted({x["ymd"] for x in srl_meta})
-    selected_ymd = today if today in available_dates else available_dates[-1]
+    if current_meetings:
+        selected_ymd = today
+        selected = current_meetings
+    else:
+        landing = discover_historical_landing()
+        srl_meta = [x for x in (parse_srl(l) for l in extract_links(landing, "pw01srl")) if x]
+        if not srl_meta:
+            raise RuntimeError("JRA開催リンク(pw01srl)が見つかりません")
 
-    selected = []
-    seen_venue = set()
-    for x in srl_meta:
-        if x["ymd"] != selected_ymd or x["venue_code"] in seen_venue:
-            continue
-        seen_venue.add(x["venue_code"])
-        selected.append(x)
+        available_dates = sorted({x["ymd"] for x in srl_meta if x["ymd"] <= today})
+        if not available_dates:
+            available_dates = sorted({x["ymd"] for x in srl_meta})
+        selected_ymd = available_dates[-1]
+
+        selected = []
+        seen_venue = set()
+        for x in srl_meta:
+            if x["ymd"] != selected_ymd or x["venue_code"] in seen_venue:
+                continue
+            seen_venue.add(x["venue_code"])
+            selected.append(x)
+
+    selected.sort(
+        key=lambda m: VENUE_ORDER.index(m["venue"]) if m["venue"] in VENUE_ORDER else 999
+    )
     selected = selected[:3]
-
     venue_names = [x["venue"] for x in selected]
+
     existing = load_existing()
     data = normalize_existing(existing, selected_ymd, venue_names)
 
@@ -483,38 +546,49 @@ def main() -> None:
         v["name"]: {int(r["race"]): r for r in v.get("results", [])}
         for v in data["venues"]
     }
-
-    changed = existing.get("source_date") != selected_ymd or [v.get("name") for v in existing.get("venues", [])] != venue_names
+    changed = (
+        existing.get("source_date") != selected_ymd
+        or [v.get("name") for v in existing.get("venues", [])] != venue_names
+    )
 
     for meet in selected:
-        meet_soup = fetch_link(meet["link"])
-        race_links = [x for x in (parse_sde(l) for l in extract_links(meet_soup, "pw01sde")) if x]
-        race_links = [x for x in race_links if x["ymd"] == selected_ymd and x["venue_code"] == meet["venue_code"]]
-
         venue_results = result_map.setdefault(meet["venue"], {})
-        for race_meta in sorted(race_links, key=lambda x: x["race"]):
+
+        if mode == "current":
+            race_candidates = meet.get("race_pages", [])
+        else:
+            meet_soup = fetch_link(meet["link"])
+            race_candidates = [
+                x for x in (parse_sde(l) for l in extract_links(meet_soup, "pw01sde")) if x
+            ]
+            race_candidates = [
+                x for x in race_candidates
+                if x["ymd"] == selected_ymd and x["venue_code"] == meet["venue_code"]
+            ]
+
+        for race_meta in sorted(race_candidates, key=lambda x: x["race"]):
             race_no = race_meta["race"]
             existing_race = venue_results.get(race_no, {})
-            existing_payouts = existing_race.get("payouts", {})
-            if (
-                len(existing_race.get("top3", [])) >= 3
-                and all(k in existing_payouts for k in PAYOUT_ORDER)
-                and all(existing_payouts.get(k) for k in ("単勝", "複勝", "3連単"))
-            ):
+            if race_is_complete(existing_race):
                 continue
 
+            if mode == "current":
+                result_link = current_result_link(race_meta)
+                if not result_link:
+                    continue
+            else:
+                result_link = race_meta["link"]
+
             try:
-                race_soup = soup_cname_get(
-                    "/JRADB/accessS.html",
-                    link_cname(race_meta["link"]),
-                )
+                cname = link_cname(result_link)
+                # Public current-day result links (pw01sde01) include payouts.
+                # Historical internal links (pw01sde10) may need mobile payout fallback.
+                race_soup = soup_cname_get("/JRADB/accessS.html", cname)
                 race_result = result_from_result_page(race_soup)
 
-                # Payout markup is more consistently present on JRA's
-                # smartphone result page. Read every standard bet type there.
-                if race_result:
+                if race_result and cname.startswith("pw01sde10"):
                     try:
-                        mobile_soup = soup_mobile_result(race_meta["link"])
+                        mobile_soup = soup_mobile_result(result_link)
                         if mobile_soup:
                             race_result["payouts"] = {
                                 label: payout_items(mobile_soup, label)
@@ -526,8 +600,7 @@ def main() -> None:
                             )
                     except Exception as payout_exc:
                         print(
-                            f"[JRA] {meet['venue']} {race_no}R mobile payout failed: "
-                            f"{payout_exc}",
+                            f"[JRA] {meet['venue']} {race_no}R mobile payout failed: {payout_exc}",
                             file=sys.stderr,
                         )
             except Exception as exc:
