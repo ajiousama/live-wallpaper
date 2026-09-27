@@ -158,36 +158,80 @@ def soup_mobile_result(link: dict) -> BeautifulSoup | None:
 
 
 def discover_result_landing() -> BeautifulSoup:
-    # This menu parameter has been stable for years. If JRA changes it,
-    # fall back to discovering the current "レース結果" action from the top page.
+    # JRA exposes more than one result menu (completed/past vs current-day).
+    # Inspect both the stable DB menu and current top-page actions, then choose
+    # the page that contains today's meeting links when available.
+    candidates: list[BeautifulSoup] = []
+
     try:
-        soup = soup_action("/JRADB/accessS.html", "pw01sli00/AF")
-        if extract_links(soup, "pw01srl"):
-            return soup
+        stable = soup_action("/JRADB/accessS.html", "pw01sli00/AF")
+        if extract_links(stable, "pw01srl"):
+            candidates.append(stable)
     except Exception as exc:
         print(f"[JRA] stable result-menu action failed: {exc}", file=sys.stderr)
 
-    top = soup_get(BASE + "/")
-    candidates: list[dict] = []
-    seen: set[str] = set()
-    for a in top.find_all("a"):
-        if "レース結果" not in a.get_text(" ", strip=True):
-            continue
-        onclick = a.get("onclick") or a.get("onClick") or ""
-        m = ACTION_RE.search(onclick)
-        if m and "accessS" in m.group(1):
+    try:
+        top = soup_get(BASE + "/")
+        seen: set[str] = set()
+        actions: list[dict] = []
+
+        # Current-day result entry points are usually attached to visible
+        # "レース結果" links on the JRA top page.
+        for a in top.find_all("a"):
+            text = a.get_text(" ", strip=True)
+            onclick = a.get("onclick") or a.get("onClick") or ""
+            m = ACTION_RE.search(onclick)
+            if not m or "accessS" not in m.group(1):
+                continue
+            if "レース結果" not in text and "結果" not in text:
+                continue
             key = m.group(1) + "|" + m.group(2)
-            if key not in seen:
+            if key in seen:
+                continue
+            seen.add(key)
+            actions.append({"kind": "post", "path": m.group(1), "cname": m.group(2)})
+
+        # Some JRA layouts hide the label inside nested elements. If the
+        # labelled pass found nothing, inspect all accessS actions cautiously.
+        if not actions:
+            for a in top.find_all("a"):
+                onclick = a.get("onclick") or a.get("onClick") or ""
+                m = ACTION_RE.search(onclick)
+                if not m or "accessS" not in m.group(1):
+                    continue
+                key = m.group(1) + "|" + m.group(2)
+                if key in seen:
+                    continue
                 seen.add(key)
-                candidates.append({"kind": "post", "path": m.group(1), "cname": m.group(2)})
+                actions.append({"kind": "post", "path": m.group(1), "cname": m.group(2)})
 
-    for candidate in candidates:
-        soup = fetch_link(candidate)
-        if extract_links(soup, "pw01srl"):
-            return soup
+        for action in actions[:40]:
+            try:
+                page = fetch_link(action)
+            except Exception:
+                continue
+            if extract_links(page, "pw01srl"):
+                candidates.append(page)
+    except Exception as exc:
+        print(f"[JRA] top-page result discovery failed: {exc}", file=sys.stderr)
 
-    raise RuntimeError("JRAのレース結果開催選択ページを取得できませんでした")
+    if not candidates:
+        raise RuntimeError("JRAのレース結果開催選択ページを取得できませんでした")
 
+    today = datetime.now(JST).strftime("%Y%m%d")
+
+    def page_score(soup: BeautifulSoup) -> tuple[int, str]:
+        dates: list[str] = []
+        for link in extract_links(soup, "pw01srl"):
+            m = SRL_RE.search(link_cname(link))
+            if m:
+                dates.append(m.group("ymd"))
+        return (1 if today in dates else 0, max(dates) if dates else "")
+
+    best = max(candidates, key=page_score)
+    score = page_score(best)
+    print(f"[JRA] result menu selected: today={bool(score[0])} latest={score[1]}")
+    return best
 
 def parse_srl(link: dict) -> dict | None:
     cname = link_cname(link)
