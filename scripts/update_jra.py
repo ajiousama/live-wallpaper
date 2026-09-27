@@ -172,6 +172,10 @@ def discover_result_landing() -> BeautifulSoup:
 
     try:
         top = soup_get(BASE + "/")
+        top_html = str(top)
+        dde_hits = sorted(set(re.findall(r"pw01dde[^'\\\"<>\\s)]+", top_html)))
+        if dde_hits:
+            print(f"[JRA DEBUG] top dde count={len(dde_hits)} first={dde_hits[:8]}")
         seen: set[str] = set()
         actions: list[dict] = []
 
