@@ -287,7 +287,8 @@ async function getMadonna(now: { minutes: number }) {
   const html = await fetchTimeout(IYOTETSU_MADONNA_URL, true) as string;
   const text = htmlToText(html);
 
-  const route = (text.match(/系統\s*[:：]?\s*([0-9]+)/) ?? [])[1] ?? "51";
+  // マドンナスタジアム発は伊予鉄51系統。ページ内の時刻数字を「系統」と誤認しないよう固定。
+  const route = "51";
   const destination =
     ((text.match(/行き先\s*[:：]?\s*([^\n]+)/) ?? [])[1] ?? "松山市駅")
       .replace(/所要時間.*$/, "")
