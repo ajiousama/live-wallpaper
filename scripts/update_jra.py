@@ -176,6 +176,15 @@ def discover_result_landing() -> BeautifulSoup:
         dde_hits = sorted(set(re.findall(r"pw01dde[^'\\\"<>\\s)]+", top_html)))
         if dde_hits:
             print(f"[JRA DEBUG] top dde count={len(dde_hits)} first={dde_hits[:8]}")
+            for dde in dde_hits[:2]:
+                try:
+                    rr = request("GET", BASE + "/JRADB/accessD.html", params={"CNAME": dde})
+                    hh = rr.text
+                    sde2 = sorted(set(re.findall(r"pw01sde[^'\\\"<>\\s)]+", hh)))
+                    dde2 = sorted(set(re.findall(r"pw01dde[^'\\\"<>\\s)]+", hh)))
+                    print(f"[JRA DEBUG] dde page {dde} -> sde={sde2[:12]} dde={dde2[:20]}")
+                except Exception as e:
+                    print(f"[JRA DEBUG] dde fetch failed {dde}: {e}")
         seen: set[str] = set()
         actions: list[dict] = []
 
