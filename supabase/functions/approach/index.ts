@@ -637,6 +637,9 @@ function parseDisaster(history:any[], weather:any) {
         serial:String(eew?.issue?.serial||""),
         hypocenter:String(eew?.earthquake?.hypocenter?.name||""),
         magnitude:Number(eew?.earthquake?.hypocenter?.magnitude),
+        depth:Number(eew?.earthquake?.hypocenter?.depth),
+        originTime:String(eew?.earthquake?.originTime||""),
+        domesticTsunami:String(eew?.earthquake?.domesticTsunami||""),
         local: local ? {
           area:String(local.name||"愛媛県"),
           scaleFrom:scaleLabel(local.scaleFrom),
