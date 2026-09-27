@@ -337,7 +337,29 @@ def debug_harai_menu(today: str) -> None:
         soup = soup_action("/JRADB/accessH.html", "pw01hli00/03")
         html = str(soup)
         hits = sorted(set(re.findall(r"pw01h[^'\\\"<>\\s)]+", html)))
-        print(f"[JRA H DEBUG] menu hits={hits[:80]}")
+        current = [x for x in hits if x.startswith("pw01hde01") and today in x]
+        print(f"[JRA H DEBUG] current={current}")
+        for cname in current[:2]:
+            detail = soup_action("/JRADB/accessH.html", cname)
+            print(f"[JRA H DEBUG] detail {cname} title={page_title(detail)}")
+            heads = []
+            for tag in detail.find_all(["h1","h2","h3","h4","caption","strong"]):
+                t = clean_text(tag)
+                if t and t not in heads:
+                    heads.append(t)
+            print(f"[JRA H DEBUG] heads={heads[:80]}")
+            tables = []
+            for i, table in enumerate(detail.find_all("table")[:30]):
+                t = clean_text(table)
+                if t:
+                    tables.append((i, t[:700]))
+            print(f"[JRA H DEBUG] tables={tables[:20]}")
+            dls = []
+            for i, dl in enumerate(detail.find_all("dl")[:80]):
+                t = clean_text(dl)
+                if t:
+                    dls.append((i, t[:350]))
+            print(f"[JRA H DEBUG] dls={dls[:50]}")
     except Exception as exc:
         print(f"[JRA H DEBUG] menu failed: {exc}", file=sys.stderr)
 
