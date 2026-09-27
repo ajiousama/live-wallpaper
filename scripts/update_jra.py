@@ -331,6 +331,16 @@ def discover_historical_landing() -> BeautifulSoup:
     raise RuntimeError("JRAのレース結果開催選択ページを取得できませんでした")
 
 
+
+def debug_harai_menu(today: str) -> None:
+    try:
+        soup = soup_action("/JRADB/accessH.html", "pw01hli00/03")
+        html = str(soup)
+        hits = sorted(set(re.findall(r"pw01h[^'\\\"<>\\s)]+", html)))
+        print(f"[JRA H DEBUG] menu hits={hits[:80]}")
+    except Exception as exc:
+        print(f"[JRA H DEBUG] menu failed: {exc}", file=sys.stderr)
+
 def clean_text(node) -> str:
     if not node:
         return ""
@@ -505,6 +515,7 @@ def main() -> None:
     now = datetime.now(JST)
     today = now.strftime("%Y%m%d")
 
+    debug_harai_menu(today)
     current_meetings = discover_today_meetings(today)
     mode = "current" if current_meetings else "historical"
 
