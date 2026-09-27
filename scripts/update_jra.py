@@ -39,6 +39,10 @@ SDE_RE = re.compile(
 DDE_PUBLIC_RE = re.compile(
     r"pw01dde01(?P<venue>\d{2})(?P<year>\d{4})(?P<meet>\d{2})(?P<day>\d{2})(?P<race>\d{2})(?P<ymd>\d{8})/(?P<cd>[0-9A-Fa-f]{2})"
 )
+HDE_PUBLIC_RE = re.compile(
+    r"pw01hde01(?P<venue>\d{2})(?P<year>\d{4})(?P<meet>\d{2})(?P<day>\d{2})20(?P<ymd>\d{8})/(?P<cd>[0-9A-Fa-f]{2})"
+)
+
 
 session = requests.Session()
 session.headers.update({
