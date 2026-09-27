@@ -337,24 +337,22 @@ def discover_historical_landing() -> BeautifulSoup:
 
 
 def payout_items_from_dl(dl) -> list[dict]:
-    dd = dl.find("dd") or dl
-    tokens = [clean_text(p) for p in dd.find_all("p")]
-    items: list[dict] = []
-    pending_combo = None
+    # accessH may render the yen unit in a separate span, so parse the
+    # visible DL text instead of relying on individual <p> boundaries.
+    text = clean_text(dl)
+    label_node = dl.find("strong") or dl.find("dt")
+    label = clean_text(label_node)
+    if label and text.startswith(label):
+        text = text[len(label):].strip()
 
-    for raw in tokens:
-        token = re.sub(r"\\s+", "", raw)
-        if not token or "番人気" in token:
-            continue
-        if re.fullmatch(r"[0-9,]+円", token):
-            if pending_combo is not None:
-                items.append({"combo": pending_combo, "amount": token})
-                pending_combo = None
-            continue
-        if re.fullmatch(r"[0-9]+(?:[-→][0-9]+)*", token):
-            pending_combo = token
-
-    return items
+    pairs = re.findall(
+        r"(?<![0-9])([0-9]+(?:[-→][0-9]+)*)\s+([0-9,]+)\s*円",
+        text,
+    )
+    return [
+        {"combo": combo, "amount": amount + "円"}
+        for combo, amount in pairs
+    ]
 
 
 def discover_today_payouts(today: str) -> dict[str, dict[int, dict[str, list[dict]]]]:
