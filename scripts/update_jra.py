@@ -184,7 +184,7 @@ def discover_result_landing() -> BeautifulSoup:
                     sde2 = sorted(set(re.findall(r"pw01sde[^'\\\"<>\\s)]+", hh)))
                     dde2 = sorted(set(re.findall(r"pw01dde[^'\\\"<>\\s)]+", hh)))
                     print(f"[JRA DEBUG] dde page {dde} -> sde={sde2[:12]} dde={dde2[:20]}")
-                    current_r1 = [x for x in dde2 if today in x and re.search(r"dde01\\d{2}\\d{4}\\d{2}\\d{2}01" + today, x)]
+                    current_r1 = [x for x in dde2 if today in x and re.search(r"dde01\d{2}\d{4}\d{2}\d{2}01" + today, x)]
                     if current_r1:
                         d1 = current_r1[0]
                         r1 = request("GET", BASE + "/JRADB/accessD.html", params={"CNAME": d1})
