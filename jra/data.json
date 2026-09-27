@@ -2,7 +2,7 @@
   "source": "JRA公式",
   "source_date": "20260927",
   "date_label": "9月27日 日曜",
-  "updated_at": "2026-09-27 14:53 JST",
+  "updated_at": "2026-09-27 14:54 JST",
   "venues": [
     {
       "name": "中山",
@@ -856,6 +856,53 @@
           },
           "jockey": "川田 将雅",
           "horse": "ブラックオリンピア",
+          "win_payout": null
+        },
+        {
+          "race": 10,
+          "race_name": "堺ステークス",
+          "course": "",
+          "top3": [
+            {
+              "position": 1,
+              "frame": "枠7橙",
+              "number": "10",
+              "horse": "ショウナンバンライ",
+              "jockey": "池添 謙一",
+              "time": "1:51.5",
+              "margin": ""
+            },
+            {
+              "position": 2,
+              "frame": "枠5黄",
+              "number": "6",
+              "horse": "マテンロウブレイブ",
+              "jockey": "横山 典弘",
+              "time": "",
+              "margin": "８"
+            },
+            {
+              "position": 3,
+              "frame": "枠5黄",
+              "number": "5",
+              "horse": "ジャイアンバローズ",
+              "jockey": "川田 将雅",
+              "time": "",
+              "margin": "クビ"
+            }
+          ],
+          "payouts": {
+            "単勝": [],
+            "複勝": [],
+            "枠連": [],
+            "馬連": [],
+            "馬単": [],
+            "ワイド": [],
+            "3連複": [],
+            "3連単": []
+          },
+          "jockey": "池添 謙一",
+          "horse": "ショウナンバンライ",
           "win_payout": null
         }
       ]
