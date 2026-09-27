@@ -334,6 +334,226 @@ async function getMadonna(now: { minutes: number }) {
   };
 }
 
+
+const AIRPORT_LIVE_URL = "https://www.matsuyama-airport.co.jp/flight/timetable.html?arrival=1";
+const ORANGE_FERRY_URL = "https://www.orange-ferry.co.jp/";
+const BOYO_FERRY_URL = "https://www.boyoferry.co.jp/smp/status.html";
+const KOKU94_URL = "https://www.koku94.jp/";
+const IYOTETSU_HIGHWAY_URL = "https://www.iyotetsu.co.jp/topics/rinji/kousoku.html";
+const JR_HIGHWAY_URL = "https://www.jr-shikokubus.co.jp/unkouinfo/";
+
+function flatText(html: string) {
+  return htmlToText(html).replace(/\s+/g, " ").trim();
+}
+
+function minuteDelta(from: string, to: string) {
+  const a = toMinutes(from);
+  const b = toMinutes(to);
+  if (!Number.isFinite(a) || !Number.isFinite(b)) return null;
+  let d = b - a;
+  if (d < -720) d += 1440;
+  if (d > 720) d -= 1440;
+  return d;
+}
+
+function parseAirportFlights(html: string) {
+  const text = flatText(html);
+  const updated =
+    (text.match(/(\d{4}年\d{1,2}月\d{1,2}日\s*\d{1,2}:\d{2}\s*現在)/) ?? [])[1] ?? "";
+  const departures: any[] = [];
+  const arrivals: any[] = [];
+
+  const segments = text.split(/(?=定刻\s*\d{1,2}:\d{2})/);
+  for (const seg of segments) {
+    const head = seg.match(
+      /^定刻\s*(\d{1,2}:\d{2})(?:\s+(\d{1,2}:\d{2}))?\s*(行き先|出発地)\s*(.*?)\s*航空会社/
+    );
+    if (!head) continue;
+
+    const scheduled = head[1];
+    const changed = head[2] || scheduled;
+    const direction = head[3] === "行き先" ? "departure" : "arrival";
+    const place = String(head[4] || "").trim();
+    const flightText = (seg.match(/便名\s*([0-9A-Z/]+)/i) ?? [])[1] ?? "";
+    const numbers = flightText.split("/").map(x => x.trim()).filter(Boolean);
+    if (!numbers.length) continue;
+
+    const changeText = ((seg.match(/変更\s*(.*?)(?:備考|$)/) ?? [])[1] ?? "").trim();
+    const status = ((seg.match(/備考\s*(.*?)(?:経路検索|$)/) ?? [])[1] ?? "").trim();
+    const deltaMinutes = minuteDelta(scheduled, changed);
+    const timing =
+      deltaMinutes == null || deltaMinutes === 0
+        ? ""
+        : deltaMinutes > 0
+          ? `+${deltaMinutes}分`
+          : `${Math.abs(deltaMinutes)}分早`;
+
+    const item = {
+      scheduled,
+      changed,
+      place,
+      numbers,
+      status,
+      changeText,
+      deltaMinutes,
+      timing,
+    };
+    (direction === "departure" ? departures : arrivals).push(item);
+  }
+
+  return { ok: departures.length > 0 || arrivals.length > 0, updatedAt: updated, departures, arrivals };
+}
+
+async function getAirportLive() {
+  const html = await fetchTimeout(AIRPORT_LIVE_URL, true, 9000) as string;
+  return {
+    source: "松山空港公式",
+    ...parseAirportFlights(html),
+  };
+}
+
+function compactStatus(text: string) {
+  const s = String(text || "").replace(/\s+/g, " ").trim();
+  if (/通常運航|通常運行/.test(s)) return "通常運航";
+  if (/週末減便/.test(s)) return "週末減便";
+  if (/減便/.test(s)) return "減便";
+  if (/全便運休/.test(s)) return "全便運休";
+  if (/一部.*運休|一部の便を運休/.test(s)) return "一部便運休";
+  if (/休航/.test(s)) return "休航";
+  if (/欠航/.test(s)) return "欠航";
+  if (/遅延/.test(s)) return "遅延";
+  return s.slice(0, 32);
+}
+
+function statusAfter(text: string, marker: string) {
+  const i = text.indexOf(marker);
+  if (i < 0) return "";
+  const s = text.slice(i + marker.length, i + marker.length + 220);
+  const m = s.match(/([^。\n]{1,90}(?:。|$))/);
+  return compactStatus(m?.[1] || s);
+}
+
+async function getFerryLive() {
+  const [orangeR, boyoR, kokuR] = await Promise.allSettled([
+    fetchTimeout(ORANGE_FERRY_URL, true, 9000),
+    fetchTimeout(BOYO_FERRY_URL, true, 9000),
+    fetchTimeout(KOKU94_URL, true, 9000),
+  ]);
+
+  const items: any[] = [];
+
+  if (orangeR.status === "fulfilled") {
+    const t = flatText(orangeR.value as string);
+    const pairs = [
+      ["東予―大阪", "東予-大阪"],
+      ["八幡浜―臼杵（オレンジ）", "八幡浜-臼杵"],
+      ["新居浜―神戸", "新居浜-神戸"],
+    ];
+    for (const [name, marker] of pairs) {
+      const status = statusAfter(t, marker);
+      if (status) items.push({ name, status, source: "オレンジフェリー" });
+    }
+  }
+
+  if (boyoR.status === "fulfilled") {
+    const t = flatText(boyoR.value as string);
+    const status = compactStatus(
+      ((t.match(/本日の運航状況\s*([^。]{1,90}。?)/) ?? [])[1] ?? "")
+    );
+    if (status) items.push({ name: "三津浜―柳井", status, source: "防予フェリー" });
+  }
+
+  if (kokuR.status === "fulfilled") {
+    const t = flatText(kokuR.value as string);
+    const status = compactStatus(
+      ((t.match(/現在の運航状況\s*:?\s*([^。]{1,90})/) ?? [])[1] ?? "")
+    );
+    if (status) items.push({ name: "三崎―佐賀関", status, source: "国道九四フェリー" });
+  }
+
+  return {
+    ok: items.length > 0,
+    items,
+    unavailable: ["松山観光港―広島・呉", "中島航路"],
+  };
+}
+
+function routeSegment(text: string, marker: string) {
+  const i = text.indexOf(marker);
+  if (i < 0) return "";
+  return text.slice(i, i + 240);
+}
+
+function iyotetsuRouteStatus(text: string, marker: string) {
+  const s = routeSegment(text, marker);
+  if (!s) return "";
+  if (/通常運行/.test(s)) return "通常運行";
+  if (/毎日運行/.test(s)) return "毎日運行";
+  if (/特定日運行/.test(s)) return "特定日運行";
+  if (/一部の便の運行を再開/.test(s)) return "一部運行";
+  if (/一部の便を運休/.test(s)) return "一部便運休";
+  return "";
+}
+
+function jrRouteStatus(text: string, marker: string) {
+  const i = text.indexOf(marker);
+  if (i < 0) return "";
+  const before = text.slice(0, i);
+  const sections = [
+    ["全便運休中路線", "全便運休"],
+    ["減便中路線", "減便"],
+    ["通常運行している路線", "通常運行"],
+  ] as const;
+  let best = { pos: -1, status: "" };
+  for (const [key, status] of sections) {
+    const pos = before.lastIndexOf(key);
+    if (pos > best.pos) best = { pos, status };
+  }
+  return best.status;
+}
+
+async function getHighwayLive() {
+  const [iyoR, jrR] = await Promise.allSettled([
+    fetchTimeout(IYOTETSU_HIGHWAY_URL, true, 9000),
+    fetchTimeout(JR_HIGHWAY_URL, true, 9000),
+  ]);
+  const items: any[] = [];
+
+  if (iyoR.status === "fulfilled") {
+    const t = flatText(iyoR.value as string);
+    const routes = [
+      ["東京", "松山 - 東京線"],
+      ["名古屋", "松山 - 名古屋線"],
+      ["神戸", "松山 - 神戸線"],
+      ["岡山", "松山 - 岡山線"],
+      ["新尾道・福山", "松山 - 新尾道・福山線"],
+      ["福岡", "松山・今治 – 福岡線"],
+    ];
+    for (const [name, marker] of routes) {
+      const status = iyotetsuRouteStatus(t, marker);
+      if (status) items.push({ operator: "伊予鉄", route: name, status });
+    }
+  }
+
+  if (jrR.status === "fulfilled") {
+    const t = flatText(jrR.value as string);
+    const routes = [
+      ["大阪・京都", "松山エクスプレス号"],
+      ["高知", "なんごくエクスプレス号"],
+      ["岡山", "マドンナエクスプレス号"],
+      ["名古屋", "瀬戸内エクスプレス名古屋号"],
+      ["高松", "坊っちゃんエクスプレス号"],
+      ["徳島", "吉野川エクスプレス号"],
+    ];
+    for (const [name, marker] of routes) {
+      const status = jrRouteStatus(t, marker);
+      if (status) items.push({ operator: "JR四国バス", route: name, status });
+    }
+  }
+
+  return { ok: items.length > 0, items };
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: corsHeaders() });
   if (req.method !== "GET") {
@@ -344,24 +564,54 @@ Deno.serve(async (req) => {
   }
 
   const now = jstNow();
-  const [jr, bus] = await Promise.allSettled([getIchitsubo(now), getMadonna(now)]);
-
-  const body = {
-    ok: jr.status === "fulfilled" || bus.status === "fulfilled",
+  const scope = new URL(req.url).searchParams.get("scope") || "all";
+  const body: any = {
+    ok: true,
     generatedAtJst: now.iso,
-    pollAfterSeconds: 15,
-    ichitsubo:
+    pollAfterSeconds: scope === "fast" ? 15 : 60,
+  };
+
+  if (scope === "fast" || scope === "all") {
+    const [jr, bus] = await Promise.allSettled([getIchitsubo(now), getMadonna(now)]);
+    body.ichitsubo =
       jr.status === "fulfilled"
         ? jr.value
-        : { ok: false, alert: false, message: "", error: String(jr.reason) },
-    madonna:
+        : { ok: false, alert: false, message: "", error: String(jr.reason) };
+    body.madonna =
       bus.status === "fulfilled"
         ? bus.value
-        : { ok: false, alert: false, message: "", error: String(bus.reason) },
-  };
+        : { ok: false, alert: false, message: "", error: String(bus.reason) };
+    body.ok = body.ok && (jr.status === "fulfilled" || bus.status === "fulfilled");
+  }
+
+  if (scope === "slow" || scope === "all") {
+    const [airport, ferry, highway] = await Promise.allSettled([
+      getAirportLive(),
+      getFerryLive(),
+      getHighwayLive(),
+    ]);
+    body.airport =
+      airport.status === "fulfilled"
+        ? airport.value
+        : { ok: false, error: String(airport.reason) };
+    body.ferry =
+      ferry.status === "fulfilled"
+        ? ferry.value
+        : { ok: false, items: [], error: String(ferry.reason) };
+    body.highway =
+      highway.status === "fulfilled"
+        ? highway.value
+        : { ok: false, items: [], error: String(highway.reason) };
+    body.ok = body.ok && (
+      airport.status === "fulfilled" ||
+      ferry.status === "fulfilled" ||
+      highway.status === "fulfilled"
+    );
+  }
 
   return new Response(JSON.stringify(body), {
     status: body.ok ? 200 : 502,
     headers: corsHeaders(),
   });
 });
+
