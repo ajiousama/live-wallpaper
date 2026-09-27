@@ -1,4 +1,6 @@
 const JR_POSITIONS_URL = "https://jr-shikoku-api-data-storage.haruk.in/tmp/currentPositions.json";
+const P2P_HISTORY_URL = "https://api.p2pquake.net/v2/history?codes=551&codes=552&codes=556&limit=20";
+const JMA_EHIME_WARNING_URL = "https://www.jma.go.jp/bosai/warning/data/warning/380000.json";
 const JR_DIAGRAM_URL = "https://jr-shikoku-api-data-storage.haruk.in/tmp/diagram-today.json";
 const IYOTETSU_MADONNA_URL =
   "https://iyotetsu.bus-navigation.jp/wgsys/wgs/bus.htm?tabName=signpoleTab&selectedLandmarkCatCd=&from=%E3%83%9E%E3%83%89%E3%83%B3%E3%83%8A%E3%82%B9%E3%82%BF%E3%82%B8%E3%82%A2%E3%83%A0&fromType=1&to=&toType=&locale=ja&fromlat=&fromlng=&tolat=&tolng=&fromSignpoleKey=9895&routeLayoutCd=&bsid=2&fromBusStopCd=&toBusStopCd=&mapFlag=false&existYn=N&routeKey=&nextDiagramFlag=&diaRevisedDate=&timeTableDirevtionCd=&searchDate=&searchTime=&fromBusStopKey=&toBusStopKey=&tramSearchFlg=";
@@ -722,6 +724,157 @@ async function getDisasterLive() {
 }
 
 
+
+function parseJstTimestamp(s: unknown) {
+  const m = String(s ?? "").match(/^(\d{4})\/(\d{2})\/(\d{2})\s+(\d{2}):(\d{2}):(\d{2})/);
+  if (!m) return NaN;
+  return Date.parse(`${m[1]}-${m[2]}-${m[3]}T${m[4]}:${m[5]}:${m[6]}+09:00`);
+}
+
+function scaleText(v: unknown) {
+  const n = Number(v);
+  const map: Record<number,string> = {
+    0:"0",10:"1",20:"2",30:"3",40:"4",45:"5弱",50:"5強",55:"6弱",60:"6強",70:"7",99:"7"
+  };
+  return map[n] ?? (Number.isFinite(n) ? String(n) : "不明");
+}
+
+function haversineKm(lat1:number, lon1:number, lat2:number, lon2:number) {
+  const r = 6371;
+  const p = Math.PI / 180;
+  const dLat = (lat2-lat1)*p;
+  const dLon = (lon2-lon1)*p;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*p)*Math.cos(lat2*p)*Math.sin(dLon/2)**2;
+  return 2*r*Math.asin(Math.sqrt(a));
+}
+
+function tsunamiText(v: unknown) {
+  const s = String(v ?? "");
+  if (s === "None") return "津波の心配なし";
+  if (/Checking/.test(s)) return "津波情報を確認中";
+  if (/NonEffective/.test(s)) return "若干の海面変動の可能性";
+  if (/Watch/.test(s)) return "津波注意報";
+  if (/Warning/.test(s)) return "津波警報";
+  return s || "確認中";
+}
+
+async function getDisasterLive() {
+  const [historyR, warningR] = await Promise.allSettled([
+    fetchTimeout(P2P_HISTORY_URL, false, 7000),
+    fetchTimeout(JMA_EHIME_WARNING_URL, false, 7000),
+  ]);
+
+  const events = historyR.status === "fulfilled" && Array.isArray(historyR.value)
+    ? historyR.value as Record<string, any>[] : [];
+  const nowMs = Date.now();
+
+  const eews = events.filter(x => Number(x?.code) === 556 && !x?.test);
+  const latestEew = eews[0] || null;
+  let eew: any = null;
+  if (latestEew) {
+    const issueMs = parseJstTimestamp(latestEew?.issue?.time || latestEew?.time);
+    const ageMs = Number.isFinite(issueMs) ? nowMs - issueMs : Infinity;
+    const areas = Array.isArray(latestEew?.areas) ? latestEew.areas : [];
+    const matsuyamaArea = areas.find((a:any) =>
+      /愛媛/.test(String(a?.pref || "")) &&
+      /(中予|松山)/.test(String(a?.name || ""))
+    ) || areas.find((a:any) => /愛媛/.test(String(a?.pref || ""))) || null;
+    const relevant = !!matsuyamaArea;
+    const arrivalMs = parseJstTimestamp(matsuyamaArea?.arrivalTime);
+    eew = {
+      active: !latestEew?.cancelled && relevant && ageMs >= -30000 && ageMs <= 5*60*1000,
+      cancelled: !!latestEew?.cancelled,
+      serial: String(latestEew?.issue?.serial || ""),
+      issueTime: String(latestEew?.issue?.time || ""),
+      eventId: String(latestEew?.issue?.eventId || ""),
+      predictedScale: matsuyamaArea ? scaleText(matsuyamaArea?.scaleTo ?? matsuyamaArea?.scaleFrom) : "対象外",
+      area: String(matsuyamaArea?.name || ""),
+      arrivalTime: String(matsuyamaArea?.arrivalTime || ""),
+      secondsToArrival: Number.isFinite(arrivalMs) ? Math.round((arrivalMs-nowMs)/1000) : null,
+      kindCode: String(matsuyamaArea?.kindCode || ""),
+      hypocenter: {
+        name: String(latestEew?.earthquake?.hypocenter?.name || ""),
+        magnitude: Number(latestEew?.earthquake?.hypocenter?.magnitude ?? -1),
+        depth: Number(latestEew?.earthquake?.hypocenter?.depth ?? -1),
+        latitude: Number(latestEew?.earthquake?.hypocenter?.latitude ?? -200),
+        longitude: Number(latestEew?.earthquake?.hypocenter?.longitude ?? -200),
+      },
+    };
+  }
+
+  const quakes = events.filter(x => Number(x?.code) === 551 && x?.earthquake?.hypocenter);
+  let quake:any = null;
+  if (quakes.length) {
+    const q = quakes[0];
+    const h = q.earthquake.hypocenter || {};
+    const lat=Number(h.latitude), lon=Number(h.longitude);
+    const dist = Number.isFinite(lat) && Number.isFinite(lon) ? haversineKm(33.8392,132.7657,lat,lon) : null;
+    const qMs = parseJstTimestamp(q?.earthquake?.time || q?.issue?.time);
+    quake = {
+      recent: Number.isFinite(qMs) ? nowMs-qMs <= 30*60*1000 : false,
+      local: Number.isFinite(dist) ? dist <= 500 : false,
+      time: String(q?.earthquake?.time || ""),
+      issueTime: String(q?.issue?.time || ""),
+      hypocenter: String(h.name || ""),
+      magnitude: Number(h.magnitude ?? -1),
+      depth: Number(h.depth ?? -1),
+      maxScale: scaleText(q?.earthquake?.maxScale),
+      tsunami: tsunamiText(q?.earthquake?.domesticTsunami),
+      distanceKm: Number.isFinite(dist) ? Math.round(dist) : null,
+    };
+  }
+
+  const tsunamis = events.filter(x => Number(x?.code) === 552);
+  let tsunami:any = null;
+  if (tsunamis.length) {
+    const t = tsunamis[0];
+    const areas = Array.isArray(t?.areas) ? t.areas : [];
+    const ehime = areas.filter((a:any) => /愛媛|伊予灘|瀬戸内海沿岸|宇和海沿岸/.test(String(a?.name || "")));
+    tsunami = {
+      active: !t?.cancelled && ehime.some((a:any)=>!/Forecast/.test(String(a?.grade||""))),
+      cancelled: !!t?.cancelled,
+      issueTime: String(t?.issue?.time || ""),
+      areas: ehime.map((a:any)=>({
+        name:String(a?.name||""),
+        grade:String(a?.grade||""),
+        immediate:!!a?.immediate,
+        arrivalTime:String(a?.firstHeight?.arrivalTime||a?.firstHeight?.condition||""),
+        maxHeight:String(a?.maxHeight?.description||a?.maxHeight?.value||""),
+      }))
+    };
+  }
+
+  let weather:any = { active:false, headline:"", reportDatetime:"", publishingOffice:"松山地方気象台", warnings:[] };
+  if (warningR.status === "fulfilled" && warningR.value && typeof warningR.value === "object") {
+    const w:any = warningR.value;
+    const matsuyama = (Array.isArray(w?.areaTypes) ? w.areaTypes : [])
+      .flatMap((g:any)=>Array.isArray(g?.areas)?g.areas:[])
+      .find((a:any)=>String(a?.code||"")==="3820100");
+    const warnings = Array.isArray(matsuyama?.warnings) ? matsuyama.warnings : [];
+    const activeWarnings = warnings.filter((x:any)=> {
+      const st=String(x?.status||"");
+      return st && !/なし|解除/.test(st);
+    });
+    weather = {
+      active: activeWarnings.length>0,
+      headline:String(w?.headlineText||""),
+      reportDatetime:String(w?.reportDatetime||""),
+      publishingOffice:String(w?.publishingOffice||"松山地方気象台"),
+      warnings:activeWarnings.map((x:any)=>({code:String(x?.code||""),status:String(x?.status||"")}))
+    };
+  }
+
+  return {
+    ok: historyR.status === "fulfilled" || warningR.status === "fulfilled",
+    source: "P2P地震情報 / 気象庁",
+    eew,
+    quake,
+    tsunami,
+    weather,
+    active: !!(eew?.active || tsunami?.active || weather?.active),
+  };
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: corsHeaders() });
   if (req.method !== "GET") {
@@ -758,6 +911,14 @@ Deno.serve(async (req) => {
       ? disaster[0].value
       : { ok:false, eew:null, tsunami:null, recentEarthquake:null, weather:{ok:false,active:[]}, error:String(disaster[0].reason) };
     body.ok = body.ok && disaster[0].status === "fulfilled";
+  }
+
+  if (scope === "disaster" || scope === "all") {
+    try {
+      body.disaster = await getDisasterLive();
+    } catch (e) {
+      body.disaster = { ok:false, active:false, error:String(e) };
+    }
   }
 
   if (scope === "slow" || scope === "all") {
