@@ -1183,11 +1183,11 @@
 
   function busDestinationHtml(r,badges='') {
     const lines=splitDestinationLines(busDisplayDestination(r));
-    return \`${lines.map((x,i)=>{
+    return lines.map((x,i)=>{
       const clean=String(x).replace(/\s*行$/,'');
-      const label=i===0 ? \`${clean} 行\` : clean;
-      return \`<span class="dest-line">${label}${i===0&&badges?\` ${badges}\`:''}</span>\`;
-    }).join('')}\`;
+      const label=i===0 ? clean+' 行' : clean;
+      return '<span class="dest-line">'+label+(i===0&&badges?' '+badges:'')+'</span>';
+    }).join('');
   }
   function busArrivalContinuationLabel(r) {
     if (!r.continueTo) return '';
