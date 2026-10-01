@@ -1222,12 +1222,21 @@
     const track=box.querySelector(':scope > .overflow-scroll-track');
     if(!track) return;
     const boxWidth=box.getBoundingClientRect().width;
-    const trackWidth=track.scrollWidth || track.getBoundingClientRect().width;
+    const trackWidth=Math.max(track.scrollWidth,track.getBoundingClientRect().width);
     if(!(boxWidth>0)) return;
-    const over=trackWidth > boxWidth + 1;
+    const overflowPx=Math.max(0,trackWidth-boxWidth);
+    // Ignore only sub-pixel/font-rendering noise. Real overflow always scrolls.
+    const over=overflowPx > 2;
     box.classList.toggle('is-overflow', over);
-    if(over) box.style.setProperty('--overflow-distance', `${Math.ceil(trackWidth-boxWidth+36)}px`);
-    else box.style.removeProperty('--overflow-distance');
+    if(over) {
+      const distance=Math.ceil(overflowPx+1);
+      const duration=Math.max(7,Math.min(16,6+distance/24));
+      box.style.setProperty('--overflow-distance', `${distance}px`);
+      box.style.setProperty('--overflow-duration', `${duration.toFixed(1)}s`);
+    } else {
+      box.style.removeProperty('--overflow-distance');
+      box.style.removeProperty('--overflow-duration');
+    }
   }
 
   function activateOverflowScroll(root=document) {
