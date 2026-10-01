@@ -1262,8 +1262,8 @@
         const depDay = r.originDepartureDay ? `${r.originDepartureDay}` : '';
         row.innerHTML = `
           <div class="cell main arrival-origin"><span class="arrival-place">${overflowScrollHtml(r.origin,'bus-origin-scroll')} ${firstBadge}${finalBadge}</span><span class="arrival-departure-time">${depDay}${r.originDepartureTime || '—'}出発</span></div>
-          <div class="cell service">${busOperatorHtml(r)}</div>
           <div class="cell sub arrival-terminal-wrap"><span class="arrival-terminal">${r.arrivalTerminal}</span><span class="arrival-continuation">${busArrivalContinuationLabel(r)}</span></div>
+          <div class="cell service">${busOperatorHtml(r)}</div>
           <div class="cell time">${r.arrivalTerminalTime}頃予定</div>`;
       }
       root.appendChild(row);
@@ -1315,7 +1315,7 @@
       : '<span>出発地</span><span>航空会社 / 便名</span><span>区分</span><span>到着時刻</span>';
     busHead.innerHTML = dep
       ? '<span>時刻 / 終着</span><span>運行会社</span><span>行先</span><span>乗車場所 / 経由</span>'
-      : '<span>出発地</span><span>運行会社</span><span>到着場所</span><span>到着時刻</span>';
+      : '<span>出発地</span><span>到着場所</span><span>運行会社</span><span>到着時刻</span>';
     portHead.innerHTML = dep
       ? '<span>時刻 / 到着</span><span>出発港 → 行先 / 寄港</span><span>運航会社 / 船種</span>'
       : '<span>出発港 → 到着港</span><span>運航会社 / 船種</span><span>到着時刻</span>';
