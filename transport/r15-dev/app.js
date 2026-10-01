@@ -1163,8 +1163,8 @@
     const north=auxUpcoming('ichitsubo','north',now,1)[0]||null;
     const south=auxUpcoming('ichitsubo','south',now,1)[0]||null;
     const items=[];
-    if(north){const badges=`${north.isNextDayStart?badgeHtml('first'):''}${north.isFinal?badgeHtml('final','最終列車'):''}`;items.push(`JR市坪駅 松山方面　次列車 ${north.time}　普通 ${railDestLabel(north)}行 ${badges}`);} else items.push('JR市坪駅 松山方面｜運行終了');
-    if(south){const badges=`${south.isNextDayStart?badgeHtml('first'):''}${south.isFinal?badgeHtml('final','最終列車'):''}`;items.push(`JR市坪駅 宇和島方面　次列車 ${south.time}　普通 ${railDestLabel(south)}行 ${badges}`);} else items.push('JR市坪駅 宇和島方面｜運行終了');
+    if(north){const badges=`${north.isNextDayStart?badgeHtml('first'):''}${north.isFinal?badgeHtml('final','最終'):''}`;items.push(`JR市坪駅 松山方面　次列車 ${north.time}　普通 ${railDestLabel(north)}行 ${badges}`);} else items.push('JR市坪駅 松山方面｜運行終了');
+    if(south){const badges=`${south.isNextDayStart?badgeHtml('first'):''}${south.isFinal?badgeHtml('final','最終'):''}`;items.push(`JR市坪駅 宇和島方面　次列車 ${south.time}　普通 ${railDestLabel(south)}行 ${badges}`);} else items.push('JR市坪駅 宇和島方面｜運行終了');
     return [...items,...specials];
   }
 
