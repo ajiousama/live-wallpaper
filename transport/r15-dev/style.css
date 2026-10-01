@@ -761,3 +761,111 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
   from{transform:translateX(0)}
   to{transform:translateX(calc(-1 * var(--overflow-distance,0px)))}
 }
+
+
+/* R15 DEV: disaster information is one full-screen alert at a time.
+   When multiple alert types are active, app.js rotates them every 20 seconds. */
+.disaster-overlay.single-focus{
+  padding:14px!important;
+}
+.disaster-overlay.single-focus .disaster-grid{
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+}
+.disaster-overlay.single-focus .disaster-card{
+  display:none!important;
+  width:100%!important;
+  height:100%!important;
+  min-height:0!important;
+  border-width:4px!important;
+}
+.disaster-overlay.single-focus.focus-summary .disaster-summary,
+.disaster-overlay.single-focus.focus-eew .disaster-eew,
+.disaster-overlay.single-focus.focus-weather .disaster-weather,
+.disaster-overlay.single-focus.focus-tsunami .disaster-tsunami{
+  display:grid!important;
+}
+.disaster-overlay.single-focus .disaster-card{
+  grid-template-rows:78px 1fr 48px!important;
+}
+.disaster-overlay.single-focus .disaster-summary{
+  grid-template-rows:78px 1fr!important;
+}
+.disaster-overlay.single-focus .disaster-head{
+  padding:0 28px!important;
+  gap:16px!important;
+}
+.disaster-overlay.single-focus .disaster-head span{
+  font-size:42px!important;
+}
+.disaster-overlay.single-focus .disaster-head strong{
+  font-size:38px!important;
+}
+.disaster-overlay.single-focus .disaster-head em{
+  font-size:22px!important;
+}
+.disaster-overlay.single-focus .disaster-body{
+  padding:28px 36px!important;
+}
+.disaster-overlay.single-focus .disaster-mainline{
+  font-size:54px!important;
+  margin-bottom:28px!important;
+}
+.disaster-overlay.single-focus .quake-summary{
+  font-size:36px!important;
+  line-height:1.45!important;
+}
+.disaster-overlay.single-focus .disaster-source{
+  left:36px!important;
+  bottom:28px!important;
+  font-size:17px!important;
+}
+.disaster-overlay.single-focus .eew-body{
+  grid-template-columns:38% 1fr!important;
+  grid-template-rows:1fr auto!important;
+  gap:22px 28px!important;
+}
+.disaster-overlay.single-focus .eew-scale-wrap span{
+  font-size:26px!important;
+}
+.disaster-overlay.single-focus .eew-scale-wrap b{
+  font-size:190px!important;
+}
+.disaster-overlay.single-focus .eew-countdown span{
+  font-size:32px!important;
+}
+.disaster-overlay.single-focus .eew-countdown b{
+  font-size:100px!important;
+}
+.disaster-overlay.single-focus .eew-detail{
+  font-size:27px!important;
+  white-space:normal!important;
+  line-height:1.35!important;
+}
+.disaster-overlay.single-focus .weather-title{
+  font-size:52px!important;
+  line-height:1.3!important;
+  margin-bottom:30px!important;
+}
+.disaster-overlay.single-focus .weather-list{
+  font-size:38px!important;
+  line-height:1.5!important;
+}
+.disaster-overlay.single-focus .weather-issued{
+  margin-top:30px!important;
+  font-size:22px!important;
+}
+.disaster-overlay.single-focus .tsunami-main{
+  font-size:58px!important;
+  line-height:1.3!important;
+}
+.disaster-overlay.single-focus .tsunami-detail{
+  margin-top:38px!important;
+  font-size:38px!important;
+  line-height:1.5!important;
+}
+.disaster-overlay.single-focus .audio-cue{
+  padding:0 24px!important;
+  font-size:17px!important;
+}
