@@ -1638,7 +1638,7 @@
       const row = document.createElement('div');
       row.className = `row${r.isFinal?' is-final':''}${dep && isDepartSoon(r, japanNow()) ? ' depart-soon' : ''}`;
       const op = portOperator(r);
-      const firstBadge = r.isNextDayStart ? badgeHtml('first', dep ? '始発' : '初便') : '';
+      const firstBadge = '';
       const finalBadge = dep && r.isFinal ? badgeHtml('final','最終便') : '';
       const route = portRouteHtml(r, dep ? 'departure' : 'arrival');
       const service = `<div class="service-wrap"><span class="name">${op.name}</span><span class="code">${op.type}</span></div>`;
