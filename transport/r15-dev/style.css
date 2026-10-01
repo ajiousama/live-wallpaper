@@ -558,3 +558,42 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
   min-width:max-content;
   white-space:nowrap;
 }
+
+
+/* R15 DEV: global overflow-scroll policy */
+.auto-overflow{
+  display:block!important;
+  width:100%;
+  max-width:100%;
+  min-width:0;
+  overflow:hidden!important;
+  white-space:nowrap!important;
+}
+.auto-overflow .overflow-scroll-track{
+  display:inline-block;
+  min-width:max-content;
+  white-space:nowrap!important;
+}
+.bus-destination-line,
+.arrival-terminal,
+.arrival-continuation,
+.arrival-departure-time,
+.bus-terminal-time,
+.port-dest-main,
+.port-via-line,
+.port-arrival-line,
+.panel-air .air-place,
+.service-wrap .name,
+.service-wrap .code,
+.operator-wrap span,
+.rail-primary .cell.main,
+.rail-primary .kindtxt{
+  min-width:0!important;
+  max-width:100%!important;
+  overflow:hidden!important;
+  text-overflow:clip!important;
+  white-space:nowrap!important;
+}
+.panel-bus .bus-destination-line{
+  text-overflow:clip!important;
+}
