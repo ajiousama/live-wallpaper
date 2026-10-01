@@ -1240,16 +1240,9 @@
     return {items:[liveAlertSpan(pick.text,'airport-bus-alert',strong)],className:`live-takeover airbus-live${strong?' strong-live':''}${pick.text.length>23?' fast-scroll':''}`};
   }
   function airportAccessTickerItems(now) {
-    const takeover=airportBusTakeover(now); if(takeover)return takeover.items;
-    const weekend=now.dow===0||now.dow===6;
-    const ordinary=weekend?ORDINARY_WEEKEND_AIRPORT_TO_CITY:ORDINARY_WEEKDAY_AIRPORT_TO_CITY;
-    const services=[];
-    LIMO_AIRPORT_TO_CITY.forEach((t,i)=>services.push({time:t,minutes:toMinutes(t),text:`松山空港 ${t}発 → JR松山駅前・松山市駅・大街道・道後方面`,isFinal:i===LIMO_AIRPORT_TO_CITY.length-1}));
-    ordinary.forEach((pair,i)=>services.push({time:pair[0],minutes:toMinutes(pair[0]),text:`松山空港 ${pair[0]}発 → 松山市駅 ${pair[1]}着`,isFinal:i===ordinary.length-1}));
-    services.sort((a,b)=>a.minutes-b.minutes);
-    const upcoming=services.filter(x=>x.minutes>=now.minutes).slice(0,6);
-    if(!upcoming.length)return ['松山空港発バス｜本日の運行は終了しました'];
-    return upcoming.map(x=>x.text);
+    // Airport lower ticker is reserved for airport/flight information.
+    // Do not output limousine-bus or ordinary-route bus schedules here.
+    return [''];
   }
 
   const scrollState = {};
@@ -1872,7 +1865,7 @@
   function currentTakeoverClass(key, now) {
     if(key==='rail') return ichitsuboTakeover(now)?.className||'';
     if(key==='bus') return madonnaTakeover(now)?.className||'';
-    if(key==='air') return airportBusTakeover(now)?.className||'';
+    if(key==='air') return '';
     return '';
   }
   function ferryTickerItems() {
