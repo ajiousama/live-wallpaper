@@ -1284,20 +1284,36 @@
   function renderRail(rows) {
     const root = $('rail-rows'); root.innerHTML = '';
     root.classList.remove('rail-end');
-    const visible = rows.slice(0, 3);
+    const now = japanNow();
+
+    // Live deadhead arrivals are real train movements too. Show them all day,
+    // mixed chronologically with the ordinary/limited-service rows.
+    const deadheads = matsuyamaDeadheadArrivals(now).map(x => ({
+      _deadhead: true,
+      _sortMinutes: (() => {
+        let d=toMinutes(x.arrival)-now.minutes;
+        if(d < -720) d += 1440;
+        if(d > 720) d -= 1440;
+        return now.minutes + d;
+      })(),
+      data: x
+    }));
+    const services = rows.map(r => ({
+      _deadhead: false,
+      _sortMinutes: (() => {
+        const t=padTime(r.time||'');
+        let d=toMinutes(t)-now.minutes;
+        if(d < -720) d += 1440;
+        if(d > 720) d -= 1440;
+        return now.minutes + d;
+      })(),
+      data: r
+    }));
+    const visible = [...services, ...deadheads]
+      .sort((a,b)=>a._sortMinutes-b._sortMinutes)
+      .slice(0,3);
+
     if (!visible.length) {
-      const now = japanNow();
-      const deadheads=matsuyamaDeadheadArrivals(now).slice(0,3);
-      if(deadheads.length){
-        deadheads.forEach(x=>appendMatsuyamaDeadheadRow(root,x));
-        while(root.children.length<3){
-          const row=document.createElement('div'); row.className='row rail-row placeholder blank';
-          row.innerHTML=`<div class="rail-primary"><div class="cell"></div><div class="cell time"></div><div class="cell"></div></div><div class="rail-detail"></div>`;
-          root.appendChild(row);
-        }
-        activatePanelOverflow(root);
-        return;
-      }
       const last = lastRailMovement(now);
       const mode = currentRailDir() === 'north' ? 'NORTHBOUND — 今治方面 —' : 'SOUTHBOUND — 宇和島方面 —';
       const serviceLabel = last ? (last.kind === 'local' ? '普通' : (last.kind === 'sightseeing' ? `観光 ${last.service}` : `特急 ${last.service}`)) : '—';
@@ -1305,11 +1321,16 @@
       root.classList.add('rail-end');
       root.innerHTML = `<div class="rail-end-state"><div class="rail-end-mode">🚆 ${mode}</div><div class="rail-end-message">本日の列車は終了しました</div>${detail ? `<div class="rail-end-detail">${detail}</div>` : ''}</div>`;
     } else {
-      visible.forEach(r => {
-        const row = document.createElement('div'); row.className = `row rail-row${r.isFinal ? ' is-final' : ''}${isDepartSoon(r, japanNow()) ? ' depart-soon' : ''}`;
+      visible.forEach(item => {
+        if(item._deadhead){
+          appendMatsuyamaDeadheadRow(root,item.data);
+          return;
+        }
+        const r=item.data;
+        const row = document.createElement('div'); row.className = `row rail-row${r.isFinal ? ' is-final' : ''}${isDepartSoon(r, now) ? ' depart-soon' : ''}`;
         const kind = r.kind === 'limited' ? 'limited' : r.kind === 'sightseeing' ? 'tourist' : 'local';
         const label = kind === 'limited' ? `特急 ${r.service}` : kind === 'tourist' ? `観光 ${r.service}` : '普通電車';
-        const badges = `${r.isNextDayStart ? badgeHtml('first') : ''}${railSpecialFinalBadge(r,japanNow())}`;
+        const badges = `${r.isNextDayStart ? badgeHtml('first') : ''}${railSpecialFinalBadge(r,now)}`;
         row.innerHTML = `
           <div class="rail-primary">
             <div class="cell rail-service ${kind}"><span class="kindtxt">${label}</span></div>
