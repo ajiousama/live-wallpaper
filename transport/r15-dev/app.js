@@ -994,13 +994,13 @@
     LIMO_AIRPORT_TO_CITY.forEach((t,i)=>{
       const d=toMinutes(t)-now.minutes; if(d>=-1&&d<=4){
         const final=i===LIMO_AIRPORT_TO_CITY.length-1; const action=d<=2?'発車します':'まもなく乗車できます';
-        alerts.push({time:t,text:final?`まもなく最終バス 道後温泉方面行きリムジンバスが${action}。`:`まもなく道後温泉方面行きリムジンバスが${action}。`,diff:d});
+        alerts.push({time:t,text:final?`まもなく道後温泉方面行きのバスが${action}。`:`まもなく道後温泉方面行きのバスが${action}。`,diff:d});
       }
     });
     ordinary.forEach((pair,i)=>{
       const d=toMinutes(pair[0])-now.minutes; if(d>=-1&&d<=4){
         const final=i===ordinary.length-1; const action=d<=2?'発車します':'まもなく乗車できます';
-        alerts.push({time:pair[0],text:final?`まもなく最終バス 松山市駅行き普通便が${action}。`:`まもなく松山市駅行き普通便が${action}。`,diff:d});
+        alerts.push({time:pair[0],text:final?`まもなく松山市駅行きのバスが${action}。`:`まもなく松山市駅行きのバスが${action}。`,diff:d});
       }
     });
     if(!alerts.length)return null; alerts.sort((a,b)=>a.diff-b.diff);
@@ -1012,12 +1012,12 @@
     const weekend=now.dow===0||now.dow===6;
     const ordinary=weekend?ORDINARY_WEEKEND_AIRPORT_TO_CITY:ORDINARY_WEEKDAY_AIRPORT_TO_CITY;
     const services=[];
-    LIMO_AIRPORT_TO_CITY.forEach((t,i)=>services.push({time:t,minutes:toMinutes(t),kind:'リムジン',text:`松山空港 ${t}発 → JR松山駅前・松山市駅・大街道/道後方面`,isFinal:i===LIMO_AIRPORT_TO_CITY.length-1}));
-    ordinary.forEach((pair,i)=>services.push({time:pair[0],minutes:toMinutes(pair[0]),kind:'普通便',text:`松山空港 ${pair[0]}発 → 松山市駅 ${pair[1]}着`,isFinal:i===ordinary.length-1}));
-    services.sort((a,b)=>a.minutes-b.minutes||a.kind.localeCompare(b.kind,'ja'));
+    LIMO_AIRPORT_TO_CITY.forEach((t,i)=>services.push({time:t,minutes:toMinutes(t),text:`松山空港 ${t}発 → JR松山駅前・松山市駅・大街道・道後方面`,isFinal:i===LIMO_AIRPORT_TO_CITY.length-1}));
+    ordinary.forEach((pair,i)=>services.push({time:pair[0],minutes:toMinutes(pair[0]),text:`松山空港 ${pair[0]}発 → 松山市駅 ${pair[1]}着`,isFinal:i===ordinary.length-1}));
+    services.sort((a,b)=>a.minutes-b.minutes);
     const upcoming=services.filter(x=>x.minutes>=now.minutes).slice(0,6);
-    if(!upcoming.length)return ['松山空港発 リムジン｜運行終了','松山空港発 普通便｜運行終了'];
-    return upcoming.map(x=>`${x.kind}　${x.text}${x.isFinal?' '+badgeHtml('final','最終バス'):''}`);
+    if(!upcoming.length)return ['松山空港発バス｜本日の運行は終了しました'];
+    return upcoming.map(x=>x.text);
   }
 
   const scrollState = {};
