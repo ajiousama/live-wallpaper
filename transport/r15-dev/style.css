@@ -724,3 +724,40 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
   white-space:nowrap;
   text-align:center;
 }
+
+
+/* R15 DEV: seamless one-direction overflow marquee */
+.overflow-scroll{
+  display:block!important;
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  overflow:hidden!important;
+  white-space:nowrap!important;
+}
+.overflow-scroll > .overflow-scroll-track{
+  display:inline-flex!important;
+  align-items:center;
+  width:max-content!important;
+  min-width:max-content!important;
+  max-width:none!important;
+  gap:32px!important;
+  white-space:nowrap!important;
+  transform:translateX(0);
+  will-change:transform;
+  animation:none!important;
+}
+.overflow-scroll-copy{
+  display:inline-block;
+  flex:0 0 auto;
+  width:max-content;
+  min-width:max-content;
+  white-space:nowrap!important;
+}
+.overflow-scroll.is-overflow > .overflow-scroll-track{
+  animation:overflow-marquee-continuous var(--overflow-duration,12s) linear infinite!important;
+}
+@keyframes overflow-marquee-continuous{
+  from{transform:translateX(0)}
+  to{transform:translateX(calc(-1 * var(--overflow-distance,0px)))}
+}
