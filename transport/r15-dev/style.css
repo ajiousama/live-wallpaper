@@ -1192,3 +1192,46 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
 .panel-air .table-head span:nth-child(4){
   font-size:10px!important;
 }
+
+
+/* Compact ferry operator marks */
+.panel-port .ferry-service-wrap{
+  align-items:flex-start;
+  justify-content:center;
+  gap:2px;
+}
+.ferry-mini-logo{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:42px;
+  max-width:112px;
+  height:19px;
+  padding:0 6px;
+  border-radius:3px;
+  box-sizing:border-box;
+  font-size:10.5px;
+  font-weight:900;
+  line-height:1;
+  letter-spacing:.03em;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:clip;
+  flex:0 0 auto;
+}
+.ferry-logo-orange{background:#ff8a1f;color:#fff;border:1px solid #ffc27a}
+.ferry-logo-nakajima{background:#e9fff8;color:#00695f;border:1px solid #80cbc4}
+.ferry-logo-boyo{background:#eef6ff;color:#0057a8;border:1px solid #8fc1f0}
+.ferry-logo-94{background:#fff6df;color:#8a4d00;border:1px solid #f0bf68}
+.ferry-logo-uwajima{background:#edf4ff;color:#184a9b;border:1px solid #9bb8e8}
+.ferry-logo-jumbo{background:#fff3f6;color:#b00045;border:1px solid #e49ab8}
+.ferry-logo-imabari{background:#eefcff;color:#006b7d;border:1px solid #8fd4df}
+.ferry-logo-blue{background:#e8f3ff;color:#005db4;border:1px solid #8dbfea}
+.ferry-logo-geiyo{background:#f3fff0;color:#2e7d32;border:1px solid #9fd49f}
+.ferry-logo-setouchi{background:#effcff;color:#006e7a;border:1px solid #8ed3da;font-size:9.5px}
+.ferry-logo-aoshima{background:#f6f4ff;color:#5640a8;border:1px solid #b7aae8}
+.ferry-logo-niihama{background:#f3f6f8;color:#455a64;border:1px solid #aab8bf}
+.panel-port .ferry-service-wrap .code{
+  margin-top:0!important;
+  font-size:9px!important;
+}
