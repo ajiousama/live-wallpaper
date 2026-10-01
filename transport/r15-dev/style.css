@@ -1019,3 +1019,76 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
   bottom:32px!important;
   max-width:48%;
 }
+
+
+/* R15: stable BUS arrival columns */
+.panel-bus.arrival-columns .table-head,
+.panel-bus.arrival-columns #bus-rows .bus-arrival-row{
+  grid-template-columns:minmax(0,1fr) 118px 150px 94px!important;
+  column-gap:8px!important;
+}
+.panel-bus.arrival-columns #bus-rows .bus-arrival-row > .cell{
+  min-width:0!important;
+  max-width:100%!important;
+  overflow:hidden!important;
+}
+.panel-bus.arrival-columns .arrival-origin,
+.panel-bus.arrival-columns .arrival-terminal-wrap,
+.panel-bus.arrival-columns .bus-arrival-operator{
+  min-width:0!important;
+  width:100%!important;
+  max-width:100%!important;
+  overflow:hidden!important;
+}
+.panel-bus.arrival-columns .arrival-place,
+.panel-bus.arrival-columns .arrival-terminal{
+  display:block!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+  overflow:hidden!important;
+  text-overflow:clip!important;
+  white-space:nowrap!important;
+}
+.panel-bus.arrival-columns .bus-arrival-operator .operator-wrap{
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  overflow:hidden!important;
+}
+.panel-bus.arrival-columns .bus-arrival-operator .operator-wrap span{
+  display:block!important;
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  overflow:hidden!important;
+  text-overflow:clip!important;
+  white-space:nowrap!important;
+  font-size:10.4px!important;
+  line-height:1.03!important;
+}
+.panel-bus.arrival-columns .bus-arrival-operator .operator-wrap.lines-3 span{
+  font-size:9.4px!important;
+}
+.panel-bus.arrival-columns .bus-arrival-time{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+  padding-left:0!important;
+  padding-right:2px!important;
+  font-size:12.5px!important;
+  font-weight:800!important;
+  letter-spacing:-.025em!important;
+  white-space:nowrap!important;
+  overflow:visible!important;
+}
+.panel-bus.arrival-columns .arrival-continuation,
+.panel-bus.arrival-columns .arrival-departure-time{
+  max-width:100%!important;
+  overflow:hidden!important;
+  text-overflow:clip!important;
+  white-space:nowrap!important;
+}
