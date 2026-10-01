@@ -418,7 +418,7 @@
     }
     const terminal = seq[seq.length - 1];
     const arrivalNextDay=toMinutes(seq[0].time)<toMinutes(record.time);
-    return { ...record, actualOperator: record.arrivalActualOperator || '', syntheticArrival: true, direction: 'arrival', time: seq[0].time, origin: record.dest, originDepartureTime: record.time, arrivalSequence: seq, arrivalTerminal: terminal.name, arrivalTerminalTime: terminal.time, estimatedArrival: true, _arrivalNextDay:arrivalNextDay };
+    return { ...record, actualOperator: record.arrivalActualOperator || record.actualOperator || '', syntheticArrival: true, direction: 'arrival', time: seq[0].time, origin: record.dest, originDepartureTime: record.time, arrivalSequence: seq, arrivalTerminal: terminal.name, arrivalTerminalTime: terminal.time, estimatedArrival: true, _arrivalNextDay:arrivalNextDay };
   }
   function synthPortArrival(record) {
     const originTime = record.reverseTime || record.time;
@@ -1218,7 +1218,7 @@
   };
   function busOperatorLabel(r) {
     if (r.actualOperator) return r.actualOperator;
-    if (r.syntheticArrival && BUS_JOINT_OPERATORS[r.source]) return BUS_JOINT_OPERATORS[r.source];
+    if (r.syntheticArrival && BUS_JOINT_OPERATORS[r.source]) return '共同運行';
     return r.service || '';
   }
   const BUS_OPERATOR_TOKEN = {
