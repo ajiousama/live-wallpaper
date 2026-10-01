@@ -12,6 +12,8 @@ type Route = {
   cityTime: string;
   matsuyamaIndex: number;
   matsuyamaTime: string;
+  matsuyamaDepartureIndex: number;
+  matsuyamaDepartureTime: string;
   origin: string;
   destination: string;
 };
@@ -113,6 +115,14 @@ function parseDiagramRecord(trainNum: string, raw: unknown): Route | null {
   );
   const matsuyamaIndex = matsuyamaArrivalIndex >= 0 ? matsuyamaArrivalIndex : matsuyamaAnyIndex;
   const matsuyamaTime = matsuyamaIndex >= 0 ? String(points[matsuyamaIndex]?.time ?? "") : "";
+  const matsuyamaDepartureIndex = points.findIndex((p) =>
+    normalizeStationName(p.station) === "松山" &&
+    /発/.test(p.event) &&
+    /^\d{1,2}:\d{2}$/.test(p.time)
+  );
+  const matsuyamaDepartureTime = matsuyamaDepartureIndex >= 0
+    ? String(points[matsuyamaDepartureIndex]?.time ?? "")
+    : "";
   const origin = points.find((p) => normalizeStationName(p.station));
   const terminal =
     [...points].reverse().find((p) => p.station && p.station !== "松山基地") ?? points[points.length - 1];
@@ -125,6 +135,8 @@ function parseDiagramRecord(trainNum: string, raw: unknown): Route | null {
     cityTime: cityTimePoint?.time ?? "",
     matsuyamaIndex,
     matsuyamaTime,
+    matsuyamaDepartureIndex,
+    matsuyamaDepartureTime,
     origin: normalizeStationName(origin?.station ?? ""),
     destination: normalizeStationName(terminal?.station ?? ""),
   };
@@ -150,6 +162,41 @@ async function loadDiagram() {
     diagramCache.at = now;
   }
   return map;
+}
+
+function matsuyamaRouteDirection(route: Route) {
+  const idx = route.matsuyamaDepartureIndex;
+  if (idx < 0) return "";
+  const here = normalizeStationName(route.points[idx]?.station);
+  const next = route.points.slice(idx + 1)
+    .map((p) => normalizeStationName(p.station))
+    .find((s) => s && s !== here) ?? "";
+  if (/^(市坪|北伊予|南伊予|伊予横田|鳥ノ木|伊予市|向井原|内子|伊予大洲|八幡浜|宇和島)$/.test(next)) return "south";
+  if (/^(三津浜|伊予和気|堀江|光洋台|粟井|柳原|伊予北条|今治|伊予西条|新居浜|観音寺|高松|岡山)$/.test(next)) return "north";
+  return "";
+}
+
+function exactStopsAfterMatsuyama(route: Route) {
+  const idx = route.matsuyamaDepartureIndex;
+  if (idx < 0) return [];
+  const out: { station: string; time: string }[] = [];
+  const seen = new Set<string>();
+  for (const p of route.points.slice(idx + 1)) {
+    const station = normalizeStationName(p.station);
+    if (!station || station === "松山基地" || seen.has(station)) continue;
+    if (/通/.test(p.event) || !/着|発/.test(p.event) || !/^\d{1,2}:\d{2}$/.test(p.time)) continue;
+    // Prefer the arrival event when both arrival/departure points exist.
+    const same = route.points.slice(idx + 1).filter((q) =>
+      normalizeStationName(q.station) === station &&
+      !/通/.test(q.event) &&
+      /着/.test(q.event) &&
+      /^\d{1,2}:\d{2}$/.test(q.time)
+    );
+    const t = same[0]?.time || p.time;
+    out.push({ station, time: String(t) });
+    seen.add(station);
+  }
+  return out;
 }
 
 function stationIndexes(route: Route, station: string) {
@@ -324,6 +371,25 @@ async function getIchitsubo(now: { minutes: number }) {
     };
   }).filter(Boolean).sort((a: any, b: any) => (a.minutesToMatsuyama ?? 999) - (b.minutesToMatsuyama ?? 999));
 
+  const matsuyamaSchedule = [...diagram.values()].map((route) => {
+    if (route.matsuyamaDepartureIndex < 0 || !/^\d{1,2}:\d{2}$/.test(route.matsuyamaDepartureTime)) return null;
+    const num = String(route.trainNum || "").trim();
+    if (/^[0-9]{1,4}[AER]$/i.test(num) || /^(?:3072|3073)$/.test(num)) return null;
+    const direction = matsuyamaRouteDirection(route);
+    if (!direction) return null;
+
+    const stops = exactStopsAfterMatsuyama(route);
+    const terminal = stops.length ? stops[stops.length - 1] : null;
+    return {
+      trainNum: num,
+      departure: route.matsuyamaDepartureTime,
+      direction,
+      destination: route.destination || terminal?.station || "",
+      stops,
+      terminal,
+    };
+  }).filter(Boolean).sort((a: any, b: any) => toMinutes(a.departure) - toMinutes(b.departure));
+
   return {
     ok: true,
     source: "JR四国非公式アプリ系公開データ",
@@ -331,6 +397,7 @@ async function getIchitsubo(now: { minutes: number }) {
     approaching,
     matsuyamaDeadheads,
     matsuyamaFreights,
+    matsuyamaSchedule,
     alert: approaching.length > 0,
     message: (approaching[0] as any)?.message ?? "",
   };
