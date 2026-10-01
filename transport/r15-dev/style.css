@@ -1400,3 +1400,207 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
   text-align:right!important;
   padding-right:2px!important;
 }
+
+
+/* BRAND PASS: closer to official identities without external logo image dependencies */
+
+/* Airlines */
+.air-mini-logo-jal{
+  position:relative!important;
+  background:#fff!important;
+  color:#c90019!important;
+  border:1px solid rgba(255,255,255,.95)!important;
+  padding-left:15px!important;
+  font-family:Arial,Helvetica,sans-serif!important;
+  font-style:italic!important;
+  letter-spacing:-.04em!important;
+}
+.air-mini-logo-jal::before{
+  content:"";
+  position:absolute;
+  left:4px;
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#c90019;
+}
+.air-mini-logo-ana{
+  position:relative!important;
+  overflow:hidden!important;
+  background:#005bac!important;
+  color:#fff!important;
+  border:1px solid #4b91d0!important;
+  font-family:Arial,Helvetica,sans-serif!important;
+  font-style:italic!important;
+  letter-spacing:-.03em!important;
+}
+.air-mini-logo-ana::after{
+  content:"";
+  position:absolute;
+  right:-5px;
+  top:-4px;
+  width:13px;
+  height:28px;
+  background:#fff;
+  transform:rotate(25deg);
+  opacity:.96;
+}
+
+/* Bus operators — strong matches use their recognizable corporate identity.
+   Less-certain operators stay restrained rather than inventing a false brand. */
+.bus-logo-iyo,
+.bus-logo-nanyo{
+  background:#f28c00!important;
+  color:#fff!important;
+  border-color:#f7a53d!important;
+  font-family:Arial,"Noto Sans JP",sans-serif!important;
+  letter-spacing:-.02em!important;
+}
+.bus-logo-jrshikoku{
+  background:#fff!important;
+  color:#1786bd!important;
+  border-color:#65b7dc!important;
+  font-style:italic!important;
+}
+.bus-logo-jrwest{
+  background:#fff!important;
+  color:#0072bc!important;
+  border-color:#66abd6!important;
+  font-style:italic!important;
+}
+.bus-logo-jrtokai{
+  background:#fff!important;
+  color:#f58220!important;
+  border-color:#f6aa67!important;
+  font-style:italic!important;
+}
+.bus-logo-hankyu{
+  background:#fff!important;
+  color:#6b1f37!important;
+  border-color:#6b1f37!important;
+  font-family:"Noto Sans JP",sans-serif!important;
+  letter-spacing:.02em!important;
+}
+.bus-logo-meitetsu{
+  background:#fff!important;
+  color:#e60012!important;
+  border-color:#e60012!important;
+}
+.bus-logo-tosaden{
+  color:#fff!important;
+  border-color:#6aa848!important;
+  background:linear-gradient(90deg,#198754 0 58%,#ef7f1a 58% 100%)!important;
+}
+.bus-logo-willer{
+  background:#e6007e!important;
+  color:#fff!important;
+  border-color:#f052a5!important;
+  font-family:Arial,Helvetica,sans-serif!important;
+  letter-spacing:-.02em!important;
+}
+.bus-logo-setouchi{
+  background:#fff!important;
+  color:#0077a8!important;
+  border-color:#64aac8!important;
+}
+.bus-logo-shimanami{
+  background:#fff!important;
+  color:#1976a8!important;
+  border-color:#6db4d2!important;
+}
+.bus-logo-uwajima{
+  background:#fff!important;
+  color:#24589a!important;
+  border-color:#799ac7!important;
+}
+.bus-logo-shikoku,
+.bus-logo-tokushima,
+.bus-logo-ryobi,
+.bus-logo-shimoden,
+.bus-logo-nishitokyo,
+.bus-logo-chugoku,
+.bus-logo-honshi,
+.bus-logo-kotobus,
+.bus-logo-shinki{
+  background:#fff!important;
+  color:#31424c!important;
+  border-color:#93a4ad!important;
+}
+
+/* Boarding-place badges follow the recognizable railway/bus identity too. */
+.bus-stop-jr{
+  background:#fff!important;
+  color:#1786bd!important;
+  border-color:#65b7dc!important;
+}
+.bus-stop-iyotetsu{
+  background:#f28c00!important;
+  color:#fff!important;
+  border-color:#f7a53d!important;
+}
+.bus-stop-muromachi{
+  background:#f28c00!important;
+  color:#fff!important;
+  border-color:#f7a53d!important;
+}
+
+/* Ferries */
+.ferry-logo-orange{
+  background:#f58220!important;
+  color:#fff!important;
+  border-color:#ffb266!important;
+  font-weight:900!important;
+}
+.ferry-logo-blue{
+  background:#fff!important;
+  color:#005a9c!important;
+  border-color:#4a9ed1!important;
+}
+.ferry-logo-jumbo{
+  background:#fff!important;
+  color:#004b86!important;
+  border-color:#e22c3a!important;
+  box-shadow:inset 0 -3px 0 #e22c3a;
+}
+.ferry-logo-uwajima{
+  background:#fff!important;
+  color:#156b58!important;
+  border-color:#6aae9d!important;
+}
+.ferry-logo-boyo{
+  background:#fff!important;
+  color:#174f8a!important;
+  border-color:#f28c00!important;
+  box-shadow:inset 0 -3px 0 #f28c00;
+}
+.ferry-logo-94{
+  background:#fff!important;
+  color:#164d83!important;
+  border-color:#6fa0c6!important;
+}
+.ferry-logo-setouchi{
+  background:#fff!important;
+  color:#006f86!important;
+  border-color:#4ea7b4!important;
+}
+.ferry-logo-geiyo{
+  background:#fff!important;
+  color:#1f6f62!important;
+  border-color:#75b7ab!important;
+}
+.ferry-logo-nakajima{
+  background:#fff!important;
+  color:#147365!important;
+  border-color:#79b9ae!important;
+}
+.ferry-logo-imabari,
+.ferry-logo-aoshima,
+.ferry-logo-niihama{
+  background:#fff!important;
+  color:#40505a!important;
+  border-color:#9eabb2!important;
+}
+.ferry-brand-main{
+  display:block;
+  line-height:1;
+}
