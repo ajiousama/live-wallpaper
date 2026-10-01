@@ -1075,3 +1075,38 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
   white-space:nowrap!important;
   overflow:hidden!important;
 }
+
+
+/* R15: highlighted JR last-connection notices */
+.rail-special-final{
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:7px!important;
+  padding:3px 10px!important;
+  border-radius:6px!important;
+  font-weight:1000!important;
+  letter-spacing:.02em!important;
+  white-space:nowrap!important;
+  box-shadow:0 0 12px rgba(255,190,70,.18)!important;
+}
+.rail-outside-final{
+  color:#fff2a6!important;
+  background:#4a3300!important;
+  border:1px solid #ffca45!important;
+}
+.rail-southwest-final{
+  color:#ffd1b8!important;
+  background:#4b1d09!important;
+  border:1px solid #ff8c55!important;
+}
+.rail-shinkansen-final{
+  color:#dff8ff!important;
+  background:#073b4c!important;
+  border:1px solid #46d7ff!important;
+}
+.rail-sunrise-final{
+  color:#ffe6b4!important;
+  background:#452014!important;
+  border:1px solid #ff9f5a!important;
+  text-shadow:0 0 8px rgba(255,140,70,.4)!important;
+}
