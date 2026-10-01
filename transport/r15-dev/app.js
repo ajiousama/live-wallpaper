@@ -1025,22 +1025,20 @@
     let html='';
     const city=ichitsuboTakeover(now);
     const bus=madonnaTakeover(now);
-    const stadium=madonnaTopInfo(now);
 
-    // Live approach alerts take priority. Otherwise keep the next Madonna Stadium
-    // departure visible in the top ticker so it never disappears between buses.
+    // Top ticker is reserved for live alerts only:
+    // approaching / passing / imminent departure. Routine "next service" info
+    // belongs in the normal panel ticker and must never appear here.
     if(city){
       cls='hero-alert top-live-alert active stop-live fast-scroll';
       html=tickerHtml(city.items);
     } else if(bus){
       cls='hero-alert top-live-alert active bus-live fast-scroll';
       html=tickerHtml(bus.items);
-    } else if(stadium){
-      cls='hero-alert top-live-alert active bus-live';
-      html=tickerHtml([stadium]);
     }
+
     // Keep the marquee running smoothly. Do not rebuild the top ticker when the
-    // departure/arrival panels switch mode if the visible text has not changed.
+    // visible alert text has not changed.
     if (el.dataset.alertClass === cls && el.dataset.alertHtml === html) return;
     el.className = cls;
     el.innerHTML = html;
