@@ -1150,3 +1150,44 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
 .airport-delay-alert .air-mini-logo,
 .note-ticker .air-mini-logo,
 .ticker .air-mini-logo{margin:0 4px 0 2px;transform:translateY(1px)}
+
+
+/* AIR: airline and flight number are separate columns */
+.panel-air.dep-mode .table-head,
+.panel-air.dep-mode #air-rows .row{
+  grid-template-columns:92px minmax(118px,1fr) 66px 72px 112px!important;
+  column-gap:6px!important;
+}
+.panel-air.arrival-columns .table-head,
+.panel-air.arrival-columns #air-rows .row{
+  grid-template-columns:minmax(118px,1fr) 66px 72px 112px 82px!important;
+  column-gap:6px!important;
+}
+.panel-air .air-airline-cell,
+.panel-air .air-flight-cell{
+  min-width:0!important;
+  overflow:hidden!important;
+}
+.panel-air .air-airline-cell{
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+}
+.panel-air .air-airline-cell .service-wrap{
+  width:100%;
+  align-items:flex-start;
+}
+.panel-air .air-flight-cell{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:13px!important;
+  font-weight:900!important;
+  letter-spacing:.02em;
+  white-space:nowrap;
+  color:#e8f7ff;
+}
+.panel-air .table-head span:nth-child(3),
+.panel-air .table-head span:nth-child(4){
+  font-size:10px!important;
+}
