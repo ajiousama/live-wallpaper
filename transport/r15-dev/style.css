@@ -222,7 +222,7 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
 @keyframes depart-text-pulse{0%,100%{opacity:1}50%{opacity:.35}}
 #panel-port .port-head,#panel-port .row{grid-template-columns:72px 1fr 205px}
 #panel-port.arrival-columns .port-head,#panel-port.arrival-columns .row{grid-template-columns:1fr 205px 92px}
-.port-route{font-size:14px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+.port-route{font-size:17px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
 .port-route .ehime-port{padding:2px 5px;vertical-align:middle}
 .port-route .route-arrow{color:#75cfc2;font-weight:900}
 .port-route .route-port{font-weight:700}
@@ -1055,29 +1055,29 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
 }
 .panel-bus.arrival-columns .arrival-departure-time{
   margin-top:2px!important;
-  font-size:9px!important;
+  font-size:11px!important;
   white-space:nowrap!important;
 }
 .panel-bus.arrival-columns .arrival-terminal{
   display:block!important;
   width:100%!important;
-  font-size:12px!important;
-  font-weight:800!important;
+  font-size:15px!important;
+  font-weight:900!important;
   overflow:hidden!important;
   white-space:nowrap!important;
 }
 .panel-bus.arrival-columns .bus-arrival-operator{
-  font-size:10.5px!important;
-  line-height:1!important;
+  font-size:13px!important;
+  line-height:1.05!important;
   white-space:nowrap!important;
 }
 .panel-bus.arrival-columns .bus-arrival-time{
   display:flex!important;
   align-items:center!important;
   justify-content:flex-end!important;
-  font-size:12px!important;
+  font-size:15px!important;
   font-weight:900!important;
-  letter-spacing:-.02em!important;
+  letter-spacing:-.01em!important;
   white-space:nowrap!important;
   overflow:hidden!important;
 }
