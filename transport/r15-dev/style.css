@@ -1116,3 +1116,37 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
   border:1px solid #ff9f5a!important;
   text-shadow:0 0 8px rgba(255,140,70,.4)!important;
 }
+
+
+/* Compact airline marks for the airport board */
+.airline-service-wrap{align-items:flex-start}
+.air-mini-logo{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:42px;
+  height:20px;
+  border-radius:3px;
+  font-size:13px;
+  font-weight:900;
+  letter-spacing:.04em;
+  line-height:1;
+  box-sizing:border-box;
+  vertical-align:middle;
+  flex:0 0 auto;
+}
+.air-mini-logo-jal{
+  background:#fff;
+  color:#c90019;
+  border:1px solid rgba(255,255,255,.86);
+}
+.air-mini-logo-ana{
+  background:#eef5ff;
+  color:#004ea2;
+  border:1px solid rgba(185,214,255,.95);
+}
+.panel-air .air-mini-logo{margin-bottom:2px}
+.panel-air .service-wrap.airline-service-wrap .code{margin-top:1px}
+.airport-delay-alert .air-mini-logo,
+.note-ticker .air-mini-logo,
+.ticker .air-mini-logo{margin:0 4px 0 2px;transform:translateY(1px)}
