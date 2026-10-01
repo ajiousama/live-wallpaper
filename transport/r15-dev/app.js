@@ -1047,14 +1047,98 @@
     el.dataset.alertHtml = html;
   }
 
+  function railReachText(r) {
+    return [
+      String(r.dest||''),
+      String(r.info||''),
+      String(r.connectsTo||''),
+      String(r.connection||'')
+    ].join(' ');
+  }
+
+  function railSpecialFinals(now) {
+    const displayIso=boardDisplayIso('rail',now);
+    const ctx=dayContext(displayIso);
+    const rows=data.records
+      .filter(r=>r.board==='rail' && validRecord(r,displayIso))
+      .map(r=>({...r,time:effectiveTime(r,ctx),minutes:toMinutes(effectiveTime(r,ctx))}))
+      .sort((a,b)=>a.minutes-b.minutes);
+
+    // "Reach" can be direct or a same-day connection recorded in connectsTo/connection.
+    const outside=rows.filter(r=>{
+      if(r.direction!=='north') return false;
+      return /観音寺|高松|岡山/.test(railReachText(r));
+    }).at(-1)||null;
+
+    const southwest=rows.filter(r=>{
+      if(r.direction!=='south') return false;
+      return /八幡浜|宇和島/.test(railReachText(r));
+    }).at(-1)||null;
+
+    // Latest Matsuyama departure that still reaches Okayama for Shinkansen transfer.
+    const shinkansen=rows.filter(r=>{
+      if(r.direction!=='north') return false;
+      return /岡山/.test(railReachText(r));
+    }).at(-1)||null;
+
+    // Sunrise Seto leaves Okayama at 22:34.
+    // Use the latest Okayama-bound train whose estimated/known arrival is before that.
+    const sunriseCandidates=rows.filter(r=>{
+      if(r.direction!=='north' || !/岡山/.test(railReachText(r))) return false;
+      const arr=railTerminalArrivals(r).find(x=>x&&x[0]==='岡山');
+      return arr && toMinutes(arr[1]) <= toMinutes('22:34')-5;
+    });
+    const sunrise=sunriseCandidates.at(-1)||shinkansen;
+
+    return {outside,southwest,shinkansen,sunrise};
+  }
+
+  function sameRailService(a,b) {
+    return !!a && !!b
+      && String(a.direction||'')===String(b.direction||'')
+      && padTime(a.time)===padTime(b.time)
+      && String(a.service||'')===String(b.service||'')
+      && String(a.dest||'')===String(b.dest||'');
+  }
+
+  function railSpecialFinalBadge(r,now) {
+    const s=railSpecialFinals(now);
+    if(sameRailService(r,s.outside)) return badgeHtml('final','県外最終');
+    if(sameRailService(r,s.southwest)) return badgeHtml('final','宇和島・八幡浜方面最終');
+    return '';
+  }
+
+  function railSpecialFinalTickerItems(now) {
+    const s=railSpecialFinals(now);
+    const out=[];
+    const label=(r)=>r.kind==='local'
+      ? `普通 ${r.dest}行`
+      : `${String(r.service||'').includes('しおかぜ')||String(r.service||'').includes('いしづち')||String(r.service||'').includes('宇和海')?'特急 ':''}${r.service||''} ${r.dest}行`.trim();
+
+    if(s.outside && s.outside.minutes>=now.minutes){
+      out.push(`<span class="rail-special-final rail-outside-final">⚠ 県外へ行ける最終｜松山 ${s.outside.time}発｜${label(s.outside)}</span>`);
+    }
+    if(s.southwest && s.southwest.minutes>=now.minutes){
+      out.push(`<span class="rail-special-final rail-southwest-final">⚠ 宇和島・八幡浜方面 最終｜松山 ${s.southwest.time}発｜${label(s.southwest)}</span>`);
+    }
+    if(s.shinkansen && s.shinkansen.minutes>=now.minutes){
+      out.push(`<span class="rail-special-final rail-shinkansen-final">🚄 新幹線乗継最終｜松山 ${s.shinkansen.time}発｜${label(s.shinkansen)} → 岡山</span>`);
+    }
+    if(s.sunrise && s.sunrise.minutes>=now.minutes){
+      out.push(`<span class="rail-special-final rail-sunrise-final">🌅 サンライズ瀬戸乗継最終｜松山 ${s.sunrise.time}発｜${label(s.sunrise)} → 岡山 22:34発</span>`);
+    }
+    return out;
+  }
+
   function railTickerItems(now) {
-    const takeover=ichitsuboTakeover(now); if(takeover) return takeover.items;
+    const specials=railSpecialFinalTickerItems(now);
+    const takeover=ichitsuboTakeover(now); if(takeover) return [...takeover.items,...specials];
     const north=auxUpcoming('ichitsubo','north',now,1)[0]||null;
     const south=auxUpcoming('ichitsubo','south',now,1)[0]||null;
     const items=[];
     if(north){const badges=`${north.isNextDayStart?badgeHtml('first'):''}${north.isFinal?badgeHtml('final','最終列車'):''}`;items.push(`JR市坪駅 松山方面　次列車 ${north.time}　普通 ${railDestLabel(north)}行 ${badges}`);} else items.push('JR市坪駅 松山方面｜運行終了');
     if(south){const badges=`${south.isNextDayStart?badgeHtml('first'):''}${south.isFinal?badgeHtml('final','最終列車'):''}`;items.push(`JR市坪駅 宇和島方面　次列車 ${south.time}　普通 ${railDestLabel(south)}行 ${badges}`);} else items.push('JR市坪駅 宇和島方面｜運行終了');
-    return items;
+    return [...items,...specials];
   }
 
 
@@ -1144,7 +1228,7 @@
         const row = document.createElement('div'); row.className = `row rail-row${r.isFinal ? ' is-final' : ''}${isDepartSoon(r, japanNow()) ? ' depart-soon' : ''}`;
         const kind = r.kind === 'limited' ? 'limited' : r.kind === 'sightseeing' ? 'tourist' : 'local';
         const label = kind === 'limited' ? `特急 ${r.service}` : kind === 'tourist' ? `観光 ${r.service}` : '普通電車';
-        const badges = `${r.isNextDayStart ? badgeHtml('first') : ''}${r.isFinal ? badgeHtml('final','最終列車') : ''}`;
+        const badges = `${r.isNextDayStart ? badgeHtml('first') : ''}${r.isFinal ? badgeHtml('final','最終列車') : ''}${railSpecialFinalBadge(r,japanNow())}`;
         row.innerHTML = `
           <div class="rail-primary">
             <div class="cell rail-service ${kind}"><span class="kindtxt">${label}</span></div>
