@@ -1041,6 +1041,7 @@
         row.innerHTML=`<div class="rail-primary"><div class="cell"></div><div class="cell time"></div><div class="cell"></div></div><div class="rail-detail"></div>`;
         root.appendChild(row);
       }
+      activatePanelOverflow(root);
     }
   }
 
@@ -1088,10 +1089,10 @@
       const changed=r.liveChangedTime||r.time; const scheduled=r.liveScheduled||r.time; const delta=Number(r.liveDelta);
       const deltaHtml=Number.isFinite(delta)&&delta!==0?`<span class="air-delay${delta<0?' air-early':''}">${delta>0?'+':''}${delta}分</span>`:'';
       const timeHtml=`<div class="air-time-wrap"><span class="live-time">${changed}${deltaHtml}</span>${changed!==scheduled?`<span class="scheduled-time">定刻 ${scheduled}</span>`:''}</div>`;
-      if(dep){row.innerHTML=`<div class="cell time">${timeHtml}</div><div class="cell main">${place} ${firstBadge}${finalBadge}</div><div class="cell service"><div class="service-wrap"><span class="name">${p.airline}</span><span class="code">便名 ${p.number||'—'}</span></div></div><div class="${statusClass}">${overflowScrollHtml(status,'air-status-scroll')}</div>`;}
+      if(dep){row.innerHTML=`<div class="cell time">${timeHtml}</div><div class="cell main air-place">${place} ${firstBadge}${finalBadge}</div><div class="cell service"><div class="service-wrap"><span class="name">${p.airline}</span><span class="code">便名 ${p.number||'—'}</span></div></div><div class="${statusClass}">${overflowScrollHtml(status,'air-status-scroll')}</div>`;}
       else{row.innerHTML=`<div class="cell main">${place} ${firstBadge}${finalBadge}</div><div class="cell service"><div class="service-wrap"><span class="name">${p.airline}</span><span class="code">便名 ${p.number||'—'}</span></div></div><div class="${statusClass}">${overflowScrollHtml(status,'air-status-scroll')}</div><div class="cell time">${timeHtml}</div>`;}
       root.appendChild(row);
-    }); activateOverflowScroll(root); restoreScroll('air'); attachScrollMemory('air');
+    }); activatePanelOverflow(root); restoreScroll('air'); attachScrollMemory('air');
   }
 
   const BUS_JOINT_OPERATORS = {
@@ -1179,6 +1180,48 @@
       if(over) box.style.setProperty('--overflow-distance', `${track.scrollWidth-box.clientWidth+36}px`);
       else box.style.removeProperty('--overflow-distance');
     });
+  }
+
+  // Common rule: readable text stays still; only text that actually exceeds its box scrolls.
+  function activatePanelOverflow(root=document) {
+    const selector = [
+      '.rail-primary .rail-service .kindtxt',
+      '.rail-primary .cell.main',
+      '.cell.main.air-place',
+      '.service-wrap .name',
+      '.service-wrap .code',
+      '.operator-wrap span',
+      '.bus-destination-line',
+      '.bus-via-line',
+      '.bus-place-scroll',
+      '.bus-terminal-time',
+      '.arrival-terminal',
+      '.arrival-continuation',
+      '.arrival-departure-time',
+      '.port-dest-main',
+      '.port-via-line',
+      '.port-arrival-line',
+      '.port-route',
+      '.air-status'
+    ].join(',');
+
+    root.querySelectorAll(selector).forEach(el => {
+      if (el.closest('.marquee')) return;
+      if (el.classList.contains('overflow-scroll')) return;
+      if (el.querySelector(':scope > .overflow-scroll')) return;
+      if (el.classList.contains('port-route') && el.querySelector('.port-dest-wrap')) return;
+      if (el.classList.contains('air-status') && el.querySelector('.overflow-scroll')) return;
+
+      const wrap=document.createElement('span');
+      wrap.className='overflow-scroll auto-overflow';
+      const track=document.createElement('span');
+      track.className='overflow-scroll-track';
+      while(el.firstChild) track.appendChild(el.firstChild);
+      wrap.appendChild(track);
+      el.appendChild(wrap);
+    });
+
+    activateOverflowScroll(root);
   }
 
   function busDestinationParts(r) {
@@ -1293,7 +1336,7 @@
       }
       root.appendChild(row);
     });
-    activateOverflowScroll(root);
+    activatePanelOverflow(root);
     restoreScroll('bus'); attachScrollMemory('bus');
   }
   function renderPort(rows) {
@@ -1322,6 +1365,7 @@
       }
       root.appendChild(row);
     });
+    activatePanelOverflow(root);
     restoreScroll('port'); attachScrollMemory('port');
   }
 
