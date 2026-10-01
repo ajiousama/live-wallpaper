@@ -1243,6 +1243,16 @@
     };
   }
 
+  function busBoardingSubline(r) {
+    const start=String(r.originStartName||'').trim();
+    const startTime=String(r.originStartTime||'').trim();
+    const stop=String(r.stop||'').trim();
+    if (!start || !startTime) return '';
+    if (!['松山市駅','JR松山駅'].includes(stop)) return '';
+    if (['松山市駅','JR松山駅','松山室町営業所'].includes(start)) return '';
+    if (start===stop) return '';
+    return `始発 ${start} ${startTime}`;
+  }
   function renderBus(rows) {
     const root = $('bus-rows'); root.innerHTML = '';
     const dep = currentDirection() === 'departure';
@@ -1265,7 +1275,7 @@
       const finalBadge = r.isFinal ? badgeHtml('final','最終バス') : '';
       if (dep) {
         const rightTop = r.stopText || r.stop || '松山市駅発';
-        const rightBottom = r.viaStop || (r.kind==='midbus' ? '中距離バス' : '');
+        const rightBottom = busBoardingSubline(r);
         const terminal = busTerminalArrivalLabel(r);
         const ferryExtra = r.kind === 'ferrybus' ? '<span class="route-sub">フェリー連絡</span>' : '';
         row.innerHTML = `
