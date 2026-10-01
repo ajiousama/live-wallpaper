@@ -658,6 +658,23 @@
     return { name: svc || '運航会社', type:'船便' };
   }
 
+  function ferryMiniLogo(name) {
+    const n=String(name||'').trim();
+    if(n==='四国開発フェリー') return '<span class="ferry-mini-logo ferry-logo-orange">ORANGE</span>';
+    if(n==='中島汽船') return '<span class="ferry-mini-logo ferry-logo-nakajima">NAKAJIMA</span>';
+    if(n==='防予フェリー') return '<span class="ferry-mini-logo ferry-logo-boyo">BOYO</span>';
+    if(n==='国道九四フェリー') return '<span class="ferry-mini-logo ferry-logo-94">94</span>';
+    if(n==='宇和島運輸') return '<span class="ferry-mini-logo ferry-logo-uwajima">UW</span>';
+    if(n==='ジャンボフェリー') return '<span class="ferry-mini-logo ferry-logo-jumbo">JUMBO</span>';
+    if(n==='今治市営') return '<span class="ferry-mini-logo ferry-logo-imabari">IMABARI</span>';
+    if(n==='大三島ブルーライン') return '<span class="ferry-mini-logo ferry-logo-blue">BLUE LINE</span>';
+    if(n==='芸予汽船') return '<span class="ferry-mini-logo ferry-logo-geiyo">GEIYO</span>';
+    if(n==='瀬戸内海汽船・石崎汽船') return '<span class="ferry-mini-logo ferry-logo-setouchi">瀬戸内海・石崎</span>';
+    if(n==='青島海運') return '<span class="ferry-mini-logo ferry-logo-aoshima">青島</span>';
+    if(n==='新居浜市営') return '<span class="ferry-mini-logo ferry-logo-niihama">新居浜</span>';
+    return '';
+  }
+
 
   const PORT_WARNING = '⚠ 乗り場注意：松山観光港・三津浜港・高浜港・今治港・東予港・新居浜東港・高松東港・八幡浜港・三崎港は、それぞれ乗り場が違います';
   const EHIME_PORTS = new Set(['松山観光港','三津浜港','高浜港','今治港','東予港','新居浜東港','八幡浜港','三崎港']);
@@ -1845,7 +1862,9 @@
       const firstBadge = '';
       const finalBadge = dep && r.isFinal ? badgeHtml('final','最終便') : '';
       const route = portRouteHtml(r, dep ? 'departure' : 'arrival');
-      const service = `<div class="service-wrap"><span class="name">${op.name}</span><span class="code">${op.type}</span></div>`;
+      const ferryLogo=ferryMiniLogo(op.name);
+      const operatorHtml=ferryLogo||`<span class="name">${op.name}</span>`;
+      const service = `<div class="service-wrap ferry-service-wrap">${operatorHtml}<span class="code">${op.type}</span></div>`;
       if (dep) {
         row.innerHTML = `
           <div class="cell time port-time-stack">${portTimeStackHtml(r)}</div>
