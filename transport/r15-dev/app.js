@@ -155,6 +155,13 @@
     return { airline: airlineMap[m[1]] || m[1], number: m[2] };
   }
 
+  function airlineMiniLogo(airline) {
+    const a=String(airline||'').trim().toUpperCase();
+    if(a==='JAL') return '<span class="air-mini-logo air-mini-logo-jal" aria-label="JAL">JAL</span>';
+    if(a==='ANA') return '<span class="air-mini-logo air-mini-logo-ana" aria-label="ANA">ANA</span>';
+    return '';
+  }
+
 
 
   function padTime(t) {
@@ -1262,7 +1269,8 @@
           const row=data.records.find(r=>r.board==='air' && String(parseAirService(r.service).number)===String(n));
           return row?parseAirService(row.service).airline:'';
         }).find(Boolean)||'';
-        const airlineLabel=matchedAirline ? `${matchedAirline} ` : '';
+        const miniLogo=airlineMiniLogo(matchedAirline);
+        const airlineLabel=miniLogo ? `${miniLogo} ` : (matchedAirline ? `${matchedAirline} ` : '');
         const place=String(x?.place||'').trim();
         const late=Number.isFinite(delta)&&delta>0
           ? `+${delta}分`
@@ -1514,12 +1522,12 @@
       root.innerHTML=`<div class="air-end-state"><div class="air-end-mode">✈ ${mode}</div><div class="air-end-message">${msg}</div>${detail?`<div class="air-end-detail">${detail}</div>`:''}</div>`;
     } else rows.forEach(r=>{
       const row=document.createElement('div');row.className=`row${r.isFinal?' is-final':''}${dep&&isDepartSoon(r,japanNow())?' depart-soon':''}`;
-      const p=parseAirService(r.service); const finalBadge=dep&&r.isFinal?badgeHtml('final','最終便'):''; const place=dep?`→ ${r.dest}`:`${r.dest} →`; const firstBadge=r.isNextDayStart?badgeHtml('first',dep?'始発':'初便'):'';
+      const p=parseAirService(r.service); const finalBadge=dep&&r.isFinal?badgeHtml('final','最終便'):''; const place=dep?`→ ${r.dest}`:`${r.dest} →`; const firstBadge=r.isNextDayStart?badgeHtml('first',dep?'始発':'初便'):''; const airlineLogo=airlineMiniLogo(p.airline); const airlineName=airlineLogo||`<span class="name">${p.airline}</span>`;
       const status=String(r.liveStatus||r.info||''); const statusClass=`cell sub air-status${status.length>10?' long-status':''}${/まもなく到着|ただいま到着/.test(status)?' arriving':''}`;
       const changed=r.liveChangedTime||r.time; const scheduled=r.liveScheduled||r.time; const delta=Number(r.liveDelta);
       const deltaHtml=Number.isFinite(delta)&&delta!==0?`<span class="air-delay${delta<0?' air-early':''}">${delta>0?'+':''}${delta}分</span>`:'';
       const timeHtml=`<div class="air-time-wrap"><span class="live-time">${changed}${deltaHtml}</span>${changed!==scheduled?`<span class="scheduled-time">定刻 ${scheduled}</span>`:''}</div>`;
-      if(dep){row.innerHTML=`<div class="cell time">${timeHtml}</div><div class="cell main air-place">${place} ${firstBadge}${finalBadge}</div><div class="cell service"><div class="service-wrap"><span class="name">${p.airline}</span><span class="code">便名 ${p.number||'—'}</span></div></div><div class="${statusClass}">${overflowScrollHtml(status,'air-status-scroll')}</div>`;}
+      if(dep){row.innerHTML=`<div class="cell time">${timeHtml}</div><div class="cell main air-place">${place} ${firstBadge}${finalBadge}</div><div class="cell service"><div class="service-wrap airline-service-wrap">${airlineName}<span class="code">便名 ${p.number||'—'}</span></div></div><div class="${statusClass}">${overflowScrollHtml(status,'air-status-scroll')}</div>`;}
       else{row.innerHTML=`<div class="cell main">${place} ${firstBadge}${finalBadge}</div><div class="cell service"><div class="service-wrap"><span class="name">${p.airline}</span><span class="code">便名 ${p.number||'—'}</span></div></div><div class="${statusClass}">${overflowScrollHtml(status,'air-status-scroll')}</div><div class="cell time">${timeHtml}</div>`;}
       root.appendChild(row);
     }); activatePanelOverflow(root); restoreScroll('air'); attachScrollMemory('air');
