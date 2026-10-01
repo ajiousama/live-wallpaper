@@ -206,7 +206,7 @@
       const delta=Number(x.deltaMinutes);
       if (Number.isFinite(delta) && delta>0 && (!liveStatus || /定刻/.test(liveStatus))) liveStatus=`遅れ +${delta}分`;
       if (Number.isFinite(delta) && delta<0 && (!liveStatus || /定刻/.test(liveStatus))) liveStatus=dep?`変更 ${Math.abs(delta)}分前`:`早着予定 ${Math.abs(delta)}分`;
-      out.push({...r,time:padTime(x.changed),liveScheduled:padTime(x.scheduled),liveChangedTime:padTime(x.changed),liveStatus,liveDelta:delta,liveRaw:x,isFinal:Number.isFinite(lastStaticMinute)&&toMinutes(effectiveTime(r,now))===lastStaticMinute,isNextDayStart:false});
+      out.push({...r,time:padTime(x.changed),liveScheduled:padTime(x.scheduled),liveChangedTime:padTime(x.changed),liveStatus,liveDelta:delta,liveRaw:x,isFinal:dep&&Number.isFinite(lastStaticMinute)&&toMinutes(effectiveTime(r,now))===lastStaticMinute,isNextDayStart:false});
     });
     out.sort((a,b)=>toMinutes(a.liveChangedTime)-toMinutes(b.liveChangedTime));
     // LIVE取得に成功して0件なら「本日終了」。誤った静的データへ戻さない。
@@ -294,7 +294,9 @@
   }
   function auxUpcoming(board, direction, now, limit=6) {
     const full = auxRows(board, direction, now);
-    const finalMinute=full.length?Math.max(...full.map(r=>r.minutes)):null;
+    // "Final" means the last departure from this place today, regardless of direction.
+    const allFromPlace = direction ? auxRows(board, null, now) : full;
+    const finalMinute=allFromPlace.length?Math.max(...allFromPlace.map(r=>r.minutes)):null;
     return full.filter(r => r.minutes >= now.minutes).slice(0, limit).map(r => ({
       ...r,
       isFinal: Number.isFinite(finalMinute)&&r.minutes===finalMinute,
@@ -477,64 +479,75 @@
     return [];
   }
   function rMinutes(r){return typeof r.minutes==='number'?r.minutes:toMinutes(r.time)}
-  function finalGroupKey(board,r) {
-    if (board==='bus') return `${r.kind||'bus'}|${String(busDisplayDestination(r)||r.dest||'').replace(/（.*?）/g,'')}`;
-    if (board==='port') return `${r.port||''}|${r.dest||''}|${r.service||''}`;
-    return board;
+  function finalDepartureKey(board,r) {
+    if (board==='rail') return 'JR松山駅';
+    if (board==='air') return '松山空港';
+    if (board==='port') return String(r.port||'').trim() || '出発港不明';
+    return '';
   }
+
+  function finalDepartureRows(board, now) {
+    if (board==='bus') return [];
+    if (board==='air') {
+      if (currentDirection()!=='departure') return [];
+      const iso=boardDisplayIso('air',now);
+      const ctx=dayContext(iso);
+      return data.records
+        .filter(r=>r.board==='air' && r.direction==='departure' && validRecord(r,iso))
+        .map(r=>({...r,time:effectiveTime(r,ctx),minutes:toMinutes(effectiveTime(r,ctx))}));
+    }
+    if (board==='rail') {
+      const iso=boardDisplayIso('rail',now);
+      const ctx=dayContext(iso);
+      return data.records
+        .filter(r=>r.board==='rail' && validRecord(r,iso))
+        .map(r=>({...r,time:effectiveTime(r,ctx),minutes:toMinutes(effectiveTime(r,ctx))}));
+    }
+    if (board==='port') {
+      if (currentDirection()!=='departure') return [];
+      return recordsForDay('port',now.iso).map(r=>({...r,minutes:toMinutes(r.time)}));
+    }
+    return [];
+  }
+
   function nextRows(board, now) {
     const list = getBoardRecords(board, now);
+
+    // Unified definition:
+    // FINAL = the last service that DEPARTS from that place on that day.
+    // Bus board intentionally has no "final bus" badge.
+    // Arrival boards intentionally have no "final" badge.
     const finalTimes=new Map();
-    const groupCounts=new Map();
-    list.forEach(r=>{
-      const key=finalGroupKey(board,r);
+    finalDepartureRows(board,now).forEach(r=>{
+      const key=finalDepartureKey(board,r);
       const m=rMinutes(r);
-      groupCounts.set(key,(groupCounts.get(key)||0)+1);
       if(!finalTimes.has(key)||m>finalTimes.get(key)) finalTimes.set(key,m);
     });
-    const shouldMarkFinal = (key, minute) => {
-      // Highway/regional bus board does not use a "final bus" designation.
-      if (board === 'bus') return false;
-      // Ferry sparse routes (1-3 services/day) do not get a "final" badge.
-      if (board === 'port' && (groupCounts.get(key)||0) <= 3) return false;
-      return finalTimes.get(key) === minute;
-    };
+
     const upcoming = list.filter(r => rMinutes(r) >= now.minutes).map(r => {
-      const key=finalGroupKey(board,r);
+      const key=finalDepartureKey(board,r);
+      const isFinal=board!=='bus' && finalTimes.has(key) && finalTimes.get(key)===rMinutes(r);
       return {
         ...r,
-        isFinal: shouldMarkFinal(key,rMinutes(r)),
+        isFinal,
         isNextDayStart: false
       };
     });
     if (board !== 'port') return upcoming;
 
-    // Ferry board is always-on. Keep up to four visible rows populated by
-    // appending the next day's earliest sailings/arrivals before today is empty.
-    // This also lets late-night users see overnight arrivals and the first boats
-    // after midnight without an end-of-day blank period.
+    // Ferry board is always-on. Append tomorrow's first services when needed.
+    // Tomorrow's rows are not "today's final service".
     if (upcoming.length >= 4) return upcoming;
     const nextIso = shiftIso(now.iso, 1);
     const nextCtx = dayContext(nextIso);
     const nextNow = { ...now, iso: nextIso, dow: nextCtx.dow, minutes: 0 };
     const nextList = getBoardRecords('port', nextNow);
-    const nextFinalTimes = new Map();
-    const nextGroupCounts = new Map();
-    nextList.forEach(r=>{
-      const key=finalGroupKey('port',r);
-      const m=rMinutes(r);
-      nextGroupCounts.set(key,(nextGroupCounts.get(key)||0)+1);
-      if(!nextFinalTimes.has(key)||m>nextFinalTimes.get(key)) nextFinalTimes.set(key,m);
-    });
     const need = Math.max(0, 4 - upcoming.length);
-    const nextRows = nextList.slice(0, need).map((r,i) => {
-      const key=finalGroupKey('port',r);
-      return {
-        ...r,
-        isFinal: (nextGroupCounts.get(key)||0) > 3 && nextFinalTimes.get(key)===rMinutes(r),
-        isNextDayStart: i === 0
-      };
-    });
+    const nextRows = nextList.slice(0, need).map((r,i) => ({
+      ...r,
+      isFinal: false,
+      isNextDayStart: i === 0
+    }));
     return [...upcoming, ...nextRows];
   }
 
@@ -1120,7 +1133,7 @@
       const last = lastRailMovement(now);
       const mode = currentRailDir() === 'north' ? 'NORTHBOUND — 今治方面 —' : 'SOUTHBOUND — 宇和島方面 —';
       const serviceLabel = last ? (last.kind === 'local' ? '普通' : (last.kind === 'sightseeing' ? `観光 ${last.service}` : `特急 ${last.service}`)) : '—';
-      const detail = last ? `最終列車：${last.time}　${serviceLabel}　${last.dest}行　発車済み` : '';
+      const detail = last && last.direction===currentRailDir() ? `最終列車：${last.time}　${serviceLabel}　${last.dest}行　発車済み` : '';
       root.classList.add('rail-end');
       root.innerHTML = `<div class="rail-end-state"><div class="rail-end-mode">🚆 ${mode}</div><div class="rail-end-message">本日の列車は終了しました</div>${detail ? `<div class="rail-end-detail">${detail}</div>` : ''}</div>`;
     } else {
@@ -1162,16 +1175,15 @@
     return { time:rows[rows.length-1]._time, place:places.join('・')||'—', displayIso };
   }
   function lastRailMovement(now) {
-    const direction = currentRailDir();
     const displayIso = boardDisplayIso('rail', now);
     const displayCtx = dayContext(displayIso);
     const rows = data.records
-      .filter(r => r.board === 'rail' && r.direction === direction && validRecord(r, displayIso))
+      .filter(r => r.board === 'rail' && validRecord(r, displayIso))
       .map(r => ({ ...r, _time: effectiveTime(r, displayCtx) }))
       .sort((a,b)=>toMinutes(a._time)-toMinutes(b._time));
     if (!rows.length) return null;
     const last = rows[rows.length-1];
-    return { time: last._time, dest: String(last.dest || '').trim() || '—', service: String(last.service || '').trim() || '', kind: String(last.kind || ''), displayIso };
+    return { time: last._time, dest: String(last.dest || '').trim() || '—', service: String(last.service || '').trim() || '', kind: String(last.kind || ''), direction:String(last.direction||''), displayIso };
   }
 
   function renderAir(rows) {
@@ -1186,7 +1198,7 @@
       root.innerHTML=`<div class="air-end-state"><div class="air-end-mode">✈ ${mode}</div><div class="air-end-message">${msg}</div>${detail?`<div class="air-end-detail">${detail}</div>`:''}</div>`;
     } else rows.forEach(r=>{
       const row=document.createElement('div');row.className=`row${r.isFinal?' is-final':''}${dep&&isDepartSoon(r,japanNow())?' depart-soon':''}`;
-      const p=parseAirService(r.service); const finalBadge=r.isFinal?badgeHtml('final','最終便'):''; const place=dep?`→ ${r.dest}`:`${r.dest} →`; const firstBadge=r.isNextDayStart?badgeHtml('first',dep?'始発':'初便'):'';
+      const p=parseAirService(r.service); const finalBadge=dep&&r.isFinal?badgeHtml('final','最終便'):''; const place=dep?`→ ${r.dest}`:`${r.dest} →`; const firstBadge=r.isNextDayStart?badgeHtml('first',dep?'始発':'初便'):'';
       const status=String(r.liveStatus||r.info||''); const statusClass=`cell sub air-status${status.length>10?' long-status':''}${/まもなく到着|ただいま到着/.test(status)?' arriving':''}`;
       const changed=r.liveChangedTime||r.time; const scheduled=r.liveScheduled||r.time; const delta=Number(r.liveDelta);
       const deltaHtml=Number.isFinite(delta)&&delta!==0?`<span class="air-delay${delta<0?' air-early':''}">${delta>0?'+':''}${delta}分</span>`:'';
@@ -1513,7 +1525,7 @@
       row.className = `row${r.isFinal?' is-final':''}${dep && isDepartSoon(r, japanNow()) ? ' depart-soon' : ''}`;
       const op = portOperator(r);
       const firstBadge = r.isNextDayStart ? badgeHtml('first', dep ? '始発' : '初便') : '';
-      const finalBadge = r.isFinal ? badgeHtml('final','最終便') : '';
+      const finalBadge = dep && r.isFinal ? badgeHtml('final','最終便') : '';
       const route = portRouteHtml(r, dep ? 'departure' : 'arrival');
       const service = `<div class="service-wrap"><span class="name">${op.name}</span><span class="code">${op.type}</span></div>`;
       if (dep) {
