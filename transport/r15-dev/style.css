@@ -416,3 +416,52 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
 .panel-bus.dep-mode .bus-terminal-time{
   font-size:8.6px!important;
 }
+
+
+/* R15 DEV: readable bus text + overflow-only origin/boarding scroll */
+.panel-bus .operator-wrap span{
+  font-size:12px!important;
+  line-height:1.08!important;
+}
+.panel-bus .operator-wrap.lines-3 span{
+  font-size:10.8px!important;
+}
+.panel-bus .bus-dest-main{
+  font-size:15px!important;
+  line-height:1.06!important;
+}
+.panel-bus .bus-dest-main .dest-line{
+  font-weight:800!important;
+}
+.panel-bus.dep-mode .cell.sub .service-wrap .name{
+  font-size:12px!important;
+  letter-spacing:0!important;
+  overflow:hidden!important;
+  max-width:100%;
+}
+.arrival-origin .arrival-place{
+  width:100%;
+  max-width:100%;
+  overflow:hidden!important;
+  text-overflow:clip!important;
+}
+.overflow-scroll{
+  display:block;
+  width:100%;
+  max-width:100%;
+  overflow:hidden;
+  white-space:nowrap;
+}
+.overflow-scroll-track{
+  display:inline-block;
+  min-width:max-content;
+  white-space:nowrap;
+}
+.overflow-scroll.is-overflow .overflow-scroll-track{
+  padding-right:36px;
+  animation:bus-place-scroll 8s linear infinite;
+}
+@keyframes bus-place-scroll{
+  0%,12%{transform:translateX(0)}
+  88%,100%{transform:translateX(calc(-1 * var(--overflow-distance, 0px)))}
+}
