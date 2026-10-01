@@ -1,6 +1,22 @@
 (() => {
   const data = window.MATSUYAMA_DATA;
   const $ = (id) => document.getElementById(id);
+  const CURRENT_BUILD = document.documentElement.dataset.build || '';
+  const DEPLOY_CHECK_MS = 60000;
+
+  async function checkDeployment() {
+    try {
+      const r = await fetch('../../deploy-version.json?t=' + Date.now(), { cache:'no-store' });
+      if (!r.ok) return;
+      const x = await r.json();
+      const next = String(x.build || '');
+      if (next && CURRENT_BUILD && CURRENT_BUILD !== '__BUILD_ID__' && next !== CURRENT_BUILD) {
+        const u = new URL(location.href);
+        u.searchParams.set('v', next);
+        location.replace(u.toString());
+      }
+    } catch(e) {}
+  }
 
   const state = {
     modeIndex: 0, // 0 departure / south, 1 arrival / north
@@ -1792,6 +1808,8 @@
   setInterval(()=>{loadSlowLive().then(()=>renderAll());},60000);
   setInterval(()=>{loadDisasterLive().then(()=>renderDisaster(japanNow()));},10000);
   renderAll(); setupMonthlyUpdatePrompt();
+  checkDeployment();
+  setInterval(checkDeployment,DEPLOY_CHECK_MS);
   updateModeCountdown();
   setInterval(()=>{const now=japanNow();$('date-label').textContent=now.date;$('clock-label').innerHTML=`${now.time}<span>:${now.sec}</span>`;renderDisaster(now);renderTopLiveAlert(now);cachedNotes.rail=railTickerItems(now);cachedNotes.air=airportAccessTickerItems(now);cachedNotes.bus=busTickerItems(now);updateNotes();updateModeCountdown();},1000);
   setInterval(()=>{['rail','air','bus','port'].forEach(rememberScroll);state.modeIndex=(state.modeIndex+1)%2;nextModeSwitchAt=Date.now()+MODE_SWITCH_MS;renderAll();updateModeCountdown();},MODE_SWITCH_MS);
