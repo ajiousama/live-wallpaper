@@ -1167,6 +1167,20 @@
     if (parts.length===2) return parts;
     return [s];
   }
+  function overflowScrollHtml(text, extraClass='') {
+    return `<span class="overflow-scroll ${extraClass}"><span class="overflow-scroll-track">${text||'—'}</span></span>`;
+  }
+  function activateOverflowScroll(root=document) {
+    root.querySelectorAll('.overflow-scroll').forEach(box => {
+      const track=box.querySelector('.overflow-scroll-track');
+      if(!track) return;
+      const over=track.scrollWidth > box.clientWidth + 2;
+      box.classList.toggle('is-overflow', over);
+      if(over) box.style.setProperty('--overflow-distance', `${track.scrollWidth-box.clientWidth+36}px`);
+      else box.style.removeProperty('--overflow-distance');
+    });
+  }
+
   function busDestinationHtml(r,badges='') {
     const lines=splitDestinationLines(busDisplayDestination(r));
     return `${lines.map((x,i)=>`<span class="dest-line">${i===0?'→ ':''}${x}${i===0&&badges?` ${badges}`:''}</span>`).join('')}`;
@@ -1243,17 +1257,18 @@
           <div class="cell time bus-time-stack"><span class="primary-time">${r.time}</span>${terminal?`<span class="bus-terminal-time">${terminal}</span>`:''}</div>
           <div class="cell service">${busOperatorHtml(r)}</div>
           <div class="cell main bus-dest-cell"><span class="bus-dest-main">${busDestinationHtml(r,`${firstBadge}${finalBadge}`)}</span>${r.kind==='midbus'?'<span class="route-sub">中距離</span>':''}${ferryExtra}</div>
-          <div class="cell sub"><div class="service-wrap"><span class="name">${rightTop}</span><span class="code">${rightBottom}</span></div></div>`;
+          <div class="cell sub"><div class="service-wrap"><span class="name bus-place-scroll">${overflowScrollHtml(rightTop)}</span><span class="code">${rightBottom}</span></div></div>`;
       } else {
         const depDay = r.originDepartureDay ? `${r.originDepartureDay}` : '';
         row.innerHTML = `
-          <div class="cell main arrival-origin"><span class="arrival-place">${r.origin} → ${firstBadge}${finalBadge}</span><span class="arrival-departure-time">${depDay}${r.originDepartureTime || '—'}出発</span></div>
+          <div class="cell main arrival-origin"><span class="arrival-place">${overflowScrollHtml(r.origin,'bus-origin-scroll')} ${firstBadge}${finalBadge}</span><span class="arrival-departure-time">${depDay}${r.originDepartureTime || '—'}出発</span></div>
           <div class="cell service">${busOperatorHtml(r)}</div>
           <div class="cell sub arrival-terminal-wrap"><span class="arrival-terminal">${r.arrivalTerminal}</span><span class="arrival-continuation">${busArrivalContinuationLabel(r)}</span></div>
           <div class="cell time">${r.arrivalTerminalTime}頃予定</div>`;
       }
       root.appendChild(row);
     });
+    activateOverflowScroll(root);
     restoreScroll('bus'); attachScrollMemory('bus');
   }
   function renderPort(rows) {
