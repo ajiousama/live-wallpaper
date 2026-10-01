@@ -607,8 +607,12 @@
   const EHIME_PORTS = new Set(['松山観光港','三津浜港','高浜港','今治港','東予港','新居浜東港','八幡浜港','三崎港']);
   function ehimePortHtml(name) {
     const n = String(name || '');
-    if (!EHIME_PORTS.has(n)) return n || '—';
-    return `<span class="ehime-port"><span class="ehime-badge">愛媛</span>${n}</span>`;
+    return n ? `<span class="route-port">${n}</span>` : '—';
+  }
+  function jumboPortHtml(name) {
+    const n=String(name||'');
+    if (/高松/.test(n)) return `<span class="kagawa-port"><span class="kagawa-badge">香川</span>${n}</span>`;
+    return `<span class="route-port">${n}</span>`;
   }
 
   function portDestinationName(dest) {
@@ -692,7 +696,8 @@
     return direction === 'arrival' ? clean.reverse() : clean;
   }
   function portRouteHtml(record, direction = 'departure') {
-    return portRouteParts(record, direction).map(x => EHIME_PORTS.has(x) ? ehimePortHtml(x) : `<span class="route-port">${x}</span>`).join('<span class="route-arrow"> → </span>');
+    const jumbo=/ジャンボフェリー/.test(String(record.service||''));
+    return portRouteParts(record, direction).map(x => jumbo ? jumboPortHtml(x) : `<span class="route-port">${x}</span>`).join('<span class="route-arrow"> → </span>');
   }
 
   const CRUISE_DEPARTURE_CALLS = {
@@ -760,8 +765,9 @@
     const via=calls.slice(0,-1).map(x=>x[0]);
     const displayTerminal=/中島/.test(String(record.service||'')) && /大浦/.test(String(record.dest||'')) ? '中島（大浦）' : terminal;
     const start=record.port || '出発港';
-    const startHtml=EHIME_PORTS.has(start)?ehimePortHtml(start):`<span class="route-port">${start}</span>`;
-    const terminalHtml=EHIME_PORTS.has(displayTerminal)?ehimePortHtml(displayTerminal):`<span class="route-port">${displayTerminal}</span>`;
+    const jumbo=/ジャンボフェリー/.test(String(record.service||''));
+    const startHtml=jumbo?jumboPortHtml(start):`<span class="route-port">${start}</span>`;
+    const terminalHtml=jumbo?jumboPortHtml(displayTerminal):`<span class="route-port">${displayTerminal}</span>`;
     const viaNames=via.map(compactPortName);
     const viaLines=[];
     if (viaNames.length===1) viaLines.push(`${viaNames[0]}寄港`);
