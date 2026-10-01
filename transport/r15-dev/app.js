@@ -1680,9 +1680,35 @@
     overlay.dataset.focusCount=String(focus.count);
     overlay.dataset.focusIndex=String(focus.index);
   }
+  function earthquakeNoticeKey(recent) {
+    if(!recent) return '';
+    return [
+      String(recent.time||''),
+      String(recent.hypocenter||''),
+      String(recent.magnitude??''),
+      String(recent.maxScale??'')
+    ].join('|');
+  }
+
+  function acknowledgedEarthquakeKey() {
+    try { return localStorage.getItem('matsuyama.ackEarthquake') || ''; }
+    catch(e) { return ''; }
+  }
+
+  function acknowledgeEarthquake(recent) {
+    const key=earthquakeNoticeKey(recent);
+    if(!key) return;
+    try { localStorage.setItem('matsuyama.ackEarthquake',key); } catch(e) {}
+    disasterRotationSignature='';
+    renderDisaster(japanNow());
+  }
+
   function renderDisaster(now) {
     const test=new URLSearchParams(location.search).get('disasterTest')==='1'; const d=test?disasterTestData():(disasterLive.data||{});
-    const recent=d.recentEarthquake; const recentMs=parseJstClient(recent?.time); const recentActive=!!recent && Number.isFinite(recentMs) && Date.now()-recentMs<20*60*1000;
+    const recent=d.recentEarthquake; const recentMs=parseJstClient(recent?.time);
+    const recentKey=earthquakeNoticeKey(recent);
+    const recentAcknowledged=!test && recentKey && acknowledgedEarthquakeKey()===recentKey;
+    const recentActive=!!recent && !recentAcknowledged && Number.isFinite(recentMs) && Date.now()-recentMs<20*60*1000;
     const weatherActive=Array.isArray(d.weather?.active)&&d.weather.active.length>0; const eewActive=!!(d.eew?.active&&d.eew?.local); const tsunamiActive=!!d.tsunami?.active;
     const active=test||eewActive||tsunamiActive||weatherActive||recentActive; const overlay=$('disaster-overlay'); overlay.hidden=!active;
     maybePlayDisasterAlarm(d,test);
@@ -1695,6 +1721,15 @@
     applyDisasterFocus(overlay,focus);
     overlay.classList.toggle('eew-active',focus.type==='eew');
     overlay.classList.toggle('tsunami-active',focus.type==='tsunami');
+    const confirmWrap=$('quake-confirm-wrap');
+    const confirmBtn=$('quake-confirm');
+    if(confirmWrap) confirmWrap.hidden=focus.type!=='summary' || !recentActive;
+    if(confirmBtn){
+      confirmBtn.onclick=()=>{
+        if(focus.type!=='summary' || !recentActive) return;
+        acknowledgeEarthquake(recent);
+      };
+    }
     $('disaster-time').textContent=now.time;
     $('disaster-mainline').textContent=eewActive||test?'緊急地震速報を受信しています':tsunamiActive?'津波情報が発表されています':weatherActive?'松山市に気象警報・注意報が発表されています':'近隣で地震が発生しました';
     $('quake-summary').textContent=recent?`震源 ${recent.hypocenter}　M${recent.magnitude}　深さ ${recent.depth}km　最大震度 ${recent.maxScale}${recent.ehimeScale?`　愛媛 ${recent.ehimeScale}`:''}`:'地震情報を確認中';
