@@ -1116,43 +1116,82 @@
     return badges.join('');
   }
 
+  function railVisiblePassengerRows(now) {
+    const passenger=nextRows('rail',now).map(r=>({
+      type:'passenger',
+      sort:(()=>{
+        const t=padTime(r.time||'');
+        let d=toMinutes(t)-now.minutes;
+        if(d < -720) d += 1440;
+        if(d > 720) d -= 1440;
+        return now.minutes+d;
+      })(),
+      row:r
+    }));
+    const deadheads=matsuyamaDeadheadArrivals(now).map(x=>({
+      type:'deadhead',
+      sort:(()=>{
+        let d=toMinutes(x.arrival)-now.minutes;
+        if(d < -720) d += 1440;
+        if(d > 720) d -= 1440;
+        return now.minutes+d;
+      })()
+    }));
+    const freights=matsuyamaFreightPasses(now).map(x=>({
+      type:'freight',
+      sort:(()=>{
+        let d=toMinutes(x.passTime)-now.minutes;
+        if(d < -720) d += 1440;
+        if(d > 720) d -= 1440;
+        return now.minutes+d;
+      })()
+    }));
+    return [...passenger,...deadheads,...freights]
+      .sort((a,b)=>a.sort-b.sort)
+      .slice(0,3)
+      .filter(x=>x.type==='passenger')
+      .map(x=>x.row);
+  }
+
   function railSpecialFinalTickerItems(now) {
     const s=railSpecialFinals(now);
+    const visible=railVisiblePassengerRows(now);
+    const isVisible=(r)=>visible.some(v=>sameRailService(v,r));
     const out=[];
     const label=(r)=>r.kind==='local'
       ? `普通 ${r.dest}行`
       : `${String(r.service||'').includes('しおかぜ')||String(r.service||'').includes('いしづち')||String(r.service||'').includes('宇和海')?'特急 ':''}${r.service||''} ${r.dest}行`.trim();
 
-    if(s.imabariFinal && s.imabariFinal.minutes>=now.minutes){
+    if(s.imabariFinal && isVisible(s.imabariFinal)){
       out.push(`<span class="rail-special-final rail-direction-final">🚆 今治方面 最終｜松山 ${s.imabariFinal.time}発｜${label(s.imabariFinal)}</span>`);
     }
-    if(s.northFinal && s.northFinal.minutes>=now.minutes){
+    if(s.northFinal && isVisible(s.northFinal)){
       out.push(`<span class="rail-special-final rail-direction-final">🚆 最終｜松山 ${s.northFinal.time}発｜${label(s.northFinal)}</span>`);
     }
-    if(s.southwest && s.southwest.minutes>=now.minutes){
+    if(s.southwest && isVisible(s.southwest)){
       out.push(`<span class="rail-special-final rail-southwest-final">🚆 宇和島方面 最終｜松山 ${s.southwest.time}発｜${label(s.southwest)}</span>`);
     }
-    if(s.southFinal && s.southFinal.minutes>=now.minutes){
+    if(s.southFinal && isVisible(s.southFinal)){
       out.push(`<span class="rail-special-final rail-direction-final">🚆 最終｜松山 ${s.southFinal.time}発｜${label(s.southFinal)}</span>`);
     }
 
-    if(s.outside && s.outside.minutes>=now.minutes){
+    if(s.outside && isVisible(s.outside)){
       out.push(`<span class="rail-special-final rail-outside-final">⚠ 県外へ行ける最終｜松山 ${s.outside.time}発｜${label(s.outside)}</span>`);
     }
     // "最終連絡" is reserved for exactly these five notices.
-    if(s.yodo && s.yodo.minutes>=now.minutes){
+    if(s.yodo && isVisible(s.yodo)){
       out.push(`<span class="rail-special-final rail-southwest-final">🚆 予土線 最終連絡｜松山 ${s.yodo.time}発｜${label(s.yodo)} → 宇和島21:06着 → 予土線21:11発</span>`);
     }
-    if(s.kochi && s.kochi.minutes>=now.minutes){
+    if(s.kochi && isVisible(s.kochi)){
       out.push(`<span class="rail-special-final rail-outside-final">🚆 高知方面 最終連絡｜松山 ${s.kochi.time}発｜${label(s.kochi)} → 多度津 → 南風27号</span>`);
     }
-    if(s.tokushima && s.tokushima.minutes>=now.minutes){
+    if(s.tokushima && isVisible(s.tokushima)){
       out.push(`<span class="rail-special-final rail-outside-final">🚆 徳島方面 最終連絡｜松山 ${s.tokushima.time}発｜${label(s.tokushima)} → 高松 → うずしお33号</span>`);
     }
-    if(s.shinkansen && s.shinkansen.minutes>=now.minutes){
+    if(s.shinkansen && isVisible(s.shinkansen)){
       out.push(`<span class="rail-special-final rail-shinkansen-final">🚄 新幹線 最終連絡｜松山 ${s.shinkansen.time}発｜${label(s.shinkansen)} → 岡山で新幹線</span>`);
     }
-    if(s.sunrise && s.sunrise.minutes>=now.minutes){
+    if(s.sunrise && isVisible(s.sunrise)){
       out.push(`<span class="rail-special-final rail-sunrise-final">🌅 サンライズ瀬戸 最終連絡｜松山 ${s.sunrise.time}発｜${label(s.sunrise)} → 坂出でサンライズ瀬戸</span>`);
     }
     return out;
