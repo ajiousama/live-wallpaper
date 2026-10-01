@@ -1,4 +1,5 @@
-const CFG={refreshMs:15000,switchMs:10000,airportSwitchMs:10000,maxRows:4};
+const CFG={refreshMs:15000,switchMs:10000,airportSwitchMs:10000,deployCheckMs:60000,maxRows:4};
+const CURRENT_BUILD=document.documentElement.dataset.build||"";
 let currentView="board",airportSide="departures",cache=null;
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 function tickClock(){const n=new Date();$("#clock").textContent=new Intl.DateTimeFormat("ja-JP",{hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false}).format(n);$("#date").textContent=new Intl.DateTimeFormat("ja-JP",{year:"numeric",month:"2-digit",day:"2-digit",weekday:"short"}).format(n)}
@@ -9,6 +10,7 @@ function renderNow(key,items){const root=document.querySelector('[data-now="'+ke
 function renderAlert(data){const root=$("#alert"),alerts=[];for(const x of(data.ichitsubo||[])){if(x.alert)alerts.push(x.alert)}if(alerts.length){root.textContent=alerts[0];root.classList.remove("hidden")}else{root.textContent="";root.classList.add("hidden")}}
 function render(data){cache=data;renderRows("jr_matsuyama",data.jr_matsuyama);renderRows("ichitsubo",data.ichitsubo);renderRows("highway_bus",data.highway_bus);renderRows("ferry",data.ferry);const airport=data.airport||{};renderRows("airport",airport[airportSide]||[]);$("#airport-mode").textContent=airportSide==="departures"?"出発":"到着";const now=data.now||{};for(const key of["trains","buses","aircraft","vessels"])renderNow(key,now[key]);renderAlert(data);$("#updated").textContent=data.generated_at_jst||"--"}
 async function refresh(){try{const r=await fetch("../data/transport.json?t="+Date.now(),{cache:"no-store"});if(!r.ok)throw new Error("HTTP "+r.status);render(await r.json())}catch(e){$("#updated").textContent="取得失敗"}}
+async function checkDeployment(){try{const r=await fetch("../deploy-version.json?t="+Date.now(),{cache:"no-store"});if(!r.ok)return;const x=await r.json();const next=String(x.build||"");if(next&&CURRENT_BUILD&&next!==CURRENT_BUILD){const u=new URL(location.href);u.searchParams.set("v",next);location.replace(u.toString())}}catch(e){}}
 function switchView(){currentView=currentView==="board"?"now":"board";$$("#board,#now").forEach(x=>x.classList.remove("active"));$("#"+currentView).classList.add("active");$("#mode-title").textContent=currentView==="board"?"松山交通案内":"松山交通 NOW"}
 function switchAirport(){airportSide=airportSide==="departures"?"arrivals":"departures";if(cache)render(cache)}
-tickClock();setInterval(tickClock,1000);refresh();setInterval(refresh,CFG.refreshMs);setInterval(switchView,CFG.switchMs);setInterval(switchAirport,CFG.airportSwitchMs);
+tickClock();setInterval(tickClock,1000);refresh();setInterval(refresh,CFG.refreshMs);setInterval(switchView,CFG.switchMs);setInterval(switchAirport,CFG.airportSwitchMs);checkDeployment();setInterval(checkDeployment,CFG.deployCheckMs);
