@@ -1608,14 +1608,54 @@
     lastDisasterSoundKey=key;
     playUrgentDisasterAlarm();
   }
+
+  const DISASTER_ROTATE_MS=20000;
+  let disasterRotationSignature='';
+  let disasterRotationStartedAt=0;
+
+  function currentDisasterFocus(eewActive,tsunamiActive,weatherActive,recentActive) {
+    const types=[];
+    if(eewActive) types.push('eew');
+    if(tsunamiActive) types.push('tsunami');
+    if(weatherActive) types.push('weather');
+    // Do not duplicate the same earthquake as a separate summary while EEW is active.
+    if(recentActive && !eewActive) types.push('summary');
+
+    const signature=types.join('|');
+    if(signature!==disasterRotationSignature){
+      disasterRotationSignature=signature;
+      disasterRotationStartedAt=Date.now();
+    }
+    if(!types.length) return {type:'summary',count:0,index:0};
+    const index=types.length>1
+      ? Math.floor((Date.now()-disasterRotationStartedAt)/DISASTER_ROTATE_MS)%types.length
+      : 0;
+    return {type:types[index],count:types.length,index};
+  }
+
+  function applyDisasterFocus(overlay,focus) {
+    overlay.classList.add('single-focus');
+    ['summary','eew','weather','tsunami'].forEach(type=>{
+      overlay.classList.toggle(`focus-${type}`,focus.type===type);
+    });
+    overlay.dataset.focusCount=String(focus.count);
+    overlay.dataset.focusIndex=String(focus.index);
+  }
   function renderDisaster(now) {
     const test=new URLSearchParams(location.search).get('disasterTest')==='1'; const d=test?disasterTestData():(disasterLive.data||{});
     const recent=d.recentEarthquake; const recentMs=parseJstClient(recent?.time); const recentActive=!!recent && Number.isFinite(recentMs) && Date.now()-recentMs<20*60*1000;
     const weatherActive=Array.isArray(d.weather?.active)&&d.weather.active.length>0; const eewActive=!!(d.eew?.active&&d.eew?.local); const tsunamiActive=!!d.tsunami?.active;
     const active=test||eewActive||tsunamiActive||weatherActive||recentActive; const overlay=$('disaster-overlay'); overlay.hidden=!active;
     maybePlayDisasterAlarm(d,test);
-    if(!active)return;
-    overlay.classList.toggle('eew-active',eewActive||test); overlay.classList.toggle('tsunami-active',tsunamiActive||test);
+    if(!active){
+      disasterRotationSignature='';
+      overlay.classList.remove('single-focus','focus-summary','focus-eew','focus-weather','focus-tsunami');
+      return;
+    }
+    const focus=currentDisasterFocus(eewActive,tsunamiActive,weatherActive,recentActive);
+    applyDisasterFocus(overlay,focus);
+    overlay.classList.toggle('eew-active',focus.type==='eew');
+    overlay.classList.toggle('tsunami-active',focus.type==='tsunami');
     $('disaster-time').textContent=now.time;
     $('disaster-mainline').textContent=eewActive||test?'緊急地震速報を受信しています':tsunamiActive?'津波情報が発表されています':weatherActive?'松山市に気象警報・注意報が発表されています':'近隣で地震が発生しました';
     $('quake-summary').textContent=recent?`震源 ${recent.hypocenter}　M${recent.magnitude}　深さ ${recent.depth}km　最大震度 ${recent.maxScale}${recent.ehimeScale?`　愛媛 ${recent.ehimeScale}`:''}`:'地震情報を確認中';
