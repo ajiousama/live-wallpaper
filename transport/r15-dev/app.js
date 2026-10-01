@@ -1128,7 +1128,6 @@
         const t=padTime(r.time||'');
         let d=toMinutes(t)-now.minutes;
         if(d < -720) d += 1440;
-        if(d > 720) d -= 1440;
         return now.minutes+d;
       })(),
       row:r
@@ -1138,7 +1137,6 @@
       sort:(()=>{
         let d=toMinutes(x.arrival)-now.minutes;
         if(d < -720) d += 1440;
-        if(d > 720) d -= 1440;
         return now.minutes+d;
       })()
     }));
@@ -1147,7 +1145,6 @@
       sort:(()=>{
         let d=toMinutes(x.passTime)-now.minutes;
         if(d < -720) d += 1440;
-        if(d > 720) d -= 1440;
         return now.minutes+d;
       })()
     }));
@@ -1412,7 +1409,6 @@
       _sortMinutes: (() => {
         let d=toMinutes(x.arrival)-now.minutes;
         if(d < -720) d += 1440;
-        if(d > 720) d -= 1440;
         return now.minutes + d;
       })(),
       data: x
@@ -1423,7 +1419,6 @@
       _sortMinutes: (() => {
         let d=toMinutes(x.passTime)-now.minutes;
         if(d < -720) d += 1440;
-        if(d > 720) d -= 1440;
         return now.minutes + d;
       })(),
       data: x
@@ -1435,7 +1430,6 @@
         const t=padTime(r.time||'');
         let d=toMinutes(t)-now.minutes;
         if(d < -720) d += 1440;
-        if(d > 720) d -= 1440;
         return now.minutes + d;
       })(),
       data: r
