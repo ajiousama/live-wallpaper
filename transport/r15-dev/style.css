@@ -513,3 +513,25 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
 .panel-bus .bus-via-line .overflow-scroll-track{
   white-space:nowrap;
 }
+
+
+/* R15 DEV: airport departure delay visibility */
+.panel-air.dep-mode .table-head,
+.panel-air.dep-mode .row{
+  grid-template-columns:94px 155px 1fr 123px!important;
+}
+.panel-air.dep-mode .cell.time{
+  padding-left:6px;
+  overflow:visible!important;
+}
+.panel-air.dep-mode .air-time-wrap{
+  align-items:flex-start;
+}
+.panel-air.dep-mode .air-time-wrap .live-time{
+  font-size:16px;
+  white-space:nowrap;
+}
+.panel-air.dep-mode .air-delay{
+  margin-left:4px;
+  white-space:nowrap;
+}
