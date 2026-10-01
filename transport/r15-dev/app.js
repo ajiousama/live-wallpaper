@@ -1065,6 +1065,9 @@
       .sort((a,b)=>a.minutes-b.minutes);
 
     // "Reach" can be direct or a same-day connection recorded in connectsTo/connection.
+    const northFinal=rows.filter(r=>r.direction==='north').at(-1)||null;
+    const southFinal=rows.filter(r=>r.direction==='south').at(-1)||null;
+
     const outside=rows.filter(r=>{
       if(r.direction!=='north') return false;
       return /観音寺|高松|岡山/.test(railReachText(r));
@@ -1090,7 +1093,7 @@
     });
     const sunrise=sunriseCandidates.at(-1)||shinkansen;
 
-    return {outside,southwest,shinkansen,sunrise};
+    return {northFinal,southFinal,outside,southwest,shinkansen,sunrise};
   }
 
   function sameRailService(a,b) {
@@ -1103,9 +1106,12 @@
 
   function railSpecialFinalBadge(r,now) {
     const s=railSpecialFinals(now);
-    if(sameRailService(r,s.outside)) return badgeHtml('final','県外最終');
-    if(sameRailService(r,s.southwest)) return badgeHtml('final','宇和島・八幡浜方面最終');
-    return '';
+    const badges=[];
+    if(sameRailService(r,s.northFinal)) badges.push(badgeHtml('final','今治方面 最終列車'));
+    if(sameRailService(r,s.southFinal)) badges.push(badgeHtml('final','宇和島方面 最終列車'));
+    if(sameRailService(r,s.outside)) badges.push(badgeHtml('final','県外最終'));
+    if(sameRailService(r,s.southwest)) badges.push(badgeHtml('final','宇和島・八幡浜方面最終'));
+    return badges.join('');
   }
 
   function railSpecialFinalTickerItems(now) {
@@ -1114,6 +1120,13 @@
     const label=(r)=>r.kind==='local'
       ? `普通 ${r.dest}行`
       : `${String(r.service||'').includes('しおかぜ')||String(r.service||'').includes('いしづち')||String(r.service||'').includes('宇和海')?'特急 ':''}${r.service||''} ${r.dest}行`.trim();
+
+    if(s.northFinal && s.northFinal.minutes>=now.minutes){
+      out.push(`<span class="rail-special-final rail-direction-final">🚆 今治方面 最終列車｜松山 ${s.northFinal.time}発｜${label(s.northFinal)}</span>`);
+    }
+    if(s.southFinal && s.southFinal.minutes>=now.minutes){
+      out.push(`<span class="rail-special-final rail-direction-final">🚆 宇和島方面 最終列車｜松山 ${s.southFinal.time}発｜${label(s.southFinal)}</span>`);
+    }
 
     if(s.outside && s.outside.minutes>=now.minutes){
       out.push(`<span class="rail-special-final rail-outside-final">⚠ 県外へ行ける最終｜松山 ${s.outside.time}発｜${label(s.outside)}</span>`);
