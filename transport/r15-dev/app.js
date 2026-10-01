@@ -1582,27 +1582,27 @@
   function busMiniLogo(name) {
     const n=String(name||'').trim();
     const defs=[
-      [/^伊予鉄バス$/, 'IYOTETSU', 'iyo'],
-      [/^伊予鉄南予バス$/, 'NANYO', 'nanyo'],
+      [/^伊予鉄バス$/, '伊予鉄', 'iyo'],
+      [/^伊予鉄南予バス$/, '伊予鉄南予', 'nanyo'],
       [/^JR四国バス$/, 'JR四国', 'jrshikoku'],
       [/^西日本JRバス$/, '西日本JR', 'jrwest'],
       [/^JR東海バス$/, 'JR東海', 'jrtokai'],
       [/^四国高速バス$/, '四国高速', 'shikoku'],
       [/^徳島バス$/, '徳島', 'tokushima'],
-      [/^両備バス$/, 'RYOBI', 'ryobi'],
-      [/^下電バス$/, 'SHIMODEN', 'shimoden'],
-      [/^とさでん交通$/, 'TOSADEN', 'tosaden'],
-      [/^阪急観光バス$/, 'HANKYU', 'hankyu'],
-      [/^名鉄バス$/, 'MEITETSU', 'meitetsu'],
-      [/^せとうちバス$/, 'SETOUCHI', 'setouchi'],
-      [/^西東京バス$/, 'NISHITOKYO', 'nishitokyo'],
+      [/^両備バス$/, '両備', 'ryobi'],
+      [/^下電バス$/, '下電', 'shimoden'],
+      [/^とさでん交通$/, 'とさでん', 'tosaden'],
+      [/^阪急観光バス$/, '阪急', 'hankyu'],
+      [/^名鉄バス$/, '名鉄', 'meitetsu'],
+      [/^せとうちバス$/, 'せとうち', 'setouchi'],
+      [/^西東京バス$/, '西東京', 'nishitokyo'],
       [/^WILLER EXPRESS$/, 'WILLER', 'willer'],
-      [/^宇和島自動車$/, 'UWJ BUS', 'uwajima'],
-      [/^中国バス$/, 'CHUGOKU', 'chugoku'],
-      [/^本四バス$/, 'HONSHI', 'honshi'],
-      [/^琴平バス$/, 'KOTOBUS', 'kotobus'],
-      [/^神姫バス$/, 'SHINKI', 'shinki'],
-      [/^しまなみバス$/, 'SHIMANAMI', 'shimanami']
+      [/^宇和島自動車$/, '宇和島', 'uwajima'],
+      [/^中国バス$/, '中国', 'chugoku'],
+      [/^本四バス$/, '本四', 'honshi'],
+      [/^琴平バス$/, '琴平', 'kotobus'],
+      [/^神姫バス$/, '神姫', 'shinki'],
+      [/^しまなみバス$/, 'しまなみ', 'shimanami']
     ];
     const hit=defs.find(([re])=>re.test(n));
     if(!hit) return `<span class="bus-mini-logo bus-logo-generic">${n||'—'}</span>`;
