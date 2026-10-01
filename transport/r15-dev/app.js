@@ -150,7 +150,7 @@
     const m = String(service).match(/^(.+?)\s+(\d+)$/);
     if (!m) return { airline: service, number: '' };
     const airlineMap = {
-      JAL: '日本航空', ANA: '全日本空輸', IBX: 'IBEXエアラインズ', IBEX: 'IBEXエアラインズ', JJP: 'ジェットスター', GK: 'ジェットスター', '7C': 'チェジュ航空', JJA: 'チェジュ航空', BR: 'エバー航空', EVA: 'エバー航空', BX: 'エアプサン', MH: 'マレーシア航空'
+      JAL: 'JAL', ANA: 'ANA', IBX: 'IBEXエアラインズ', IBEX: 'IBEXエアラインズ', JJP: 'ジェットスター', GK: 'ジェットスター', '7C': 'チェジュ航空', JJA: 'チェジュ航空', BR: 'エバー航空', EVA: 'エバー航空', BX: 'エアプサン', MH: 'マレーシア航空'
     };
     return { airline: airlineMap[m[1]] || m[1], number: m[2] };
   }
@@ -1258,13 +1258,18 @@
 
         const nums=Array.isArray(x?.numbers)?x.numbers.map(String).filter(Boolean):[];
         const flight=nums.length?nums.join(' / '):'便名不明';
+        const matchedAirline=nums.map(n=>{
+          const row=data.records.find(r=>r.board==='air' && String(parseAirService(r.service).number)===String(n));
+          return row?parseAirService(row.service).airline:'';
+        }).find(Boolean)||'';
+        const airlineLabel=matchedAirline ? `${matchedAirline} ` : '';
         const place=String(x?.place||'').trim();
         const late=Number.isFinite(delta)&&delta>0
           ? `+${delta}分`
           : (status.match(/(?:遅延|遅れ)[^0-9]*([0-9]+)分/)?.[1] ? `+${status.match(/(?:遅延|遅れ)[^0-9]*([0-9]+)分/)?.[1]}分` : '遅延');
         const dirLabel=direction==='departure'?'出発':'到着';
         const route=place ? `｜${place}${direction==='departure'?'行':'発'}` : '';
-        items.push(`✈ 遅延｜${dirLabel} ${flight}${route}｜定刻 ${scheduled} → ${changed}（${late}）`);
+        items.push(`✈ 遅延｜${dirLabel} ${airlineLabel}${flight}${route}｜定刻 ${scheduled} → ${changed}（${late}）`);
       });
     };
 
