@@ -1165,6 +1165,12 @@
     const items=[];
     if(north){const badges=`${north.isNextDayStart?badgeHtml('first'):''}${north.isFinal?badgeHtml('final','最終'):''}`;items.push(`JR市坪駅 松山方面　次列車 ${north.time}　普通 ${railDestLabel(north)}行 ${badges}`);} else items.push('JR市坪駅 松山方面｜運行終了');
     if(south){const badges=`${south.isNextDayStart?badgeHtml('first'):''}${south.isFinal?badgeHtml('final','最終'):''}`;items.push(`JR市坪駅 宇和島方面　次列車 ${south.time}　普通 ${railDestLabel(south)}行 ${badges}`);} else items.push('JR市坪駅 宇和島方面｜運行終了');
+    const deadhead=matsuyamaDeadheadArrivals(now)[0];
+    if(deadhead){
+      const origin=deadhead.origin||'回送区間';
+      const pos=deadhead.position?`｜現在位置 ${deadhead.position}`:'';
+      items.push(`JR松山駅｜回送 ${deadhead.arrival} 到着予定｜${origin}発${pos}`);
+    }
     return [...items,...specials];
   }
 
@@ -1238,12 +1244,60 @@
     if (dep) return `<div class="cell time"></div><div class="cell service"></div><div class="cell main end-message">${msg}</div><div class="cell sub"></div>`;
     return `<div class="cell main end-message">${msg}</div><div class="cell service"></div><div class="cell sub"></div><div class="cell time"></div>`;
   }
+  function matsuyamaDeadheadArrivals(now) {
+    const generatedAt=Date.parse(String(approachLive.generatedAtJst||''));
+    if(!approachLive.ok || (Number.isFinite(generatedAt) && Date.now()-generatedAt>45000)) return [];
+    const raw=Array.isArray(approachLive.ichitsubo?.matsuyamaDeadheads)
+      ? approachLive.ichitsubo.matsuyamaDeadheads
+      : [];
+    return raw.map(x=>{
+      const scheduled=padTime(x.scheduledMatsuyama||'');
+      const delay=Number(x.delayMinutes)||0;
+      return {
+        ...x,
+        scheduled,
+        arrival: scheduled ? addMinutes(scheduled,delay) : '',
+        origin: cleanStation(x.origin||''),
+        position: cleanStation(x.position||''),
+        delay
+      };
+    }).filter(x=>x.arrival);
+  }
+
+  function appendMatsuyamaDeadheadRow(root, x) {
+    const row=document.createElement('div');
+    row.className='row rail-row deadhead-row';
+    const origin=x.origin||'回送区間';
+    const details=[`${origin}発の回送列車が松山駅に到着します`];
+    if(x.position) details.push(`現在位置 ${x.position}`);
+    if(x.delay>0) details.push(`${x.delay}分遅れ`);
+    row.innerHTML=`
+      <div class="rail-primary">
+        <div class="cell rail-service deadhead"><span class="kindtxt">回送</span></div>
+        <div class="cell time">${x.arrival}</div>
+        <div class="cell main">松山　到着</div>
+      </div>
+      <div class="rail-detail">${tickerHtml(details)}</div>`;
+    root.appendChild(row);
+  }
+
   function renderRail(rows) {
     const root = $('rail-rows'); root.innerHTML = '';
     root.classList.remove('rail-end');
     const visible = rows.slice(0, 3);
     if (!visible.length) {
       const now = japanNow();
+      const deadheads=matsuyamaDeadheadArrivals(now).slice(0,3);
+      if(deadheads.length){
+        deadheads.forEach(x=>appendMatsuyamaDeadheadRow(root,x));
+        while(root.children.length<3){
+          const row=document.createElement('div'); row.className='row rail-row placeholder blank';
+          row.innerHTML=`<div class="rail-primary"><div class="cell"></div><div class="cell time"></div><div class="cell"></div></div><div class="rail-detail"></div>`;
+          root.appendChild(row);
+        }
+        activatePanelOverflow(root);
+        return;
+      }
       const last = lastRailMovement(now);
       const mode = currentRailDir() === 'north' ? 'NORTHBOUND — 今治方面 —' : 'SOUTHBOUND — 宇和島方面 —';
       const serviceLabel = last ? (last.kind === 'local' ? '普通' : (last.kind === 'sightseeing' ? `観光 ${last.service}` : `特急 ${last.service}`)) : '—';
