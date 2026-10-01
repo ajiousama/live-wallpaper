@@ -458,12 +458,13 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
   white-space:nowrap;
 }
 .overflow-scroll.is-overflow .overflow-scroll-track{
-  padding-right:36px;
-  animation:bus-place-scroll 8s linear infinite;
+  padding-right:0!important;
+  animation:bus-place-scroll 8s ease-in-out infinite;
 }
 @keyframes bus-place-scroll{
-  0%,12%{transform:translateX(0)}
-  88%,100%{transform:translateX(calc(-1 * var(--overflow-distance, 0px)))}
+  0%,14%{transform:translateX(0)}
+  46%,60%{transform:translateX(calc(-1 * var(--overflow-distance, 0px)))}
+  92%,100%{transform:translateX(0)}
 }
 
 
@@ -620,8 +621,8 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
   will-change:transform;
 }
 .overflow-scroll.is-overflow > .overflow-scroll-track{
-  padding-right:36px;
-  animation:bus-place-scroll 8s linear infinite!important;
+  padding-right:0!important;
+  animation:bus-place-scroll 8s ease-in-out infinite!important;
 }
 .panel-air .air-status,
 .panel-air .air-status > .overflow-scroll,
