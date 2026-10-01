@@ -873,24 +873,45 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
 
 /* R15 DEV: disaster action ticker */
 .disaster-action-ticker{
+  position:relative!important;
   overflow:hidden!important;
   white-space:nowrap!important;
+  background:#1b0900!important;
+  border-top:2px solid #ffb000!important;
+  box-shadow:inset 0 0 18px rgba(255,120,0,.18)!important;
 }
 .disaster-action-track{
-  display:inline-flex;
-  align-items:center;
-  gap:72px;
-  width:max-content;
-  min-width:max-content;
-  animation:disaster-action-scroll 15s linear infinite;
+  display:inline-flex!important;
+  align-items:center!important;
+  width:max-content!important;
+  min-width:max-content!important;
+  gap:0!important;
+  animation:disaster-action-scroll 22s linear infinite!important;
   will-change:transform;
 }
-.disaster-action-track span{
-  flex:0 0 auto;
-  font-weight:900;
-  letter-spacing:.03em;
+.disaster-action-set{
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:120px!important;
+  padding-right:120px!important;
+  flex:0 0 auto!important;
+}
+.disaster-action-set > span{
+  display:inline-block!important;
+  flex:0 0 auto!important;
+  font-size:24px!important;
+  font-weight:1000!important;
+  letter-spacing:.08em!important;
+  color:#ffd84d!important;
+  text-shadow:0 0 10px rgba(255,180,0,.65)!important;
+}
+.disaster-action-set > span::before{
+  content:"⚠";
+  margin-right:14px;
+  color:#ff5d3a;
+  text-shadow:0 0 10px rgba(255,70,40,.8);
 }
 @keyframes disaster-action-scroll{
-  from{transform:translateX(100%)}
-  to{transform:translateX(-100%)}
+  from{transform:translateX(0)}
+  to{transform:translateX(-50%)}
 }
