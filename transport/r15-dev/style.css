@@ -597,3 +597,45 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
 .panel-bus .bus-destination-line{
   text-overflow:clip!important;
 }
+
+
+/* R15 DEV: robust overflow measurement */
+.overflow-scroll{
+  display:block!important;
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  overflow:hidden!important;
+  white-space:nowrap!important;
+  text-overflow:clip!important;
+}
+.overflow-scroll > .overflow-scroll-track{
+  display:inline-block!important;
+  width:max-content!important;
+  min-width:max-content!important;
+  max-width:none!important;
+  white-space:nowrap!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+  will-change:transform;
+}
+.overflow-scroll.is-overflow > .overflow-scroll-track{
+  padding-right:36px;
+  animation:bus-place-scroll 8s linear infinite!important;
+}
+.panel-air .air-status,
+.panel-air .air-status > .overflow-scroll,
+.panel-bus .bus-via-line,
+.panel-bus .bus-via-line > .overflow-scroll,
+.panel-bus .bus-destination-line,
+.panel-bus .bus-destination-line > .overflow-scroll{
+  min-width:0!important;
+  width:100%!important;
+  max-width:100%!important;
+  overflow:hidden!important;
+  text-overflow:clip!important;
+}
+.panel-air .air-status.long-status{
+  font-size:15px!important;
+  letter-spacing:0!important;
+}
