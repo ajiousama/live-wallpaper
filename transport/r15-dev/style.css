@@ -222,7 +222,7 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
 @keyframes depart-text-pulse{0%,100%{opacity:1}50%{opacity:.35}}
 #panel-port .port-head,#panel-port .row{grid-template-columns:72px 1fr 205px}
 #panel-port.arrival-columns .port-head,#panel-port.arrival-columns .row{grid-template-columns:1fr 205px 92px}
-.port-route{font-size:17px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+.port-route{font-size:14px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
 .port-route .ehime-port{padding:2px 5px;vertical-align:middle}
 .port-route .route-arrow{color:#75cfc2;font-weight:900}
 .port-route .route-port{font-weight:700}
@@ -1051,7 +1051,8 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
   overflow:hidden!important;
   text-overflow:clip!important;
   white-space:nowrap!important;
-  font-size:14px!important;
+  font-size:17px!important;
+  font-weight:900!important;
 }
 .panel-bus.arrival-columns .arrival-departure-time{
   margin-top:2px!important;
