@@ -1565,7 +1565,7 @@
   };
   function busOperatorLabel(r) {
     if (r.actualOperator) return r.actualOperator;
-    if (r.syntheticArrival && BUS_JOINT_OPERATORS[r.source]) return '共同運行';
+    if (r.syntheticArrival && BUS_JOINT_OPERATORS[r.source]) return BUS_JOINT_OPERATORS[r.source];
     return r.service || '';
   }
   const BUS_OPERATOR_TOKEN = {
@@ -1579,17 +1579,38 @@
     const parts=raw.split(/\s*\/\s*/).filter(Boolean).map(x=>BUS_OPERATOR_TOKEN[x]||x);
     return parts;
   }
+  function busMiniLogo(name) {
+    const n=String(name||'').trim();
+    const defs=[
+      [/^伊予鉄バス$/, 'IYOTETSU', 'iyo'],
+      [/^伊予鉄南予バス$/, 'NANYO', 'nanyo'],
+      [/^JR四国バス$/, 'JR四国', 'jrshikoku'],
+      [/^西日本JRバス$/, '西日本JR', 'jrwest'],
+      [/^JR東海バス$/, 'JR東海', 'jrtokai'],
+      [/^四国高速バス$/, '四国高速', 'shikoku'],
+      [/^徳島バス$/, '徳島', 'tokushima'],
+      [/^両備バス$/, 'RYOBI', 'ryobi'],
+      [/^下電バス$/, 'SHIMODEN', 'shimoden'],
+      [/^とさでん交通$/, 'TOSADEN', 'tosaden'],
+      [/^阪急観光バス$/, 'HANKYU', 'hankyu'],
+      [/^名鉄バス$/, 'MEITETSU', 'meitetsu'],
+      [/^せとうちバス$/, 'SETOUCHI', 'setouchi'],
+      [/^西東京バス$/, 'NISHITOKYO', 'nishitokyo'],
+      [/^WILLER EXPRESS$/, 'WILLER', 'willer'],
+      [/^宇和島自動車$/, 'UWJ BUS', 'uwajima'],
+      [/^中国バス$/, 'CHUGOKU', 'chugoku'],
+      [/^本四バス$/, 'HONSHI', 'honshi'],
+      [/^琴平バス$/, 'KOTOBUS', 'kotobus'],
+      [/^神姫バス$/, 'SHINKI', 'shinki'],
+      [/^しまなみバス$/, 'SHIMANAMI', 'shimanami']
+    ];
+    const hit=defs.find(([re])=>re.test(n));
+    if(!hit) return `<span class="bus-mini-logo bus-logo-generic">${n||'—'}</span>`;
+    return `<span class="bus-mini-logo bus-logo-${hit[2]}" title="${n}">${hit[1]}</span>`;
+  }
   function busOperatorHtml(r) {
     const parts=busOperatorParts(r);
-    const lines=[];
-    const limit=13;
-    for (const part of parts) {
-      const last=lines[lines.length-1];
-      if (last && `${last}・${part}`.length<=limit && lines.length<=2) lines[lines.length-1]=`${last}・${part}`;
-      else if (lines.length<3) lines.push(part);
-      else lines[2]=`${lines[2]}・${part}`;
-    }
-    return `<div class="operator-wrap lines-${Math.min(lines.length,3)}">${lines.map(x=>`<span>${x}</span>`).join('')}</div>`;
+    return `<div class="operator-wrap bus-logo-group">${parts.map(busMiniLogo).join('')}</div>`;
   }
   function splitDestinationLines(text) {
     let s=String(text||'').replace(/（オレンジフェリー連絡）/g,'').replace(/\s+/g,' ').trim();
@@ -1833,7 +1854,7 @@
         const origin = String(r.origin || r.dest || '—').trim() || '—';
         const terminal = String(r.arrivalTerminal || r.stop || '松山市駅').trim() || '松山市駅';
         const terminalTime = padTime(r.arrivalTerminalTime || r.time || '') || '—';
-        const operator = busOperatorParts(r).join('・');
+        const operator = busOperatorHtml(r);
         row.innerHTML = `
           <div class="cell main arrival-origin">
             <span class="arrival-place">${overflowScrollHtml(origin,'bus-origin-scroll')} ${firstBadge}${finalBadge}</span>
@@ -1842,7 +1863,7 @@
           <div class="cell sub arrival-terminal-wrap">
             <span class="arrival-terminal">${overflowScrollHtml(terminal,'bus-terminal-scroll')}</span>
           </div>
-          <div class="cell service bus-arrival-operator">${overflowScrollHtml(operator,'bus-operator-scroll')}</div>
+          <div class="cell service bus-arrival-operator">${operator}</div>
           <div class="cell time bus-arrival-time">${terminalTime}頃予定</div>`;
       }
       root.appendChild(row);
