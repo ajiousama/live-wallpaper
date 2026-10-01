@@ -1527,8 +1527,8 @@
       const changed=r.liveChangedTime||r.time; const scheduled=r.liveScheduled||r.time; const delta=Number(r.liveDelta);
       const deltaHtml=Number.isFinite(delta)&&delta!==0?`<span class="air-delay${delta<0?' air-early':''}">${delta>0?'+':''}${delta}分</span>`:'';
       const timeHtml=`<div class="air-time-wrap"><span class="live-time">${changed}${deltaHtml}</span>${changed!==scheduled?`<span class="scheduled-time">定刻 ${scheduled}</span>`:''}</div>`;
-      if(dep){row.innerHTML=`<div class="cell time">${timeHtml}</div><div class="cell main air-place">${place} ${firstBadge}${finalBadge}</div><div class="cell service"><div class="service-wrap airline-service-wrap">${airlineName}<span class="code">便名 ${p.number||'—'}</span></div></div><div class="${statusClass}">${overflowScrollHtml(status,'air-status-scroll')}</div>`;}
-      else{row.innerHTML=`<div class="cell main">${place} ${firstBadge}${finalBadge}</div><div class="cell service"><div class="service-wrap"><span class="name">${p.airline}</span><span class="code">便名 ${p.number||'—'}</span></div></div><div class="${statusClass}">${overflowScrollHtml(status,'air-status-scroll')}</div><div class="cell time">${timeHtml}</div>`;}
+      if(dep){row.innerHTML=`<div class="cell time">${timeHtml}</div><div class="cell main air-place">${place} ${firstBadge}${finalBadge}</div><div class="cell service air-airline-cell"><div class="service-wrap airline-service-wrap">${airlineName}</div></div><div class="cell air-flight-cell">${p.number||'—'}</div><div class="${statusClass}">${overflowScrollHtml(status,'air-status-scroll')}</div>`;}
+      else{row.innerHTML=`<div class="cell main">${place} ${firstBadge}${finalBadge}</div><div class="cell service air-airline-cell"><div class="service-wrap airline-service-wrap">${airlineName}</div></div><div class="cell air-flight-cell">${p.number||'—'}</div><div class="${statusClass}">${overflowScrollHtml(status,'air-status-scroll')}</div><div class="cell time">${timeHtml}</div>`;}
       root.appendChild(row);
     }); activatePanelOverflow(root); restoreScroll('air'); attachScrollMemory('air');
   }
@@ -1883,8 +1883,8 @@
     const busHead = document.querySelector('#panel-bus .table-head');
     const portHead = document.querySelector('#panel-port .table-head');
     airHead.innerHTML = dep
-      ? '<span>時刻</span><span>行先</span><span>航空会社 / 便名</span><span>区分</span>'
-      : '<span>出発地</span><span>航空会社 / 便名</span><span>区分</span><span>到着時刻</span>';
+      ? '<span>時刻</span><span>行先</span><span>航空会社</span><span>便名</span><span>区分</span>'
+      : '<span>出発地</span><span>航空会社</span><span>便名</span><span>区分</span><span>到着時刻</span>';
     busHead.innerHTML = dep
       ? '<span>時刻 / 終着</span><span>行先 / 経由地</span><span>乗車場所</span><span>運行会社</span>'
       : '<span>出発地</span><span>到着場所</span><span>運行会社</span><span>到着時刻</span>';
