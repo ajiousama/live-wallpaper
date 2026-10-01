@@ -1219,7 +1219,7 @@
     return [s];
   }
   function overflowScrollHtml(text, extraClass='') {
-    return `<span class="overflow-scroll ${extraClass}"><span class="overflow-scroll-track">${text||'—'}</span></span>`;
+    return `<span class="overflow-scroll ${extraClass}"><span class="overflow-scroll-track"><span class="overflow-scroll-copy">${text||'—'}</span></span></span>`;
   }
   const overflowObserver = typeof ResizeObserver !== 'undefined'
     ? new ResizeObserver(entries => {
@@ -1231,19 +1231,43 @@
     if(!box || !box.isConnected) return;
     const track=box.querySelector(':scope > .overflow-scroll-track');
     if(!track) return;
+
+    let copy=track.querySelector(':scope > .overflow-scroll-copy:not(.overflow-scroll-clone)');
+    if(!copy){
+      copy=document.createElement('span');
+      copy.className='overflow-scroll-copy';
+      while(track.firstChild) copy.appendChild(track.firstChild);
+      track.appendChild(copy);
+    }
+
+    const clone=track.querySelector(':scope > .overflow-scroll-clone');
     const boxWidth=box.getBoundingClientRect().width;
-    const trackWidth=Math.max(track.scrollWidth,track.getBoundingClientRect().width);
-    if(!(boxWidth>0)) return;
-    const overflowPx=Math.max(0,trackWidth-boxWidth);
-    // Ignore only sub-pixel/font-rendering noise. Real overflow always scrolls.
-    const over=overflowPx > 2;
-    box.classList.toggle('is-overflow', over);
-    if(over) {
-      const distance=Math.ceil(overflowPx+1);
-      const duration=Math.max(7,Math.min(16,6+distance/24));
-      box.style.setProperty('--overflow-distance', `${distance}px`);
-      box.style.setProperty('--overflow-duration', `${duration.toFixed(1)}s`);
+    const copyWidth=Math.max(copy.scrollWidth,copy.getBoundingClientRect().width);
+    if(!(boxWidth>0) || !(copyWidth>0)) return;
+
+    const overflowPx=Math.max(0,copyWidth-boxWidth);
+    const over=overflowPx>2;
+
+    if(over){
+      if(!clone){
+        const dup=copy.cloneNode(true);
+        dup.classList.add('overflow-scroll-clone');
+        dup.setAttribute('aria-hidden','true');
+        track.appendChild(dup);
+      }
+      const gap=32;
+      const distance=Math.ceil(copyWidth+gap);
+      const duration=Math.max(9,Math.min(22,distance/28));
+      if(box.style.getPropertyValue('--overflow-distance')!==`${distance}px`) {
+        box.style.setProperty('--overflow-distance',`${distance}px`);
+      }
+      if(box.style.getPropertyValue('--overflow-duration')!==`${duration.toFixed(1)}s`) {
+        box.style.setProperty('--overflow-duration',`${duration.toFixed(1)}s`);
+      }
+      box.classList.add('is-overflow');
     } else {
+      if(clone) clone.remove();
+      box.classList.remove('is-overflow');
       box.style.removeProperty('--overflow-distance');
       box.style.removeProperty('--overflow-duration');
     }
@@ -1298,7 +1322,10 @@
       wrap.className='overflow-scroll auto-overflow';
       const track=document.createElement('span');
       track.className='overflow-scroll-track';
-      while(el.firstChild) track.appendChild(el.firstChild);
+      const copy=document.createElement('span');
+      copy.className='overflow-scroll-copy';
+      while(el.firstChild) copy.appendChild(el.firstChild);
+      track.appendChild(copy);
       wrap.appendChild(track);
       el.appendChild(wrap);
     });
