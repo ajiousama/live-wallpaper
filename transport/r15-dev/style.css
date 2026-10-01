@@ -465,3 +465,51 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
   0%,12%{transform:translateX(0)}
   88%,100%{transform:translateX(calc(-1 * var(--overflow-distance, 0px)))}
 }
+
+
+/* R15 DEV: destination second-line route guide */
+.panel-bus .bus-dest-cell{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:center;
+  min-width:0;
+  overflow:hidden!important;
+}
+.panel-bus .bus-dest-main{
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  overflow:hidden!important;
+}
+.panel-bus .bus-destination-line{
+  display:block!important;
+  width:100%;
+  max-width:100%!important;
+  font-size:15px!important;
+  line-height:1.05!important;
+  font-weight:900!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+.panel-bus .bus-via-line{
+  display:block;
+  width:100%;
+  max-width:100%;
+  margin-top:3px;
+  color:#9fd5e3;
+  font-size:10px;
+  line-height:1.05;
+  font-weight:700;
+  overflow:hidden;
+}
+.panel-bus .bus-via-line .overflow-scroll{
+  width:100%;
+}
+.panel-bus .bus-via-line .overflow-scroll-track{
+  white-space:nowrap;
+}
