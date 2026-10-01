@@ -973,3 +973,49 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
 #rail-rows .rail-primary .cell.main{
   font-size:14px!important;
 }
+
+
+/* R15: acknowledge nearby earthquake notice */
+.quake-confirm-wrap{
+  position:absolute;
+  right:34px;
+  bottom:28px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  z-index:5;
+}
+.quake-confirm-wrap[hidden]{
+  display:none!important;
+}
+.quake-confirm-btn{
+  appearance:none;
+  border:2px solid #ffd166;
+  background:#2b2108;
+  color:#fff2b8;
+  border-radius:10px;
+  padding:12px 22px;
+  font:900 20px/1 'BIZ UDPGothic','Yu Gothic UI','Meiryo',sans-serif;
+  letter-spacing:.04em;
+  cursor:pointer;
+  box-shadow:0 0 18px rgba(255,196,70,.28);
+}
+.quake-confirm-btn:hover,
+.quake-confirm-btn:focus-visible{
+  background:#4a3709;
+  outline:3px solid rgba(255,214,102,.35);
+  outline-offset:2px;
+}
+.quake-confirm-wrap span{
+  font-size:13px;
+  font-weight:800;
+  color:#ffe7a3;
+  text-shadow:0 1px 2px #000;
+}
+.disaster-overlay.single-focus.focus-summary .disaster-summary{
+  position:relative!important;
+}
+.disaster-overlay.single-focus.focus-summary .disaster-source{
+  bottom:32px!important;
+  max-width:48%;
+}
