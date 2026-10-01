@@ -575,57 +575,57 @@
     const mm = ((total % 60) + 60) % 60;
     return `${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')}`;
   }
-  function railTerminalArrivals(record) {
-    const dep = padTime(record.time||'');
-    const info = String(record.info||'');
-    const dest = String(record.dest||'');
-    const svc = String(record.service||'');
-    const out = [];
-    if (/宇和海/.test(svc)) {
-      out.push(['宇和島', addClock(dep, 136)]);
-      return out;
-    }
-    if (/しおかぜ|いしづち/.test(svc) && /岡山・高松/.test(dest)) {
-      out.push(['高松', addClock(dep, 159)]);
-      out.push(['岡山', addClock(dep, 185)]);
-      return out;
-    }
-    const northLocal = {
-      '今治': 37,
-      '伊予西条': 76,
-      '観音寺': 121,
-      '高松': 170,
-      '岡山': 210
-    };
-    const southLocal = {
-      '伊予市': 19,
-      '伊予大洲': /伊予長浜経由/.test(info) ? 102 : 83,
-      '八幡浜': /伊予長浜経由/.test(info) ? 150 : 127,
-      '宇和島': /伊予長浜経由/.test(info) ? 198 : 176,
-      '内子': 49
-    };
-    const table = /^(松山|伊予北条|今治|伊予西条|観音寺|高松|岡山)$/.test(dest) ? northLocal : southLocal;
-    const mins = table[dest];
-    if (Number.isFinite(mins)) out.push([dest, addClock(dep, mins)]);
-    return out;
+  function railExactTimings(record) {
+    const raw=Array.isArray(approachLive.ichitsubo?.matsuyamaSchedule)
+      ? approachLive.ichitsubo.matsuyamaSchedule
+      : [];
+    const departure=padTime(record.time||'');
+    const direction=String(record.direction||'');
+    const matches=raw.filter(x=>padTime(x?.departure||'')===departure && String(x?.direction||'')===direction);
+    if(!matches.length) return null;
+
+    const stops=[];
+    const seen=new Set();
+    matches.forEach(x=>{
+      (Array.isArray(x?.stops)?x.stops:[]).forEach(s=>{
+        const station=cleanStation(s?.station||'');
+        const time=padTime(s?.time||'');
+        const key=`${station}|${time}`;
+        if(station&&time&&!seen.has(key)){seen.add(key);stops.push({station,time});}
+      });
+    });
+    stops.sort((a,b)=>{
+      let am=toMinutes(a.time), bm=toMinutes(b.time);
+      if(am<toMinutes(departure)) am+=1440;
+      if(bm<toMinutes(departure)) bm+=1440;
+      return am-bm;
+    });
+
+    const terminals=matches.map(x=>{
+      const t=x?.terminal;
+      return t ? {station:cleanStation(t.station||''),time:padTime(t.time||'')} : null;
+    }).filter(x=>x?.station&&x?.time);
+    const terminalSeen=new Set();
+    const uniqueTerminals=terminals.filter(x=>{
+      const k=`${x.station}|${x.time}`;
+      if(terminalSeen.has(k)) return false;
+      terminalSeen.add(k);
+      return true;
+    });
+    return {stops,terminals:uniqueTerminals};
   }
   function railTerminalArrivalText(record) {
-    const arrs = railTerminalArrivals(record).filter(x=>x && x[1]);
-    if (!arrs.length) return '';
-    return arrs.map(([name,t])=>`${name} ${t}`).join(' / ');
+    const exact=railExactTimings(record);
+    if(!exact?.terminals?.length) return '';
+    return exact.terminals.map(x=>`${x.station} ${x.time}`).join(' / ');
   }
   function railTimedStops(record) {
-    const dep = padTime(record.time||'');
-    const svc = String(record.service||'');
-    if (/宇和海/.test(svc)) {
-      const defs = [['伊予市',14],['内子',43],['八幡浜',80],['卯之町',107],['宇和島',136]];
-      return defs.map(([n,m])=>`${n}(${addClock(dep,m)})`);
-    }
-    if (/しおかぜ|いしづち/.test(svc)) {
-      const defs = [['今治',37],['壬生川',58],['伊予西条',79],['新居浜',98],['丸亀',132],['高松',159],['岡山',185]];
-      return defs.map(([n,m])=>`${n}(${addClock(dep,m)})`);
-    }
-    return [];
+    const exact=railExactTimings(record);
+    if(!exact?.stops?.length) return [];
+    const destText=String(record.dest||'');
+    // Coupled Shiokaze/Ishizuchi services can have two branches. Keep all exact
+    // timed stops returned by the daily diagram; duplicates were removed above.
+    return exact.stops.map(x=>`${x.station}(${x.time})`);
   }
   function busVia(record) {
     const d = String(record.dest || record.origin || '');
