@@ -1088,10 +1088,10 @@
       const changed=r.liveChangedTime||r.time; const scheduled=r.liveScheduled||r.time; const delta=Number(r.liveDelta);
       const deltaHtml=Number.isFinite(delta)&&delta!==0?`<span class="air-delay${delta<0?' air-early':''}">${delta>0?'+':''}${delta}分</span>`:'';
       const timeHtml=`<div class="air-time-wrap"><span class="live-time">${changed}${deltaHtml}</span>${changed!==scheduled?`<span class="scheduled-time">定刻 ${scheduled}</span>`:''}</div>`;
-      if(dep){row.innerHTML=`<div class="cell time">${timeHtml}</div><div class="cell main">${place} ${firstBadge}${finalBadge}</div><div class="cell service"><div class="service-wrap"><span class="name">${p.airline}</span><span class="code">便名 ${p.number||'—'}</span></div></div><div class="${statusClass}">${status}</div>`;}
+      if(dep){row.innerHTML=`<div class="cell time">${timeHtml}</div><div class="cell main">${place} ${firstBadge}${finalBadge}</div><div class="cell service"><div class="service-wrap"><span class="name">${p.airline}</span><span class="code">便名 ${p.number||'—'}</span></div></div><div class="${statusClass}">${overflowScrollHtml(status,'air-status-scroll')}</div>`;}
       else{row.innerHTML=`<div class="cell main">${place} ${firstBadge}${finalBadge}</div><div class="cell service"><div class="service-wrap"><span class="name">${p.airline}</span><span class="code">便名 ${p.number||'—'}</span></div></div><div class="${statusClass}">${status}</div><div class="cell time">${timeHtml}</div>`;}
       root.appendChild(row);
-    }); restoreScroll('air'); attachScrollMemory('air');
+    }); activateOverflowScroll(root); restoreScroll('air'); attachScrollMemory('air');
   }
 
   const BUS_JOINT_OPERATORS = {
