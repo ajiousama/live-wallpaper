@@ -1301,3 +1301,82 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
   height:19px;
   font-size:9.5px;
 }
+
+
+/* BUS: boarding place badges + Ehime route subline */
+.panel-bus.dep-mode .bus-boarding-cell{
+  min-width:0!important;
+  overflow:hidden!important;
+}
+.panel-bus.dep-mode .bus-boarding-cell .service-wrap{
+  width:100%;
+  min-width:0;
+  align-items:flex-start;
+  gap:2px;
+}
+.panel-bus.dep-mode .bus-place-logo{
+  display:block;
+  width:100%;
+  min-width:0;
+  overflow:visible!important;
+  white-space:normal!important;
+}
+.bus-stop-badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:54px;
+  max-width:116px;
+  height:20px;
+  padding:0 7px;
+  border-radius:3px;
+  box-sizing:border-box;
+  font-size:11px;
+  font-weight:900;
+  line-height:1;
+  white-space:nowrap;
+}
+.bus-stop-jr{background:#eef7ff;color:#12649c;border:1px solid #8bbde0}
+.bus-stop-iyotetsu{background:#f2fff5;color:#00843d;border:1px solid #7bc99a}
+.bus-stop-ichibancho{background:#fff6e9;color:#955400;border:1px solid #d9ae6c}
+.bus-stop-madonna{background:#fff0f3;color:#a92345;border:1px solid #dd91a5}
+.bus-stop-muromachi{background:#f3f6f8;color:#455a64;border:1px solid #aab8bf}
+.bus-stop-generic{background:#f3f5f6;color:#40505a;border:1px solid #9eabb2}
+.panel-bus.dep-mode .bus-ehime-route{
+  display:block!important;
+  width:100%;
+  min-width:0;
+  font-size:11px!important;
+  line-height:1.05!important;
+  color:#c7d8df!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+}
+.panel-bus.dep-mode .bus-ehime-route .overflow-scroll{
+  width:100%;
+}
+
+/* BUS: departure and arrival share one text-size scale */
+.panel-bus.dep-mode .bus-time-stack .primary-time,
+.panel-bus.arrival-columns .bus-arrival-time{
+  font-size:15px!important;
+  font-weight:900!important;
+}
+.panel-bus.dep-mode .bus-dest-main,
+.panel-bus.dep-mode .bus-dest-main .dest-line,
+.panel-bus.arrival-columns .arrival-place,
+.panel-bus.arrival-columns .arrival-terminal{
+  font-size:16px!important;
+  font-weight:900!important;
+  line-height:1.05!important;
+}
+.panel-bus.dep-mode .bus-terminal-time,
+.panel-bus.arrival-columns .arrival-departure-time{
+  font-size:11px!important;
+  line-height:1.05!important;
+}
+.panel-bus.dep-mode .bus-mini-logo,
+.panel-bus.arrival-columns .bus-mini-logo{
+  height:19px!important;
+  font-size:9.5px!important;
+}
