@@ -1268,8 +1268,8 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
   white-space:nowrap;
   flex:0 0 auto;
 }
-.bus-logo-iyo{background:#f2fff5;color:#00843d;border:1px solid #7bc99a}
-.bus-logo-nanyo{background:#f2fff5;color:#147047;border:1px solid #89c7a2}
+.bus-logo-iyo{background:#f28c00;color:#fff;border:1px solid #ffb347}
+.bus-logo-nanyo{background:#f28c00;color:#fff;border:1px solid #ffb347}
 .bus-logo-jrshikoku{background:#eef7ff;color:#1467a8;border:1px solid #8bbde0}
 .bus-logo-jrwest{background:#eef7ff;color:#1b6b9d;border:1px solid #9ec2da}
 .bus-logo-jrtokai{background:#fff4e8;color:#e36b00;border:1px solid #f0b277}
@@ -1278,7 +1278,7 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
 .bus-logo-ryobi{background:#fff0f3;color:#b31e3e;border:1px solid #df8ca0}
 .bus-logo-shimoden{background:#f1f8ff;color:#17679a;border:1px solid #96c0da}
 .bus-logo-tosaden{background:#f1fff9;color:#00745d;border:1px solid #84cdbb}
-.bus-logo-hankyu{background:#fff2f6;color:#8e234f;border:1px solid #d29ab1}
+.bus-logo-hankyu{background:#5b1f2f;color:#fff;border:1px solid #8d5260}
 .bus-logo-meitetsu{background:#fff1f1;color:#b21722;border:1px solid #df969b}
 .bus-logo-setouchi{background:#edf9ff;color:#00789e;border:1px solid #8ac6d9}
 .bus-logo-nishitokyo{background:#f4f7f8;color:#43555d;border:1px solid #aebbc0}
