@@ -10,6 +10,9 @@ type Route = {
   cityIndex: number;
   passOnly: boolean;
   cityTime: string;
+  matsuyamaIndex: number;
+  matsuyamaTime: string;
+  origin: string;
   destination: string;
 };
 
@@ -94,11 +97,23 @@ function parseDiagramRecord(trainNum: string, raw: unknown): Route | null {
 
   if (!points.length) return null;
   const city = points.filter((p) => normalizeStationName(p.station) === "市坪");
-  if (!city.length) return null;
-
   const passengerStop = city.some((p) => !/通/.test(p.event) && /着|発/.test(p.event));
   const cityTimePoint =
     city.find((p) => /通|着|発/.test(p.event) && /^\d{1,2}:\d{2}$/.test(p.time)) ?? city[0];
+
+  const matsuyamaArrivalIndex = points.findIndex((p) =>
+    normalizeStationName(p.station) === "松山" &&
+    /着/.test(p.event) &&
+    /^\d{1,2}:\d{2}$/.test(p.time)
+  );
+  const matsuyamaAnyIndex = points.findIndex((p) =>
+    normalizeStationName(p.station) === "松山" &&
+    /着|発|通/.test(p.event) &&
+    /^\d{1,2}:\d{2}$/.test(p.time)
+  );
+  const matsuyamaIndex = matsuyamaArrivalIndex >= 0 ? matsuyamaArrivalIndex : matsuyamaAnyIndex;
+  const matsuyamaTime = matsuyamaIndex >= 0 ? String(points[matsuyamaIndex]?.time ?? "") : "";
+  const origin = points.find((p) => normalizeStationName(p.station));
   const terminal =
     [...points].reverse().find((p) => p.station && p.station !== "松山基地") ?? points[points.length - 1];
 
@@ -108,6 +123,9 @@ function parseDiagramRecord(trainNum: string, raw: unknown): Route | null {
     cityIndex: points.findIndex((p) => normalizeStationName(p.station) === "市坪"),
     passOnly: !passengerStop,
     cityTime: cityTimePoint?.time ?? "",
+    matsuyamaIndex,
+    matsuyamaTime,
+    origin: normalizeStationName(origin?.station ?? ""),
     destination: normalizeStationName(terminal?.station ?? ""),
   };
 }
@@ -178,7 +196,7 @@ function approachingIchitsubo(pos: Record<string, unknown>, route: Route, nowMin
     let diff = toMinutes(route.cityTime) + delay - nowMinutes;
     if (diff < -720) diff += 1440;
     if (diff > 720) diff -= 1440;
-    scheduledSoon = diff >= -2 && diff <= 5;
+    scheduledSoon = diff >= 0 && diff <= 5;
   }
 
   if (normalizeStationName(clean) === "市坪") return true;
@@ -223,9 +241,9 @@ async function getIchitsubo(now: { minutes: number }) {
 
     const deadhead = isDeadhead(pos, route);
     const passing = deadhead || route.passOnly;
-    const threshold = deadhead ? 2 : passing ? 1 : 3;
+    const threshold = passing ? 1 : 4;
 
-    if (Number.isFinite(diff) && !(diff >= -1 && diff <= threshold)) return null;
+    if (Number.isFinite(diff) && !(diff >= 0 && diff <= threshold)) return null;
 
     let message = "";
     if (deadhead) message = "まもなく　市坪駅を　回送列車が通過します";
@@ -242,14 +260,44 @@ async function getIchitsubo(now: { minutes: number }) {
       delayMinutes: delay,
       minutesToIchitsubo: Number.isFinite(diff) ? diff : null,
       thresholdMinutes: threshold,
+      scheduledIchitsubo: route.cityTime,
     };
   }).filter(Boolean).sort((a: any, b: any) => (a.minutesToIchitsubo ?? 999) - (b.minutesToIchitsubo ?? 999));
+
+  const matsuyamaDeadheads = positions.map((pos) => {
+    const route = diagram.get(String(pos.TrainNum));
+    if (!route || !isDeadhead(pos, route) || route.matsuyamaIndex < 0) return null;
+    const matsuyamaPoint = route.points[route.matsuyamaIndex];
+    if (!matsuyamaPoint || !/着/.test(String(matsuyamaPoint.event || ""))) return null;
+    if (!/^\d{1,2}:\d{2}$/.test(route.matsuyamaTime)) return null;
+
+    const stations = [...new Set(route.points.map((p) => normalizeStationName(p.station)).filter(Boolean))];
+    if (stations.length <= 1) return null;
+
+    const delay = Number(pos.delay ?? 0) || 0;
+    let diff = toMinutes(route.matsuyamaTime) + delay - now.minutes;
+    if (diff < -720) diff += 1440;
+    if (diff > 720) diff -= 1440;
+    if (!Number.isFinite(diff) || diff < -2 || diff > 240) return null;
+
+    return {
+      trainNum: String(pos.TrainNum),
+      kind: "deadhead",
+      origin: route.origin || "",
+      destination: "松山",
+      position: String(pos.Pos ?? ""),
+      delayMinutes: delay,
+      scheduledMatsuyama: route.matsuyamaTime,
+      minutesToMatsuyama: diff,
+    };
+  }).filter(Boolean).sort((a: any, b: any) => (a.minutesToMatsuyama ?? 999) - (b.minutesToMatsuyama ?? 999));
 
   return {
     ok: true,
     source: "JR四国非公式アプリ系公開データ",
     fetchedAt: pjson?.fetchedAt ?? null,
     approaching,
+    matsuyamaDeadheads,
     alert: approaching.length > 0,
     message: (approaching[0] as any)?.message ?? "",
   };
@@ -297,10 +345,26 @@ async function getMadonna(now: { minutes: number }) {
   const depBlock = text.match(
     /発\s*マドンナスタジアム[\s\S]{0,500}?予定時刻\s*(\d{1,2}:\d{2})[\s\S]{0,160}?発車予測\s*(\d{1,2}:\d{2})/
   );
-  const scheduled =
-    depBlock?.[1] ?? (text.match(/予定時刻\s*(\d{1,2}:\d{2})/) ?? [])[1] ?? null;
-  const predicted =
-    depBlock?.[2] ?? (text.match(/発車予測\s*(\d{1,2}:\d{2})/) ?? [])[1] ?? scheduled;
+  const scheduled = depBlock?.[1] ?? null;
+  const predicted = depBlock?.[2] ?? scheduled;
+
+  // If the page no longer contains a Madonna Stadium departure block,
+  // do not borrow a time from another stop/route on the same page.
+  if (!scheduled) {
+    return {
+      ok: true,
+      source: "伊予鉄バスロケ",
+      stop: "マドンナスタジアム",
+      route,
+      destination,
+      scheduledDeparture: null,
+      predictedDeparture: null,
+      stopsAway: null,
+      minutesUntilDeparture: null,
+      alert: false,
+      message: "",
+    };
+  }
 
   const stopMatches = [...text.matchAll(/([0-9]+)\s*個前の停留所/g)]
     .map((m) => Number(m[1]))
@@ -308,12 +372,17 @@ async function getMadonna(now: { minutes: number }) {
   const stopsAway = stopMatches.length ? Math.min(...stopMatches) : null;
 
   const pageMinutes = (text.match(/約\s*([0-9]+)\s*分で発車/) ?? [])[1];
+  const clockMinutes = minutesFromNow(predicted, now.minutes);
   const minutes =
-    pageMinutes != null ? Number(pageMinutes) : minutesFromNow(predicted, now.minutes);
+    Number.isFinite(clockMinutes) ? clockMinutes :
+    (pageMinutes != null ? Number(pageMinutes) : null);
 
+  // Predicted clock time wins. Stale "約0分" / stop-count text must not
+  // keep the alert alive after the bus has already departed.
   const alert =
-    (Number.isFinite(stopsAway) && (stopsAway as number) <= 2) ||
-    (Number.isFinite(minutes) && (minutes as number) >= -1 && (minutes as number) <= 3);
+    Number.isFinite(minutes)
+      ? (minutes as number) >= -1 && (minutes as number) <= 4
+      : (Number.isFinite(stopsAway) && (stopsAway as number) <= 2);
 
   const message = alert
     ? `まもなく　マドンナスタジアムに　${route}番 ${destination}行バスがまいります${Number.isFinite(stopsAway) ? `（${stopsAway}個前）` : ""}`
