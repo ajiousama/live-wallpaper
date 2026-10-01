@@ -471,9 +471,10 @@
       if(!finalTimes.has(key)||m>finalTimes.get(key)) finalTimes.set(key,m);
     });
     const shouldMarkFinal = (key, minute) => {
-      // JR/airport keep normal final-service marking. For express buses and
-      // ferries, sparse routes (1-3 services/day) do not get a "final" badge.
-      if ((board === 'bus' || board === 'port') && (groupCounts.get(key)||0) <= 3) return false;
+      // Highway/regional bus board does not use a "final bus" designation.
+      if (board === 'bus') return false;
+      // Ferry sparse routes (1-3 services/day) do not get a "final" badge.
+      if (board === 'port' && (groupCounts.get(key)||0) <= 3) return false;
       return finalTimes.get(key) === minute;
     };
     const upcoming = list.filter(r => rMinutes(r) >= now.minutes).map(r => {
@@ -834,9 +835,7 @@
     if (!active) return null;
     const departing=Number.isFinite(mins)&&mins<=2;
     const strong=Number.isFinite(mins)&&mins<=1;
-    const finalBus=isFinalAuxTime('stadium',null,now,liveTime);
-    const prefix=finalBus?'最終バス ':'';
-    const text=departing?`まもなく${prefix}松山市駅行きのバスが発車します。`:`まもなく${prefix}松山市駅行きのバスが到着します。`;
+    const text=departing?'まもなく松山市駅行きのバスが発車します。':'まもなく松山市駅行きのバスが到着します。';
     return {items:[liveAlertSpan(text,'bus-alert',strong)],className:`live-takeover bus-live${strong?' strong-live':''}${text.length>23?' fast-scroll':''}`};
   }
   function highwayLiveItems() {
@@ -853,12 +852,10 @@
     if (approachLive.ok&&live?.ok&&live.predictedDeparture&&isKnownStadiumScheduledTime(live.scheduledDeparture,now)) {
       const localDiff=minutesUntil(live.predictedDeparture,now.minutes);
       const diff=Number.isFinite(localDiff)?`｜約${localDiff}分後`:'';
-      const finalBus=isFinalAuxTime('stadium',null,now,live.predictedDeparture||live.scheduledDeparture);
-      items.push(`マドンナスタジアム｜51系統 松山市駅行｜発車予測 ${padTime(live.predictedDeparture)}${diff}${finalBus?' '+badgeHtml('final','最終バス'):''}`);
+      items.push(`マドンナスタジアム｜51系統 松山市駅行｜発車予測 ${padTime(live.predictedDeparture)}${diff}`);
     } else {
       const stadium=nextAux('stadium',null,now);
-      const finalBus=stadium&&isFinalAuxTime('stadium',null,now,stadium.time);
-      items.push(stadium?`マドンナスタジアム｜51系統 松山市駅行｜次便 ${stadium.time}発${finalBus?' '+badgeHtml('final','最終バス'):''}`:'マドンナスタジアム｜運行終了');
+      items.push(stadium?`マドンナスタジアム｜51系統 松山市駅行｜次便 ${stadium.time}発`:'マドンナスタジアム｜運行終了');
     }
     return items;
   }
@@ -1410,17 +1407,10 @@
     const dep = currentDirection() === 'departure';
     root.classList.remove('bus-end');
     if (!rows.length) {
-      const now = japanNow();
-      const last = lastBusMovement(now, dep);
       root.classList.add('bus-end');
       const mode = dep ? 'DEPARTURES — 出発バス —' : 'ARRIVALS — 到着バス —';
       const msg = dep ? '本日のバスは終了しました' : '本日の到着バスは終了しました';
-      const detail = last
-        ? (dep
-          ? `最終バス：${last.time}　${last.place}行　出発済み`
-          : `最終到着バス：${last.place}発　${last.time}　${last.terminal}到着済み`)
-        : '';
-      root.innerHTML = `<div class="bus-end-state"><div class="bus-end-mode">🚌 ${mode}</div><div class="bus-end-message">${msg}</div>${detail?`<div class="bus-end-detail">${detail}</div>`:''}</div>`;
+      root.innerHTML = `<div class="bus-end-state"><div class="bus-end-mode">🚌 ${mode}</div><div class="bus-end-message">${msg}</div></div>`;
     } else rows.forEach(r => {
       const row = document.createElement('div'); row.className = `row${r.isFinal?' is-final':''}${dep && isDepartSoon(r, japanNow()) ? ' depart-soon' : ''}`;
       const firstBadge = r.isNextDayStart ? badgeHtml('first', dep ? '始発' : '初便') : '';
