@@ -1530,11 +1530,91 @@
   function disasterTestData() {
     return {eew:{active:true,serial:'第3報',issuedAt:'2026/09/27 15:10:00',hypocenter:'豊後水道',magnitude:6.1,depth:40,local:{area:'愛媛県中予',scaleTo:'4',arrivalTime:new Date(Date.now()+18000).toISOString()}},recentEarthquake:{active:true,time:'2026/09/27 15:09:40',hypocenter:'豊後水道',magnitude:6.1,depth:40,maxScale:'5弱',distanceKm:70,ehimeScale:'4',tsunami:'None'},weather:{active:[{name:'レベル4土砂災害危険警報',status:'発表'}],headlineText:'松山市 土砂災害の危険度が高まっています',reportDatetime:'2026-09-27T15:05:00+09:00'},tsunami:{active:true,issuedAt:'2026/09/27 15:10:10',areas:[{name:'愛媛県瀬戸内海沿岸',grade:'Warning',arrivalTime:'まもなく',maxHeight:'3m'}]}};
   }
+
+  let disasterAudioContext=null;
+  let lastDisasterSoundKey='';
+
+  function playUrgentDisasterAlarm() {
+    try {
+      const Ctx=window.AudioContext||window.webkitAudioContext;
+      if(!Ctx) return;
+      if(!disasterAudioContext) disasterAudioContext=new Ctx();
+      const ctx=disasterAudioContext;
+      if(ctx.state==='suspended') ctx.resume().catch(()=>{});
+      const start=ctx.currentTime+0.03;
+      const master=ctx.createGain();
+      master.gain.setValueAtTime(0.82,start);
+      master.connect(ctx.destination);
+
+      const tone=(at,dur,freq,amp=0.18,freqEnd=null)=>{
+        const osc=ctx.createOscillator();
+        const gain=ctx.createGain();
+        osc.type='sine';
+        osc.frequency.setValueAtTime(freq,at);
+        if(freqEnd!=null) osc.frequency.linearRampToValueAtTime(freqEnd,at+dur);
+        gain.gain.setValueAtTime(0.0001,at);
+        gain.gain.linearRampToValueAtTime(amp,at+Math.min(0.012,dur*0.2));
+        gain.gain.setValueAtTime(amp,Math.max(at+0.015,at+dur-0.04));
+        gain.gain.exponentialRampToValueAtTime(0.0001,at+dur);
+        osc.connect(gain).connect(master);
+        osc.start(at); osc.stop(at+dur+0.02);
+      };
+
+      let t=start;
+      // low urgent double pulse
+      for(let n=0;n<2;n++){
+        tone(t,0.18,220,0.26); tone(t,0.18,440,0.10);
+        t+=0.23;
+      }
+      // three rising danger sweeps
+      for(let n=0;n<3;n++){
+        tone(t,0.22,700,0.24,1500); tone(t,0.22,350,0.10,750);
+        t+=0.22;
+        tone(t,0.12,1500,0.21,900); tone(t,0.12,1800,0.07);
+        t+=0.155;
+      }
+      // rapid alarm pulses
+      for(let n=0;n<6;n++){
+        tone(t,0.095,1250,0.21); tone(t,0.095,1875,0.09);
+        t+=0.13;
+      }
+      // strong warning hit
+      tone(t,0.45,880,0.22); tone(t,0.45,1320,0.16); tone(t,0.45,1760,0.11); tone(t,0.45,220,0.07);
+      t+=0.65;
+      // compact repeat
+      for(let n=0;n<2;n++){
+        tone(t,0.18,850,0.25,1550); tone(t,0.18,300,0.07);
+        t+=0.18;
+        tone(t,0.10,1550,0.20,950);
+        t+=0.14;
+      }
+      tone(t,0.50,990,0.23); tone(t,0.50,1485,0.15); tone(t,0.50,1980,0.09);
+    } catch(e) {}
+  }
+
+  function disasterSoundKey(d,test) {
+    if(test) return 'disaster-test';
+    if(d?.eew?.active&&d?.eew?.local) return `eew|${d.eew.issuedAt||''}|${d.eew.hypocenter||''}`;
+    if(d?.tsunami?.active) return `tsunami|${d.tsunami.issuedAt||''}`;
+    const severe=(d?.weather?.active||[]).find(x=>/特別警報/.test(String(x?.name||'')));
+    if(severe) return `weather|${d.weather?.reportDatetime||''}|${severe.name||''}`;
+    return '';
+  }
+
+  function maybePlayDisasterAlarm(d,test) {
+    const key=disasterSoundKey(d,test);
+    if(!key) return;
+    if(key===lastDisasterSoundKey) return;
+    lastDisasterSoundKey=key;
+    playUrgentDisasterAlarm();
+  }
   function renderDisaster(now) {
     const test=new URLSearchParams(location.search).get('disasterTest')==='1'; const d=test?disasterTestData():(disasterLive.data||{});
     const recent=d.recentEarthquake; const recentMs=parseJstClient(recent?.time); const recentActive=!!recent && Number.isFinite(recentMs) && Date.now()-recentMs<20*60*1000;
     const weatherActive=Array.isArray(d.weather?.active)&&d.weather.active.length>0; const eewActive=!!(d.eew?.active&&d.eew?.local); const tsunamiActive=!!d.tsunami?.active;
-    const active=test||eewActive||tsunamiActive||weatherActive||recentActive; const overlay=$('disaster-overlay'); overlay.hidden=!active; if(!active)return;
+    const active=test||eewActive||tsunamiActive||weatherActive||recentActive; const overlay=$('disaster-overlay'); overlay.hidden=!active;
+    maybePlayDisasterAlarm(d,test);
+    if(!active)return;
     overlay.classList.toggle('eew-active',eewActive||test); overlay.classList.toggle('tsunami-active',tsunamiActive||test);
     $('disaster-time').textContent=now.time;
     $('disaster-mainline').textContent=eewActive||test?'緊急地震速報を受信しています':tsunamiActive?'津波情報が発表されています':weatherActive?'松山市に気象警報・注意報が発表されています':'近隣で地震が発生しました';
