@@ -1186,15 +1186,37 @@
   function overflowScrollHtml(text, extraClass='') {
     return `<span class="overflow-scroll ${extraClass}"><span class="overflow-scroll-track">${text||'—'}</span></span>`;
   }
+  const overflowObserver = typeof ResizeObserver !== 'undefined'
+    ? new ResizeObserver(entries => {
+        entries.forEach(entry => syncOverflowBox(entry.target));
+      })
+    : null;
+
+  function syncOverflowBox(box) {
+    if(!box || !box.isConnected) return;
+    const track=box.querySelector(':scope > .overflow-scroll-track');
+    if(!track) return;
+    const boxWidth=box.getBoundingClientRect().width;
+    const trackWidth=track.scrollWidth || track.getBoundingClientRect().width;
+    if(!(boxWidth>0)) return;
+    const over=trackWidth > boxWidth + 1;
+    box.classList.toggle('is-overflow', over);
+    if(over) box.style.setProperty('--overflow-distance', `${Math.ceil(trackWidth-boxWidth+36)}px`);
+    else box.style.removeProperty('--overflow-distance');
+  }
+
   function activateOverflowScroll(root=document) {
-    root.querySelectorAll('.overflow-scroll').forEach(box => {
-      const track=box.querySelector('.overflow-scroll-track');
-      if(!track) return;
-      const over=track.scrollWidth > box.clientWidth + 2;
-      box.classList.toggle('is-overflow', over);
-      if(over) box.style.setProperty('--overflow-distance', `${track.scrollWidth-box.clientWidth+36}px`);
-      else box.style.removeProperty('--overflow-distance');
+    const boxes=[...root.querySelectorAll('.overflow-scroll')];
+    boxes.forEach(box => {
+      syncOverflowBox(box);
+      if(overflowObserver && !box.dataset.overflowObserved){
+        overflowObserver.observe(box);
+        box.dataset.overflowObserved='1';
+      }
     });
+    // Measure again after grid/flex/layout and webfont calculations settle.
+    requestAnimationFrame(()=>boxes.forEach(syncOverflowBox));
+    setTimeout(()=>boxes.filter(box=>box.isConnected).forEach(syncOverflowBox),120);
   }
 
   // Common rule: readable text stays still; only text that actually exceeds its box scrolls.
@@ -1544,6 +1566,7 @@
   }
 
   window.addEventListener('resize', scale);
+  window.addEventListener('resize', ()=>activateOverflowScroll(document));
   scale();
   // FINAL polling: fast approach 15s / disaster 10s / slower service status 60s.
   Promise.all([loadApproach(),loadSlowLive(),loadDisasterLive()]).then(()=>renderAll());
