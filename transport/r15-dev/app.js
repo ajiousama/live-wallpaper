@@ -1066,7 +1066,7 @@
   function renderRail(rows) {
     const root = $('rail-rows'); root.innerHTML = '';
     root.classList.remove('rail-end');
-    const visible = rows.slice(0, 2);
+    const visible = rows.slice(0, 3);
     if (!visible.length) {
       const now = japanNow();
       const last = lastRailMovement(now);
@@ -1090,7 +1090,7 @@
           <div class="rail-detail">${tickerHtml(railRowDetailItems(r))}</div>`;
         root.appendChild(row);
       });
-      while (root.children.length < 2) {
+      while (root.children.length < 3) {
         const row=document.createElement('div'); row.className='row rail-row placeholder blank';
         row.innerHTML=`<div class="rail-primary"><div class="cell"></div><div class="cell time"></div><div class="cell"></div></div><div class="rail-detail"></div>`;
         root.appendChild(row);
