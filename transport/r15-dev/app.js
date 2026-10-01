@@ -847,6 +847,13 @@
     const takeover=madonnaTakeover(now);
     if (takeover) return takeover.items;
     const items=highwayLiveItems();
+
+    // Airport-bound buses belong with the city-side bus information:
+    // show the next limousine / ordinary services from Matsuyama City Station
+    // and JR Matsuyama Station in the BUS ticker, not as labels on the airport board.
+    const airportTo=airportAccessNotes(now,'departure');
+    airportTo.forEach(x=>items.push(`空港アクセス｜${x}`));
+
     if (!items.length) items.push('WILLER EXPRESS｜松山市駅・JR松山駅には停車しません｜松山一番町をご利用ください');
     const live=approachLive.madonna;
     if (approachLive.ok&&live?.ok&&live.predictedDeparture&&isKnownStadiumScheduledTime(live.scheduledDeparture,now)) {
