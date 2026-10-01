@@ -660,18 +660,18 @@
 
   function ferryMiniLogo(name) {
     const n=String(name||'').trim();
-    if(n==='四国開発フェリー') return '<span class="ferry-mini-logo ferry-logo-orange">ORANGE</span>';
-    if(n==='中島汽船') return '<span class="ferry-mini-logo ferry-logo-nakajima">NAKAJIMA</span>';
-    if(n==='防予フェリー') return '<span class="ferry-mini-logo ferry-logo-boyo">BOYO</span>';
-    if(n==='国道九四フェリー') return '<span class="ferry-mini-logo ferry-logo-94">94</span>';
-    if(n==='宇和島運輸') return '<span class="ferry-mini-logo ferry-logo-uwajima">UW</span>';
-    if(n==='ジャンボフェリー') return '<span class="ferry-mini-logo ferry-logo-jumbo">JUMBO</span>';
-    if(n==='今治市営') return '<span class="ferry-mini-logo ferry-logo-imabari">IMABARI</span>';
-    if(n==='大三島ブルーライン') return '<span class="ferry-mini-logo ferry-logo-blue">BLUE LINE</span>';
-    if(n==='芸予汽船') return '<span class="ferry-mini-logo ferry-logo-geiyo">GEIYO</span>';
+    if(n==='四国開発フェリー') return '<span class="ferry-mini-logo ferry-logo-orange">オレンジ</span>';
+    if(n==='中島汽船') return '<span class="ferry-mini-logo ferry-logo-nakajima">中島汽船</span>';
+    if(n==='防予フェリー') return '<span class="ferry-mini-logo ferry-logo-boyo">防予</span>';
+    if(n==='国道九四フェリー') return '<span class="ferry-mini-logo ferry-logo-94">国道九四</span>';
+    if(n==='宇和島運輸') return '<span class="ferry-mini-logo ferry-logo-uwajima">宇和島運輸</span>';
+    if(n==='ジャンボフェリー') return '<span class="ferry-mini-logo ferry-logo-jumbo">ジャンボ</span>';
+    if(n==='今治市営') return '<span class="ferry-mini-logo ferry-logo-imabari">今治市営</span>';
+    if(n==='大三島ブルーライン') return '<span class="ferry-mini-logo ferry-logo-blue">大三島</span>';
+    if(n==='芸予汽船') return '<span class="ferry-mini-logo ferry-logo-geiyo">芸予汽船</span>';
     if(n==='瀬戸内海汽船・石崎汽船') return '<span class="ferry-mini-logo ferry-logo-setouchi">瀬戸内海・石崎</span>';
-    if(n==='青島海運') return '<span class="ferry-mini-logo ferry-logo-aoshima">青島</span>';
-    if(n==='新居浜市営') return '<span class="ferry-mini-logo ferry-logo-niihama">新居浜</span>';
+    if(n==='青島海運') return '<span class="ferry-mini-logo ferry-logo-aoshima">青島海運</span>';
+    if(n==='新居浜市営') return '<span class="ferry-mini-logo ferry-logo-niihama">新居浜市営</span>';
     return '';
   }
 
