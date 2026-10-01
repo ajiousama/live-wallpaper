@@ -1254,10 +1254,10 @@
         const terminal = busTerminalArrivalLabel(r);
         const ferryExtra = r.kind === 'ferrybus' ? '<span class="route-sub">フェリー連絡</span>' : '';
         row.innerHTML = `
-          <div class="cell time bus-time-stack"><span class="primary-time">${r.time}</span>${terminal?`<span class="bus-terminal-time">${terminal}</span>`:''}</div>
-          <div class="cell service">${busOperatorHtml(r)}</div>
           <div class="cell main bus-dest-cell"><span class="bus-dest-main">${busDestinationHtml(r,`${firstBadge}${finalBadge}`)}</span>${r.kind==='midbus'?'<span class="route-sub">中距離</span>':''}${ferryExtra}</div>
-          <div class="cell sub"><div class="service-wrap"><span class="name bus-place-scroll">${overflowScrollHtml(rightTop)}</span><span class="code">${rightBottom}</span></div></div>`;
+          <div class="cell sub"><div class="service-wrap"><span class="name bus-place-scroll">${overflowScrollHtml(rightTop)}</span><span class="code">${rightBottom}</span></div></div>
+          <div class="cell service">${busOperatorHtml(r)}</div>
+          <div class="cell time bus-time-stack"><span class="primary-time">${r.time}</span>${terminal?`<span class="bus-terminal-time">${terminal}</span>`:''}</div>`;
       } else {
         const depDay = r.originDepartureDay ? `${r.originDepartureDay}` : '';
         row.innerHTML = `
@@ -1314,7 +1314,7 @@
       ? '<span>時刻</span><span>行先</span><span>航空会社 / 便名</span><span>区分</span>'
       : '<span>出発地</span><span>航空会社 / 便名</span><span>区分</span><span>到着時刻</span>';
     busHead.innerHTML = dep
-      ? '<span>時刻 / 終着</span><span>運行会社</span><span>行先</span><span>乗車場所 / 経由</span>'
+      ? '<span>行先</span><span>乗車場所 / 経由</span><span>運行会社</span><span>時刻 / 終着</span>'
       : '<span>出発地</span><span>到着場所</span><span>運行会社</span><span>到着時刻</span>';
     portHead.innerHTML = dep
       ? '<span>時刻 / 到着</span><span>出発港 → 行先 / 寄港</span><span>運航会社 / 船種</span>'
