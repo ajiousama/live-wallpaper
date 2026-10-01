@@ -1068,6 +1068,12 @@
     const northFinal=rows.filter(r=>r.direction==='north').at(-1)||null;
     const southFinal=rows.filter(r=>r.direction==='south').at(-1)||null;
 
+    // Last Matsuyama departure that can still reach Imabari (directly or beyond).
+    const imabariFinal=rows.filter(r=>{
+      if(r.direction!=='north') return false;
+      return /今治|伊予西条|新居浜|観音寺|高松|岡山/.test(railReachText(r));
+    }).at(-1)||null;
+
     const outside=rows.filter(r=>{
       if(r.direction!=='north') return false;
       return /観音寺|高松|岡山/.test(railReachText(r));
@@ -1093,7 +1099,7 @@
     });
     const sunrise=sunriseCandidates.at(-1)||shinkansen;
 
-    return {northFinal,southFinal,outside,southwest,shinkansen,sunrise};
+    return {northFinal,southFinal,imabariFinal,outside,southwest,shinkansen,sunrise};
   }
 
   function sameRailService(a,b) {
@@ -1107,9 +1113,11 @@
   function railSpecialFinalBadge(r,now) {
     const s=railSpecialFinals(now);
     const badges=[];
-    if(sameRailService(r,s.northFinal)) badges.push(badgeHtml('final','今治方面 最終列車'));
+    if(sameRailService(r,s.imabariFinal)) badges.push(badgeHtml('final','今治方面 最終'));
+    if(sameRailService(r,s.northFinal)) badges.push(badgeHtml('final','最終'));
     if(sameRailService(r,s.outside)) badges.push(badgeHtml('final','県外最終'));
     if(sameRailService(r,s.southwest)) badges.push(badgeHtml('final','宇和島方面 最終'));
+    if(sameRailService(r,s.southFinal)) badges.push(badgeHtml('final','最終'));
     return badges.join('');
   }
 
@@ -1120,8 +1128,11 @@
       ? `普通 ${r.dest}行`
       : `${String(r.service||'').includes('しおかぜ')||String(r.service||'').includes('いしづち')||String(r.service||'').includes('宇和海')?'特急 ':''}${r.service||''} ${r.dest}行`.trim();
 
+    if(s.imabariFinal && s.imabariFinal.minutes>=now.minutes){
+      out.push(`<span class="rail-special-final rail-direction-final">🚆 今治方面 最終｜松山 ${s.imabariFinal.time}発｜${label(s.imabariFinal)}</span>`);
+    }
     if(s.northFinal && s.northFinal.minutes>=now.minutes){
-      out.push(`<span class="rail-special-final rail-direction-final">🚆 今治方面 最終列車｜松山 ${s.northFinal.time}発｜${label(s.northFinal)}</span>`);
+      out.push(`<span class="rail-special-final rail-direction-final">🚆 最終｜松山 ${s.northFinal.time}発｜${label(s.northFinal)}</span>`);
     }
     if(s.southwest && s.southwest.minutes>=now.minutes){
       out.push(`<span class="rail-special-final rail-southwest-final">🚆 宇和島方面 最終｜松山 ${s.southwest.time}発｜${label(s.southwest)}</span>`);
@@ -1240,7 +1251,7 @@
         const row = document.createElement('div'); row.className = `row rail-row${r.isFinal ? ' is-final' : ''}${isDepartSoon(r, japanNow()) ? ' depart-soon' : ''}`;
         const kind = r.kind === 'limited' ? 'limited' : r.kind === 'sightseeing' ? 'tourist' : 'local';
         const label = kind === 'limited' ? `特急 ${r.service}` : kind === 'tourist' ? `観光 ${r.service}` : '普通電車';
-        const badges = `${r.isNextDayStart ? badgeHtml('first') : ''}${r.isFinal ? badgeHtml('final','最終') : ''}${railSpecialFinalBadge(r,japanNow())}`;
+        const badges = `${r.isNextDayStart ? badgeHtml('first') : ''}${railSpecialFinalBadge(r,japanNow())}`;
         row.innerHTML = `
           <div class="rail-primary">
             <div class="cell rail-service ${kind}"><span class="kindtxt">${label}</span></div>
