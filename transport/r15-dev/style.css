@@ -869,3 +869,28 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
   padding:0 24px!important;
   font-size:17px!important;
 }
+
+
+/* R15 DEV: disaster action ticker */
+.disaster-action-ticker{
+  overflow:hidden!important;
+  white-space:nowrap!important;
+}
+.disaster-action-track{
+  display:inline-flex;
+  align-items:center;
+  gap:72px;
+  width:max-content;
+  min-width:max-content;
+  animation:disaster-action-scroll 15s linear infinite;
+  will-change:transform;
+}
+.disaster-action-track span{
+  flex:0 0 auto;
+  font-weight:900;
+  letter-spacing:.03em;
+}
+@keyframes disaster-action-scroll{
+  from{transform:translateX(100%)}
+  to{transform:translateX(-100%)}
+}
