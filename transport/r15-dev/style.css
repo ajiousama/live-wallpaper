@@ -1204,13 +1204,13 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  min-width:42px;
-  max-width:112px;
+  min-width:46px;
+  max-width:124px;
   height:19px;
   padding:0 6px;
   border-radius:3px;
   box-sizing:border-box;
-  font-size:10.5px;
+  font-size:10px;
   font-weight:900;
   line-height:1;
   letter-spacing:.03em;
