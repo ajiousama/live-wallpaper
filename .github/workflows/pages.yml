@@ -65,6 +65,24 @@ jobs:
             git push
           fi
 
+      - name: Stamp wallpaper UI version
+        shell: bash
+        run: |
+          BUILD_ID="$(find transport assets config -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum | cut -c1-16)"
+          printf '{"build":"%s"}\n' "$BUILD_ID" > deploy-version.json
+          python - "$BUILD_ID" <<'PY'
+          from pathlib import Path
+          import sys
+
+          build_id = sys.argv[1]
+          path = Path("transport/index.html")
+          text = path.read_text(encoding="utf-8")
+          marker = "__BUILD_ID__"
+          if marker not in text:
+              raise SystemExit("transport/index.html: build marker not found")
+          path.write_text(text.replace(marker, build_id), encoding="utf-8")
+          PY
+
       - uses: actions/configure-pages@v5
         with:
           enablement: true
