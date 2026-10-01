@@ -186,7 +186,7 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
 
 /* v43 arrival time labels need room for 「頃予定」 */
 .panel-air.arrival-columns .table-head,.panel-air.arrival-columns .row{grid-template-columns:175px 1fr 95px 92px}
-.panel-bus.arrival-columns .table-head,.panel-bus.arrival-columns .row{grid-template-columns:1fr 155px 120px 92px}
+.panel-bus.arrival-columns .table-head,.panel-bus.arrival-columns .row{grid-template-columns:1fr 120px 155px 92px}
 .panel-port.arrival-columns .table-head,.panel-port.arrival-columns .row{grid-template-columns:1fr 170px 105px 92px}
 
 /* v44: bus terminal-arrival subline */
