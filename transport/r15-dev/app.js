@@ -1486,10 +1486,16 @@
         const origin = String(r.origin || r.dest || '—').trim() || '—';
         const terminal = String(r.arrivalTerminal || r.stop || '松山市駅').trim() || '松山市駅';
         const terminalTime = padTime(r.arrivalTerminalTime || r.time || '') || '—';
+        const operator = busOperatorParts(r).join('・');
         row.innerHTML = `
-          <div class="cell main arrival-origin"><span class="arrival-place">${overflowScrollHtml(origin,'bus-origin-scroll')} ${firstBadge}${finalBadge}</span><span class="arrival-departure-time">${depDay}${r.originDepartureTime || '—'}出発</span></div>
-          <div class="cell sub arrival-terminal-wrap"><span class="arrival-terminal">${overflowScrollHtml(terminal,'bus-terminal-scroll')}</span><span class="arrival-continuation">${busArrivalContinuationLabel(r)}</span></div>
-          <div class="cell service bus-arrival-operator">${busOperatorHtml(r)}</div>
+          <div class="cell main arrival-origin">
+            <span class="arrival-place">${overflowScrollHtml(origin,'bus-origin-scroll')} ${firstBadge}${finalBadge}</span>
+            <span class="arrival-departure-time">${depDay}${r.originDepartureTime || '—'}出発</span>
+          </div>
+          <div class="cell sub arrival-terminal-wrap">
+            <span class="arrival-terminal">${overflowScrollHtml(terminal,'bus-terminal-scroll')}</span>
+          </div>
+          <div class="cell service bus-arrival-operator">${overflowScrollHtml(operator,'bus-operator-scroll')}</div>
           <div class="cell time bus-arrival-time">${terminalTime}頃予定</div>`;
       }
       root.appendChild(row);
