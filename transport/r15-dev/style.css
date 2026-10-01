@@ -1380,3 +1380,23 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
   height:19px!important;
   font-size:9.5px!important;
 }
+
+
+/* BUS departure: push operator column farther right */
+.panel-bus.dep-mode .table-head,
+.panel-bus.dep-mode #bus-rows .row{
+  grid-template-columns:106px minmax(0,1fr) 142px 140px!important;
+  column-gap:10px!important;
+}
+.panel-bus.dep-mode #bus-rows .row > .cell.service:last-child{
+  display:flex!important;
+  justify-content:flex-end!important;
+  padding-left:8px!important;
+}
+.panel-bus.dep-mode #bus-rows .row > .cell.service:last-child .bus-logo-group{
+  justify-content:flex-end!important;
+}
+.panel-bus.dep-mode .table-head span:nth-child(4){
+  text-align:right!important;
+  padding-right:2px!important;
+}
