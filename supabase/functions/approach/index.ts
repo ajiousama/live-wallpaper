@@ -174,8 +174,15 @@ function isDeadhead(pos: Record<string, unknown>, route: Route) {
   return /^[0-9]{1,4}[AER]$/i.test(num);
 }
 
+function isFreight(pos: Record<string, unknown>, route: Route) {
+  const num = String(pos.TrainNum ?? route.trainNum ?? "").trim();
+  // Current Matsuyama freight pair: Takamatsu Freight Terminal <-> Matsuyama Freight.
+  return /^(?:3072|3073)$/.test(num);
+}
+
 function displayName(pos: Record<string, unknown>, route: Route) {
   if (isDeadhead(pos, route)) return "回送列車";
+  if (isFreight(pos, route)) return "貨物列車";
   const type = String(pos.Type ?? "").replace(/\r/g, "").trim();
   const named = type.match(/^(?:express|rapid):(.+)$/i);
   if (named?.[1]) return named[1].trim();
@@ -240,13 +247,15 @@ async function getIchitsubo(now: { minutes: number }) {
     }
 
     const deadhead = isDeadhead(pos, route);
-    const passing = deadhead || route.passOnly;
-    const threshold = passing ? 1 : 4;
+    const freight = isFreight(pos, route);
+    const passing = deadhead || freight || route.passOnly;
+    const threshold = deadhead || freight ? 2 : passing ? 1 : 4;
 
     if (Number.isFinite(diff) && !(diff >= 0 && diff <= threshold)) return null;
 
     let message = "";
     if (deadhead) message = "まもなく　市坪駅を　回送列車が通過します";
+    else if (freight) message = "まもなく　市坪駅を　貨物列車が通過します";
     else if (route.passOnly) message = `まもなく　市坪駅を　${displayName(pos, route)}が通過します`;
     else message = `まもなく　市坪駅に　${route.destination}行がまいります`;
 
@@ -254,7 +263,7 @@ async function getIchitsubo(now: { minutes: number }) {
       alert: true,
       message,
       trainNum: String(pos.TrainNum),
-      kind: deadhead ? "deadhead" : route.passOnly ? "pass" : "stop",
+      kind: deadhead ? "deadhead" : freight ? "freight" : route.passOnly ? "pass" : "stop",
       destination: route.destination,
       position: String(pos.Pos ?? ""),
       delayMinutes: delay,
@@ -292,12 +301,36 @@ async function getIchitsubo(now: { minutes: number }) {
     };
   }).filter(Boolean).sort((a: any, b: any) => (a.minutesToMatsuyama ?? 999) - (b.minutesToMatsuyama ?? 999));
 
+  const matsuyamaFreights = positions.map((pos) => {
+    const route = diagram.get(String(pos.TrainNum));
+    if (!route || !isFreight(pos, route) || route.matsuyamaIndex < 0) return null;
+    if (!/^\d{1,2}:\d{2}$/.test(route.matsuyamaTime)) return null;
+
+    const delay = Number(pos.delay ?? 0) || 0;
+    let diff = toMinutes(route.matsuyamaTime) + delay - now.minutes;
+    if (diff < -720) diff += 1440;
+    if (diff > 720) diff -= 1440;
+    if (!Number.isFinite(diff) || diff < -2 || diff > 240) return null;
+
+    return {
+      trainNum: String(pos.TrainNum),
+      kind: "freight",
+      origin: route.origin || "",
+      destination: route.destination || "",
+      position: String(pos.Pos ?? ""),
+      delayMinutes: delay,
+      scheduledMatsuyama: route.matsuyamaTime,
+      minutesToMatsuyama: diff,
+    };
+  }).filter(Boolean).sort((a: any, b: any) => (a.minutesToMatsuyama ?? 999) - (b.minutesToMatsuyama ?? 999));
+
   return {
     ok: true,
     source: "JR四国非公式アプリ系公開データ",
     fetchedAt: pjson?.fetchedAt ?? null,
     approaching,
     matsuyamaDeadheads,
+    matsuyamaFreights,
     alert: approaching.length > 0,
     message: (approaching[0] as any)?.message ?? "",
   };
