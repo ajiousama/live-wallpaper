@@ -1108,9 +1108,8 @@
     const s=railSpecialFinals(now);
     const badges=[];
     if(sameRailService(r,s.northFinal)) badges.push(badgeHtml('final','今治方面 最終列車'));
-    if(sameRailService(r,s.southFinal)) badges.push(badgeHtml('final','宇和島方面 最終列車'));
     if(sameRailService(r,s.outside)) badges.push(badgeHtml('final','県外最終'));
-    if(sameRailService(r,s.southwest)) badges.push(badgeHtml('final','宇和島・八幡浜方面最終'));
+    if(sameRailService(r,s.southwest)) badges.push(badgeHtml('final','宇和島方面 最終'));
     return badges.join('');
   }
 
@@ -1124,15 +1123,15 @@
     if(s.northFinal && s.northFinal.minutes>=now.minutes){
       out.push(`<span class="rail-special-final rail-direction-final">🚆 今治方面 最終列車｜松山 ${s.northFinal.time}発｜${label(s.northFinal)}</span>`);
     }
+    if(s.southwest && s.southwest.minutes>=now.minutes){
+      out.push(`<span class="rail-special-final rail-southwest-final">🚆 宇和島方面 最終｜松山 ${s.southwest.time}発｜${label(s.southwest)}</span>`);
+    }
     if(s.southFinal && s.southFinal.minutes>=now.minutes){
-      out.push(`<span class="rail-special-final rail-direction-final">🚆 宇和島方面 最終列車｜松山 ${s.southFinal.time}発｜${label(s.southFinal)}</span>`);
+      out.push(`<span class="rail-special-final rail-direction-final">🚆 最終｜松山 ${s.southFinal.time}発｜${label(s.southFinal)}</span>`);
     }
 
     if(s.outside && s.outside.minutes>=now.minutes){
       out.push(`<span class="rail-special-final rail-outside-final">⚠ 県外へ行ける最終｜松山 ${s.outside.time}発｜${label(s.outside)}</span>`);
-    }
-    if(s.southwest && s.southwest.minutes>=now.minutes){
-      out.push(`<span class="rail-special-final rail-southwest-final">⚠ 宇和島・八幡浜方面 最終｜松山 ${s.southwest.time}発｜${label(s.southwest)}</span>`);
     }
     if(s.shinkansen && s.shinkansen.minutes>=now.minutes){
       out.push(`<span class="rail-special-final rail-shinkansen-final">🚄 新幹線乗継最終｜松山 ${s.shinkansen.time}発｜${label(s.shinkansen)} → 岡山</span>`);
@@ -1233,7 +1232,7 @@
       const last = lastRailMovement(now);
       const mode = currentRailDir() === 'north' ? 'NORTHBOUND — 今治方面 —' : 'SOUTHBOUND — 宇和島方面 —';
       const serviceLabel = last ? (last.kind === 'local' ? '普通' : (last.kind === 'sightseeing' ? `観光 ${last.service}` : `特急 ${last.service}`)) : '—';
-      const detail = last && last.direction===currentRailDir() ? `最終列車：${last.time}　${serviceLabel}　${last.dest}行　発車済み` : '';
+      const detail = last && last.direction===currentRailDir() ? `最終：${last.time}　${serviceLabel}　${last.dest}行　発車済み` : '';
       root.classList.add('rail-end');
       root.innerHTML = `<div class="rail-end-state"><div class="rail-end-mode">🚆 ${mode}</div><div class="rail-end-message">本日の列車は終了しました</div>${detail ? `<div class="rail-end-detail">${detail}</div>` : ''}</div>`;
     } else {
@@ -1241,7 +1240,7 @@
         const row = document.createElement('div'); row.className = `row rail-row${r.isFinal ? ' is-final' : ''}${isDepartSoon(r, japanNow()) ? ' depart-soon' : ''}`;
         const kind = r.kind === 'limited' ? 'limited' : r.kind === 'sightseeing' ? 'tourist' : 'local';
         const label = kind === 'limited' ? `特急 ${r.service}` : kind === 'tourist' ? `観光 ${r.service}` : '普通電車';
-        const badges = `${r.isNextDayStart ? badgeHtml('first') : ''}${r.isFinal ? badgeHtml('final','最終列車') : ''}${railSpecialFinalBadge(r,japanNow())}`;
+        const badges = `${r.isNextDayStart ? badgeHtml('first') : ''}${r.isFinal ? badgeHtml('final','最終') : ''}${railSpecialFinalBadge(r,japanNow())}`;
         row.innerHTML = `
           <div class="rail-primary">
             <div class="cell rail-service ${kind}"><span class="kindtxt">${label}</span></div>
