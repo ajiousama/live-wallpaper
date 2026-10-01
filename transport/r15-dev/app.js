@@ -1181,13 +1181,24 @@
     });
   }
 
+  function busDestinationParts(r) {
+    const raw=String(busDisplayDestination(r)||'').replace(/\s+/g,' ').trim();
+    let destination=raw || '—';
+    let via='';
+    const viaDest=raw.match(/^(.*?経由)\s+(.+)$/);
+    if(viaDest){ via=viaDest[1].trim(); destination=viaDest[2].trim(); }
+    const info=String(r.info||'').replace(/\s+/g,' ').trim();
+    if(/経由/.test(info)) via=info;
+    destination=destination.replace(/\s*行$/,'');
+    return {destination,via};
+  }
   function busDestinationHtml(r,badges='') {
-    const lines=splitDestinationLines(busDisplayDestination(r));
-    return lines.map((x,i)=>{
-      const clean=String(x).replace(/\s*行$/,'');
-      const label=i===0 ? clean+' 行' : clean;
-      return '<span class="dest-line">'+label+(i===0&&badges?' '+badges:'')+'</span>';
-    }).join('');
+    const p=busDestinationParts(r);
+    const first='<span class="dest-line bus-destination-line">'+p.destination+' 行'+(badges?' '+badges:'')+'</span>';
+    const second=p.via
+      ? '<span class="bus-via-line">'+overflowScrollHtml(p.via,'bus-via-scroll')+'</span>'
+      : '';
+    return first+second;
   }
   function busArrivalContinuationLabel(r) {
     if (!r.continueTo) return '';
@@ -1318,7 +1329,7 @@
       ? '<span>時刻</span><span>行先</span><span>航空会社 / 便名</span><span>区分</span>'
       : '<span>出発地</span><span>航空会社 / 便名</span><span>区分</span><span>到着時刻</span>';
     busHead.innerHTML = dep
-      ? '<span>行先</span><span>乗車場所 / 経由</span><span>運行会社</span><span>時刻 / 終着</span>'
+      ? '<span>行先 / 経由地</span><span>乗車場所</span><span>運行会社</span><span>時刻 / 終着</span>'
       : '<span>出発地</span><span>到着場所</span><span>運行会社</span><span>到着時刻</span>';
     portHead.innerHTML = dep
       ? '<span>時刻 / 到着</span><span>出発港 → 行先 / 寄港</span><span>運航会社 / 船種</span>'
