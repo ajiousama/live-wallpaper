@@ -112,6 +112,9 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
 .rail-service .kindtxt{color:#ffd89d}
 .rail-service.local .kindtxt{color:#aef0c7}
 #rail-rows .rail-service.deadhead .kindtxt{color:#f1f4f8;letter-spacing:.12em}
+#rail-rows .rail-service.freight .kindtxt{color:#ffd36b;letter-spacing:.12em}
+#rail-rows .rail-row.freight-row{border-left:3px solid rgba(255,211,107,.72);background:linear-gradient(180deg,rgba(37,31,17,.96),rgba(20,18,13,.96))}
+#rail-rows .rail-row.freight-row .cell.main{color:#ffe8a6;font-weight:900}
 #rail-rows .rail-row.deadhead-row{border-left:3px solid rgba(220,228,238,.65);background:linear-gradient(180deg,rgba(31,35,42,.96),rgba(17,20,25,.96))}
 #rail-rows .rail-row.deadhead-row .cell.main{color:#f1f4f8;font-weight:900}
 
