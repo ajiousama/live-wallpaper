@@ -997,7 +997,8 @@
       "service": "JR四国/西日本JR",
       "dest": "大阪（梅田）",
       "info": "土日運行・三宮経由",
-      "kind": "bus",      "source": "jr_osaka",
+      "kind": "bus",
+      "source": "jr_osaka",
       "days": [
         0,
         6
@@ -1996,7 +1997,8 @@
       "info": "3番・内子経由",
       "kind": "local",
       "direction": "south",
-      "source": "rail",      "id": "rail-158"
+      "source": "rail",
+      "id": "rail-158"
     },
     {
       "board": "rail",
@@ -2995,7 +2997,8 @@
     },
     {
       "board": "bus",
-      "time": "10:10",      "service": "伊予鉄/阪急観光",
+      "time": "10:10",
+      "service": "伊予鉄/阪急観光",
       "dest": "大阪・京都",
       "info": "松山乗車可",
       "kind": "bus",
@@ -3994,7 +3997,8 @@
       "info": "国内線",
       "kind": "flight",
       "direction": "arrival",
-      "start": "2026-09-01",      "end": "2026-09-30",
+      "start": "2026-09-01",
+      "end": "2026-09-30",
       "source": "matsuyama_airport_arrivals"
     },
     {
@@ -4993,7 +4997,8 @@
       "direction": "north",
       "source": "jr_ichitsubo_pdf"
     },
-    {      "id": "ichitsubo-north-23",
+    {
+      "id": "ichitsubo-north-23",
       "board": "ichitsubo",
       "time": "22:22",
       "service": "普通",
@@ -5992,7 +5997,8 @@
           "小大下港",
           "08:11"
         ],
-        [          "岡村港",
+        [
+          "岡村港",
           "08:18"
         ]
       ],
@@ -6089,76 +6095,6 @@
       "noSyntheticArrival": true
     },
     {
-      "id": "tf-port-nagahama-aoshima-1",
-      "board": "port",
-      "time": "08:00",
-      "service": "青島海運 あおしま",
-      "dest": "青島",
-      "info": "青島航路",
-      "kind": "passenger",
-      "source": "nagahama_aoshima",
-      "port": "長浜港",
-      "calls": [
-        [
-          "青島",
-          "08:35"
-        ]
-      ],
-      "reverseTime": "08:45",
-      "reverseArrivalTime": "09:20",
-      "exclude": [
-        "2026-09-28",
-        "2026-10-01",
-        "2026-10-02",
-        "2026-10-03",
-        "2026-10-04",
-        "2026-10-05",
-        "2026-10-06",
-        "2026-10-07",
-        "2026-10-08",
-        "2026-10-09",
-        "2026-10-10",
-        "2026-10-11",
-        "2026-10-12",
-        "2026-10-13"
-      ]
-    },
-    {
-      "id": "tf-port-nagahama-aoshima-2",
-      "board": "port",
-      "time": "14:30",
-      "service": "青島海運 あおしま",
-      "dest": "青島",
-      "info": "青島航路",
-      "kind": "passenger",
-      "source": "nagahama_aoshima",
-      "port": "長浜港",
-      "calls": [
-        [
-          "青島",
-          "15:05"
-        ]
-      ],
-      "reverseTime": "16:15",
-      "reverseArrivalTime": "16:50",
-      "exclude": [
-        "2026-09-28",
-        "2026-10-01",
-        "2026-10-02",
-        "2026-10-03",
-        "2026-10-04",
-        "2026-10-05",
-        "2026-10-06",
-        "2026-10-07",
-        "2026-10-08",
-        "2026-10-09",
-        "2026-10-10",
-        "2026-10-11",
-        "2026-10-12",
-        "2026-10-13"
-      ]
-    },
-    {
       "id": "tf-port-niihama-orange",
       "board": "port",
       "time": "16:20",
@@ -6181,253 +6117,6 @@
         4
       ],
       "noSyntheticArrival": true
-    },
-    {
-      "id": "tf-port-niihama-oshima-01",
-      "board": "port",
-      "time": "06:45",
-      "service": "新居浜市営渡海船",
-      "dest": "大島",
-      "info": "黒島港発",
-      "kind": "passenger",
-      "source": "niihama_oshima",
-      "port": "黒島港",
-      "calls": [
-        [
-          "大島",
-          "07:00"
-        ]
-      ],
-      "reverseTime": "06:20",
-      "reverseArrivalTime": "06:35"
-    },
-    {
-      "id": "tf-port-niihama-oshima-02",
-      "board": "port",
-      "time": "07:40",
-      "service": "新居浜市営渡海船",
-      "dest": "大島",
-      "info": "黒島港発",
-      "kind": "passenger",
-      "source": "niihama_oshima",
-      "port": "黒島港",
-      "calls": [
-        [
-          "大島",
-          "07:55"
-        ]
-      ],
-      "reverseTime": "07:10",
-      "reverseArrivalTime": "07:25"
-    },
-    {
-      "id": "tf-port-niihama-oshima-03",
-      "board": "port",
-      "time": "08:40",
-      "service": "新居浜市営渡海船",
-      "dest": "大島",
-      "info": "黒島港発",
-      "kind": "passenger",
-      "source": "niihama_oshima",
-      "port": "黒島港",
-      "calls": [
-        [
-          "大島",
-          "08:55"
-        ]
-      ],
-      "reverseTime": "08:15",
-      "reverseArrivalTime": "08:30"
-    },
-    {
-      "id": "tf-port-niihama-oshima-04",
-      "board": "port",
-      "time": "09:40",
-      "service": "新居浜市営渡海船",
-      "dest": "大島",
-      "info": "黒島港発",
-      "kind": "passenger",
-      "source": "niihama_oshima",
-      "port": "黒島港",
-      "calls": [
-        [
-          "大島",
-          "09:55"
-        ]
-      ],
-      "reverseTime": "09:15",
-      "reverseArrivalTime": "09:30"
-    },
-    {
-      "id": "tf-port-niihama-oshima-05",
-      "board": "port",
-      "time": "10:40",
-      "service": "新居浜市営渡海船",
-      "dest": "大島",
-      "info": "黒島港発",
-      "kind": "passenger",
-      "source": "niihama_oshima",
-      "port": "黒島港",
-      "calls": [
-        [
-          "大島",
-          "10:55"
-        ]
-      ],
-      "reverseTime": "10:15",
-      "reverseArrivalTime": "10:30"
-    },
-    {
-      "id": "tf-port-niihama-oshima-06",
-      "board": "port",
-      "time": "11:40",
-      "service": "新居浜市営渡海船",
-      "dest": "大島",
-      "info": "黒島港発",
-      "kind": "passenger",
-      "source": "niihama_oshima",
-      "port": "黒島港",
-      "calls": [
-        [
-          "大島",
-          "11:55"
-        ]
-      ],
-      "reverseTime": "11:15",
-      "reverseArrivalTime": "11:30"
-    },
-    {
-      "id": "tf-port-niihama-oshima-07",
-      "board": "port",
-      "time": "13:30",
-      "service": "新居浜市営渡海船",
-      "dest": "大島",
-      "info": "黒島港発",
-      "kind": "passenger",
-      "source": "niihama_oshima",
-      "port": "黒島港",
-      "calls": [
-        [
-          "大島",
-          "13:45"
-        ]
-      ],
-      "reverseTime": "13:05",
-      "reverseArrivalTime": "13:20"
-    },
-    {
-      "id": "tf-port-niihama-oshima-08",
-      "board": "port",
-      "time": "14:30",
-      "service": "新居浜市営渡海船",
-      "dest": "大島",
-      "info": "黒島港発",
-      "kind": "passenger",
-      "source": "niihama_oshima",
-      "port": "黒島港",
-      "calls": [
-        [
-          "大島",
-          "14:45"
-        ]
-      ],
-      "reverseTime": "14:05",
-      "reverseArrivalTime": "14:20"
-    },
-    {
-      "id": "tf-port-niihama-oshima-09",
-      "board": "port",
-      "time": "15:40",
-      "service": "新居浜市営渡海船",
-      "dest": "大島",
-      "info": "黒島港発",
-      "kind": "passenger",
-      "source": "niihama_oshima",
-      "port": "黒島港",
-      "calls": [
-        [
-          "大島",
-          "15:55"
-        ]
-      ],
-      "reverseTime": "15:15",
-      "reverseArrivalTime": "15:30"
-    },
-    {
-      "id": "tf-port-niihama-oshima-10",
-      "board": "port",
-      "time": "16:40",
-      "service": "新居浜市営渡海船",
-      "dest": "大島",
-      "info": "黒島港発",
-      "kind": "passenger",
-      "source": "niihama_oshima",
-      "port": "黒島港",
-      "calls": [
-        [
-          "大島",
-          "16:55"
-        ]
-      ],
-      "reverseTime": "16:15",
-      "reverseArrivalTime": "16:30"
-    },
-    {
-      "id": "tf-port-niihama-oshima-11",
-      "board": "port",
-      "time": "17:40",
-      "service": "新居浜市営渡海船",
-      "dest": "大島",
-      "info": "黒島港発",
-      "kind": "passenger",
-      "source": "niihama_oshima",
-      "port": "黒島港",
-      "calls": [
-        [
-          "大島",
-          "17:55"
-        ]
-      ],
-      "reverseTime": "17:15",
-      "reverseArrivalTime": "17:30"
-    },
-    {
-      "id": "tf-port-niihama-oshima-12",
-      "board": "port",
-      "time": "19:40",
-      "service": "新居浜市営渡海船",
-      "dest": "大島",
-      "info": "黒島港発",
-      "kind": "passenger",
-      "source": "niihama_oshima",
-      "port": "黒島港",
-      "calls": [
-        [
-          "大島",
-          "19:55"
-        ]
-      ],
-      "reverseTime": "19:15",
-      "reverseArrivalTime": "19:30"
-    },
-    {
-      "id": "tf-port-niihama-oshima-13",
-      "board": "port",
-      "time": "21:25",
-      "service": "新居浜市営渡海船",
-      "dest": "大島",
-      "info": "黒島港発",
-      "kind": "passenger",
-      "source": "niihama_oshima",
-      "port": "黒島港",
-      "calls": [
-        [
-          "大島",
-          "21:40"
-        ]
-      ],
-      "reverseTime": "21:00",
-      "reverseArrivalTime": "21:15"
     }
   ],
   "sources": {
