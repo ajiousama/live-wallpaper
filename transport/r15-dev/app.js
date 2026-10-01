@@ -1815,15 +1815,68 @@
     };
   }
 
-  function busBoardingSubline(r) {
+  function busBoardingPlaceHtml(r) {
+    const raw=String(r.stopText||r.stop||'松山市駅').replace(/発$/,'').trim();
+    const stop=raw || '松山市駅';
+    if (stop==='JR松山駅') return '<span class="bus-stop-badge bus-stop-jr">JR松山駅</span>';
+    if (stop==='松山市駅') return '<span class="bus-stop-badge bus-stop-iyotetsu">松山市駅</span>';
+    if (/松山一番町/.test(stop)) return '<span class="bus-stop-badge bus-stop-ichibancho">松山一番町</span>';
+    if (/マドンナスタジアム/.test(stop)) return '<span class="bus-stop-badge bus-stop-madonna">マドンナ</span>';
+    if (/松山室町営業所/.test(stop)) return '<span class="bus-stop-badge bus-stop-muromachi">室町営業所</span>';
+    return `<span class="bus-stop-badge bus-stop-generic">${stop}</span>`;
+  }
+
+  function busEhimeRoute(r) {
+    const src=String(r.source||'');
+    const dest=String(r.dest||'');
+    const info=String(r.info||'');
+    const stop=String(r.stop||'');
     const start=String(r.originStartName||'').trim();
     const startTime=String(r.originStartTime||'').trim();
-    const stop=String(r.stop||'').trim();
-    if (!start || !startTime) return '';
-    if (!['松山市駅','JR松山駅'].includes(stop)) return '';
-    if (['松山市駅','JR松山駅','松山室町営業所'].includes(start)) return '';
-    if (start===stop) return '';
-    return `始発 ${start} ${startTime}`;
+    const parts=[];
+
+    if (start && startTime && start!==stop && !['松山室町営業所'].includes(start)) {
+      parts.push(`始発 ${start} ${startTime}`);
+    }
+
+    if (/orange_ferry_shuttle/.test(src)) {
+      const timed=[...info.matchAll(/(松山市駅|松山IC口|川内IC)(\d{1,2}:\d{2})/g)]
+        .map(m=>`${m[1]} ${m[2]}`);
+      if (timed.length) parts.push(...timed);
+    } else if (/iyotetsu_misaki/.test(src)) {
+      parts.push('伊予市','内子','大洲','八幡浜港');
+    } else if (/uwajima_bus_matsuyama/.test(src)) {
+      if (/大洲/.test(info)) parts.push('大洲');
+      if (/卯之町/.test(info)) parts.push('卯之町');
+      if (/吉田/.test(info)) parts.push('吉田');
+      if (/城辺/.test(dest) || /宇和島経由/.test(info)) parts.push('宇和島');
+    } else if (/setouchi_omishima/.test(src)) {
+      parts.push('奥道後','玉川','今治');
+    } else if (/iyotetsu_niihama/.test(src)) {
+      if (stop==='JR松山駅') parts.push('松山市駅');
+      parts.push('四国がんセンター','西条');
+    } else if (/iyotetsu_tokyo|iyo_city_fukuoka/.test(src) || /東京|横浜|福岡/.test(dest)) {
+      parts.push('余戸南インター','松山インター口','川内インター');
+      if (/福岡/.test(dest)) parts.push('今治');
+    } else if (/jr_osaka|takamatsu|tokushima|kochi|okayama|nagoya|iyo_city_(?:osaka|takamatsu|tokushima|kochi|okayama|nagoya)/.test(src)
+      || /大阪|京都|神戸|高松|徳島|高知|岡山|名古屋/.test(dest)) {
+      if (stop==='JR松山駅') parts.push('松山市駅');
+      parts.push('松山インター口','川内インター');
+    } else if (/新尾道|福山/.test(dest)) {
+      parts.push('今治','来島海峡BS');
+    }
+
+    const seen=new Set();
+    const cleaned=parts.filter(x=>{
+      const k=String(x).replace(/\s+/g,' ').trim();
+      if(!k || seen.has(k)) return false;
+      seen.add(k); return true;
+    });
+    return cleaned.join(' → ');
+  }
+
+  function busBoardingSubline(r) {
+    return busEhimeRoute(r);
   }
   function renderBus(rows) {
     const root = $('bus-rows'); root.innerHTML = '';
@@ -1839,14 +1892,14 @@
       const firstBadge = r.isNextDayStart ? badgeHtml('first', dep ? '始発' : '初便') : '';
       const finalBadge = r.isFinal ? badgeHtml('final','最終バス') : '';
       if (dep) {
-        const rightTop = r.stopText || r.stop || '松山市駅発';
+        const rightTop = busBoardingPlaceHtml(r);
         const rightBottom = busBoardingSubline(r);
         const terminal = busTerminalArrivalLabel(r);
         const ferryExtra = r.kind === 'ferrybus' ? '<span class="route-sub">フェリー連絡</span>' : '';
         row.innerHTML = `
           <div class="cell time bus-time-stack"><span class="primary-time">${r.time}</span>${terminal?`<span class="bus-terminal-time">${terminal}</span>`:''}</div>
           <div class="cell main bus-dest-cell"><span class="bus-dest-main">${busDestinationHtml(r,`${firstBadge}${finalBadge}`)}</span>${ferryExtra}</div>
-          <div class="cell sub"><div class="service-wrap"><span class="name bus-place-scroll">${overflowScrollHtml(rightTop)}</span><span class="code">${rightBottom}</span></div></div>
+          <div class="cell sub bus-boarding-cell"><div class="service-wrap"><span class="name bus-place-logo">${rightTop}</span><span class="code bus-ehime-route">${rightBottom?overflowScrollHtml(rightBottom,'bus-ehime-route-scroll'):''}</span></div></div>
           <div class="cell service">${busOperatorHtml(r)}</div>`;
       } else {
         row.classList.add('bus-arrival-row');
