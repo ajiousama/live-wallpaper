@@ -631,6 +631,24 @@
     return '';
   }
 
+  function isHiroshimaKureVia(record) {
+    const svc=String(record.service||'');
+    const text=`${record.dest||''} ${record.info||''}`;
+    return /広島/.test(String(record.dest||'')) &&
+      /呉経由/.test(text) &&
+      (/クルーズフェリー/.test(svc) || /^高速船$/.test(svc));
+  }
+
+  function portKureUnifiedHtml(record, direction='departure', badges='') {
+    const localPort=record.port || '松山観光港';
+    const from=direction==='arrival' ? '広島港' : localPort;
+    const to=direction==='arrival' ? localPort : '広島港';
+    const fromHtml=EHIME_PORTS.has(from)?ehimePortHtml(from):`<span class="route-port">${from}</span>`;
+    const toHtml=EHIME_PORTS.has(to)?ehimePortHtml(to):`<span class="route-port">${to}</span>`;
+    const main=`${fromHtml}<span class="route-arrow"> → </span>${toHtml}${badges?' '+badges:''}`;
+    return `<div class="port-dest-wrap port-kure-unified"><span class="port-dest-main">${overflowScrollHtml(main,'port-main-scroll')}</span><span class="port-via-line">${overflowScrollHtml('呉経由','port-via-scroll')}</span></div>`;
+  }
+
   function portRoute(record, direction = 'departure') {
     const svc = String(record.service || '');
     const text = `${record.dest || ''} ${record.info || ''}`;
@@ -736,6 +754,7 @@
     return `<span class="primary-time">${record.time}</span>${lines.map(x=>`<span class="port-arrival-line">${x}</span>`).join('')}`;
   }
   function portDepartureDestinationHtml(record, badges='') {
+    if (isHiroshimaKureVia(record)) return portKureUnifiedHtml(record,'departure',badges);
     const calls=portDepartureCalls(record);
     const terminal=(calls.length ? calls[calls.length-1][0] : portDestinationName(record.dest)) || portDestinationName(record.dest);
     const via=calls.slice(0,-1).map(x=>x[0]);
@@ -1395,8 +1414,11 @@
           <div class="cell main port-route">${portDepartureDestinationHtml(r,`${firstBadge}${finalBadge}`)}</div>
           <div class="cell service">${service}</div>`;
       } else {
+        const arrivalRoute = isHiroshimaKureVia(r)
+          ? portKureUnifiedHtml(r,'arrival',`${firstBadge}${finalBadge}`)
+          : `${route} ${firstBadge}${finalBadge}`;
         row.innerHTML = `
-          <div class="cell main port-route">${route} ${firstBadge}${finalBadge}</div>
+          <div class="cell main port-route">${arrivalRoute}</div>
           <div class="cell service">${service}</div>
           <div class="cell time">${r.time}頃予定</div>`;
       }
