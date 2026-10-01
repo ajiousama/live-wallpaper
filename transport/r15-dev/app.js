@@ -886,7 +886,22 @@
     return !!(last && scheduled && padTime(last.time)===scheduled);
   }
   function ichitsuboTakeover(now) {
-    const list=Array.isArray(approachLive.ichitsubo?.approaching)?approachLive.ichitsubo.approaching:[];
+    const generatedAt=Date.parse(String(approachLive.generatedAtJst||''));
+    if (Number.isFinite(generatedAt) && Date.now()-generatedAt>45000) return null;
+    const rawList=Array.isArray(approachLive.ichitsubo?.approaching)?approachLive.ichitsubo.approaching:[];
+    const list=rawList.filter(x=>{
+      const mins=Number(x.minutesToIchitsubo);
+      if (Number.isFinite(mins) && mins<0) return false;
+      const scheduled=padTime(x.scheduledIchitsubo||'');
+      const delay=Number(x.delayMinutes)||0;
+      if (/^\d{2}:\d{2}$/.test(scheduled)) {
+        let diff=toMinutes(scheduled)+delay-now.minutes;
+        if (diff<-720) diff+=1440;
+        if (diff>720) diff-=1440;
+        if (diff<0) return false;
+      }
+      return true;
+    });
     if (!list.length) return null;
     const alerts=list.map(x=>{
       const kind=String(x.kind||''); const mins=Number(x.minutesToIchitsubo); const strong=Number.isFinite(mins)&&mins<=1;
