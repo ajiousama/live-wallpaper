@@ -958,6 +958,27 @@
     });
     return {items:alerts.map(a=>liveAlertSpan(a.text,a.mode==='pass'?'rail-pass-alert':'rail-stop-alert',a.strong)),className:'live-takeover stop-live fast-scroll'};
   }
+  function madonnaTopInfo(now) {
+    const live=approachLive.madonna;
+    const generatedAt=Date.parse(String(approachLive.generatedAtJst||''));
+    const fresh=!Number.isFinite(generatedAt) || (Date.now()-generatedAt)<=90000;
+
+    if(approachLive.ok && live?.ok && fresh && isKnownStadiumScheduledTime(live.scheduledDeparture,now)) {
+      const t=padTime(live.predictedDeparture||live.scheduledDeparture);
+      if(t){
+        const diff=minutesUntil(t,now.minutes);
+        if(Number.isFinite(diff) && diff>=0){
+          return `マドンナスタジアム｜51系統 松山市駅行｜${t}発${diff<=59?`｜あと${diff}分`:''}`;
+        }
+      }
+    }
+
+    const next=nextAux('stadium',null,now);
+    return next
+      ? `マドンナスタジアム｜51系統 松山市駅行｜次便 ${next.time}発`
+      : '';
+  }
+
   function renderTopLiveAlert(now) {
     const el=$('top-live-alert');
     if(!el)return;
@@ -965,14 +986,19 @@
     let html='';
     const city=ichitsuboTakeover(now);
     const bus=madonnaTakeover(now);
-    // Top-center large ticker is reserved only for live approach alerts.
-    // Do not keep showing generic next-train/next-bus guidance here.
+    const stadium=madonnaTopInfo(now);
+
+    // Live approach alerts take priority. Otherwise keep the next Madonna Stadium
+    // departure visible in the top ticker so it never disappears between buses.
     if(city){
       cls='hero-alert top-live-alert active stop-live fast-scroll';
       html=tickerHtml(city.items);
     } else if(bus){
-      cls='hero-alert top-live-alert active fast-scroll';
+      cls='hero-alert top-live-alert active bus-live fast-scroll';
       html=tickerHtml(bus.items);
+    } else if(stadium){
+      cls='hero-alert top-live-alert active bus-live';
+      html=tickerHtml([stadium]);
     }
     // Keep the marquee running smoothly. Do not rebuild the top ticker when the
     // departure/arrival panels switch mode if the visible text has not changed.
