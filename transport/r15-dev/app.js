@@ -1821,17 +1821,20 @@
 
   function scale() {
     const wall = $('wall');
-    const iconSpace = window.innerWidth >= 900 ? 300 : 12;
-    const edge = 16;
-    const usableW = Math.max(320, window.innerWidth - iconSpace - edge);
-    const usableH = window.innerHeight - 32;
-    const baseH = wall.offsetHeight || 724;
-    const ratio = Math.min(0.88, usableW / 1180, usableH / baseH);
-    wall.style.left = 'auto';
-    wall.style.right = `${edge}px`;
+    const edge = 10;
+    const usableW = Math.max(320, window.innerWidth - edge * 2);
+    const usableH = Math.max(240, window.innerHeight - edge * 2);
+    const baseW = wall.offsetWidth || 1180;
+    const baseH = wall.offsetHeight || 650;
+    const ratio = Math.min(usableW / baseW, usableH / baseH);
+
+    // Lively is the desktop background: use the whole screen.
+    // Desktop icons sit above the wallpaper, so no reserved left-side space is needed.
+    wall.style.left = '50%';
+    wall.style.right = 'auto';
     wall.style.top = '50%';
-    wall.style.transformOrigin = 'right center';
-    wall.style.transform = `translateY(-50%) scale(${ratio})`;
+    wall.style.transformOrigin = 'center center';
+    wall.style.transform = `translate(-50%, -50%) scale(${ratio})`;
   }
 
   window.addEventListener('resize', scale);
