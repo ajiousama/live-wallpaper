@@ -1240,9 +1240,37 @@
     return {items:[liveAlertSpan(pick.text,'airport-bus-alert',strong)],className:`live-takeover airbus-live${strong?' strong-live':''}${pick.text.length>23?' fast-scroll':''}`};
   }
   function airportAccessTickerItems(now) {
-    // Airport lower ticker is reserved for airport/flight information.
-    // Do not output limousine-bus or ordinary-route bus schedules here.
-    return [''];
+    // Airport lower ticker: delay notices only. No bus schedule / routine flight guide.
+    const airport=slowLive.airport;
+    if(!airport?.ok) return [''];
+
+    const items=[];
+    const addDelayed=(rows,direction)=>{
+      if(!Array.isArray(rows)) return;
+      rows.forEach(x=>{
+        const delta=Number(x?.deltaMinutes);
+        const status=String(x?.status||'');
+        if(!(Number.isFinite(delta) && delta>0) && !/遅延|遅れ/.test(status)) return;
+
+        const scheduled=padTime(x?.scheduled||'');
+        const changed=padTime(x?.changed||x?.scheduled||'');
+        if(!scheduled || !changed) return;
+
+        const nums=Array.isArray(x?.numbers)?x.numbers.map(String).filter(Boolean):[];
+        const flight=nums.length?nums.join(' / '):'便名不明';
+        const place=String(x?.place||'').trim();
+        const late=Number.isFinite(delta)&&delta>0
+          ? `+${delta}分`
+          : (status.match(/(?:遅延|遅れ)[^0-9]*([0-9]+)分/)?.[1] ? `+${status.match(/(?:遅延|遅れ)[^0-9]*([0-9]+)分/)?.[1]}分` : '遅延');
+        const dirLabel=direction==='departure'?'出発':'到着';
+        const route=place ? `｜${place}${direction==='departure'?'行':'発'}` : '';
+        items.push(`✈ 遅延｜${dirLabel} ${flight}${route}｜定刻 ${scheduled} → ${changed}（${late}）`);
+      });
+    };
+
+    addDelayed(airport.departures,'departure');
+    addDelayed(airport.arrivals,'arrival');
+    return items.length?items:[''];
   }
 
   const scrollState = {};
