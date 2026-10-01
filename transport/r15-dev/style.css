@@ -1235,3 +1235,69 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
   margin-top:0!important;
   font-size:9px!important;
 }
+
+
+/* Compact bus operator logo badges */
+.panel-bus .bus-logo-group{
+  display:flex!important;
+  flex-wrap:wrap;
+  align-content:center;
+  align-items:center;
+  justify-content:flex-start;
+  gap:2px 3px;
+  width:100%;
+  min-width:0;
+  line-height:1;
+  white-space:normal!important;
+  overflow:visible!important;
+}
+.bus-mini-logo{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:38px;
+  max-width:78px;
+  height:18px;
+  padding:0 5px;
+  border-radius:3px;
+  box-sizing:border-box;
+  font-size:9.5px;
+  font-weight:900;
+  line-height:1;
+  letter-spacing:.01em;
+  white-space:nowrap;
+  flex:0 0 auto;
+}
+.bus-logo-iyo{background:#f2fff5;color:#00843d;border:1px solid #7bc99a}
+.bus-logo-nanyo{background:#f2fff5;color:#147047;border:1px solid #89c7a2}
+.bus-logo-jrshikoku{background:#eef7ff;color:#1467a8;border:1px solid #8bbde0}
+.bus-logo-jrwest{background:#eef7ff;color:#1b6b9d;border:1px solid #9ec2da}
+.bus-logo-jrtokai{background:#fff4e8;color:#e36b00;border:1px solid #f0b277}
+.bus-logo-shikoku{background:#fff7e8;color:#995b00;border:1px solid #ddb36a}
+.bus-logo-tokushima{background:#f4f0ff;color:#5b3aa8;border:1px solid #b3a0dd}
+.bus-logo-ryobi{background:#fff0f3;color:#b31e3e;border:1px solid #df8ca0}
+.bus-logo-shimoden{background:#f1f8ff;color:#17679a;border:1px solid #96c0da}
+.bus-logo-tosaden{background:#f1fff9;color:#00745d;border:1px solid #84cdbb}
+.bus-logo-hankyu{background:#fff2f6;color:#8e234f;border:1px solid #d29ab1}
+.bus-logo-meitetsu{background:#fff1f1;color:#b21722;border:1px solid #df969b}
+.bus-logo-setouchi{background:#edf9ff;color:#00789e;border:1px solid #8ac6d9}
+.bus-logo-nishitokyo{background:#f4f7f8;color:#43555d;border:1px solid #aebbc0}
+.bus-logo-willer{background:#fff0f8;color:#d1006f;border:1px solid #e391bd}
+.bus-logo-uwajima{background:#f2f6ff;color:#315e9c;border:1px solid #a1b9db}
+.bus-logo-chugoku{background:#fff6e9;color:#8c5800;border:1px solid #d8b06e}
+.bus-logo-honshi{background:#eefcff;color:#006e78;border:1px solid #8ed0d5}
+.bus-logo-kotobus{background:#fff5ea;color:#9d5700;border:1px solid #deb57d}
+.bus-logo-shinki{background:#fff3f0;color:#a53c25;border:1px solid #dca08f}
+.bus-logo-shimanami{background:#eef8ff;color:#246c9a;border:1px solid #9cc8e2}
+.bus-logo-generic{background:#f3f5f6;color:#40505a;border:1px solid #9eabb2;font-size:8.5px}
+.panel-bus.arrival-columns .bus-arrival-operator{
+  display:flex!important;
+  align-items:center!important;
+  overflow:visible!important;
+  white-space:normal!important;
+  line-height:1!important;
+}
+.panel-bus.arrival-columns .bus-arrival-operator .bus-mini-logo{
+  height:19px;
+  font-size:9.5px;
+}
