@@ -643,10 +643,10 @@
     const localPort=record.port || '松山観光港';
     const from=direction==='arrival' ? '広島港' : localPort;
     const to=direction==='arrival' ? localPort : '広島港';
-    const fromHtml=EHIME_PORTS.has(from)?ehimePortHtml(from):`<span class="route-port">${from}</span>`;
-    const toHtml=EHIME_PORTS.has(to)?ehimePortHtml(to):`<span class="route-port">${to}</span>`;
-    const main=`${fromHtml}<span class="route-arrow"> → </span>${toHtml}${badges?' '+badges:''}`;
-    return `<div class="port-dest-wrap port-kure-unified"><span class="port-dest-main">${overflowScrollHtml(main,'port-main-scroll')}</span><span class="port-via-line">${overflowScrollHtml('呉経由','port-via-scroll')}</span></div>`;
+    // This route is short enough to stay fixed. Do not let the Ehime badge
+    // artificially trigger scrolling on "広島港 → 松山観光港".
+    const main=`<span class="route-port">${from}</span><span class="route-arrow"> → </span><span class="route-port">${to}</span>${badges?' '+badges:''}`;
+    return `<div class="port-dest-wrap port-kure-unified"><span class="port-dest-main no-auto-scroll">${main}</span><span class="port-via-line">${overflowScrollHtml('呉経由','port-via-scroll')}</span></div>`;
   }
 
   function portRoute(record, direction = 'departure') {
@@ -1267,6 +1267,7 @@
       if (el.querySelector(':scope > .overflow-scroll')) return;
       if (el.classList.contains('port-route') && el.querySelector('.port-dest-wrap')) return;
       if (el.classList.contains('air-status') && el.querySelector('.overflow-scroll')) return;
+      if (el.classList.contains('no-auto-scroll')) return;
 
       const wrap=document.createElement('span');
       wrap.className='overflow-scroll auto-overflow';
