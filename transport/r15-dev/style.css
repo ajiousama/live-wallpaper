@@ -915,3 +915,61 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
   from{transform:translateX(0)}
   to{transform:translateX(-50%)}
 }
+
+
+/* R15 DEV: balance top row — AIR 4 visible rows, JR 3 visible rows */
+#air-rows{
+  gap:4px!important;
+  padding:5px 8px 0!important;
+}
+.panel-air #air-rows .row{
+  min-height:36px!important;
+  flex:0 0 36px!important;
+  padding-top:1px!important;
+  padding-bottom:1px!important;
+}
+.panel-air #air-rows .cell.time{
+  font-size:14px!important;
+}
+.panel-air #air-rows .cell.main{
+  font-size:15px!important;
+  line-height:1.02!important;
+}
+.panel-air #air-rows .service-wrap .name{
+  font-size:12.5px!important;
+  line-height:1.02!important;
+}
+.panel-air #air-rows .service-wrap .code{
+  font-size:9.5px!important;
+  line-height:1.02!important;
+}
+.panel-air #air-rows .air-status{
+  font-size:11px!important;
+  line-height:1.02!important;
+}
+
+/* JR gains one visible service while keeping each service detail ticker. */
+#rail-rows{
+  gap:4px!important;
+  padding:5px 8px 0!important;
+}
+#rail-rows .rail-row{
+  min-height:47px!important;
+  flex:0 0 47px!important;
+}
+#rail-rows .rail-primary{
+  height:27px!important;
+}
+#rail-rows .rail-detail{
+  height:19px!important;
+  font-size:9px!important;
+}
+#rail-rows .rail-service{
+  font-size:12px!important;
+}
+#rail-rows .rail-primary .cell.time{
+  font-size:14px!important;
+}
+#rail-rows .rail-primary .cell.main{
+  font-size:14px!important;
+}
