@@ -7,6 +7,16 @@
     noteIndex: { rail: 0, air: 0, bus: 0, port: 0 }
   };
 
+  const MODE_SWITCH_MS = 15000;
+  let nextModeSwitchAt = Date.now() + MODE_SWITCH_MS;
+
+  function updateModeCountdown() {
+    const el=$('mode-countdown');
+    if(!el) return;
+    const left=Math.max(0,Math.ceil((nextModeSwitchAt-Date.now())/1000));
+    el.textContent=`表示切替まで あと${left}秒`;
+  }
+
   // FINAL: workplace PC performs only lightweight JSON reads.
   // Heavy parsing (JR positions, Iyotetsu bus-location HTML, airport/ferry/highway status,
   // and disaster feeds) is done by the Supabase Edge Function.
@@ -1612,6 +1622,7 @@
   setInterval(()=>{loadSlowLive().then(()=>renderAll());},60000);
   setInterval(()=>{loadDisasterLive().then(()=>renderDisaster(japanNow()));},10000);
   renderAll(); setupMonthlyUpdatePrompt();
-  setInterval(()=>{const now=japanNow();$('date-label').textContent=now.date;$('clock-label').innerHTML=`${now.time}<span>:${now.sec}</span>`;renderDisaster(now);renderTopLiveAlert(now);cachedNotes.rail=railTickerItems(now);cachedNotes.air=airportAccessTickerItems(now);cachedNotes.bus=busTickerItems(now);updateNotes();},1000);
-  setInterval(()=>{['rail','air','bus','port'].forEach(rememberScroll);state.modeIndex=(state.modeIndex+1)%2;renderAll();},10000);
+  updateModeCountdown();
+  setInterval(()=>{const now=japanNow();$('date-label').textContent=now.date;$('clock-label').innerHTML=`${now.time}<span>:${now.sec}</span>`;renderDisaster(now);renderTopLiveAlert(now);cachedNotes.rail=railTickerItems(now);cachedNotes.air=airportAccessTickerItems(now);cachedNotes.bus=busTickerItems(now);updateNotes();updateModeCountdown();},1000);
+  setInterval(()=>{['rail','air','bus','port'].forEach(rememberScroll);state.modeIndex=(state.modeIndex+1)%2;nextModeSwitchAt=Date.now()+MODE_SWITCH_MS;renderAll();updateModeCountdown();},MODE_SWITCH_MS);
 })();
