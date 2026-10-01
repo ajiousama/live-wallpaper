@@ -518,15 +518,18 @@
     // Bus board intentionally has no "final bus" badge.
     // Arrival boards intentionally have no "final" badge.
     const finalTimes=new Map();
+    const departureCounts=new Map();
     finalDepartureRows(board,now).forEach(r=>{
       const key=finalDepartureKey(board,r);
       const m=rMinutes(r);
+      departureCounts.set(key,(departureCounts.get(key)||0)+1);
       if(!finalTimes.has(key)||m>finalTimes.get(key)) finalTimes.set(key,m);
     });
 
     const upcoming = list.filter(r => rMinutes(r) >= now.minutes).map(r => {
       const key=finalDepartureKey(board,r);
-      const isFinal=board!=='bus' && finalTimes.has(key) && finalTimes.get(key)===rMinutes(r);
+      const enoughServices = board!=='port' || (departureCounts.get(key)||0) >= 2;
+      const isFinal=board!=='bus' && enoughServices && finalTimes.has(key) && finalTimes.get(key)===rMinutes(r);
       return {
         ...r,
         isFinal,
