@@ -985,6 +985,7 @@
       let text=''; let mode='stop';
       const dir = ichitsuboDirection(x)==='north' ? '松山方面' : '宇和島方面';
       if (kind==='deadhead') { text=`まもなく市坪駅を${dir}へ回送列車が通過します。`; mode='pass'; }
+      else if (kind==='freight') { text=`まもなく市坪駅を${dir}へ貨物列車が通過します。`; mode='pass'; }
       else if (kind==='pass') { text=`まもなく市坪駅を${dir}へ列車が通過します。`; mode='pass'; }
       else {
         const finalTrain=ichitsuboIsFinal(x,now); const prefix=finalTrain?'最終列車 ':'';
@@ -1171,6 +1172,12 @@
       const pos=deadhead.position?`｜現在位置 ${deadhead.position}`:'';
       items.push(`JR松山駅｜回送 ${deadhead.arrival} 到着予定｜${origin}発${pos}`);
     }
+    const freight=matsuyamaFreightPasses(now)[0];
+    if(freight){
+      const route=freight.origin&&freight.destination?`${freight.origin} → ${freight.destination}`:(freight.destination||'貨物列車');
+      const pos=freight.position?`｜現在位置 ${freight.position}`:'';
+      items.push(`JR松山駅｜貨物 ${freight.passTime} 通過予定｜${route}${pos}`);
+    }
     return [...items,...specials];
   }
 
@@ -1264,6 +1271,27 @@
     }).filter(x=>x.arrival);
   }
 
+  function matsuyamaFreightPasses(now) {
+    const generatedAt=Date.parse(String(approachLive.generatedAtJst||''));
+    if(!approachLive.ok || (Number.isFinite(generatedAt) && Date.now()-generatedAt>45000)) return [];
+    const raw=Array.isArray(approachLive.ichitsubo?.matsuyamaFreights)
+      ? approachLive.ichitsubo.matsuyamaFreights
+      : [];
+    return raw.map(x=>{
+      const scheduled=padTime(x.scheduledMatsuyama||'');
+      const delay=Number(x.delayMinutes)||0;
+      return {
+        ...x,
+        scheduled,
+        passTime: scheduled ? addMinutes(scheduled,delay) : '',
+        origin: cleanStation(x.origin||''),
+        destination: cleanStation(x.destination||''),
+        position: cleanStation(x.position||''),
+        delay
+      };
+    }).filter(x=>x.passTime);
+  }
+
   function appendMatsuyamaDeadheadRow(root, x) {
     const row=document.createElement('div');
     row.className='row rail-row deadhead-row';
@@ -1281,6 +1309,25 @@
     root.appendChild(row);
   }
 
+  function appendMatsuyamaFreightRow(root, x) {
+    const row=document.createElement('div');
+    row.className='row rail-row freight-row';
+    const routeText=x.origin&&x.destination
+      ? `${x.origin} → ${x.destination}`
+      : (x.destination ? `${x.destination}方面` : '貨物列車');
+    const details=[`貨物列車 ${routeText}`];
+    if(x.position) details.push(`現在位置 ${x.position}`);
+    if(x.delay>0) details.push(`${x.delay}分遅れ`);
+    row.innerHTML=`
+      <div class="rail-primary">
+        <div class="cell rail-service freight"><span class="kindtxt">貨物</span></div>
+        <div class="cell time">${x.passTime}</div>
+        <div class="cell main">松山　通過</div>
+      </div>
+      <div class="rail-detail">${tickerHtml(details)}</div>`;
+    root.appendChild(row);
+  }
+
   function renderRail(rows) {
     const root = $('rail-rows'); root.innerHTML = '';
     root.classList.remove('rail-end');
@@ -1290,6 +1337,7 @@
     // mixed chronologically with the ordinary/limited-service rows.
     const deadheads = matsuyamaDeadheadArrivals(now).map(x => ({
       _deadhead: true,
+      _freight: false,
       _sortMinutes: (() => {
         let d=toMinutes(x.arrival)-now.minutes;
         if(d < -720) d += 1440;
@@ -1298,8 +1346,20 @@
       })(),
       data: x
     }));
+    const freights = matsuyamaFreightPasses(now).map(x => ({
+      _deadhead: false,
+      _freight: true,
+      _sortMinutes: (() => {
+        let d=toMinutes(x.passTime)-now.minutes;
+        if(d < -720) d += 1440;
+        if(d > 720) d -= 1440;
+        return now.minutes + d;
+      })(),
+      data: x
+    }));
     const services = rows.map(r => ({
       _deadhead: false,
+      _freight: false,
       _sortMinutes: (() => {
         const t=padTime(r.time||'');
         let d=toMinutes(t)-now.minutes;
@@ -1309,7 +1369,7 @@
       })(),
       data: r
     }));
-    const visible = [...services, ...deadheads]
+    const visible = [...services, ...deadheads, ...freights]
       .sort((a,b)=>a._sortMinutes-b._sortMinutes)
       .slice(0,3);
 
@@ -1324,6 +1384,10 @@
       visible.forEach(item => {
         if(item._deadhead){
           appendMatsuyamaDeadheadRow(root,item.data);
+          return;
+        }
+        if(item._freight){
+          appendMatsuyamaFreightRow(root,item.data);
           return;
         }
         const r=item.data;
