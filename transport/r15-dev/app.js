@@ -1084,22 +1084,16 @@
       return /八幡浜|宇和島/.test(railReachText(r));
     }).at(-1)||null;
 
-    // Latest Matsuyama departure that still reaches Okayama for Shinkansen transfer.
-    const shinkansen=rows.filter(r=>{
-      if(r.direction!=='north') return false;
-      return /岡山/.test(railReachText(r));
-    }).at(-1)||null;
+    // Five "last connection" notices for the October 2026 timetable.
+    // These are the last Matsuyama departures that still make the listed same-day connection.
+    const findService=(time,re)=>rows.find(r=>padTime(r.time)===time && re.test(String(r.service||'')))||null;
+    const yodo=findService('19:30',/宇和海27号/);
+    const kochi=findService('19:32',/いしづち102号/);
+    const tokushima=kochi;
+    const shinkansen=findService('18:39',/しおかぜ30号/);
+    const sunrise=findService('19:32',/いしづち102号/);
 
-    // Sunrise Seto leaves Okayama at 22:34.
-    // Use the latest Okayama-bound train whose estimated/known arrival is before that.
-    const sunriseCandidates=rows.filter(r=>{
-      if(r.direction!=='north' || !/岡山/.test(railReachText(r))) return false;
-      const arr=railTerminalArrivals(r).find(x=>x&&x[0]==='岡山');
-      return arr && toMinutes(arr[1]) <= toMinutes('22:34')-5;
-    });
-    const sunrise=sunriseCandidates.at(-1)||shinkansen;
-
-    return {northFinal,southFinal,imabariFinal,outside,southwest,shinkansen,sunrise};
+    return {northFinal,southFinal,imabariFinal,outside,southwest,yodo,kochi,tokushima,shinkansen,sunrise};
   }
 
   function sameRailService(a,b) {
@@ -1144,11 +1138,21 @@
     if(s.outside && s.outside.minutes>=now.minutes){
       out.push(`<span class="rail-special-final rail-outside-final">⚠ 県外へ行ける最終｜松山 ${s.outside.time}発｜${label(s.outside)}</span>`);
     }
+    // "最終連絡" is reserved for exactly these five notices.
+    if(s.yodo && s.yodo.minutes>=now.minutes){
+      out.push(`<span class="rail-special-final rail-southwest-final">🚆 予土線 最終連絡｜松山 ${s.yodo.time}発｜${label(s.yodo)} → 宇和島21:06着 → 予土線21:11発</span>`);
+    }
+    if(s.kochi && s.kochi.minutes>=now.minutes){
+      out.push(`<span class="rail-special-final rail-outside-final">🚆 高知方面 最終連絡｜松山 ${s.kochi.time}発｜${label(s.kochi)} → 多度津 → 南風27号</span>`);
+    }
+    if(s.tokushima && s.tokushima.minutes>=now.minutes){
+      out.push(`<span class="rail-special-final rail-outside-final">🚆 徳島方面 最終連絡｜松山 ${s.tokushima.time}発｜${label(s.tokushima)} → 高松 → うずしお33号</span>`);
+    }
     if(s.shinkansen && s.shinkansen.minutes>=now.minutes){
-      out.push(`<span class="rail-special-final rail-shinkansen-final">🚄 新幹線乗継最終｜松山 ${s.shinkansen.time}発｜${label(s.shinkansen)} → 岡山</span>`);
+      out.push(`<span class="rail-special-final rail-shinkansen-final">🚄 新幹線 最終連絡｜松山 ${s.shinkansen.time}発｜${label(s.shinkansen)} → 岡山で新幹線</span>`);
     }
     if(s.sunrise && s.sunrise.minutes>=now.minutes){
-      out.push(`<span class="rail-special-final rail-sunrise-final">🌅 サンライズ瀬戸乗継最終｜松山 ${s.sunrise.time}発｜${label(s.sunrise)} → 岡山 22:34発</span>`);
+      out.push(`<span class="rail-special-final rail-sunrise-final">🌅 サンライズ瀬戸 最終連絡｜松山 ${s.sunrise.time}発｜${label(s.sunrise)} → 坂出でサンライズ瀬戸</span>`);
     }
     return out;
   }
