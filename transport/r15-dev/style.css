@@ -1,0 +1,394 @@
+:root {
+  --bg:#071217;
+  --bg2:#0b1b22;
+  --ink:#eef6f9;
+  --muted:#9eb6c1;
+  --line:#1b3340;
+  --panel:#09161c;
+  --card:#0d2028;
+  --dep:#1a7c58;
+  --arr:#9a4450;
+  --rail:#18c0ff;
+  --air:#1a95d9;
+  --bus:#d88a2c;
+  --port:#18b6a4;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10303d 0, #071217 40%, #041015 100%);font-family:'BIZ UDPGothic','Yu Gothic UI','Yu Gothic','Meiryo',sans-serif;color:var(--ink);overflow:hidden}
+#wall{width:1180px;height:650px;padding:18px 20px 16px;border:1px solid #17303b;background:linear-gradient(180deg, rgba(7,18,23,.96), rgba(5,16,22,.98));box-shadow:0 20px 50px rgba(0,0,0,.45), inset 0 0 0 1px rgba(255,255,255,.03);position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)}
+.hero{display:flex;justify-content:space-between;align-items:flex-end;height:102px;padding-bottom:12px;border-bottom:1px solid var(--line);margin-bottom:14px}
+.eyebrow{font-size:11px;letter-spacing:.24em;color:#e0b179;font-weight:700}
+.hero-title-row{display:flex;align-items:flex-end;gap:16px;margin-top:6px}
+.hero h1{margin:0;font-size:56px;line-height:.95;font-weight:800}
+.hero h1 span{font-size:20px;letter-spacing:.08em;color:#f0b168;vertical-align:middle;margin-left:8px}
+.hero-sub{margin:6px 0 0;font-size:15px;color:#aac0ca}
+.hero-right{text-align:right}
+.date{font-size:18px;letter-spacing:.18em;color:#f0b168;font-weight:700}
+.clock{font:700 62px/1 'BIZ UDPGothic','Yu Gothic UI',sans-serif;letter-spacing:.04em}
+.clock span{font-size:.55em;color:#b7c7cf}
+.tz{font-size:10px;letter-spacing:.2em;color:#718893}
+.grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:14px;height:500px}
+.panel{display:grid;grid-template-rows:56px 28px 1fr 34px;background:var(--panel);border:1px solid var(--line);box-shadow:inset 0 0 0 1px rgba(255,255,255,.02)}
+.panel-head{display:flex;justify-content:space-between;align-items:center;padding:0 16px;border-bottom:1px solid var(--line)}
+.panel-no{font-size:10px;letter-spacing:.18em;font-weight:700;opacity:.9}
+.head-main h2{margin:2px 0 0;font-size:34px;line-height:1;font-weight:800;display:flex;gap:10px;align-items:flex-end}
+.head-main h2 small{font-size:12px;font-weight:600;letter-spacing:.12em;color:#93aeb9;margin-bottom:4px}
+.mode-badge{min-width:104px;text-align:center;padding:7px 12px;border-radius:999px;font-size:14px;font-weight:700;border:1px solid currentColor}
+.panel-rail .panel-no,.panel-rail .head-main h2{color:#d9ecef}.panel-rail .mode-badge{color:#7ad9ff;background:#0e2a35}
+.panel-air .panel-no,.panel-air .head-main h2{color:#c8efff}.panel-air .mode-badge{color:#bfeaff;background:#103345}
+.panel-bus .panel-no,.panel-bus .head-main h2{color:#ffe5c4}.panel-bus .mode-badge{color:#ffe1b1;background:#3a2410}
+.panel-port .panel-no,.panel-port .head-main h2{color:#d2fff8}.panel-port .mode-badge{color:#cbfff8;background:#103734}
+.table-head,.row{display:grid;align-items:center;padding:0 14px;column-gap:12px}
+.rail-head,.panel-rail .row{grid-template-columns:118px 108px 1fr 72px}
+.service-head,.panel-air .row{grid-template-columns:90px 220px 1fr 136px}
+.panel-bus .row,.panel-bus .service-head{grid-template-columns:90px 195px 1fr 185px}
+.panel-port .row,.panel-port .service-head{grid-template-columns:90px 220px 1fr 150px}
+.table-head{font-size:12px;font-weight:700;color:#9cb5c0;border-bottom:1px solid var(--line);letter-spacing:.04em}
+.rows{display:grid;grid-template-rows:repeat(4,1fr);gap:6px;padding:10px 12px}
+.row{background:var(--card);border:1px solid rgba(255,255,255,.04);min-height:0}
+.row.placeholder{color:#67808a;background:rgba(255,255,255,.01)}
+.panel-rail .row{border-left:3px solid rgba(24,192,255,.55)}
+.panel-air .row{border-left:3px solid rgba(26,149,217,.55)}
+.panel-bus .row{border-left:3px solid rgba(216,138,44,.55)}
+.panel-port .row{border-left:3px solid rgba(24,182,164,.55)}
+.cell{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:15px;color:#edf5f8}
+.cell.time{font:700 17px/1.1 'BIZ UDPGothic','Yu Gothic UI',monospace;color:#ffe09f}
+.cell.main{font-size:21px;font-weight:700}
+.cell.sub{font-size:14px;color:#c2d3da}
+.service-wrap{display:flex;flex-direction:column;justify-content:center;line-height:1.12;min-width:0}
+.service-wrap .name{font-size:19px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.service-wrap .code{font-size:14px;color:#aec3cd;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rail-kind{display:inline-flex;align-items:center;justify-content:center;min-width:72px;padding:6px 10px;border-radius:6px;font-weight:700;font-size:16px}
+.rail-kind.local{background:#17362a;color:#aef0c7}.rail-kind.limited{background:#4d3414;color:#ffd89d}.rail-kind.tourist{background:#14394a;color:#9fdfff}
+.note{display:flex;align-items:center;padding:0 14px;border-top:1px solid var(--line);font-size:13px;font-weight:500;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.panel-rail .note{color:#90dfff;background:#07171f}
+.panel-air .note{color:#cdeeff;background:#0d2530}
+.panel-bus .note{color:#ffe0b8;background:#211408}
+.panel-port .note{color:#ccfff9;background:#0a211f}
+.dep-mode{box-shadow:inset 0 3px 0 var(--dep)}
+.arr-mode{box-shadow:inset 0 3px 0 var(--arr)}
+.north-mode{box-shadow:inset 0 3px 0 #4999c7}
+.south-mode{box-shadow:inset 0 3px 0 #1cae77}
+.footer-mini{font-size:12px;color:#99b5bf}
+@media (max-width:1240px){#wall{width:1120px;height:630px}.hero h1{font-size:52px}.grid{height:486px}.head-main h2{font-size:31px}}
+
+/* v35 compact shell: shrink chrome, preserve readable transport rows */
+#wall{width:1180px;height:650px;padding:12px 16px 12px}
+.hero{height:72px;padding-bottom:8px;margin-bottom:10px;align-items:center}
+.eyebrow{font-size:9px;letter-spacing:.18em}
+.hero-title-row{margin-top:3px}
+.hero h1{font-size:38px;line-height:1}
+.hero h1 span{font-size:16px;margin-left:6px}
+.hero-sub{margin-top:3px;font-size:11px}
+.date{font-size:13px;letter-spacing:.14em}
+.clock{font-size:44px}
+.tz{font-size:8px}
+.grid{height:544px;gap:10px}
+.panel{grid-template-rows:44px 26px 1fr 32px}
+.panel-head{padding:0 12px}
+.panel-no{font-size:8px}
+.head-main h2{font-size:23px;gap:7px}
+.head-main h2 small{font-size:9px;margin-bottom:2px}
+.mode-badge{min-width:86px;padding:5px 9px;font-size:11px}
+.table-head{font-size:10px;padding:0 10px;column-gap:8px}
+.rows{gap:5px;padding:7px 8px}
+.row{padding:0 10px;column-gap:8px}
+.rail-head,.panel-rail .row{grid-template-columns:150px 72px 1fr 48px}
+.service-head,.panel-air .row{grid-template-columns:72px 180px 1fr 110px}
+.panel-bus .row,.panel-bus .service-head{grid-template-columns:72px 165px 1fr 145px}
+.panel-port .row,.panel-port .service-head{grid-template-columns:72px 180px 1fr 120px}
+.cell{font-size:13px}
+.cell.time{font-size:15px}
+.cell.main{font-size:17px}
+.cell.sub{font-size:12px}
+.service-wrap .name{font-size:15px}
+.service-wrap .code{font-size:11px}
+.rail-kind{min-width:60px;padding:4px 7px;font-size:13px}
+.note{padding:0 10px;font-size:11px}
+
+/* v39: keep v33/v35 overall footprint; only rebalance rail columns */
+.panel-bus .head-main h2{font-size:21px}
+.rail-service{font-size:14px;font-weight:700;line-height:1.1}
+.rail-service .kindtxt{color:#ffd89d}
+.rail-service.local .kindtxt{color:#aef0c7}
+
+
+/* v40: unified direction semantics + manual scrolling */
+.panel-rail .mode-badge{min-width:230px;max-width:250px;font-size:10px;line-height:1.15;padding:5px 8px;white-space:normal}
+.rows{
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+  padding:7px 8px;
+  overflow-y:auto;
+  overflow-x:hidden;
+  scrollbar-width:thin;
+  scrollbar-color:#38515c transparent;
+  overscroll-behavior:contain;
+}
+.rows::-webkit-scrollbar{width:7px}
+.rows::-webkit-scrollbar-track{background:transparent}
+.rows::-webkit-scrollbar-thumb{background:#38515c;border-radius:8px}
+.row{min-height:39px;flex:0 0 39px}
+.row.placeholder{flex:0 0 39px}
+.cell.main .route-sub{display:block;font-size:10px;font-weight:500;color:#a9c0c9;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cell.main.long{font-size:15px}
+.cell.sub .name{font-size:12px}
+.cell.sub .code{font-size:10px}
+.panel-port .cell.main,.panel-bus .cell.main{font-size:16px}
+.panel-air .cell.main{font-size:17px}
+.scroll-hint{opacity:.7}
+
+.cell.main.wrap{white-space:normal;overflow:hidden;text-overflow:clip;line-height:1.02;font-size:12px;overflow-wrap:anywhere}
+
+/* v41: contain scroll areas inside the existing compact shell */
+.grid{min-height:0}
+.panel{min-height:0;overflow:hidden}
+.rows{min-height:0;max-height:100%}
+
+
+/* v42: three visible rows, arrival time on the far right, horizontal departure tickers */
+.rows{gap:7px;padding:7px 8px 0}
+.row{min-height:47px;flex:0 0 47px}
+.row.placeholder{flex:0 0 47px}
+.panel-air.arrival-columns .table-head,.panel-air.arrival-columns .row{grid-template-columns:180px 1fr 110px 72px}
+.panel-bus.arrival-columns .table-head,.panel-bus.arrival-columns .row{grid-template-columns:1fr 165px 145px 72px}
+.panel-port.arrival-columns .table-head,.panel-port.arrival-columns .row{grid-template-columns:1fr 180px 120px 72px}
+.note{position:relative;min-width:0;overflow:hidden;text-overflow:clip}
+.marquee{width:100%;overflow:hidden;white-space:nowrap}
+.marquee-track{display:flex;width:max-content;align-items:center;gap:42px;animation:ticker-scroll var(--ticker-duration,30s) linear infinite;will-change:transform}
+.marquee-track>span{display:inline-flex;align-items:center;gap:8px;padding-right:34px}
+.ticker-sep{opacity:.55;margin:0 8px}
+@keyframes ticker-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.final-badge,.first-badge{display:inline-block;margin-left:6px;padding:2px 6px;border-radius:999px;font-size:9px;line-height:1.2;font-weight:800;vertical-align:middle;white-space:nowrap}
+.final-badge{color:#fff3d6;background:#7a2c1b;border:1px solid #ffb176;animation:final-pulse 1.6s ease-in-out infinite}
+.first-badge{color:#d8f7ff;background:#123d50;border:1px solid #5fd7ff}
+.is-final{box-shadow:inset 0 0 0 1px rgba(255,171,105,.22)}
+@keyframes final-pulse{0%,100%{opacity:1;filter:brightness(1)}50%{opacity:.55;filter:brightness(1.35)}}
+@media (prefers-reduced-motion:reduce){.final-badge{animation:none}.marquee-track{animation-duration:90s}}
+
+
+/* v43: JR 2-row detail tickers + persistent third-line Ichitsubo ticker + clean arrival semantics */
+.rail-head{grid-template-columns:150px 72px 1fr}
+#rail-rows{gap:7px;padding:7px 8px 0;overflow:hidden}
+#rail-rows .rail-row{display:block;min-height:70px;flex:0 0 70px;padding:0;overflow:hidden}
+#rail-rows .rail-primary{display:grid;grid-template-columns:150px 72px 1fr;align-items:center;column-gap:8px;height:37px;padding:0 10px}
+#rail-rows .rail-detail{height:31px;border-top:1px solid rgba(255,255,255,.05);display:flex;align-items:center;padding:0 8px;color:#90dfff;font-size:10px;overflow:hidden}
+#rail-rows .rail-detail .marquee-track{gap:32px}
+#rail-rows .rail-detail .marquee-track>span{padding-right:26px}
+.panel-bus.arrival-columns .cell.time,.panel-air.arrival-columns .cell.time,.panel-port.arrival-columns .cell.time{font-size:13px;white-space:nowrap}
+.arrival-origin{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;line-height:1.08}
+.arrival-origin .arrival-place{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:16px;font-weight:700}
+.arrival-origin .arrival-departure-time{display:block;margin-top:3px;font-size:10px;font-weight:600;color:#9eb6c1}
+.arrival-terminal{font-size:13px;color:#edf5f8}
+.arrival-terminal-wrap{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;line-height:1.05;min-width:0}
+.arrival-continuation{display:block;margin-top:3px;font-size:9px;font-weight:600;color:#9eb6c1;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+
+/* v43 arrival time labels need room for 「頃予定」 */
+.panel-air.arrival-columns .table-head,.panel-air.arrival-columns .row{grid-template-columns:175px 1fr 95px 92px}
+.panel-bus.arrival-columns .table-head,.panel-bus.arrival-columns .row{grid-template-columns:1fr 155px 120px 92px}
+.panel-port.arrival-columns .table-head,.panel-port.arrival-columns .row{grid-template-columns:1fr 170px 105px 92px}
+
+/* v44: bus terminal-arrival subline */
+.bus-dest-cell{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;line-height:1.08;min-width:0}
+.bus-dest-main{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:15px;font-weight:700}
+.bus-terminal-time{display:block;margin-top:3px;font-size:9px;font-weight:600;color:#9eb6c1;white-space:nowrap}
+
+
+/* v45: persistent bus ticker + stronger Ehime-side ferry port emphasis */
+.panel-port .port-side{overflow:visible;white-space:nowrap}
+.ehime-port{display:inline-flex;align-items:center;gap:5px;padding:3px 7px;border:1px solid rgba(104,255,231,.78);border-radius:5px;background:rgba(24,182,164,.18);color:#e5fffb;font-weight:800;box-shadow:0 0 10px rgba(24,182,164,.18)}
+.ehime-badge{display:inline-block;padding:1px 4px;border-radius:3px;background:#1fb8a5;color:#031b18;font-size:8px;line-height:1.25;font-weight:900;letter-spacing:.04em}
+
+
+/* FINAL: compact 3-row panels, imminent-departure alert, ferry route order, monthly check */
+.hero-left{flex:0 0 auto}
+.hero-center{flex:1;min-width:0;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 12px;text-align:center}
+.hero-right{flex:0 0 auto}
+.hero-alert{min-height:30px;max-width:480px;font-size:23px;line-height:1.05;font-weight:900;letter-spacing:.02em;color:#ff6868;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:0}
+.hero-alert.active{opacity:1;animation:imminent-alert .85s ease-in-out infinite;text-shadow:0 0 10px rgba(255,70,70,.7),0 0 18px rgba(255,70,70,.35)}
+.data-status{margin-top:4px;font-size:9px;letter-spacing:.08em;color:#78939e;white-space:nowrap}
+@keyframes imminent-alert{0%,100%{opacity:1;filter:brightness(1.15)}50%{opacity:.28;filter:brightness(1.65)}}
+.depart-soon{animation:depart-row-pulse .9s ease-in-out infinite;border-color:rgba(255,92,92,.72)!important;box-shadow:inset 0 0 0 1px rgba(255,92,92,.16)}
+.depart-soon .cell.time,.depart-soon .cell.main{color:#ff9b8f!important}
+.depart-soon-text{color:#ff8176;font-weight:900;animation:depart-text-pulse .9s ease-in-out infinite}
+@keyframes depart-row-pulse{0%,100%{background:var(--card)}50%{background:rgba(120,31,31,.36)}}
+@keyframes depart-text-pulse{0%,100%{opacity:1}50%{opacity:.35}}
+#panel-port .port-head,#panel-port .row{grid-template-columns:72px 1fr 205px}
+#panel-port.arrival-columns .port-head,#panel-port.arrival-columns .row{grid-template-columns:1fr 205px 92px}
+.port-route{font-size:14px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+.port-route .ehime-port{padding:2px 5px;vertical-align:middle}
+.port-route .route-arrow{color:#75cfc2;font-weight:900}
+.port-route .route-port{font-weight:700}
+.row.placeholder.blank{opacity:.35}
+.update-modal{position:absolute;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;background:rgba(1,8,11,.78);backdrop-filter:blur(3px)}
+.update-card{width:560px;max-width:calc(100% - 48px);padding:24px 26px 22px;border:1px solid #31515e;border-radius:12px;background:#091a22;box-shadow:0 22px 60px rgba(0,0,0,.6)}
+.update-kicker{font-size:10px;letter-spacing:.18em;color:#e0b179;font-weight:800}
+.update-card h3{margin:7px 0 8px;font-size:25px}
+.update-card p{margin:0 0 18px;color:#b9ccd4;font-size:13px;line-height:1.65}
+.update-actions{display:flex;gap:10px}
+.update-actions button{border:1px solid #3b6170;border-radius:7px;background:#102a34;color:#eff8fb;padding:10px 14px;font:700 13px/1 'Yu Gothic UI','Meiryo',sans-serif;cursor:pointer}
+.update-actions button:first-child{background:#8d4d1e;border-color:#cf8547}
+.update-actions button:hover{filter:brightness(1.18)}
+.update-help{min-height:18px;margin-top:12px;font-size:11px;color:#ffcf92;line-height:1.5}
+[hidden]{display:none!important}
+@media (prefers-reduced-motion:reduce){.hero-alert.active,.depart-soon,.depart-soon-text{animation:none}}
+
+.hero-alert.live-alert{color:#ff5252;text-shadow:0 0 12px rgba(255,45,45,.9),0 0 24px rgba(255,45,45,.45)}
+
+
+/* ==================== FINAL LIVE OVERRIDES ==================== */
+.live-system-status{font-size:14px;font-weight:900;letter-spacing:.12em;color:#a9dfe8;white-space:nowrap}
+.top-live-alert{width:min(100%,540px);max-width:540px;min-height:25px;font-size:22px;line-height:1.05;margin-bottom:2px;text-align:center}
+.top-live-alert.stop-live,.top-live-alert.bus-live{color:#ff5a5a;text-shadow:0 0 11px rgba(255,65,65,.75)}
+.top-live-alert.pass-live{color:#fff;text-shadow:0 0 8px rgba(255,255,255,.35)}
+.top-live-alert.strong-live{animation-duration:.38s!important}
+.top-live-alert .marquee{width:100%;overflow:hidden}
+.top-live-alert.fast-scroll .marquee-track{animation-duration:9s!important}
+.top-live-alert .rail-stop-alert,.top-live-alert .bus-alert{color:#ff5a5a}
+.top-live-alert .rail-pass-alert{color:#fff}
+.live-dot{display:inline-block;width:9px;height:9px;margin-right:7px;border-radius:50%;background:#56ef98;box-shadow:0 0 10px rgba(86,239,152,.7);animation:live-dot-pulse 1.7s ease-in-out infinite}
+@keyframes live-dot-pulse{50%{opacity:.38}}
+
+/* AIR: 区分は到着・出発とも大きく、折返さない */
+.panel-air.dep-mode .table-head,.panel-air.dep-mode .row{grid-template-columns:72px 165px 1fr 135px}
+.panel-air.arrival-columns .table-head,.panel-air.arrival-columns .row{grid-template-columns:165px 1fr 135px 82px}
+.panel-air .cell.sub.air-status{font-size:17px!important;font-weight:900;line-height:1;white-space:nowrap!important;overflow:hidden;text-overflow:ellipsis;color:#f3fbff}
+.panel-air .cell.sub.air-status.long-status{font-size:12px!important;letter-spacing:-.02em}
+.panel-air .cell.sub.air-status.arriving{font-size:19px!important;color:#fff5b7;text-shadow:0 0 8px rgba(255,232,100,.32)}
+.air-time-wrap{display:flex;flex-direction:column;justify-content:center;line-height:1.02;white-space:nowrap}
+.air-time-wrap .live-time{font-size:16px;font-weight:900;color:#ffe09f}
+.air-time-wrap .scheduled-time{font-size:8px;color:#8ba6b2;margin-top:2px}
+.air-delay{font-size:10px;font-weight:900;color:#ff9a8f;margin-left:3px}
+.air-early{color:#9be6ff}
+
+/* 下部LIVE帯：接近時は通常案内を停止し、スクロール＋点滅 */
+.note.live-takeover{font-size:15px!important;font-weight:900!important}
+.note.live-takeover .marquee-track{animation-name:ticker-scroll, note-pulse;animation-duration:var(--ticker-duration,18s),.85s;animation-timing-function:linear,ease-in-out;animation-iteration-count:infinite,infinite}
+.note.live-takeover.strong-live .marquee-track{animation-duration:var(--ticker-duration,14s),.38s}
+.note.live-takeover.stop-live{color:#ff5a5a!important;background:#270b0b!important;text-shadow:0 0 10px rgba(255,65,65,.7)}
+.note.live-takeover.pass-live{color:#fff!important;background:#15191c!important;text-shadow:0 0 7px rgba(255,255,255,.28)}
+.note.live-takeover.bus-live,.note.live-takeover.airbus-live{color:#ff6b61!important;background:#2a100c!important;text-shadow:0 0 10px rgba(255,70,55,.65)}
+@keyframes note-pulse{0%,100%{opacity:1;filter:brightness(1.08)}50%{opacity:.38;filter:brightness(1.6)}}
+.fast-scroll .marquee-track{animation-duration:var(--ticker-duration,10s),.85s!important}
+.strong-live.fast-scroll .marquee-track{animation-duration:var(--ticker-duration,9s),.38s!important}
+
+/* Ferry LIVE */
+.ferry-cancel{color:#ff5a5a;font-weight:900;animation:ferry-danger .55s ease-in-out infinite;text-shadow:0 0 8px rgba(255,60,60,.75)}
+@keyframes ferry-danger{50%{opacity:.25}}
+.ferry-reduced{color:#ffd27e;font-weight:800}
+.ferry-normal{color:#bfffe7}
+
+/* 防災：平常時は完全非表示。警報時のみ交通画面の上に全面表示 */
+.disaster-overlay{position:absolute;inset:0;z-index:80;background:#04080b;padding:12px 14px;color:#fff}
+.disaster-grid{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:10px;width:100%;height:100%}
+.disaster-card{position:relative;display:grid;grid-template-rows:44px 1fr 25px;min-width:0;overflow:hidden;border:2px solid #47545b;background:#091116;box-shadow:inset 0 0 24px rgba(0,0,0,.65)}
+.disaster-summary{grid-template-rows:44px 1fr}
+.disaster-head{display:flex;align-items:center;gap:9px;padding:0 13px;background:#123c58;border-bottom:1px solid rgba(255,255,255,.2);font-size:17px;letter-spacing:.04em}
+.disaster-head span{font-size:24px}.disaster-head strong{font-size:23px}.disaster-head em{margin-left:auto;font-style:normal;font-weight:900;font-size:13px}
+.disaster-head.danger{background:#b31218}.disaster-head.weather{background:#74267c}.disaster-head.tsunami{background:#99144d}
+.disaster-body{padding:14px 16px;min-width:0;overflow:hidden}
+.disaster-mainline{font-size:27px;font-weight:900;line-height:1.25;color:#ffdc73;margin-bottom:16px}
+.quake-summary{font-size:18px;font-weight:800;line-height:1.5}
+.disaster-source{position:absolute;left:16px;bottom:12px;color:#8fa8b4;font-size:11px}
+.eew-body{display:grid;grid-template-columns:170px 1fr;grid-template-rows:1fr auto;gap:10px 14px}
+.eew-scale-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid #78323a;background:#18090b}
+.eew-scale-wrap span{font-size:15px;font-weight:800}.eew-scale-wrap b{font-size:82px;line-height:1;color:#ffdf4e;margin-top:4px}
+.eew-countdown{display:flex;flex-direction:column;align-items:center;justify-content:center;border:2px solid #d3262e;background:#230609}
+.eew-countdown span{font-size:19px;font-weight:900}.eew-countdown b{font-size:52px;line-height:1.05;color:#ffdf4e;margin-top:8px}
+.eew-detail{grid-column:1/-1;font-size:15px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.weather-title{font-size:25px;font-weight:900;color:#f6c3ff;margin-bottom:14px}.weather-list{font-size:19px;font-weight:900;line-height:1.45}.weather-issued{margin-top:16px;font-size:12px;color:#d9b5df}
+.tsunami-main{font-size:25px;font-weight:900;line-height:1.3;color:#ffc3db}.tsunami-detail{margin-top:18px;font-size:18px;font-weight:800;line-height:1.45}
+.audio-cue{display:flex;align-items:center;padding:0 12px;background:#180609;border-top:1px solid #6b2528;color:#ffd36b;font-size:10px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.disaster-overlay.eew-active .disaster-eew{animation:disaster-flash .65s ease-in-out infinite}
+.disaster-overlay.tsunami-active .disaster-tsunami{animation:disaster-flash .8s ease-in-out infinite}
+@keyframes disaster-flash{50%{filter:brightness(1.55)}}
+@media (prefers-reduced-motion:reduce){.live-dot,.note.live-takeover .marquee-track,.ferry-cancel,.disaster-card{animation:none!important}}
+\n\n/* FINAL2: meaning-first text layout + 2-line destinations/operators */\n.end-message{font-size:15px!important;font-weight:800!important;color:#a9c3cd!important;white-space:normal!important;line-height:1.15!important}\n.operator-wrap{display:flex;flex-direction:column;justify-content:center;gap:1px;min-width:0;line-height:1.02;white-space:normal}\n.operator-wrap span{display:block;font-size:11px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}\n.panel-bus .cell.service{white-space:normal;text-overflow:clip}\n.bus-dest-main{display:flex!important;flex-direction:column;align-items:flex-start;justify-content:center;max-width:100%;overflow:hidden!important;text-overflow:clip!important;white-space:normal!important;font-size:13px!important;line-height:1.04!important}\n.bus-dest-main .dest-line{display:block;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}\n.panel-port .service-wrap .name{font-size:12px;line-height:1.05;white-space:normal;overflow:visible;text-overflow:clip}\n.panel-port .port-route{font-size:12px!important;line-height:1.08!important;white-space:normal!important;overflow:hidden!important;text-overflow:clip!important}\n.panel-air .cell.service .name{font-size:14px}\n.panel-air .cell.main{white-space:normal;line-height:1.05}\n
+/* FINAL3: destination/operator full display + terminal/port arrival times under departure time */
+.panel-bus.dep-mode .table-head,.panel-bus.dep-mode .row{grid-template-columns:106px 158px 1fr 124px}
+.panel-port.dep-mode .port-head,.panel-port.dep-mode .row{grid-template-columns:138px 1fr 160px}
+#bus-rows .row{min-height:54px;flex-basis:54px}
+#port-rows .row{min-height:58px;flex-basis:58px}
+.operator-wrap{overflow:visible!important}
+.operator-wrap span{font-size:10.5px!important;line-height:1.02;white-space:nowrap!important;overflow:visible!important;text-overflow:clip!important}
+.operator-wrap.lines-3 span{font-size:9.7px!important}
+.bus-time-stack,.port-time-stack{display:flex!important;flex-direction:column;align-items:flex-start;justify-content:center;line-height:1!important;white-space:normal!important;overflow:visible!important}
+.bus-time-stack .primary-time,.port-time-stack .primary-time{display:block;font-size:15px;font-weight:800;line-height:1.05;color:#ffe09f}
+.bus-terminal-time{display:block!important;margin-top:3px!important;font-size:8.4px!important;line-height:1.05!important;font-weight:700!important;color:#a9c0c9!important;white-space:normal!important;overflow:visible!important;text-overflow:clip!important}
+.bus-dest-cell{overflow:visible!important}
+.bus-dest-main{overflow:visible!important;max-width:none!important;font-size:12.5px!important;line-height:1.03!important}
+.bus-dest-main .dest-line{display:block;max-width:none!important;white-space:nowrap!important;overflow:visible!important;text-overflow:clip!important}
+.panel-bus .cell.sub .service-wrap{overflow:visible}
+.panel-bus .cell.sub .name,.panel-bus .cell.sub .code{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;line-height:1.03}
+.port-time-stack .port-arrival-line{display:block;margin-top:2px;font-size:8.2px;line-height:1.04;font-weight:700;color:#a8c9c5;white-space:nowrap}
+.panel-port .port-route{overflow:visible!important;white-space:normal!important;text-overflow:clip!important}
+.port-dest-wrap{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;min-width:0;line-height:1.03}
+.port-dest-main{display:block;font-size:13.5px;font-weight:800;white-space:nowrap}
+.port-via-line{display:block;margin-top:2px;font-size:9.4px;font-weight:700;color:#9ed8d1;white-space:nowrap}
+.panel-port .service-wrap .name{font-size:11px!important;line-height:1.02!important;white-space:normal!important;overflow:visible!important;text-overflow:clip!important}
+.panel-port .service-wrap .code{font-size:9px!important;white-space:normal!important;overflow:visible!important;text-overflow:clip!important}
+.panel-port.dep-mode .port-head,.panel-port.dep-mode .row{grid-template-columns:150px 1fr 150px}
+.port-time-stack .port-arrival-line{font-size:7.6px!important;letter-spacing:-.01em}
+
+
+/* TRUE FINAL 2026-09-27
+   Preserve the 300px desktop-icon gutter and existing top-panel dimensions.
+   Only add vertical room to BUS/FERRY so four rows are visible. */
+#wall{height:724px!important}
+.grid{height:618px!important;grid-template-rows:267px 341px!important}
+#bus-rows,#port-rows{gap:5px!important;padding:7px 8px!important}
+#bus-rows .row,#port-rows .row{min-height:52px!important;flex:0 0 52px!important}
+
+/* Meaning first: no ellipsis on BUS/FERRY destination/operator fields. */
+.panel-bus .operator-wrap span,.panel-bus .bus-dest-main .dest-line,
+.panel-port .service-wrap .name,.panel-port .service-wrap .code,
+.panel-port .port-dest-main,.panel-port .port-via-line{
+  text-overflow:clip!important;overflow:visible!important;
+}
+.panel-bus .operator-wrap.lines-3 span{font-size:9.2px!important}
+.panel-bus .bus-dest-main{font-size:12px!important;line-height:1.01!important}
+.panel-bus .bus-terminal-time{font-size:8px!important;margin-top:2px!important}
+.panel-port .port-dest-main{font-size:13.6px!important}
+.panel-port .port-via-line{font-size:9.2px!important;margin-top:1px!important}
+.panel-port .port-time-stack .port-arrival-line{font-size:7.1px!important;line-height:1.01!important;margin-top:1px!important}
+.panel-port .service-wrap .name{font-size:11.4px!important}
+.panel-port .service-wrap .code{font-size:9px!important}
+
+/* AIR end-of-day state is deliberately different from a blank timetable. */
+#air-rows.air-end{display:block!important;padding:7px 8px!important;overflow:hidden!important}
+.air-end-state{height:100%;min-height:128px;border:1px solid rgba(255,255,255,.055);border-left:3px solid rgba(26,149,217,.7);background:linear-gradient(180deg,#0d2028,#0a1b22);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:14px 12px;overflow:hidden}
+.air-end-mode{font-size:13px;font-weight:900;letter-spacing:.08em;color:#65d8ff;margin-bottom:10px;white-space:nowrap}
+.air-end-message{font-size:21px;font-weight:900;line-height:1.15;color:#f4fbff;white-space:nowrap}
+.air-end-detail{margin-top:10px;font-size:12px;font-weight:800;color:#b8d8e5;white-space:normal;line-height:1.2}
+
+
+/* TRUE FINAL R2: keep long boarding-place names on one line without changing row height. */
+.panel-bus.dep-mode .cell.sub .service-wrap .name{
+  font-size:10.2px!important;
+  letter-spacing:-.02em;
+  white-space:nowrap!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+}
+.panel-bus.dep-mode .cell.sub .service-wrap .code{
+  font-size:8.4px!important;
+  white-space:nowrap!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+}
+
+
+/* TRUE FINAL R3: JR end-state matches airport, and ferry operator text is easier to read. */
+#rail-rows.rail-end{display:block!important;padding:7px 8px 0!important;overflow:hidden!important}
+.rail-end-state{min-height:146px;border:1px solid rgba(255,255,255,.055);border-left:3px solid rgba(255,192,74,.78);background:linear-gradient(180deg,#251a0e,#16120d);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:14px 12px;overflow:hidden}
+.rail-end-mode{font-size:13px;font-weight:900;letter-spacing:.08em;color:#ffd36b;margin-bottom:10px;white-space:nowrap}
+.rail-end-message{font-size:20px;font-weight:900;line-height:1.15;color:#fff7e7;white-space:nowrap}
+.rail-end-detail{margin-top:10px;font-size:12px;font-weight:800;color:#e6d2a8;white-space:normal;line-height:1.2}
+
+/* TRUE FINAL R4: BUS end-state matches JR/AIRPORT without changing panel geometry. */
+#bus-rows.bus-end{display:block!important;padding:7px 8px!important;overflow:hidden!important}
+.bus-end-state{height:100%;min-height:214px;border:1px solid rgba(255,255,255,.055);border-left:3px solid rgba(40,201,139,.78);background:linear-gradient(180deg,#0d211b,#091814);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:14px 12px;overflow:hidden}
+.bus-end-mode{font-size:13px;font-weight:900;letter-spacing:.08em;color:#67e8bd;margin-bottom:10px;white-space:nowrap}
+.bus-end-message{font-size:21px;font-weight:900;line-height:1.15;color:#f0fff8;white-space:nowrap}
+.bus-end-detail{margin-top:10px;font-size:12px;font-weight:800;color:#b8dfd0;white-space:normal;line-height:1.2}
