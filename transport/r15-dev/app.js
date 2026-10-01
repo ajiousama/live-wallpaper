@@ -441,11 +441,17 @@
         .sort((a, b) => rMinutes(a) - rMinutes(b));
     }
     if (board === 'bus') {
-      const explicitArrivals = rows.filter(r => r.direction === 'arrival').map(r => ({
-        ...r,
-        arrivalTerminalTime: r.arrivalTerminalTime || r.time,
-        minutes: toMinutes(r.arrivalTerminalTime || r.time)
-      }));
+      const explicitArrivals = rows.filter(r => r.direction === 'arrival').map(r => {
+        const terminal = String(r.arrivalTerminal || r.stop || '松山市駅').trim() || '松山市駅';
+        const terminalTime = padTime(r.arrivalTerminalTime || r.time || '');
+        return {
+          ...r,
+          origin: String(r.origin || r.dest || '—').trim() || '—',
+          arrivalTerminal: terminal,
+          arrivalTerminalTime: terminalTime || '—',
+          minutes: toMinutes(terminalTime || r.time)
+        };
+      });
       const depSource = rows.filter(r => r.direction !== 'arrival');
       const deps = normalizeBusDepartures(depSource).map(r => ({ ...r, direction: 'departure', minutes: toMinutes(r.time) }));
       if (currentDirection() === 'departure') return deps.sort((a,b)=>rMinutes(a)-rMinutes(b));
@@ -1475,12 +1481,16 @@
           <div class="cell sub"><div class="service-wrap"><span class="name bus-place-scroll">${overflowScrollHtml(rightTop)}</span><span class="code">${rightBottom}</span></div></div>
           <div class="cell service">${busOperatorHtml(r)}</div>`;
       } else {
+        row.classList.add('bus-arrival-row');
         const depDay = r.originDepartureDay ? `${r.originDepartureDay}` : '';
+        const origin = String(r.origin || r.dest || '—').trim() || '—';
+        const terminal = String(r.arrivalTerminal || r.stop || '松山市駅').trim() || '松山市駅';
+        const terminalTime = padTime(r.arrivalTerminalTime || r.time || '') || '—';
         row.innerHTML = `
-          <div class="cell main arrival-origin"><span class="arrival-place">${overflowScrollHtml(r.origin,'bus-origin-scroll')} ${firstBadge}${finalBadge}</span><span class="arrival-departure-time">${depDay}${r.originDepartureTime || '—'}出発</span></div>
-          <div class="cell sub arrival-terminal-wrap"><span class="arrival-terminal">${r.arrivalTerminal}</span><span class="arrival-continuation">${busArrivalContinuationLabel(r)}</span></div>
-          <div class="cell service">${busOperatorHtml(r)}</div>
-          <div class="cell time">${r.arrivalTerminalTime}頃予定</div>`;
+          <div class="cell main arrival-origin"><span class="arrival-place">${overflowScrollHtml(origin,'bus-origin-scroll')} ${firstBadge}${finalBadge}</span><span class="arrival-departure-time">${depDay}${r.originDepartureTime || '—'}出発</span></div>
+          <div class="cell sub arrival-terminal-wrap"><span class="arrival-terminal">${overflowScrollHtml(terminal,'bus-terminal-scroll')}</span><span class="arrival-continuation">${busArrivalContinuationLabel(r)}</span></div>
+          <div class="cell service bus-arrival-operator">${busOperatorHtml(r)}</div>
+          <div class="cell time bus-arrival-time">${terminalTime}頃予定</div>`;
       }
       root.appendChild(row);
     });
@@ -1821,20 +1831,17 @@
 
   function scale() {
     const wall = $('wall');
-    const edge = 10;
-    const usableW = Math.max(320, window.innerWidth - edge * 2);
-    const usableH = Math.max(240, window.innerHeight - edge * 2);
-    const baseW = wall.offsetWidth || 1180;
-    const baseH = wall.offsetHeight || 650;
-    const ratio = Math.min(usableW / baseW, usableH / baseH);
-
-    // Lively is the desktop background: use the whole screen.
-    // Desktop icons sit above the wallpaper, so no reserved left-side space is needed.
-    wall.style.left = '50%';
-    wall.style.right = 'auto';
+    const iconSpace = window.innerWidth >= 900 ? 300 : 12;
+    const edge = 16;
+    const usableW = Math.max(320, window.innerWidth - iconSpace - edge);
+    const usableH = window.innerHeight - 32;
+    const baseH = wall.offsetHeight || 724;
+    const ratio = Math.min(0.88, usableW / 1180, usableH / baseH);
+    wall.style.left = 'auto';
+    wall.style.right = `${edge}px`;
     wall.style.top = '50%';
-    wall.style.transformOrigin = 'center center';
-    wall.style.transform = `translate(-50%, -50%) scale(${ratio})`;
+    wall.style.transformOrigin = 'right center';
+    wall.style.transform = `translateY(-50%) scale(${ratio})`;
   }
 
   window.addEventListener('resize', scale);
