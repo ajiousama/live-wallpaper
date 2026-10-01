@@ -535,3 +535,26 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
   margin-left:4px;
   white-space:nowrap;
 }
+
+
+/* R15 DEV: airport status overflow scroll */
+.panel-air .air-status{
+  min-width:0;
+  overflow:hidden!important;
+  text-overflow:clip!important;
+}
+.panel-air .air-status.long-status{
+  font-size:15px!important;
+  letter-spacing:0!important;
+}
+.panel-air .air-status .overflow-scroll{
+  display:block;
+  width:100%;
+  max-width:100%;
+  overflow:hidden;
+}
+.panel-air .air-status .overflow-scroll-track{
+  display:inline-block;
+  min-width:max-content;
+  white-space:nowrap;
+}
