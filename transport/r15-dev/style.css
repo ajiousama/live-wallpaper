@@ -392,3 +392,27 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
 .bus-end-mode{font-size:13px;font-weight:900;letter-spacing:.08em;color:#67e8bd;margin-bottom:10px;white-space:nowrap}
 .bus-end-message{font-size:21px;font-weight:900;line-height:1.15;color:#f0fff8;white-space:nowrap}
 .bus-end-detail{margin-top:10px;font-size:12px;font-weight:800;color:#b8dfd0;white-space:normal;line-height:1.2}
+
+/* R15 DEV v1: BUS readability — destination and operator are primary information */
+.panel-bus.dep-mode .operator-wrap span{
+  font-size:12.4px!important;
+  line-height:1.08!important;
+  letter-spacing:-.015em!important;
+}
+.panel-bus.dep-mode .operator-wrap.lines-3 span{
+  font-size:11.2px!important;
+  line-height:1.04!important;
+}
+.panel-bus.dep-mode .bus-dest-main{
+  font-size:15.2px!important;
+  line-height:1.06!important;
+  font-weight:900!important;
+}
+.panel-bus.dep-mode .bus-dest-main .dest-line{
+  font-size:15.2px!important;
+  font-weight:900!important;
+  letter-spacing:-.015em!important;
+}
+.panel-bus.dep-mode .bus-terminal-time{
+  font-size:8.6px!important;
+}
