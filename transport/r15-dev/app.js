@@ -1582,7 +1582,7 @@
     }));
     const visible = [...services, ...terminalArrivals, ...deadheads, ...freights]
       .sort((a,b)=>a._sortMinutes-b._sortMinutes)
-      .slice(0, FREEWIFI_TV ? 6 : 3);
+      .slice(0, FREEWIFI_TV ? 10 : 3);
 
     if (!visible.length) {
       const last = lastRailMovement(now);
@@ -1664,7 +1664,7 @@
       const msg=dep?'本日の出発便は終了しました':'本日の到着便は終了しました';
       const detail=last ? (dep?`最終出発便：${last.place}行　${last.time}　出発済み`:`最終到着便：${last.place}発　${last.time}　到着済み`) : '';
       root.innerHTML=`<div class="air-end-state"><div class="air-end-mode">✈ ${mode}</div><div class="air-end-message">${msg}</div>${detail?`<div class="air-end-detail">${detail}</div>`:''}</div>`;
-    } else (FREEWIFI_TV ? rows.slice(0,6) : rows).forEach(r=>{
+    } else (FREEWIFI_TV ? rows.slice(0,10) : rows).forEach(r=>{
       const row=document.createElement('div');row.className=`row${r.isFinal?' is-final':''}${dep&&isDepartSoon(r,japanNow())?' depart-soon':''}`;
       const p=parseAirService(r.service); const finalBadge=dep&&r.isFinal?badgeHtml('final','最終便'):''; const place=dep?`→ ${r.dest}`:`${r.dest} →`; const firstBadge=r.isNextDayStart?badgeHtml('first',dep?'始発':'初便'):''; const airlineLogo=airlineMiniLogo(p.airline); const airlineName=airlineLogo||`<span class="name">${p.airline}</span>`;
       const status=String(r.liveStatus||r.info||''); const statusClass=`cell sub air-status${status.length>10?' long-status':''}${/まもなく到着|ただいま到着/.test(status)?' arriving':''}`;
@@ -2042,7 +2042,7 @@
       const mode = dep ? 'DEPARTURES — 出発バス —' : 'ARRIVALS — 到着バス —';
       const msg = dep ? '本日のバスは終了しました' : '本日の到着バスは終了しました';
       root.innerHTML = `<div class="bus-end-state"><div class="bus-end-mode">🚌 ${mode}</div><div class="bus-end-message">${msg}</div></div>`;
-    } else (FREEWIFI_TV ? rows.slice(0,6) : rows).forEach(r => {
+    } else (FREEWIFI_TV ? rows.slice(0,10) : rows).forEach(r => {
       const row = document.createElement('div'); row.className = `row${r.isFinal?' is-final':''}${dep && isDepartSoon(r, japanNow()) ? ' depart-soon' : ''}`;
       const firstBadge = r.isNextDayStart ? badgeHtml('first', dep ? '始発' : '初便') : '';
       const finalBadge = r.isFinal ? badgeHtml('final','最終バス') : '';
@@ -2115,13 +2115,14 @@
       const kyushu=(r)=>/^(uwajima_beppu|uwajima_usuki|koku94)$/.test(String(r.source||'')) || /別府|臼杵|佐賀関/.test(String(r.dest||r.origin||''));
       const matsuyamaPorts=(r)=>/三津浜港|松山観光港/.test(String(r.port||r.arrivalPort||''));
       const groups=[
-        {key:'kyushu',title:'九州航路',rows:rows.filter(kyushu).slice(0,2)},
-        {key:'matsuyama',title:'三津浜港・松山観光港 発着',rows:rows.filter(r=>!kyushu(r)&&matsuyamaPorts(r)).slice(0,2)},
-        {key:'other',title:'その他の航路',rows:rows.filter(r=>!kyushu(r)&&!matsuyamaPorts(r)).slice(0,2)}
+        {key:'kyushu',title:'九州航路',rows:rows.filter(kyushu).slice(0,4)},
+        {key:'matsuyama',title:'三津浜港・松山観光港 発着',rows:rows.filter(r=>!kyushu(r)&&matsuyamaPorts(r)).slice(0,3)},
+        {key:'other',title:'その他の航路',rows:rows.filter(r=>!kyushu(r)&&!matsuyamaPorts(r)).slice(0,3)}
       ];
       groups.forEach(g=>{
         const section=document.createElement('section');
         section.className=`freewifi-port-group freewifi-port-${g.key}`;
+        section.style.setProperty('--freewifi-port-row-count', String(Math.max(1,g.rows.length)));
         const head=document.createElement('div');
         head.className='freewifi-port-group-head';
         head.textContent=g.title;
