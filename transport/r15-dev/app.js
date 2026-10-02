@@ -1015,14 +1015,15 @@
       const kind=String(x.kind||''); const mins=Number(x.minutesToIchitsubo); const strong=Number.isFinite(mins)&&mins<=1;
       let text=''; let mode='stop';
       const dir = ichitsuboDirection(x)==='north' ? '松山方面' : '宇和島方面';
-      if (kind==='deadhead') { text=`まもなく市坪駅を${dir}へ回送列車が通過します。`; mode='pass'; }
-      else if (kind==='freight') { text=`まもなく市坪駅を${dir}へ貨物列車が通過します。`; mode='pass'; }
-      else if (kind==='pass') { text=`まもなく市坪駅を${dir}へ列車が通過します。`; mode='pass'; }
+      const serviceLogo=railApproachBadgeHtml(x);
+      if (kind==='deadhead') { text=`${serviceLogo} まもなく市坪駅を${dir}へ回送列車が通過します。`; mode='pass'; }
+      else if (kind==='freight') { text=`${serviceLogo} まもなく市坪駅を${dir}へ貨物列車が通過します。`; mode='pass'; }
+      else if (kind==='pass') { text=`${serviceLogo} まもなく市坪駅を${dir}へ列車が通過します。`; mode='pass'; }
       else {
         const finalTrain=ichitsuboIsFinal(x,now); const prefix=finalTrain?'最終列車 ':'';
         text=(Number.isFinite(mins)&&mins<=2)
-          ?`まもなく市坪駅から${dir}へ${prefix}${x.destination||''}行が発車します。`
-          :`まもなく市坪駅 ${dir}に${prefix}${x.destination||''}行がまいります。`;
+          ?`${serviceLogo} まもなく市坪駅から${dir}へ${prefix}${x.destination||''}行が発車します。`
+          :`${serviceLogo} まもなく市坪駅 ${dir}に${prefix}${x.destination||''}行がまいります。`;
       }
       return {text,mode,strong};
     });
@@ -1179,14 +1180,33 @@
       .map(x=>x.row);
   }
 
+  function railTickerServiceHtml(kind,service='') {
+    return `<span class="rail-ticker-service">${railServiceBadgeHtml(kind,service)}</span>`;
+  }
+
+  function railApproachBadgeHtml(x) {
+    const kind=String(x?.kind||'');
+    if(kind==='deadhead') return railTickerServiceHtml('deadhead');
+    if(kind==='freight') return railTickerServiceHtml('freight');
+    if(kind==='stop') return railTickerServiceHtml('local');
+    if(kind==='pass'){
+      const info=railLiveTrainLabel(x);
+      if(info.kind==='limited') return railTickerServiceHtml('limited',info.service);
+      return '<span class="rail-ticker-service"><span class="rail-kind-badge rail-kind-pass">通過</span></span>';
+    }
+    return '';
+  }
+
   function railSpecialFinalTickerItems(now) {
     const s=railSpecialFinals(now);
     const visible=railVisiblePassengerRows(now);
     const isVisible=(r)=>visible.some(v=>sameRailService(v,r));
     const out=[];
-    const label=(r)=>r.kind==='local'
-      ? `普通 ${r.dest}行`
-      : `${String(r.service||'').includes('しおかぜ')||String(r.service||'').includes('いしづち')||String(r.service||'').includes('宇和海')?'特急 ':''}${r.service||''} ${r.dest}行`.trim();
+    const label=(r)=>{
+      const kind=r.kind==='local'?'local':r.kind==='sightseeing'?'tourist':'limited';
+      const service=kind==='local'?'':String(r.service||'');
+      return `${railTickerServiceHtml(kind,service)} <span class="rail-ticker-dest">${r.dest}行</span>`;
+    };
 
     if(s.imabariFinal && isVisible(s.imabariFinal)){
       out.push(`<span class="rail-special-final rail-direction-final">🚆 今治方面 最終｜松山 ${s.imabariFinal.time}発｜${label(s.imabariFinal)}</span>`);
@@ -1229,19 +1249,19 @@
     const north=auxUpcoming('ichitsubo','north',now,1)[0]||null;
     const south=auxUpcoming('ichitsubo','south',now,1)[0]||null;
     const items=[];
-    if(north){const badges=`${north.isNextDayStart?badgeHtml('first'):''}${north.isFinal?badgeHtml('final','最終'):''}`;items.push(`JR市坪駅 松山方面　次列車 ${north.time}　普通 ${railDestLabel(north)}行 ${badges}`);} else items.push('JR市坪駅 松山方面｜運行終了');
-    if(south){const badges=`${south.isNextDayStart?badgeHtml('first'):''}${south.isFinal?badgeHtml('final','最終'):''}`;items.push(`JR市坪駅 宇和島方面　次列車 ${south.time}　普通 ${railDestLabel(south)}行 ${badges}`);} else items.push('JR市坪駅 宇和島方面｜運行終了');
+    if(north){const badges=`${north.isNextDayStart?badgeHtml('first'):''}${north.isFinal?badgeHtml('final','最終'):''}`;items.push(`JR市坪駅 松山方面　次列車 ${north.time}　${railTickerServiceHtml('local')} ${railDestLabel(north)}行 ${badges}`);} else items.push('JR市坪駅 松山方面｜運行終了');
+    if(south){const badges=`${south.isNextDayStart?badgeHtml('first'):''}${south.isFinal?badgeHtml('final','最終'):''}`;items.push(`JR市坪駅 宇和島方面　次列車 ${south.time}　${railTickerServiceHtml('local')} ${railDestLabel(south)}行 ${badges}`);} else items.push('JR市坪駅 宇和島方面｜運行終了');
     const deadhead=matsuyamaDeadheadArrivals(now)[0];
     if(deadhead){
       const origin=deadhead.origin||'回送区間';
       const pos=deadhead.position?`｜現在位置 ${deadhead.position}`:'';
-      items.push(`JR松山駅｜回送 ${deadhead.arrival} 到着予定｜${origin}発${pos}`);
+      items.push(`JR松山駅｜${railTickerServiceHtml('deadhead')} ${deadhead.arrival} 到着予定｜${origin}発${pos}`);
     }
     const freight=matsuyamaFreightPasses(now)[0];
     if(freight){
       const route=freight.origin&&freight.destination?`${freight.origin} → ${freight.destination}`:(freight.destination||'貨物列車');
       const pos=freight.position?`｜現在位置 ${freight.position}`:'';
-      items.push(`JR松山駅｜貨物 ${freight.passTime} 通過予定｜${route}${pos}`);
+      items.push(`JR松山駅｜${railTickerServiceHtml('freight')} ${freight.passTime} 通過予定｜${route}${pos}`);
     }
     return [...items,...specials];
   }
@@ -1402,7 +1422,11 @@
   function railLiveTrainLabel(x) {
     const num=String(x?.trainNum||'').trim();
     const m=num.match(/^(\d+)([A-Z]+)$/i);
-    if (String(x?.trainClass||'')==='limited' && m) {
+    const inferredLimited=!!(m && (
+      (String(m[2]||'').toUpperCase()==='M' && ((Number(m[1])>=1&&Number(m[1])<=40)||(Number(m[1])>=1000&&Number(m[1])<=1199))) ||
+      (String(m[2]||'').toUpperCase()==='D' && Number(m[1])>=1051&&Number(m[1])<=1099)
+    ));
+    if ((String(x?.trainClass||'')==='limited' || inferredLimited) && m) {
       const n=Number(m[1]);
       const suffix=String(m[2]||'').toUpperCase();
       if (suffix==='M' && n>=1 && n<=40) return {kind:'limited',service:`しおかぜ${n}号`};
