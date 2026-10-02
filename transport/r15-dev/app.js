@@ -150,7 +150,7 @@
     const m = String(service).match(/^(.+?)\s+(\d+)$/);
     if (!m) return { airline: service, number: '' };
     const airlineMap = {
-      JAL: 'JAL', ANA: 'ANA', IBX: 'IBEXエアラインズ', IBEX: 'IBEXエアラインズ', JJP: 'ジェットスター', GK: 'ジェットスター', '7C': 'チェジュ航空', JJA: 'チェジュ航空', BR: 'エバー航空', EVA: 'エバー航空', BX: 'エアプサン', MH: 'マレーシア航空'
+      JAL: 'JAL', ANA: 'ANA', IBX: 'IBEXエアラインズ', IBEX: 'IBEXエアラインズ', JJP: 'Jetstar', GK: 'Jetstar', '7C': 'チェジュ航空', JJA: 'チェジュ航空', BR: 'エバー航空', EVA: 'エバー航空', BX: 'エアプサン', MH: 'マレーシア航空'
     };
     return { airline: airlineMap[m[1]] || m[1], number: m[2] };
   }
@@ -161,7 +161,7 @@
     if(a==='JAL') return '<span class="air-mini-logo air-mini-logo-jal" aria-label="JAL"><span>JAL</span></span>';
     if(a==='ANA') return '<span class="air-mini-logo air-mini-logo-ana" aria-label="ANA"><span>ANA</span></span>';
     if(/IBEX/.test(a)) return '<span class="air-mini-logo air-mini-logo-ibex" aria-label="IBEXエアラインズ"><span class="air-brand-main">IBEX</span></span>';
-    if(/ジェットスター|JETSTAR/.test(raw)) return '<span class="air-mini-logo air-mini-logo-jetstar" aria-label="ジェットスター"><span class="air-star-mark">★</span><span class="air-brand-main">ジェットスター</span></span>';
+    if(/ジェットスター|JETSTAR/i.test(raw)) return '<span class="air-mini-logo air-mini-logo-jetstar" aria-label="Jetstar"><span class="air-star-mark">★</span><span class="air-brand-main">Jetstar</span></span>';
     if(/チェジュ|JEJU/.test(raw)) return '<span class="air-mini-logo air-mini-logo-jeju" aria-label="チェジュ航空"><span class="air-brand-main">チェジュ</span><span class="air-jeju-i">i</span></span>';
     if(/エバー|EVA/.test(raw)) return '<span class="air-mini-logo air-mini-logo-eva" aria-label="エバー航空"><span class="air-eva-dot"></span><span class="air-brand-main">エバー</span></span>';
     if(/エアプサン|AIR BUSAN/.test(raw)) return '<span class="air-mini-logo air-mini-logo-busan" aria-label="エアプサン"><span class="air-busan-wing"></span><span class="air-brand-main">エアプサン</span></span>';
@@ -670,7 +670,7 @@
     if(n==='四国開発フェリー') return '<span class="ferry-mini-logo ferry-logo-orange"><span class="ferry-brand-main">オレンジフェリー</span></span>';
     if(n==='中島汽船') return '<span class="ferry-mini-logo ferry-logo-nakajima">中島汽船</span>';
     if(n==='防予フェリー') return '<span class="ferry-mini-logo ferry-logo-boyo">防予フェリー</span>';
-    if(n==='国道九四フェリー') return '<span class="ferry-mini-logo ferry-logo-94">国道九四</span>';
+    if(n==='国道九四フェリー') return '<span class="ferry-mini-logo ferry-logo-94">国道九四フェリー</span>';
     if(n==='宇和島運輸') return '<span class="ferry-mini-logo ferry-logo-uwajima"><span class="ferry-brand-main">宇和島運輸</span></span>';
     if(n==='ジャンボフェリー') return '<span class="ferry-mini-logo ferry-logo-jumbo"><span class="ferry-brand-main">ジャンボフェリー</span></span>';
     if(n==='今治市営') return '<span class="ferry-mini-logo ferry-logo-imabari">今治市営</span>';
