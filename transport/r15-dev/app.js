@@ -1604,27 +1604,27 @@
   function busMiniLogo(name) {
     const n=String(name||'').trim();
     const defs=[
-      [/^伊予鉄バス$/, '伊予鉄', 'iyo'],
-      [/^伊予鉄南予バス$/, '伊予鉄南予', 'nanyo'],
-      [/^JR四国バス$/, 'JR四国', 'jrshikoku'],
-      [/^西日本JRバス$/, '西日本JR', 'jrwest'],
-      [/^JR東海バス$/, 'JR東海', 'jrtokai'],
-      [/^四国高速バス$/, '四国高速', 'shikoku'],
-      [/^徳島バス$/, '徳島', 'tokushima'],
-      [/^両備バス$/, '両備', 'ryobi'],
-      [/^下電バス$/, '下電', 'shimoden'],
-      [/^とさでん交通$/, 'とさでん', 'tosaden'],
-      [/^阪急観光バス$/, '阪急', 'hankyu'],
-      [/^名鉄バス$/, '名鉄', 'meitetsu'],
-      [/^せとうちバス$/, 'せとうち', 'setouchi'],
-      [/^西東京バス$/, '西東京', 'nishitokyo'],
-      [/^WILLER EXPRESS$/, 'WILLER', 'willer'],
-      [/^宇和島自動車$/, '宇和島', 'uwajima'],
-      [/^中国バス$/, '中国', 'chugoku'],
-      [/^本四バス$/, '本四', 'honshi'],
-      [/^琴平バス$/, '琴平', 'kotobus'],
-      [/^神姫バス$/, '神姫', 'shinki'],
-      [/^しまなみバス$/, 'しまなみ', 'shimanami']
+      [/^伊予鉄バス$/, '伊予鉄バス', 'iyo'],
+      [/^伊予鉄南予バス$/, '伊予鉄南予バス', 'nanyo'],
+      [/^JR四国バス$/, 'JR四国バス', 'jrshikoku'],
+      [/^西日本JRバス$/, '西日本JRバス', 'jrwest'],
+      [/^JR東海バス$/, 'JR東海バス', 'jrtokai'],
+      [/^四国高速バス$/, '四国高速バス', 'shikoku'],
+      [/^徳島バス$/, '徳島バス', 'tokushima'],
+      [/^両備バス$/, '両備バス', 'ryobi'],
+      [/^下電バス$/, '下電バス', 'shimoden'],
+      [/^とさでん交通$/, 'とさでんバス', 'tosaden'],
+      [/^阪急観光バス$/, '阪急観光バス', 'hankyu'],
+      [/^名鉄バス$/, '名鉄バス', 'meitetsu'],
+      [/^せとうちバス$/, 'せとうちバス', 'setouchi'],
+      [/^西東京バス$/, '西東京バス', 'nishitokyo'],
+      [/^WILLER EXPRESS$/, 'WILLERバス', 'willer'],
+      [/^宇和島自動車$/, '宇和島バス', 'uwajima'],
+      [/^中国バス$/, '中国バス', 'chugoku'],
+      [/^本四バス$/, '本四バス', 'honshi'],
+      [/^琴平バス$/, '琴平バス', 'kotobus'],
+      [/^神姫バス$/, '神姫バス', 'shinki'],
+      [/^しまなみバス$/, 'しまなみバス', 'shimanami']
     ];
     const hit=defs.find(([re])=>re.test(n));
     if(!hit) return `<span class="bus-mini-logo bus-logo-generic no-auto-scroll">${n||'—'}</span>`;
