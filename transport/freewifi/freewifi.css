@@ -267,3 +267,117 @@ body.freewifi-tv .freewifi-port-group-head{
   font-size:16px!important;
   padding:0 12px!important;
 }
+
+
+/* FreeWiFi TV v3: 10-row density test */
+body.freewifi-tv .panel{
+  grid-template-rows:58px 32px 1fr 42px!important;
+}
+body.freewifi-tv .panel-head{padding:0 16px!important}
+body.freewifi-tv .head-main h2{font-size:32px!important}
+body.freewifi-tv .mode-badge{
+  min-width:240px!important;
+  max-width:310px!important;
+  padding:6px 11px!important;
+  font-size:14px!important;
+}
+body.freewifi-tv .table-head{
+  font-size:12px!important;
+  padding:0 14px!important;
+}
+body.freewifi-tv .rows{
+  gap:3px!important;
+  padding:4px 7px 3px!important;
+}
+body.freewifi-tv .row{
+  min-height:38px!important;
+  flex:0 0 38px!important;
+  padding:0 14px!important;
+  column-gap:10px!important;
+}
+body.freewifi-tv .row.placeholder{
+  min-height:38px!important;
+  flex:0 0 38px!important;
+}
+body.freewifi-tv .cell{font-size:16px!important}
+body.freewifi-tv .cell.time{font-size:20px!important}
+body.freewifi-tv .cell.main{font-size:20px!important}
+body.freewifi-tv .cell.sub{font-size:14px!important}
+body.freewifi-tv .service-wrap .name{font-size:17px!important}
+body.freewifi-tv .service-wrap .code{font-size:12px!important}
+body.freewifi-tv .note{
+  padding:0 14px!important;
+  font-size:15px!important;
+}
+
+/* JR 10 rows with compact detail ticker */
+body.freewifi-tv #rail-rows{
+  gap:3px!important;
+  padding:4px 7px 3px!important;
+}
+body.freewifi-tv #rail-rows .rail-row{
+  min-height:38px!important;
+  flex:0 0 38px!important;
+}
+body.freewifi-tv #rail-rows .rail-primary{
+  height:24px!important;
+  grid-template-columns:220px 96px 1fr!important;
+  padding:0 12px!important;
+  column-gap:10px!important;
+}
+body.freewifi-tv .rail-head{
+  grid-template-columns:220px 96px 1fr!important;
+}
+body.freewifi-tv #rail-rows .rail-detail{
+  height:13px!important;
+  font-size:9.5px!important;
+  padding:0 10px!important;
+}
+body.freewifi-tv #rail-rows .rail-primary .cell.time{font-size:18px!important}
+body.freewifi-tv #rail-rows .rail-primary .cell.main{font-size:18px!important}
+body.freewifi-tv .rail-kind-badge{
+  height:21px!important;min-width:46px!important;font-size:11px!important
+}
+body.freewifi-tv .rail-name-badge{
+  height:21px!important;min-width:70px!important;max-width:145px!important;font-size:10.5px!important
+}
+
+/* Airline / bus marks stay readable at 10-row density */
+body.freewifi-tv .panel-air .air-mini-logo{
+  transform:scale(1.12)!important;
+  transform-origin:left center!important;
+}
+body.freewifi-tv .panel-bus .bus-mini-logo{
+  height:21px!important;
+  font-size:10.5px!important;
+  max-width:180px!important;
+}
+
+/* Ferry 10 rows total: 4 + 3 + 3 */
+body.freewifi-tv #panel-port{
+  grid-template-rows:58px 1fr 42px!important;
+}
+body.freewifi-tv #port-rows.freewifi-port-groups{
+  gap:4px!important;
+  padding:4px 7px 3px!important;
+}
+body.freewifi-tv .freewifi-port-group{
+  grid-template-rows:22px repeat(var(--freewifi-port-row-count,1),minmax(0,1fr))!important;
+  gap:2px!important;
+  padding:2px!important;
+}
+body.freewifi-tv .freewifi-port-group-head{
+  font-size:13px!important;
+  padding:0 10px!important;
+}
+body.freewifi-tv .freewifi-port-group>.row{
+  min-height:0!important;
+  height:auto!important;
+  flex:none!important;
+  padding:0 10px!important;
+}
+body.freewifi-tv .panel-port .ferry-mini-logo{
+  height:21px!important;
+  font-size:10px!important;
+  max-width:180px!important;
+}
