@@ -1804,3 +1804,23 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
   border-radius:50%;
   transform:skewX(-20deg);
 }
+
+
+/* BUS simplification: boarding place back to plain text; keep operator logos + Ehime route */
+.panel-bus.dep-mode .bus-place-text{
+  display:block;
+  max-width:100%;
+  font-size:13px;
+  font-weight:900;
+  line-height:1.05;
+  color:#f4fbff;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.panel-bus.dep-mode .bus-place-logo{
+  overflow:hidden!important;
+}
+.panel-bus.dep-mode .bus-stop-badge{
+  display:none!important;
+}
