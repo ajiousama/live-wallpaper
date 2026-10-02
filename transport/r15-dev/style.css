@@ -1925,3 +1925,53 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
   padding-left:17px!important;
   padding-right:4px!important;
 }
+
+
+/* JR logos inside lower ticker and top live ticker */
+.note .rail-ticker-service,
+.hero-alert .rail-ticker-service{
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:3px!important;
+  vertical-align:middle!important;
+  flex:0 0 auto!important;
+}
+.note .rail-kind-badge,
+.note .rail-name-badge{
+  height:18px!important;
+}
+.note .rail-kind-badge{
+  min-width:34px!important;
+  padding:0 5px!important;
+  font-size:10px!important;
+}
+.note .rail-name-badge{
+  min-width:54px!important;
+  max-width:92px!important;
+  padding:0 6px!important;
+  font-size:9.5px!important;
+}
+.hero-alert .rail-kind-badge,
+.hero-alert .rail-name-badge{
+  height:27px!important;
+  border-radius:4px!important;
+}
+.hero-alert .rail-kind-badge{
+  min-width:50px!important;
+  padding:0 8px!important;
+  font-size:14px!important;
+}
+.hero-alert .rail-name-badge{
+  min-width:76px!important;
+  max-width:126px!important;
+  padding:0 9px!important;
+  font-size:13px!important;
+}
+.rail-kind-pass{
+  background:#263238!important;
+  color:#fff!important;
+  border:1px solid #90a4ae!important;
+}
+.rail-ticker-dest{
+  white-space:nowrap!important;
+}
