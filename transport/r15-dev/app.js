@@ -1840,12 +1840,7 @@
   function busBoardingPlaceHtml(r) {
     const raw=String(r.stopText||r.stop||'松山市駅').replace(/発$/,'').trim();
     const stop=raw || '松山市駅';
-    if (stop==='JR松山駅') return '<span class="bus-stop-badge bus-stop-jr">JR松山駅</span>';
-    if (stop==='松山市駅') return '<span class="bus-stop-badge bus-stop-iyotetsu">松山市駅</span>';
-    if (/松山一番町/.test(stop)) return '<span class="bus-stop-badge bus-stop-ichibancho">松山一番町</span>';
-    if (/マドンナスタジアム/.test(stop)) return '<span class="bus-stop-badge bus-stop-madonna">マドンナ</span>';
-    if (/松山室町営業所/.test(stop)) return '<span class="bus-stop-badge bus-stop-muromachi">室町営業所</span>';
-    return `<span class="bus-stop-badge bus-stop-generic">${stop}</span>`;
+    return `<span class="bus-place-text">${stop}</span>`;
   }
 
   function busEhimeRoute(r) {
