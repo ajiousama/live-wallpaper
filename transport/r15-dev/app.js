@@ -1631,8 +1631,31 @@
     return `<span class="bus-mini-logo bus-logo-${hit[2]}" title="${n}">${hit[1]}</span>`;
   }
   function busOperatorHtml(r) {
-    const parts=busOperatorParts(r);
-    return `<div class="operator-wrap bus-logo-group">${parts.map(busMiniLogo).join('')}</div>`;
+    const shortMap={
+      '伊予鉄バス':'伊予鉄',
+      '伊予鉄南予バス':'伊予鉄南予',
+      'JR四国バス':'JR四国',
+      '西日本JRバス':'西日本JR',
+      'JR東海バス':'JR東海',
+      '四国高速バス':'四国高速',
+      '阪急観光バス':'阪急',
+      'とさでん交通':'とさでん',
+      '宇和島自動車':'宇和島自動車',
+      'WILLER EXPRESS':'WILLER'
+    };
+    const parts=busOperatorParts(r).map(x=>shortMap[x]||x);
+    const lines=[];
+    for(const part of parts){
+      const last=lines[lines.length-1];
+      if(last && `${last}・${part}`.length<=12 && lines.length<=2){
+        lines[lines.length-1]=`${last}・${part}`;
+      }else if(lines.length<2){
+        lines.push(part);
+      }else{
+        lines[1]=`${lines[1]}・${part}`;
+      }
+    }
+    return `<div class="operator-wrap bus-operator-text">${lines.map(x=>`<span>${x}</span>`).join('')}</div>`;
   }
   function splitDestinationLines(text) {
     let s=String(text||'').replace(/（オレンジフェリー連絡）/g,'').replace(/\s+/g,' ').trim();
