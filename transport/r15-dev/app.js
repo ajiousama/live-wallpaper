@@ -1399,6 +1399,75 @@
     return '<span class="rail-kind-badge rail-kind-local">普通</span>';
   }
 
+  function railLiveTrainLabel(x) {
+    const num=String(x?.trainNum||'').trim();
+    const m=num.match(/^(\d+)([A-Z]+)$/i);
+    if (String(x?.trainClass||'')==='limited' && m) {
+      const n=Number(m[1]);
+      const suffix=String(m[2]||'').toUpperCase();
+      if (suffix==='M' && n>=1 && n<=40) return {kind:'limited',service:`しおかぜ${n}号`};
+      if (suffix==='D' && n>=1051 && n<=1099) return {kind:'limited',service:`宇和海${n-1050}号`};
+      if (suffix==='M' && n>=1000 && n<=1199) return {kind:'limited',service:`いしづち${n-1000}号`};
+      return {kind:'limited',service:'特急'};
+    }
+    return {kind:'local',service:'普通'};
+  }
+
+  function railTurnbackLabel(turnback,now) {
+    if(!turnback) return '';
+    const dep=padTime(turnback.departure||'');
+    const dir=String(turnback.direction||'');
+    const dest=cleanStation(turnback.destination||'');
+    const matches=data.records.filter(r=>
+      r.board==='rail' &&
+      r.direction===dir &&
+      padTime(r.time||'')===dep &&
+      validRecord(r,now.iso)
+    );
+    const r=matches.find(x=>!dest || cleanStation(x.dest||'')===dest) || matches[0];
+    if(r){
+      const kind=r.kind==='limited'?'特急 ':r.kind==='sightseeing'?'観光 ':'';
+      const service=r.kind==='local'?'普通':`${kind}${r.service||''}`.trim();
+      return `折り返し ${service} ${r.dest||dest}行 となります`;
+    }
+    const info=railLiveTrainLabel({trainNum:turnback.trainNum,trainClass:''});
+    const service=info.kind==='limited'? `特急 ${info.service}` : '普通';
+    return `折り返し ${service} ${dest||''}行 となります`.replace(/\s+行/,'行');
+  }
+
+  function matsuyamaTerminatingArrivals(now) {
+    const generatedAt=Date.parse(String(approachLive.generatedAtJst||''));
+    if(!approachLive.ok || (Number.isFinite(generatedAt) && Date.now()-generatedAt>45000)) return [];
+    const raw=Array.isArray(approachLive.ichitsubo?.matsuyamaTerminatingArrivals)
+      ? approachLive.ichitsubo.matsuyamaTerminatingArrivals
+      : [];
+    const side=currentRailDir();
+    return raw.map(x=>{
+      const arrival=padTime(x.arrival||'');
+      let diff=arrival?toMinutes(arrival)-now.minutes:NaN;
+      if(Number.isFinite(diff) && diff < -720) diff += 1440;
+      return {...x,arrival,diff};
+    }).filter(x=>x.arrival && x.side===side && Number.isFinite(x.diff) && x.diff>=-1 && x.diff<=180);
+  }
+
+  function appendMatsuyamaTerminalArrivalRow(root,x,now) {
+    const row=document.createElement('div');
+    row.className='row rail-row terminal-arrival-row';
+    const info=railLiveTrainLabel(x);
+    const serviceBadge=railServiceBadgeHtml(info.kind,info.kind==='limited'?info.service:'');
+    const details=['この列車は松山止まりです'];
+    const turnback=railTurnbackLabel(x.turnback,now);
+    if(turnback) details.push(turnback);
+    row.innerHTML=`
+      <div class="rail-primary">
+        <div class="cell rail-service ${info.kind}"><span class="kindtxt">${serviceBadge}</span></div>
+        <div class="cell time">${x.arrival}</div>
+        <div class="cell main">当駅止まり</div>
+      </div>
+      <div class="rail-detail">${tickerHtml(details)}</div>`;
+    root.appendChild(row);
+  }
+
   function appendMatsuyamaDeadheadRow(root, x) {
     const row=document.createElement('div');
     row.className='row rail-row deadhead-row';
@@ -1445,6 +1514,7 @@
     const deadheads = matsuyamaDeadheadArrivals(now).map(x => ({
       _deadhead: true,
       _freight: false,
+      _terminalArrival: false,
       _sortMinutes: (() => {
         let d=toMinutes(x.arrival)-now.minutes;
         if(d < -720) d += 1440;
@@ -1462,6 +1532,13 @@
       })(),
       data: x
     }));
+    const terminalArrivals = matsuyamaTerminatingArrivals(now).map(x => ({
+      _deadhead: false,
+      _freight: false,
+      _terminalArrival: true,
+      _sortMinutes: now.minutes + x.diff,
+      data: x
+    }));
     const services = rows.map(r => ({
       _deadhead: false,
       _freight: false,
@@ -1473,7 +1550,7 @@
       })(),
       data: r
     }));
-    const visible = [...services, ...deadheads, ...freights]
+    const visible = [...services, ...terminalArrivals, ...deadheads, ...freights]
       .sort((a,b)=>a._sortMinutes-b._sortMinutes)
       .slice(0,3);
 
@@ -1492,6 +1569,10 @@
         }
         if(item._freight){
           appendMatsuyamaFreightRow(root,item.data);
+          return;
+        }
+        if(item._terminalArrival){
+          appendMatsuyamaTerminalArrivalRow(root,item.data,now);
           return;
         }
         const r=item.data;
