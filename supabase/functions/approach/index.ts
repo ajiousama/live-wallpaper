@@ -176,6 +176,37 @@ function matsuyamaRouteDirection(route: Route) {
   return "";
 }
 
+function matsuyamaInboundSide(route: Route) {
+  const idx = route.matsuyamaIndex;
+  if (idx < 0) return "";
+  const here = normalizeStationName(route.points[idx]?.station);
+  const prev = route.points.slice(0, idx).reverse()
+    .map((p) => normalizeStationName(p.station))
+    .find((s) => s && s !== here && s !== "松山基地") ?? "";
+  if (/^(三津浜|伊予和気|堀江|光洋台|粟井|柳原|伊予北条|今治|伊予西条|新居浜|観音寺|高松|岡山)$/.test(prev)) return "north";
+  if (/^(市坪|北伊予|南伊予|伊予横田|鳥ノ木|伊予市|向井原|内子|伊予大洲|八幡浜|宇和島)$/.test(prev)) return "south";
+  return "";
+}
+
+function matsuyamaTrainClass(trainNum: string) {
+  const m = String(trainNum || "").trim().match(/^(\d+)([A-Z]+)$/i);
+  if (!m) return "local";
+  const n = Number(m[1]);
+  const suffix = String(m[2] || "").toUpperCase();
+  if (suffix === "M" && ((n >= 1 && n <= 40) || (n >= 1000 && n <= 1199))) return "limited";
+  if (suffix === "D" && n >= 1051 && n <= 1099) return "limited";
+  return "local";
+}
+
+function routeTerminatesAtMatsuyama(route: Route) {
+  if (route.matsuyamaIndex < 0 || !/^\d{1,2}:\d{2}$/.test(route.matsuyamaTime)) return false;
+  if (normalizeStationName(route.destination) !== "松山") return false;
+  const after = route.points.slice(route.matsuyamaIndex + 1)
+    .map((p) => normalizeStationName(p.station))
+    .filter((s) => s && s !== "松山" && s !== "松山基地");
+  return after.length === 0;
+}
+
 function exactStopsAfterMatsuyama(route: Route) {
   const idx = route.matsuyamaDepartureIndex;
   if (idx < 0) return [];
@@ -382,6 +413,7 @@ async function getIchitsubo(now: { minutes: number }) {
     const terminal = stops.length ? stops[stops.length - 1] : null;
     return {
       trainNum: num,
+      trainClass: matsuyamaTrainClass(num),
       departure: route.matsuyamaDepartureTime,
       direction,
       destination: route.destination || terminal?.station || "",
@@ -389,6 +421,44 @@ async function getIchitsubo(now: { minutes: number }) {
       terminal,
     };
   }).filter(Boolean).sort((a: any, b: any) => toMinutes(a.departure) - toMinutes(b.departure));
+
+  const matsuyamaTerminatingArrivals = [...diagram.values()].map((route) => {
+    const num = String(route.trainNum || "").trim();
+    if (!routeTerminatesAtMatsuyama(route)) return null;
+    if (/^[0-9]{1,4}[AER]$/i.test(num) || /^(?:3072|3073)$/.test(num)) return null;
+    const side = matsuyamaInboundSide(route);
+    if (!side) return null;
+
+    const arrival = String(route.matsuyamaTime || "");
+    const trainClass = matsuyamaTrainClass(num);
+    const maxGap = trainClass === "limited" ? 45 : 30;
+    const candidates = matsuyamaSchedule.filter((x: any) => {
+      if (!x || x.direction !== side || x.trainClass !== trainClass) return false;
+      let gap = toMinutes(x.departure) - toMinutes(arrival);
+      if (gap < -720) gap += 1440;
+      return gap >= 4 && gap <= maxGap;
+    });
+
+    // Only claim "turnback" when today's diagram produces one unambiguous
+    // same-corridor/same-class departure in a short turn-around window.
+    const turnback = candidates.length === 1
+      ? {
+          trainNum: candidates[0].trainNum,
+          departure: candidates[0].departure,
+          direction: candidates[0].direction,
+          destination: candidates[0].destination,
+        }
+      : null;
+
+    return {
+      trainNum: num,
+      trainClass,
+      arrival,
+      side,
+      origin: route.origin || "",
+      turnback,
+    };
+  }).filter(Boolean).sort((a: any, b: any) => toMinutes(a.arrival) - toMinutes(b.arrival));
 
   return {
     ok: true,
@@ -398,6 +468,7 @@ async function getIchitsubo(now: { minutes: number }) {
     matsuyamaDeadheads,
     matsuyamaFreights,
     matsuyamaSchedule,
+    matsuyamaTerminatingArrivals,
     alert: approaching.length > 0,
     message: (approaching[0] as any)?.message ?? "",
   };
