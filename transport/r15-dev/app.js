@@ -2420,8 +2420,9 @@
     const usableW = Math.max(320, window.innerWidth - iconSpace - edge * 2);
     const usableH = window.innerHeight - (freeWifiTv ? 16 : 32);
     const baseH = wall.offsetHeight || 724;
-    const maxRatio = freeWifiTv ? 1.22 : 0.88;
-    const ratio = Math.min(maxRatio, usableW / 1220, usableH / baseH);
+    const ratio = freeWifiTv
+      ? Math.min(usableW / 1220, usableH / baseH)
+      : Math.min(0.88, usableW / 1180, usableH / baseH);
     if (freeWifiTv) {
       wall.style.left = '50%';
       wall.style.right = 'auto';
