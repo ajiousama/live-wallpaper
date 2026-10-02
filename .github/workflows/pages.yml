@@ -80,6 +80,7 @@ jobs:
               Path("transport/index.html"),
               Path("transport/r15-dev/index.html"),
               Path("transport/r15-dev/departures.html"),
+              Path("transport/freewifi/index.html"),
           ]
           for path in targets:
               text = path.read_text(encoding="utf-8")
