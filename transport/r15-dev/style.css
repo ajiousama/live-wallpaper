@@ -1854,3 +1854,19 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
 .panel-bus.arrival-columns .bus-arrival-operator .bus-operator-text span{
   font-size:11.5px!important;
 }
+
+
+/* BUS logos are identity marks: never marquee/scroll them */
+.panel-bus .bus-mini-logo,
+.panel-bus .bus-mini-logo .overflow-scroll,
+.panel-bus .bus-mini-logo .overflow-scroll-track{
+  animation:none!important;
+  transform:none!important;
+}
+.panel-bus .bus-mini-logo{
+  overflow:hidden!important;
+  text-overflow:clip!important;
+}
+.panel-bus .bus-logo-group{
+  overflow:visible!important;
+}
