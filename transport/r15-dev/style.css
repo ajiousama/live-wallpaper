@@ -1824,3 +1824,33 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
 .panel-bus.dep-mode .bus-stop-badge{
   display:none!important;
 }
+
+
+/* BUS simplification: operator names are plain Japanese text, not logo badges */
+.panel-bus .bus-operator-text{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:flex-end!important;
+  justify-content:center!important;
+  gap:1px!important;
+  width:100%!important;
+  min-width:0!important;
+  line-height:1.04!important;
+  white-space:normal!important;
+}
+.panel-bus .bus-operator-text span{
+  display:block!important;
+  max-width:100%!important;
+  font-size:11.5px!important;
+  font-weight:800!important;
+  color:#f2f5f7!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+.panel-bus.arrival-columns .bus-arrival-operator .bus-operator-text{
+  align-items:flex-start!important;
+}
+.panel-bus.arrival-columns .bus-arrival-operator .bus-operator-text span{
+  font-size:11.5px!important;
+}
