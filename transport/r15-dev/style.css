@@ -1975,3 +1975,25 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
 .rail-ticker-dest{
   white-space:nowrap!important;
 }
+
+
+/* JR lower ticker must remain readable end-to-end even with iOS Reduce Motion */
+#rail-note .marquee-track{
+  animation-name:ticker-scroll!important;
+  animation-timing-function:linear!important;
+  animation-iteration-count:infinite!important;
+}
+#rail-note .rail-special-final{
+  flex:0 0 auto!important;
+  max-width:none!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+}
+@media (prefers-reduced-motion:reduce){
+  #rail-note .marquee-track{
+    animation-name:ticker-scroll!important;
+    animation-duration:24s!important;
+    animation-timing-function:linear!important;
+    animation-iteration-count:infinite!important;
+  }
+}
