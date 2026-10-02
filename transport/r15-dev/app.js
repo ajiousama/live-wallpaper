@@ -1666,14 +1666,37 @@
     iyo_city_fukuoka: '伊予鉄バス / 伊予鉄南予バス / せとうちバス',
     iyotetsu_tokyo_202609: '伊予鉄バス / 西東京バス'
   };
+  const BUS_REPRESENTATIVE_OPERATOR = {
+    jr_osaka: 'JR四国バス',
+    jr_takamatsu: '伊予鉄バス',
+    jr_takamatsu_new: '伊予鉄バス',
+    iyo_city_takamatsu_sep: '伊予鉄バス',
+    iyo_city_takamatsu_oct: '伊予鉄バス',
+    bus_tokushima: '伊予鉄バス',
+    jr_tokushima_new: '伊予鉄バス',
+    iyo_city_tokushima_sep: '伊予鉄バス',
+    iyo_city_tokushima_oct: '伊予鉄バス',
+    bus_okayama: '伊予鉄バス',
+    iyo_city_okayama: '伊予鉄バス',
+    bus_kochi: '伊予鉄バス',
+    iyo_city_osaka: '伊予鉄バス',
+    iyo_city_osaka_arrival: '伊予鉄バス',
+    nagoya: '伊予鉄バス',
+    iyo_city_nagoya: '伊予鉄バス',
+    iyo_city_fukuoka: '伊予鉄バス',
+    iyotetsu_tokyo_202609: '伊予鉄バス'
+  };
   function busOperatorLabel(r) {
     if (r.actualOperator) return r.actualOperator;
-    // Keep these long joint-operated routes readable with one representative
-    // operator when the exact vehicle operator is not available.
-    if (r.source==='iyo_city_fukuoka') return '伊予鉄バス';
-    if (r.syntheticArrival && (r.source==='bus_okayama' || r.source==='iyo_city_okayama')) return '伊予鉄バス';
-    if (r.syntheticArrival && BUS_JOINT_OPERATORS[r.source]) return BUS_JOINT_OPERATORS[r.source];
-    return r.service || '';
+    const representative=BUS_REPRESENTATIVE_OPERATOR[r.source];
+    if (representative) return representative;
+    const raw=String(r.service||'').trim();
+    // Last safety net: never render a row of multiple operator logos.
+    if (/\s*\/\s*/.test(raw)) {
+      const first=raw.split(/\s*\/\s*/).filter(Boolean)[0]||'';
+      return BUS_OPERATOR_TOKEN[first]||first;
+    }
+    return raw;
   }
   const BUS_OPERATOR_TOKEN = {
     'JR四国':'JR四国バス','伊予鉄':'伊予鉄バス','四国高速':'四国高速バス','名鉄':'名鉄バス',
