@@ -1156,12 +1156,12 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
 /* AIR: airline and flight number are separate columns */
 .panel-air.dep-mode .table-head,
 .panel-air.dep-mode #air-rows .row{
-  grid-template-columns:92px minmax(118px,1fr) 66px 72px 112px!important;
+  grid-template-columns:92px minmax(108px,1fr) 84px 66px 112px!important;
   column-gap:6px!important;
 }
 .panel-air.arrival-columns .table-head,
 .panel-air.arrival-columns #air-rows .row{
-  grid-template-columns:minmax(118px,1fr) 66px 72px 112px 82px!important;
+  grid-template-columns:minmax(108px,1fr) 84px 66px 112px 82px!important;
   column-gap:6px!important;
 }
 .panel-air .air-airline-cell,
@@ -1899,4 +1899,29 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
 }
 #rail-rows .terminal-arrival-row .rail-detail{
   color:#bfe3ff!important;
+}
+
+
+/* AIR: keep every airline mark fully visible in the fixed airline column */
+.panel-air .air-airline-cell .air-mini-logo{
+  max-width:80px!important;
+  flex-shrink:0!important;
+  overflow:visible!important;
+}
+.panel-air .air-mini-logo-jetstar{
+  min-width:66px!important;
+  padding:0 5px!important;
+  font-family:Arial,Helvetica,sans-serif!important;
+  font-size:10.5px!important;
+  letter-spacing:0!important;
+}
+.panel-air .air-mini-logo-malaysia{
+  font-size:8.8px!important;
+  padding-left:18px!important;
+  padding-right:4px!important;
+}
+.panel-air .air-mini-logo-busan{
+  font-size:9px!important;
+  padding-left:17px!important;
+  padding-right:4px!important;
 }
