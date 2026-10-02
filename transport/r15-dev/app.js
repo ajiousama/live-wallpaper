@@ -1209,36 +1209,36 @@
     };
 
     if(s.imabariFinal && isVisible(s.imabariFinal)){
-      out.push(`<span class="rail-special-final rail-direction-final">🚆 今治方面 最終｜松山 ${s.imabariFinal.time}発｜${label(s.imabariFinal)}</span>`);
+      out.push(`<span class="rail-special-final fast-scroll-text rail-direction-final">🚆 今治方面 最終｜松山 ${s.imabariFinal.time}発｜${label(s.imabariFinal)}</span>`);
     }
     if(s.northFinal && isVisible(s.northFinal)){
-      out.push(`<span class="rail-special-final rail-direction-final">🚆 最終｜松山 ${s.northFinal.time}発｜${label(s.northFinal)}</span>`);
+      out.push(`<span class="rail-special-final fast-scroll-text rail-direction-final">🚆 最終｜松山 ${s.northFinal.time}発｜${label(s.northFinal)}</span>`);
     }
     if(s.southwest && isVisible(s.southwest)){
-      out.push(`<span class="rail-special-final rail-southwest-final">🚆 宇和島方面 最終｜松山 ${s.southwest.time}発｜${label(s.southwest)}</span>`);
+      out.push(`<span class="rail-special-final fast-scroll-text rail-southwest-final">🚆 宇和島方面 最終｜松山 ${s.southwest.time}発｜${label(s.southwest)}</span>`);
     }
     if(s.southFinal && isVisible(s.southFinal)){
-      out.push(`<span class="rail-special-final rail-direction-final">🚆 最終｜松山 ${s.southFinal.time}発｜${label(s.southFinal)}</span>`);
+      out.push(`<span class="rail-special-final fast-scroll-text rail-direction-final">🚆 最終｜松山 ${s.southFinal.time}発｜${label(s.southFinal)}</span>`);
     }
 
     if(s.outside && isVisible(s.outside)){
-      out.push(`<span class="rail-special-final rail-outside-final">⚠ 県外へ行ける最終｜松山 ${s.outside.time}発｜${label(s.outside)}</span>`);
+      out.push(`<span class="rail-special-final fast-scroll-text rail-outside-final">⚠ 県外へ行ける最終｜松山 ${s.outside.time}発｜${label(s.outside)}</span>`);
     }
     // "最終連絡" is reserved for exactly these five notices.
     if(s.yodo && isVisible(s.yodo)){
-      out.push(`<span class="rail-special-final rail-southwest-final">🚆 予土線 最終連絡｜松山 ${s.yodo.time}発｜${label(s.yodo)} → 宇和島21:06着 → 予土線21:11発</span>`);
+      out.push(`<span class="rail-special-final fast-scroll-text rail-southwest-final">🚆 予土線 最終連絡｜松山 ${s.yodo.time}発｜${label(s.yodo)} → 宇和島21:06着 → 予土線21:11発</span>`);
     }
     if(s.kochi && isVisible(s.kochi)){
-      out.push(`<span class="rail-special-final rail-outside-final">🚆 高知方面 最終連絡｜松山 ${s.kochi.time}発｜${label(s.kochi)} → 多度津 → 南風27号</span>`);
+      out.push(`<span class="rail-special-final fast-scroll-text rail-outside-final">🚆 高知方面 最終連絡｜松山 ${s.kochi.time}発｜${label(s.kochi)} → 多度津 → 南風27号</span>`);
     }
     if(s.tokushima && isVisible(s.tokushima)){
-      out.push(`<span class="rail-special-final rail-outside-final">🚆 徳島方面 最終連絡｜松山 ${s.tokushima.time}発｜${label(s.tokushima)} → 高松 → うずしお33号</span>`);
+      out.push(`<span class="rail-special-final fast-scroll-text rail-outside-final">🚆 徳島方面 最終連絡｜松山 ${s.tokushima.time}発｜${label(s.tokushima)} → 高松 → うずしお33号</span>`);
     }
     if(s.shinkansen && isVisible(s.shinkansen)){
-      out.push(`<span class="rail-special-final rail-shinkansen-final">🚄 新幹線 最終連絡｜松山 ${s.shinkansen.time}発｜${label(s.shinkansen)} → 岡山で新幹線</span>`);
+      out.push(`<span class="rail-special-final fast-scroll-text rail-shinkansen-final">🚄 新幹線 最終連絡｜松山 ${s.shinkansen.time}発｜${label(s.shinkansen)} → 岡山で新幹線</span>`);
     }
     if(s.sunrise && isVisible(s.sunrise)){
-      out.push(`<span class="rail-special-final rail-sunrise-final">🌅 サンライズ瀬戸 最終連絡｜松山 ${s.sunrise.time}発｜${label(s.sunrise)} → 坂出でサンライズ瀬戸</span>`);
+      out.push(`<span class="rail-special-final fast-scroll-text rail-sunrise-final">🌅 サンライズ瀬戸 最終連絡｜松山 ${s.sunrise.time}発｜${label(s.sunrise)} → 坂出でサンライズ瀬戸</span>`);
     }
     return out;
   }
