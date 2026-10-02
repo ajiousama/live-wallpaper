@@ -1188,10 +1188,10 @@
     const kind=String(x?.kind||'');
     if(kind==='deadhead') return railTickerServiceHtml('deadhead');
     if(kind==='freight') return railTickerServiceHtml('freight');
-    if(kind==='stop') return railTickerServiceHtml('local');
-    if(kind==='pass'){
+    if(kind==='stop' || kind==='pass'){
       const info=railLiveTrainLabel(x);
       if(info.kind==='limited') return railTickerServiceHtml('limited',info.service);
+      if(kind==='stop') return railTickerServiceHtml('local');
       return '<span class="rail-ticker-service"><span class="rail-kind-badge rail-kind-pass">通過</span></span>';
     }
     return '';
