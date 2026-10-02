@@ -1604,3 +1604,80 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
   display:block;
   line-height:1;
 }
+
+
+/* JR service badges: kind + limited express/train name */
+#rail-rows .rail-service .kindtxt{
+  display:flex!important;
+  align-items:center!important;
+  gap:4px!important;
+  overflow:visible!important;
+  max-width:none!important;
+  white-space:nowrap!important;
+}
+.rail-kind-badge,
+.rail-name-badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  box-sizing:border-box;
+  height:20px;
+  padding:0 6px;
+  border-radius:3px;
+  font-weight:900;
+  line-height:1;
+  white-space:nowrap;
+  flex:0 0 auto;
+}
+.rail-kind-badge{
+  min-width:38px;
+  font-size:11px;
+  letter-spacing:.04em;
+}
+.rail-name-badge{
+  min-width:58px;
+  max-width:94px;
+  padding:0 7px;
+  font-size:10.5px;
+  letter-spacing:-.01em;
+  overflow:hidden;
+  text-overflow:clip;
+}
+.rail-kind-limited{
+  background:#d7262e;
+  color:#fff;
+  border:1px solid #ef777d;
+}
+.rail-name-badge{
+  background:#fff7e8;
+  color:#8f4a00;
+  border:1px solid #e2a45b;
+}
+.rail-kind-local{
+  background:#198754;
+  color:#fff;
+  border:1px solid #65ba8c;
+}
+.rail-kind-deadhead{
+  background:#e8edf1;
+  color:#2d3940;
+  border:1px solid #aebbc2;
+}
+.rail-kind-freight{
+  background:#5a4a20;
+  color:#ffd56e;
+  border:1px solid #a58a3e;
+}
+.rail-kind-tourist{
+  background:#7a4f9d;
+  color:#fff;
+  border:1px solid #b093c8;
+}
+.rail-name-tourist{
+  background:#f6effb;
+  color:#6b3f8c;
+  border-color:#b99bcf;
+}
+#rail-rows .rail-service{
+  overflow:visible!important;
+}
