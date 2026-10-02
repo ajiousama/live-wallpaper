@@ -156,9 +156,16 @@
   }
 
   function airlineMiniLogo(airline) {
-    const a=String(airline||'').trim().toUpperCase();
+    const raw=String(airline||'').trim();
+    const a=raw.toUpperCase();
     if(a==='JAL') return '<span class="air-mini-logo air-mini-logo-jal" aria-label="JAL"><span>JAL</span></span>';
     if(a==='ANA') return '<span class="air-mini-logo air-mini-logo-ana" aria-label="ANA"><span>ANA</span></span>';
+    if(/IBEX/.test(a)) return '<span class="air-mini-logo air-mini-logo-ibex" aria-label="IBEXエアラインズ"><span class="air-brand-main">IBEX</span></span>';
+    if(/ジェットスター|JETSTAR/.test(raw)) return '<span class="air-mini-logo air-mini-logo-jetstar" aria-label="ジェットスター"><span class="air-star-mark">★</span><span class="air-brand-main">ジェットスター</span></span>';
+    if(/チェジュ|JEJU/.test(raw)) return '<span class="air-mini-logo air-mini-logo-jeju" aria-label="チェジュ航空"><span class="air-brand-main">チェジュ</span><span class="air-jeju-i">i</span></span>';
+    if(/エバー|EVA/.test(raw)) return '<span class="air-mini-logo air-mini-logo-eva" aria-label="エバー航空"><span class="air-eva-dot"></span><span class="air-brand-main">エバー</span></span>';
+    if(/エアプサン|AIR BUSAN/.test(raw)) return '<span class="air-mini-logo air-mini-logo-busan" aria-label="エアプサン"><span class="air-busan-wing"></span><span class="air-brand-main">エアプサン</span></span>';
+    if(/マレーシア|MALAYSIA/.test(raw)) return '<span class="air-mini-logo air-mini-logo-malaysia" aria-label="マレーシア航空"><span class="air-my-mark"></span><span class="air-brand-main">マレーシア</span></span>';
     return '';
   }
 
