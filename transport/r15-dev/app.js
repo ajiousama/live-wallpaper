@@ -1668,6 +1668,10 @@
   };
   function busOperatorLabel(r) {
     if (r.actualOperator) return r.actualOperator;
+    // Keep these long joint-operated routes readable with one representative
+    // operator when the exact vehicle operator is not available.
+    if (r.source==='iyo_city_fukuoka') return '伊予鉄バス';
+    if (r.syntheticArrival && (r.source==='bus_okayama' || r.source==='iyo_city_okayama')) return '伊予鉄バス';
     if (r.syntheticArrival && BUS_JOINT_OPERATORS[r.source]) return BUS_JOINT_OPERATORS[r.source];
     return r.service || '';
   }
