@@ -1,6 +1,7 @@
 (() => {
   const data = window.MATSUYAMA_DATA;
   const $ = (id) => document.getElementById(id);
+  const FREEWIFI_TV = document.body.classList.contains('freewifi-tv');
   const CURRENT_BUILD = document.documentElement.dataset.build || '';
   const DEPLOY_CHECK_MS = 60000;
 
@@ -1581,7 +1582,7 @@
     }));
     const visible = [...services, ...terminalArrivals, ...deadheads, ...freights]
       .sort((a,b)=>a._sortMinutes-b._sortMinutes)
-      .slice(0,3);
+      .slice(0, FREEWIFI_TV ? 6 : 3);
 
     if (!visible.length) {
       const last = lastRailMovement(now);
@@ -1663,7 +1664,7 @@
       const msg=dep?'本日の出発便は終了しました':'本日の到着便は終了しました';
       const detail=last ? (dep?`最終出発便：${last.place}行　${last.time}　出発済み`:`最終到着便：${last.place}発　${last.time}　到着済み`) : '';
       root.innerHTML=`<div class="air-end-state"><div class="air-end-mode">✈ ${mode}</div><div class="air-end-message">${msg}</div>${detail?`<div class="air-end-detail">${detail}</div>`:''}</div>`;
-    } else rows.forEach(r=>{
+    } else (FREEWIFI_TV ? rows.slice(0,6) : rows).forEach(r=>{
       const row=document.createElement('div');row.className=`row${r.isFinal?' is-final':''}${dep&&isDepartSoon(r,japanNow())?' depart-soon':''}`;
       const p=parseAirService(r.service); const finalBadge=dep&&r.isFinal?badgeHtml('final','最終便'):''; const place=dep?`→ ${r.dest}`:`${r.dest} →`; const firstBadge=r.isNextDayStart?badgeHtml('first',dep?'始発':'初便'):''; const airlineLogo=airlineMiniLogo(p.airline); const airlineName=airlineLogo||`<span class="name">${p.airline}</span>`;
       const status=String(r.liveStatus||r.info||''); const statusClass=`cell sub air-status${status.length>10?' long-status':''}${/まもなく到着|ただいま到着/.test(status)?' arriving':''}`;
@@ -2041,7 +2042,7 @@
       const mode = dep ? 'DEPARTURES — 出発バス —' : 'ARRIVALS — 到着バス —';
       const msg = dep ? '本日のバスは終了しました' : '本日の到着バスは終了しました';
       root.innerHTML = `<div class="bus-end-state"><div class="bus-end-mode">🚌 ${mode}</div><div class="bus-end-message">${msg}</div></div>`;
-    } else rows.forEach(r => {
+    } else (FREEWIFI_TV ? rows.slice(0,6) : rows).forEach(r => {
       const row = document.createElement('div'); row.className = `row${r.isFinal?' is-final':''}${dep && isDepartSoon(r, japanNow()) ? ' depart-soon' : ''}`;
       const firstBadge = r.isNextDayStart ? badgeHtml('first', dep ? '始発' : '初便') : '';
       const finalBadge = r.isFinal ? badgeHtml('final','最終バス') : '';
@@ -2081,9 +2082,8 @@
   function renderPort(rows) {
     const root = $('port-rows'); root.innerHTML = '';
     const dep = currentDirection() === 'departure';
-    if (!rows.length) {
-      const row=document.createElement('div'); row.className='row placeholder'; row.innerHTML=emptyRow('port'); root.appendChild(row);
-    } else rows.forEach(r => {
+
+    const makePortRow=(r)=>{
       const row = document.createElement('div');
       row.className = `row${r.isFinal?' is-final':''}${dep && isDepartSoon(r, japanNow()) ? ' depart-soon' : ''}`;
       const op = portOperator(r);
@@ -2107,8 +2107,41 @@
           <div class="cell service">${service}</div>
           <div class="cell time">${r.time}頃予定</div>`;
       }
-      root.appendChild(row);
-    });
+      return row;
+    };
+
+    if (FREEWIFI_TV) {
+      root.classList.add('freewifi-port-groups');
+      const kyushu=(r)=>/^(uwajima_beppu|uwajima_usuki|koku94)$/.test(String(r.source||'')) || /別府|臼杵|佐賀関/.test(String(r.dest||r.origin||''));
+      const matsuyamaPorts=(r)=>/三津浜港|松山観光港/.test(String(r.port||r.arrivalPort||''));
+      const groups=[
+        {key:'kyushu',title:'九州航路',rows:rows.filter(kyushu).slice(0,2)},
+        {key:'matsuyama',title:'三津浜港・松山観光港 発着',rows:rows.filter(r=>!kyushu(r)&&matsuyamaPorts(r)).slice(0,2)},
+        {key:'other',title:'その他の航路',rows:rows.filter(r=>!kyushu(r)&&!matsuyamaPorts(r)).slice(0,2)}
+      ];
+      groups.forEach(g=>{
+        const section=document.createElement('section');
+        section.className=`freewifi-port-group freewifi-port-${g.key}`;
+        const head=document.createElement('div');
+        head.className='freewifi-port-group-head';
+        head.textContent=g.title;
+        section.appendChild(head);
+        if(g.rows.length){
+          g.rows.forEach(r=>section.appendChild(makePortRow(r)));
+        } else {
+          const empty=document.createElement('div');
+          empty.className='row placeholder';
+          empty.innerHTML='<div class="cell main">現在表示できる便はありません</div>';
+          section.appendChild(empty);
+        }
+        root.appendChild(section);
+      });
+    } else {
+      root.classList.remove('freewifi-port-groups');
+      if (!rows.length) {
+        const row=document.createElement('div'); row.className='row placeholder'; row.innerHTML=emptyRow('port'); root.appendChild(row);
+      } else rows.forEach(r => root.appendChild(makePortRow(r)));
+    }
     activatePanelOverflow(root);
     restoreScroll('port'); attachScrollMemory('port');
   }
@@ -2414,7 +2447,7 @@
 
   function scale() {
     const wall = $('wall');
-    const freeWifiTv = new URLSearchParams(location.search).get('freewifi') === '1';
+    const freeWifiTv = FREEWIFI_TV || new URLSearchParams(location.search).get('freewifi') === '1';
     const iconSpace = freeWifiTv ? 0 : (window.innerWidth >= 900 ? 300 : 12);
     const edge = freeWifiTv ? 8 : 16;
     const usableW = Math.max(320, window.innerWidth - iconSpace - edge * 2);
