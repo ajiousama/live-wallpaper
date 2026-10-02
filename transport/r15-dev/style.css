@@ -1997,3 +1997,22 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
     animation-iteration-count:infinite!important;
   }
 }
+
+
+/* JR ticker timing: one full cycle must finish before the 15s panel switch */
+#rail-note .marquee-track{
+  animation-duration:8.5s!important;
+}
+#rail-note.fast-scroll .marquee-track,
+#rail-note .fast-scroll-text{
+  --ticker-duration:8.5s!important;
+}
+@media (prefers-reduced-motion:reduce){
+  #rail-note .marquee-track{
+    animation-duration:8.5s!important;
+  }
+}
+/* Top JR live alert also moves briskly enough to be read before mode changes */
+#top-live-alert .marquee-track{
+  animation-duration:7.5s!important;
+}
