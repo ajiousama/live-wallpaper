@@ -5,7 +5,7 @@
     {id:'panel-bus',  label:'03 / 04　高速・中距離バス'},
     {id:'panel-port', label:'04 / 04　フェリー'}
   ];
-  const PAGE_MS = 60000;
+  const PAGE_MS = 15000;
   const status=document.getElementById('freewifi-page-status');
   let pageIndex=0;
   let nextPageAt=Date.now()+PAGE_MS;
