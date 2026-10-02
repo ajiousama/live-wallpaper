@@ -1886,3 +1886,17 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
 }
 .panel-port .ferry-logo-setouchi{font-size:8.6px!important}
 .panel-port .ferry-logo-blue{font-size:8.8px!important}
+
+
+/* JR terminating arrivals at Matsuyama */
+#rail-rows .terminal-arrival-row{
+  border-left:3px solid rgba(111,190,255,.72)!important;
+  background:linear-gradient(180deg,rgba(19,34,48,.96),rgba(13,24,34,.96))!important;
+}
+#rail-rows .terminal-arrival-row .cell.main{
+  color:#d9efff!important;
+  font-weight:900!important;
+}
+#rail-rows .terminal-arrival-row .rail-detail{
+  color:#bfe3ff!important;
+}
