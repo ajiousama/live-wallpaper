@@ -1288,9 +1288,14 @@
     return {items:[liveAlertSpan(pick.text,'airport-bus-alert',strong)],className:`live-takeover airbus-live${strong?' strong-live':''}${pick.text.length>23?' fast-scroll':''}`};
   }
   function airportAccessTickerItems(now) {
-    // Airport lower ticker: delay notices only. No bus schedule / routine flight guide.
+    // Airport lower ticker: delay notices only for the direction currently shown.
+    // Once that side has no more active flights, clear the ticker completely.
     const airport=slowLive.airport;
     if(!airport?.ok) return [''];
+
+    const dep=currentDirection()==='departure';
+    const activeRows=liveFlightRows(now) || nextRows('air',now);
+    if(!Array.isArray(activeRows) || !activeRows.length) return [''];
 
     const items=[];
     const addDelayed=(rows,direction)=>{
@@ -1322,8 +1327,8 @@
       });
     };
 
-    addDelayed(airport.departures,'departure');
-    addDelayed(airport.arrivals,'arrival');
+    if(dep) addDelayed(airport.departures,'departure');
+    else addDelayed(airport.arrivals,'arrival');
     return items.length?items:[''];
   }
 
@@ -2409,17 +2414,27 @@
 
   function scale() {
     const wall = $('wall');
-    const iconSpace = window.innerWidth >= 900 ? 300 : 12;
-    const edge = 16;
-    const usableW = Math.max(320, window.innerWidth - iconSpace - edge);
-    const usableH = window.innerHeight - 32;
+    const freeWifiTv = new URLSearchParams(location.search).get('freewifi') === '1';
+    const iconSpace = freeWifiTv ? 0 : (window.innerWidth >= 900 ? 300 : 12);
+    const edge = freeWifiTv ? 8 : 16;
+    const usableW = Math.max(320, window.innerWidth - iconSpace - edge * 2);
+    const usableH = window.innerHeight - (freeWifiTv ? 16 : 32);
     const baseH = wall.offsetHeight || 724;
-    const ratio = Math.min(0.88, usableW / 1180, usableH / baseH);
-    wall.style.left = 'auto';
-    wall.style.right = `${edge}px`;
-    wall.style.top = '50%';
-    wall.style.transformOrigin = 'right center';
-    wall.style.transform = `translateY(-50%) scale(${ratio})`;
+    const maxRatio = freeWifiTv ? 1.22 : 0.88;
+    const ratio = Math.min(maxRatio, usableW / 1220, usableH / baseH);
+    if (freeWifiTv) {
+      wall.style.left = '50%';
+      wall.style.right = 'auto';
+      wall.style.top = '50%';
+      wall.style.transformOrigin = 'center center';
+      wall.style.transform = `translate(-50%,-50%) scale(${ratio})`;
+    } else {
+      wall.style.left = 'auto';
+      wall.style.right = `${edge}px`;
+      wall.style.top = '50%';
+      wall.style.transformOrigin = 'right center';
+      wall.style.transform = `translateY(-50%) scale(${ratio})`;
+    }
   }
 
   window.addEventListener('resize', scale);
