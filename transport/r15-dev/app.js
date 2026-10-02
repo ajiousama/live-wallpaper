@@ -1377,6 +1377,21 @@
     }).filter(x=>x.passTime);
   }
 
+  function railServiceBadgeHtml(kind, service='') {
+    const svc=String(service||'').trim();
+    if(kind==='limited'){
+      const name=svc||'特急';
+      return `<span class="rail-kind-badge rail-kind-limited">特急</span><span class="rail-name-badge">${name}</span>`;
+    }
+    if(kind==='tourist'){
+      const name=svc||'観光列車';
+      return `<span class="rail-kind-badge rail-kind-tourist">観光</span><span class="rail-name-badge rail-name-tourist">${name}</span>`;
+    }
+    if(kind==='deadhead') return '<span class="rail-kind-badge rail-kind-deadhead">回送</span>';
+    if(kind==='freight') return '<span class="rail-kind-badge rail-kind-freight">貨物</span>';
+    return '<span class="rail-kind-badge rail-kind-local">普通</span>';
+  }
+
   function appendMatsuyamaDeadheadRow(root, x) {
     const row=document.createElement('div');
     row.className='row rail-row deadhead-row';
@@ -1386,7 +1401,7 @@
     if(x.delay>0) details.push(`${x.delay}分遅れ`);
     row.innerHTML=`
       <div class="rail-primary">
-        <div class="cell rail-service deadhead"><span class="kindtxt">回送</span></div>
+        <div class="cell rail-service deadhead"><span class="kindtxt">${railServiceBadgeHtml('deadhead')}</span></div>
         <div class="cell time">${x.arrival}</div>
         <div class="cell main">松山　到着</div>
       </div>
@@ -1405,7 +1420,7 @@
     if(x.delay>0) details.push(`${x.delay}分遅れ`);
     row.innerHTML=`
       <div class="rail-primary">
-        <div class="cell rail-service freight"><span class="kindtxt">貨物</span></div>
+        <div class="cell rail-service freight"><span class="kindtxt">${railServiceBadgeHtml('freight')}</span></div>
         <div class="cell time">${x.passTime}</div>
         <div class="cell main">松山　通過</div>
       </div>
@@ -1475,11 +1490,11 @@
         const r=item.data;
         const row = document.createElement('div'); row.className = `row rail-row${r.isFinal ? ' is-final' : ''}${isDepartSoon(r, now) ? ' depart-soon' : ''}`;
         const kind = r.kind === 'limited' ? 'limited' : r.kind === 'sightseeing' ? 'tourist' : 'local';
-        const label = kind === 'limited' ? `特急 ${r.service}` : kind === 'tourist' ? `観光 ${r.service}` : '普通電車';
+        const serviceBadge = railServiceBadgeHtml(kind,r.service);
         const badges = `${r.isNextDayStart ? badgeHtml('first') : ''}${railSpecialFinalBadge(r,now)}`;
         row.innerHTML = `
           <div class="rail-primary">
-            <div class="cell rail-service ${kind}"><span class="kindtxt">${label}</span></div>
+            <div class="cell rail-service ${kind}"><span class="kindtxt">${serviceBadge}</span></div>
             <div class="cell time">${r.time}</div>
             <div class="cell main">${railDestLabel(r)}行 ${badges}</div>
           </div>
