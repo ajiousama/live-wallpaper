@@ -1870,3 +1870,19 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
 .panel-bus .bus-logo-group{
   overflow:visible!important;
 }
+
+
+/* FERRY: full recognizable names, fixed like logos */
+.panel-port .ferry-mini-logo{
+  min-width:54px!important;
+  max-width:154px!important;
+  padding:0 7px!important;
+  font-size:9.6px!important;
+  overflow:hidden!important;
+  text-overflow:clip!important;
+  white-space:nowrap!important;
+  animation:none!important;
+  transform:none!important;
+}
+.panel-port .ferry-logo-setouchi{font-size:8.6px!important}
+.panel-port .ferry-logo-blue{font-size:8.8px!important}
