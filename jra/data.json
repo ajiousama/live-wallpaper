@@ -2,15 +2,429 @@
   "source": "JRA公式",
   "source_date": "20261003",
   "date_label": "10月3日 土曜",
-  "updated_at": "2026-10-03 04:18 JST",
+  "updated_at": "2026-10-03 10:55 JST",
   "venues": [
     {
       "name": "東京",
-      "results": []
+      "results": [
+        {
+          "race": 1,
+          "race_name": "2歳未勝利",
+          "course": "",
+          "top3": [
+            {
+              "position": 1,
+              "frame": "枠3赤",
+              "number": "5",
+              "horse": "ワンダーマーベル",
+              "jockey": "横山 琉人",
+              "time": "1:38.1",
+              "margin": ""
+            },
+            {
+              "position": 2,
+              "frame": "枠7橙",
+              "number": "13",
+              "horse": "スターフラッシュ",
+              "jockey": "C.ルメール",
+              "time": "1:38.4",
+              "margin": "２"
+            },
+            {
+              "position": 3,
+              "frame": "枠1白",
+              "number": "1",
+              "horse": "アークレイリ",
+              "jockey": "丹内 祐次",
+              "time": "1:39.4",
+              "margin": "６"
+            }
+          ],
+          "payouts": {
+            "単勝": [
+              {
+                "combo": "5",
+                "amount": "760円"
+              }
+            ],
+            "複勝": [
+              {
+                "combo": "5",
+                "amount": "150円"
+              },
+              {
+                "combo": "13",
+                "amount": "110円"
+              },
+              {
+                "combo": "1",
+                "amount": "810円"
+              }
+            ],
+            "枠連": [
+              {
+                "combo": "3-7",
+                "amount": "280円"
+              }
+            ],
+            "馬連": [
+              {
+                "combo": "5-13",
+                "amount": "310円"
+              }
+            ],
+            "馬単": [
+              {
+                "combo": "5-13",
+                "amount": "1,490円"
+              }
+            ],
+            "ワイド": [
+              {
+                "combo": "5-13",
+                "amount": "220円"
+              },
+              {
+                "combo": "1-5",
+                "amount": "3,110円"
+              },
+              {
+                "combo": "1-13",
+                "amount": "1,310円"
+              }
+            ],
+            "3連複": [
+              {
+                "combo": "1-5-13",
+                "amount": "6,200円"
+              }
+            ],
+            "3連単": [
+              {
+                "combo": "5-13-1",
+                "amount": "40,080円"
+              }
+            ]
+          },
+          "jockey": "横山 琉人",
+          "horse": "ワンダーマーベル",
+          "win_payout": "760円"
+        },
+        {
+          "race": 2,
+          "race_name": "2歳未勝利",
+          "course": "",
+          "top3": [
+            {
+              "position": 1,
+              "frame": "枠4青",
+              "number": "4",
+              "horse": "インテルラゴス",
+              "jockey": "C.ルメール",
+              "time": "2:01.8",
+              "margin": ""
+            },
+            {
+              "position": 2,
+              "frame": "枠7橙",
+              "number": "8",
+              "horse": "シアルナーレ",
+              "jockey": "戸崎 圭太",
+              "time": "2:01.9",
+              "margin": "１／２"
+            },
+            {
+              "position": 3,
+              "frame": "枠8桃",
+              "number": "10",
+              "horse": "ウイニングレイ",
+              "jockey": "松岡 正海",
+              "time": "2:02.2",
+              "margin": "１ 3/4"
+            }
+          ],
+          "payouts": {
+            "単勝": [
+              {
+                "combo": "4",
+                "amount": "250円"
+              }
+            ],
+            "複勝": [
+              {
+                "combo": "4",
+                "amount": "140円"
+              },
+              {
+                "combo": "8",
+                "amount": "150円"
+              },
+              {
+                "combo": "10",
+                "amount": "390円"
+              }
+            ],
+            "枠連": [
+              {
+                "combo": "4-7",
+                "amount": "400円"
+              }
+            ],
+            "馬連": [
+              {
+                "combo": "4-8",
+                "amount": "400円"
+              }
+            ],
+            "馬単": [
+              {
+                "combo": "4-8",
+                "amount": "720円"
+              }
+            ],
+            "ワイド": [
+              {
+                "combo": "4-8",
+                "amount": "250円"
+              },
+              {
+                "combo": "4-10",
+                "amount": "860円"
+              },
+              {
+                "combo": "8-10",
+                "amount": "910円"
+              }
+            ],
+            "3連複": [
+              {
+                "combo": "4-8-10",
+                "amount": "1,860円"
+              }
+            ],
+            "3連単": [
+              {
+                "combo": "4-8-10",
+                "amount": "5,340円"
+              }
+            ]
+          },
+          "jockey": "C.ルメール",
+          "horse": "インテルラゴス",
+          "win_payout": "250円"
+        }
+      ]
     },
     {
       "name": "京都",
-      "results": []
+      "results": [
+        {
+          "race": 1,
+          "race_name": "2歳未勝利",
+          "course": "",
+          "top3": [
+            {
+              "position": 1,
+              "frame": "枠3赤",
+              "number": "5",
+              "horse": "ペアスターロード",
+              "jockey": "坂井 瑠星",
+              "time": "1:25.0",
+              "margin": ""
+            },
+            {
+              "position": 2,
+              "frame": "枠8桃",
+              "number": "15",
+              "horse": "ゴールデンレシオ",
+              "jockey": "柴田 裕一郎",
+              "time": "1:25.5",
+              "margin": "３ 1/2"
+            },
+            {
+              "position": 3,
+              "frame": "枠7橙",
+              "number": "13",
+              "horse": "ジョルティーニ",
+              "jockey": "松山 弘平",
+              "time": "1:25.9",
+              "margin": "２ 1/2"
+            }
+          ],
+          "payouts": {
+            "単勝": [
+              {
+                "combo": "5",
+                "amount": "450円"
+              }
+            ],
+            "複勝": [
+              {
+                "combo": "5",
+                "amount": "130円"
+              },
+              {
+                "combo": "15",
+                "amount": "130円"
+              },
+              {
+                "combo": "13",
+                "amount": "110円"
+              }
+            ],
+            "枠連": [
+              {
+                "combo": "3-8",
+                "amount": "770円"
+              }
+            ],
+            "馬連": [
+              {
+                "combo": "5-15",
+                "amount": "1,340円"
+              }
+            ],
+            "馬単": [
+              {
+                "combo": "5-15",
+                "amount": "2,650円"
+              }
+            ],
+            "ワイド": [
+              {
+                "combo": "5-15",
+                "amount": "470円"
+              },
+              {
+                "combo": "5-13",
+                "amount": "200円"
+              },
+              {
+                "combo": "13-15",
+                "amount": "230円"
+              }
+            ],
+            "3連複": [
+              {
+                "combo": "5-13-15",
+                "amount": "920円"
+              }
+            ],
+            "3連単": [
+              {
+                "combo": "5-15-13",
+                "amount": "6,860円"
+              }
+            ]
+          },
+          "jockey": "坂井 瑠星",
+          "horse": "ペアスターロード",
+          "win_payout": "450円"
+        },
+        {
+          "race": 2,
+          "race_name": "2歳未勝利",
+          "course": "",
+          "top3": [
+            {
+              "position": 1,
+              "frame": "枠1白",
+              "number": "1",
+              "horse": "イッペイ",
+              "jockey": "浜中 俊",
+              "time": "1:45.5",
+              "margin": "レコード"
+            },
+            {
+              "position": 2,
+              "frame": "枠7橙",
+              "number": "7",
+              "horse": "リーベラーリア",
+              "jockey": "荻野 極",
+              "time": "1:45.5",
+              "margin": "クビ"
+            },
+            {
+              "position": 3,
+              "frame": "枠3赤",
+              "number": "3",
+              "horse": "メイショウジェード",
+              "jockey": "太宰 啓介",
+              "time": "1:45.7",
+              "margin": "１ 1/4"
+            }
+          ],
+          "payouts": {
+            "単勝": [
+              {
+                "combo": "1",
+                "amount": "790円"
+              }
+            ],
+            "複勝": [
+              {
+                "combo": "1",
+                "amount": "210円"
+              },
+              {
+                "combo": "7",
+                "amount": "340円"
+              },
+              {
+                "combo": "3",
+                "amount": "120円"
+              }
+            ],
+            "枠連": [
+              {
+                "combo": "1-7",
+                "amount": "1,340円"
+              }
+            ],
+            "馬連": [
+              {
+                "combo": "1-7",
+                "amount": "4,180円"
+              }
+            ],
+            "馬単": [
+              {
+                "combo": "1-7",
+                "amount": "8,100円"
+              }
+            ],
+            "ワイド": [
+              {
+                "combo": "1-7",
+                "amount": "1,210円"
+              },
+              {
+                "combo": "1-3",
+                "amount": "340円"
+              },
+              {
+                "combo": "3-7",
+                "amount": "670円"
+              }
+            ],
+            "3連複": [
+              {
+                "combo": "1-3-7",
+                "amount": "3,450円"
+              }
+            ],
+            "3連単": [
+              {
+                "combo": "1-7-3",
+                "amount": "29,590円"
+              }
+            ]
+          },
+          "jockey": "浜中 俊",
+          "horse": "イッペイ",
+          "win_payout": "790円"
+        }
+      ]
     }
   ]
 }
