@@ -1,6 +1,6 @@
 const DATA_URL="./data.json";
 const JRA_URL="../jra/data.json";
-let data=null,jra=null,keirinPage=0,leftSport="keirin";
+let data=null,jra=null,keirinPage=0,screenMode="keirin";
 
 function esc(v){return String(v??"").replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]})}
 function jstNow(){
@@ -51,11 +51,13 @@ function renderKeirin(){
   host.classList.toggle("four",current.length>=4);
   host.innerHTML=current.map(function(v){return compactCard(v,"keirin")}).join("");
 }
-function showLeftSport(kind){
-  leftSport=kind==="boat"?"boat":"keirin";
-  document.querySelector(".keirin-block")?.classList.toggle("active",leftSport==="keirin");
-  document.querySelector(".boat-block")?.classList.toggle("active",leftSport==="boat");
-  document.querySelector(".main-grid")?.classList.toggle("keirin-full",leftSport==="keirin");
+function showScreen(mode){
+  screenMode=["keirin","race","boat"].includes(mode)?mode:"keirin";
+  const main=document.querySelector(".main-grid");
+  main?.classList.remove("screen-keirin","screen-race","screen-boat");
+  main?.classList.add("screen-"+screenMode);
+  document.querySelector(".keirin-block")?.classList.toggle("active",screenMode==="keirin");
+  document.querySelector(".boat-block")?.classList.toggle("active",screenMode==="boat");
 }
 function renderBoats(){
   const host=document.getElementById("boat-grid");
@@ -166,9 +168,11 @@ setInterval(tick,1000);tick();
 load();setInterval(load,30000);
 setInterval(function(){
   const n=Math.ceil((data?.keirin?.venues||[]).length/4);
-  if(n>1 && leftSport==="keirin"){keirinPage=(keirinPage+1)%n;renderKeirin()}
+  if(n>1 && screenMode==="keirin"){keirinPage=(keirinPage+1)%n;renderKeirin()}
 },15000);
+const SCREEN_ORDER=["keirin","race","boat"];
 setInterval(function(){
-  showLeftSport(leftSport==="keirin"?"boat":"keirin");
+  const i=SCREEN_ORDER.indexOf(screenMode);
+  showScreen(SCREEN_ORDER[(i+1)%SCREEN_ORDER.length]);
 },20000);
-showLeftSport("keirin");
+showScreen("keirin");
