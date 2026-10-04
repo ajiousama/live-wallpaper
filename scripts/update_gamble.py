@@ -6,6 +6,7 @@ import xml.etree.ElementTree as ET
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from pathlib import Path
+from urllib.parse import urljoin
 from zoneinfo import ZoneInfo
 
 import requests
@@ -540,6 +541,135 @@ def local_night_results(ymd: str, local_epg: list[dict], now_minutes: int):
         out.append({"name":venue["venue"],"code":code,"races":races})
     return out
 
+
+def _featured_horses_from_page(url: str, limit: int = 3) -> list[str]:
+    try:
+        soup = BeautifulSoup(fetch(url), "html.parser")
+    except Exception:
+        return []
+    bad = {
+        "出走馬情報","レーストップ","出馬表","調教動画ほか","データ分析",
+        "発売情報","レース情報","海外競馬発売","馬券購入情報",
+    }
+    out = []
+    for h in soup.find_all(["h3","h4"]):
+        t = clean(h)
+        if not t or t in bad or len(t) > 28:
+            continue
+        if re.search(r"(情報|メニュー|ポイント|プロフィール|データ)", t):
+            continue
+        if t not in out:
+            out.append(t)
+        if len(out) >= limit:
+            break
+    return out
+
+
+def featured_races_today(ymd: str, local_epg: list[dict]) -> list[dict]:
+    featured: list[dict] = []
+    year, mm, dd = ymd[:4], ymd[4:6], ymd[6:8]
+
+    # JRA: each venue's 11R from the official daily programme.
+    try:
+        cal_url = f"https://www.jra.go.jp/keiba/calendar{year}/{year}/{mm}/{mm}{dd}.html"
+        soup = BeautifulSoup(fetch(cal_url), "html.parser")
+        for table in soup.find_all("table"):
+            head = table.find_previous(["h2","h3"])
+            heading = clean(head)
+            vm = re.search(r"(札幌|函館|福島|新潟|東京|中山|中京|京都|阪神|小倉)", heading)
+            if not vm:
+                continue
+            venue = vm.group(1)
+            for tr in table.find_all("tr"):
+                cells = tr.find_all(["th","td"], recursive=False)
+                vals = [clean(x) for x in cells]
+                if len(vals) < 3 or not re.search(r"^11(?:レース|R)", vals[0]):
+                    continue
+                name_cell = cells[1]
+                a = name_cell.find("a")
+                race_name = clean(a) if a else vals[1]
+                race_name = re.sub(r"^第\d+回\s*", "", race_name)
+                race_name = re.sub(r"^農林水産省賞典", "", race_name).strip()
+                tm = re.search(r"(\d{1,2})時(\d{2})分", vals[-1])
+                time_text = f"{int(tm.group(1)):02d}:{tm.group(2)}" if tm else vals[-1]
+                horses = []
+                if a and a.get("href"):
+                    race_url = urljoin(cal_url, a.get("href"))
+                    base = race_url.rsplit("/", 1)[0] + "/"
+                    horses = _featured_horses_from_page(urljoin(base, "horse.html"))
+                featured.append({
+                    "source":"JRA","venue":venue,"race":"11R","name":race_name,
+                    "time":time_text,"horses":horses,
+                })
+                break
+    except Exception as exc:
+        print(f"[GAMBLE] JRA featured failed: {exc}")
+
+    # JRA overseas sales: add today's overseas headline race when present.
+    try:
+        overseas_url = "https://www.jra.go.jp/keiba/overseas/"
+        soup = BeautifulSoup(fetch(overseas_url), "html.parser")
+        text = clean(soup)
+        date_pat = rf"{int(mm)}月\s*{int(dd)}日"
+        if re.search(date_pat, text):
+            om = re.search(
+                rf"([^\s]+?)(?:G1|GⅠ).*?発走予定時刻.*?{date_pat}.*?(\d{{1,2}})時(\d{{2}})分",
+                text
+            )
+            if om:
+                name = om.group(1)
+                time_text = f"{int(om.group(2)):02d}:{om.group(3)}"
+                horses = []
+                race_link = None
+                for a in soup.find_all("a", href=True):
+                    href = a.get("href","")
+                    if "/keiba/overseas/race/" in href:
+                        race_link = urljoin(overseas_url, href)
+                        break
+                if race_link:
+                    base = race_link.rsplit("/", 1)[0] + "/"
+                    horses = _featured_horses_from_page(urljoin(base, "horse.html"))
+                featured.append({
+                    "source":"海外競馬","venue":"海外","race":"",
+                    "name":name,"time":time_text,"horses":horses,
+                })
+    except Exception as exc:
+        print(f"[GAMBLE] overseas featured failed: {exc}")
+
+    # Local races: only races explicitly named in Green Channel's local-racing broadcast.
+    try:
+        gc_url = "https://www.greenchannel.jp/program/racing-chihoukeiba-chukei.html"
+        gc_text = clean(BeautifulSoup(fetch(gc_url), "html.parser"))
+        gm = re.search(r"《([^》]+)》", gc_text)
+        gc_names = []
+        if gm:
+            gc_names = [clean(x) for x in re.split(r"[、,，]", gm.group(1)) if clean(x)]
+        for target in gc_names:
+            key = re.sub(r"^[ＪJ]認\s*", "", target).replace(" ", "")
+            matched = None
+            for venue in local_epg:
+                for r in venue.get("races", []):
+                    rn = re.sub(r"^[ＪJ]認\s*", "", r.get("race_name","")).replace(" ", "")
+                    if key and (key in rn or rn in key):
+                        matched = (venue, r)
+                        break
+                if matched:
+                    break
+            if not matched:
+                continue
+            venue, r = matched
+            featured.append({
+                "source":"GCH地方","venue":venue.get("venue",""),
+                "race":f'{r.get("race","")}R',
+                "name":target,"time":r.get("time",""),
+                "horses":[],
+            })
+    except Exception as exc:
+        print(f"[GAMBLE] GCH featured failed: {exc}")
+
+    # Keep order: JRA domestic -> overseas -> GCH local.
+    return featured
+
 def main():
     now = datetime.now(JST)
     ymd = now.strftime("%Y%m%d")
@@ -577,6 +707,7 @@ def main():
 
     local_names = [v["venue"] for v in local_epg if v.get("venue") in NAR_CODES]
     local_all = local_results_for_names(ymd, local_epg, local_names, now_minutes)
+    featured_races = featured_races_today(ymd, local_epg)
 
     payload = {
         "date":now.strftime("%Y-%m-%d"),
@@ -591,6 +722,7 @@ def main():
         },
         "boats":boats,
         "local_all":{"venues":local_all},
+        "featured_races":featured_races,
         "source":{
             "schedule":"Free WiFi EPG",
             "keirin":"netkeirin / EPG",
