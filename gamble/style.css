@@ -74,25 +74,25 @@ body{background:linear-gradient(180deg,#061522,#02090f)}
 .jra-dedicated-grid.jra-count-1{grid-template-columns:1fr}
 .jra-dedicated-grid.jra-count-2.with-featured{grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(260px,.72fr)}
 .jra-dedicated-grid.jra-count-1.with-featured{grid-template-columns:minmax(0,1fr) minmax(260px,.55fr)}
-.jra-venue-card,.featured-card{min-width:0;min-height:0;display:grid;grid-template-rows:21px 1fr;border:1px solid #276344;background:#06151b;overflow:hidden}
-.jra-venue-head{display:flex;align-items:center;justify-content:space-between;gap:5px;padding:1px 5px;border-bottom:1px solid #24533d;background:#0a3323}
-.jra-venue-head strong{font-size:12px}
-.jra-venue-head span{font-size:7px;color:#a6c6b5}
+.jra-venue-card,.featured-card{min-width:0;min-height:0;display:grid;grid-template-rows:30px 1fr;border:1px solid #276344;background:#06151b;overflow:hidden}
+.jra-venue-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:3px 8px;border-bottom:1px solid #24533d;background:#0a3323}
+.jra-venue-head strong{font-size:18px}
+.jra-venue-head span{font-size:10px;color:#a6c6b5}
 .jra-venue-scroll,.featured-scroll{min-height:0;overflow:hidden;position:relative}
-.jra-race{min-width:0;border-bottom:1px solid #204536;padding:1px 2px}
-.jra-race-main{display:grid;grid-template-columns:24px minmax(0,1fr) 55px;align-items:center;gap:2px;height:12px}
-.jra-race-main>strong{font-size:7.5px;color:#d8eee2;text-align:center}
-.jra-race-name{min-width:0;font-size:7px;color:#d3e6dc}
-.jra-race-main>em{font-size:6.7px;font-style:normal;color:#72c797;text-align:right;white-space:nowrap}
-.places{height:13px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2px;align-items:center}
-.place{min-width:0;font-size:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#f5f7f6}
-.place b{font-size:6px;color:#87bba1}
+.jra-race{min-width:0;border-bottom:1px solid #2b5b48;padding:4px 5px}
+.jra-race-main{display:grid;grid-template-columns:36px minmax(0,1fr) 88px;align-items:center;gap:5px;min-height:22px}
+.jra-race-main>strong{font-size:12px;color:#d8eee2;text-align:center}
+.jra-race-name{min-width:0;font-size:11px;color:#d3e6dc;font-weight:900}
+.jra-race-main>em{font-size:10px;font-style:normal;color:#72c797;text-align:right;white-space:nowrap;font-weight:900}
+.places{min-height:24px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;align-items:center}
+.place{min-width:0;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#f5f7f6}
+.place b{font-size:9px;color:#87bba1}
 .place.p1{font-weight:1000;color:#fff4a8}
-.payout-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px 3px;padding-bottom:1px}
-.payout-item{min-width:0;display:grid;grid-template-columns:27px minmax(0,1fr);gap:2px;align-items:center;line-height:9px}
-.payout-item{border-radius:2px;padding:1px 2px}
-.payout-item b{font-size:5.8px;color:#fff;white-space:nowrap;font-weight:1000}
-.payout-item span{font-size:6.2px;color:#fff;white-space:normal;overflow:visible;text-overflow:clip;line-height:7px;font-weight:900}
+.payout-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:3px 5px;padding:2px 0 1px}
+.payout-item{min-width:0;display:grid;grid-template-columns:43px minmax(0,1fr);gap:4px;align-items:center;line-height:15px}
+.payout-item{border-radius:3px;padding:2px 4px}
+.payout-item b{font-size:9px;color:#fff;white-space:nowrap;font-weight:1000}
+.payout-item span{font-size:9.5px;color:#fff;white-space:normal;overflow:visible;text-overflow:clip;line-height:12px;font-weight:900}
 .payout-item.bet-tansho,.payout-item.bet-fukusho{background:#b51f2e}
 .payout-item.bet-wakuren{background:#27894d}
 .payout-item.bet-umaren{background:#8a2b96}
@@ -121,7 +121,14 @@ body{background:linear-gradient(180deg,#061522,#02090f)}
   .phase-card{grid-template-rows:17px 1fr}
   .card-head strong{font-size:9px}
   .num{width:11px;height:10px;font-size:6.4px}
-  .jra-race-main{height:11px}
-  .places{height:12px}
-  .payout-item span{font-size:5.8px}
+  .jra-race-main{min-height:19px;grid-template-columns:32px minmax(0,1fr) 76px}
+  .jra-race-main>strong{font-size:11px}
+  .jra-race-name{font-size:10px}
+  .jra-race-main>em{font-size:9px}
+  .places{min-height:21px}
+  .place{font-size:10px}
+  .place b{font-size:8px}
+  .payout-item{grid-template-columns:38px minmax(0,1fr);line-height:13px;padding:2px 3px}
+  .payout-item b{font-size:8px}
+  .payout-item span{font-size:8.5px;line-height:11px}
 }
