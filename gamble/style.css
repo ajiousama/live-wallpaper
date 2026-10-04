@@ -12,6 +12,9 @@ h1{margin:1px 0 0;font-size:31px;line-height:1;font-weight:1000;letter-spacing:.
 .sub{font-size:12px;color:#b9ced8;margin-top:5px}
 .status{display:flex;align-items:center;gap:18px;font-weight:900}.live{border:1px solid #1fbf72;color:#aaf6cd;padding:7px 11px;border-radius:6px}.live span{display:inline-block;width:8px;height:8px;border-radius:50%;background:#2ce786;box-shadow:0 0 10px #2ce786;margin-right:6px}.status #updated{font-size:13px;color:#c4d7df}.status #clock{font-size:31px;letter-spacing:.05em}
 .main-grid{min-height:0;display:grid;grid-template-columns:43% 57%;gap:8px}
+.main-grid.keirin-full{grid-template-columns:1fr}
+.main-grid.keirin-full .left-column{grid-column:1/-1}
+.main-grid.keirin-full .right-column{display:none}
 .left-column{min-height:0;position:relative}
 .left-column .sport-panel{position:absolute;inset:0;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .25s ease}
 .left-column .sport-panel.active{opacity:1;visibility:visible;pointer-events:auto}
@@ -25,6 +28,7 @@ h1{margin:1px 0 0;font-size:31px;line-height:1;font-weight:1000;letter-spacing:.
 .two-grid{min-height:0;display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:6px}
 .keirin-block .two-grid.one{grid-template-columns:1fr}
 .keirin-block .two-grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.keirin-block .two-grid.four{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr))}
 .result-card{min-width:0;min-height:0;display:grid;grid-template-rows:36px 1fr;border:1px solid #315262;background:#06141e;overflow:hidden}
 .card-head{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:4px 8px;border-bottom:1px solid #2a4a5b;background:#0b202d}
 .card-title{font-size:19px;font-weight:1000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.card-title small{font-size:10px;color:#bed0d8;margin-left:5px}.event{font-size:9px;color:#9db7c3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:58%;text-align:right}
@@ -41,6 +45,9 @@ h1{margin:1px 0 0;font-size:31px;line-height:1;font-weight:1000;letter-spacing:.
 .keirin-block .two-grid.three .keirin-card .compact-table .ocol{width:74px}
 .keirin-block .two-grid.three .keirin-card .num{width:23px;height:22px;font-size:13px}
 .keirin-block .two-grid.three .keirin-card .event{display:none}
+.keirin-block .two-grid.four .keirin-card .compact-table td{font-size:14px}
+.keirin-block .two-grid.four .keirin-card .compact-table th{font-size:10px}
+.keirin-block .two-grid.four .keirin-card .num{width:24px;height:23px;font-size:13px}
 .n1{background:#fff;color:#111}.n2{background:#111;color:#fff;border-color:#6f7b80}.n3{background:#d9232e;color:#fff}.n4{background:#1762c9;color:#fff}.n5{background:#f4d421;color:#111}.n6{background:#15964b;color:#fff}.n7{background:#ec7c22;color:#111}.n8{background:#ee91b4;color:#111}.n9{background:#7a35a5;color:#fff}
 .pending{color:#617e8c!important;font-size:10px!important;text-align:center!important}
 .empty-card{display:grid;place-items:center;text-align:center;color:#7896a4;font-size:14px;font-weight:900;border:1px dashed #284554;background:#06131b}
@@ -67,7 +74,7 @@ h1{margin:1px 0 0;font-size:31px;line-height:1;font-weight:1000;letter-spacing:.
 .right-grid.three .jra-table td{font-size:10px}.right-grid.three .jra-table .jockey{width:54px}.right-grid.three .jra-table .pay{width:67px}
 footer{display:flex;justify-content:space-between;align-items:center;padding:0 8px;color:#7f9ba9;font-size:10px;border-top:1px solid #173442}
 @media(max-width:1300px){
-  #dash{padding:6px;grid-template-rows:66px 1fr 24px;gap:5px}.main-grid{grid-template-columns:44% 56%;gap:5px}.block{grid-template-rows:45px 1fr}.two-grid,.right-grid{gap:4px;padding:4px}
+  #dash{padding:6px;grid-template-rows:66px 1fr 24px;gap:5px}.main-grid{grid-template-columns:44% 56%;gap:5px}.main-grid.keirin-full{grid-template-columns:1fr}.block{grid-template-rows:45px 1fr}.two-grid,.right-grid{gap:4px;padding:4px}
   h1{font-size:25px}.status #clock{font-size:25px}.block h2{font-size:18px}.card-title{font-size:16px}.compact-table td{font-size:10px}.num{width:18px;height:17px;font-size:10px}.jra-table td{font-size:9.5px}
   .horse-result-line{grid-template-columns:30px minmax(0,1fr) 58px 48px 60px;font-size:9px}.winner-jockey{font-size:8px}.race-info{font-size:7.5px}
 }
