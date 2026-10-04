@@ -1,8 +1,8 @@
 {
   "date": "2026-10-04",
   "date_label": "2026年10月04日",
-  "updated_at": "15:53:34",
-  "updated_at_iso": "2026-10-04T15:53:34.373035+09:00",
+  "updated_at": "16:03:11",
+  "updated_at_iso": "2026-10-04T16:03:11.463435+09:00",
   "jra_switch_time": "17:00",
   "keirin": {
     "phase": "本日開催 8場",
@@ -565,8 +565,8 @@
               2
             ],
             "payout": "9,290円",
-            "winner": "",
-            "origin": "",
+            "winner": "皿屋豊",
+            "origin": "三重",
             "race_name": "Ｓ級 特秀",
             "scheduled_time": "15:47"
           },
@@ -860,9 +860,13 @@
           {
             "race": 1,
             "time": "15:55",
-            "status": "発走前",
-            "order": [],
-            "payout": "",
+            "status": "確定",
+            "order": [
+              2,
+              5,
+              7
+            ],
+            "payout": "680円",
             "winner": "",
             "origin": "",
             "race_name": "Ａ級 予選",
@@ -1863,11 +1867,16 @@
         },
         {
           "race": 11,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            3,
+            1,
+            4
+          ],
+          "payout": "5,060円",
           "race_name": "戸田特選",
-          "scheduled_time": "15:56"
+          "scheduled_time": "15:56",
+          "winner": ""
         },
         {
           "race": 12,
@@ -2504,7 +2513,7 @@
             2
           ],
           "payout": "1,650円",
-          "race_name": "",
+          "race_name": "予選",
           "scheduled_time": "15:43",
           "winner": ""
         },
@@ -2819,11 +2828,16 @@
         },
         {
           "race": 11,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            1,
+            5,
+            4
+          ],
+          "payout": "3,570円",
           "race_name": "予選特選",
-          "scheduled_time": "15:50"
+          "scheduled_time": "15:50",
+          "winner": ""
         },
         {
           "race": 12,
@@ -3014,11 +3028,16 @@
         },
         {
           "race": 2,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            4,
+            5,
+            6
+          ],
+          "payout": "49,750円",
           "race_name": "一般戦",
-          "scheduled_time": "15:48"
+          "scheduled_time": "15:48",
+          "winner": ""
         },
         {
           "race": 3,
@@ -3132,7 +3151,7 @@
             5
           ],
           "payout": "2,330円",
-          "race_name": "",
+          "race_name": "予選",
           "scheduled_time": "15:41",
           "winner": ""
         },
@@ -3241,11 +3260,16 @@
         },
         {
           "race": 2,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            1,
+            4,
+            2
+          ],
+          "payout": "810円",
           "race_name": "",
-          "scheduled_time": "15:52"
+          "scheduled_time": "15:52",
+          "winner": ""
         },
         {
           "race": 3,
@@ -3444,13 +3468,18 @@
           },
           {
             "race": 8,
-            "winner": "",
-            "jockey": "",
-            "trifecta": "",
-            "race_name": "Ｃ２八組",
+            "winner": "グローリアスダンス",
+            "jockey": "小林凌",
+            "trifecta": "247,490円",
+            "order": [
+              10,
+              5,
+              2
+            ],
             "course": "ダート1200m",
-            "scheduled_time": "15:23",
-            "status": "結果待ち"
+            "status": "確定",
+            "race_name": "Ｃ２八組",
+            "scheduled_time": "15:23"
           },
           {
             "race": 9,
@@ -3460,7 +3489,7 @@
             "race_name": "Ｂ２",
             "course": "ダート1400m",
             "scheduled_time": "15:58",
-            "status": "発走前"
+            "status": "結果待ち"
           },
           {
             "race": 10,
@@ -3806,7 +3835,7 @@
             "race_name": "２歳－３",
             "course": "ダート1300m",
             "scheduled_time": "16:03",
-            "status": "発走前"
+            "status": "結果待ち"
           },
           {
             "race": 4,
@@ -4032,8 +4061,8 @@
         "race": 11
       }
     ],
-    "payout": "7,543,000円",
-    "payout_kind": "想定"
+    "payout": "7512万3310円",
+    "payout_kind": "確定"
   },
   "source": {
     "schedule": "Free WiFi EPG",
