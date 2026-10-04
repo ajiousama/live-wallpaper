@@ -17,10 +17,12 @@ body{background:linear-gradient(180deg,#061522,#02090f)}
 #clock{font-size:19px}
 .screen{display:none;min-width:0;min-height:0}
 .screen.active{display:block}
-.phase-grid{height:100%;min-height:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:4px;padding:2px;overflow:hidden}
+.phase-grid{height:100%;min-height:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:4px;padding:2px;overflow:hidden}
 .phase-grid.count-1{grid-template-columns:1fr;grid-template-rows:1fr}
 .phase-grid.count-2{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:1fr}
-.phase-grid.count-3,.phase-grid.count-4{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr))}
+.phase-grid.count-3{grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:1fr}
+.phase-grid.count-4{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr))}
+.phase-grid.count-5,.phase-grid.count-6{grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr))}
 .phase-card{min-width:0;min-height:0;display:grid;grid-template-rows:30px 1fr;border:1px solid #2b4856;background:#06141e;overflow:hidden}
 .card-head{min-width:0;display:grid;grid-template-columns:auto auto minmax(0,1fr);align-items:center;gap:7px;padding:3px 7px;border-bottom:1px solid #203b48;background:#0a1c27}
 .card-head strong{font-size:16px;white-space:nowrap}
@@ -53,6 +55,28 @@ body{background:linear-gradient(180deg,#061522,#02090f)}
 .local-table .jockey{width:72px;text-align:left;text-overflow:ellipsis}
 .local-table .combo{width:78px}
 .local-table .pay{width:88px}
+.phase-grid.count-5 .card-head,.phase-grid.count-6 .card-head{gap:4px;padding:2px 4px}
+.phase-grid.count-5 .card-head strong,.phase-grid.count-6 .card-head strong{font-size:13px}
+.phase-grid.count-5 .card-head small,.phase-grid.count-6 .card-head small{font-size:8px}
+.phase-grid.count-5 .sport-tag,.phase-grid.count-6 .sport-tag{font-size:8px;padding:1px 3px}
+.phase-grid.count-5 .phase-table th,.phase-grid.count-6 .phase-table th{font-size:8px;height:20px}
+.phase-grid.count-5 .phase-table td,.phase-grid.count-6 .phase-table td{font-size:9.5px;padding:1px 2px}
+.phase-grid.count-5 .phase-table .r,.phase-grid.count-6 .phase-table .r{width:27px}
+.phase-grid.count-5 .phase-table .class-col,.phase-grid.count-6 .phase-table .class-col{width:34px}
+.phase-grid.count-5 .phase-table .origin,.phase-grid.count-6 .phase-table .origin{width:43px}
+.phase-grid.count-5 .phase-table .combo,.phase-grid.count-6 .phase-table .combo{width:66px}
+.phase-grid.count-5 .phase-table .pay,.phase-grid.count-6 .phase-table .pay{width:72px}
+.phase-grid.count-5 .keirin-table .name,.phase-grid.count-6 .keirin-table .name{width:65px}
+.phase-grid.count-5 .keirin-table .winner,.phase-grid.count-6 .keirin-table .winner{width:75px}
+.phase-grid.count-5 .boat-table .combo,.phase-grid.count-6 .boat-table .combo{width:66px}
+.phase-grid.count-5 .boat-table .pay,.phase-grid.count-6 .boat-table .pay{width:74px}
+.phase-grid.count-5 .local-table .local-info,.phase-grid.count-6 .local-table .local-info{width:92px}
+.phase-grid.count-5 .local-table .winner,.phase-grid.count-6 .local-table .winner{width:78px}
+.phase-grid.count-5 .local-table .jockey,.phase-grid.count-6 .local-table .jockey{width:54px}
+.phase-grid.count-5 .local-table .combo,.phase-grid.count-6 .local-table .combo{width:62px}
+.phase-grid.count-5 .local-table .pay,.phase-grid.count-6 .local-table .pay{width:70px}
+.phase-grid.count-5 .num,.phase-grid.count-6 .num,
+.phase-grid.count-5 .horse-no,.phase-grid.count-6 .horse-no{width:18px;min-width:18px;height:17px;font-size:9px}
 .order{display:flex;justify-content:center;gap:1px}
 .num{display:inline-grid;place-items:center;width:22px;height:21px;border:1px solid rgba(255,255,255,.25);border-radius:3px;font-size:12px;line-height:1}
 .n1{background:#fff;color:#111}.n2{background:#111;color:#fff}.n3{background:#d9232e;color:#fff}.n4{background:#1762c9;color:#fff}.n5{background:#f4d421;color:#111}.n6{background:#15964b;color:#fff}.n7{background:#ec7c22;color:#111}.n8{background:#ee91b4;color:#111}.n9{background:#7a35a5;color:#fff}
