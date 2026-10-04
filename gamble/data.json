@@ -1,8 +1,8 @@
 {
   "date": "2026-10-04",
   "date_label": "2026年10月04日",
-  "updated_at": "15:27:25",
-  "updated_at_iso": "2026-10-04T15:27:25.854009+09:00",
+  "updated_at": "15:35:09",
+  "updated_at_iso": "2026-10-04T15:35:09.153369+09:00",
   "jra_switch_time": "17:00",
   "keirin": {
     "phase": "本日開催 8場",
@@ -550,8 +550,8 @@
               3
             ],
             "payout": "7,320円",
-            "winner": "",
-            "origin": "",
+            "winner": "纐纈洸翔",
+            "origin": "愛知",
             "race_name": "Ｓ級 特秀",
             "scheduled_time": "15:16"
           },
@@ -1846,11 +1846,16 @@
         },
         {
           "race": 10,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            1,
+            2,
+            5
+          ],
+          "payout": "990円",
           "race_name": "",
-          "scheduled_time": "15:25"
+          "scheduled_time": "15:25",
+          "winner": ""
         },
         {
           "race": 11,
@@ -2004,7 +2009,7 @@
             5
           ],
           "payout": "4,300円",
-          "race_name": "",
+          "race_name": "予選特賞",
           "scheduled_time": "15:20",
           "winner": ""
         },
@@ -2779,7 +2784,7 @@
             1
           ],
           "payout": "7,410円",
-          "race_name": "",
+          "race_name": "予選特賞",
           "scheduled_time": "15:15",
           "winner": ""
         },
@@ -3080,7 +3085,7 @@
             6
           ],
           "payout": "9,130円",
-          "race_name": "",
+          "race_name": "予選",
           "scheduled_time": "15:17",
           "winner": ""
         },
@@ -3184,11 +3189,16 @@
       "races": [
         {
           "race": 1,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            4,
+            1,
+            6
+          ],
+          "payout": "3,980円",
           "race_name": "",
-          "scheduled_time": "15:25"
+          "scheduled_time": "15:25",
+          "winner": ""
         },
         {
           "race": 2,
@@ -3286,7 +3296,7 @@
       {
         "name": "盛岡",
         "code": "10",
-        "day_type": "ナイター",
+        "day_type": "デイ",
         "races": [
           {
             "race": 1,
@@ -3301,7 +3311,7 @@
             "course": "ダート1000m",
             "status": "確定",
             "race_name": "ファーストステップ ２歳 新馬戦",
-            "scheduled_time": "11:40"
+            "scheduled_time": "11:25"
           },
           {
             "race": 2,
@@ -3316,7 +3326,7 @@
             "course": "ダート1000m",
             "status": "確定",
             "race_name": "Ｃ２",
-            "scheduled_time": "12:15"
+            "scheduled_time": "11:43"
           },
           {
             "race": 3,
@@ -3331,7 +3341,7 @@
             "course": "ダート1200m",
             "status": "確定",
             "race_name": "Ｃ２十一組",
-            "scheduled_time": "12:55"
+            "scheduled_time": "12:18"
           },
           {
             "race": 4,
@@ -3346,7 +3356,7 @@
             "course": "ダート1200m",
             "status": "確定",
             "race_name": "Ｃ２十一組",
-            "scheduled_time": "13:30"
+            "scheduled_time": "12:58"
           },
           {
             "race": 5,
@@ -3360,8 +3370,8 @@
             ],
             "course": "芝1600m",
             "status": "確定",
-            "race_name": "Ｂ１",
-            "scheduled_time": "14:05"
+            "race_name": "Ｂ１ 芝左1600m 晴 良 10",
+            "scheduled_time": "13:33"
           },
           {
             "race": 6,
@@ -3376,7 +3386,7 @@
             "course": "ダート1200m",
             "status": "確定",
             "race_name": "Ｃ２十組",
-            "scheduled_time": "14:40"
+            "scheduled_time": "14:08"
           },
           {
             "race": 7,
@@ -3391,7 +3401,7 @@
             "course": "ダート1200m",
             "status": "確定",
             "race_name": "Ｃ２九組",
-            "scheduled_time": "15:20"
+            "scheduled_time": "14:43"
           },
           {
             "race": 8,
@@ -3400,8 +3410,8 @@
             "trifecta": "",
             "race_name": "Ｃ２八組",
             "course": "ダート1200m",
-            "scheduled_time": "15:55",
-            "status": "発走前"
+            "scheduled_time": "15:23",
+            "status": "結果待ち"
           },
           {
             "race": 9,
@@ -3410,7 +3420,7 @@
             "trifecta": "",
             "race_name": "Ｂ２",
             "course": "ダート1400m",
-            "scheduled_time": "16:35",
+            "scheduled_time": "15:58",
             "status": "発走前"
           },
           {
@@ -3420,7 +3430,7 @@
             "trifecta": "",
             "race_name": "イギリス海岸賞Ｂ２",
             "course": "ダート1400m",
-            "scheduled_time": "17:10",
+            "scheduled_time": "16:38",
             "status": "発走前"
           },
           {
@@ -3430,7 +3440,7 @@
             "trifecta": "",
             "race_name": "バーベナ賞Ｂ２",
             "course": "ダート1400m",
-            "scheduled_time": "17:40",
+            "scheduled_time": "17:13",
             "status": "発走前"
           },
           {
@@ -3440,7 +3450,7 @@
             "trifecta": "",
             "race_name": "重賞 Ｊ認 若駒賞２歳",
             "course": "ダート1600m",
-            "scheduled_time": "18:15",
+            "scheduled_time": "17:43",
             "status": "発走前"
           }
         ]
@@ -3460,9 +3470,9 @@
               1,
               2
             ],
-            "course": "",
+            "course": "ダート1400m",
             "status": "確定",
-            "race_name": "出走取消 馬体故障",
+            "race_name": "有 ２歳５",
             "scheduled_time": "12:45"
           },
           {
@@ -3478,7 +3488,7 @@
             "course": "ダート1400m",
             "status": "確定",
             "race_name": "かいと＆るり結婚記念２歳４",
-            "scheduled_time": "13:35"
+            "scheduled_time": "13:03"
           },
           {
             "race": 3,
@@ -3490,9 +3500,9 @@
               2,
               1
             ],
-            "course": "",
+            "course": "ダート1500m",
             "status": "確定",
-            "race_name": "競走除外 馬体故障",
+            "race_name": "有 ２歳３",
             "scheduled_time": "13:38"
           },
           {
@@ -3508,7 +3518,7 @@
             "course": "ダート1500m",
             "status": "確定",
             "race_name": "真実社会日本人コミュニティ三周年記２歳２",
-            "scheduled_time": "14:45"
+            "scheduled_time": "14:13"
           },
           {
             "race": 5,
@@ -3523,7 +3533,7 @@
             "course": "ダート1500m",
             "status": "確定",
             "race_name": "Ｂ２九",
-            "scheduled_time": "15:20"
+            "scheduled_time": "14:48"
           },
           {
             "race": 6,
@@ -3532,8 +3542,8 @@
             "trifecta": "",
             "race_name": "特別 楽天競馬で馬券を買おう！楽天競馬特Ａ１二",
             "course": "ダート1500m",
-            "scheduled_time": "16:20",
-            "status": "発走前"
+            "scheduled_time": "15:23",
+            "status": "結果待ち"
           },
           {
             "race": 7,
@@ -3542,7 +3552,7 @@
             "trifecta": "",
             "race_name": "遼太となのはの結婚記念杯Ｂ２八",
             "course": "ダート1400m",
-            "scheduled_time": "16:55",
+            "scheduled_time": "16:23",
             "status": "発走前"
           },
           {
@@ -3552,7 +3562,7 @@
             "trifecta": "",
             "race_name": "ノマジョ・カナザワ来場記念Ｂ２七",
             "course": "ダート1400m",
-            "scheduled_time": "17:30",
+            "scheduled_time": "16:58",
             "status": "発走前"
           },
           {
@@ -3562,7 +3572,7 @@
             "trifecta": "",
             "race_name": "重賞 Ｊ認 金沢シンデレラカップ２歳牝馬（地方",
             "course": "ダート1500m",
-            "scheduled_time": "18:05",
+            "scheduled_time": "17:33",
             "status": "発走前"
           },
           {
@@ -3572,7 +3582,7 @@
             "trifecta": "",
             "race_name": "特別 熊本地震被災者支援特別Ｃ１Ｃ２",
             "course": "ダート900m",
-            "scheduled_time": "18:45",
+            "scheduled_time": "18:08",
             "status": "発走前"
           }
         ]
@@ -3594,8 +3604,8 @@
             ],
             "course": "直200m",
             "status": "確定",
-            "race_name": "愛猫チビたん２歳記念Ｃ２－４",
-            "scheduled_time": "14:30"
+            "race_name": "愛猫チビたん２歳記念Ｃ２－４  10",
+            "scheduled_time": "14:15"
           },
           {
             "race": 2,
@@ -3609,27 +3619,27 @@
             ],
             "course": "直200m",
             "status": "確定",
-            "race_name": "博多から応援に来たよ記念２歳Ｄ－５",
-            "scheduled_time": "15:05"
+            "race_name": "博多から応援に来たよ記念２歳Ｄ－５  10",
+            "scheduled_time": "14:33"
           },
           {
             "race": 3,
             "winner": "",
             "jockey": "",
             "trifecta": "",
-            "race_name": "十勝乃長屋雅楽８周年記念２歳Ｃ－４",
+            "race_name": "十勝乃長屋雅楽８周年記念２歳Ｃ－４  10",
             "course": "直200m",
-            "scheduled_time": "15:40",
-            "status": "発走前"
+            "scheduled_time": "15:08",
+            "status": "結果待ち"
           },
           {
             "race": 4,
             "winner": "",
             "jockey": "",
             "trifecta": "",
-            "race_name": "小松原拓真３０代突入記念杯２歳Ｂ－２",
+            "race_name": "小松原拓真３０代突入記念杯２歳Ｂ－２  10",
             "course": "直200m",
-            "scheduled_time": "16:15",
+            "scheduled_time": "15:43",
             "status": "発走前"
           },
           {
@@ -3637,9 +3647,9 @@
             "winner": "",
             "jockey": "",
             "trifecta": "",
-            "race_name": "生誕オメデトナノチャン杯Ｃ１－８",
+            "race_name": "生誕オメデトナノチャン杯Ｃ１－８  9",
             "course": "直200m",
-            "scheduled_time": "16:50",
+            "scheduled_time": "16:18",
             "status": "発走前"
           },
           {
@@ -3647,9 +3657,9 @@
             "winner": "",
             "jockey": "",
             "trifecta": "",
-            "race_name": "Ｃ１－５",
+            "race_name": "Ｃ１－５  8",
             "course": "直200m",
-            "scheduled_time": "17:25",
+            "scheduled_time": "16:53",
             "status": "発走前"
           },
           {
@@ -3657,9 +3667,9 @@
             "winner": "",
             "jockey": "",
             "trifecta": "",
-            "race_name": "賢哉くん祝２４歳記念Ｂ４－１混合",
+            "race_name": "賢哉くん祝２４歳記念Ｂ４－１混合  10",
             "course": "直200m",
-            "scheduled_time": "17:55",
+            "scheduled_time": "17:28",
             "status": "発走前"
           },
           {
@@ -3667,9 +3677,9 @@
             "winner": "",
             "jockey": "",
             "trifecta": "",
-            "race_name": "ルカルカナイトフィーバー２歳Ａ－１",
+            "race_name": "ルカルカナイトフィーバー２歳Ａ－１  9",
             "course": "直200m",
-            "scheduled_time": "18:25",
+            "scheduled_time": "17:58",
             "status": "発走前"
           },
           {
@@ -3677,9 +3687,9 @@
             "winner": "",
             "jockey": "",
             "trifecta": "",
-            "race_name": "安藤夫婦ｗｉｔｈ哲也善重Ｂ３－７",
+            "race_name": "安藤夫婦ｗｉｔｈ哲也善重Ｂ３－７  10",
             "course": "直200m",
-            "scheduled_time": "18:55",
+            "scheduled_time": "18:28",
             "status": "発走前"
           },
           {
@@ -3687,9 +3697,9 @@
             "winner": "",
             "jockey": "",
             "trifecta": "",
-            "race_name": "真澄りち生誕記念杯Ｂ３－４",
+            "race_name": "真澄りち生誕記念杯Ｂ３－４  10",
             "course": "直200m",
-            "scheduled_time": "19:25",
+            "scheduled_time": "18:58",
             "status": "発走前"
           },
           {
@@ -3697,8 +3707,8 @@
             "winner": "",
             "jockey": "",
             "trifecta": "",
-            "race_name": "出走取消 疾病",
-            "course": "",
+            "race_name": "有 特別 田山産業ばん馬大会記念Ａ１－２混合  10",
+            "course": "直200m",
             "scheduled_time": "19:28",
             "status": "発走前"
           },
@@ -3707,9 +3717,9 @@
             "winner": "",
             "jockey": "",
             "trifecta": "",
-            "race_name": "Ｂ２－１",
+            "race_name": "Ｂ２－１  10",
             "course": "直200m",
-            "scheduled_time": "20:35",
+            "scheduled_time": "20:03",
             "status": "発走前"
           }
         ]
@@ -3721,23 +3731,28 @@
         "races": [
           {
             "race": 1,
-            "winner": "",
-            "jockey": "",
-            "trifecta": "",
-            "race_name": "特別 ２歳新馬",
+            "winner": "パルムグレン",
+            "jockey": "永森大",
+            "trifecta": "600円",
+            "order": [
+              3,
+              5,
+              1
+            ],
             "course": "ダート1300m",
-            "scheduled_time": "15:25",
-            "status": "結果待ち"
+            "status": "確定",
+            "race_name": "特別 ２歳新馬",
+            "scheduled_time": "15:10"
           },
           {
             "race": 2,
             "winner": "",
             "jockey": "",
             "trifecta": "",
-            "race_name": "出走取消 疾病",
-            "course": "",
+            "race_name": "有 ２歳－４",
+            "course": "ダート1300m",
             "scheduled_time": "15:28",
-            "status": "発走前"
+            "status": "結果待ち"
           },
           {
             "race": 3,
@@ -3746,7 +3761,7 @@
             "trifecta": "",
             "race_name": "２歳－３",
             "course": "ダート1300m",
-            "scheduled_time": "16:30",
+            "scheduled_time": "16:03",
             "status": "発走前"
           },
           {
@@ -3756,7 +3771,7 @@
             "trifecta": "",
             "race_name": "Ｃ２－６",
             "course": "ダート1400m",
-            "scheduled_time": "17:00",
+            "scheduled_time": "16:33",
             "status": "発走前"
           },
           {
@@ -3766,7 +3781,7 @@
             "trifecta": "",
             "race_name": "Ｃ２－５",
             "course": "ダート1400m",
-            "scheduled_time": "17:30",
+            "scheduled_time": "17:03",
             "status": "発走前"
           },
           {
@@ -3774,8 +3789,8 @@
             "winner": "",
             "jockey": "",
             "trifecta": "",
-            "race_name": "出走取消 疾病",
-            "course": "",
+            "race_name": "有 特別 ダリア特別Ｃ３－１選抜馬",
+            "course": "ダート1600m",
             "scheduled_time": "17:33",
             "status": "発走前"
           },
@@ -3786,7 +3801,7 @@
             "trifecta": "",
             "race_name": "Ｃ３－２",
             "course": "ダート1600m",
-            "scheduled_time": "18:35",
+            "scheduled_time": "18:03",
             "status": "発走前"
           },
           {
@@ -3796,7 +3811,7 @@
             "trifecta": "",
             "race_name": "Ｃ１－３",
             "course": "ダート1400m",
-            "scheduled_time": "19:10",
+            "scheduled_time": "18:38",
             "status": "発走前"
           },
           {
@@ -3804,8 +3819,8 @@
             "winner": "",
             "jockey": "",
             "trifecta": "",
-            "race_name": "出走取消 疾病",
-            "course": "",
+            "race_name": "有 Ｃ１－２",
+            "course": "ダート1400m",
             "scheduled_time": "19:13",
             "status": "発走前"
           },
@@ -3816,7 +3831,7 @@
             "trifecta": "",
             "race_name": "特別 ＵＦＯライン特別Ｃ１－１選抜馬",
             "course": "ダート1400m",
-            "scheduled_time": "20:15",
+            "scheduled_time": "19:43",
             "status": "発走前"
           },
           {
@@ -3826,7 +3841,7 @@
             "trifecta": "",
             "race_name": "ファイナルレースＣ３－７記者選抜",
             "course": "ダート1600m",
-            "scheduled_time": "20:45",
+            "scheduled_time": "20:18",
             "status": "発走前"
           }
         ]
@@ -3843,7 +3858,7 @@
             "trifecta": "",
             "race_name": "Ｃ３六",
             "course": "ダート1200m",
-            "scheduled_time": "16:25",
+            "scheduled_time": "16:10",
             "status": "発走前"
           },
           {
@@ -3853,7 +3868,7 @@
             "trifecta": "",
             "race_name": "２歳新馬",
             "course": "ダート1400m",
-            "scheduled_time": "17:00",
+            "scheduled_time": "16:28",
             "status": "発走前"
           },
           {
@@ -3863,7 +3878,7 @@
             "trifecta": "",
             "race_name": "２歳新馬",
             "course": "ダート1200m",
-            "scheduled_time": "17:35",
+            "scheduled_time": "17:03",
             "status": "発走前"
           },
           {
@@ -3873,7 +3888,7 @@
             "trifecta": "",
             "race_name": "ピンク・スクアーレル賞Ｃ２十八 十九",
             "course": "ダート1600m",
-            "scheduled_time": "18:10",
+            "scheduled_time": "17:38",
             "status": "発走前"
           },
           {
@@ -3883,7 +3898,7 @@
             "trifecta": "",
             "race_name": "Ｃ２十八 十九",
             "course": "ダート1200m",
-            "scheduled_time": "18:50",
+            "scheduled_time": "18:13",
             "status": "発走前"
           },
           {
@@ -3893,7 +3908,7 @@
             "trifecta": "",
             "race_name": "特別 みなみのうお座特別Ｃ２二選抜",
             "course": "ダート1800m",
-            "scheduled_time": "19:30",
+            "scheduled_time": "18:53",
             "status": "発走前"
           },
           {
@@ -3903,7 +3918,7 @@
             "trifecta": "",
             "race_name": "特別 相馬野馬追賞Ａ２選抜特別",
             "course": "ダート1400m",
-            "scheduled_time": "20:10",
+            "scheduled_time": "19:33",
             "status": "発走前"
           },
           {
@@ -3913,7 +3928,7 @@
             "trifecta": "",
             "race_name": "特別 オフト南相馬賞Ｂ３四選抜特別",
             "course": "ダート1200m",
-            "scheduled_time": "20:50",
+            "scheduled_time": "20:13",
             "status": "発走前"
           }
         ]
