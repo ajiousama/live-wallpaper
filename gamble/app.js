@@ -197,7 +197,7 @@ function jraVenueCard(v){
   const map=new Map((v.results||[]).map(x=>[Number(x.race),x]));
   let races="";
   for(let no=1;no<=12;no++) races+=jraRaceBlock(map.get(no)||{},no);
-  return '<article class="jra-venue-card"><div class="jra-venue-head"><strong>'+esc(v.name||"---")+'</strong><span>1〜3着＋騎手 / 全掛式払戻</span></div><div class="jra-venue-scroll sync-vscroll">'+races+'</div></article>';
+  return '<article class="jra-venue-card"><div class="jra-venue-head"><strong>'+esc(v.name||"---")+'</strong><span>1〜3着＋騎手 / 全掛式払戻</span></div><div class="jra-venue-scroll">'+races+'</div></article>';
 }
 function renderSpecialPage(page){
   const host=document.getElementById("phase-grid");
