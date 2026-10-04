@@ -6,19 +6,15 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta name="color-scheme" content="dark">
 <title>週末ギャンブル結果一覧</title>
-<link rel="stylesheet" href="style.css?v=19">
+<link rel="stylesheet" href="style.css?v=20">
 </head>
 <body>
 <main id="dash">
   <header class="topbar">
-    <div class="brand">
-      <div class="kicker">WEEKEND LIVE RESULT BOARD</div>
-      <h1>週末ギャンブル結果一覧</h1>
-      <div class="sub">競輪・競馬・ボート / 3画面ローテーション</div>
-    </div>
+    <h1>週末ギャンブル</h1>
     <div class="status">
-      <div class="live"><span></span> 自動更新</div>
-      <div id="updated">最終取得 --:--:--</div>
+      <div class="live"><span></span>自動</div>
+      <div id="updated">--:--:--</div>
       <div id="clock">--:--</div>
     </div>
   </header>
@@ -26,45 +22,24 @@
   <section class="main-grid">
     <section class="left-column">
       <section class="block keirin-block sport-panel active">
-        <div class="block-head">
-          <div>
-            <div class="mini">KEIRIN / 3連単</div>
-            <h2>競輪 <span id="keirin-phase">本日開催全場</span></h2>
-          </div>
-          <div class="note">本日開催全場を同時表示 / 20秒ごと切替</div>
-        </div>
+        <div class="block-head"><h2>競輪 <span id="keirin-phase">本日開催全場</span></h2></div>
         <div id="keirin-grid" class="two-grid"></div>
       </section>
 
       <section class="block boat-block sport-panel">
-        <div class="block-head">
-          <div>
-            <div class="mini">BOAT RACE / 3連単</div>
-            <h2>本日のボートレース 全開催場</h2>
-          </div>
-          <div class="note">本日開催全場を同時表示 / 20秒ごと切替</div>
-        </div>
+        <div class="block-head"><h2>ボート 全開催場</h2></div>
         <div id="boat-grid" class="two-grid"></div>
       </section>
     </section>
 
     <section class="right-column block">
-      <div class="block-head right-head">
-        <div>
-          <div id="right-mini" class="mini">JRA / WINNER・JOCKEY・3連単</div>
-          <h2 id="right-title">JRA</h2>
-        </div>
-        <div id="right-note" class="note">JRA・地方競馬を全場表示</div>
-      </div>
+      <div class="block-head right-head"><h2 id="right-title">競馬 全開催場</h2></div>
       <div id="right-grid" class="right-grid"></div>
     </section>
   </section>
 
-  <footer>
-    <span id="source">データ取得中</span>
-    <span>画面は30秒ごとに最新データを確認</span>
-  </footer>
+  <footer><span id="source"></span></footer>
 </main>
-<script src="app.js?v=19"></script>
+<script src="app.js?v=20"></script>
 </body>
 </html>
