@@ -209,18 +209,28 @@ function specialItems(){
 }
 function buildPages(){
   const pages=[];
+  const sportGroups=[
+    {kind:"keirin",label:"競輪"},
+    {kind:"boat",label:"ボート"},
+    {kind:"local",label:"地方競馬"}
+  ];
   for(const phase of PHASES){
-    const items=phaseItems(phase);
-    for(let i=0;i<items.length;i+=6){
-      const chunk=items.slice(i,i+6);
-      pages.push({
-        key:"phase:"+phase+":"+Math.floor(i/6),
-        type:"phase",
-        phase,
-        page:Math.floor(i/6)+1,
-        total:Math.ceil(items.length/6),
-        items:chunk
-      });
+    const phaseAll=phaseItems(phase);
+    for(const group of sportGroups){
+      const items=phaseAll.filter(x=>x.kind===group.kind);
+      for(let i=0;i<items.length;i+=6){
+        const chunk=items.slice(i,i+6);
+        pages.push({
+          key:"phase:"+phase+":"+group.kind+":"+Math.floor(i/6),
+          type:"phase",
+          phase,
+          sportKind:group.kind,
+          sportLabel:group.label,
+          page:Math.floor(i/6)+1,
+          total:Math.ceil(items.length/6),
+          items:chunk
+        });
+      }
     }
   }
 
@@ -251,10 +261,10 @@ function renderPhasePage(page){
   const items=page.items||[];
   const host=document.getElementById("phase-grid");
   host.className="phase-grid count-"+Math.max(1,items.length);
-  host.innerHTML=items.length?items.map(phaseCard).join(""):'<div class="empty-card">'+esc(page.phase)+'開催なし</div>';
-  document.getElementById("screen-title").textContent=page.phase;
+  host.innerHTML=items.length?items.map(phaseCard).join(""):'<div class="empty-card">'+esc(page.phase+" "+(page.sportLabel||""))+'開催なし</div>';
+  document.getElementById("screen-title").textContent=page.phase+"・"+(page.sportLabel||"");
   const pageText=page.total>1?(" "+page.page+"/"+page.total):"";
-  document.getElementById("screen-sub").textContent=(items.length?("競輪・ボート・地方 "+items.length+"場"):"開催なし")+pageText;
+  document.getElementById("screen-sub").textContent=(items.length?(items.length+"場"):"開催なし")+pageText;
   updateMarquees();
 }
 function payoutItems(r,label){
