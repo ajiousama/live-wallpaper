@@ -1,8 +1,8 @@
 {
   "date": "2026-10-04",
   "date_label": "2026年10月04日",
-  "updated_at": "12:28:08",
-  "updated_at_iso": "2026-10-04T12:28:08.016644+09:00",
+  "updated_at": "12:39:06",
+  "updated_at_iso": "2026-10-04T12:39:06.387862+09:00",
   "jra_switch_time": "17:00",
   "keirin": {
     "phase": "本日開催 8場",
@@ -1749,9 +1749,13 @@
         },
         {
           "race": 5,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            1,
+            2,
+            4
+          ],
+          "payout": "1円",
           "race_name": "",
           "scheduled_time": "12:25"
         },
@@ -1871,9 +1875,13 @@
         },
         {
           "race": 5,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            1,
+            2,
+            3
+          ],
+          "payout": "1円",
           "race_name": "",
           "scheduled_time": "12:30"
         },
@@ -2761,9 +2769,13 @@
         },
         {
           "race": 9,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            1,
+            2,
+            5
+          ],
+          "payout": "1円",
           "race_name": "",
           "scheduled_time": "12:28"
         },
