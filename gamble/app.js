@@ -132,6 +132,18 @@ function buildPages(){
       });
     }
   }
+
+  const specials=data?.featured_races||[];
+  for(let i=0;i<specials.length;i+=4){
+    pages.push({
+      key:"special:"+Math.floor(i/4),
+      type:"special",
+      page:Math.floor(i/4)+1,
+      total:Math.ceil(specials.length/4),
+      items:specials.slice(i,i+4)
+    });
+  }
+
   for(const v of (jra?.venues||[])){
     pages.push({
       key:"jra:"+(v.name||""),
@@ -186,6 +198,22 @@ function jraVenueCard(v){
   for(let no=1;no<=12;no++) races+=jraRaceBlock(map.get(no)||{},no);
   return '<article class="jra-venue-card"><div class="jra-venue-head"><strong>'+esc(v.name||"---")+'</strong><span>1〜3着＋騎手 / 全掛式払戻</span></div><div class="jra-venue-scroll sync-vscroll">'+races+'</div></article>';
 }
+function renderSpecialPage(page){
+  const host=document.getElementById("phase-grid");
+  const items=page.items||[];
+  host.className="special-grid count-"+Math.max(1,items.length);
+  host.innerHTML=items.length?items.map(x=>{
+    const where=[x.venue,x.race].filter(Boolean).join(" ");
+    const horses=Array.isArray(x.horses)&&x.horses.length?x.horses.join("・"):"情報取得中";
+    return '<article class="special-card">'+
+      '<div class="special-head"><span>'+esc(x.source||"特別")+'</span><strong>'+esc(where||"特別競走")+'</strong><time>'+esc(x.time?x.time+" 発走予定":"")+'</time></div>'+
+      '<div class="special-name">'+esc(x.name||"---")+'</div>'+
+      '<div class="special-horses"><b>有力馬</b> '+esc(horses)+'</div>'+
+    '</article>';
+  }).join(""):'<div class="empty-card">本日の特別レース情報なし</div>';
+  document.getElementById("screen-title").textContent="特別レース";
+  document.getElementById("screen-sub").textContent=page.total>1?("注目競走 "+page.page+"/"+page.total):"注目競走";
+}
 function renderJraPage(page){
   const v=page.venue;
   const host=document.getElementById("jra-grid");
@@ -203,7 +231,9 @@ function showPage(index){
   const isJra=page.type==="jra";
   document.getElementById("phase-screen").classList.toggle("active",!isJra);
   document.getElementById("jra-screen").classList.toggle("active",isJra);
-  if(isJra) renderJraPage(page); else renderPhasePage(page);
+  if(isJra) renderJraPage(page);
+  else if(page.type==="special") renderSpecialPage(page);
+  else renderPhasePage(page);
   document.querySelectorAll(".sync-vscroll").forEach(x=>x.scrollTop=0);
 }
 function syncScrollPosition(){
@@ -257,7 +287,9 @@ async function load(){
       const isJra=page.type==="jra";
       document.getElementById("phase-screen").classList.toggle("active",!isJra);
       document.getElementById("jra-screen").classList.toggle("active",isJra);
-      if(isJra) renderJraPage(page); else renderPhasePage(page);
+      if(isJra) renderJraPage(page);
+      else if(page.type==="special") renderSpecialPage(page);
+      else renderPhasePage(page);
     }
   }catch(e){
     console.error(e);
