@@ -1,8 +1,8 @@
 {
   "date": "2026-10-04",
   "date_label": "2026年10月04日",
-  "updated_at": "15:24:48",
-  "updated_at_iso": "2026-10-04T15:24:48.913171+09:00",
+  "updated_at": "15:27:25",
+  "updated_at_iso": "2026-10-04T15:27:25.854009+09:00",
   "jra_switch_time": "17:00",
   "keirin": {
     "phase": "本日開催 8場",
@@ -1997,11 +1997,16 @@
         },
         {
           "race": 10,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            1,
+            6,
+            5
+          ],
+          "payout": "4,300円",
           "race_name": "",
-          "scheduled_time": "15:20"
+          "scheduled_time": "15:20",
+          "winner": ""
         },
         {
           "race": 11,
@@ -2957,11 +2962,16 @@
       "races": [
         {
           "race": 1,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            1,
+            2,
+            3
+          ],
+          "payout": "850円",
           "race_name": "一般戦",
-          "scheduled_time": "15:21"
+          "scheduled_time": "15:21",
+          "winner": ""
         },
         {
           "race": 2,
@@ -3370,13 +3380,18 @@
           },
           {
             "race": 7,
-            "winner": "",
-            "jockey": "",
-            "trifecta": "",
-            "race_name": "Ｃ２九組",
+            "winner": "ニシノトマラナイ",
+            "jockey": "岩本怜",
+            "trifecta": "12,770円",
+            "order": [
+              1,
+              4,
+              8
+            ],
             "course": "ダート1200m",
-            "scheduled_time": "15:20",
-            "status": "結果待ち"
+            "status": "確定",
+            "race_name": "Ｃ２九組",
+            "scheduled_time": "15:20"
           },
           {
             "race": 8,
@@ -3497,13 +3512,18 @@
           },
           {
             "race": 5,
-            "winner": "",
-            "jockey": "",
-            "trifecta": "",
-            "race_name": "Ｂ２九",
+            "winner": "オブラマエストラ",
+            "jockey": "中島龍",
+            "trifecta": "4,350円",
+            "order": [
+              7,
+              5,
+              1
+            ],
             "course": "ダート1500m",
-            "scheduled_time": "15:20",
-            "status": "結果待ち"
+            "status": "確定",
+            "race_name": "Ｂ２九",
+            "scheduled_time": "15:20"
           },
           {
             "race": 6,
@@ -3707,7 +3727,7 @@
             "race_name": "特別 ２歳新馬",
             "course": "ダート1300m",
             "scheduled_time": "15:25",
-            "status": "発走前"
+            "status": "結果待ち"
           },
           {
             "race": 2,
