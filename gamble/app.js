@@ -303,29 +303,22 @@ function specialItems(){
     });
   }
 
-  // JRA: 当日データだけ使う。前日データは絶対に特別ページへ混ぜない。
-  if(jraIsCurrentDay()){
-    for(const v of jra?.venues||[]){
-      const r=(v.results||[]).find(x=>Number(x.race)===11)||{};
-      if(!r.race_name) continue;
-      const first=Array.isArray(r.top3)?(r.top3.find(x=>Number(x.position)===1)||{}):{};
-      const tri=Array.isArray(r?.payouts?.["3連単"])?r.payouts["3連単"][0]:null;
-      out.push({
-        kind:"jra",source:"JRA",venue:v.name||"",race:"11R",name:r.race_name||"",
-        time:r.time||"",winner:first.horse||"",sub:first.jockey?("騎手 "+first.jockey):"",
-        order:tri?.combo?String(tri.combo).split(/[-－]/).map(Number):[],
-        payout:tri?.amount||"",status:first.horse?"確定":"発走前"
-      });
-    }
-  }else{
-    for(const x of data?.featured_races||[]){
-      if(x.source!=="JRA") continue;
-      out.push({
-        kind:"jra",source:"JRA",venue:x.venue||"",race:x.race||"11R",
-        name:x.name||"",time:x.time||"",winner:"",sub:"",
-        order:[],payout:"",status:"発走前"
-      });
-    }
+  // JRA特別: 一覧そのものは gamble/data.json の当日 featured_races を正とする。
+  // JRA通常データは、同じ日なら勝ち馬・騎手・払戻を上書きするだけ。
+  for(const x of data?.featured_races||[]){
+    if(x.source!=="JRA") continue;
+    const raceNo=Number(String(x.race||"11R").replace(/\D/g,""))||11;
+    const r=jraRaceResult(x.venue,raceNo);
+    const first=Array.isArray(r.top3)?(r.top3.find(y=>Number(y.position)===1)||{}):{};
+    const tri=Array.isArray(r?.payouts?.["3連単"])?r.payouts["3連単"][0]:null;
+    out.push({
+      kind:"jra",source:"JRA",venue:x.venue||"",race:x.race||raceNo+"R",
+      name:x.name||r.race_name||"",time:x.time||r.time||"",
+      winner:first.horse||"",sub:first.jockey?("騎手 "+first.jockey):"",
+      order:tri?.combo?String(tri.combo).split(/[-－]/).map(Number):[],
+      payout:tri?.amount||"",status:first.horse?"確定":"発走前",
+      horses:x.horses||[]
+    });
   }
 
   // 海外発売対象の大レース。
