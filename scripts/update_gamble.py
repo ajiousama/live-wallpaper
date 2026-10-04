@@ -444,7 +444,7 @@ def nar_course_from_html(html: str, venue: str = "") -> str:
     return normalize_nar_course(clean(BeautifulSoup(html, "html.parser")), venue)
 
 
-def nar_course_map(ymd: str, code: str, venue: str) -> dict[int, str]:
+def nar_race_meta_map(ymd: str, code: str, venue: str) -> dict[int, dict]:
     url = (
         "https://www.keiba.go.jp/KeibaWeb/TodayRaceInfo/RaceList"
         f"?k_babaCode={code}&k_raceDate={ymd[:4]}%2F{ymd[4:6]}%2F{ymd[6:]}"
@@ -453,20 +453,38 @@ def nar_course_map(ymd: str, code: str, venue: str) -> dict[int, str]:
         soup = BeautifulSoup(fetch(url), "html.parser")
     except Exception:
         return {}
-    out: dict[int, str] = {}
+    out: dict[int, dict] = {}
     for tr in soup.find_all("tr"):
-        cells = [clean(x) for x in tr.find_all(["th","td"], recursive=False)]
+        raw_cells = tr.find_all(["th","td"], recursive=False)
+        cells = [clean(x) for x in raw_cells]
         if not cells:
             continue
         rm = re.fullmatch(r"(\d{1,2})R", cells[0])
         if not rm:
             continue
         no = int(rm.group(1))
-        for cell in cells[1:]:
-            course = normalize_nar_course(cell, venue)
-            if course:
-                out[no] = course
+        time_text = next((x for x in cells[1:] if re.fullmatch(r"\d{1,2}:\d{2}", x)), "")
+        course = next((normalize_nar_course(x, venue) for x in cells[1:] if normalize_nar_course(x, venue)), "")
+
+        race_name = ""
+        race_type = ""
+        for a in tr.find_all("a"):
+            href = a.get("href","")
+            label = clean(a)
+            if "RaceMarkTable" in href and label and label not in {"オッズ","映像","成績"}:
+                race_name = label
                 break
+        if len(cells) >= 5:
+            race_type = cells[3] if cells[3] not in {"", "変更"} else ""
+            race_name = race_name or cells[4]
+        full_name = " ".join(x for x in [race_type, race_name] if x).strip()
+
+        out[no] = {
+            "race":no,
+            "time":time_text,
+            "race_name":full_name,
+            "course":course,
+        }
     return out
 
 
@@ -518,11 +536,15 @@ def local_results_for_names(ymd: str, local_epg: list[dict], names: list[str], n
         if not venue or name not in NAR_CODES:
             continue
         code = NAR_CODES[name]
-        course_map = nar_course_map(ymd, code, name)
+        nar_meta = nar_race_meta_map(ymd, code, name)
+        epg_by_no = {int(r["race"]):r for r in venue.get("races", [])}
+        race_nos = sorted(set(epg_by_no) | set(nar_meta))
         races = []
-        for r in venue["races"]:
-            no = r["race"]
-            startm = hhmm_minutes(r["time"])
+        for no in race_nos:
+            r = epg_by_no.get(no, {"race":no,"time":"","race_name":""})
+            meta = nar_meta.get(no, {})
+            start_time = meta.get("time") or r.get("time","")
+            startm = hhmm_minutes(start_time)
             result = None
             page_html = ""
             try:
@@ -539,14 +561,14 @@ def local_results_for_names(ymd: str, local_epg: list[dict], names: list[str], n
                 except Exception:
                     result = None
             page_course = nar_course_from_html(page_html, name)
-            fallback_name = r.get("race_name","")
-            fallback_course = ""
+            fallback_name = meta.get("race_name") or r.get("race_name","")
+            fallback_course = meta.get("course","")
             fm = re.search(r"(芝|ダート|ダ|直)\s*([0-9,]{3,5})\s*m", fallback_name)
             if fm:
                 surface = "ダート" if fm.group(1) == "ダ" else fm.group(1)
                 fallback_course = f"{surface}{fm.group(2).replace(',','')}m"
                 fallback_name = (fallback_name[:fm.start()] + fallback_name[fm.end():]).strip()
-            course_value = course_map.get(no,"") or fallback_course or page_course
+            course_value = fallback_course or page_course
             if result:
                 result["race_name"] = fallback_name
                 if not result.get("course"):
