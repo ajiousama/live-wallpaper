@@ -145,6 +145,33 @@ function boatRows(v){
   }
   return '<table class="phase-table boat-table"><thead><tr><th>R</th><th>レース</th><th>3連単</th><th>払戻</th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
+function isBoatSg(v){
+  const name=String(v?.event_name||"").normalize("NFKC");
+  return /(^|[^A-Z])SG([^A-Z]|$)/i.test(name);
+}
+function boatDetailCard(v){
+  const map=new Map((v.races||[]).map(x=>[Number(x.race),x]));
+  let rows="";
+  for(let r=1;r<=12;r++){
+    const x=map.get(r)||{race:r,status:"発走前",order:[],payout:""};
+    const isFinal=String(x.race_name||"").includes("優勝戦")&&!String(x.race_name||"").includes("準優勝");
+    rows+='<tr class="'+(isFinal?"final-row":"")+'">'+
+      '<td class="r">'+r+'R</td>'+
+      '<td class="time">'+esc(x.scheduled_time||"--:--")+'</td>'+
+      '<td class="name">'+raceNameMarquee(x.race_name||"—")+'</td>'+
+      '<td class="combo">'+orderHtml(x.order,"boat")+'</td>'+
+      '<td class="pay">'+esc(x.payout||"---")+'</td>'+
+      '<td class="winner">'+esc(x.winner||"")+'</td>'+
+      '<td class="status-col">'+esc(x.status||"発走前")+'</td>'+
+    '</tr>';
+  }
+  return '<article class="boat-detail-card">'+
+    '<div class="boat-detail-head"><span class="sport-tag boat">ボート</span><strong>'+esc(v.name||"---")+'</strong><b>SG</b><em>'+esc(v.event_name||"")+'</em></div>'+
+    '<div class="boat-detail-table-wrap">'+
+      '<table class="boat-detail-table"><thead><tr><th>R</th><th>発走</th><th>レース</th><th>3連単</th><th>払戻</th><th>優勝者</th><th>状況</th></tr></thead><tbody>'+rows+'</tbody></table>'+
+    '</div>'+
+  '</article>';
+}
 function localRows(v){
   const races=v.races||[];
   let rows="";
@@ -275,8 +302,9 @@ function buildPages(){
     const premiumKeirin=phaseAll.filter(x=>
       x.kind==="keirin" && /^(G1|G2|G3|GP)$/i.test(String(x.venue?.grade||""))
     );
+    const premiumBoat=phaseAll.filter(x=>x.kind==="boat"&&isBoatSg(x.venue));
 
-    // G3以上は1場ずつ全掛式の詳細ページ。
+    // 競輪G3以上は1場ずつ全掛式の詳細ページ。
     for(const item of premiumKeirin){
       const v=item.venue||{};
       pages.push({
@@ -291,8 +319,23 @@ function buildPages(){
       });
     }
 
+    // ボートSGも1場ずつ専用詳細ページ。
+    for(const item of premiumBoat){
+      const v=item.venue||{};
+      pages.push({
+        key:"phase:"+phase+":boat-sg:"+(v.name||v.code||""),
+        type:"phase",
+        phase,
+        sportKind:"boat-detail",
+        sportLabel:"ボート SG",
+        page:1,
+        total:1,
+        items:[item]
+      });
+    }
+
     // それ以外は競輪→ボート→地方競馬の順で最大6場をまとめる。
-    const rest=phaseAll.filter(x=>!premiumKeirin.includes(x));
+    const rest=phaseAll.filter(x=>!premiumKeirin.includes(x)&&!premiumBoat.includes(x));
     for(let i=0;i<rest.length;i+=6){
       const chunk=rest.slice(i,i+6);
       pages.push({
@@ -333,9 +376,14 @@ function renderPhasePage(page){
   const items=page.items||[];
   const host=document.getElementById("phase-grid");
   const singleKeirinDetail=page.sportKind==="keirin-detail"&&items.length===1;
-  host.className="phase-grid count-"+Math.max(1,items.length)+(singleKeirinDetail?" single-keirin-detail":"");
+  const singleBoatDetail=page.sportKind==="boat-detail"&&items.length===1;
+  host.className="phase-grid count-"+Math.max(1,items.length)
+    +(singleKeirinDetail?" single-keirin-detail":"")
+    +(singleBoatDetail?" single-boat-detail":"");
   if(singleKeirinDetail){
     host.innerHTML=keirinDetailCard(items[0].venue);
+  }else if(singleBoatDetail){
+    host.innerHTML=boatDetailCard(items[0].venue);
   }else{
     host.innerHTML=items.length?items.map(phaseCard).join(""):'<div class="empty-card">'+esc(page.phase+" "+(page.sportLabel||""))+'開催なし</div>';
   }
@@ -344,6 +392,9 @@ function renderPhasePage(page){
   if(singleKeirinDetail){
     const v=items[0].venue;
     document.getElementById("screen-sub").textContent=[v.venue||v.name,v.grade,v.event_name||v.event_name_epg].filter(Boolean).join(" / ");
+  }else if(singleBoatDetail){
+    const v=items[0].venue;
+    document.getElementById("screen-sub").textContent=[v.name,"SG",v.event_name].filter(Boolean).join(" / ");
   }else if(page.sportKind==="mixed"){
     const kc=items.filter(x=>x.kind==="keirin").length;
     const bc=items.filter(x=>x.kind==="boat").length;
