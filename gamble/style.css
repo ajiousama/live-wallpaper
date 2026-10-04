@@ -63,6 +63,12 @@ body{background:linear-gradient(180deg,#061522,#02090f)}
 .phase-grid.count-4 .sport-tag,.phase-grid.count-5 .sport-tag,.phase-grid.count-6 .sport-tag{font-size:7.5px;padding:1px 3px}
 .phase-grid.count-4 .phase-table th,.phase-grid.count-5 .phase-table th,.phase-grid.count-6 .phase-table th{height:16px;font-size:7.5px;padding:0 1px}
 .phase-grid.count-4 .phase-table td,.phase-grid.count-5 .phase-table td,.phase-grid.count-6 .phase-table td{font-size:9px;padding:0 1px;line-height:1}
+.phase-grid.count-5 .card-table-wrap,.phase-grid.count-6 .card-table-wrap{overflow:hidden}
+.phase-grid.count-5 .phase-table,.phase-grid.count-6 .phase-table{height:100%}
+.phase-grid.count-5 .phase-table thead,.phase-grid.count-6 .phase-table thead{height:15px}
+.phase-grid.count-5 .phase-table tbody tr,.phase-grid.count-6 .phase-table tbody tr{height:calc((100% - 15px)/12)}
+.phase-grid.count-5 .phase-table th,.phase-grid.count-6 .phase-table th{height:15px;line-height:14px}
+.phase-grid.count-5 .phase-table td,.phase-grid.count-6 .phase-table td{height:auto;line-height:1}
 .phase-grid.count-4 .num,.phase-grid.count-5 .num,.phase-grid.count-6 .num,
 .phase-grid.count-4 .horse-no,.phase-grid.count-5 .horse-no,.phase-grid.count-6 .horse-no{width:15px;min-width:15px;height:14px;font-size:8px;padding:0 1px}
 .phase-grid.count-4 .local-table .local-info>div,.phase-grid.count-5 .local-table .local-info>div,.phase-grid.count-6 .local-table .local-info>div{height:10px;line-height:10px}
