@@ -85,9 +85,12 @@ body{background:linear-gradient(180deg,#061522,#02090f)}
 .jra-race-name{min-width:0;font-size:11px;color:#d3e6dc;font-weight:900}
 .jra-race-main>em{font-size:10px;font-style:normal;color:#72c797;text-align:right;white-space:nowrap;font-weight:900}
 .places{min-height:24px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;align-items:center}
-.place{min-width:0;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#f5f7f6}
+.place{min-width:0;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:5px;align-items:center;font-size:11px;white-space:nowrap;overflow:hidden;color:#f5f7f6}
 .place b{font-size:9px;color:#87bba1}
+.place-horse{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.place em{font-size:9px;font-style:normal;color:#b8d5c7;white-space:nowrap}
 .place.p1{font-weight:1000;color:#fff4a8}
+.place.p1 em{color:#ffe38a;font-weight:1000}
 .payout-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:3px 5px;padding:2px 0 1px}
 .payout-item{min-width:0;display:grid;grid-template-columns:43px minmax(0,1fr);gap:4px;align-items:center;line-height:15px}
 .payout-item{border-radius:3px;padding:2px 4px}
