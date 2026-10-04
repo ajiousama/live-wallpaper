@@ -132,12 +132,20 @@ function renderRight(){
     host.classList.toggle("three",venues.length>=3);
     host.innerHTML=venues.length?venues.map(localVenueCard).join(""):'<div class="empty-card">本日の地方ナイター情報を取得中</div>';
   }else{
-    document.getElementById("right-mini").textContent="JRA / WINNER・JOCKEY・3連単";
-    document.getElementById("right-title").textContent="JRA";
-    document.getElementById("right-note").textContent="17:00に地方競馬ナイターへ切替";
-    venues=(jra?.venues||[]).slice(0,3);
-    host.classList.toggle("three",venues.length>=3);
-    host.innerHTML=venues.length?venues.map(jraVenueCard).join(""):'<div class="empty-card">JRA開催情報を取得中</div>';
+    document.getElementById("right-mini").textContent="JRA EAST / WEST + LOCAL 3RD";
+    document.getElementById("right-title").textContent="JRA東・西 ＋ 第3場";
+    document.getElementById("right-note").textContent="JRAが2場の日は3場目に盛岡";
+    const central=(jra?.venues||[]).slice(0,3);
+    const cards=central.map(function(v){return {kind:"jra",venue:v}});
+    if(cards.length<3){
+      (data?.local_feature?.venues||[]).forEach(function(v){
+        if(cards.length<3) cards.push({kind:"local",venue:v});
+      });
+    }
+    host.classList.toggle("three",cards.length>=3);
+    host.innerHTML=cards.length?cards.map(function(x){
+      return x.kind==="jra"?jraVenueCard(x.venue):localVenueCard(x.venue);
+    }).join(""):'<div class="empty-card">競馬開催情報を取得中</div>';
     updateMarquees();
   }
 }
