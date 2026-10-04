@@ -33,7 +33,7 @@ function compactCard(v,kind){
     ?((v.race_ids||[]).length||(v.races||[]).reduce(function(m,x){return Math.max(m,Number(x.race)||0)},0)||12)
     :12;
   const klass=kind==="keirin"?"result-card keirin-card":"result-card";
-  return '<article class="'+klass+'"><div class="card-head"><div class="card-title">'+esc(title)+grade+'</div><div class="event">'+esc(event)+'</div></div><table class="compact-table"><thead><tr><th>R</th><th>レース名・種別</th><th>3連単</th><th>払戻金</th></tr></thead><tbody>'+raceRows(v.races,raceCount)+'</tbody></table></article>';
+  return '<article class="'+klass+'"><div class="card-head"><div class="card-title">'+esc(title)+grade+'</div><div class="event">'+esc(event)+'</div></div><table class="compact-table"><thead><tr><th class="rcol">R</th><th class="race-label">レース名・種別</th><th class="ocol">3連単</th><th class="pcol">払戻金</th></tr></thead><tbody>'+raceRows(v.races,raceCount)+'</tbody></table></article>';
 }
 function renderKeirin(){
   const host=document.getElementById("keirin-grid");
@@ -107,7 +107,7 @@ function localVenueCard(v){
     const raceName=x.race_name||"—";
     rows+='<tr><td class="jr">'+r+'R</td><td class="race-label" title="'+esc(raceName)+'">'+esc(raceName)+'</td><td class="horse '+(x.winner?"":"pending")+'">'+esc(x.winner||x.status||"発走前")+'</td><td class="jockey">'+esc(x.jockey||"")+'</td><td class="pay '+(x.trifecta?"":"pending")+'">'+esc((combo?combo+" ":"")+(x.trifecta||""))+'</td></tr>';
   }
-  return '<article class="jra-card"><div class="card-head"><div class="card-title">'+esc(v.name||"---")+'</div><div class="event">地方競馬</div></div><table class="jra-table"><thead><tr><th>R</th><th>レース名・種別</th><th>勝ち馬</th><th>騎手</th><th>3連単</th></tr></thead><tbody>'+rows+'</tbody></table></article>';
+  return '<article class="jra-card"><div class="card-head"><div class="card-title">'+esc(v.name||"---")+'</div><div class="event">地方競馬</div></div><table class="jra-table"><thead><tr><th class="jr">R</th><th class="race-label">レース名・種別</th><th>勝ち馬</th><th class="jockey">騎手</th><th class="pay">3連単</th></tr></thead><tbody>'+rows+'</tbody></table></article>';
 }
 function updateMarquees(){
   requestAnimationFrame(function(){
