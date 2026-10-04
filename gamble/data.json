@@ -1,8 +1,8 @@
 {
   "date": "2026-10-04",
   "date_label": "2026年10月04日",
-  "updated_at": "14:03:51",
-  "updated_at_iso": "2026-10-04T14:03:51.999408+09:00",
+  "updated_at": "14:08:18",
+  "updated_at_iso": "2026-10-04T14:08:18.128914+09:00",
   "jra_switch_time": "17:00",
   "keirin": {
     "phase": "本日開催 8場",
@@ -1764,7 +1764,7 @@
             4
           ],
           "payout": "46,970円",
-          "race_name": "",
+          "race_name": "ウインウイン７",
           "scheduled_time": "13:52"
         },
         {
@@ -2305,9 +2305,13 @@
         },
         {
           "race": 8,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            1,
+            4,
+            2
+          ],
+          "payout": "2,780円",
           "race_name": "",
           "scheduled_time": "14:01"
         },
@@ -3086,7 +3090,7 @@
               1,
               6
             ],
-            "course": "",
+            "course": "ダート1000m",
             "status": "確定",
             "race_name": "ファーストステップ ２歳 新馬戦"
           },
@@ -3100,7 +3104,7 @@
               10,
               9
             ],
-            "course": "",
+            "course": "ダート1000m",
             "status": "確定",
             "race_name": "Ｃ２"
           },
@@ -3114,7 +3118,7 @@
               4,
               2
             ],
-            "course": "",
+            "course": "ダート1200m",
             "status": "確定",
             "race_name": "Ｃ２十一組"
           },
@@ -3128,7 +3132,7 @@
               4,
               7
             ],
-            "course": "",
+            "course": "ダート1200m",
             "status": "確定",
             "race_name": "Ｃ２十一組"
           },
@@ -3138,7 +3142,7 @@
             "jockey": "",
             "trifecta": "",
             "race_name": "Ｂ１ 芝左1600m 晴 良 10",
-            "course": "",
+            "course": "芝1600m",
             "status": "結果待ち"
           },
           {
@@ -3147,8 +3151,8 @@
             "jockey": "",
             "trifecta": "",
             "race_name": "Ｃ２十組",
-            "course": "",
-            "status": "発走前"
+            "course": "ダート1200m",
+            "status": "結果待ち"
           },
           {
             "race": 7,
@@ -3156,7 +3160,7 @@
             "jockey": "",
             "trifecta": "",
             "race_name": "Ｃ２九組",
-            "course": "",
+            "course": "ダート1200m",
             "status": "発走前"
           },
           {
@@ -3165,7 +3169,7 @@
             "jockey": "",
             "trifecta": "",
             "race_name": "Ｃ２八組",
-            "course": "",
+            "course": "ダート1200m",
             "status": "発走前"
           },
           {
@@ -3174,7 +3178,7 @@
             "jockey": "",
             "trifecta": "",
             "race_name": "Ｂ２",
-            "course": "",
+            "course": "ダート1400m",
             "status": "発走前"
           },
           {
@@ -3183,7 +3187,7 @@
             "jockey": "",
             "trifecta": "",
             "race_name": "イギリス海岸賞Ｂ２",
-            "course": "",
+            "course": "ダート1400m",
             "status": "発走前"
           },
           {
@@ -3192,7 +3196,7 @@
             "jockey": "",
             "trifecta": "",
             "race_name": "バーベナ賞Ｂ２",
-            "course": "",
+            "course": "ダート1400m",
             "status": "発走前"
           },
           {
@@ -3201,7 +3205,7 @@
             "jockey": "",
             "trifecta": "",
             "race_name": "重賞 Ｊ認 若駒賞２歳",
-            "course": "",
+            "course": "ダート1600m",
             "status": "発走前"
           }
         ]
@@ -3220,7 +3224,7 @@
               1,
               2
             ],
-            "course": "",
+            "course": "ダート1400m",
             "status": "確定",
             "race_name": "有 ２歳５"
           },
@@ -3234,7 +3238,7 @@
               8,
               6
             ],
-            "course": "",
+            "course": "ダート1400m",
             "status": "確定",
             "race_name": "かいと＆るり結婚記念２歳４"
           },
@@ -3244,7 +3248,7 @@
             "jockey": "",
             "trifecta": "",
             "race_name": "有 ２歳３",
-            "course": "",
+            "course": "ダート1500m",
             "status": "結果待ち"
           },
           {
@@ -3253,7 +3257,7 @@
             "jockey": "",
             "trifecta": "",
             "race_name": "真実社会日本人コミュニティ三周年記２歳２",
-            "course": "",
+            "course": "ダート1500m",
             "status": "発走前"
           },
           {
@@ -3262,7 +3266,7 @@
             "jockey": "",
             "trifecta": "",
             "race_name": "Ｂ２九",
-            "course": "",
+            "course": "ダート1500m",
             "status": "発走前"
           },
           {
@@ -3271,7 +3275,7 @@
             "jockey": "",
             "trifecta": "",
             "race_name": "特別 楽天競馬で馬券を買おう！楽天競馬特Ａ１二",
-            "course": "",
+            "course": "ダート1500m",
             "status": "発走前"
           },
           {
@@ -3280,7 +3284,7 @@
             "jockey": "",
             "trifecta": "",
             "race_name": "遼太となのはの結婚記念杯Ｂ２八",
-            "course": "",
+            "course": "ダート1400m",
             "status": "発走前"
           },
           {
@@ -3289,7 +3293,7 @@
             "jockey": "",
             "trifecta": "",
             "race_name": "ノマジョ・カナザワ来場記念Ｂ２七",
-            "course": "",
+            "course": "ダート1400m",
             "status": "発走前"
           },
           {
@@ -3298,7 +3302,7 @@
             "jockey": "",
             "trifecta": "",
             "race_name": "重賞 Ｊ認 金沢シンデレラカップ２歳牝馬（地方",
-            "course": "",
+            "course": "ダート1500m",
             "status": "発走前"
           },
           {
@@ -3307,7 +3311,7 @@
             "jockey": "",
             "trifecta": "",
             "race_name": "特別 熊本地震被災者支援特別Ｃ１Ｃ２",
-            "course": "",
+            "course": "ダート900m",
             "status": "発走前"
           }
         ]
@@ -3436,7 +3440,7 @@
             "jockey": "",
             "trifecta": "",
             "race_name": "特別 ２歳新馬",
-            "course": "",
+            "course": "ダート1300m",
             "status": "発走前"
           },
           {
@@ -3445,7 +3449,7 @@
             "jockey": "",
             "trifecta": "",
             "race_name": "有 ２歳－４",
-            "course": "",
+            "course": "ダート1300m",
             "status": "発走前"
           },
           {
@@ -3454,7 +3458,7 @@
             "jockey": "",
             "trifecta": "",
             "race_name": "２歳－３",
-            "course": "",
+            "course": "ダート1300m",
             "status": "発走前"
           },
           {
@@ -3463,7 +3467,7 @@
             "jockey": "",
             "trifecta": "",
             "race_name": "Ｃ２－６",
-            "course": "",
+            "course": "ダート1400m",
             "status": "発走前"
           },
           {
@@ -3472,7 +3476,7 @@
             "jockey": "",
             "trifecta": "",
             "race_name": "Ｃ２－５",
-            "course": "",
+            "course": "ダート1400m",
             "status": "発走前"
           },
           {
@@ -3481,7 +3485,7 @@
             "jockey": "",
             "trifecta": "",
             "race_name": "有 特別 ダリア特別Ｃ３－１選抜馬",
-            "course": "",
+            "course": "ダート1600m",
             "status": "発走前"
           },
           {
@@ -3490,7 +3494,7 @@
             "jockey": "",
             "trifecta": "",
             "race_name": "Ｃ３－２",
-            "course": "",
+            "course": "ダート1600m",
             "status": "発走前"
           },
           {
@@ -3499,7 +3503,7 @@
             "jockey": "",
             "trifecta": "",
             "race_name": "Ｃ１－３",
-            "course": "",
+            "course": "ダート1400m",
             "status": "発走前"
           },
           {
@@ -3508,7 +3512,7 @@
             "jockey": "",
             "trifecta": "",
             "race_name": "有 Ｃ１－２",
-            "course": "",
+            "course": "ダート1400m",
             "status": "発走前"
           },
           {
@@ -3517,7 +3521,7 @@
             "jockey": "",
             "trifecta": "",
             "race_name": "特別 ＵＦＯライン特別Ｃ１－１選抜馬",
-            "course": "",
+            "course": "ダート1400m",
             "status": "発走前"
           },
           {
@@ -3526,7 +3530,7 @@
             "jockey": "",
             "trifecta": "",
             "race_name": "ファイナルレースＣ３－７記者選抜",
-            "course": "",
+            "course": "ダート1600m",
             "status": "発走前"
           }
         ]
@@ -3541,7 +3545,7 @@
             "jockey": "",
             "trifecta": "",
             "race_name": "Ｃ３六",
-            "course": "",
+            "course": "ダート1200m",
             "status": "発走前"
           },
           {
@@ -3550,7 +3554,7 @@
             "jockey": "",
             "trifecta": "",
             "race_name": "２歳新馬",
-            "course": "",
+            "course": "ダート1400m",
             "status": "発走前"
           },
           {
@@ -3559,7 +3563,7 @@
             "jockey": "",
             "trifecta": "",
             "race_name": "２歳新馬",
-            "course": "",
+            "course": "ダート1200m",
             "status": "発走前"
           },
           {
@@ -3568,7 +3572,7 @@
             "jockey": "",
             "trifecta": "",
             "race_name": "ピンク・スクアーレル賞Ｃ２十八 十九",
-            "course": "",
+            "course": "ダート1600m",
             "status": "発走前"
           },
           {
@@ -3577,7 +3581,7 @@
             "jockey": "",
             "trifecta": "",
             "race_name": "Ｃ２十八 十九",
-            "course": "",
+            "course": "ダート1200m",
             "status": "発走前"
           },
           {
@@ -3586,7 +3590,7 @@
             "jockey": "",
             "trifecta": "",
             "race_name": "特別 みなみのうお座特別Ｃ２二選抜",
-            "course": "",
+            "course": "ダート1800m",
             "status": "発走前"
           },
           {
@@ -3595,7 +3599,7 @@
             "jockey": "",
             "trifecta": "",
             "race_name": "特別 相馬野馬追賞Ａ２選抜特別",
-            "course": "",
+            "course": "ダート1400m",
             "status": "発走前"
           },
           {
@@ -3604,7 +3608,7 @@
             "jockey": "",
             "trifecta": "",
             "race_name": "特別 オフト南相馬賞Ｂ３四選抜特別",
-            "course": "",
+            "course": "ダート1200m",
             "status": "発走前"
           }
         ]
