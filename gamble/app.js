@@ -269,61 +269,54 @@ function specialItems(){
 }
 function buildPages(){
   const pages=[];
-  const sportGroups=[
-    {kind:"keirin",label:"競輪"},
-    {kind:"boat",label:"ボート"},
-    {kind:"local",label:"地方競馬"}
-  ];
   for(const phase of PHASES){
     const phaseAll=phaseItems(phase);
 
-    if(phase==="モーニング"){
-      const morningMain=phaseAll.filter(x=>x.kind==="keirin"||x.kind==="boat");
-      for(let i=0;i<morningMain.length;i+=6){
-        const chunk=morningMain.slice(i,i+6);
+    // デイ競輪が1場だけなら、ここだけ全掛式の詳細ページを残す。
+    // それ以外は競輪→ボート→地方競馬の順で最大6場をまとめる。
+    if(phase==="デイ"){
+      const dayKeirin=phaseAll.filter(x=>x.kind==="keirin");
+      if(dayKeirin.length===1){
         pages.push({
-          key:"phase:モーニング:mixed:"+Math.floor(i/6),
+          key:"phase:デイ:keirin-detail",
           type:"phase",
-          phase:"モーニング",
-          sportKind:"mixed",
-          sportLabel:"",
-          page:Math.floor(i/6)+1,
-          total:Math.ceil(morningMain.length/6),
-          items:chunk
+          phase:"デイ",
+          sportKind:"keirin",
+          sportLabel:"競輪",
+          page:1,
+          total:1,
+          items:dayKeirin
         });
+        const rest=phaseAll.filter(x=>x.kind!=="keirin");
+        for(let i=0;i<rest.length;i+=6){
+          const chunk=rest.slice(i,i+6);
+          pages.push({
+            key:"phase:デイ:mixed:"+Math.floor(i/6),
+            type:"phase",
+            phase:"デイ",
+            sportKind:"mixed",
+            sportLabel:"",
+            page:Math.floor(i/6)+1,
+            total:Math.ceil(rest.length/6),
+            items:chunk
+          });
+        }
+        continue;
       }
-      const morningLocal=phaseAll.filter(x=>x.kind==="local");
-      for(let i=0;i<morningLocal.length;i+=6){
-        const chunk=morningLocal.slice(i,i+6);
-        pages.push({
-          key:"phase:モーニング:local:"+Math.floor(i/6),
-          type:"phase",
-          phase:"モーニング",
-          sportKind:"local",
-          sportLabel:"地方競馬",
-          page:Math.floor(i/6)+1,
-          total:Math.ceil(morningLocal.length/6),
-          items:chunk
-        });
-      }
-      continue;
     }
 
-    for(const group of sportGroups){
-      const items=phaseAll.filter(x=>x.kind===group.kind);
-      for(let i=0;i<items.length;i+=6){
-        const chunk=items.slice(i,i+6);
-        pages.push({
-          key:"phase:"+phase+":"+group.kind+":"+Math.floor(i/6),
-          type:"phase",
-          phase,
-          sportKind:group.kind,
-          sportLabel:group.label,
-          page:Math.floor(i/6)+1,
-          total:Math.ceil(items.length/6),
-          items:chunk
-        });
-      }
+    for(let i=0;i<phaseAll.length;i+=6){
+      const chunk=phaseAll.slice(i,i+6);
+      pages.push({
+        key:"phase:"+phase+":mixed:"+Math.floor(i/6),
+        type:"phase",
+        phase,
+        sportKind:"mixed",
+        sportLabel:"",
+        page:Math.floor(i/6)+1,
+        total:Math.ceil(phaseAll.length/6),
+        items:chunk
+      });
     }
   }
 
@@ -366,7 +359,12 @@ function renderPhasePage(page){
   }else if(page.sportKind==="mixed"){
     const kc=items.filter(x=>x.kind==="keirin").length;
     const bc=items.filter(x=>x.kind==="boat").length;
-    document.getElementById("screen-sub").textContent="競輪 "+kc+"場 / ボート "+bc+"場"+pageText;
+    const lc=items.filter(x=>x.kind==="local").length;
+    const parts=[];
+    if(kc) parts.push("競輪 "+kc+"場");
+    if(bc) parts.push("ボート "+bc+"場");
+    if(lc) parts.push("地方 "+lc+"場");
+    document.getElementById("screen-sub").textContent=(parts.join(" / ")||"開催なし")+pageText;
   }else{
     document.getElementById("screen-sub").textContent=(items.length?(items.length+"場"):"開催なし")+pageText;
   }
