@@ -22,6 +22,21 @@ function jraIsCurrentDay(){
   const src=String(jra?.source_date||"").replace(/\D/g,"").slice(0,8);
   return !!src&&src===jstYmd();
 }
+function raceStartIfUpcoming(time,status,hasResult=false){
+  const t=String(time||"");
+  if(!t||hasResult) return "";
+  const st=String(status||"");
+  if(/確定|結果待ち|終了/.test(st)) return "";
+  const m=t.match(/(\d{1,2}):(\d{2})/);
+  if(m){
+    const nowParts=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Tokyo",hour:"2-digit",minute:"2-digit",hourCycle:"h23"}).formatToParts(new Date());
+    const get=k=>Number(nowParts.find(p=>p.type===k)?.value||0);
+    const nowMin=get("hour")*60+get("minute");
+    const raceMin=Number(m[1])*60+Number(m[2]);
+    if(nowMin>=raceMin) return "";
+  }
+  return t;
+}
 function normalizePhase(v){
   const s=String(v||"");
   if(s.includes("オーバーミッド")||s.includes("ミッド")) return "ミッドナイト";
@@ -114,7 +129,7 @@ function keirinDetailCard(v){
     }).join("");
     rows+='<tr class="'+(isFinal?"final-row":"")+'">'+
       '<td class="r">'+esc(x.race)+'R</td>'+
-      '<td class="time">'+esc(x.scheduled_time||x.time||"--:--")+'</td>'+
+      '<td class="time">'+esc(raceStartIfUpcoming(x.scheduled_time||x.time,x.status,!!(x.winner||x.payout)))+'</td>'+
       '<td class="class-col">'+esc(cls||"—")+'</td>'+
       '<td class="name">'+raceNameMarquee(name)+'</td>'+
       '<td class="winner">'+esc(x.winner||"---")+'</td>'+
@@ -150,7 +165,7 @@ function boatBoardCell(x){
   const decided=Array.isArray(x?.order)&&x.order.length>=3&&x?.payout;
   if(!decided){
     const status=String(x?.status||"発走前");
-    const time=status==="発走前"?(x?.scheduled_time||"--:--"):"";
+    const time=raceStartIfUpcoming(x?.scheduled_time,status,false);
     return '<div class="boat-pay-pending">'+(time?'<b>'+esc(time)+'</b>':'')+'<span>'+esc(status)+'</span></div>';
   }
   return '<div class="boat-pay-cell">'+
@@ -172,7 +187,7 @@ function boatPayBoard(items){
       const x=m.get(r)||{race:r,status:"発走前",order:[],payout:"",scheduled_time:""};
       if(!(Array.isArray(x.order)&&x.order.length>=3&&x.payout)){
         const status=String(x.status||"発走前");
-        const time=status==="発走前"?(x.scheduled_time||"--:--"):"";
+        const time=raceStartIfUpcoming(x.scheduled_time,status,false);
         return '<td class="boat-pay-pending-cell" colspan="3"><div class="boat-pay-pending">'+(time?'<b>'+esc(time)+'</b>':'')+'<span>'+esc(status)+'</span></div></td>';
       }
       return '<td class="boat-pay-combo-cell">'+orderHtml(x.order,"boat")+'</td>'+
@@ -207,7 +222,7 @@ function boatDetailCard(v){
     ).join("");
     rows+='<tr class="'+(isFinal?"final-row":"")+'">'+
       '<td class="r">'+r+'R</td>'+
-      '<td class="time">'+esc(x.scheduled_time||"--:--")+'</td>'+
+      '<td class="time">'+esc(raceStartIfUpcoming(x.scheduled_time,x.status,!!(x.payout||(x.order||[]).length)))+'</td>'+
       '<td class="name">'+raceNameMarquee(x.race_name||"—")+'</td>'+
       payoutCells+
       '<td class="winner">'+esc(x.winner||"")+'</td>'+
@@ -523,15 +538,16 @@ function specialRaceCard(x){
   const where=[x.venue,x.race].filter(Boolean).join(" ");
   const winnerLabel=(x.kind==="jra"||x.kind==="local"||x.kind==="overseas")?"勝ち馬":"優勝";
   const hasWinner=!!x.winner;
+  const upcomingTime=raceStartIfUpcoming(x.time,x.status,hasWinner||!!x.payout);
   const result=hasWinner
     ?'<div class="special-winner"><span>'+winnerLabel+'</span><strong>'+esc(x.winner)+'</strong><em>'+esc(x.sub||"")+'</em></div>'
-    :'<div class="special-winner waiting"><span>結果</span><strong>'+esc(x.status||"発走前")+'</strong><em>'+esc(x.time?x.time+" 発走予定":"")+'</em></div>';
+    :'<div class="special-winner waiting"><span>結果</span><strong>'+esc(x.status||"発走前")+'</strong><em>'+esc(upcomingTime?upcomingTime+" 発走予定":"")+'</em></div>';
   const combo=(Array.isArray(x.order)&&x.order.length>=3)?orderHtml(x.order,(x.kind==="local"||x.kind==="jra"||x.kind==="overseas")?"local":(x.kind==="boat"?"boat":"keirin")):'<span class="muted">---</span>';
   const meta=(x.kind==="overseas"&&!hasWinner&&Array.isArray(x.horses)&&x.horses.length)
     ?'<div class="special-detail"><b>注目馬</b><span>'+esc(x.horses.join("・"))+'</span></div>'
     :'<div class="special-detail"><b>3連単</b><span>'+combo+'</span><b>払戻</b><strong>'+esc(x.payout||"---")+'</strong></div>';
   return '<article class="special-card '+esc(x.kind||"")+'-special">'+
-    '<div class="special-head"><span>'+esc(x.source||"特別")+'</span><strong>'+esc(where||"特別競走")+'</strong><time>'+esc(x.time?x.time+" 発走":"")+'</time></div>'+
+    '<div class="special-head"><span>'+esc(x.source||"特別")+'</span><strong>'+esc(where||"特別競走")+'</strong><time>'+esc(upcomingTime?upcomingTime+" 発走":"")+'</time></div>'+
     '<div class="special-name">'+esc(x.name||"---")+'</div>'+
     result+meta+
   '</article>';
