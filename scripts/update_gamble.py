@@ -204,30 +204,38 @@ def keirin_venue_expired(v: dict, typ: str, now_minutes: int) -> bool:
     end = keirin_venue_end_minutes(v, typ)
     return bool(v.get("last_confirmed") and end is not None and now_minutes > end + 60)
 
-def choose_keirin_phase(metas: list[dict], now_minutes: int):
-    grouped = {x:[] for x in PHASE_ORDER}
+def choose_keirin_venues(metas: list[dict], now_minutes: int, limit: int = 4):
+    # 「時間帯を1つ選ぶ」のではなく、終了+60分を過ぎていない場から
+    # モーニング→デイ→ナイター→ミッドナイトの順に空き枠を埋める。
+    active = []
     for v in metas:
-        grouped.setdefault(v["type"], []).append(v)
-
-    for typ in PHASE_ORDER:
-        venues = grouped.get(typ) or []
-        if not venues:
+        typ = v.get("type","")
+        if typ not in PHASE_ORDER:
             continue
-
-        # 各場ごとに「最終R確定＋60分」で表示終了。
-        # その時間帯の全場が消えたら、次の時間帯へ自動で進む。
-        active = [v for v in venues if not keirin_venue_expired(v, typ, now_minutes)]
-        if not active:
+        if keirin_venue_expired(v, typ, now_minutes):
             continue
+        active.append(v)
 
-        end_values = [
-            x for x in (keirin_venue_end_minutes(v, typ) for v in active)
-            if x is not None
-        ]
-        group_end = max(end_values) if end_values else None
-        return typ, active, group_end
+    def sort_key(v):
+        typ = v.get("type","")
+        phase_idx = PHASE_ORDER.index(typ) if typ in PHASE_ORDER else 99
+        end = keirin_venue_end_minutes(v, typ)
+        return (phase_idx, end if end is not None else 9999, v.get("venue",""))
 
-    return "", [], None
+    active.sort(key=sort_key)
+    selected = active[:limit]
+    labels = []
+    for v in selected:
+        typ = v.get("type","")
+        if typ and typ not in labels:
+            labels.append(typ)
+    end_values = [
+        x for x in (keirin_venue_end_minutes(v, v.get("type","")) for v in selected)
+        if x is not None
+    ]
+    phase_label = " / ".join(labels)
+    group_end = max(end_values) if end_values else None
+    return phase_label, selected, group_end
 
 def fill_keirin_results(ymd: str, venues: list[dict], now_minutes: int):
     for venue in venues:
@@ -432,7 +440,7 @@ def main():
             except Exception:
                 metas.append(jobs[fut])
 
-    phase, phase_venues, phase_end = choose_keirin_phase(metas,now_minutes)
+    phase, phase_venues, phase_end = choose_keirin_venues(metas,now_minutes,4)
     phase_venues = fill_keirin_results(ymd, phase_venues, now_minutes) if phase_venues else []
 
     boats=[]
