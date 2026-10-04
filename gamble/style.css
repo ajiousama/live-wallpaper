@@ -14,6 +14,7 @@ body{background:linear-gradient(180deg,#061522,#02090f)}
 .live{font-size:9px;color:#adf2cb;border:1px solid #21845a;border-radius:3px;padding:1px 4px}
 .live i{display:inline-block;width:5px;height:5px;border-radius:50%;background:#37df88;margin-right:3px}
 #updated{font-size:9px;color:#9fb7c2}
+#next-switch{font-size:10px;color:#ffd56a;border:1px solid #6b5b27;border-radius:3px;padding:2px 5px;background:#241d08;min-width:82px;text-align:center}
 #clock{font-size:19px}
 .screen{display:none;min-width:0;min-height:0}
 .screen.active{display:block}
@@ -198,6 +199,7 @@ body{background:linear-gradient(180deg,#061522,#02090f)}
   #dash{grid-template-rows:32px 1fr}
   #screen-title{font-size:16px}
   #screen-sub,#updated{font-size:8px}
+  #next-switch{font-size:8px;min-width:70px;padding:1px 4px}
   #clock{font-size:16px}
   .phase-grid{gap:3px}
   .phase-card{grid-template-rows:25px 1fr}
