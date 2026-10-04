@@ -426,7 +426,14 @@ function rotate(){
   const pages=buildPages();
   showPage((currentPageIndex+1)%pages.length);
 }
-function tick(){document.getElementById("clock").textContent=jstNow()}
+function tick(){
+  document.getElementById("clock").textContent=jstNow();
+  const el=document.getElementById("next-switch");
+  if(el){
+    const remain=Math.max(0,Math.ceil((currentPageDuration()-(performance.now()-screenShownAt))/1000));
+    el.textContent="切替まで "+remain+"秒";
+  }
+}
 setInterval(tick,1000);tick();
 load();setInterval(load,30000);
 requestAnimationFrame(syncScrollPosition);
