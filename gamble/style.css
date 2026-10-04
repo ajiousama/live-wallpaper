@@ -61,7 +61,7 @@ h1{margin:1px 0 0;font-size:31px;line-height:1;font-weight:1000;letter-spacing:.
 .all-venue-grid .event{font-size:7px}
 .keirin-all .compact-table th,.boat-all .compact-table th{height:14px;font-size:7px;padding:0 2px}
 .keirin-all .compact-table td,.boat-all .compact-table td{font-size:9px;padding:0 2px}
-.keirin-all .compact-table .rcol,.boat-all .compact-table .rcol{width:24px}
+.keirin-all .compact-table .rcol,.boat-all .compact-table .rcol{width:20px;padding-left:0;padding-right:0}
 .keirin-all .compact-table .race-label{width:92px}
 .boat-all .compact-table .race-label{width:76px}
 .keirin-all .compact-table .ocol,.boat-all .compact-table .ocol{width:67px}
@@ -103,12 +103,12 @@ h1{margin:1px 0 0;font-size:31px;line-height:1;font-weight:1000;letter-spacing:.
 .race-all-grid .event{font-size:8px}
 .race-all-grid .horse-race{grid-template-rows:1fr;min-height:0}
 .race-all-grid .race-info{display:none}
-.race-all-grid .horse-result-line{grid-template-columns:26px 105px minmax(0,1fr) 52px 48px 60px;gap:2px;padding:0 3px;font-size:8.5px}
+.race-all-grid .horse-result-line{grid-template-columns:20px 105px minmax(0,1fr) 52px 48px 60px;gap:2px;padding:0 3px;font-size:8.5px}
 .race-all-grid .horse-race-label{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left;color:#9fc7b5}
 .race-all-grid .winner-jockey{font-size:7.5px}
 .race-all-grid .jra-table th{height:15px;font-size:7px;padding:0 2px}
 .race-all-grid .jra-table td{font-size:8px;padding:0 2px}
-.race-all-grid .jra-table .jr{width:24px}
+.race-all-grid .jra-table .jr{width:20px;padding-left:0;padding-right:0}
 .race-all-grid .jra-table .race-label{width:96px;text-align:left;white-space:nowrap;text-overflow:ellipsis;color:#a9cdbd}
 .race-all-grid .jra-table .jockey{width:52px}
 .race-all-grid .jra-table .pay{width:64px}
@@ -117,4 +117,5 @@ footer{display:flex;justify-content:space-between;align-items:center;padding:0 8
   #dash{padding:6px;grid-template-rows:66px 1fr 24px;gap:5px}.main-grid{grid-template-columns:44% 56%;gap:5px}.main-grid.screen-keirin,.main-grid.screen-boat,.main-grid.screen-race{grid-template-columns:1fr}.block{grid-template-rows:45px 1fr}.two-grid,.right-grid,.all-venue-grid,.race-all-grid{gap:3px;padding:3px}
   h1{font-size:25px}.status #clock{font-size:25px}.block h2{font-size:18px}.card-title{font-size:16px}.compact-table td{font-size:10px}.compact-table .race-label{font-size:8px}.num{width:18px;height:17px;font-size:10px}.jra-table td{font-size:9.5px}
   .horse-result-line{grid-template-columns:30px minmax(0,1fr) 58px 48px 60px;font-size:9px}.winner-jockey{font-size:8px}.race-info{font-size:7.5px}
+  .race-all-grid .horse-result-line{grid-template-columns:20px 86px minmax(0,1fr) 46px 42px 52px}
 }
