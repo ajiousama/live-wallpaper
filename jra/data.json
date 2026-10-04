@@ -2,7 +2,7 @@
   "source": "JRA公式",
   "source_date": "20261004",
   "date_label": "10月4日 日曜",
-  "updated_at": "2026-10-04 11:47 JST",
+  "updated_at": "2026-10-04 12:27 JST",
   "venues": [
     {
       "name": "東京",
@@ -850,6 +850,109 @@
           "jockey": "池添 謙一",
           "horse": "ブライトスクリプト",
           "win_payout": "150円"
+        },
+        {
+          "race": 5,
+          "race_name": "メイクデビュー京都",
+          "course": "",
+          "top3": [
+            {
+              "position": 1,
+              "frame": "枠6緑",
+              "number": "8",
+              "horse": "トロカアニマダ",
+              "jockey": "国分 恭介",
+              "time": "2:01.8",
+              "margin": ""
+            },
+            {
+              "position": 2,
+              "frame": "枠2黒",
+              "number": "2",
+              "horse": "アンバーライト",
+              "jockey": "田山 旺佑",
+              "time": "2:02.0",
+              "margin": "１ 1/2"
+            },
+            {
+              "position": 3,
+              "frame": "枠5黄",
+              "number": "6",
+              "horse": "ジーティーギャング",
+              "jockey": "松山 弘平",
+              "time": "2:02.1",
+              "margin": "クビ"
+            }
+          ],
+          "payouts": {
+            "単勝": [
+              {
+                "combo": "8",
+                "amount": "610円"
+              }
+            ],
+            "複勝": [
+              {
+                "combo": "8",
+                "amount": "200円"
+              },
+              {
+                "combo": "2",
+                "amount": "550円"
+              },
+              {
+                "combo": "6",
+                "amount": "150円"
+              }
+            ],
+            "枠連": [
+              {
+                "combo": "2-6",
+                "amount": "13,290円"
+              }
+            ],
+            "馬連": [
+              {
+                "combo": "2-8",
+                "amount": "13,360円"
+              }
+            ],
+            "馬単": [
+              {
+                "combo": "8-2",
+                "amount": "24,770円"
+              }
+            ],
+            "ワイド": [
+              {
+                "combo": "2-8",
+                "amount": "2,220円"
+              },
+              {
+                "combo": "6-8",
+                "amount": "340円"
+              },
+              {
+                "combo": "2-6",
+                "amount": "1,530円"
+              }
+            ],
+            "3連複": [
+              {
+                "combo": "2-6-8",
+                "amount": "9,010円"
+              }
+            ],
+            "3連単": [
+              {
+                "combo": "8-2-6",
+                "amount": "109,130円"
+              }
+            ]
+          },
+          "jockey": "国分 恭介",
+          "horse": "トロカアニマダ",
+          "win_payout": "610円"
         }
       ]
     }
