@@ -225,13 +225,13 @@ function buildPages(){
   }
 
   const specials=specialItems();
-  for(let i=0;i<specials.length;i+=4){
+  if(specials.length){
     pages.push({
-      key:"special:"+Math.floor(i/4),
+      key:"special:all",
       type:"special",
-      page:Math.floor(i/4)+1,
-      total:Math.ceil(specials.length/4),
-      items:specials.slice(i,i+4)
+      page:1,
+      total:1,
+      items:specials
     });
   }
 
@@ -325,7 +325,7 @@ function renderSpecialPage(page){
   host.className="special-grid count-"+Math.max(1,items.length);
   host.innerHTML=items.length?items.map(x=>x.kind==="win5"?win5Card(x):specialRaceCard(x)).join(""):'<div class="empty-card">本日の特別レース情報なし</div>';
   document.getElementById("screen-title").textContent="特別レース";
-  document.getElementById("screen-sub").textContent=page.total>1?("勝者・結果 "+page.page+"/"+page.total):"勝者・結果";
+  document.getElementById("screen-sub").textContent="勝者・結果 "+items.length+"件";
 }
 function renderJraPage(page){
   const venues=page.venues||[];
