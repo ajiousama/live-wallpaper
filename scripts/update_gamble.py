@@ -489,7 +489,6 @@ def nar_race_meta_map(ymd: str, code: str, venue: str) -> dict[int, dict]:
         if not rm:
             continue
         no = int(rm.group(1))
-        time_text = next((x for x in cells[1:] if re.fullmatch(r"\d{1,2}:\d{2}", x)), "")
         course = next((normalize_nar_course(x, venue) for x in cells[1:] if normalize_nar_course(x, venue)), "")
 
         race_name = ""
@@ -505,11 +504,25 @@ def nar_race_meta_map(ymd: str, code: str, venue: str) -> dict[int, dict]:
             race_name = race_name or cells[4]
         full_name = " ".join(x for x in [race_type, race_name] if x).strip()
 
+        # 出走取消・疾病・騎手変更などの変更情報行をレース本体として扱わない。
+        notice = bool(re.search(
+            r"(出走取消|競走除外|疾病|馬体故障|騎手変更|発走時刻変更|取消|変更)",
+            full_name,
+        ))
+        time_text = "" if notice else next(
+            (x for x in cells[1:] if re.fullmatch(r"\d{1,2}:\d{2}", x)),
+            "",
+        )
+        if notice:
+            full_name = ""
+
+        current = out.get(no, {})
+        # 同じRが複数行ある場合、変更情報よりレース本体の情報を優先してマージ。
         out[no] = {
             "race":no,
-            "time":time_text,
-            "race_name":full_name,
-            "course":course,
+            "time":current.get("time") or time_text,
+            "race_name":current.get("race_name") or full_name,
+            "course":current.get("course") or course,
         }
     return out
 
@@ -569,7 +582,7 @@ def local_results_for_names(ymd: str, local_epg: list[dict], names: list[str], n
         for no in race_nos:
             r = epg_by_no.get(no, {"race":no,"time":"","race_name":""})
             meta = nar_meta.get(no, {})
-            start_time = meta.get("time") or r.get("time","")
+            start_time = r.get("time","") or meta.get("time","")
             startm = hhmm_minutes(start_time)
             result = None
             page_html = ""
@@ -587,7 +600,7 @@ def local_results_for_names(ymd: str, local_epg: list[dict], names: list[str], n
                 except Exception:
                     result = None
             page_course = nar_course_from_html(page_html, name)
-            fallback_name = meta.get("race_name") or r.get("race_name","")
+            fallback_name = r.get("race_name","") or meta.get("race_name","")
             fallback_course = meta.get("course","")
             fm = re.search(r"(芝|ダート|ダ|直)\s*([0-9,]{3,5})\s*m", fallback_name)
             if fm:
