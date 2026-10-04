@@ -1,8 +1,8 @@
 {
   "date": "2026-10-04",
   "date_label": "2026年10月04日",
-  "updated_at": "14:33:41",
-  "updated_at_iso": "2026-10-04T14:33:41.220746+09:00",
+  "updated_at": "14:40:53",
+  "updated_at_iso": "2026-10-04T14:40:53.785251+09:00",
   "jra_switch_time": "17:00",
   "keirin": {
     "phase": "本日開催 8場",
@@ -1521,9 +1521,13 @@
         },
         {
           "race": 12,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            2,
+            3,
+            4
+          ],
+          "payout": "2,100円",
           "race_name": "すなっち特選",
           "scheduled_time": "14:30"
         }
@@ -1784,7 +1788,7 @@
             5
           ],
           "payout": "9,130円",
-          "race_name": "",
+          "race_name": "予選",
           "scheduled_time": "14:23"
         },
         {
@@ -2341,9 +2345,13 @@
         },
         {
           "race": 9,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            1,
+            5,
+            6
+          ],
+          "payout": "5,170円",
           "race_name": "",
           "scheduled_time": "14:33"
         },
@@ -2486,7 +2494,7 @@
             2
           ],
           "payout": "8,010円",
-          "race_name": "",
+          "race_name": "予選特賞",
           "scheduled_time": "14:22"
         },
         {
@@ -3193,7 +3201,7 @@
             "trifecta": "",
             "race_name": "Ｃ２十組",
             "course": "ダート1200m",
-            "status": "発走前"
+            "status": "結果待ち"
           },
           {
             "race": 7,
