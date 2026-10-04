@@ -1,8 +1,8 @@
 {
   "date": "2026-10-04",
   "date_label": "2026年10月04日",
-  "updated_at": "20:26:54",
-  "updated_at_iso": "2026-10-04T20:26:54.290048+09:00",
+  "updated_at": "20:33:03",
+  "updated_at_iso": "2026-10-04T20:33:03.980401+09:00",
   "jra_switch_time": "17:00",
   "keirin": {
     "phase": "本日開催 8場",
@@ -2389,8 +2389,8 @@
                 }
               ]
             },
-            "winner": "",
-            "origin": "",
+            "winner": "岡部陸斗",
+            "origin": "栃木",
             "race_name": "Ａ級 初日特別選抜",
             "scheduled_time": "20:16"
           }
@@ -3082,7 +3082,7 @@
           {
             "race": 12,
             "time": "20:30",
-            "status": "発走前",
+            "status": "結果待ち",
             "order": [],
             "payout": "",
             "payouts": {},
