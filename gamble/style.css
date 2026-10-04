@@ -62,9 +62,10 @@ h1{margin:1px 0 0;font-size:31px;line-height:1;font-weight:1000;letter-spacing:.
 .keirin-all .compact-table th,.boat-all .compact-table th{height:14px;font-size:7px;padding:0 2px}
 .keirin-all .compact-table td,.boat-all .compact-table td{font-size:9px;padding:0 2px}
 .keirin-all .compact-table .rcol,.boat-all .compact-table .rcol{width:20px;padding-left:0;padding-right:0}
-.keirin-all .compact-table .race-label{width:55px}
-.keirin-all .compact-table .winner-origin{width:86px;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.keirin-all .compact-table .ocol{width:58px}
+.keirin-all .compact-table .race-label{width:48px}
+.keirin-all .compact-table .winner-name{width:72px;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-right:1px solid #2f5263}
+.keirin-all .compact-table .winner-origin{width:38px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-right:1px solid #2f5263}
+.keirin-all .compact-table .ocol{width:56px}
 .keirin-all .compact-table .pcol{width:68px;padding-right:3px;white-space:nowrap}
 .boat-all .compact-table .race-label{width:62px}
 .boat-all .compact-table .ocol{width:56px}
