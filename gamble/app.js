@@ -236,11 +236,13 @@ function buildPages(){
   }
 
   const jraVenues=jra?.venues||[];
-  if(jraVenues.length){
+  for(let i=0;i<jraVenues.length;i+=2){
     pages.push({
-      key:"jra:all",
+      key:"jra:"+Math.floor(i/2),
       type:"jra",
-      venues:jraVenues
+      page:Math.floor(i/2)+1,
+      total:Math.ceil(jraVenues.length/2),
+      venues:jraVenues.slice(i,i+2)
     });
   }
   return pages.length?pages:[{key:"phase:デイ:0",type:"phase",phase:"デイ",page:1,total:1,items:[]}];
@@ -288,7 +290,7 @@ function jraVenueCard(v){
   const map=new Map((v.results||[]).map(x=>[Number(x.race),x]));
   let races="";
   for(let no=1;no<=12;no++) races+=jraRaceBlock(map.get(no)||{},no);
-  return '<article class="jra-venue-card"><div class="jra-venue-head"><strong>'+esc(v.name||"---")+'</strong><span>1〜3着＋騎手 / 全掛式払戻</span></div><div class="jra-venue-scroll">'+races+'</div></article>';
+  return '<article class="jra-venue-card"><div class="jra-venue-head"><strong>'+esc(v.name||"---")+'</strong><span>1〜3着＋騎手 / 全掛式払戻</span></div><div class="jra-venue-scroll sync-vscroll">'+races+'</div></article>';
 }
 function specialRaceCard(x){
   const where=[x.venue,x.race].filter(Boolean).join(" ");
@@ -330,10 +332,11 @@ function renderSpecialPage(page){
 function renderJraPage(page){
   const venues=page.venues||[];
   const host=document.getElementById("jra-grid");
-  host.className="jra-dedicated-grid all-jra-venues sync-vscroll";
+  host.className="jra-dedicated-grid jra-two-col count-"+venues.length;
   host.innerHTML=venues.length?venues.map(jraVenueCard).join(""):'<div class="empty-card">JRA開催なし</div>';
   document.getElementById("screen-title").textContent="JRA";
-  document.getElementById("screen-sub").textContent=(venues.map(v=>v.name).join("・")||"開催なし")+" / 1〜3着＋騎手 / 全掛式払戻";
+  const pageText=page.total>1?(" "+page.page+"/"+page.total):"";
+  document.getElementById("screen-sub").textContent=(venues.map(v=>v.name).join("・")||"開催なし")+" / 1〜3着＋騎手 / 全掛式払戻"+pageText;
   updateMarquees();
 }
 function showPage(index){
@@ -354,12 +357,12 @@ function syncScrollPosition(){
   const pages=buildPages();
   const page=pages[currentPageIndex]||pages[0];
   if(page?.type==="jra"){
-    const elapsed=(performance.now()-screenShownAt)%40000;
+    const elapsed=(performance.now()-screenShownAt)%50000;
     let pos=0;
-    if(elapsed<2000) pos=0;
-    else if(elapsed<18000) pos=(elapsed-2000)/16000;
-    else if(elapsed<22000) pos=1;
-    else if(elapsed<38000) pos=1-(elapsed-22000)/16000;
+    if(elapsed<3000) pos=0;
+    else if(elapsed<23000) pos=(elapsed-3000)/20000;
+    else if(elapsed<27000) pos=1;
+    else if(elapsed<47000) pos=1-(elapsed-27000)/20000;
     else pos=0;
     document.querySelectorAll("#jra-screen.active .sync-vscroll").forEach(box=>{
       const max=Math.max(0,box.scrollHeight-box.clientHeight);
@@ -413,7 +416,7 @@ async function load(){
 function currentPageDuration(){
   const pages=buildPages();
   const page=pages[currentPageIndex]||pages[0];
-  return page?.type==="jra"?40000:20000;
+  return page?.type==="jra"?50000:20000;
 }
 function scheduleRotation(){
   if(rotateTimer) clearTimeout(rotateTimer);
