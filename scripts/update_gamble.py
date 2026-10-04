@@ -489,7 +489,7 @@ def main():
     OUT.write_text(json.dumps(payload,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     print(
         f"[GAMBLE] {ymd} phase={phase or '-'} "
-        f"keirin={len(phase_venues)} boat={len(boats)} local={len(local_night)}"
+        f"keirin={len(phase_venues)} boat={len(boats)} local={len(local_all)}"
     )
 
 if __name__ == "__main__":
