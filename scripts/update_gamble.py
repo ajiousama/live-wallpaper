@@ -6,7 +6,7 @@ import xml.etree.ElementTree as ET
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from pathlib import Path
-from urllib.parse import urljoin
+from urllib.parse import parse_qs, urljoin, urlparse
 from zoneinfo import ZoneInfo
 
 import requests
@@ -508,7 +508,45 @@ def boat_winner_racer(ymd: str, code: str, race_no: int) -> str:
     return ""
 
 
-def boat_results(ymd: str, target: dict, now_minutes: int):
+def boat_pay_popularity(ymd: str) -> dict[tuple[str, int], str]:
+    """Get 3連単 popularity from the official daily payout matrix in one request."""
+    try:
+        soup = BeautifulSoup(
+            fetch(f"https://www.boatrace.jp/owpc/pc/race/pay?hd={ymd}"),
+            "html.parser",
+        )
+    except Exception:
+        return {}
+
+    out: dict[tuple[str, int], str] = {}
+    for a in soup.find_all("a", href=True):
+        href = urljoin("https://www.boatrace.jp", a.get("href",""))
+        if "/owpc/pc/race/raceresult" not in href:
+            continue
+        qs = parse_qs(urlparse(href).query)
+        code = (qs.get("jcd") or [""])[0]
+        rno_raw = (qs.get("rno") or [""])[0]
+        if not (re.fullmatch(r"\d{2}", code) and str(rno_raw).isdigit()):
+            continue
+
+        text = clean(a)
+        if not re.search(r"[¥￥]\s*[0-9,]+|[0-9,]+\s*円", text):
+            continue
+
+        td = a.find_parent("td")
+        if not td:
+            continue
+        nxt = td.find_next_sibling("td")
+        pop = clean(nxt)
+        pm = re.search(r"(?<!\d)(\d{1,3})(?!\d)", pop)
+        if pm:
+            out[(code, int(rno_raw))] = pm.group(1)
+        elif "返" in pop:
+            out[(code, int(rno_raw))] = "返"
+    return out
+
+
+def boat_results(ymd: str, target: dict, now_minutes: int, popularity_map: dict[tuple[str, int], str] | None = None):
     code = target["code"]
     try:
         html = fetch(f"https://www.boatrace.jp/owpc/pc/race/resultlist?hd={ymd}&jcd={code}")
@@ -547,6 +585,7 @@ def boat_results(ymd: str, target: dict, now_minutes: int):
                 "race":no,"status":"確定",
                 "order":[int(combo.group(1)),int(combo.group(2)),int(combo.group(3))],
                 "payout":f"{int(yen.group(1).replace(',','')):,}円",
+                "popularity":(popularity_map or {}).get((code,no),""),
                 "payouts":all_payouts,
                 "race_name":race_name,
                 "scheduled_time":meta.get("time",""),
@@ -566,6 +605,7 @@ def boat_results(ymd: str, target: dict, now_minutes: int):
                 "status":"結果待ち" if final_done else "発走前",
                 "order":[],
                 "payout":"",
+                "popularity":"",
                 "payouts":{},
                 "race_name":race_types.get(no) or meta.get("name",""),
                 "scheduled_time":meta.get("time",""),
@@ -1052,8 +1092,9 @@ def main():
 
     boats=[]
     boat_targets = boat_targets_today()
+    boat_popularity = boat_pay_popularity(ymd)
     with ThreadPoolExecutor(max_workers=min(8,max(1,len(boat_targets)))) as ex:
-        jobs=[ex.submit(boat_results,ymd,x,now_minutes) for x in boat_targets]
+        jobs=[ex.submit(boat_results,ymd,x,now_minutes,boat_popularity) for x in boat_targets]
         for fut in jobs:
             try:
                 boats.append(fut.result())
