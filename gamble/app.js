@@ -2,7 +2,7 @@ const DATA_URL="./data.json";
 const JRA_URL="../jra/data.json";
 const PHASES=["モーニング","デイ","ナイター","ミッドナイト"];
 const PAYOUT_TYPES=["単勝","複勝","枠連","馬連","馬単","ワイド","3連複","3連単"];
-let data=null,jra=null,currentPageIndex=0,screenShownAt=performance.now();
+let data=null,jra=null,currentPageIndex=0,screenShownAt=performance.now(),rotateTimer=null;
 
 function esc(v){
   return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
@@ -348,17 +348,18 @@ function showPage(index){
   else if(page.type==="special") renderSpecialPage(page);
   else renderPhasePage(page);
   document.querySelectorAll(".sync-vscroll").forEach(x=>x.scrollTop=0);
+  scheduleRotation();
 }
 function syncScrollPosition(){
   const pages=buildPages();
   const page=pages[currentPageIndex]||pages[0];
   if(page?.type==="jra"){
-    const elapsed=(performance.now()-screenShownAt)%20000;
+    const elapsed=(performance.now()-screenShownAt)%40000;
     let pos=0;
-    if(elapsed<1200) pos=0;
-    else if(elapsed<8800) pos=(elapsed-1200)/7600;
-    else if(elapsed<10400) pos=1;
-    else if(elapsed<18000) pos=1-(elapsed-10400)/7600;
+    if(elapsed<2000) pos=0;
+    else if(elapsed<18000) pos=(elapsed-2000)/16000;
+    else if(elapsed<22000) pos=1;
+    else if(elapsed<38000) pos=1-(elapsed-22000)/16000;
     else pos=0;
     document.querySelectorAll("#jra-screen.active .sync-vscroll").forEach(box=>{
       const max=Math.max(0,box.scrollHeight-box.clientHeight);
@@ -409,6 +410,15 @@ async function load(){
     document.getElementById("updated").textContent="再取得中";
   }
 }
+function currentPageDuration(){
+  const pages=buildPages();
+  const page=pages[currentPageIndex]||pages[0];
+  return page?.type==="jra"?40000:20000;
+}
+function scheduleRotation(){
+  if(rotateTimer) clearTimeout(rotateTimer);
+  rotateTimer=setTimeout(rotate,currentPageDuration());
+}
 function rotate(){
   const pages=buildPages();
   showPage((currentPageIndex+1)%pages.length);
@@ -417,4 +427,3 @@ function tick(){document.getElementById("clock").textContent=jstNow()}
 setInterval(tick,1000);tick();
 load();setInterval(load,30000);
 requestAnimationFrame(syncScrollPosition);
-setInterval(rotate,20000);
