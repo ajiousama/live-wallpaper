@@ -120,7 +120,10 @@ h1{margin:1px 0 0;font-size:31px;line-height:1;font-weight:1000;letter-spacing:.
 .race-all-grid .jra-table th{height:15px;font-size:7px;padding:0 2px}
 .race-all-grid .jra-table td{font-size:8px;padding:0 2px}
 .race-all-grid .jra-table .jr{width:20px;padding-left:0;padding-right:0}
-.race-all-grid .jra-table .race-label{width:58px;text-align:left;white-space:nowrap;text-overflow:ellipsis;color:#a9cdbd}
+.race-all-grid .jra-table .race-label{width:70px;text-align:left;color:#a9cdbd}
+.race-all-grid .race-info-two{padding:0 2px;vertical-align:middle;white-space:normal}
+.race-all-grid .race-name-line{height:11px;line-height:11px;overflow:hidden;white-space:nowrap;font-size:7.5px;color:#c7e0d5}
+.race-all-grid .race-course-line{height:10px;line-height:10px;overflow:hidden;white-space:nowrap;font-size:7px;color:#79b8a0}
 .race-all-grid .jra-table .horse{width:80px;text-align:left;font-weight:1000;white-space:nowrap}
 .race-all-grid td.race-label.marquee-check{padding-left:2px;padding-right:2px}
 .race-all-grid td.race-label.marquee-check .marquee-track,
@@ -135,7 +138,9 @@ footer{display:flex;justify-content:space-between;align-items:center;padding:0 8
   h1{font-size:25px}.status #clock{font-size:25px}.block h2{font-size:18px}.card-title{font-size:16px}.compact-table td{font-size:10px}.compact-table .race-label{font-size:8px}.num{width:18px;height:17px;font-size:10px}.jra-table td{font-size:9.5px}
   .horse-result-line{grid-template-columns:30px minmax(0,1fr) 58px 48px 60px;font-size:9px}.winner-jockey{font-size:8px}.race-info{font-size:7.5px}
   .race-all-grid .horse-result-line{grid-template-columns:20px 82px minmax(72px,1fr) 42px 38px 48px}
-  .race-all-grid .jra-table .race-label{width:54px}
+  .race-all-grid .jra-table .race-label{width:64px}
+  .race-all-grid .race-name-line{font-size:7px}
+  .race-all-grid .race-course-line{font-size:6.5px}
   .race-all-grid .jra-table .horse{width:75px}
   .race-all-grid .jra-table .jockey{width:34px}
   .race-all-grid .jra-table .tri-combo-cell{width:42px}
