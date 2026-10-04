@@ -53,6 +53,14 @@ body{background:linear-gradient(180deg,#061522,#02090f)}
 .order{display:flex;justify-content:center;gap:1px}
 .num{display:inline-grid;place-items:center;width:13px;height:11px;border:1px solid rgba(255,255,255,.25);border-radius:2px;font-size:7px;line-height:1}
 .n1{background:#fff;color:#111}.n2{background:#111;color:#fff}.n3{background:#d9232e;color:#fff}.n4{background:#1762c9;color:#fff}.n5{background:#f4d421;color:#111}.n6{background:#15964b;color:#fff}.n7{background:#ec7c22;color:#111}.n8{background:#ee91b4;color:#111}.n9{background:#7a35a5;color:#fff}
+.keirin-order .num,.boat-order .num{font-weight:1000}
+.keirin-card .combo,.boat-card .combo{background:rgba(255,255,255,.025)}
+.keirin-card .pay{background:rgba(255,79,135,.08);color:#ffd8e5}
+.boat-card .pay{background:rgba(45,139,255,.09);color:#d9eaff}
+.local-card .combo,.local-card .pay{background:rgba(214,106,19,.13)}
+.local-card .pay{color:#ffd8a8;font-weight:1000}
+.horse-order{gap:1px}
+.horse-no{display:inline-grid;place-items:center;min-width:14px;height:11px;padding:0 2px;border-radius:2px;border:1px solid #b56728;background:#4a2610;color:#ffd9b3;font-size:7px;font-weight:1000}
 .muted{color:#5e7a87}
 .marquee-check{min-width:0;overflow:hidden;white-space:nowrap}
 .marquee-track{display:inline-flex;align-items:center;min-width:100%;width:max-content;gap:28px;white-space:nowrap;transform:translateX(0)}
