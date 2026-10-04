@@ -73,11 +73,12 @@ h1{margin:1px 0 0;font-size:31px;line-height:1;font-weight:1000;letter-spacing:.
 .keirin-all .num,.boat-all .num{width:16px;height:15px;font-size:9px;gap:1px}
 .keirin-all .order,.boat-all .order{gap:2px}
 .boat-all .result-card{grid-template-rows:24px 1fr}
-.boat-table-viewport{min-height:0;overflow:hidden;position:relative}
-.boat-table-viewport .compact-table{height:auto;min-height:100%}
-.boat-table-viewport .compact-table th{position:sticky;top:0;z-index:2}
-.boat-table-viewport .compact-table td{height:16px;line-height:14px}
-.boat-table-viewport.needs-vscroll::after{content:"↕";position:absolute;right:2px;bottom:2px;font-size:9px;color:#65bfff;background:rgba(2,10,16,.72);padding:1px 2px;border-radius:2px;pointer-events:none}
+.auto-vscroll{min-height:0;overflow:hidden;position:relative}
+.result-table-viewport .compact-table,
+.horse-table-viewport .jra-table{height:auto!important;min-height:100%}
+.auto-vscroll table th{position:sticky;top:0;z-index:2}
+.result-table-viewport .compact-table td{height:16px;line-height:14px}
+.auto-vscroll.needs-vscroll::after{content:"↕";position:absolute;right:2px;bottom:2px;font-size:9px;color:#65bfff;background:rgba(2,10,16,.72);padding:1px 2px;border-radius:2px;pointer-events:none}
 .boat-all .card-title{font-size:12px}
 .boat-all .event{display:none}
 .boat-all .compact-table td{font-size:8px}
@@ -109,6 +110,8 @@ h1{margin:1px 0 0;font-size:31px;line-height:1;font-weight:1000;letter-spacing:.
 .race-all-grid .jra-card{grid-template-rows:28px 1fr}
 .race-all-grid .unified-race-card{grid-template-rows:28px 1fr}
 .race-all-grid .unified-race-card .jra-table{height:100%}
+.race-all-grid .horse-table-viewport{min-height:0}
+.race-all-grid .horse-table-viewport .jra-table{height:auto!important;min-height:100%}
 .race-all-grid .jra-card .card-head{padding:2px 6px}
 .race-all-grid .card-title{font-size:14px}
 .race-all-grid .event{font-size:8px}
@@ -123,7 +126,7 @@ h1{margin:1px 0 0;font-size:31px;line-height:1;font-weight:1000;letter-spacing:.
 .race-all-grid .jra-table .race-label{width:70px;text-align:left;color:#a9cdbd}
 .race-all-grid .race-info-two{padding:0 2px;vertical-align:middle;white-space:normal}
 .race-all-grid .race-name-line{height:11px;line-height:11px;overflow:hidden;white-space:nowrap;font-size:7.5px;color:#c7e0d5}
-.race-all-grid .race-course-line{height:10px;line-height:10px;overflow:hidden;white-space:nowrap;font-size:7px;color:#79b8a0}
+.race-all-grid .race-course-line{height:10px;line-height:10px;overflow:hidden;white-space:nowrap;font-size:7px;color:#79b8a0;font-weight:900}
 .race-all-grid .jra-table .horse{width:80px;text-align:left;font-weight:1000;white-space:nowrap}
 .race-all-grid td.race-label.marquee-check{padding-left:2px;padding-right:2px}
 .race-all-grid td.race-label.marquee-check .marquee-track,
