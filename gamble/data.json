@@ -1,8 +1,8 @@
 {
   "date": "2026-10-04",
   "date_label": "2026年10月04日",
-  "updated_at": "16:05:30",
-  "updated_at_iso": "2026-10-04T16:05:30.881647+09:00",
+  "updated_at": "16:14:21",
+  "updated_at_iso": "2026-10-04T16:14:21.750043+09:00",
   "jra_switch_time": "17:00",
   "keirin": {
     "phase": "本日開催 8場",
@@ -659,9 +659,13 @@
           {
             "race": 1,
             "time": "16:07",
-            "status": "発走前",
-            "order": [],
-            "payout": "",
+            "status": "確定",
+            "order": [
+              1,
+              4,
+              5
+            ],
+            "payout": "6,980円",
             "winner": "",
             "origin": "",
             "race_name": "Ａ級 チャレンジ予選",
@@ -867,8 +871,8 @@
               7
             ],
             "payout": "680円",
-            "winner": "",
-            "origin": "",
+            "winner": "吉田航",
+            "origin": "大分",
             "race_name": "Ａ級 予選",
             "scheduled_time": "15:55"
           },
@@ -2189,11 +2193,16 @@
         },
         {
           "race": 11,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            1,
+            4,
+            2
+          ],
+          "payout": "1,530円",
           "race_name": "選抜戦",
-          "scheduled_time": "16:06"
+          "scheduled_time": "16:06",
+          "winner": ""
         },
         {
           "race": 12,
@@ -2989,11 +2998,16 @@
         },
         {
           "race": 11,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            1,
+            5,
+            2
+          ],
+          "payout": "960円",
           "race_name": "予選特選",
-          "scheduled_time": "16:02"
+          "scheduled_time": "16:02",
+          "winner": ""
         },
         {
           "race": 12,
@@ -3157,11 +3171,16 @@
         },
         {
           "race": 3,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            1,
+            4,
+            5
+          ],
+          "payout": "600円",
           "race_name": "",
-          "scheduled_time": "16:08"
+          "scheduled_time": "16:08",
+          "winner": ""
         },
         {
           "race": 4,
@@ -3819,13 +3838,18 @@
           },
           {
             "race": 2,
-            "winner": "",
-            "jockey": "",
-            "trifecta": "",
-            "race_name": "有 ２歳－４",
+            "winner": "スリースカーレット",
+            "jockey": "▲塚本直",
+            "trifecta": "98,360円",
+            "order": [
+              8,
+              6,
+              9
+            ],
             "course": "ダート1300m",
-            "scheduled_time": "15:28",
-            "status": "結果待ち"
+            "status": "確定",
+            "race_name": "有 ２歳－４",
+            "scheduled_time": "15:28"
           },
           {
             "race": 3,
@@ -3932,7 +3956,7 @@
             "race_name": "Ｃ３六",
             "course": "ダート1200m",
             "scheduled_time": "16:10",
-            "status": "発走前"
+            "status": "結果待ち"
           },
           {
             "race": 2,
