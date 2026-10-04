@@ -65,7 +65,8 @@ function showScreen(mode){
   document.querySelector(".keirin-block")?.classList.toggle("active",screenMode==="keirin");
   document.querySelector(".boat-block")?.classList.toggle("active",screenMode==="boat");
   setupAllVerticalScrolls(true);
-  updateSportGridScroll();
+  const activeGrid=currentSportGrid();
+  if(activeGrid) activeGrid.scrollTop=0;
 }
 function renderBoats(){
   const host=document.getElementById("boat-grid");
