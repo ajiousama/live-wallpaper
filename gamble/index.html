@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta name="color-scheme" content="dark">
+<title>週末ギャンブル結果一覧</title>
+<link rel="stylesheet" href="style.css?v=1">
+</head>
+<body>
+<main id="dash">
+  <header class="topbar">
+    <div class="brand">
+      <div class="kicker">WEEKEND LIVE RESULT BOARD</div>
+      <h1>週末ギャンブル結果一覧</h1>
+      <div class="sub">競輪・ボート・JRA / 地方ナイター</div>
+    </div>
+    <div class="status">
+      <div class="live"><span></span> 自動更新</div>
+      <div id="updated">最終取得 --:--:--</div>
+      <div id="clock">--:--</div>
+    </div>
+  </header>
+
+  <section class="main-grid">
+    <section class="left-column">
+      <section class="block keirin-block">
+        <div class="block-head">
+          <div>
+            <div class="mini">KEIRIN / 3連単</div>
+            <h2>競輪 <span id="keirin-phase">---</span></h2>
+          </div>
+          <div class="note">結果＋払戻金のみ</div>
+        </div>
+        <div id="keirin-grid" class="two-grid"></div>
+      </section>
+
+      <section class="block boat-block">
+        <div class="block-head">
+          <div>
+            <div class="mini">BOAT RACE / 3連単</div>
+            <h2>本日の注目ボートレース</h2>
+          </div>
+          <div class="note">終了1時間後に非表示</div>
+        </div>
+        <div id="boat-grid" class="two-grid"></div>
+      </section>
+    </section>
+
+    <section class="right-column block">
+      <div class="block-head right-head">
+        <div>
+          <div id="right-mini" class="mini">JRA / WINNER・JOCKEY・3連単</div>
+          <h2 id="right-title">JRA</h2>
+        </div>
+        <div id="right-note" class="note">17:00に地方競馬ナイターへ切替</div>
+      </div>
+      <div id="right-grid" class="right-grid"></div>
+    </section>
+  </section>
+
+  <footer>
+    <span id="source">データ取得中</span>
+    <span>画面は30秒ごとに最新データを確認</span>
+  </footer>
+</main>
+<script src="app.js?v=1"></script>
+</body>
+</html>
