@@ -36,7 +36,9 @@ function compactCard(v,kind){
     :12;
   const klass=kind==="keirin"?"result-card keirin-card":"result-card";
   const winnerHead=kind==="keirin"?'<th class="winner-origin">勝者・出身</th>':"";
-  return '<article class="'+klass+'"><div class="card-head"><div class="card-title">'+esc(title)+grade+'</div><div class="event">'+esc(event)+'</div></div><table class="compact-table"><thead><tr><th class="rcol">R</th><th class="race-label">レース名・種別</th>'+winnerHead+'<th class="ocol">3連単</th><th class="pcol">払戻金</th></tr></thead><tbody>'+raceRows(v.races,raceCount,kind)+'</tbody></table></article>';
+  const table='<table class="compact-table"><thead><tr><th class="rcol">R</th><th class="race-label">レース名・種別</th>'+winnerHead+'<th class="ocol">3連単</th><th class="pcol">払戻金</th></tr></thead><tbody>'+raceRows(v.races,raceCount,kind)+'</tbody></table>';
+  const body=kind==="boat"?'<div class="boat-table-viewport">'+table+'</div>':table;
+  return '<article class="'+klass+'"><div class="card-head"><div class="card-title">'+esc(title)+grade+'</div><div class="event">'+esc(event)+'</div></div>'+body+'</article>';
 }
 function renderKeirin(){
   const host=document.getElementById("keirin-grid");
@@ -57,6 +59,7 @@ function showScreen(mode){
   main?.classList.add("screen-"+screenMode);
   document.querySelector(".keirin-block")?.classList.toggle("active",screenMode==="keirin");
   document.querySelector(".boat-block")?.classList.toggle("active",screenMode==="boat");
+  if(screenMode==="boat") setupBoatVerticalScrolls(true);
 }
 function renderBoats(){
   const host=document.getElementById("boat-grid");
@@ -67,6 +70,7 @@ function renderBoats(){
     return;
   }
   host.innerHTML=boats.map(function(v){return compactCard(v,"boat")}).join("");
+  setupBoatVerticalScrolls(true);
 }
 function cleanJockey(s){return String(s||"").replace(/(?<=[\u3040-\u30ff\u3400-\u9fff])\s+(?=[\u3040-\u30ff\u3400-\u9fff])/g,"")}
 function trifectaJra(r){
@@ -101,6 +105,43 @@ function localVenueCard(v){
     rows+='<tr><td class="jr">'+r+'R</td>'+'<td class="race-label marquee-check" title="'+esc(raceName)+'"><div class="marquee-track"><span class="marquee-text">'+esc(raceName)+'</span><span class="marquee-copy" aria-hidden="true">'+esc(raceName)+'</span></div></td>'+'<td class="horse '+(x.winner?"":"pending")+'">'+esc(x.winner||x.status||"発走前")+'</td><td class="jockey">'+esc(x.jockey||"")+'</td><td class="tri-combo-cell '+(combo?"":"pending")+'">'+esc(combo||"---")+'</td><td class="pay '+(x.trifecta?"":"pending")+'">'+esc(x.trifecta||"")+'</td></tr>';
   }
   return '<article class="jra-card unified-race-card"><div class="card-head"><div class="card-title">'+esc(v.name||"---")+'</div><div class="event">地方</div></div><table class="jra-table"><thead><tr><th class="jr">R</th><th class="race-label">レース名・種別</th><th>勝ち馬</th><th class="jockey">騎手</th><th class="tri-combo-cell">3連単</th><th class="pay">払戻</th></tr></thead><tbody>'+rows+'</tbody></table></article>';
+}
+function setupBoatVerticalScrolls(reset){
+  requestAnimationFrame(function(){
+    document.querySelectorAll(".boat-table-viewport").forEach(function(box){
+      const max=Math.max(0,box.scrollHeight-box.clientHeight);
+      const needs=max>2;
+      box.classList.toggle("needs-vscroll",needs);
+      if(reset || !needs){
+        box.scrollTop=0;
+        box.dataset.dir="1";
+        box.dataset.hold=needs?"18":"0";
+      }
+    });
+  });
+}
+function stepBoatVerticalScrolls(){
+  if(screenMode!=="boat") return;
+  document.querySelectorAll(".boat-table-viewport.needs-vscroll").forEach(function(box){
+    const max=Math.max(0,box.scrollHeight-box.clientHeight);
+    if(max<=2) return;
+    let hold=Number(box.dataset.hold||0);
+    if(hold>0){
+      box.dataset.hold=String(hold-1);
+      return;
+    }
+    let dir=Number(box.dataset.dir||1);
+    box.scrollTop+=dir;
+    if(box.scrollTop>=max-1){
+      box.scrollTop=max;
+      box.dataset.dir="-1";
+      box.dataset.hold="18";
+    }else if(box.scrollTop<=1){
+      box.scrollTop=0;
+      box.dataset.dir="1";
+      box.dataset.hold="18";
+    }
+  });
 }
 function updateMarquees(){
   requestAnimationFrame(function(){
@@ -150,6 +191,7 @@ function tick(){
 }
 setInterval(tick,1000);tick();
 load();setInterval(load,30000);
+setInterval(stepBoatVerticalScrolls,70);
 const SCREEN_ORDER=["keirin","race","boat"];
 setInterval(function(){
   const i=SCREEN_ORDER.indexOf(screenMode);
