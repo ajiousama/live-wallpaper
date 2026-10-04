@@ -83,7 +83,7 @@ body{background:linear-gradient(180deg,#061522,#02090f)}
 .payout-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px 3px;padding-bottom:1px}
 .payout-item{min-width:0;display:grid;grid-template-columns:27px minmax(0,1fr);gap:2px;align-items:center;line-height:9px}
 .payout-item b{font-size:5.8px;color:#8eaf9d;white-space:nowrap}
-.payout-item span{font-size:6.2px;color:#ffe88f;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.payout-item span{font-size:6.2px;color:#ffe88f;white-space:normal;overflow:visible;text-overflow:clip;line-height:7px}
 .featured-card{border-color:#7a6430;background:#12150b}
 .featured-card .jra-venue-head{background:#4c3a0f;border-color:#7a6430}
 .featured-scroll{padding:2px}
