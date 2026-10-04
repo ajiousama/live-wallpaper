@@ -212,30 +212,58 @@ def soup_mobile_result(link: dict) -> BeautifulSoup | None:
 
 def discover_today_meetings(today: str) -> list[dict]:
     """
-    Current-day confirmed results do not appear in JRA's completed-results
-    landing page until later. Discover today's live race pages from accessD:
-      top page -> one race page -> today's venue page -> all 1R-12R links.
+    Discover today's live race pages from official JRA pages.
+
+    The JRA top page can stop exposing the current day's race links after the
+    final race. Therefore, use the date-specific official programme page first
+    and the top page only as an additional source. This prevents a Sunday
+    evening refresh from falling back to Saturday's completed results.
     """
+    year, mm, dd = today[:4], today[4:6], today[6:8]
+    seed_html: list[str] = []
+
+    calendar_url = (
+        f"{BASE}/keiba/calendar{year}/{year}/{mm}/{mm}{dd}.html"
+    )
     try:
-        top_html = request("GET", BASE + "/").text
+        seed_html.append(request("GET", calendar_url).text)
+    except Exception as exc:
+        print(f"[JRA] current-day calendar fetch failed: {exc}", file=sys.stderr)
+
+    try:
+        seed_html.append(request("GET", BASE + "/").text)
     except Exception as exc:
         print(f"[JRA] current-day top fetch failed: {exc}", file=sys.stderr)
-        return []
 
-    seeds = cname_hits(top_html, "pw01dde01")
-    if not seeds:
-        return []
+    seeds: set[str] = set()
+    for html in seed_html:
+        seeds.update(cname_hits(html, "pw01dde01"))
 
     first_hop: set[str] = set(seeds)
-    for cname in seeds[:6]:
+    for cname in list(seeds)[:12]:
+        meta = parse_dde(cname)
+        if meta and meta["ymd"] != today:
+            continue
         try:
-            html = request("GET", BASE + "/JRADB/accessD.html", params={"CNAME": cname}).text
+            html = request(
+                "GET",
+                BASE + "/JRADB/accessD.html",
+                params={"CNAME": cname},
+            ).text
             first_hop.update(cname_hits(html, "pw01dde01"))
         except Exception:
             continue
 
-    today_seed_meta = [x for x in (parse_dde(c) for c in first_hop) if x and x["ymd"] == today]
+    today_seed_meta = [
+        x for x in (parse_dde(c) for c in first_hop)
+        if x and x["ymd"] == today
+    ]
     if not today_seed_meta:
+        print(
+            f"[JRA] no current-day race links found for {today}; "
+            "do not silently treat yesterday as today",
+            file=sys.stderr,
+        )
         return []
 
     # Pick one valid current-day page per venue, then use its race selector
@@ -703,6 +731,28 @@ def main() -> None:
         if not available_dates:
             available_dates = sorted({x["ymd"] for x in srl_meta})
         selected_ymd = available_dates[-1]
+
+        # A historical fallback is allowed for genuine non-racing days only.
+        # If today's official programme page exists and names a JRA venue,
+        # refusing yesterday's date is safer than displaying stale results.
+        if selected_ymd != today:
+            try:
+                y, m, d = today[:4], today[4:6], today[6:8]
+                cal = clean_text(
+                    soup_get(f"{BASE}/keiba/calendar{y}/{y}/{m}/{m}{d}.html")
+                )
+                if re.search(
+                    r"(札幌|函館|福島|新潟|東京|中山|中京|京都|阪神|小倉)\d*日",
+                    cal,
+                ):
+                    raise RuntimeError(
+                        f"JRA当日開催({today})を確認したため、"
+                        f"前日データ({selected_ymd})へのフォールバックを停止"
+                    )
+            except RuntimeError:
+                raise
+            except Exception:
+                pass
 
         selected = []
         seen_venue = set()
