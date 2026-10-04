@@ -297,7 +297,7 @@ function specialRaceCard(x){
   const result=hasWinner
     ?'<div class="special-winner"><span>'+winnerLabel+'</span><strong>'+esc(x.winner)+'</strong><em>'+esc(x.sub||"")+'</em></div>'
     :'<div class="special-winner waiting"><span>結果</span><strong>'+esc(x.status||"発走前")+'</strong><em>'+esc(x.time?x.time+" 発走予定":"")+'</em></div>';
-  const combo=(Array.isArray(x.order)&&x.order.length>=3)?orderHtml(x.order,x.kind==="local"?"local":(x.kind==="boat"?"boat":"keirin")):'<span class="muted">---</span>';
+  const combo=(Array.isArray(x.order)&&x.order.length>=3)?orderHtml(x.order,(x.kind==="local"||x.kind==="jra"||x.kind==="overseas")?"local":(x.kind==="boat"?"boat":"keirin")):'<span class="muted">---</span>';
   const meta=(x.kind==="overseas"&&!hasWinner&&Array.isArray(x.horses)&&x.horses.length)
     ?'<div class="special-detail"><b>注目馬</b><span>'+esc(x.horses.join("・"))+'</span></div>'
     :'<div class="special-detail"><b>3連単</b><span>'+combo+'</span><b>払戻</b><strong>'+esc(x.payout||"---")+'</strong></div>';
