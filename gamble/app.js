@@ -1,6 +1,6 @@
 const DATA_URL="./data.json";
 const JRA_URL="../jra/data.json";
-let data=null,jra=null,keirinPage=0,screenMode="keirin";
+let data=null,jra=null,screenMode="keirin";
 
 function esc(v){return String(v??"").replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]})}
 function jstNow(){
@@ -36,21 +36,15 @@ function compactCard(v,kind){
 }
 function renderKeirin(){
   const host=document.getElementById("keirin-grid");
-  const phase=data?.keirin?.phase||"";
-  document.getElementById("keirin-phase").textContent=phase||"開催なし";
   const venues=data?.keirin?.venues||[];
+  document.getElementById("keirin-phase").textContent=venues.length?("本日開催 "+venues.length+"場"):"開催なし";
   if(!venues.length){
-    host.innerHTML='<div class="empty-card">現在表示する競輪開催はありません</div><div class="empty-card">次の時間帯を待っています</div>';
+    host.className="all-venue-grid keirin-all";
+    host.innerHTML='<div class="empty-card">本日の競輪開催はありません</div>';
     return;
   }
-  const pages=[];
-  for(let i=0;i<venues.length;i+=4) pages.push(venues.slice(i,i+4));
-  if(keirinPage>=pages.length) keirinPage=0;
-  const current=pages[keirinPage]||[];
-  host.classList.toggle("one",current.length===1);
-  host.classList.toggle("three",current.length===3);
-  host.classList.toggle("four",current.length>=4);
-  host.innerHTML=current.map(function(v){return compactCard(v,"keirin")}).join("");
+  host.className="all-venue-grid keirin-all";
+  host.innerHTML=venues.map(function(v){return compactCard(v,"keirin")}).join("");
 }
 function showScreen(mode){
   screenMode=["keirin","race","boat"].includes(mode)?mode:"keirin";
@@ -62,12 +56,13 @@ function showScreen(mode){
 }
 function renderBoats(){
   const host=document.getElementById("boat-grid");
-  const boats=(data?.boats||[]).filter(function(b){return b.active!==false}).slice(0,2);
+  const boats=data?.boats||[];
+  host.className="all-venue-grid boat-all";
   if(!boats.length){
-    host.innerHTML='<div class="empty-card">注目ボート結果待ち</div><div class="empty-card">終了1時間後に表示終了</div>';
+    host.innerHTML='<div class="empty-card">本日のボート開催情報を取得中</div>';
     return;
   }
-  host.innerHTML=boats.map(function(v){return compactCard(v,"boat")}).join("")+(boats.length===1?'<div class="empty-card">もう1場は表示終了</div>':"");
+  host.innerHTML=boats.map(function(v){return compactCard(v,"boat")}).join("");
 }
 function cleanJockey(s){return String(s||"").replace(/(?<=[\u3040-\u30ff\u3400-\u9fff])\s+(?=[\u3040-\u30ff\u3400-\u9fff])/g,"")}
 function trifectaJra(r){
@@ -121,34 +116,18 @@ function updateMarquees(){
   });
 }
 function renderRight(){
-  const now=jstNow();
-  const night=now.hour>=17;
   const host=document.getElementById("right-grid");
-  let venues=[];
-  if(night){
-    document.getElementById("right-mini").textContent="NAR NIGHT / WINNER・JOCKEY・3連単";
-    document.getElementById("right-title").textContent="本日の地方競馬ナイター";
-    document.getElementById("right-note").textContent="17:00から自動切替";
-    venues=(data?.local_night?.venues||[]).slice(0,3);
-    host.classList.toggle("three",venues.length>=3);
-    host.innerHTML=venues.length?venues.map(localVenueCard).join(""):'<div class="empty-card">本日の地方ナイター情報を取得中</div>';
-  }else{
-    document.getElementById("right-mini").textContent="JRA EAST / WEST + LOCAL 3RD";
-    document.getElementById("right-title").textContent="JRA東・西 ＋ 第3場";
-    document.getElementById("right-note").textContent="JRAが2場の日は3場目に盛岡";
-    const central=(jra?.venues||[]).slice(0,3);
-    const cards=central.map(function(v){return {kind:"jra",venue:v}});
-    if(cards.length<3){
-      (data?.local_feature?.venues||[]).forEach(function(v){
-        if(cards.length<3) cards.push({kind:"local",venue:v});
-      });
-    }
-    host.classList.toggle("three",cards.length>=3);
-    host.innerHTML=cards.length?cards.map(function(x){
-      return x.kind==="jra"?jraVenueCard(x.venue):localVenueCard(x.venue);
-    }).join(""):'<div class="empty-card">競馬開催情報を取得中</div>';
-    updateMarquees();
-  }
+  document.getElementById("right-mini").textContent="JRA + LOCAL / ALL VENUES";
+  document.getElementById("right-title").textContent="本日の競馬 全開催場";
+  const central=(jra?.venues||[]).map(function(v){return {kind:"jra",venue:v}});
+  const local=(data?.local_all?.venues||[]).map(function(v){return {kind:"local",venue:v}});
+  const cards=central.concat(local);
+  document.getElementById("right-note").textContent="JRA・地方競馬を全場表示";
+  host.className="race-all-grid";
+  host.innerHTML=cards.length?cards.map(function(x){
+    return x.kind==="jra"?jraVenueCard(x.venue):localVenueCard(x.venue);
+  }).join(""):'<div class="empty-card">本日の競馬開催情報を取得中</div>';
+  updateMarquees();
 }
 function render(){
   renderKeirin();renderBoats();renderRight();updateMarquees();
@@ -175,10 +154,6 @@ function tick(){
 }
 setInterval(tick,1000);tick();
 load();setInterval(load,30000);
-setInterval(function(){
-  const n=Math.ceil((data?.keirin?.venues||[]).length/4);
-  if(n>1 && screenMode==="keirin"){keirinPage=(keirinPage+1)%n;renderKeirin()}
-},15000);
 const SCREEN_ORDER=["keirin","race","boat"];
 setInterval(function(){
   const i=SCREEN_ORDER.indexOf(screenMode);
