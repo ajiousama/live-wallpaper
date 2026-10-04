@@ -173,28 +173,65 @@ def parse_keirin_result(html: str, race_no: int):
         if winner:
             break
 
-    m = re.search(
-        r"３連単\s*([1-9])\s*[>→\-]\s*([1-9])\s*[>→\-]\s*([1-9])\s*([0-9,]+)円",
-        text,
-    )
-    if not m:
+    payout_specs = [
+        ("枠複", r"枠複", r"([1-9])\s*[-－]\s*([1-9])"),
+        ("枠単", r"枠単", r"([1-9])\s*[>→]\s*([1-9])"),
+        ("2車複", r"[２2]車複", r"([1-9])\s*[-－]\s*([1-9])"),
+        ("2車単", r"[２2]車単", r"([1-9])\s*[>→]\s*([1-9])"),
+        ("3連複", r"[３3]連複", r"([1-9])\s*[-－]\s*([1-9])\s*[-－]\s*([1-9])"),
+        ("3連単", r"[３3]連単", r"([1-9])\s*[>→]\s*([1-9])\s*[>→]\s*([1-9])"),
+    ]
+    payouts = {}
+
+    for label, head_pat, combo_pat in payout_specs:
         m = re.search(
-            r"3連単\s*([1-9])\s*[>→\-]\s*([1-9])\s*[>→\-]\s*([1-9])\s*([0-9,]+)円",
+            head_pat + r"\s*" + combo_pat + r"\s*([0-9,]+)円",
             text,
         )
-    if m:
+        if not m:
+            continue
+        nums = m.groups()[:-1]
+        sep = ">" if label in {"枠単","2車単","3連単"} else "-"
+        payouts[label] = [{
+            "combo":sep.join(nums),
+            "amount":f"{int(m.groups()[-1].replace(',','')):,}円",
+        }]
+
+    wide_seg = re.search(r"ワイド\s*(.*?)(?=[３3]連複|[３3]連単|$)", text)
+    if wide_seg:
+        wide_items = []
+        for wm in re.finditer(
+            r"([1-9])\s*[-－]\s*([1-9])\s*([0-9,]+)円",
+            wide_seg.group(1),
+        ):
+            wide_items.append({
+                "combo":f"{wm.group(1)}-{wm.group(2)}",
+                "amount":f"{int(wm.group(3).replace(',','')):,}円",
+            })
+        if wide_items:
+            payouts["ワイド"] = wide_items
+
+    tri = (payouts.get("3連単") or [{}])[0]
+    order = []
+    payout = ""
+    if tri.get("combo"):
+        order = [int(x) for x in tri["combo"].split(">")]
+        payout = tri.get("amount","")
+
+    if winner or payouts:
         return {
             "race":race_no,
             "time":start,
             "status":"確定",
-            "order":[int(m.group(1)),int(m.group(2)),int(m.group(3))],
-            "payout":f"{int(m.group(4).replace(',','')):,}円",
+            "order":order,
+            "payout":payout,
+            "payouts":payouts,
             "winner":winner,
             "origin":origin,
         }
     return {
         "race":race_no,"time":start,"status":"未確定","order":[],"payout":"",
-        "winner":winner,"origin":origin,
+        "payouts":{},"winner":winner,"origin":origin,
     }
 
 def keirin_meta(ymd: str, sched: dict):
@@ -286,7 +323,7 @@ def fill_keirin_results(ymd: str, venues: list[dict], now_minutes: int):
                 try:
                     race = parse_keirin_result(fut.result(), no)
                 except Exception:
-                    race = {"race":no,"time":"","status":"未確定","order":[],"payout":""}
+                    race = {"race":no,"time":"","status":"未確定","order":[],"payout":"","payouts":{}}
                 rm = hhmm_minutes(race.get("time",""), rollover="ミッドナイト" in venue.get("type",""))
                 if not race["order"]:
                     race["status"] = "結果待ち" if rm is not None and now_minutes >= rm else "発走前"
