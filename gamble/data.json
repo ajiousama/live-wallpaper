@@ -1,114 +1,13 @@
 {
   "date": "2026-10-04",
   "date_label": "2026年10月04日",
-  "updated_at": "11:12:20",
-  "updated_at_iso": "2026-10-04T11:12:20.812363+09:00",
+  "updated_at": "11:18:49",
+  "updated_at_iso": "2026-10-04T11:18:49.429024+09:00",
   "jra_switch_time": "17:00",
   "keirin": {
     "phase": "モーニング",
     "phase_end_minutes": 640,
     "venues": [
-      {
-        "channel": "keirin.hofu",
-        "venue": "防府",
-        "type": "モーニング",
-        "grade": "F2",
-        "epg_start": "202610041000",
-        "epg_stop": "202610041400",
-        "code": "63",
-        "race_ids": [
-          "202610046301",
-          "202610046302",
-          "202610046303",
-          "202610046304",
-          "202610046305",
-          "202610046306",
-          "202610046307"
-        ],
-        "event_name": "介護サービスのセービング杯",
-        "last_time": "10:30",
-        "last_confirmed": true,
-        "races": [
-          {
-            "race": 1,
-            "time": "08:30",
-            "status": "確定",
-            "order": [
-              5,
-              4,
-              7
-            ],
-            "payout": "28,980円"
-          },
-          {
-            "race": 2,
-            "time": "08:50",
-            "status": "確定",
-            "order": [
-              1,
-              2,
-              3
-            ],
-            "payout": "7,670円"
-          },
-          {
-            "race": 3,
-            "time": "09:10",
-            "status": "確定",
-            "order": [
-              5,
-              2,
-              1
-            ],
-            "payout": "2,140円"
-          },
-          {
-            "race": 4,
-            "time": "09:30",
-            "status": "確定",
-            "order": [
-              7,
-              2,
-              4
-            ],
-            "payout": "2,250円"
-          },
-          {
-            "race": 5,
-            "time": "09:50",
-            "status": "確定",
-            "order": [
-              3,
-              7,
-              2
-            ],
-            "payout": "3,960円"
-          },
-          {
-            "race": 6,
-            "time": "10:10",
-            "status": "確定",
-            "order": [
-              4,
-              1,
-              7
-            ],
-            "payout": "1,250円"
-          },
-          {
-            "race": 7,
-            "time": "10:30",
-            "status": "確定",
-            "order": [
-              1,
-              4,
-              5
-            ],
-            "payout": "29,390円"
-          }
-        ],
-        "display_name": "防府"
-      },
       {
         "channel": "keirin.matsudo",
         "venue": "松戸",
@@ -209,6 +108,107 @@
           }
         ],
         "display_name": "松戸"
+      },
+      {
+        "channel": "keirin.hofu",
+        "venue": "防府",
+        "type": "モーニング",
+        "grade": "F2",
+        "epg_start": "202610041000",
+        "epg_stop": "202610041400",
+        "code": "63",
+        "race_ids": [
+          "202610046301",
+          "202610046302",
+          "202610046303",
+          "202610046304",
+          "202610046305",
+          "202610046306",
+          "202610046307"
+        ],
+        "event_name": "介護サービスのセービング杯",
+        "last_time": "10:30",
+        "last_confirmed": true,
+        "races": [
+          {
+            "race": 1,
+            "time": "08:30",
+            "status": "確定",
+            "order": [
+              5,
+              4,
+              7
+            ],
+            "payout": "28,980円"
+          },
+          {
+            "race": 2,
+            "time": "08:50",
+            "status": "確定",
+            "order": [
+              1,
+              2,
+              3
+            ],
+            "payout": "7,670円"
+          },
+          {
+            "race": 3,
+            "time": "09:10",
+            "status": "確定",
+            "order": [
+              5,
+              2,
+              1
+            ],
+            "payout": "2,140円"
+          },
+          {
+            "race": 4,
+            "time": "09:30",
+            "status": "確定",
+            "order": [
+              7,
+              2,
+              4
+            ],
+            "payout": "2,250円"
+          },
+          {
+            "race": 5,
+            "time": "09:50",
+            "status": "確定",
+            "order": [
+              3,
+              7,
+              2
+            ],
+            "payout": "3,960円"
+          },
+          {
+            "race": 6,
+            "time": "10:10",
+            "status": "確定",
+            "order": [
+              4,
+              1,
+              7
+            ],
+            "payout": "1,250円"
+          },
+          {
+            "race": 7,
+            "time": "10:30",
+            "status": "確定",
+            "order": [
+              1,
+              4,
+              5
+            ],
+            "payout": "29,390円"
+          }
+        ],
+        "display_name": "防府"
       }
     ]
   },
@@ -311,9 +311,13 @@
       "races": [
         {
           "race": 1,
-          "status": "発走前",
-          "order": [],
-          "payout": ""
+          "status": "確定",
+          "order": [
+            2,
+            5,
+            3
+          ],
+          "payout": "2円"
         },
         {
           "race": 2,

@@ -2,7 +2,7 @@
   "source": "JRA公式",
   "source_date": "20261004",
   "date_label": "10月4日 日曜",
-  "updated_at": "2026-10-04 11:11 JST",
+  "updated_at": "2026-10-04 11:18 JST",
   "venues": [
     {
       "name": "東京",
@@ -212,6 +212,109 @@
           "jockey": "菊沢 一樹",
           "horse": "ピクシーブラスト",
           "win_payout": "260円"
+        },
+        {
+          "race": 3,
+          "race_name": "メイクデビュー東京",
+          "course": "",
+          "top3": [
+            {
+              "position": 1,
+              "frame": "枠5黄",
+              "number": "9",
+              "horse": "ヴェントセラーレ",
+              "jockey": "津村 明秀",
+              "time": "1:39.9",
+              "margin": ""
+            },
+            {
+              "position": 2,
+              "frame": "枠8桃",
+              "number": "15",
+              "horse": "ドーリック",
+              "jockey": "荻野 極",
+              "time": "1:40.6",
+              "margin": "４"
+            },
+            {
+              "position": 3,
+              "frame": "枠5黄",
+              "number": "10",
+              "horse": "エコロゴッド",
+              "jockey": "菊沢 一樹",
+              "time": "1:40.7",
+              "margin": "１／２"
+            }
+          ],
+          "payouts": {
+            "単勝": [
+              {
+                "combo": "9",
+                "amount": "1,350円"
+              }
+            ],
+            "複勝": [
+              {
+                "combo": "9",
+                "amount": "400円"
+              },
+              {
+                "combo": "15",
+                "amount": "700円"
+              },
+              {
+                "combo": "10",
+                "amount": "630円"
+              }
+            ],
+            "枠連": [
+              {
+                "combo": "5-8",
+                "amount": "7,110円"
+              }
+            ],
+            "馬連": [
+              {
+                "combo": "9-15",
+                "amount": "9,000円"
+              }
+            ],
+            "馬単": [
+              {
+                "combo": "9-15",
+                "amount": "15,390円"
+              }
+            ],
+            "ワイド": [
+              {
+                "combo": "9-15",
+                "amount": "2,240円"
+              },
+              {
+                "combo": "9-10",
+                "amount": "3,390円"
+              },
+              {
+                "combo": "10-15",
+                "amount": "9,070円"
+              }
+            ],
+            "3連複": [
+              {
+                "combo": "9-10-15",
+                "amount": "76,460円"
+              }
+            ],
+            "3連単": [
+              {
+                "combo": "9-15-10",
+                "amount": "328,230円"
+              }
+            ]
+          },
+          "jockey": "津村 明秀",
+          "horse": "ヴェントセラーレ",
+          "win_payout": "1,350円"
         }
       ]
     },
