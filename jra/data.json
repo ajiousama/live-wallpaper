@@ -2,7 +2,7 @@
   "source": "JRA公式",
   "source_date": "20261004",
   "date_label": "10月4日 日曜",
-  "updated_at": "2026-10-04 13:33 JST",
+  "updated_at": "2026-10-04 13:54 JST",
   "venues": [
     {
       "name": "東京",
@@ -727,6 +727,18 @@
           "jockey": "野中 悠太郎",
           "horse": "アバレリュウ",
           "win_payout": "940円"
+        },
+        {
+          "race": 9,
+          "course": "芝1400m"
+        },
+        {
+          "race": 10,
+          "course": "ダート1600m"
+        },
+        {
+          "race": 11,
+          "course": "芝1800m"
         }
       ]
     },
@@ -1468,6 +1480,121 @@
           "jockey": "川田 将雅",
           "horse": "マウンテンバローズ",
           "win_payout": "600円"
+        },
+        {
+          "race": 8,
+          "race_name": "3歳以上2勝クラス",
+          "course": "",
+          "top3": [
+            {
+              "position": 1,
+              "frame": "枠5黄",
+              "number": "10",
+              "horse": "ザックザク",
+              "jockey": "北村 友一",
+              "time": "1:23.5",
+              "margin": ""
+            },
+            {
+              "position": 2,
+              "frame": "枠3赤",
+              "number": "6",
+              "horse": "ジューンアゲイン",
+              "jockey": "田山 旺佑",
+              "time": "1:23.6",
+              "margin": "クビ"
+            },
+            {
+              "position": 3,
+              "frame": "枠1白",
+              "number": "1",
+              "horse": "ライトオブヌカタ",
+              "jockey": "富田 暁",
+              "time": "1:24.1",
+              "margin": "３"
+            }
+          ],
+          "payouts": {
+            "単勝": [
+              {
+                "combo": "10",
+                "amount": "460円"
+              }
+            ],
+            "複勝": [
+              {
+                "combo": "10",
+                "amount": "140円"
+              },
+              {
+                "combo": "6",
+                "amount": "150円"
+              },
+              {
+                "combo": "1",
+                "amount": "180円"
+              }
+            ],
+            "枠連": [
+              {
+                "combo": "3-5",
+                "amount": "580円"
+              }
+            ],
+            "馬連": [
+              {
+                "combo": "6-10",
+                "amount": "680円"
+              }
+            ],
+            "馬単": [
+              {
+                "combo": "10-6",
+                "amount": "1,360円"
+              }
+            ],
+            "ワイド": [
+              {
+                "combo": "6-10",
+                "amount": "300円"
+              },
+              {
+                "combo": "1-10",
+                "amount": "570円"
+              },
+              {
+                "combo": "1-6",
+                "amount": "490円"
+              }
+            ],
+            "3連複": [
+              {
+                "combo": "1-6-10",
+                "amount": "1,650円"
+              }
+            ],
+            "3連単": [
+              {
+                "combo": "10-6-1",
+                "amount": "7,990円"
+              }
+            ]
+          },
+          "jockey": "北村 友一",
+          "horse": "ザックザク",
+          "win_payout": "460円"
+        },
+        {
+          "race": 9,
+          "course": "芝2000m"
+        },
+        {
+          "race": 10,
+          "course": "ダート1200m"
+        },
+        {
+          "race": 11,
+          "course": "芝2400m"
         }
       ]
     }
