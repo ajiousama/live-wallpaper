@@ -13,10 +13,11 @@ function orderHtml(order){
   if(!Array.isArray(order)||order.length<3) return '<span class="pending">---</span>';
   return '<span class="order">'+order.slice(0,3).map(numBox).join("")+'</span>';
 }
-function raceRows(races){
+function raceRows(races,count){
   const map=new Map((races||[]).map(function(r){return [Number(r.race),r]}));
   let out="";
-  for(let r=1;r<=12;r++){
+  const rows=Math.max(1,Math.min(12,Number(count)||12));
+  for(let r=1;r<=rows;r++){
     const x=map.get(r)||{race:r,status:"発走前",order:[],payout:""};
     out+='<tr><td class="rcol">'+r+'R</td><td class="ocol">'+orderHtml(x.order)+'</td><td class="pcol '+(x.payout?"":"pending")+'">'+esc(x.payout||x.status||"発走前")+'</td></tr>';
   }
@@ -26,7 +27,11 @@ function compactCard(v,kind){
   const title=v.display_name||v.name||v.venue||"---";
   const event=v.event_name||"";
   const grade=kind==="keirin"&&v.grade?' <small>'+esc(v.grade)+'</small>':"";
-  return '<article class="result-card"><div class="card-head"><div class="card-title">'+esc(title)+grade+'</div><div class="event">'+esc(event)+'</div></div><table class="compact-table"><thead><tr><th>R</th><th>3連単</th><th>払戻金</th></tr></thead><tbody>'+raceRows(v.races)+'</tbody></table></article>';
+  const raceCount=kind==="keirin"
+    ?((v.race_ids||[]).length||(v.races||[]).reduce(function(m,x){return Math.max(m,Number(x.race)||0)},0)||12)
+    :12;
+  const klass=kind==="keirin"?"result-card keirin-card":"result-card";
+  return '<article class="'+klass+'"><div class="card-head"><div class="card-title">'+esc(title)+grade+'</div><div class="event">'+esc(event)+'</div></div><table class="compact-table"><thead><tr><th>R</th><th>3連単</th><th>払戻金</th></tr></thead><tbody>'+raceRows(v.races,raceCount)+'</tbody></table></article>';
 }
 function renderKeirin(){
   const host=document.getElementById("keirin-grid");
@@ -38,10 +43,12 @@ function renderKeirin(){
     return;
   }
   const pages=[];
-  for(let i=0;i<venues.length;i+=2) pages.push(venues.slice(i,i+2));
+  for(let i=0;i<venues.length;i+=3) pages.push(venues.slice(i,i+3));
   if(keirinPage>=pages.length) keirinPage=0;
   const current=pages[keirinPage]||[];
-  host.innerHTML=current.map(function(v){return compactCard(v,"keirin")}).join("")+(current.length===1?'<div class="empty-card">この時間帯は1場開催</div>':"");
+  host.classList.toggle("one",current.length===1);
+  host.classList.toggle("three",current.length>=3);
+  host.innerHTML=current.map(function(v){return compactCard(v,"keirin")}).join("");
 }
 function renderBoats(){
   const host=document.getElementById("boat-grid");
@@ -151,6 +158,6 @@ function tick(){
 setInterval(tick,1000);tick();
 load();setInterval(load,30000);
 setInterval(function(){
-  const n=Math.ceil((data?.keirin?.venues||[]).length/2);
+  const n=Math.ceil((data?.keirin?.venues||[]).length/3);
   if(n>1){keirinPage=(keirinPage+1)%n;renderKeirin()}
 },15000);
