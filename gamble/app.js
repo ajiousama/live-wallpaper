@@ -297,13 +297,11 @@ function updateMarquees(){
 }
 function renderRight(){
   const host=document.getElementById("right-grid");
-  document.getElementById("right-mini").textContent="JRA + LOCAL / ALL VENUES";
-  document.getElementById("right-title").textContent="本日の競馬 全開催場";
+  document.getElementById("right-title").textContent="競馬 全開催場";
   const central=(jra?.venues||[]).map(function(v){return {kind:"jra",venue:v}});
   const local=(data?.local_all?.venues||[]).map(function(v){return {kind:"local",venue:v}});
   const cards=central.concat(local);
   const featured=data?.featured_races||[];
-  document.getElementById("right-note").textContent="JRA・地方競馬を全場表示";
   host.className="race-all-grid auto-vscroll sport-grid-vscroll";
   if(!cards.length){
     host.innerHTML='<div class="empty-card">本日の競馬開催情報を取得中</div>';
@@ -321,7 +319,7 @@ function renderRight(){
 }
 function render(){
   renderKeirin();renderBoats();renderRight();updateMarquees();setupAllVerticalScrolls(true);
-  document.getElementById("updated").textContent="最終取得 "+(data?.updated_at||jra?.updated_at||"--");
+  document.getElementById("updated").textContent=(data?.updated_at||jra?.updated_at||"--");
   const src=data?.source||{};
   document.getElementById("source").textContent="日程: "+(src.schedule||"Free WiFi EPG")+" / 競輪: "+(src.keirin||"-")+" / ボート: "+(src.boat||"-")+" / JRA: JRA公式";
 }
