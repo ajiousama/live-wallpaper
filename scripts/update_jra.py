@@ -421,6 +421,120 @@ def netkeiba_race_meta(race_page: dict) -> dict:
     return {"race_name":_race_name_from_soup(soup),"course":course}
 
 
+def race_id_from_meta(race_page: dict) -> str:
+    race_id = (
+        f'{race_page.get("year","")}{race_page.get("venue_code","")}'
+        f'{race_page.get("meet","")}{race_page.get("day","")}'
+        f'{int(race_page.get("race",0)):02d}'
+    )
+    return race_id if len(race_id) == 12 else ""
+
+
+def netkeiba_current_result(race_page: dict) -> dict | None:
+    """Fallback for same-day results when JRA hides current result links after racing."""
+    race_id = race_id_from_meta(race_page)
+    if not race_id:
+        return None
+    try:
+        soup = soup_get(
+            "https://race.netkeiba.com/race/result.html?race_id=" + race_id
+        )
+    except Exception:
+        return None
+
+    result_table = None
+    for table in soup.find_all("table"):
+        header = clean_text(table)
+        if "着順" in header and "馬名" in header and "騎手" in header:
+            result_table = table
+            break
+    if not result_table:
+        return None
+
+    top3: list[dict] = []
+    for row in result_table.find_all("tr"):
+        cells = row.find_all("td", recursive=False)
+        if len(cells) < 9:
+            continue
+        rank_text = clean_text(cells[0])
+        m = re.match(r"([123])", rank_text)
+        if not m:
+            continue
+        horse_link = cells[3].find("a")
+        jockey_link = cells[6].find("a")
+        top3.append({
+            "position": int(m.group(1)),
+            "frame": clean_text(cells[1]),
+            "number": clean_text(cells[2]),
+            "horse": clean_text(horse_link or cells[3]),
+            "jockey": clean_text(jockey_link or cells[6]),
+            "time": clean_text(cells[7]),
+            "margin": clean_text(cells[8]),
+        })
+        if len(top3) >= 3:
+            break
+
+    if len(top3) < 3:
+        return None
+
+    text = clean_text(soup)
+    race_name = _race_name_from_soup(soup)
+    course = normalize_course_text(text)
+    winner = top3[0]
+    return {
+        "race_name": race_name,
+        "course": course,
+        "top3": top3,
+        "payouts": {},
+        "jockey": winner.get("jockey",""),
+        "horse": winner.get("horse",""),
+        "win_payout": None,
+    }
+
+
+def discover_today_payout_meetings(today: str) -> list[dict]:
+    """Rebuild today's venue/meet/day metadata from the still-live payout menu."""
+    try:
+        menu = soup_action("/JRADB/accessH.html", "pw01hli00/03")
+    except Exception:
+        return []
+
+    by_venue: dict[str, dict] = {}
+    for cname in cname_hits(str(menu), "pw01hde01"):
+        m = HDE_PUBLIC_RE.search(cname)
+        if not m:
+            continue
+        g = m.groupdict()
+        if g["ymd"] != today:
+            continue
+        by_venue[g["venue"]] = g
+
+    meetings = []
+    for venue_code, g in by_venue.items():
+        venue = VENUES.get(venue_code, venue_code)
+        race_pages = [{
+            "cname":"",
+            "venue_code":venue_code,
+            "venue":venue,
+            "year":g["year"],
+            "meet":g["meet"],
+            "day":g["day"],
+            "race":race_no,
+            "ymd":today,
+        } for race_no in range(1,13)]
+        meetings.append({
+            "venue_code":venue_code,
+            "venue":venue,
+            "ymd":today,
+            "race_pages":race_pages,
+        })
+
+    meetings.sort(
+        key=lambda m: VENUE_ORDER.index(m["venue"]) if m["venue"] in VENUE_ORDER else 999
+    )
+    return meetings
+
+
 def current_race_meta(race_page: dict) -> dict:
     name = course = ""
     try:
@@ -716,6 +830,13 @@ def main() -> None:
 
     current_payouts = discover_today_payouts(today)
     current_meetings = discover_today_meetings(today)
+    if not current_meetings and current_payouts:
+        current_meetings = discover_today_payout_meetings(today)
+        if current_meetings:
+            print(
+                "[JRA] rebuilt current-day meetings from payout menu: "
+                + ", ".join(m["venue"] for m in current_meetings)
+            )
     mode = "current" if current_meetings else "historical"
 
     if current_meetings:
@@ -840,19 +961,21 @@ def main() -> None:
                 print(f"[JRA] {meet['venue']} {race_no}R payout merged")
                 continue
 
-            if mode == "current":
-                result_link = current_result_link(race_meta)
-                if not result_link:
-                    continue
-            else:
-                result_link = race_meta["link"]
-
             try:
-                cname = link_cname(result_link)
-                # Public current-day result links (pw01sde01) include payouts.
-                # Historical internal links (pw01sde10) may need mobile payout fallback.
-                race_soup = soup_cname_get("/JRADB/accessS.html", cname)
-                race_result = result_from_result_page(race_soup)
+                cname = ""
+                if mode == "current":
+                    result_link = current_result_link(race_meta) if race_meta.get("cname") else None
+                    if result_link:
+                        cname = link_cname(result_link)
+                        race_soup = soup_cname_get("/JRADB/accessS.html", cname)
+                        race_result = result_from_result_page(race_soup)
+                    else:
+                        race_result = netkeiba_current_result(race_meta)
+                else:
+                    result_link = race_meta["link"]
+                    cname = link_cname(result_link)
+                    race_soup = soup_cname_get("/JRADB/accessS.html", cname)
+                    race_result = result_from_result_page(race_soup)
 
                 if race_result and mode == "current" and live_payouts:
                     race_result["payouts"] = live_payouts
