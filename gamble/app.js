@@ -26,7 +26,8 @@ function raceRows(races,count){
 function compactCard(v,kind){
   const title=v.display_name||v.name||v.venue||"---";
   const event=v.event_name||"";
-  const grade=kind==="keirin"&&v.grade?' <small>'+esc(v.grade)+'</small>':"";
+  const tags=kind==="keirin"?[v.type,v.grade].filter(Boolean).join(" / "):"";
+  const grade=tags?' <small>'+esc(tags)+'</small>':"";
   const raceCount=kind==="keirin"
     ?((v.race_ids||[]).length||(v.races||[]).reduce(function(m,x){return Math.max(m,Number(x.race)||0)},0)||12)
     :12;
