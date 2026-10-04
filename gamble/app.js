@@ -171,7 +171,7 @@ function renderJra(){
   const venues=jra?.venues||[];
   const featured=data?.featured_races||[];
   const host=document.getElementById("jra-grid");
-  const showFeatured=venues.length>0&&venues.length<3&&featured.length>0;
+  const showFeatured=venues.length===1&&featured.length>0;
   host.className="jra-dedicated-grid jra-count-"+venues.length+(showFeatured?" with-featured":"");
   host.innerHTML=venues.length?(venues.map(jraVenueCard).join("")+(showFeatured?featuredCard(featured):"")):'<div class="empty-card">JRA開催なし</div>';
   document.getElementById("screen-title").textContent="JRA";
