@@ -365,6 +365,27 @@ def boat_last_time(ymd: str, code: str) -> str:
         pass
     return ""
 
+def boat_winner_racer(ymd: str, code: str, race_no: int) -> str:
+    try:
+        soup = BeautifulSoup(
+            fetch(f"https://www.boatrace.jp/owpc/pc/race/raceresult?hd={ymd}&jcd={code}&rno={race_no}"),
+            "html.parser",
+        )
+    except Exception:
+        return ""
+    for tr in soup.find_all("tr"):
+        cells = [clean(x) for x in tr.find_all(["th","td"], recursive=False)]
+        if len(cells) < 3:
+            continue
+        if cells[0] not in {"1","１"}:
+            continue
+        racer = cells[2]
+        racer = re.sub(r"^\d{4}\s*", "", racer)
+        racer = re.sub(r"\s+", "", racer)
+        return racer
+    return ""
+
+
 def boat_results(ymd: str, target: dict, now_minutes: int):
     code = target["code"]
     try:
@@ -393,12 +414,17 @@ def boat_results(ymd: str, target: dict, now_minutes: int):
             yen = re.search(r"([0-9,]+)\s*円", cells[2])
         if combo and yen:
             meta = (target.get("race_meta") or {}).get(str(no), {})
+            race_name = race_types.get(no) or meta.get("name","")
+            winner = ""
+            if "優勝戦" in race_name and "準優勝" not in race_name:
+                winner = boat_winner_racer(ymd, code, no)
             found[no] = {
                 "race":no,"status":"確定",
                 "order":[int(combo.group(1)),int(combo.group(2)),int(combo.group(3))],
                 "payout":f"{int(yen.group(1).replace(',','')):,}円",
-                "race_name":race_types.get(no) or meta.get("name",""),
+                "race_name":race_name,
                 "scheduled_time":meta.get("time",""),
+                "winner":winner,
             }
     last = target.get("last_time","") or boat_last_time(ymd,code)
     final_done = 12 in found
@@ -657,6 +683,56 @@ def _featured_horses_from_page(url: str, limit: int = 3) -> list[str]:
     return out
 
 
+def win5_today(ymd: str) -> dict:
+    targets = []
+    mm = str(int(ymd[4:6]))
+    dd = str(int(ymd[6:8]))
+    try:
+        soup = BeautifulSoup(
+            fetch("https://www.jra.go.jp/kouza/win5/info/racelist.html"),
+            "html.parser",
+        )
+        for tr in soup.find_all("tr"):
+            cells = [clean(x) for x in tr.find_all(["th","td"], recursive=False)]
+            if len(cells) < 6:
+                continue
+            if not re.search(rf"{re.escape(mm)}月\s*{re.escape(dd)}日", cells[0]):
+                continue
+            for cell in cells[1:]:
+                m = re.search(
+                    r"(札幌|函館|福島|新潟|東京|中山|中京|京都|阪神|小倉)\s*(\d{1,2})R",
+                    cell,
+                )
+                if m:
+                    targets.append({"venue":m.group(1),"race":int(m.group(2))})
+            if len(targets) >= 5:
+                targets = targets[:5]
+                break
+    except Exception as exc:
+        print(f"[GAMBLE] WIN5 official target failed: {exc}")
+
+    payout = ""
+    payout_kind = ""
+    try:
+        soup = BeautifulSoup(
+            fetch(f"https://race.netkeiba.com/top/win5.html?date={ymd}"),
+            "html.parser",
+        )
+        text = clean(soup)
+        m = re.search(r"想定払い戻し\s*([0-9,万億]+円)", text)
+        if m:
+            payout = m.group(1)
+            payout_kind = "想定"
+        m2 = re.search(r"(?:払戻金|払い戻し)\s*([0-9,万億]+円)", text)
+        if m2 and "想定" not in text[max(0,m2.start()-8):m2.start()+4]:
+            payout = m2.group(1)
+            payout_kind = "確定"
+    except Exception as exc:
+        print(f"[GAMBLE] WIN5 payout fallback failed: {exc}")
+
+    return {"targets":targets,"payout":payout,"payout_kind":payout_kind}
+
+
 def featured_races_today(ymd: str, local_epg: list[dict]) -> list[dict]:
     featured: list[dict] = []
     year, mm, dd = ymd[:4], ymd[4:6], ymd[6:8]
@@ -704,23 +780,26 @@ def featured_races_today(ymd: str, local_epg: list[dict]) -> list[dict]:
         text = clean(soup)
         date_pat = rf"{int(mm)}月\s*{int(dd)}日"
         if re.search(date_pat, text):
-            om = re.search(
-                rf"([^\s]+?)(?:G1|GⅠ).*?発走予定時刻.*?{date_pat}.*?(\d{{1,2}})時(\d{{2}})分",
-                text
+            name = ""
+            nm = re.search(r"([^\s]+?)(?:G1|GⅠ)", text)
+            if nm:
+                name = nm.group(1)
+            tm = re.search(
+                rf"発走予定時刻.*?{date_pat}.*?(\d{{1,2}})時(\d{{2}})分",
+                text,
             )
-            if om:
-                name = om.group(1)
-                time_text = f"{int(om.group(2)):02d}:{om.group(3)}"
-                horses = []
-                race_link = None
-                for a in soup.find_all("a", href=True):
-                    href = a.get("href","")
-                    if "/keiba/overseas/race/" in href:
-                        race_link = urljoin(overseas_url, href)
-                        break
-                if race_link:
-                    base = race_link.rsplit("/", 1)[0] + "/"
-                    horses = _featured_horses_from_page(urljoin(base, "horse.html"))
+            time_text = f"{int(tm.group(1)):02d}:{tm.group(2)}" if tm else ""
+            race_link = None
+            for a in soup.find_all("a", href=True):
+                href = a.get("href","")
+                if "/keiba/overseas/race/" in href and href.endswith(("index.html","horse.html")):
+                    race_link = urljoin(overseas_url, href)
+                    break
+            horses = []
+            if race_link:
+                base = race_link.rsplit("/", 1)[0] + "/"
+                horses = _featured_horses_from_page(urljoin(base, "horse.html"))
+            if name:
                 featured.append({
                     "source":"海外競馬","venue":"海外","race":"",
                     "name":name,"time":time_text,"horses":horses,
@@ -800,6 +879,7 @@ def main():
     local_names = [v["venue"] for v in local_epg if v.get("venue") in NAR_CODES]
     local_all = local_results_for_names(ymd, local_epg, local_names, now_minutes)
     featured_races = featured_races_today(ymd, local_epg)
+    win5 = win5_today(ymd)
 
     payload = {
         "date":now.strftime("%Y-%m-%d"),
@@ -815,6 +895,7 @@ def main():
         "boats":boats,
         "local_all":{"venues":local_all},
         "featured_races":featured_races,
+        "win5":win5,
         "source":{
             "schedule":"Free WiFi EPG",
             "keirin":"netkeirin / EPG",
