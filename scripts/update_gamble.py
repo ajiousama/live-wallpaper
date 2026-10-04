@@ -85,13 +85,33 @@ def epg_today(ymd: str):
             if not mt or "終了" in title:
                 continue
             venue = re.sub(r"(けいりん|競輪).*$", "", channel_names.get(ch,ch)).strip()
-            mg = re.search(r"【(G\d|F\d)】|開催種別:\s*(G\d|F\d)", joined)
+            mg = re.search(r"【(G\d|F\d)】|開催種別:\s*(G\d|F\d)|グレード:\s*(G\d|F\d)", joined)
             grade = next((x for x in (mg.groups() if mg else ()) if x), "")
+            old = keirin.get(venue)
+            race_meta = dict((old or {}).get("race_meta", {}))
+            rn = re.search(r"【\s*(\d{1,2})\s*[RＲ]\s*】", title)
+            if not rn:
+                rn = re.search(r"\b(\d{1,2})R\b", title)
+            if rn:
+                race_no = int(rn.group(1))
+                rt = re.search(r"🏷️\s*(.+?)(?:\s*🏆|\s*📢|\s*📅|$)", desc)
+                if not rt:
+                    pieces = re.findall(r"【([^】]+)】", title)
+                    race_type = clean(pieces[1]).replace("🚲","").replace("🏆","").strip() if len(pieces) > 1 else ""
+                else:
+                    race_type = clean(rt.group(1))
+                tm = re.search(r"発走予定:\s*(\d{1,2}:\d{2})", desc)
+                race_meta[str(race_no)] = {
+                    "name":race_type,
+                    "time":tm.group(1) if tm else "",
+                }
+            em = re.search(r"開催名:\s*(.+?)(?:\s*📅|$)", desc)
             item = {
                 "channel":ch, "venue":venue, "type":mt.group(1), "grade":grade,
                 "epg_start":start[:12], "epg_stop":p.attrib.get("stop","")[:12],
+                "race_meta":race_meta,
+                "event_name_epg":clean(em.group(1)) if em else (old or {}).get("event_name_epg",""),
             }
-            old = keirin.get(venue)
             if old is None or item["epg_start"] > old["epg_start"]:
                 keirin[venue] = item
 
@@ -103,10 +123,13 @@ def epg_today(ymd: str):
                 continue
             venue = re.sub(r"(けいば|競馬).*$", "", channel_names.get(ch,ch)).strip()
             t = start[8:12]
+            pieces = re.findall(r"【([^】]+)】", title)
+            race_name = clean(pieces[1]).replace("🏇","").replace("🏆","").strip() if len(pieces) > 1 else ""
             race = {
                 "race":int(rn.group(1)),
                 "time":f"{t[:2]}:{t[2:]}",
                 "title":title,
+                "race_name":race_name,
             }
             local.setdefault(venue, {"channel":ch,"venue":venue,"races":[]})["races"].append(race)
 
@@ -152,12 +175,12 @@ def keirin_meta(ymd: str, sched: dict):
     venue = sched["venue"]
     code = KEIRIN_CODES.get(venue)
     if not code:
-        return {**sched, "race_ids":[], "event_name":"", "last_time":"", "last_confirmed":False}
+        return {**sched, "race_ids":[], "event_name":sched.get("event_name_epg",""), "last_time":"", "last_confirmed":False}
     first_id = f"{ymd}{code}01"
     try:
         first = fetch(f"https://keirin.netkeiba.com/race/entry/?race_id={first_id}")
     except Exception:
-        return {**sched, "race_ids":[first_id], "event_name":"", "last_time":"", "last_confirmed":False}
+        return {**sched, "race_ids":[first_id], "event_name":sched.get("event_name_epg",""), "last_time":"", "last_confirmed":False}
     nums = sorted({
         int(x) for x in re.findall(rf"race_id={ymd}{code}(\d{{2}})", first)
         if 1 <= int(x) <= 12
@@ -181,7 +204,7 @@ def keirin_meta(ymd: str, sched: dict):
         pass
     return {
         **sched, "code":code, "race_ids":race_ids,
-        "event_name":keirin_event_name(venue, first),
+        "event_name":keirin_event_name(venue, first) or sched.get("event_name_epg",""),
         "last_time":last_time, "last_confirmed":last_confirmed,
     }
 
@@ -241,6 +264,9 @@ def fill_keirin_results(ymd: str, venues: list[dict], now_minutes: int):
                 rm = hhmm_minutes(race.get("time",""), rollover="ミッドナイト" in venue.get("type",""))
                 if not race["order"]:
                     race["status"] = "結果待ち" if rm is not None and now_minutes >= rm else "発走前"
+                meta = (venue.get("race_meta") or {}).get(str(no), {})
+                race["race_name"] = meta.get("name","")
+                race["scheduled_time"] = meta.get("time","")
                 races.append(race)
         venue["races"] = sorted(races, key=lambda x:x["race"])
         venue["display_name"] = venue["venue"]
@@ -260,12 +286,20 @@ def boat_targets_today():
             continue
         races = info.get("races") or []
         last_time = clean(races[-1].get("time","")) if races else ""
+        race_meta = {
+            str(int(r.get("rno"))): {
+                "name":clean(r.get("race_name","")),
+                "time":clean(r.get("time","")),
+            }
+            for r in races if r.get("rno") is not None
+        }
         out.append({
             "name":m.group(2).strip(),
             "code":m.group(1),
             "fallback_event":"",
             "last_time":last_time,
             "day_type":clean(info.get("day_type","")),
+            "race_meta":race_meta,
         })
     out.sort(key=lambda x:int(x["code"]))
     return out
@@ -309,10 +343,13 @@ def boat_results(ymd: str, target: dict, now_minutes: int):
         combo = re.search(r"([1-6])\s*[-－]\s*([1-6])\s*[-－]\s*([1-6])", joined)
         yen = re.search(r"[¥￥]?\s*([0-9,]+)\s*円?", joined)
         if combo and yen:
+            meta = (target.get("race_meta") or {}).get(str(no), {})
             found[no] = {
                 "race":no,"status":"確定",
                 "order":[int(combo.group(1)),int(combo.group(2)),int(combo.group(3))],
                 "payout":f"{int(yen.group(1).replace(',','')):,}円",
+                "race_name":meta.get("name",""),
+                "scheduled_time":meta.get("time",""),
             }
     last = target.get("last_time","") or boat_last_time(ymd,code)
     final_done = 12 in found
@@ -322,7 +359,15 @@ def boat_results(ymd: str, target: dict, now_minutes: int):
         if no in found:
             races.append(found[no])
         else:
-            races.append({"race":no,"status":"結果待ち" if final_done else "発走前","order":[],"payout":""})
+            meta = (target.get("race_meta") or {}).get(str(no), {})
+            races.append({
+                "race":no,
+                "status":"結果待ち" if final_done else "発走前",
+                "order":[],
+                "payout":"",
+                "race_name":meta.get("name",""),
+                "scheduled_time":meta.get("time",""),
+            })
     return {
         "name":target["name"],"code":code,
         "event_name":boat_event_name(soup,target["fallback_event"]),
@@ -385,10 +430,15 @@ def local_results_for_names(ymd: str, local_epg: list[dict], names: list[str], n
                     result = parse_nar_result(fetch(url), no)
                 except Exception:
                     result = None
-            races.append(result or {
-                "race":no,"winner":"","jockey":"","trifecta":"",
-                "status":"結果待ち" if startm is not None and now_minutes >= startm else "発走前"
-            })
+            if result:
+                result["race_name"] = r.get("race_name","")
+                races.append(result)
+            else:
+                races.append({
+                    "race":no,"winner":"","jockey":"","trifecta":"",
+                    "race_name":r.get("race_name",""),
+                    "status":"結果待ち" if startm is not None and now_minutes >= startm else "発走前"
+                })
         out.append({"name":name,"code":code,"races":races})
     return out
 
