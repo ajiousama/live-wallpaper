@@ -1,8 +1,8 @@
 {
   "date": "2026-10-04",
   "date_label": "2026年10月04日",
-  "updated_at": "20:42:16",
-  "updated_at_iso": "2026-10-04T20:42:16.082116+09:00",
+  "updated_at": "20:48:12",
+  "updated_at_iso": "2026-10-04T20:48:12.983614+09:00",
   "jra_switch_time": "17:00",
   "keirin": {
     "phase": "本日開催 8場",
@@ -3129,8 +3129,8 @@
                 }
               ]
             },
-            "winner": "",
-            "origin": "",
+            "winner": "青柳靖起",
+            "origin": "佐賀",
             "race_name": "Ｓ級 初日特別選抜",
             "scheduled_time": "20:30"
           }
@@ -3192,10 +3192,53 @@
           {
             "race": 1,
             "time": "20:41",
-            "status": "結果待ち",
-            "order": [],
-            "payout": "",
-            "payouts": {},
+            "status": "確定",
+            "order": [
+              3,
+              4,
+              2
+            ],
+            "payout": "9,370円",
+            "payouts": {
+              "2車複": [
+                {
+                  "combo": "3-4",
+                  "amount": "650円"
+                }
+              ],
+              "2車単": [
+                {
+                  "combo": "3>4",
+                  "amount": "2,440円"
+                }
+              ],
+              "3連複": [
+                {
+                  "combo": "2-3-4",
+                  "amount": "1,240円"
+                }
+              ],
+              "3連単": [
+                {
+                  "combo": "3>4>2",
+                  "amount": "9,370円"
+                }
+              ],
+              "ワイド": [
+                {
+                  "combo": "3-4",
+                  "amount": "360円"
+                },
+                {
+                  "combo": "2-3",
+                  "amount": "530円"
+                },
+                {
+                  "combo": "2-4",
+                  "amount": "470円"
+                }
+              ]
+            },
             "winner": "",
             "origin": "",
             "race_name": "Ａ級 一般",
@@ -5643,13 +5686,18 @@
         },
         {
           "race": 12,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
-          "popularity": "",
+          "status": "確定",
+          "order": [
+            1,
+            2,
+            3
+          ],
+          "payout": "550円",
+          "popularity": "1",
           "payouts": {},
           "race_name": "優勝戦",
-          "scheduled_time": "20:38"
+          "scheduled_time": "20:38",
+          "winner": "新田泰章"
         }
       ]
     },
@@ -6549,13 +6597,18 @@
           },
           {
             "race": 12,
-            "winner": "",
-            "jockey": "",
-            "trifecta": "",
-            "race_name": "Ｂ２－１  10",
+            "winner": "プロサングエ",
+            "jockey": "長澤幸",
+            "trifecta": "7,640円",
+            "order": [
+              4,
+              5,
+              7
+            ],
             "course": "直200m",
-            "scheduled_time": "20:03",
-            "status": "結果待ち"
+            "status": "確定",
+            "race_name": "Ｂ２－１  10",
+            "scheduled_time": "20:03"
           }
         ]
       },
