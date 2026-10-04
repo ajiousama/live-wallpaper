@@ -152,6 +152,26 @@ def parse_keirin_result(html: str, race_no: int):
     text = clean(soup)
     start_m = re.search(r"発走\s*(\d{1,2}:\d{2})", text)
     start = start_m.group(1) if start_m else ""
+
+    winner = origin = ""
+    for table in soup.find_all("table"):
+        if "選手名" not in clean(table):
+            continue
+        for tr in table.find_all("tr"):
+            cells = [clean(x) for x in tr.find_all(["th","td"], recursive=False)]
+            if len(cells) < 4 or not re.fullmatch(r"1着", cells[0]):
+                continue
+            info = cells[3]
+            pm = re.search(r"^(.+?)\s+([^\s]+)\s+\d+歳(?:\s+\d+期)?", info)
+            if pm:
+                winner = pm.group(1).strip()
+                origin = pm.group(2).strip()
+            else:
+                winner = info
+            break
+        if winner:
+            break
+
     m = re.search(
         r"３連単\s*([1-9])\s*[>→\-]\s*([1-9])\s*[>→\-]\s*([1-9])\s*([0-9,]+)円",
         text,
@@ -168,8 +188,13 @@ def parse_keirin_result(html: str, race_no: int):
             "status":"確定",
             "order":[int(m.group(1)),int(m.group(2)),int(m.group(3))],
             "payout":f"{int(m.group(4).replace(',','')):,}円",
+            "winner":winner,
+            "origin":origin,
         }
-    return {"race":race_no,"time":start,"status":"未確定","order":[],"payout":""}
+    return {
+        "race":race_no,"time":start,"status":"未確定","order":[],"payout":"",
+        "winner":winner,"origin":origin,
+    }
 
 def keirin_meta(ymd: str, sched: dict):
     venue = sched["venue"]
@@ -333,22 +358,32 @@ def boat_results(ymd: str, target: dict, now_minutes: int):
         soup = BeautifulSoup(html, "html.parser")
     except Exception:
         return {**target,"event_name":target["fallback_event"],"races":[],"last_time":"","active":True}
-    found = {}
+    race_types = {}
     for tr in soup.find_all("tr"):
         cells = [clean(x) for x in tr.find_all(["th","td"])]
         if not cells or not re.fullmatch(r"\d{1,2}R", cells[0]):
             continue
         no = int(cells[0][:-1])
-        joined = " | ".join(cells[1:4])
-        combo = re.search(r"([1-6])\s*[-－]\s*([1-6])\s*[-－]\s*([1-6])", joined)
-        yen = re.search(r"[¥￥]?\s*([0-9,]+)\s*円?", joined)
+        if len(cells) >= 4 and "着" in " ".join(cells[2:]) and not re.search(r"[1-6]\s*[-－]\s*[1-6]", cells[1]):
+            race_types[no] = cells[1]
+
+    found = {}
+    for tr in soup.find_all("tr"):
+        cells = [clean(x) for x in tr.find_all(["th","td"])]
+        if len(cells) < 3 or not re.fullmatch(r"\d{1,2}R", cells[0]):
+            continue
+        no = int(cells[0][:-1])
+        combo = re.search(r"([1-6])\s*[-－]\s*([1-6])\s*[-－]\s*([1-6])", cells[1])
+        yen = re.search(r"[¥￥]\s*([0-9,]+)", cells[2])
+        if not yen:
+            yen = re.search(r"([0-9,]+)\s*円", cells[2])
         if combo and yen:
             meta = (target.get("race_meta") or {}).get(str(no), {})
             found[no] = {
                 "race":no,"status":"確定",
                 "order":[int(combo.group(1)),int(combo.group(2)),int(combo.group(3))],
                 "payout":f"{int(yen.group(1).replace(',','')):,}円",
-                "race_name":meta.get("name",""),
+                "race_name":race_types.get(no) or meta.get("name",""),
                 "scheduled_time":meta.get("time",""),
             }
     last = target.get("last_time","") or boat_last_time(ymd,code)
@@ -365,7 +400,7 @@ def boat_results(ymd: str, target: dict, now_minutes: int):
                 "status":"結果待ち" if final_done else "発走前",
                 "order":[],
                 "payout":"",
-                "race_name":meta.get("name",""),
+                "race_name":race_types.get(no) or meta.get("name",""),
                 "scheduled_time":meta.get("time",""),
             })
     return {
