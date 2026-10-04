@@ -90,6 +90,30 @@ body{background:linear-gradient(180deg,#061522,#02090f)}
 .phase-grid.count-5 .num,.phase-grid.count-6 .num,
 .phase-grid.count-5 .horse-no,.phase-grid.count-6 .horse-no{width:18px;min-width:18px;height:17px;font-size:9px}
 .single-keirin-detail{display:block;padding:3px}
+.single-boat-detail{display:block;padding:3px}
+.boat-detail-card{height:100%;min-height:0;display:grid;grid-template-rows:46px 1fr;border:1px solid #2b69a0;background:#07131c;overflow:hidden}
+.boat-detail-head{display:grid;grid-template-columns:auto auto auto minmax(0,1fr);align-items:center;gap:10px;padding:5px 10px;border-bottom:1px solid #2b69a0;background:#0b3159}
+.boat-detail-head strong{font-size:25px;line-height:1}
+.boat-detail-head>b{font-size:16px;color:#9fd0ff}
+.boat-detail-head>em{font-size:15px;font-style:normal;color:#d6e5ec;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.boat-detail-table-wrap{min-height:0;overflow:hidden}
+.boat-detail-table{width:100%;height:100%;border-collapse:collapse;table-layout:fixed}
+.boat-detail-table thead{height:30px}
+.boat-detail-table tbody tr{height:calc((100% - 30px)/12)}
+.boat-detail-table th,.boat-detail-table td{border-right:1px solid #27404d;border-bottom:1px solid #27404d;text-align:center;overflow:hidden;padding:1px 4px}
+.boat-detail-table th{font-size:12px;color:#9fb7c2;background:#091b26;font-weight:1000;white-space:nowrap}
+.boat-detail-table td{font-size:15px;font-weight:900;white-space:nowrap}
+.boat-detail-table .r{width:46px;color:#c8d7de}
+.boat-detail-table .time{width:68px;color:#8fd8ff}
+.boat-detail-table .name{text-align:left}
+.boat-detail-table .combo{width:125px}
+.boat-detail-table .pay{width:115px;color:#ffe58a}
+.boat-detail-table .winner{width:125px;text-align:left;color:#fff4a8;text-overflow:ellipsis}
+.boat-detail-table .status-col{width:80px;color:#a9c2ce}
+.boat-detail-table .num{width:27px;height:25px;font-size:14px}
+.boat-detail-table .final-row td{background-color:rgba(45,139,255,.10);border-top:1px solid #4c95dd;border-bottom:1px solid #4c95dd}
+.boat-detail-table .final-row .name{color:#9fd0ff}
+.boat-detail-table .final-row .winner{font-size:18px}
 .keirin-detail-card{height:100%;min-height:0;display:grid;grid-template-rows:46px 1fr;border:1px solid #7b3452;background:#07131c;overflow:hidden}
 .keirin-detail-head{display:grid;grid-template-columns:auto auto auto minmax(0,1fr);align-items:center;gap:10px;padding:5px 10px;border-bottom:1px solid #7b3452;background:#321322}
 .keirin-detail-head strong{font-size:25px;line-height:1}
@@ -247,6 +271,23 @@ body{background:linear-gradient(180deg,#061522,#02090f)}
   .sport-tag{font-size:8px;padding:1px 4px}
   .phase-table th{height:19px;font-size:8px}
   .phase-table td{font-size:10px;padding:1px 2px}
+  .boat-detail-card{grid-template-rows:38px 1fr}
+  .boat-detail-head{gap:7px;padding:3px 7px}
+  .boat-detail-head strong{font-size:20px}
+  .boat-detail-head>b{font-size:13px}
+  .boat-detail-head>em{font-size:12px}
+  .boat-detail-table thead{height:25px}
+  .boat-detail-table tbody tr{height:calc((100% - 25px)/12)}
+  .boat-detail-table th{font-size:9px;padding:1px 2px}
+  .boat-detail-table td{font-size:11px;padding:1px 2px}
+  .boat-detail-table .r{width:36px}
+  .boat-detail-table .time{width:52px}
+  .boat-detail-table .combo{width:96px}
+  .boat-detail-table .pay{width:88px}
+  .boat-detail-table .winner{width:92px}
+  .boat-detail-table .status-col{width:62px}
+  .boat-detail-table .num{width:19px;height:18px;font-size:9px}
+  .boat-detail-table .final-row .winner{font-size:13px}
   .keirin-detail-card{grid-template-rows:38px 1fr}
   .keirin-detail-head{gap:7px;padding:3px 7px}
   .keirin-detail-head strong{font-size:20px}
