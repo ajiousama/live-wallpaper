@@ -20,8 +20,7 @@ function raceRows(races,count,kind){
   for(let r=1;r<=rows;r++){
     const x=map.get(r)||{race:r,status:"発走前",order:[],payout:""};
     const raceName=x.race_name||x.race_type||"—";
-    const winnerOrigin=kind==="keirin"?[x.winner,x.origin].filter(Boolean).join("・"):"";
-    const winnerCell=kind==="keirin"?'<td class="winner-origin '+(winnerOrigin?"":"pending")+'">'+esc(winnerOrigin||"---")+'</td>':"";
+    const winnerCell=kind==="keirin"?'<td class="winner-name '+(x.winner?"":"pending")+'">'+esc(x.winner||"---")+'</td><td class="winner-origin '+(x.origin?"":"pending")+'">'+esc(x.origin||"---")+'</td>':"";
     out+='<tr><td class="rcol">'+r+'R</td>'+'<td class="race-label marquee-check" title="'+esc(raceName)+'"><div class="marquee-track"><span class="marquee-text">'+esc(raceName)+'</span><span class="marquee-copy" aria-hidden="true">'+esc(raceName)+'</span></div></td>'+winnerCell+'<td class="ocol">'+orderHtml(x.order)+'</td><td class="pcol '+(x.payout?"":"pending")+'">'+esc(x.payout||x.status||"発走前")+'</td></tr>';
   }
   return out;
@@ -35,7 +34,7 @@ function compactCard(v,kind){
     ?((v.race_ids||[]).length||(v.races||[]).reduce(function(m,x){return Math.max(m,Number(x.race)||0)},0)||12)
     :12;
   const klass=kind==="keirin"?"result-card keirin-card":"result-card";
-  const winnerHead=kind==="keirin"?'<th class="winner-origin">勝者・出身</th>':"";
+  const winnerHead=kind==="keirin"?'<th class="winner-name">勝者</th><th class="winner-origin">出身</th>':"";
   const table='<table class="compact-table"><thead><tr><th class="rcol">R</th><th class="race-label">レース名・種別</th>'+winnerHead+'<th class="ocol">3連単</th><th class="pcol">払戻金</th></tr></thead><tbody>'+raceRows(v.races,raceCount,kind)+'</tbody></table>';
   const body=kind==="boat"?'<div class="boat-table-viewport">'+table+'</div>':table;
   return '<article class="'+klass+'"><div class="card-head"><div class="card-title">'+esc(title)+grade+'</div><div class="event">'+esc(event)+'</div></div>'+body+'</article>';
