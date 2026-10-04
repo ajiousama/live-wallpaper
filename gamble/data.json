@@ -1,8 +1,8 @@
 {
   "date": "2026-10-04",
   "date_label": "2026年10月04日",
-  "updated_at": "14:51:45",
-  "updated_at_iso": "2026-10-04T14:51:45.140771+09:00",
+  "updated_at": "14:54:15",
+  "updated_at_iso": "2026-10-04T14:54:15.654147+09:00",
   "jra_switch_time": "17:00",
   "keirin": {
     "phase": "本日開催 8場",
@@ -2637,9 +2637,13 @@
         },
         {
           "race": 9,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            3,
+            4,
+            2
+          ],
+          "payout": "6,410円",
           "race_name": "",
           "scheduled_time": "14:47"
         },
@@ -3337,13 +3341,18 @@
           },
           {
             "race": 4,
-            "winner": "",
-            "jockey": "",
-            "trifecta": "",
-            "race_name": "真実社会日本人コミュニティ三周年記２歳２",
+            "winner": "ハジマリノアイズ",
+            "jockey": "加藤翔",
+            "trifecta": "2,360円",
+            "order": [
+              2,
+              8,
+              3
+            ],
             "course": "ダート1500m",
-            "scheduled_time": "14:45",
-            "status": "結果待ち"
+            "status": "確定",
+            "race_name": "真実社会日本人コミュニティ三周年記２歳２",
+            "scheduled_time": "14:45"
           },
           {
             "race": 5,
