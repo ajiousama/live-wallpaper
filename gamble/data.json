@@ -1,0 +1,22 @@
+{
+  "date": "",
+  "date_label": "",
+  "updated_at": "--",
+  "updated_at_iso": "",
+  "jra_switch_time": "17:00",
+  "keirin": {
+    "phase": "",
+    "phase_end_minutes": null,
+    "venues": []
+  },
+  "boats": [],
+  "local_night": {
+    "venues": []
+  },
+  "source": {
+    "schedule": "Free WiFi EPG",
+    "keirin": "netkeirin / EPG",
+    "boat": "BOAT RACE公式",
+    "local": "地方競馬全国協会"
+  }
+}
