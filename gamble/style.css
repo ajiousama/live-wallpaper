@@ -24,6 +24,21 @@ body{background:linear-gradient(180deg,#061522,#02090f)}
 .phase-grid.count-3{grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:1fr}
 .phase-grid.count-4{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr))}
 .phase-grid.count-5,.phase-grid.count-6{grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr))}
+.phase-grid.boat-dense{grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr));gap:3px;padding:2px}
+.phase-grid.boat-dense .phase-card{grid-template-rows:20px 1fr}
+.phase-grid.boat-dense .card-head{gap:3px;padding:0 3px}
+.phase-grid.boat-dense .card-head strong{font-size:10px}
+.phase-grid.boat-dense .card-head small{font-size:6.8px}
+.phase-grid.boat-dense .sport-tag{font-size:6.8px;padding:0 2px}
+.phase-grid.boat-dense .phase-table th{height:12px;font-size:6.5px;padding:0 1px;line-height:1}
+.phase-grid.boat-dense .phase-table td{font-size:7.5px;padding:0 1px;line-height:1}
+.phase-grid.boat-dense .phase-table thead{height:12px}
+.phase-grid.boat-dense .phase-table tbody tr{height:calc((100% - 12px)/12)}
+.phase-grid.boat-dense .boat-table .r{width:23px}
+.phase-grid.boat-dense .boat-table .combo{width:56px}
+.phase-grid.boat-dense .boat-table .pay{width:62px}
+.phase-grid.boat-dense .num{width:14px;min-width:14px;height:13px;font-size:7px;border-radius:2px}
+.phase-grid.boat-dense .marquee-track{gap:18px}
 .phase-card{min-width:0;min-height:0;display:grid;grid-template-rows:30px 1fr;border:1px solid #2b4856;background:#06141e;overflow:hidden}
 .card-head{min-width:0;display:grid;grid-template-columns:auto auto minmax(0,1fr);align-items:center;gap:7px;padding:3px 7px;border-bottom:1px solid #203b48;background:#0a1c27}
 .card-head strong{font-size:16px;white-space:nowrap}
@@ -264,6 +279,19 @@ body{background:linear-gradient(180deg,#061522,#02090f)}
   #next-switch{font-size:8px;min-width:70px;padding:1px 4px}
   #clock{font-size:16px}
   .phase-grid{gap:3px}
+  .phase-grid.boat-dense{gap:2px;padding:1px}
+  .phase-grid.boat-dense .phase-card{grid-template-rows:18px 1fr}
+  .phase-grid.boat-dense .card-head strong{font-size:9px}
+  .phase-grid.boat-dense .card-head small{font-size:6px}
+  .phase-grid.boat-dense .sport-tag{font-size:6px}
+  .phase-grid.boat-dense .phase-table th{height:11px;font-size:6px}
+  .phase-grid.boat-dense .phase-table td{font-size:7px}
+  .phase-grid.boat-dense .phase-table thead{height:11px}
+  .phase-grid.boat-dense .phase-table tbody tr{height:calc((100% - 11px)/12)}
+  .phase-grid.boat-dense .boat-table .r{width:21px}
+  .phase-grid.boat-dense .boat-table .combo{width:50px}
+  .phase-grid.boat-dense .boat-table .pay{width:55px}
+  .phase-grid.boat-dense .num{width:12px;min-width:12px;height:12px;font-size:6.5px}
   .phase-card{grid-template-rows:25px 1fr}
   .card-head{padding:2px 5px;gap:5px}
   .card-head strong{font-size:13px}
