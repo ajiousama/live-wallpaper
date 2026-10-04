@@ -310,7 +310,19 @@ def boat_targets_today():
         if not m:
             continue
         races = info.get("races") or []
+        first_time = clean(races[0].get("time","")) if races else ""
         last_time = clean(races[-1].get("time","")) if races else ""
+        first_min = hhmm_minutes(first_time)
+        last_min = hhmm_minutes(last_time)
+        raw_type = clean(info.get("day_type",""))
+        if "ミッド" in raw_type or (last_min is not None and last_min >= 23 * 60):
+            day_type = "ミッドナイト"
+        elif first_min is not None and first_min < 10 * 60:
+            day_type = "モーニング"
+        elif last_min is not None and last_min >= 18 * 60:
+            day_type = "ナイター"
+        else:
+            day_type = "デイ"
         race_meta = {
             str(int(r.get("rno"))): {
                 "name":clean(r.get("race_name","")),
@@ -323,10 +335,11 @@ def boat_targets_today():
             "code":m.group(1),
             "fallback_event":"",
             "last_time":last_time,
-            "day_type":clean(info.get("day_type","")),
+            "day_type":day_type,
             "race_meta":race_meta,
         })
-    out.sort(key=lambda x:int(x["code"]))
+    boat_phase_order = {"モーニング":0,"デイ":1,"ナイター":2,"ミッドナイト":3}
+    out.sort(key=lambda x:(boat_phase_order.get(x.get("day_type",""),99), int(x["code"])))
     return out
 
 def boat_event_name(soup: BeautifulSoup, fallback: str) -> str:
