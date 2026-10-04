@@ -681,6 +681,8 @@ def _featured_horses_from_page(url: str, limit: int = 3) -> list[str]:
     bad = {
         "出走馬情報","レーストップ","出馬表","調教動画ほか","データ分析",
         "発売情報","レース情報","海外競馬発売","馬券購入情報",
+        "血統","主な成績","インタビュー動画","プロフィール","参考レース",
+        "関係者情報","調教情報","レース映像","過去の成績",
     }
     out = []
     for h in soup.find_all(["h3","h4"]):
@@ -797,6 +799,8 @@ def featured_races_today(ymd: str, local_epg: list[dict]) -> list[dict]:
             nm = re.search(r"([^\s]+?)(?:G1|GⅠ)", text)
             if nm:
                 name = nm.group(1)
+                name = re.sub(r"^\d{4}", "", name)
+                name = name.strip("（(【[「『・:：- ")
             tm = re.search(
                 rf"発走予定時刻.*?{date_pat}.*?(\d{{1,2}})時(\d{{2}})分",
                 text,
