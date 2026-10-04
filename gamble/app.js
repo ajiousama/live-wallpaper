@@ -114,13 +114,12 @@ function keirinRows(v){
       '<td class="r">'+esc(x.race)+'R</td>'+
       '<td class="class-col">'+esc(cls||"—")+'</td>'+
       '<td class="name">'+raceNameMarquee(name)+'</td>'+
-      '<td class="winner">'+esc(x.winner||"---")+'</td>'+
-      '<td class="origin">'+esc(x.origin||"---")+'</td>'+
+      '<td class="winner-stack"><strong>'+esc(x.winner||"---")+'</strong><small>'+esc(x.origin||"")+'</small></td>'+
       '<td class="combo">'+orderHtml(x.order,"keirin")+'</td>'+
       '<td class="pay">'+esc(x.payout||x.status||"発走前")+'</td>'+
     '</tr>';
   }
-  return '<table class="phase-table keirin-table"><thead><tr><th>R</th><th>級</th><th>レース</th><th>勝者</th><th>出身</th><th>3連単</th><th>払戻</th></tr></thead><tbody>'+rows+'</tbody></table>';
+  return '<table class="phase-table keirin-table"><thead><tr><th>R</th><th>級</th><th>レース</th><th>勝者/出身</th><th>3連単</th><th>払戻</th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
 function keirinPayoutText(x,label){
   const arr=x?.payouts?.[label];
@@ -146,8 +145,7 @@ function keirinDetailCard(v){
       '<td class="r"><strong>'+esc(x.race)+'R</strong>'+(startTime?'<small>'+esc(startTime)+'</small>':'')+'</td>'+
       '<td class="class-col">'+esc(cls||"—")+'</td>'+
       '<td class="name">'+raceNameMarquee(name)+'</td>'+
-      '<td class="winner">'+esc(x.winner||"---")+'</td>'+
-      '<td class="origin">'+esc(x.origin||"---")+'</td>'+
+      '<td class="winner-stack"><strong>'+esc(x.winner||"---")+'</strong><small>'+esc(x.origin||"")+'</small></td>'+
       payoutCells+
     '</tr>';
   }
@@ -157,7 +155,7 @@ function keirinDetailCard(v){
   return '<article class="keirin-detail-card">'+
     '<div class="keirin-detail-head"><span class="sport-tag keirin">競輪</span><strong>'+esc(venue)+'</strong><b>'+esc(grade)+'</b><em>'+esc(event)+'</em></div>'+
     '<div class="keirin-detail-table-wrap">'+
-      '<table class="keirin-detail-table"><thead><tr><th>R</th><th>級</th><th>レース</th><th>勝者</th><th>出身</th><th>枠複</th><th>枠単</th><th>2車複</th><th>2車単</th><th>ワイド</th><th>3連複</th><th>3連単</th></tr></thead><tbody>'+rows+'</tbody></table>'+
+      '<table class="keirin-detail-table"><thead><tr><th>R</th><th>級</th><th>レース</th><th>勝者/出身</th><th>枠複</th><th>枠単</th><th>2車複</th><th>2車単</th><th>ワイド</th><th>3連複</th><th>3連単</th></tr></thead><tbody>'+rows+'</tbody></table>'+
     '</div>'+
   '</article>';
 }
@@ -256,13 +254,12 @@ function localRows(v){
     rows+='<tr>'+
       '<td class="r">'+esc(x.race)+'R</td>'+
       '<td class="local-info"><div>'+raceNameMarquee(x.race_name||"—")+'</div><b>'+esc(horseCourse(x))+'</b></td>'+
-      '<td class="winner">'+esc(x.winner||x.status||"発走前")+'</td>'+
-      '<td class="jockey">'+esc(x.jockey||"")+'</td>'+
+      '<td class="winner-stack local-winner-stack"><strong>'+esc(x.winner||x.status||"発走前")+'</strong><small>'+esc(x.jockey||"")+'</small></td>'+
       '<td class="combo">'+orderHtml(x.order,"local")+'</td>'+
       '<td class="pay">'+esc(x.trifecta||"")+'</td>'+
     '</tr>';
   }
-  return '<table class="phase-table local-table"><thead><tr><th>R</th><th>レース/馬場距離</th><th>勝ち馬</th><th>騎手</th><th>3連単</th><th>払戻</th></tr></thead><tbody>'+rows+'</tbody></table>';
+  return '<table class="phase-table local-table"><thead><tr><th>R</th><th>レース/馬場距離</th><th>勝ち馬/騎手</th><th>3連単</th><th>払戻</th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
 function phaseCard(item){
   const body=item.kind==="keirin"?keirinRows(item.venue):item.kind==="boat"?boatRows(item.venue):localRows(item.venue);
