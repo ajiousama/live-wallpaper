@@ -14,6 +14,7 @@ on:
       - "scripts/**"
       - "data/**"
       - "jra/**"
+      - "gamble/**"
       - ".nojekyll"
       - ".github/workflows/pages.yml"
 
@@ -32,7 +33,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
 
     steps:
       - uses: actions/checkout@v4
@@ -50,18 +51,21 @@ jobs:
       - name: Update JRA winners from official results
         run: python scripts/update_jra.py
 
+      - name: Update weekend gamble results
+        run: python scripts/update_gamble.py
+
       - name: Update wallpaper health status
         run: python scripts/update_data.py
 
-      - name: Persist JRA result changes only
+      - name: Persist live result changes
         run: |
-          if git diff --quiet -- jra/data.json; then
-            echo "No new JRA result"
+          if git diff --quiet -- jra/data.json gamble/data.json; then
+            echo "No new race result"
           else
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add jra/data.json
-            git commit -m "data: update JRA winners [skip ci]"
+            git add jra/data.json gamble/data.json
+            git commit -m "data: update live race results [skip ci]"
             git push
           fi
 
