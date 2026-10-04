@@ -2,7 +2,7 @@
   "source": "JRA公式",
   "source_date": "20261004",
   "date_label": "10月4日 日曜",
-  "updated_at": "2026-10-04 13:22 JST",
+  "updated_at": "2026-10-04 13:33 JST",
   "venues": [
     {
       "name": "東京",
@@ -624,6 +624,109 @@
           "jockey": "C.ルメール",
           "horse": "ジョーティス",
           "win_payout": "190円"
+        },
+        {
+          "race": 7,
+          "race_name": "3歳以上1勝クラス",
+          "course": "",
+          "top3": [
+            {
+              "position": 1,
+              "frame": "枠4青",
+              "number": "8",
+              "horse": "アバレリュウ",
+              "jockey": "野中 悠太郎",
+              "time": "1:24.9",
+              "margin": ""
+            },
+            {
+              "position": 2,
+              "frame": "枠7橙",
+              "number": "13",
+              "horse": "ペロ",
+              "jockey": "丸山 元気",
+              "time": "",
+              "margin": "アタマ"
+            },
+            {
+              "position": 3,
+              "frame": "枠5黄",
+              "number": "10",
+              "horse": "ヘルヴェティオス",
+              "jockey": "坂井 瑠星",
+              "time": "",
+              "margin": "１"
+            }
+          ],
+          "payouts": {
+            "単勝": [
+              {
+                "combo": "8",
+                "amount": "940円"
+              }
+            ],
+            "複勝": [
+              {
+                "combo": "8",
+                "amount": "270円"
+              },
+              {
+                "combo": "13",
+                "amount": "220円"
+              },
+              {
+                "combo": "10",
+                "amount": "200円"
+              }
+            ],
+            "枠連": [
+              {
+                "combo": "4-7",
+                "amount": "1,160円"
+              }
+            ],
+            "馬連": [
+              {
+                "combo": "8-13",
+                "amount": "3,700円"
+              }
+            ],
+            "馬単": [
+              {
+                "combo": "8-13",
+                "amount": "8,430円"
+              }
+            ],
+            "ワイド": [
+              {
+                "combo": "8-13",
+                "amount": "1,020円"
+              },
+              {
+                "combo": "8-10",
+                "amount": "930円"
+              },
+              {
+                "combo": "10-13",
+                "amount": "800円"
+              }
+            ],
+            "3連複": [
+              {
+                "combo": "8-10-13",
+                "amount": "6,940円"
+              }
+            ],
+            "3連単": [
+              {
+                "combo": "8-13-10",
+                "amount": "42,510円"
+              }
+            ]
+          },
+          "jockey": "野中 悠太郎",
+          "horse": "アバレリュウ",
+          "win_payout": "940円"
         }
       ]
     },
