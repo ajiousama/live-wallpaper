@@ -462,8 +462,8 @@ def main():
             except Exception:
                 pass
 
-    local_feature = local_results_for_names(ymd, local_epg, ["盛岡"], now_minutes)
-    local_night = local_night_results(ymd,local_epg,now_minutes) if now.hour >= 16 else []
+    local_names = [v["venue"] for v in local_epg if v.get("venue") in NAR_CODES]
+    local_all = local_results_for_names(ymd, local_epg, local_names, now_minutes)
 
     payload = {
         "date":now.strftime("%Y-%m-%d"),
@@ -477,8 +477,7 @@ def main():
             "venues":phase_venues,
         },
         "boats":boats,
-        "local_feature":{"venues":local_feature},
-        "local_night":{"venues":local_night},
+        "local_all":{"venues":local_all},
         "source":{
             "schedule":"Free WiFi EPG",
             "keirin":"netkeirin / EPG",
