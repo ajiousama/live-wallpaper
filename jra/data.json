@@ -2,7 +2,7 @@
   "source": "JRA公式",
   "source_date": "20261004",
   "date_label": "10月4日 日曜",
-  "updated_at": "2026-10-04 15:01 JST",
+  "updated_at": "2026-10-04 15:24 JST",
   "venues": [
     {
       "name": "東京",
@@ -936,8 +936,106 @@
         },
         {
           "race": 10,
+          "race_name": "赤富士ステークス",
           "course": "ダート1600m",
-          "race_name": "赤富士ステークス"
+          "top3": [
+            {
+              "position": 1,
+              "frame": "枠3赤",
+              "number": "6",
+              "horse": "クールブロン",
+              "jockey": "三浦 皇成",
+              "time": "1:35.8",
+              "margin": ""
+            },
+            {
+              "position": 2,
+              "frame": "枠3赤",
+              "number": "5",
+              "horse": "オンザムービー",
+              "jockey": "横山 典弘",
+              "time": "1:35.8",
+              "margin": "アタマ"
+            },
+            {
+              "position": 3,
+              "frame": "枠4青",
+              "number": "8",
+              "horse": "ルグランヴァン",
+              "jockey": "原 優介",
+              "time": "1:36.0",
+              "margin": "１"
+            }
+          ],
+          "payouts": {
+            "単勝": [
+              {
+                "combo": "6",
+                "amount": "3,150円"
+              }
+            ],
+            "複勝": [
+              {
+                "combo": "6",
+                "amount": "510円"
+              },
+              {
+                "combo": "5",
+                "amount": "130円"
+              },
+              {
+                "combo": "8",
+                "amount": "190円"
+              }
+            ],
+            "枠連": [
+              {
+                "combo": "3-3",
+                "amount": "4,270円"
+              }
+            ],
+            "馬連": [
+              {
+                "combo": "5-6",
+                "amount": "4,450円"
+              }
+            ],
+            "馬単": [
+              {
+                "combo": "6-5",
+                "amount": "12,810円"
+              }
+            ],
+            "ワイド": [
+              {
+                "combo": "5-6",
+                "amount": "1,390円"
+              },
+              {
+                "combo": "6-8",
+                "amount": "2,250円"
+              },
+              {
+                "combo": "5-8",
+                "amount": "320円"
+              }
+            ],
+            "3連複": [
+              {
+                "combo": "5-6-8",
+                "amount": "6,550円"
+              }
+            ],
+            "3連単": [
+              {
+                "combo": "6-5-8",
+                "amount": "75,000円"
+              }
+            ]
+          },
+          "jockey": "三浦 皇成",
+          "horse": "クールブロン",
+          "win_payout": "3,150円"
         },
         {
           "race": 11,

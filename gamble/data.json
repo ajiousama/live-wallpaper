@@ -1,8 +1,8 @@
 {
   "date": "2026-10-04",
   "date_label": "2026年10月04日",
-  "updated_at": "15:16:01",
-  "updated_at_iso": "2026-10-04T15:16:01.697630+09:00",
+  "updated_at": "15:24:48",
+  "updated_at_iso": "2026-10-04T15:24:48.913171+09:00",
   "jra_switch_time": "17:00",
   "keirin": {
     "phase": "本日開催 8場",
@@ -543,9 +543,13 @@
           {
             "race": 10,
             "time": "15:16",
-            "status": "結果待ち",
-            "order": [],
-            "payout": "",
+            "status": "確定",
+            "order": [
+              7,
+              8,
+              3
+            ],
+            "payout": "7,320円",
             "winner": "",
             "origin": "",
             "race_name": "Ｓ級 特秀",
@@ -1401,7 +1405,8 @@
           ],
           "payout": "2,410円",
           "race_name": "朝トク予選",
-          "scheduled_time": "08:47"
+          "scheduled_time": "08:47",
+          "winner": ""
         },
         {
           "race": 2,
@@ -1413,7 +1418,8 @@
           ],
           "payout": "740円",
           "race_name": "狙いトク特選",
-          "scheduled_time": "09:13"
+          "scheduled_time": "09:13",
+          "winner": ""
         },
         {
           "race": 3,
@@ -1425,7 +1431,8 @@
           ],
           "payout": "1,740円",
           "race_name": "決めトク特賞",
-          "scheduled_time": "09:39"
+          "scheduled_time": "09:39",
+          "winner": ""
         },
         {
           "race": 4,
@@ -1437,7 +1444,8 @@
           ],
           "payout": "4,710円",
           "race_name": "ガチトク予選",
-          "scheduled_time": "10:05"
+          "scheduled_time": "10:05",
+          "winner": ""
         },
         {
           "race": 5,
@@ -1449,7 +1457,8 @@
           ],
           "payout": "860円",
           "race_name": "予選",
-          "scheduled_time": "10:32"
+          "scheduled_time": "10:32",
+          "winner": ""
         },
         {
           "race": 6,
@@ -1461,7 +1470,8 @@
           ],
           "payout": "890円",
           "race_name": "予選",
-          "scheduled_time": "11:02"
+          "scheduled_time": "11:02",
+          "winner": ""
         },
         {
           "race": 7,
@@ -1473,7 +1483,8 @@
           ],
           "payout": "2,690円",
           "race_name": "予選",
-          "scheduled_time": "11:35"
+          "scheduled_time": "11:35",
+          "winner": ""
         },
         {
           "race": 8,
@@ -1485,7 +1496,8 @@
           ],
           "payout": "7,570円",
           "race_name": "予選",
-          "scheduled_time": "12:09"
+          "scheduled_time": "12:09",
+          "winner": ""
         },
         {
           "race": 9,
@@ -1497,7 +1509,8 @@
           ],
           "payout": "590円",
           "race_name": "推しトク特賞",
-          "scheduled_time": "12:42"
+          "scheduled_time": "12:42",
+          "winner": ""
         },
         {
           "race": 10,
@@ -1509,7 +1522,8 @@
           ],
           "payout": "730円",
           "race_name": "予選",
-          "scheduled_time": "13:14"
+          "scheduled_time": "13:14",
+          "winner": ""
         },
         {
           "race": 11,
@@ -1521,7 +1535,8 @@
           ],
           "payout": "1,580円",
           "race_name": "予選",
-          "scheduled_time": "13:50"
+          "scheduled_time": "13:50",
+          "winner": ""
         },
         {
           "race": 12,
@@ -1533,7 +1548,8 @@
           ],
           "payout": "2,100円",
           "race_name": "すなっち特選",
-          "scheduled_time": "14:30"
+          "scheduled_time": "14:30",
+          "winner": ""
         }
       ]
     },
@@ -1555,7 +1571,8 @@
           ],
           "payout": "3,820円",
           "race_name": "朝１戦",
-          "scheduled_time": "08:35"
+          "scheduled_time": "08:35",
+          "winner": ""
         },
         {
           "race": 2,
@@ -1567,7 +1584,8 @@
           ],
           "payout": "1,790円",
           "race_name": "モー２ング戦",
-          "scheduled_time": "09:01"
+          "scheduled_time": "09:01",
+          "winner": ""
         },
         {
           "race": 3,
@@ -1579,7 +1597,8 @@
           ],
           "payout": "710円",
           "race_name": "３ライズ戦",
-          "scheduled_time": "09:30"
+          "scheduled_time": "09:30",
+          "winner": ""
         },
         {
           "race": 4,
@@ -1591,7 +1610,8 @@
           ],
           "payout": "810円",
           "race_name": "おは４戦",
-          "scheduled_time": "09:56"
+          "scheduled_time": "09:56",
+          "winner": ""
         },
         {
           "race": 5,
@@ -1603,7 +1623,8 @@
           ],
           "payout": "1,370円",
           "race_name": "レッツ５戦",
-          "scheduled_time": "10:25"
+          "scheduled_time": "10:25",
+          "winner": ""
         },
         {
           "race": 6,
@@ -1615,7 +1636,8 @@
           ],
           "payout": "10,940円",
           "race_name": "一般",
-          "scheduled_time": "10:54"
+          "scheduled_time": "10:54",
+          "winner": ""
         },
         {
           "race": 7,
@@ -1627,7 +1649,8 @@
           ],
           "payout": "2,550円",
           "race_name": "一般",
-          "scheduled_time": "11:24"
+          "scheduled_time": "11:24",
+          "winner": ""
         },
         {
           "race": 8,
@@ -1639,7 +1662,8 @@
           ],
           "payout": "10,550円",
           "race_name": "８っぴータイム",
-          "scheduled_time": "11:55"
+          "scheduled_time": "11:55",
+          "winner": ""
         },
         {
           "race": 9,
@@ -1651,7 +1675,8 @@
           ],
           "payout": "790円",
           "race_name": "一般",
-          "scheduled_time": "12:28"
+          "scheduled_time": "12:28",
+          "winner": ""
         },
         {
           "race": 10,
@@ -1663,7 +1688,8 @@
           ],
           "payout": "1,520円",
           "race_name": "準優勝戦",
-          "scheduled_time": "13:05"
+          "scheduled_time": "13:05",
+          "winner": ""
         },
         {
           "race": 11,
@@ -1675,7 +1701,8 @@
           ],
           "payout": "10,480円",
           "race_name": "準優勝戦",
-          "scheduled_time": "13:41"
+          "scheduled_time": "13:41",
+          "winner": ""
         },
         {
           "race": 12,
@@ -1687,7 +1714,8 @@
           ],
           "payout": "380円",
           "race_name": "準優勝戦",
-          "scheduled_time": "14:19"
+          "scheduled_time": "14:19",
+          "winner": ""
         }
       ]
     },
@@ -1709,7 +1737,8 @@
           ],
           "payout": "4,060円",
           "race_name": "予選",
-          "scheduled_time": "10:47"
+          "scheduled_time": "10:47",
+          "winner": ""
         },
         {
           "race": 2,
@@ -1721,7 +1750,8 @@
           ],
           "payout": "1,700円",
           "race_name": "予選",
-          "scheduled_time": "11:17"
+          "scheduled_time": "11:17",
+          "winner": ""
         },
         {
           "race": 3,
@@ -1733,7 +1763,8 @@
           ],
           "payout": "56,510円",
           "race_name": "予選",
-          "scheduled_time": "11:48"
+          "scheduled_time": "11:48",
+          "winner": ""
         },
         {
           "race": 4,
@@ -1745,7 +1776,8 @@
           ],
           "payout": "5,340円",
           "race_name": "予選",
-          "scheduled_time": "12:19"
+          "scheduled_time": "12:19",
+          "winner": ""
         },
         {
           "race": 5,
@@ -1757,7 +1789,8 @@
           ],
           "payout": "1,020円",
           "race_name": "ウインウイン５",
-          "scheduled_time": "12:50"
+          "scheduled_time": "12:50",
+          "winner": ""
         },
         {
           "race": 6,
@@ -1769,7 +1802,8 @@
           ],
           "payout": "2,660円",
           "race_name": "予選",
-          "scheduled_time": "13:21"
+          "scheduled_time": "13:21",
+          "winner": ""
         },
         {
           "race": 7,
@@ -1781,7 +1815,8 @@
           ],
           "payout": "46,970円",
           "race_name": "ウインウイン７",
-          "scheduled_time": "13:52"
+          "scheduled_time": "13:52",
+          "winner": ""
         },
         {
           "race": 8,
@@ -1793,7 +1828,8 @@
           ],
           "payout": "9,130円",
           "race_name": "予選",
-          "scheduled_time": "14:23"
+          "scheduled_time": "14:23",
+          "winner": ""
         },
         {
           "race": 9,
@@ -1805,7 +1841,8 @@
           ],
           "payout": "36,440円",
           "race_name": "戸田特賞",
-          "scheduled_time": "14:54"
+          "scheduled_time": "14:54",
+          "winner": ""
         },
         {
           "race": 10,
@@ -1851,7 +1888,8 @@
           ],
           "payout": "2,730円",
           "race_name": "予選",
-          "scheduled_time": "10:41"
+          "scheduled_time": "10:41",
+          "winner": ""
         },
         {
           "race": 2,
@@ -1863,7 +1901,8 @@
           ],
           "payout": "4,580円",
           "race_name": "予選",
-          "scheduled_time": "11:08"
+          "scheduled_time": "11:08",
+          "winner": ""
         },
         {
           "race": 3,
@@ -1875,7 +1914,8 @@
           ],
           "payout": "21,270円",
           "race_name": "予選",
-          "scheduled_time": "11:41"
+          "scheduled_time": "11:41",
+          "winner": ""
         },
         {
           "race": 4,
@@ -1887,7 +1927,8 @@
           ],
           "payout": "3,840円",
           "race_name": "予選",
-          "scheduled_time": "12:11"
+          "scheduled_time": "12:11",
+          "winner": ""
         },
         {
           "race": 5,
@@ -1899,7 +1940,8 @@
           ],
           "payout": "2,190円",
           "race_name": "予選",
-          "scheduled_time": "12:40"
+          "scheduled_time": "12:40",
+          "winner": ""
         },
         {
           "race": 6,
@@ -1911,7 +1953,8 @@
           ],
           "payout": "18,890円",
           "race_name": "予選",
-          "scheduled_time": "13:12"
+          "scheduled_time": "13:12",
+          "winner": ""
         },
         {
           "race": 7,
@@ -1923,7 +1966,8 @@
           ],
           "payout": "680円",
           "race_name": "予選",
-          "scheduled_time": "13:43"
+          "scheduled_time": "13:43",
+          "winner": ""
         },
         {
           "race": 8,
@@ -1935,7 +1979,8 @@
           ],
           "payout": "2,950円",
           "race_name": "予選",
-          "scheduled_time": "14:12"
+          "scheduled_time": "14:12",
+          "winner": ""
         },
         {
           "race": 9,
@@ -1947,7 +1992,8 @@
           ],
           "payout": "12,790円",
           "race_name": "予選特賞",
-          "scheduled_time": "14:49"
+          "scheduled_time": "14:49",
+          "winner": ""
         },
         {
           "race": 10,
@@ -1993,7 +2039,8 @@
           ],
           "payout": "5,230円",
           "race_name": "一般",
-          "scheduled_time": "11:12"
+          "scheduled_time": "11:12",
+          "winner": ""
         },
         {
           "race": 2,
@@ -2005,7 +2052,8 @@
           ],
           "payout": "4,360円",
           "race_name": "一般",
-          "scheduled_time": "11:37"
+          "scheduled_time": "11:37",
+          "winner": ""
         },
         {
           "race": 3,
@@ -2017,7 +2065,8 @@
           ],
           "payout": "4,090円",
           "race_name": "一般",
-          "scheduled_time": "12:05"
+          "scheduled_time": "12:05",
+          "winner": ""
         },
         {
           "race": 4,
@@ -2029,7 +2078,8 @@
           ],
           "payout": "11,740円",
           "race_name": "ランチタイム戦",
-          "scheduled_time": "12:35"
+          "scheduled_time": "12:35",
+          "winner": ""
         },
         {
           "race": 5,
@@ -2041,7 +2091,8 @@
           ],
           "payout": "1,230円",
           "race_name": "一般",
-          "scheduled_time": "13:09"
+          "scheduled_time": "13:09",
+          "winner": ""
         },
         {
           "race": 6,
@@ -2053,7 +2104,8 @@
           ],
           "payout": "2,270円",
           "race_name": "一般",
-          "scheduled_time": "13:35"
+          "scheduled_time": "13:35",
+          "winner": ""
         },
         {
           "race": 7,
@@ -2065,7 +2117,8 @@
           ],
           "payout": "1,220円",
           "race_name": "一般",
-          "scheduled_time": "14:06"
+          "scheduled_time": "14:06",
+          "winner": ""
         },
         {
           "race": 8,
@@ -2077,15 +2130,21 @@
           ],
           "payout": "1,520円",
           "race_name": "ブレイクタイム",
-          "scheduled_time": "14:38"
+          "scheduled_time": "14:38",
+          "winner": ""
         },
         {
           "race": 9,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            4,
+            6,
+            2
+          ],
+          "payout": "216,620円",
           "race_name": "一般特選",
-          "scheduled_time": "15:12"
+          "scheduled_time": "15:12",
+          "winner": ""
         },
         {
           "race": 10,
@@ -2131,7 +2190,8 @@
           ],
           "payout": "460円",
           "race_name": "ツッキーレース",
-          "scheduled_time": "10:30"
+          "scheduled_time": "10:30",
+          "winner": ""
         },
         {
           "race": 2,
@@ -2143,7 +2203,8 @@
           ],
           "payout": "1,630円",
           "race_name": "一般",
-          "scheduled_time": "10:59"
+          "scheduled_time": "10:59",
+          "winner": ""
         },
         {
           "race": 3,
@@ -2155,7 +2216,8 @@
           ],
           "payout": "19,570円",
           "race_name": "一般",
-          "scheduled_time": "11:28"
+          "scheduled_time": "11:28",
+          "winner": ""
         },
         {
           "race": 4,
@@ -2167,7 +2229,8 @@
           ],
           "payout": "4,050円",
           "race_name": "一般",
-          "scheduled_time": "11:57"
+          "scheduled_time": "11:57",
+          "winner": ""
         },
         {
           "race": 5,
@@ -2179,7 +2242,8 @@
           ],
           "payout": "470円",
           "race_name": "５ールドレース",
-          "scheduled_time": "12:25"
+          "scheduled_time": "12:25",
+          "winner": ""
         },
         {
           "race": 6,
@@ -2191,7 +2255,8 @@
           ],
           "payout": "6,390円",
           "race_name": "一般",
-          "scheduled_time": "12:54"
+          "scheduled_time": "12:54",
+          "winner": ""
         },
         {
           "race": 7,
@@ -2203,7 +2268,8 @@
           ],
           "payout": "6,870円",
           "race_name": "一般",
-          "scheduled_time": "13:24"
+          "scheduled_time": "13:24",
+          "winner": ""
         },
         {
           "race": 8,
@@ -2215,7 +2281,8 @@
           ],
           "payout": "3,200円",
           "race_name": "一般",
-          "scheduled_time": "13:55"
+          "scheduled_time": "13:55",
+          "winner": ""
         },
         {
           "race": 9,
@@ -2227,7 +2294,8 @@
           ],
           "payout": "680円",
           "race_name": "一般",
-          "scheduled_time": "14:25"
+          "scheduled_time": "14:25",
+          "winner": ""
         },
         {
           "race": 10,
@@ -2239,7 +2307,8 @@
           ],
           "payout": "1,450円",
           "race_name": "準優勝戦",
-          "scheduled_time": "15:00"
+          "scheduled_time": "15:00",
+          "winner": ""
         },
         {
           "race": 11,
@@ -2277,7 +2346,8 @@
           ],
           "payout": "710円",
           "race_name": "予選",
-          "scheduled_time": "10:36"
+          "scheduled_time": "10:36",
+          "winner": ""
         },
         {
           "race": 2,
@@ -2289,7 +2359,8 @@
           ],
           "payout": "890円",
           "race_name": "予選",
-          "scheduled_time": "11:04"
+          "scheduled_time": "11:04",
+          "winner": ""
         },
         {
           "race": 3,
@@ -2301,7 +2372,8 @@
           ],
           "payout": "4,430円",
           "race_name": "予選",
-          "scheduled_time": "11:32"
+          "scheduled_time": "11:32",
+          "winner": ""
         },
         {
           "race": 4,
@@ -2313,7 +2385,8 @@
           ],
           "payout": "16,200円",
           "race_name": "予選",
-          "scheduled_time": "12:01"
+          "scheduled_time": "12:01",
+          "winner": ""
         },
         {
           "race": 5,
@@ -2325,7 +2398,8 @@
           ],
           "payout": "1,160円",
           "race_name": "予選",
-          "scheduled_time": "12:30"
+          "scheduled_time": "12:30",
+          "winner": ""
         },
         {
           "race": 6,
@@ -2337,7 +2411,8 @@
           ],
           "payout": "4,010円",
           "race_name": "予選",
-          "scheduled_time": "13:00"
+          "scheduled_time": "13:00",
+          "winner": ""
         },
         {
           "race": 7,
@@ -2349,7 +2424,8 @@
           ],
           "payout": "1,490円",
           "race_name": "予選",
-          "scheduled_time": "13:30"
+          "scheduled_time": "13:30",
+          "winner": ""
         },
         {
           "race": 8,
@@ -2361,7 +2437,8 @@
           ],
           "payout": "2,780円",
           "race_name": "予選",
-          "scheduled_time": "14:01"
+          "scheduled_time": "14:01",
+          "winner": ""
         },
         {
           "race": 9,
@@ -2373,7 +2450,8 @@
           ],
           "payout": "5,170円",
           "race_name": "予選",
-          "scheduled_time": "14:33"
+          "scheduled_time": "14:33",
+          "winner": ""
         },
         {
           "race": 10,
@@ -2384,8 +2462,9 @@
             2
           ],
           "payout": "2,750円",
-          "race_name": "",
-          "scheduled_time": "15:08"
+          "race_name": "予選",
+          "scheduled_time": "15:08",
+          "winner": ""
         },
         {
           "race": 11,
@@ -2423,7 +2502,8 @@
           ],
           "payout": "510円",
           "race_name": "予選",
-          "scheduled_time": "10:29"
+          "scheduled_time": "10:29",
+          "winner": ""
         },
         {
           "race": 2,
@@ -2435,7 +2515,8 @@
           ],
           "payout": "2,600円",
           "race_name": "予選",
-          "scheduled_time": "10:57"
+          "scheduled_time": "10:57",
+          "winner": ""
         },
         {
           "race": 3,
@@ -2447,7 +2528,8 @@
           ],
           "payout": "10,540円",
           "race_name": "予選",
-          "scheduled_time": "11:22"
+          "scheduled_time": "11:22",
+          "winner": ""
         },
         {
           "race": 4,
@@ -2459,7 +2541,8 @@
           ],
           "payout": "1,740円",
           "race_name": "予選",
-          "scheduled_time": "11:51"
+          "scheduled_time": "11:51",
+          "winner": ""
         },
         {
           "race": 5,
@@ -2471,7 +2554,8 @@
           ],
           "payout": "450円",
           "race_name": "予選",
-          "scheduled_time": "12:22"
+          "scheduled_time": "12:22",
+          "winner": ""
         },
         {
           "race": 6,
@@ -2483,7 +2567,8 @@
           ],
           "payout": "1,120円",
           "race_name": "予選",
-          "scheduled_time": "12:48"
+          "scheduled_time": "12:48",
+          "winner": ""
         },
         {
           "race": 7,
@@ -2495,7 +2580,8 @@
           ],
           "payout": "1,100円",
           "race_name": "予選",
-          "scheduled_time": "13:18"
+          "scheduled_time": "13:18",
+          "winner": ""
         },
         {
           "race": 8,
@@ -2507,7 +2593,8 @@
           ],
           "payout": "1,890円",
           "race_name": "予選",
-          "scheduled_time": "13:47"
+          "scheduled_time": "13:47",
+          "winner": ""
         },
         {
           "race": 9,
@@ -2519,7 +2606,8 @@
           ],
           "payout": "8,010円",
           "race_name": "予選特賞",
-          "scheduled_time": "14:22"
+          "scheduled_time": "14:22",
+          "winner": ""
         },
         {
           "race": 10,
@@ -2531,7 +2619,8 @@
           ],
           "payout": "1,020円",
           "race_name": "予選特賞",
-          "scheduled_time": "14:57"
+          "scheduled_time": "14:57",
+          "winner": ""
         },
         {
           "race": 11,
@@ -2569,7 +2658,8 @@
           ],
           "payout": "1,870円",
           "race_name": "朝からセンプル",
-          "scheduled_time": "10:45"
+          "scheduled_time": "10:45",
+          "winner": ""
         },
         {
           "race": 2,
@@ -2581,7 +2671,8 @@
           ],
           "payout": "1,780円",
           "race_name": "予選",
-          "scheduled_time": "11:11"
+          "scheduled_time": "11:11",
+          "winner": ""
         },
         {
           "race": 3,
@@ -2593,7 +2684,8 @@
           ],
           "payout": "7,380円",
           "race_name": "予選",
-          "scheduled_time": "11:39"
+          "scheduled_time": "11:39",
+          "winner": ""
         },
         {
           "race": 4,
@@ -2605,7 +2697,8 @@
           ],
           "payout": "3,680円",
           "race_name": "予選",
-          "scheduled_time": "12:07"
+          "scheduled_time": "12:07",
+          "winner": ""
         },
         {
           "race": 5,
@@ -2617,7 +2710,8 @@
           ],
           "payout": "7,340円",
           "race_name": "予選",
-          "scheduled_time": "12:38"
+          "scheduled_time": "12:38",
+          "winner": ""
         },
         {
           "race": 6,
@@ -2629,7 +2723,8 @@
           ],
           "payout": "1,100円",
           "race_name": "昼どきピンクル",
-          "scheduled_time": "13:07"
+          "scheduled_time": "13:07",
+          "winner": ""
         },
         {
           "race": 7,
@@ -2641,7 +2736,8 @@
           ],
           "payout": "670円",
           "race_name": "予選",
-          "scheduled_time": "13:39"
+          "scheduled_time": "13:39",
+          "winner": ""
         },
         {
           "race": 8,
@@ -2653,7 +2749,8 @@
           ],
           "payout": "1,180円",
           "race_name": "予選",
-          "scheduled_time": "14:10"
+          "scheduled_time": "14:10",
+          "winner": ""
         },
         {
           "race": 9,
@@ -2665,15 +2762,21 @@
           ],
           "payout": "6,410円",
           "race_name": "予選特賞",
-          "scheduled_time": "14:47"
+          "scheduled_time": "14:47",
+          "winner": ""
         },
         {
           "race": 10,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            5,
+            6,
+            1
+          ],
+          "payout": "7,410円",
           "race_name": "",
-          "scheduled_time": "15:15"
+          "scheduled_time": "15:15",
+          "winner": ""
         },
         {
           "race": 11,
@@ -2711,7 +2814,8 @@
           ],
           "payout": "2,300円",
           "race_name": "カタメン１予選",
-          "scheduled_time": "11:00"
+          "scheduled_time": "11:00",
+          "winner": ""
         },
         {
           "race": 2,
@@ -2723,7 +2827,8 @@
           ],
           "payout": "770円",
           "race_name": "予選",
-          "scheduled_time": "11:26"
+          "scheduled_time": "11:26",
+          "winner": ""
         },
         {
           "race": 3,
@@ -2735,7 +2840,8 @@
           ],
           "payout": "7,820円",
           "race_name": "カタメン３予選",
-          "scheduled_time": "11:52"
+          "scheduled_time": "11:52",
+          "winner": ""
         },
         {
           "race": 4,
@@ -2747,7 +2853,8 @@
           ],
           "payout": "2,800円",
           "race_name": "予選",
-          "scheduled_time": "12:17"
+          "scheduled_time": "12:17",
+          "winner": ""
         },
         {
           "race": 5,
@@ -2759,7 +2866,8 @@
           ],
           "payout": "2,440円",
           "race_name": "予選",
-          "scheduled_time": "12:45"
+          "scheduled_time": "12:45",
+          "winner": ""
         },
         {
           "race": 6,
@@ -2771,7 +2879,8 @@
           ],
           "payout": "9,680円",
           "race_name": "予選",
-          "scheduled_time": "13:27"
+          "scheduled_time": "13:27",
+          "winner": ""
         },
         {
           "race": 7,
@@ -2783,7 +2892,8 @@
           ],
           "payout": "590円",
           "race_name": "予選",
-          "scheduled_time": "13:58"
+          "scheduled_time": "13:58",
+          "winner": ""
         },
         {
           "race": 8,
@@ -2795,7 +2905,8 @@
           ],
           "payout": "420円",
           "race_name": "予選",
-          "scheduled_time": "14:28"
+          "scheduled_time": "14:28",
+          "winner": ""
         },
         {
           "race": 9,
@@ -2806,8 +2917,9 @@
             2
           ],
           "payout": "1,270円",
-          "race_name": "",
-          "scheduled_time": "15:05"
+          "race_name": "予選特賞",
+          "scheduled_time": "15:05",
+          "winner": ""
         },
         {
           "race": 10,
@@ -2951,11 +3063,16 @@
       "races": [
         {
           "race": 1,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            2,
+            1,
+            6
+          ],
+          "payout": "9,130円",
           "race_name": "",
-          "scheduled_time": "15:17"
+          "scheduled_time": "15:17",
+          "winner": ""
         },
         {
           "race": 2,
@@ -3259,7 +3376,7 @@
             "race_name": "Ｃ２九組",
             "course": "ダート1200m",
             "scheduled_time": "15:20",
-            "status": "発走前"
+            "status": "結果待ち"
           },
           {
             "race": 8,
@@ -3386,7 +3503,7 @@
             "race_name": "Ｂ２九",
             "course": "ダート1500m",
             "scheduled_time": "15:20",
-            "status": "発走前"
+            "status": "結果待ち"
           },
           {
             "race": 6,
@@ -3785,6 +3902,18 @@
   },
   "featured_races": [
     {
+      "source": "海外競馬",
+      "venue": "海外",
+      "race": "",
+      "name": "2026凱旋門賞（",
+      "time": "23:05",
+      "horses": [
+        "血統",
+        "主な成績",
+        "インタビュー動画"
+      ]
+    },
+    {
       "source": "GCH地方",
       "venue": "盛岡",
       "race": "12R",
@@ -3801,6 +3930,32 @@
       "horses": []
     }
   ],
+  "win5": {
+    "targets": [
+      {
+        "venue": "東京",
+        "race": 9
+      },
+      {
+        "venue": "京都",
+        "race": 10
+      },
+      {
+        "venue": "東京",
+        "race": 10
+      },
+      {
+        "venue": "京都",
+        "race": 11
+      },
+      {
+        "venue": "東京",
+        "race": 11
+      }
+    ],
+    "payout": "206,620円",
+    "payout_kind": "想定"
+  },
   "source": {
     "schedule": "Free WiFi EPG",
     "keirin": "netkeirin / EPG",
