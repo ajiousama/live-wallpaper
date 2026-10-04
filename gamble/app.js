@@ -19,20 +19,21 @@ function raceRows(races,count){
   const rows=Math.max(1,Math.min(12,Number(count)||12));
   for(let r=1;r<=rows;r++){
     const x=map.get(r)||{race:r,status:"発走前",order:[],payout:""};
-    out+='<tr><td class="rcol">'+r+'R</td><td class="ocol">'+orderHtml(x.order)+'</td><td class="pcol '+(x.payout?"":"pending")+'">'+esc(x.payout||x.status||"発走前")+'</td></tr>';
+    const raceName=x.race_name||x.race_type||"—";
+    out+='<tr><td class="rcol">'+r+'R</td><td class="race-label" title="'+esc(raceName)+'">'+esc(raceName)+'</td><td class="ocol">'+orderHtml(x.order)+'</td><td class="pcol '+(x.payout?"":"pending")+'">'+esc(x.payout||x.status||"発走前")+'</td></tr>';
   }
   return out;
 }
 function compactCard(v,kind){
   const title=v.display_name||v.name||v.venue||"---";
   const event=v.event_name||"";
-  const tags=kind==="keirin"?[v.type,v.grade].filter(Boolean).join(" / "):"";
+  const tags=kind==="keirin"?[v.type,v.grade].filter(Boolean).join(" / "):(kind==="boat"?[v.day_type].filter(Boolean).join(" / "):"");
   const grade=tags?' <small>'+esc(tags)+'</small>':"";
   const raceCount=kind==="keirin"
     ?((v.race_ids||[]).length||(v.races||[]).reduce(function(m,x){return Math.max(m,Number(x.race)||0)},0)||12)
     :12;
   const klass=kind==="keirin"?"result-card keirin-card":"result-card";
-  return '<article class="'+klass+'"><div class="card-head"><div class="card-title">'+esc(title)+grade+'</div><div class="event">'+esc(event)+'</div></div><table class="compact-table"><thead><tr><th>R</th><th>3連単</th><th>払戻金</th></tr></thead><tbody>'+raceRows(v.races,raceCount)+'</tbody></table></article>';
+  return '<article class="'+klass+'"><div class="card-head"><div class="card-title">'+esc(title)+grade+'</div><div class="event">'+esc(event)+'</div></div><table class="compact-table"><thead><tr><th>R</th><th>レース名・種別</th><th>3連単</th><th>払戻金</th></tr></thead><tbody>'+raceRows(v.races,raceCount)+'</tbody></table></article>';
 }
 function renderKeirin(){
   const host=document.getElementById("keirin-grid");
@@ -86,6 +87,7 @@ function jraVenueCard(v){
     rows+='<div class="horse-race">'+
       '<div class="horse-result-line">'+
         '<span class="race-no">'+r+'R</span>'+
+        '<span class="race-label horse-race-label" title="'+esc(raceInfoText(x))+'">'+esc(raceInfoText(x))+'</span>'+
         '<span class="winner '+(status?"pending":"")+'">'+esc(horse||status)+'</span>'+
         '<span class="winner-jockey">'+esc(jockey||"")+'</span>'+
         '<span class="tri-combo '+(tri.combo?"":"pending")+'">'+esc(tri.combo||"---")+'</span>'+
@@ -102,9 +104,10 @@ function localVenueCard(v){
   for(let r=1;r<=12;r++){
     const x=map.get(r)||{};
     const combo=Array.isArray(x.order)&&x.order.length>=3?x.order.join("-"):"";
-    rows+='<tr><td class="jr">'+r+'R</td><td class="horse '+(x.winner?"":"pending")+'">'+esc(x.winner||x.status||"発走前")+'</td><td class="jockey">'+esc(x.jockey||"")+'</td><td class="pay '+(x.trifecta?"":"pending")+'">'+esc((combo?combo+" ":"")+(x.trifecta||""))+'</td></tr>';
+    const raceName=x.race_name||"—";
+    rows+='<tr><td class="jr">'+r+'R</td><td class="race-label" title="'+esc(raceName)+'">'+esc(raceName)+'</td><td class="horse '+(x.winner?"":"pending")+'">'+esc(x.winner||x.status||"発走前")+'</td><td class="jockey">'+esc(x.jockey||"")+'</td><td class="pay '+(x.trifecta?"":"pending")+'">'+esc((combo?combo+" ":"")+(x.trifecta||""))+'</td></tr>';
   }
-  return '<article class="jra-card"><div class="card-head"><div class="card-title">'+esc(v.name||"---")+'</div><div class="event">地方ナイター</div></div><table class="jra-table"><thead><tr><th>R</th><th>勝ち馬</th><th>勝利騎手</th><th>3連単 組合せ・払戻</th></tr></thead><tbody>'+rows+'</tbody></table></article>';
+  return '<article class="jra-card"><div class="card-head"><div class="card-title">'+esc(v.name||"---")+'</div><div class="event">地方競馬</div></div><table class="jra-table"><thead><tr><th>R</th><th>レース名・種別</th><th>勝ち馬</th><th>騎手</th><th>3連単</th></tr></thead><tbody>'+rows+'</tbody></table></article>';
 }
 function updateMarquees(){
   requestAnimationFrame(function(){
