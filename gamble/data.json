@@ -1,8 +1,8 @@
 {
   "date": "2026-10-04",
   "date_label": "2026年10月04日",
-  "updated_at": "14:08:18",
-  "updated_at_iso": "2026-10-04T14:08:18.128914+09:00",
+  "updated_at": "14:28:50",
+  "updated_at_iso": "2026-10-04T14:28:50.836283+09:00",
   "jra_switch_time": "17:00",
   "keirin": {
     "phase": "本日開催 8場",
@@ -513,9 +513,13 @@
           {
             "race": 8,
             "time": "14:14",
-            "status": "発走前",
-            "order": [],
-            "payout": "",
+            "status": "確定",
+            "order": [
+              7,
+              3,
+              5
+            ],
+            "payout": "16,860円",
             "winner": "",
             "origin": "",
             "race_name": "Ｓ級 特選",
@@ -1512,7 +1516,7 @@
             2
           ],
           "payout": "1,580円",
-          "race_name": "",
+          "race_name": "予選",
           "scheduled_time": "13:50"
         },
         {
@@ -1667,9 +1671,13 @@
         },
         {
           "race": 12,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            1,
+            2,
+            3
+          ],
+          "payout": "380円",
           "race_name": "準優勝戦",
           "scheduled_time": "14:19"
         }
@@ -1769,9 +1777,13 @@
         },
         {
           "race": 8,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            1,
+            3,
+            5
+          ],
+          "payout": "9,130円",
           "race_name": "",
           "scheduled_time": "14:23"
         },
@@ -1903,10 +1915,14 @@
         },
         {
           "race": 8,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
-          "race_name": "",
+          "status": "確定",
+          "order": [
+            3,
+            1,
+            5
+          ],
+          "payout": "2,950円",
+          "race_name": "予選",
           "scheduled_time": "14:12"
         },
         {
@@ -2025,10 +2041,14 @@
         },
         {
           "race": 7,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
-          "race_name": "",
+          "status": "確定",
+          "order": [
+            1,
+            4,
+            5
+          ],
+          "payout": "1,220円",
+          "race_name": "一般",
           "scheduled_time": "14:06"
         },
         {
@@ -2174,7 +2194,7 @@
             4
           ],
           "payout": "3,200円",
-          "race_name": "",
+          "race_name": "一般",
           "scheduled_time": "13:55"
         },
         {
@@ -2312,7 +2332,7 @@
             2
           ],
           "payout": "2,780円",
-          "race_name": "",
+          "race_name": "予選",
           "scheduled_time": "14:01"
         },
         {
@@ -2455,9 +2475,13 @@
         },
         {
           "race": 9,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            6,
+            1,
+            2
+          ],
+          "payout": "8,010円",
           "race_name": "",
           "scheduled_time": "14:22"
         },
@@ -2581,10 +2605,14 @@
         },
         {
           "race": 8,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
-          "race_name": "",
+          "status": "確定",
+          "order": [
+            1,
+            2,
+            4
+          ],
+          "payout": "1,180円",
+          "race_name": "予選",
           "scheduled_time": "14:10"
         },
         {
@@ -2710,7 +2738,7 @@
             5
           ],
           "payout": "590円",
-          "race_name": "",
+          "race_name": "予選",
           "scheduled_time": "13:58"
         },
         {
@@ -3138,12 +3166,17 @@
           },
           {
             "race": 5,
-            "winner": "",
-            "jockey": "",
-            "trifecta": "",
-            "race_name": "Ｂ１ 芝左1600m 晴 良 10",
+            "winner": "シルバースペード",
+            "jockey": "高橋悠",
+            "trifecta": "71,520円",
+            "order": [
+              8,
+              4,
+              9
+            ],
             "course": "芝1600m",
-            "status": "結果待ち"
+            "status": "確定",
+            "race_name": "Ｂ１ 芝左1600m 晴 良 10"
           },
           {
             "race": 6,
@@ -3244,12 +3277,17 @@
           },
           {
             "race": 3,
-            "winner": "",
-            "jockey": "",
-            "trifecta": "",
-            "race_name": "有 ２歳３",
+            "winner": "コンヤザカ",
+            "jockey": "塚本征",
+            "trifecta": "23,490円",
+            "order": [
+              5,
+              2,
+              1
+            ],
             "course": "ダート1500m",
-            "status": "結果待ち"
+            "status": "確定",
+            "race_name": "有 ２歳３"
           },
           {
             "race": 4,
@@ -3258,7 +3296,7 @@
             "trifecta": "",
             "race_name": "真実社会日本人コミュニティ三周年記２歳２",
             "course": "ダート1500m",
-            "status": "発走前"
+            "status": "結果待ち"
           },
           {
             "race": 5,
@@ -3327,7 +3365,7 @@
             "trifecta": "",
             "race_name": "愛猫チビたん２歳記念Ｃ２－４  10",
             "course": "直200m",
-            "status": "発走前"
+            "status": "結果待ち"
           },
           {
             "race": 2,
