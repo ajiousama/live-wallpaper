@@ -56,12 +56,17 @@ body{background:linear-gradient(180deg,#061522,#02090f)}
 .local-table .jockey{width:72px;text-align:left;text-overflow:ellipsis}
 .local-table .combo{width:78px}
 .local-table .pay{width:88px}
-.phase-grid.count-5 .card-head,.phase-grid.count-6 .card-head{gap:4px;padding:2px 4px}
-.phase-grid.count-5 .card-head strong,.phase-grid.count-6 .card-head strong{font-size:13px}
-.phase-grid.count-5 .card-head small,.phase-grid.count-6 .card-head small{font-size:8px}
-.phase-grid.count-5 .sport-tag,.phase-grid.count-6 .sport-tag{font-size:8px;padding:1px 3px}
-.phase-grid.count-5 .phase-table th,.phase-grid.count-6 .phase-table th{font-size:8px;height:20px}
-.phase-grid.count-5 .phase-table td,.phase-grid.count-6 .phase-table td{font-size:9.5px;padding:1px 2px}
+.phase-grid.count-4 .phase-card,.phase-grid.count-5 .phase-card,.phase-grid.count-6 .phase-card{grid-template-rows:24px 1fr}
+.phase-grid.count-4 .card-head,.phase-grid.count-5 .card-head,.phase-grid.count-6 .card-head{gap:4px;padding:1px 4px}
+.phase-grid.count-4 .card-head strong,.phase-grid.count-5 .card-head strong,.phase-grid.count-6 .card-head strong{font-size:12px}
+.phase-grid.count-4 .card-head small,.phase-grid.count-5 .card-head small,.phase-grid.count-6 .card-head small{font-size:7.5px}
+.phase-grid.count-4 .sport-tag,.phase-grid.count-5 .sport-tag,.phase-grid.count-6 .sport-tag{font-size:7.5px;padding:1px 3px}
+.phase-grid.count-4 .phase-table th,.phase-grid.count-5 .phase-table th,.phase-grid.count-6 .phase-table th{height:16px;font-size:7.5px;padding:0 1px}
+.phase-grid.count-4 .phase-table td,.phase-grid.count-5 .phase-table td,.phase-grid.count-6 .phase-table td{font-size:9px;padding:0 1px;line-height:1}
+.phase-grid.count-4 .num,.phase-grid.count-5 .num,.phase-grid.count-6 .num,
+.phase-grid.count-4 .horse-no,.phase-grid.count-5 .horse-no,.phase-grid.count-6 .horse-no{width:15px;min-width:15px;height:14px;font-size:8px;padding:0 1px}
+.phase-grid.count-4 .local-table .local-info>div,.phase-grid.count-5 .local-table .local-info>div,.phase-grid.count-6 .local-table .local-info>div{height:10px;line-height:10px}
+.phase-grid.count-4 .local-table .local-info>b,.phase-grid.count-5 .local-table .local-info>b,.phase-grid.count-6 .local-table .local-info>b{height:8px;line-height:8px;font-size:7px}
 .phase-grid.count-5 .phase-table .r,.phase-grid.count-6 .phase-table .r{width:27px}
 .phase-grid.count-5 .phase-table .class-col,.phase-grid.count-6 .phase-table .class-col{width:34px}
 .phase-grid.count-5 .phase-table .origin,.phase-grid.count-6 .phase-table .origin{width:43px}
