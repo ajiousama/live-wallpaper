@@ -144,11 +144,12 @@ function buildPages(){
     });
   }
 
-  for(const v of (jra?.venues||[])){
+  const jraVenues=jra?.venues||[];
+  if(jraVenues.length){
     pages.push({
-      key:"jra:"+(v.name||""),
+      key:"jra:all",
       type:"jra",
-      venue:v
+      venues:jraVenues
     });
   }
   return pages.length?pages:[{key:"phase:デイ:0",type:"phase",phase:"デイ",page:1,total:1,items:[]}];
@@ -215,12 +216,12 @@ function renderSpecialPage(page){
   document.getElementById("screen-sub").textContent=page.total>1?("注目競走 "+page.page+"/"+page.total):"注目競走";
 }
 function renderJraPage(page){
-  const v=page.venue;
+  const venues=page.venues||[];
   const host=document.getElementById("jra-grid");
-  host.className="jra-dedicated-grid single-venue";
-  host.innerHTML=v?jraVenueCard(v):'<div class="empty-card">JRA開催なし</div>';
-  document.getElementById("screen-title").textContent="JRA "+(v?.name||"");
-  document.getElementById("screen-sub").textContent="1〜3着＋騎手 / 全掛式払戻";
+  host.className="jra-dedicated-grid all-jra-venues sync-vscroll";
+  host.innerHTML=venues.length?venues.map(jraVenueCard).join(""):'<div class="empty-card">JRA開催なし</div>';
+  document.getElementById("screen-title").textContent="JRA";
+  document.getElementById("screen-sub").textContent=(venues.map(v=>v.name).join("・")||"開催なし")+" / 1〜3着＋騎手 / 全掛式払戻";
   updateMarquees();
 }
 function showPage(index){
