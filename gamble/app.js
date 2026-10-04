@@ -43,17 +43,19 @@ function renderKeirin(){
     return;
   }
   const pages=[];
-  for(let i=0;i<venues.length;i+=3) pages.push(venues.slice(i,i+3));
+  for(let i=0;i<venues.length;i+=4) pages.push(venues.slice(i,i+4));
   if(keirinPage>=pages.length) keirinPage=0;
   const current=pages[keirinPage]||[];
   host.classList.toggle("one",current.length===1);
-  host.classList.toggle("three",current.length>=3);
+  host.classList.toggle("three",current.length===3);
+  host.classList.toggle("four",current.length>=4);
   host.innerHTML=current.map(function(v){return compactCard(v,"keirin")}).join("");
 }
 function showLeftSport(kind){
   leftSport=kind==="boat"?"boat":"keirin";
   document.querySelector(".keirin-block")?.classList.toggle("active",leftSport==="keirin");
   document.querySelector(".boat-block")?.classList.toggle("active",leftSport==="boat");
+  document.querySelector(".main-grid")?.classList.toggle("keirin-full",leftSport==="keirin");
 }
 function renderBoats(){
   const host=document.getElementById("boat-grid");
@@ -163,7 +165,7 @@ function tick(){
 setInterval(tick,1000);tick();
 load();setInterval(load,30000);
 setInterval(function(){
-  const n=Math.ceil((data?.keirin?.venues||[]).length/3);
+  const n=Math.ceil((data?.keirin?.venues||[]).length/4);
   if(n>1 && leftSport==="keirin"){keirinPage=(keirinPage+1)%n;renderKeirin()}
 },15000);
 setInterval(function(){
