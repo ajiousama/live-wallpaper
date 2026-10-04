@@ -745,12 +745,11 @@ def main() -> None:
                     r"(札幌|函館|福島|新潟|東京|中山|中京|京都|阪神|小倉)\d*日",
                     cal,
                 ):
-                    raise RuntimeError(
-                        f"JRA当日開催({today})を確認したため、"
-                        f"前日データ({selected_ymd})へのフォールバックを停止"
+                    print(
+                        f"[JRA] 当日開催({today})は確認できたが当日結果リンクを取得できないため、"
+                        f"履歴データ({selected_ymd})は保持のみ。画面側では日付不一致として非表示。",
+                        file=sys.stderr,
                     )
-            except RuntimeError:
-                raise
             except Exception:
                 pass
 
