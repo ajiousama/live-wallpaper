@@ -37,6 +37,20 @@ function raceStartIfUpcoming(time,status,hasResult=false){
   }
   return t;
 }
+function raceDisplayStatus(time,status,hasResult=false){
+  const st=String(status||"発走前");
+  if(hasResult||/確定|終了/.test(st)) return st;
+  const t=String(time||"");
+  const m=t.match(/(\d{1,2}):(\d{2})/);
+  if(m){
+    const nowParts=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Tokyo",hour:"2-digit",minute:"2-digit",hourCycle:"h23"}).formatToParts(new Date());
+    const get=k=>Number(nowParts.find(p=>p.type===k)?.value||0);
+    const nowMin=get("hour")*60+get("minute");
+    const raceMin=Number(m[1])*60+Number(m[2]);
+    if(nowMin>=raceMin) return "結果待ち";
+  }
+  return st;
+}
 function normalizePhase(v){
   const s=String(v||"");
   if(s.includes("オーバーミッド")||s.includes("ミッド")) return "ミッドナイト";
@@ -531,10 +545,12 @@ function specialRaceCard(x){
   const where=[x.venue,x.race].filter(Boolean).join(" ");
   const winnerLabel=(x.kind==="jra"||x.kind==="local"||x.kind==="overseas")?"勝ち馬":"優勝";
   const hasWinner=!!x.winner;
-  const upcomingTime=raceStartIfUpcoming(x.time,x.status,hasWinner||!!x.payout);
+  const hasResult=hasWinner||!!x.payout;
+  const displayStatus=raceDisplayStatus(x.time,x.status,hasResult);
+  const upcomingTime=raceStartIfUpcoming(x.time,displayStatus,hasResult);
   const result=hasWinner
     ?'<div class="special-winner"><span>'+winnerLabel+'</span><strong>'+esc(x.winner)+'</strong><em>'+esc(x.sub||"")+'</em></div>'
-    :'<div class="special-winner waiting"><span>結果</span><strong>'+esc(x.status||"発走前")+'</strong><em>'+esc(upcomingTime?upcomingTime+" 発走予定":"")+'</em></div>';
+    :'<div class="special-winner waiting"><span>結果</span><strong>'+esc(displayStatus)+'</strong><em>'+esc(upcomingTime?upcomingTime+" 発走予定":"")+'</em></div>';
   const combo=(Array.isArray(x.order)&&x.order.length>=3)?orderHtml(x.order,(x.kind==="local"||x.kind==="jra"||x.kind==="overseas")?"local":(x.kind==="boat"?"boat":"keirin")):'<span class="muted">---</span>';
   const meta=(x.kind==="overseas"&&!hasWinner&&Array.isArray(x.horses)&&x.horses.length)
     ?'<div class="special-detail"><b>注目馬</b><span>'+esc(x.horses.join("・"))+'</span></div>'
