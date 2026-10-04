@@ -919,79 +919,68 @@ def featured_races_today(ymd: str, local_epg: list[dict]) -> list[dict]:
     featured: list[dict] = []
     year, mm, dd = ymd[:4], ymd[4:6], ymd[6:8]
 
-    # JRA: special races come from the official "今週の注目レース" page.
-    # This is intentionally independent from jra/data.json so stale normal-JRA
-    # data can never remove the day's featured graded races.
+    # JRA: read graded races from the date-specific official programme.
+    # The "今週の注目レース" page can roll to the next week on Sunday evening,
+    # while the dated programme remains stable for the whole day.
     try:
-        thisweek_url = "https://www.jra.go.jp/keiba/thisweek/"
-        thisweek = BeautifulSoup(fetch(thisweek_url), "html.parser")
-        date_text = f"{int(mm)}月{int(dd)}日"
-
-        race_links = []
-        seen = set()
-        for a in thisweek.find_all("a", href=True):
-            href = urljoin(thisweek_url, a.get("href",""))
-            if not re.search(r"/keiba/race/\d{3}(?:\.html|/index\.html)$", href):
-                continue
-            if href in seen:
-                continue
-            seen.add(href)
-            race_links.append(href)
-
         cal_url = f"https://www.jra.go.jp/keiba/calendar{year}/{year}/{mm}/{mm}{dd}.html"
-        try:
-            cal_soup = BeautifulSoup(fetch(cal_url), "html.parser")
-        except Exception:
-            cal_soup = BeautifulSoup("", "html.parser")
+        cal_soup = BeautifulSoup(fetch(cal_url), "html.parser")
 
-        for race_url in race_links:
-            try:
-                race_soup = BeautifulSoup(fetch(race_url), "html.parser")
-            except Exception:
-                continue
-            race_text = clean(race_soup)
-            if date_text not in race_text:
-                continue
-
-            h1 = race_soup.find("h1")
-            race_name = clean(h1)
-            race_name = re.sub(r"^第\d+回\s*", "", race_name)
-            race_name = re.sub(r"^農林水産省賞典\s*", "", race_name).strip()
-            if not race_name:
+        for table in cal_soup.find_all("table"):
+            # Venue headings are not consistently h2/h3. Find the nearest
+            # preceding text that looks like "4回東京2日".
+            venue = ""
+            prev = table.find_previous(string=re.compile(
+                r"\d+回(?:札幌|函館|福島|新潟|東京|中山|中京|京都|阪神|小倉)\d+日"
+            ))
+            if prev:
+                vm = re.search(
+                    r"(札幌|函館|福島|新潟|東京|中山|中京|京都|阪神|小倉)",
+                    clean(prev),
+                )
+                if vm:
+                    venue = vm.group(1)
+            if not venue:
                 continue
 
-            vm = re.search(
-                r"(札幌|函館|福島|新潟|東京|中山|中京|京都|阪神|小倉)競馬場",
-                race_text,
-            )
-            if not vm:
-                continue
-            venue = vm.group(1)
-
-            race_no = "11R"
-            time_text = ""
-            for tr in cal_soup.find_all("tr"):
-                vals = [clean(x) for x in tr.find_all(["th","td"], recursive=False)]
-                if not vals:
-                    continue
-                joined = " ".join(vals)
-                normalized_joined = re.sub(r"^第\d+回\s*", "", joined)
-                if race_name not in normalized_joined and race_name.replace("農林水産省賞典","") not in normalized_joined:
+            for tr in table.find_all("tr"):
+                cells = tr.find_all(["th","td"], recursive=False)
+                vals = [clean(x) for x in cells]
+                if len(vals) < 3:
                     continue
                 rm = re.search(r"^(\d{1,2})(?:レース|R)", vals[0])
-                if rm:
-                    race_no = f"{int(rm.group(1))}R"
-                tm = re.search(r"(\d{1,2})時(\d{2})分", joined)
-                if tm:
-                    time_text = f"{int(tm.group(1)):02d}:{tm.group(2)}"
-                break
+                if not rm:
+                    continue
 
-            base = race_url.rsplit("/", 1)[0] + "/"
-            horses = _featured_horses_from_page(urljoin(base, "horse.html"))
-            featured.append({
-                "source":"JRA","venue":venue,"race":race_no,"name":race_name,
-                "time":time_text,"horses":horses,
-            })
+                row_text = " ".join(vals)
+                if not re.search(r"[（(](?:G|Ｇ|J・G|Ｊ・Ｇ)[ⅠⅡⅢ123]+[）)]", row_text):
+                    continue
+
+                name_cell = cells[1]
+                a = name_cell.find("a")
+                race_name = clean(a) if a else vals[1]
+                # Keep the race title and grade, strip following conditions.
+                race_name = re.sub(
+                    r"\s+(?:2歳|3歳|4歳|3歳以上|4歳以上).*$",
+                    "",
+                    race_name,
+                ).strip()
+                race_name = re.sub(r"^第\d+回\s*", "", race_name)
+                race_name = re.sub(r"^農林水産省賞典\s*", "", race_name).strip()
+
+                tm = re.search(r"(\d{1,2})時(\d{2})分", vals[-1])
+                time_text = f"{int(tm.group(1)):02d}:{tm.group(2)}" if tm else ""
+                horses = []
+                if a and a.get("href"):
+                    race_url = urljoin(cal_url, a.get("href"))
+                    base = race_url.rsplit("/", 1)[0] + "/"
+                    horses = _featured_horses_from_page(urljoin(base, "horse.html"))
+
+                featured.append({
+                    "source":"JRA","venue":venue,
+                    "race":f"{int(rm.group(1))}R",
+                    "name":race_name,"time":time_text,"horses":horses,
+                })
     except Exception as exc:
         print(f"[GAMBLE] JRA featured failed: {exc}")
 
