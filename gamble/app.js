@@ -216,6 +216,39 @@ function buildPages(){
   ];
   for(const phase of PHASES){
     const phaseAll=phaseItems(phase);
+
+    if(phase==="モーニング"){
+      const morningMain=phaseAll.filter(x=>x.kind==="keirin"||x.kind==="boat");
+      for(let i=0;i<morningMain.length;i+=6){
+        const chunk=morningMain.slice(i,i+6);
+        pages.push({
+          key:"phase:モーニング:mixed:"+Math.floor(i/6),
+          type:"phase",
+          phase:"モーニング",
+          sportKind:"mixed",
+          sportLabel:"",
+          page:Math.floor(i/6)+1,
+          total:Math.ceil(morningMain.length/6),
+          items:chunk
+        });
+      }
+      const morningLocal=phaseAll.filter(x=>x.kind==="local");
+      for(let i=0;i<morningLocal.length;i+=6){
+        const chunk=morningLocal.slice(i,i+6);
+        pages.push({
+          key:"phase:モーニング:local:"+Math.floor(i/6),
+          type:"phase",
+          phase:"モーニング",
+          sportKind:"local",
+          sportLabel:"地方競馬",
+          page:Math.floor(i/6)+1,
+          total:Math.ceil(morningLocal.length/6),
+          items:chunk
+        });
+      }
+      continue;
+    }
+
     for(const group of sportGroups){
       const items=phaseAll.filter(x=>x.kind===group.kind);
       for(let i=0;i<items.length;i+=6){
@@ -262,9 +295,15 @@ function renderPhasePage(page){
   const host=document.getElementById("phase-grid");
   host.className="phase-grid count-"+Math.max(1,items.length);
   host.innerHTML=items.length?items.map(phaseCard).join(""):'<div class="empty-card">'+esc(page.phase+" "+(page.sportLabel||""))+'開催なし</div>';
-  document.getElementById("screen-title").textContent=page.phase+"・"+(page.sportLabel||"");
+  document.getElementById("screen-title").textContent=page.sportLabel?(page.phase+"・"+page.sportLabel):page.phase;
   const pageText=page.total>1?(" "+page.page+"/"+page.total):"";
-  document.getElementById("screen-sub").textContent=(items.length?(items.length+"場"):"開催なし")+pageText;
+  if(page.sportKind==="mixed"){
+    const kc=items.filter(x=>x.kind==="keirin").length;
+    const bc=items.filter(x=>x.kind==="boat").length;
+    document.getElementById("screen-sub").textContent="競輪 "+kc+"場 / ボート "+bc+"場"+pageText;
+  }else{
+    document.getElementById("screen-sub").textContent=(items.length?(items.length+"場"):"開催なし")+pageText;
+  }
   updateMarquees();
 }
 function payoutItems(r,label){
