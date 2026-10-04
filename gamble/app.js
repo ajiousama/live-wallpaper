@@ -53,9 +53,14 @@ function renderBoats(){
   host.innerHTML=boats.map(function(v){return compactCard(v,"boat")}).join("")+(boats.length===1?'<div class="empty-card">もう1場は表示終了</div>':"");
 }
 function cleanJockey(s){return String(s||"").replace(/(?<=[\u3040-\u30ff\u3400-\u9fff])\s+(?=[\u3040-\u30ff\u3400-\u9fff])/g,"")}
-function trifectaFromJra(r){
+function trifectaJra(r){
   const a=r?.payouts?.["3連単"];
-  return Array.isArray(a)&&a[0]?.amount?a[0].amount:"";
+  if(!Array.isArray(a)||!a[0]) return {combo:"",amount:""};
+  return {combo:a[0].combo||"",amount:a[0].amount||""};
+}
+function raceInfoText(x){
+  if(!x) return "レース情報待ち";
+  return [x.race_name||"",x.course||""].filter(Boolean).join("　")||"レース情報待ち";
 }
 function jraVenueCard(v){
   const map=new Map((v.results||[]).map(function(x){return [Number(x.race),x]}));
@@ -64,20 +69,39 @@ function jraVenueCard(v){
     const x=map.get(r);
     const horse=x?.horse||x?.top3?.[0]?.horse||"";
     const jockey=cleanJockey(x?.jockey||x?.top3?.[0]?.jockey||"");
-    const pay=trifectaFromJra(x);
-    const status=(horse||jockey||pay)?"":"発走前";
-    rows+='<tr><td class="jr">'+r+'R</td><td class="horse '+(status?"pending":"")+'">'+esc(horse||status)+'</td><td class="jockey">'+esc(jockey||"")+'</td><td class="pay '+(pay?"":"pending")+'">'+esc(pay||"")+'</td></tr>';
+    const tri=trifectaJra(x);
+    const status=(horse||jockey||tri.amount)?"":"発走前";
+    rows+='<div class="horse-race">'+
+      '<div class="horse-result-line">'+
+        '<span class="race-no">'+r+'R</span>'+
+        '<span class="winner '+(status?"pending":"")+'">'+esc(horse||status)+'</span>'+
+        '<span class="winner-jockey">'+esc(jockey||"")+'</span>'+
+        '<span class="tri-combo '+(tri.combo?"":"pending")+'">'+esc(tri.combo||"---")+'</span>'+
+        '<span class="tri-pay '+(tri.amount?"":"pending")+'">'+esc(tri.amount||"")+'</span>'+
+      '</div>'+
+      '<div class="race-info marquee-check"><span class="marquee-text">'+esc(raceInfoText(x))+'</span></div>'+
+    '</div>';
   }
-  return '<article class="jra-card"><div class="card-head"><div class="card-title">'+esc(v.name||"---")+'</div><div class="event">1R〜12R</div></div><table class="jra-table"><thead><tr><th>R</th><th>勝ち馬</th><th>勝利騎手</th><th>3連単</th></tr></thead><tbody>'+rows+'</tbody></table></article>';
+  return '<article class="jra-card"><div class="card-head"><div class="card-title">'+esc(v.name||"---")+'</div><div class="event">1R〜12R</div></div><div class="horse-races">'+rows+'</div></article>';
 }
 function localVenueCard(v){
   const map=new Map((v.races||[]).map(function(x){return [Number(x.race),x]}));
   let rows="";
   for(let r=1;r<=12;r++){
     const x=map.get(r)||{};
-    rows+='<tr><td class="jr">'+r+'R</td><td class="horse '+(x.winner?"":"pending")+'">'+esc(x.winner||x.status||"発走前")+'</td><td class="jockey">'+esc(x.jockey||"")+'</td><td class="pay '+(x.trifecta?"":"pending")+'">'+esc(x.trifecta||"")+'</td></tr>';
+    const combo=Array.isArray(x.order)&&x.order.length>=3?x.order.join("-"):"";
+    rows+='<tr><td class="jr">'+r+'R</td><td class="horse '+(x.winner?"":"pending")+'">'+esc(x.winner||x.status||"発走前")+'</td><td class="jockey">'+esc(x.jockey||"")+'</td><td class="pay '+(x.trifecta?"":"pending")+'">'+esc((combo?combo+" ":"")+(x.trifecta||""))+'</td></tr>';
   }
-  return '<article class="jra-card"><div class="card-head"><div class="card-title">'+esc(v.name||"---")+'</div><div class="event">地方ナイター</div></div><table class="jra-table"><thead><tr><th>R</th><th>勝ち馬</th><th>勝利騎手</th><th>3連単</th></tr></thead><tbody>'+rows+'</tbody></table></article>';
+  return '<article class="jra-card"><div class="card-head"><div class="card-title">'+esc(v.name||"---")+'</div><div class="event">地方ナイター</div></div><table class="jra-table"><thead><tr><th>R</th><th>勝ち馬</th><th>勝利騎手</th><th>3連単 組合せ・払戻</th></tr></thead><tbody>'+rows+'</tbody></table></article>';
+}
+function updateMarquees(){
+  requestAnimationFrame(function(){
+    document.querySelectorAll(".marquee-check").forEach(function(box){
+      const text=box.querySelector(".marquee-text");
+      if(!text) return;
+      box.classList.toggle("is-marquee",text.scrollWidth>box.clientWidth+2);
+    });
+  });
 }
 function renderRight(){
   const now=jstNow();
@@ -98,10 +122,11 @@ function renderRight(){
     venues=(jra?.venues||[]).slice(0,3);
     host.classList.toggle("three",venues.length>=3);
     host.innerHTML=venues.length?venues.map(jraVenueCard).join(""):'<div class="empty-card">JRA開催情報を取得中</div>';
+    updateMarquees();
   }
 }
 function render(){
-  renderKeirin();renderBoats();renderRight();
+  renderKeirin();renderBoats();renderRight();updateMarquees();
   document.getElementById("updated").textContent="最終取得 "+(data?.updated_at||jra?.updated_at||"--");
   const src=data?.source||{};
   document.getElementById("source").textContent="日程: "+(src.schedule||"Free WiFi EPG")+" / 競輪: "+(src.keirin||"-")+" / ボート: "+(src.boat||"-")+" / JRA: JRA公式";
