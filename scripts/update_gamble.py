@@ -402,6 +402,91 @@ def boat_last_time(ymd: str, code: str) -> str:
         pass
     return ""
 
+def boat_grade(event_name: str) -> str:
+    name = clean(event_name).translate(str.maketrans({"Ｓ":"S","Ｇ":"G","ｓ":"s","ｇ":"g"})).upper()
+    sg_names = (
+        "ボートレースクラシック",
+        "ボートレースオールスター",
+        "グランドチャンピオン",
+        "オーシャンカップ",
+        "ボートレースメモリアル",
+        "ボートレースダービー",
+        "チャレンジカップ",
+        "グランプリ",
+        "グランプリシリーズ",
+    )
+    if re.search(r"(^|[^A-Z])SG([^A-Z]|$)", name) or any(x in name for x in sg_names):
+        return "SG"
+    return ""
+
+
+def boat_all_payouts(ymd: str, code: str, race_no: int) -> dict[str, list[dict]]:
+    """Fetch all BOAT RACE wager payouts for one race from the official result page."""
+    try:
+        soup = BeautifulSoup(
+            fetch(f"https://www.boatrace.jp/owpc/pc/race/raceresult?hd={ymd}&jcd={code}&rno={race_no}"),
+            "html.parser",
+        )
+    except Exception:
+        return {}
+
+    labels = ("3連単","3連複","2連単","2連複","拡連複","単勝","複勝")
+    payouts: dict[str, list[dict]] = {k: [] for k in labels}
+    current = ""
+
+    def row_label(cells: list[str]) -> str:
+        for cell in cells:
+            compact = re.sub(r"\s+", "", cell)
+            for label in labels:
+                if compact == label or compact.startswith(label):
+                    return label
+        return ""
+
+    for table in soup.find_all("table"):
+        table_text = clean(table)
+        if not any(label in table_text for label in labels):
+            continue
+        if not re.search(r"(払戻|払戻金|勝式|組番)", table_text):
+            continue
+        for tr in table.find_all("tr"):
+            cells = [clean(x) for x in tr.find_all(["th","td"], recursive=False)]
+            if not cells:
+                continue
+            detected = row_label(cells)
+            if detected:
+                current = detected
+            if current not in payouts:
+                continue
+
+            row_text = " ".join(cells)
+            ym = re.search(r"[¥￥]\s*([0-9,]+)", row_text)
+            if not ym:
+                ym = re.search(r"([0-9,]+)\s*円", row_text)
+            if not ym:
+                continue
+            amount = f"{int(ym.group(1).replace(',','')):,}円"
+
+            if current in {"3連単","3連複"}:
+                cm = re.search(r"([1-6])\s*[-－→>]\s*([1-6])\s*[-－→>]\s*([1-6])", row_text)
+                combo = "-".join(cm.groups()) if cm else ""
+            elif current in {"2連単","2連複","拡連複"}:
+                cm = re.search(r"([1-6])\s*[-－→>]\s*([1-6])", row_text)
+                combo = "-".join(cm.groups()) if cm else ""
+            else:
+                # 単勝・複勝は組番欄の艇番を拾う。払戻額や人気数字は除外。
+                before_yen = row_text[:ym.start()]
+                nums = re.findall(r"(?<!\d)([1-6])(?!\d)", before_yen)
+                combo = nums[-1] if nums else ""
+
+            if not combo:
+                continue
+            item = {"combo":combo,"amount":amount}
+            if item not in payouts[current]:
+                payouts[current].append(item)
+
+    return {k:v for k,v in payouts.items() if v}
+
+
 def boat_winner_racer(ymd: str, code: str, race_no: int) -> str:
     try:
         soup = BeautifulSoup(
@@ -429,7 +514,9 @@ def boat_results(ymd: str, target: dict, now_minutes: int):
         html = fetch(f"https://www.boatrace.jp/owpc/pc/race/resultlist?hd={ymd}&jcd={code}")
         soup = BeautifulSoup(html, "html.parser")
     except Exception:
-        return {**target,"event_name":target["fallback_event"],"races":[],"last_time":"","active":True}
+        return {**target,"event_name":target["fallback_event"],"grade":"","races":[],"last_time":"","active":True}
+    event_name = boat_event_name(soup,target["fallback_event"])
+    grade = boat_grade(event_name)
     race_types = {}
     for tr in soup.find_all("tr"):
         cells = [clean(x) for x in tr.find_all(["th","td"])]
@@ -455,10 +542,12 @@ def boat_results(ymd: str, target: dict, now_minutes: int):
             winner = ""
             if "優勝戦" in race_name and "準優勝" not in race_name:
                 winner = boat_winner_racer(ymd, code, no)
+            all_payouts = boat_all_payouts(ymd, code, no) if grade == "SG" else {}
             found[no] = {
                 "race":no,"status":"確定",
                 "order":[int(combo.group(1)),int(combo.group(2)),int(combo.group(3))],
                 "payout":f"{int(yen.group(1).replace(',','')):,}円",
+                "payouts":all_payouts,
                 "race_name":race_name,
                 "scheduled_time":meta.get("time",""),
                 "winner":winner,
@@ -477,12 +566,13 @@ def boat_results(ymd: str, target: dict, now_minutes: int):
                 "status":"結果待ち" if final_done else "発走前",
                 "order":[],
                 "payout":"",
+                "payouts":{},
                 "race_name":race_types.get(no) or meta.get("name",""),
                 "scheduled_time":meta.get("time",""),
             })
     return {
         "name":target["name"],"code":code,
-        "event_name":boat_event_name(soup,target["fallback_event"]),
+        "event_name":event_name,"grade":grade,
         "last_time":last,"active":active,"day_type":target.get("day_type",""),"races":races,
     }
 
