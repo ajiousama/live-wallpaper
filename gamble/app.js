@@ -89,7 +89,11 @@ function raceInfoText(x){
 function horseRaceInfoCell(x){
   const name=raceInfoText(x);
   const rawCourse=String(x?.course||"");
-  const cm=rawCourse.match(/(芝|ダート|障害|直)[^0-9]{0,12}([0-9,]{3,5})\s*m?/);
+  let cm=rawCourse.match(/(芝|ダート|障害|直)[^0-9]{0,12}([0-9,]{3,5})\s*m?/);
+  if(!cm){
+    const rev=rawCourse.match(/([0-9,]{3,5})\s*(?:m|メートル).*?[（(](芝|ダート|障害|直)/);
+    cm=rev?[rev[0],rev[2],rev[1]]:null;
+  }
   const course=cm?(cm[1]+cm[2].replace(/,/g,"")+"m"):"馬場・距離取得中";
   return '<td class="race-label race-info-two" title="'+esc([name,course].filter(Boolean).join(" "))+'">'+
     '<div class="race-name-line marquee-check"><div class="marquee-track"><span class="marquee-text">'+esc(name)+'</span><span class="marquee-copy" aria-hidden="true">'+esc(name)+'</span></div></div>'+
