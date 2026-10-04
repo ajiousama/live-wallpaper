@@ -136,8 +136,12 @@ function jraRaceBlock(r,no){
     const num=x.number?x.number+" ":"";
     return '<span class="place p'+pos+'"><b>'+pos+'着</b> '+esc(num+horse)+'</span>';
   }).join("");
+  const payoutClass={
+    "単勝":"bet-tansho","複勝":"bet-fukusho","枠連":"bet-wakuren","馬連":"bet-umaren",
+    "馬単":"bet-umatan","ワイド":"bet-wide","3連複":"bet-sanrenpuku","3連単":"bet-sanrentan"
+  };
   const payouts=PAYOUT_TYPES.map(label=>
-    '<div class="payout-item"><b>'+label+'</b><span>'+esc(payoutItems(r,label))+'</span></div>'
+    '<div class="payout-item '+(payoutClass[label]||"")+'"><b>'+label+'</b><span>'+esc(payoutItems(r,label))+'</span></div>'
   ).join("");
   const name=r?.race_name||"レース情報取得中";
   const course=horseCourse(r);
