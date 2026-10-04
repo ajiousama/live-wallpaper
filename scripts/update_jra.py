@@ -325,6 +325,22 @@ def current_result_link(race_page: dict) -> dict | None:
     return {"kind": "cname_get", "path": "/JRADB/accessS.html", "cname": cname}
 
 
+def current_race_course(race_page: dict) -> str:
+    try:
+        soup = soup_cname_get("/JRADB/accessD.html", race_page["cname"])
+    except Exception:
+        return ""
+    text = clean_text(soup)
+    m = re.search(
+        r"(芝|ダート|ダ|障害)[^0-9]{0,16}([0-9,]{3,5})\s*(?:m|メートル)",
+        text,
+    )
+    if not m:
+        return ""
+    surface = "ダート" if m.group(1) == "ダ" else m.group(1)
+    return f"{surface}{m.group(2).replace(',','')}m"
+
+
 def discover_historical_landing() -> BeautifulSoup:
     try:
         soup = soup_action("/JRADB/accessS.html", "pw01sli00/AF")
@@ -669,6 +685,14 @@ def main() -> None:
         for race_meta in sorted(race_candidates, key=lambda x: x["race"]):
             race_no = race_meta["race"]
             existing_race = venue_results.get(race_no, {})
+
+            if mode == "current" and not existing_race.get("course"):
+                course = current_race_course(race_meta)
+                if course:
+                    existing_race = {**existing_race, "race": race_no, "course": course}
+                    venue_results[race_no] = existing_race
+                    changed = True
+
             if race_is_complete(existing_race):
                 continue
 
