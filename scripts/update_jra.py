@@ -442,33 +442,43 @@ def netkeiba_current_result(race_page: dict) -> dict | None:
     except Exception:
         return None
 
-    result_table = None
-    for table in soup.find_all("table"):
-        header = clean_text(table)
-        if "着順" in header and "馬名" in header and "騎手" in header:
-            result_table = table
-            break
+    result_table = (
+        soup.select_one("#All_Result_Table")
+        or soup.select_one("table.RaceTable01")
+        or soup.select_one("table.race_table_01")
+    )
     if not result_table:
         return None
 
+    rows = result_table.select("tr.HorseList")
+    if not rows:
+        rows = result_table.select("tbody tr")
+
     top3: list[dict] = []
-    for row in result_table.find_all("tr"):
-        cells = row.find_all("td", recursive=False)
+    for row in rows:
+        cells = row.select("td")
         if len(cells) < 9:
             continue
-        rank_text = clean_text(cells[0])
+
+        rank_node = row.select_one("td.Result_Num")
+        rank_text = clean_text(rank_node or cells[0])
         m = re.match(r"([123])", rank_text)
         if not m:
             continue
-        horse_link = cells[3].find("a")
-        jockey_link = cells[6].find("a")
+
+        horse_node = row.select_one("td.Horse_Info a") or cells[3].find("a") or cells[3]
+        jockey_node = row.select_one("td.Jockey a") or cells[6].find("a") or cells[6]
+        waku_node = row.select_one("td.Waku") or cells[1]
+        num_node = row.select_one("td.Num") or cells[2]
+        time_node = row.select_one("td.Time") or cells[7]
+
         top3.append({
             "position": int(m.group(1)),
-            "frame": clean_text(cells[1]),
-            "number": clean_text(cells[2]),
-            "horse": clean_text(horse_link or cells[3]),
-            "jockey": clean_text(jockey_link or cells[6]),
-            "time": clean_text(cells[7]),
+            "frame": clean_text(waku_node),
+            "number": clean_text(num_node),
+            "horse": clean_text(horse_node),
+            "jockey": clean_text(jockey_node),
+            "time": clean_text(time_node),
             "margin": clean_text(cells[8]),
         })
         if len(top3) >= 3:
@@ -478,7 +488,16 @@ def netkeiba_current_result(race_page: dict) -> dict | None:
         return None
 
     text = clean_text(soup)
-    race_name = _race_name_from_soup(soup)
+    race_name_node = (
+        soup.select_one(".RaceName")
+        or soup.select_one("h1.RaceName")
+        or soup.select_one(".RaceList_NameBox h1")
+    )
+    race_name = clean_text(race_name_node)
+    if not race_name:
+        m = re.search(r"\d{1,2}R\s+([^\n]+?)\s+\d{1,2}:\d{2}発走", text)
+        race_name = clean_text(m.group(1)) if m else ""
+
     course = normalize_course_text(text)
     winner = top3[0]
     return {
