@@ -79,24 +79,14 @@ function jraVenueCard(v){
   const map=new Map((v.results||[]).map(function(x){return [Number(x.race),x]}));
   let rows="";
   for(let r=1;r<=12;r++){
-    const x=map.get(r);
-    const horse=x?.horse||x?.top3?.[0]?.horse||"";
-    const jockey=cleanJockey(x?.jockey||x?.top3?.[0]?.jockey||"");
+    const x=map.get(r)||{};
+    const horse=x.horse||x.top3?.[0]?.horse||"";
+    const jockey=cleanJockey(x.jockey||x.top3?.[0]?.jockey||"");
     const tri=trifectaJra(x);
-    const status=(horse||jockey||tri.amount)?"":"発走前";
-    rows+='<div class="horse-race">'+
-      '<div class="horse-result-line">'+
-        '<span class="race-no">'+r+'R</span>'+
-        '<span class="race-label horse-race-label" title="'+esc(raceInfoText(x))+'">'+esc(raceInfoText(x))+'</span>'+
-        '<span class="winner '+(status?"pending":"")+'">'+esc(horse||status)+'</span>'+
-        '<span class="winner-jockey">'+esc(jockey||"")+'</span>'+
-        '<span class="tri-combo '+(tri.combo?"":"pending")+'">'+esc(tri.combo||"---")+'</span>'+
-        '<span class="tri-pay '+(tri.amount?"":"pending")+'">'+esc(tri.amount||"")+'</span>'+
-      '</div>'+
-      '<div class="race-info marquee-check"><div class="marquee-track"><span class="marquee-text">'+esc(raceInfoText(x))+'</span><span class="marquee-copy" aria-hidden="true">'+esc(raceInfoText(x))+'</span></div></div>'+
-    '</div>';
+    const raceName=raceInfoText(x);
+    rows+='<tr><td class="jr">'+r+'R</td><td class="race-label" title="'+esc(raceName)+'">'+esc(raceName)+'</td><td class="horse '+(horse?"":"pending")+'">'+esc(horse||"発走前")+'</td><td class="jockey">'+esc(jockey)+'</td><td class="pay '+(tri.amount?"":"pending")+'">'+esc((tri.combo?tri.combo+" ":"")+(tri.amount||""))+'</td></tr>';
   }
-  return '<article class="jra-card"><div class="card-head"><div class="card-title">'+esc(v.name||"---")+'</div><div class="event">1R〜12R</div></div><div class="horse-races">'+rows+'</div></article>';
+  return '<article class="jra-card unified-race-card"><div class="card-head"><div class="card-title">'+esc(v.name||"---")+'</div><div class="event">JRA</div></div><table class="jra-table"><thead><tr><th class="jr">R</th><th class="race-label">レース名・種別</th><th>勝ち馬</th><th class="jockey">騎手</th><th class="pay">3連単</th></tr></thead><tbody>'+rows+'</tbody></table></article>';
 }
 function localVenueCard(v){
   const map=new Map((v.races||[]).map(function(x){return [Number(x.race),x]}));
@@ -107,7 +97,7 @@ function localVenueCard(v){
     const raceName=x.race_name||"—";
     rows+='<tr><td class="jr">'+r+'R</td><td class="race-label" title="'+esc(raceName)+'">'+esc(raceName)+'</td><td class="horse '+(x.winner?"":"pending")+'">'+esc(x.winner||x.status||"発走前")+'</td><td class="jockey">'+esc(x.jockey||"")+'</td><td class="pay '+(x.trifecta?"":"pending")+'">'+esc((combo?combo+" ":"")+(x.trifecta||""))+'</td></tr>';
   }
-  return '<article class="jra-card"><div class="card-head"><div class="card-title">'+esc(v.name||"---")+'</div><div class="event">地方競馬</div></div><table class="jra-table"><thead><tr><th class="jr">R</th><th class="race-label">レース名・種別</th><th>勝ち馬</th><th class="jockey">騎手</th><th class="pay">3連単</th></tr></thead><tbody>'+rows+'</tbody></table></article>';
+  return '<article class="jra-card unified-race-card"><div class="card-head"><div class="card-title">'+esc(v.name||"---")+'</div><div class="event">地方</div></div><table class="jra-table"><thead><tr><th class="jr">R</th><th class="race-label">レース名・種別</th><th>勝ち馬</th><th class="jockey">騎手</th><th class="pay">3連単</th></tr></thead><tbody>'+rows+'</tbody></table></article>';
 }
 function updateMarquees(){
   requestAnimationFrame(function(){
