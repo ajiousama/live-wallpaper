@@ -149,7 +149,9 @@ function boatRows(v){
 function boatBoardCell(x){
   const decided=Array.isArray(x?.order)&&x.order.length>=3&&x?.payout;
   if(!decided){
-    return '<div class="boat-pay-pending"><b>'+esc(x?.scheduled_time||"--:--")+'</b><span>'+esc(x?.status||"発走前")+'</span></div>';
+    const status=String(x?.status||"発走前");
+    const time=status==="発走前"?(x?.scheduled_time||"--:--"):"";
+    return '<div class="boat-pay-pending">'+(time?'<b>'+esc(time)+'</b>':'')+'<span>'+esc(status)+'</span></div>';
   }
   return '<div class="boat-pay-cell">'+
     '<div class="boat-pay-combo">'+orderHtml(x.order,"boat")+'</div>'+
@@ -169,7 +171,9 @@ function boatPayBoard(items){
     const cells=maps.map(m=>{
       const x=m.get(r)||{race:r,status:"発走前",order:[],payout:"",scheduled_time:""};
       if(!(Array.isArray(x.order)&&x.order.length>=3&&x.payout)){
-        return '<td class="boat-pay-pending-cell" colspan="3"><div class="boat-pay-pending"><b>'+esc(x.scheduled_time||"--:--")+'</b><span>'+esc(x.status||"発走前")+'</span></div></td>';
+        const status=String(x.status||"発走前");
+        const time=status==="発走前"?(x.scheduled_time||"--:--"):"";
+        return '<td class="boat-pay-pending-cell" colspan="3"><div class="boat-pay-pending">'+(time?'<b>'+esc(time)+'</b>':'')+'<span>'+esc(status)+'</span></div></td>';
       }
       return '<td class="boat-pay-combo-cell">'+orderHtml(x.order,"boat")+'</td>'+
         '<td class="boat-pay-amount">'+esc(x.payout)+'</td>'+
