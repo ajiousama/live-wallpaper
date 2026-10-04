@@ -2,7 +2,7 @@
   "source": "JRA公式",
   "source_date": "20261004",
   "date_label": "10月4日 日曜",
-  "updated_at": "2026-10-04 16:03 JST",
+  "updated_at": "2026-10-04 16:23 JST",
   "venues": [
     {
       "name": "東京",
@@ -2300,8 +2300,106 @@
         },
         {
           "race": 12,
+          "race_name": "3歳以上2勝クラス",
           "course": "芝1200m",
-          "race_name": "3歳以上2勝クラス"
+          "top3": [
+            {
+              "position": 1,
+              "frame": "枠6緑",
+              "number": "11",
+              "horse": "アイニードユー",
+              "jockey": "川田 将雅",
+              "time": "1:08.1",
+              "margin": ""
+            },
+            {
+              "position": 2,
+              "frame": "枠1白",
+              "number": "2",
+              "horse": "スイミーユニバンス",
+              "jockey": "浜中 俊",
+              "time": "",
+              "margin": "１"
+            },
+            {
+              "position": 3,
+              "frame": "枠7橙",
+              "number": "14",
+              "horse": "マーゴットミスト",
+              "jockey": "田口 貫太",
+              "time": "",
+              "margin": "クビ"
+            }
+          ],
+          "payouts": {
+            "単勝": [
+              {
+                "combo": "11",
+                "amount": "220円"
+              }
+            ],
+            "複勝": [
+              {
+                "combo": "11",
+                "amount": "140円"
+              },
+              {
+                "combo": "2",
+                "amount": "1,480円"
+              },
+              {
+                "combo": "14",
+                "amount": "310円"
+              }
+            ],
+            "枠連": [
+              {
+                "combo": "1-6",
+                "amount": "2,620円"
+              }
+            ],
+            "馬連": [
+              {
+                "combo": "2-11",
+                "amount": "7,420円"
+              }
+            ],
+            "馬単": [
+              {
+                "combo": "11-2",
+                "amount": "10,310円"
+              }
+            ],
+            "ワイド": [
+              {
+                "combo": "2-11",
+                "amount": "2,690円"
+              },
+              {
+                "combo": "11-14",
+                "amount": "600円"
+              },
+              {
+                "combo": "2-14",
+                "amount": "5,620円"
+              }
+            ],
+            "3連複": [
+              {
+                "combo": "2-11-14",
+                "amount": "14,780円"
+              }
+            ],
+            "3連単": [
+              {
+                "combo": "11-2-14",
+                "amount": "76,110円"
+              }
+            ]
+          },
+          "jockey": "川田 将雅",
+          "horse": "アイニードユー",
+          "win_payout": "220円"
         }
       ]
     }

@@ -1,8 +1,8 @@
 {
   "date": "2026-10-04",
   "date_label": "2026年10月04日",
-  "updated_at": "16:14:21",
-  "updated_at_iso": "2026-10-04T16:14:21.750043+09:00",
+  "updated_at": "16:24:08",
+  "updated_at_iso": "2026-10-04T16:24:08.678626+09:00",
   "jra_switch_time": "17:00",
   "keirin": {
     "phase": "本日開催 8場",
@@ -879,9 +879,13 @@
           {
             "race": 2,
             "time": "16:18",
-            "status": "発走前",
-            "order": [],
-            "payout": "",
+            "status": "確定",
+            "order": [
+              3,
+              7,
+              4
+            ],
+            "payout": "8,010円",
             "winner": "",
             "origin": "",
             "race_name": "Ａ級 予選",
@@ -2367,11 +2371,16 @@
         },
         {
           "race": 12,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            1,
+            4,
+            6
+          ],
+          "payout": "6,580円",
           "race_name": "準優勝戦",
-          "scheduled_time": "16:12"
+          "scheduled_time": "16:12",
+          "winner": ""
         }
       ]
     },
@@ -2689,11 +2698,16 @@
         },
         {
           "race": 12,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            2,
+            1,
+            5
+          ],
+          "payout": "6,270円",
           "race_name": "予選特選",
-          "scheduled_time": "16:11"
+          "scheduled_time": "16:11",
+          "winner": ""
         }
       ]
     },
@@ -3055,11 +3069,16 @@
         },
         {
           "race": 3,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            6,
+            1,
+            3
+          ],
+          "payout": "8,020円",
           "race_name": "一般戦",
-          "scheduled_time": "16:15"
+          "scheduled_time": "16:15",
+          "winner": ""
         },
         {
           "race": 4,
@@ -3178,7 +3197,7 @@
             5
           ],
           "payout": "600円",
-          "race_name": "",
+          "race_name": "予選",
           "scheduled_time": "16:08",
           "winner": ""
         },
@@ -3640,7 +3659,7 @@
             "race_name": "遼太となのはの結婚記念杯Ｂ２八",
             "course": "ダート1400m",
             "scheduled_time": "16:23",
-            "status": "発走前"
+            "status": "結果待ち"
           },
           {
             "race": 8,
@@ -3726,13 +3745,18 @@
           },
           {
             "race": 4,
-            "winner": "",
-            "jockey": "",
-            "trifecta": "",
-            "race_name": "小松原拓真３０代突入記念杯２歳Ｂ－２  10",
+            "winner": "バニラ",
+            "jockey": "渡来心",
+            "trifecta": "23,550円",
+            "order": [
+              10,
+              9,
+              8
+            ],
             "course": "直200m",
-            "scheduled_time": "15:43",
-            "status": "結果待ち"
+            "status": "確定",
+            "race_name": "小松原拓真３０代突入記念杯２歳Ｂ－２  10",
+            "scheduled_time": "15:43"
           },
           {
             "race": 5,
@@ -3742,7 +3766,7 @@
             "race_name": "生誕オメデトナノチャン杯Ｃ１－８  9",
             "course": "直200m",
             "scheduled_time": "16:18",
-            "status": "発走前"
+            "status": "結果待ち"
           },
           {
             "race": 6,
@@ -4037,12 +4061,12 @@
       "source": "海外競馬",
       "venue": "海外",
       "race": "",
-      "name": "2026凱旋門賞（",
+      "name": "凱旋門賞",
       "time": "23:05",
       "horses": [
-        "血統",
-        "主な成績",
-        "インタビュー動画"
+        "ヴァランディール",
+        "ベイシティローラー",
+        "ダイヤモンドネックレス"
       ]
     },
     {
