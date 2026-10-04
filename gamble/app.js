@@ -20,9 +20,12 @@ function normalizePhase(v){
   return "デイ";
 }
 function numBox(n){return '<span class="num n'+Number(n)+'">'+esc(n)+'</span>'}
-function orderHtml(order){
+function orderHtml(order,kind){
   if(!Array.isArray(order)||order.length<3) return '<span class="muted">---</span>';
-  return '<span class="order">'+order.slice(0,3).map(numBox).join("")+'</span>';
+  if(kind==="local"){
+    return '<span class="order horse-order">'+order.slice(0,3).map(n=>'<span class="horse-no">'+esc(n)+'</span>').join("")+'</span>';
+  }
+  return '<span class="order '+esc(kind||"")+'-order">'+order.slice(0,3).map(numBox).join("")+'</span>';
 }
 function raceNameMarquee(name){
   const t=name||"—";
@@ -74,7 +77,7 @@ function keirinRows(v){
       '<td class="name">'+raceNameMarquee(name)+'</td>'+
       '<td class="winner">'+esc(x.winner||"---")+'</td>'+
       '<td class="origin">'+esc(x.origin||"---")+'</td>'+
-      '<td class="combo">'+orderHtml(x.order)+'</td>'+
+      '<td class="combo">'+orderHtml(x.order,"keirin")+'</td>'+
       '<td class="pay">'+esc(x.payout||x.status||"発走前")+'</td>'+
     '</tr>';
   }
@@ -88,7 +91,7 @@ function boatRows(v){
     rows+='<tr>'+
       '<td class="r">'+r+'R</td>'+
       '<td class="name">'+raceNameMarquee(x.race_name||"—")+'</td>'+
-      '<td class="combo">'+orderHtml(x.order)+'</td>'+
+      '<td class="combo">'+orderHtml(x.order,"boat")+'</td>'+
       '<td class="pay">'+esc(x.payout||x.status||"発走前")+'</td>'+
     '</tr>';
   }
@@ -103,7 +106,7 @@ function localRows(v){
       '<td class="local-info"><div>'+raceNameMarquee(x.race_name||"—")+'</div><b>'+esc(horseCourse(x))+'</b></td>'+
       '<td class="winner">'+esc(x.winner||x.status||"発走前")+'</td>'+
       '<td class="jockey">'+esc(x.jockey||"")+'</td>'+
-      '<td class="combo">'+orderHtml(x.order)+'</td>'+
+      '<td class="combo">'+orderHtml(x.order,"local")+'</td>'+
       '<td class="pay">'+esc(x.trifecta||"")+'</td>'+
     '</tr>';
   }
