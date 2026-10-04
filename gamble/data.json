@@ -1,8 +1,8 @@
 {
   "date": "2026-10-05",
   "date_label": "2026年10月05日",
-  "updated_at": "03:16:46",
-  "updated_at_iso": "2026-10-05T03:16:46.652049+09:00",
+  "updated_at": "06:40:14",
+  "updated_at_iso": "2026-10-05T06:40:14.010061+09:00",
   "jra_switch_time": "17:00",
   "keirin": {
     "phase": "本日開催 8場",
@@ -34,7 +34,7 @@
           {
             "race": 1,
             "time": "08:30",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -46,7 +46,7 @@
           {
             "race": 2,
             "time": "08:50",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -58,7 +58,7 @@
           {
             "race": 3,
             "time": "09:10",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -70,7 +70,7 @@
           {
             "race": 4,
             "time": "09:30",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -82,7 +82,7 @@
           {
             "race": 5,
             "time": "09:50",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -94,7 +94,7 @@
           {
             "race": 6,
             "time": "10:10",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -106,7 +106,7 @@
           {
             "race": 7,
             "time": "10:30",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -144,7 +144,7 @@
           {
             "race": 1,
             "time": "08:40",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -156,7 +156,7 @@
           {
             "race": 2,
             "time": "09:00",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -168,7 +168,7 @@
           {
             "race": 3,
             "time": "09:20",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -180,7 +180,7 @@
           {
             "race": 4,
             "time": "09:40",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -192,7 +192,7 @@
           {
             "race": 5,
             "time": "10:00",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -204,7 +204,7 @@
           {
             "race": 6,
             "time": "10:20",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -216,7 +216,7 @@
           {
             "race": 7,
             "time": "10:40",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -259,7 +259,7 @@
           {
             "race": 1,
             "time": "10:45",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -271,7 +271,7 @@
           {
             "race": 2,
             "time": "11:13",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -283,7 +283,7 @@
           {
             "race": 3,
             "time": "11:42",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -295,7 +295,7 @@
           {
             "race": 4,
             "time": "12:11",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -307,7 +307,7 @@
           {
             "race": 5,
             "time": "12:40",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -319,7 +319,7 @@
           {
             "race": 6,
             "time": "13:09",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -331,7 +331,7 @@
           {
             "race": 7,
             "time": "13:38",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -343,7 +343,7 @@
           {
             "race": 8,
             "time": "14:07",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -355,7 +355,7 @@
           {
             "race": 9,
             "time": "14:37",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -367,7 +367,7 @@
           {
             "race": 10,
             "time": "15:07",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -379,7 +379,7 @@
           {
             "race": 11,
             "time": "15:38",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -391,7 +391,7 @@
           {
             "race": 12,
             "time": "16:14",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -433,7 +433,7 @@
           {
             "race": 1,
             "time": "15:56",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -445,7 +445,7 @@
           {
             "race": 2,
             "time": "16:21",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -457,7 +457,7 @@
           {
             "race": 3,
             "time": "16:46",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -469,7 +469,7 @@
           {
             "race": 4,
             "time": "17:12",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -481,7 +481,7 @@
           {
             "race": 5,
             "time": "17:38",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -493,7 +493,7 @@
           {
             "race": 6,
             "time": "18:04",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -505,7 +505,7 @@
           {
             "race": 7,
             "time": "18:30",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -517,7 +517,7 @@
           {
             "race": 8,
             "time": "18:56",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -529,7 +529,7 @@
           {
             "race": 9,
             "time": "19:22",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -541,7 +541,7 @@
           {
             "race": 10,
             "time": "19:48",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -553,7 +553,7 @@
           {
             "race": 11,
             "time": "20:16",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -596,7 +596,7 @@
           {
             "race": 1,
             "time": "15:45",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -608,7 +608,7 @@
           {
             "race": 2,
             "time": "16:07",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -620,7 +620,7 @@
           {
             "race": 3,
             "time": "16:33",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -632,7 +632,7 @@
           {
             "race": 4,
             "time": "16:59",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -644,7 +644,7 @@
           {
             "race": 5,
             "time": "17:25",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -656,7 +656,7 @@
           {
             "race": 6,
             "time": "17:51",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -668,7 +668,7 @@
           {
             "race": 7,
             "time": "18:17",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -680,7 +680,7 @@
           {
             "race": 8,
             "time": "18:43",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -692,7 +692,7 @@
           {
             "race": 9,
             "time": "19:09",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -704,7 +704,7 @@
           {
             "race": 10,
             "time": "19:35",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -716,7 +716,7 @@
           {
             "race": 11,
             "time": "20:02",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -728,7 +728,7 @@
           {
             "race": 12,
             "time": "20:30",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -766,7 +766,7 @@
           {
             "race": 1,
             "time": "20:41",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -778,7 +778,7 @@
           {
             "race": 2,
             "time": "21:05",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -790,7 +790,7 @@
           {
             "race": 3,
             "time": "21:29",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -802,7 +802,7 @@
           {
             "race": 4,
             "time": "21:53",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -814,7 +814,7 @@
           {
             "race": 5,
             "time": "22:18",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -826,7 +826,7 @@
           {
             "race": 6,
             "time": "22:45",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -838,7 +838,7 @@
           {
             "race": 7,
             "time": "23:12",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -876,7 +876,7 @@
           {
             "race": 1,
             "time": "20:49",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -888,7 +888,7 @@
           {
             "race": 2,
             "time": "21:13",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -900,7 +900,7 @@
           {
             "race": 3,
             "time": "21:37",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -912,7 +912,7 @@
           {
             "race": 4,
             "time": "22:01",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -924,7 +924,7 @@
           {
             "race": 5,
             "time": "22:27",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -936,7 +936,7 @@
           {
             "race": 6,
             "time": "22:54",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -948,7 +948,7 @@
           {
             "race": 7,
             "time": "23:21",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -986,7 +986,7 @@
           {
             "race": 1,
             "time": "20:57",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -998,7 +998,7 @@
           {
             "race": 2,
             "time": "21:21",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -1010,7 +1010,7 @@
           {
             "race": 3,
             "time": "21:45",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -1022,7 +1022,7 @@
           {
             "race": 4,
             "time": "22:09",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -1034,7 +1034,7 @@
           {
             "race": 5,
             "time": "22:36",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -1046,7 +1046,7 @@
           {
             "race": 6,
             "time": "23:03",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -1058,7 +1058,7 @@
           {
             "race": 7,
             "time": "23:30",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -2792,7 +2792,7 @@
             "race_name": "Ｃ２",
             "course": "ダート1000m",
             "scheduled_time": "18:18",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 2,
@@ -2802,7 +2802,7 @@
             "race_name": "Ｃ２",
             "course": "ダート1000m",
             "scheduled_time": "11:43",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 3,
@@ -2812,7 +2812,7 @@
             "race_name": "Ｃ２七組",
             "course": "ダート1200m",
             "scheduled_time": "12:18",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 4,
@@ -2822,7 +2822,7 @@
             "race_name": "Ｃ２六組",
             "course": "ダート1200m",
             "scheduled_time": "12:53",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 5,
@@ -2832,7 +2832,7 @@
             "race_name": "Ｃ２五組",
             "course": "ダート1200m",
             "scheduled_time": "13:28",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 6,
@@ -2842,7 +2842,7 @@
             "race_name": "２歳",
             "course": "ダート1400m",
             "scheduled_time": "14:03",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 7,
@@ -2852,7 +2852,7 @@
             "race_name": "２歳",
             "course": "ダート1400m",
             "scheduled_time": "14:38",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 8,
@@ -2862,7 +2862,7 @@
             "race_name": "Ｂ２",
             "course": "ダート1000m",
             "scheduled_time": "15:13",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 9,
@@ -2872,7 +2872,7 @@
             "race_name": "Ｂ２",
             "course": "ダート1000m",
             "scheduled_time": "15:48",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 10,
@@ -2882,7 +2882,7 @@
             "race_name": "ペガスス賞Ｂ２一組",
             "course": "ダート1600m",
             "scheduled_time": "16:23",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 11,
@@ -2892,7 +2892,7 @@
             "race_name": "カリブラコア賞Ｂ１三組",
             "course": "ダート1600m",
             "scheduled_time": "16:58",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 12,
@@ -2902,7 +2902,7 @@
             "race_name": "夢・希望 未来へ前進Ｂ１",
             "course": "ダート1400m",
             "scheduled_time": "17:33",
-            "status": "結果待ち"
+            "status": "発走前"
           }
         ]
       },
@@ -2919,7 +2919,7 @@
             "race_name": "Ｃ１十六",
             "course": "ダート1500m",
             "scheduled_time": "18:48",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 2,
@@ -2929,7 +2929,7 @@
             "race_name": "Ｃ１十五",
             "course": "ダート1500m",
             "scheduled_time": "13:03",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 3,
@@ -2939,7 +2939,7 @@
             "race_name": "龍太郎＆瑠里子☆結婚記念Ｃ１十四",
             "course": "ダート1400m",
             "scheduled_time": "13:38",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 4,
@@ -2949,7 +2949,7 @@
             "race_name": "Ｃ１十三",
             "course": "ダート1400m",
             "scheduled_time": "14:13",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 5,
@@ -2959,7 +2959,7 @@
             "race_name": "一樹仁美結婚記念Ｃ１十二",
             "course": "ダート1500m",
             "scheduled_time": "14:48",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 6,
@@ -2969,7 +2969,7 @@
             "race_name": "Ｃ１十一",
             "course": "ダート1500m",
             "scheduled_time": "15:23",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 7,
@@ -2979,7 +2979,7 @@
             "race_name": "ずしくん＆ゆいちゃん結婚記念Ｃ１十",
             "course": "ダート1400m",
             "scheduled_time": "15:58",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 8,
@@ -2989,7 +2989,7 @@
             "race_name": "Ｃ１九",
             "course": "ダート1400m",
             "scheduled_time": "16:33",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 9,
@@ -2999,7 +2999,7 @@
             "race_name": "だいきち不動産設立記念レースＢ２三",
             "course": "ダート1500m",
             "scheduled_time": "17:08",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 10,
@@ -3009,7 +3009,7 @@
             "race_name": "Ｂ２二",
             "course": "ダート1500m",
             "scheduled_time": "17:43",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 11,
@@ -3019,7 +3019,7 @@
             "race_name": "特別 スマホで投票！楽天競馬特別Ｂ２一",
             "course": "ダート1400m",
             "scheduled_time": "18:18",
-            "status": "結果待ち"
+            "status": "発走前"
           }
         ]
       },
@@ -3036,7 +3036,7 @@
             "race_name": "シウマイ持ってきたよ７Ｃ２－６  9",
             "course": "直200m",
             "scheduled_time": "20:38",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 2,
@@ -3046,7 +3046,7 @@
             "race_name": "Ｋ＆Ｍ 念願の生観戦記念２歳Ｄ－８  10",
             "course": "直200m",
             "scheduled_time": "14:33",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 3,
@@ -3056,7 +3056,7 @@
             "race_name": "八木沢勝幸北の旅２０周年杯２歳Ｄ－１  10",
             "course": "直200m",
             "scheduled_time": "15:08",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 4,
@@ -3066,7 +3066,7 @@
             "race_name": "ももんち結婚おめでとう２歳Ｃ－３  10",
             "course": "直200m",
             "scheduled_time": "15:43",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 5,
@@ -3076,7 +3076,7 @@
             "race_name": "さやか・ゆうた結婚記念杯２歳Ｂ－１  10",
             "course": "直200m",
             "scheduled_time": "16:18",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 6,
@@ -3086,7 +3086,7 @@
             "race_name": "卒論提出ありがとう法政通信Ｃ２－５  10",
             "course": "直200m",
             "scheduled_time": "16:53",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 7,
@@ -3096,7 +3096,7 @@
             "race_name": "ともやん誕生日記念Ｃ１－９  9",
             "course": "直200m",
             "scheduled_time": "17:28",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 8,
@@ -3106,7 +3106,7 @@
             "race_name": "健太郎と優衣が結婚したよ杯Ｂ４－２  10",
             "course": "直200m",
             "scheduled_time": "18:03",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 9,
@@ -3116,7 +3116,7 @@
             "race_name": "白上フブキ生誕２０２６記念Ｂ３－８  10",
             "course": "直200m",
             "scheduled_time": "18:38",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 10,
@@ -3126,7 +3126,7 @@
             "race_name": "第６回岩下真純王冠Ｂ２－４  10",
             "course": "直200m",
             "scheduled_time": "19:13",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 11,
@@ -3136,7 +3136,7 @@
             "race_name": "特別 狩勝賞オープン  10",
             "course": "直200m",
             "scheduled_time": "19:48",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 12,
@@ -3146,7 +3146,7 @@
             "race_name": "Ｂ１－４  10",
             "course": "直200m",
             "scheduled_time": "20:18",
-            "status": "結果待ち"
+            "status": "発走前"
           }
         ]
       },
@@ -3163,7 +3163,7 @@
             "race_name": "Ｃ３四 五",
             "course": "ダート1600m",
             "scheduled_time": "20:53",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 2,
@@ -3173,7 +3173,7 @@
             "race_name": "Ｃ３四 五",
             "course": "ダート1200m",
             "scheduled_time": "15:38",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 3,
@@ -3183,7 +3183,7 @@
             "race_name": "２歳新馬",
             "course": "ダート1800m",
             "scheduled_time": "16:10",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 4,
@@ -3193,7 +3193,7 @@
             "race_name": "Ｂ１二",
             "course": "ダート1400m",
             "scheduled_time": "16:43",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 5,
@@ -3203,7 +3203,7 @@
             "race_name": "Ｃ２十五 十六 十七",
             "course": "ダート1600m",
             "scheduled_time": "17:15",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 6,
@@ -3213,7 +3213,7 @@
             "race_name": "ゴッドファーザー賞Ｃ２十五 十六 十七",
             "course": "ダート1400m",
             "scheduled_time": "17:48",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 7,
@@ -3223,7 +3223,7 @@
             "race_name": "特別 秋分特別Ｃ１一選抜",
             "course": "ダート2400m",
             "scheduled_time": "18:23",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 8,
@@ -3233,7 +3233,7 @@
             "race_name": "特別 天狗坂賞Ｂ３一選抜特別",
             "course": "ダート1800m",
             "scheduled_time": "18:58",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 9,
@@ -3243,7 +3243,7 @@
             "race_name": "特別 ヴァーゴ賞Ｂ１一Ｂ２一選抜特別",
             "course": "ダート1200m",
             "scheduled_time": "19:33",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 10,
@@ -3253,7 +3253,7 @@
             "race_name": "孔雀草賞Ｃ２十五 十六 十七",
             "course": "ダート1200m",
             "scheduled_time": "20:13",
-            "status": "結果待ち"
+            "status": "発走前"
           }
         ]
       }
