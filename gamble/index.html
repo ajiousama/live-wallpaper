@@ -5,41 +5,31 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta name="color-scheme" content="dark">
-<title>週末ギャンブル結果一覧</title>
-<link rel="stylesheet" href="style.css?v=20">
+<title>本日ギャンブル</title>
+<link rel="stylesheet" href="style.css?v=21">
 </head>
 <body>
 <main id="dash">
   <header class="topbar">
-    <h1>週末ギャンブル</h1>
+    <div class="screen-heading">
+      <strong id="screen-title">モーニング</strong>
+      <span id="screen-sub">本日開催</span>
+    </div>
     <div class="status">
-      <div class="live"><span></span>自動</div>
-      <div id="updated">--:--:--</div>
-      <div id="clock">--:--</div>
+      <span class="live"><i></i>自動</span>
+      <span id="updated">--:--:--</span>
+      <span id="clock">--:--</span>
     </div>
   </header>
 
-  <section class="main-grid">
-    <section class="left-column">
-      <section class="block keirin-block sport-panel active">
-        <div class="block-head"><h2>競輪 <span id="keirin-phase">本日開催全場</span></h2></div>
-        <div id="keirin-grid" class="two-grid"></div>
-      </section>
-
-      <section class="block boat-block sport-panel">
-        <div class="block-head"><h2>ボート 全開催場</h2></div>
-        <div id="boat-grid" class="two-grid"></div>
-      </section>
-    </section>
-
-    <section class="right-column block">
-      <div class="block-head right-head"><h2 id="right-title">競馬 全開催場</h2></div>
-      <div id="right-grid" class="right-grid"></div>
-    </section>
+  <section id="phase-screen" class="screen active">
+    <div id="phase-grid" class="phase-grid sport-grid-vscroll"></div>
   </section>
 
-  <footer><span id="source"></span></footer>
+  <section id="jra-screen" class="screen">
+    <div id="jra-grid" class="jra-dedicated-grid"></div>
+  </section>
 </main>
-<script src="app.js?v=20"></script>
+<script src="app.js?v=21"></script>
 </body>
 </html>
