@@ -1,8 +1,8 @@
 {
   "source": "JRA公式",
-  "source_date": "20261004",
-  "date_label": "10月4日 日曜",
-  "updated_at": "2026-10-04 16:23 JST",
+  "source_date": "20261003",
+  "date_label": "10月3日 土曜",
+  "updated_at": "2026-10-04 17:35 JST",
   "venues": [
     {
       "name": "東京",
@@ -10,754 +10,1166 @@
         {
           "race": 1,
           "race_name": "2歳未勝利",
-          "course": "芝1800m",
+          "course": "ダート1600m",
           "top3": [
             {
               "position": 1,
               "frame": "枠3赤",
-              "number": "3",
-              "horse": "ダノンダックス",
-              "jockey": "C.ルメール",
-              "time": "1:46.7",
+              "number": "5",
+              "horse": "ワンダーマーベル",
+              "jockey": "横山 琉人",
+              "time": "1:38.1",
               "margin": ""
             },
             {
               "position": 2,
-              "frame": "枠8桃",
-              "number": "12",
-              "horse": "イニシャルポイント",
-              "jockey": "丹内 祐次",
-              "time": "1:47.1",
-              "margin": "２ 1/2"
+              "frame": "枠7橙",
+              "number": "13",
+              "horse": "スターフラッシュ",
+              "jockey": "C.ルメール",
+              "time": "1:38.4",
+              "margin": "２"
             },
             {
               "position": 3,
+              "frame": "枠1白",
+              "number": "1",
+              "horse": "アークレイリ",
+              "jockey": "丹内 祐次",
+              "time": "1:39.4",
+              "margin": "６"
+            }
+          ],
+          "payouts": {
+            "単勝": [
+              {
+                "combo": "5",
+                "amount": "760円"
+              }
+            ],
+            "複勝": [
+              {
+                "combo": "5",
+                "amount": "150円"
+              },
+              {
+                "combo": "13",
+                "amount": "110円"
+              },
+              {
+                "combo": "1",
+                "amount": "810円"
+              }
+            ],
+            "枠連": [
+              {
+                "combo": "3-7",
+                "amount": "280円"
+              }
+            ],
+            "馬連": [
+              {
+                "combo": "5-13",
+                "amount": "310円"
+              }
+            ],
+            "馬単": [
+              {
+                "combo": "5-13",
+                "amount": "1,490円"
+              }
+            ],
+            "ワイド": [
+              {
+                "combo": "5-13",
+                "amount": "220円"
+              },
+              {
+                "combo": "1-5",
+                "amount": "3,110円"
+              },
+              {
+                "combo": "1-13",
+                "amount": "1,310円"
+              }
+            ],
+            "3連複": [
+              {
+                "combo": "1-5-13",
+                "amount": "6,200円"
+              }
+            ],
+            "3連単": [
+              {
+                "combo": "5-13-1",
+                "amount": "40,080円"
+              }
+            ]
+          },
+          "jockey": "横山 琉人",
+          "horse": "ワンダーマーベル",
+          "win_payout": "760円"
+        },
+        {
+          "race": 2,
+          "race_name": "2歳未勝利",
+          "course": "芝2000m",
+          "top3": [
+            {
+              "position": 1,
               "frame": "枠4青",
               "number": "4",
-              "horse": "コンフィアル",
-              "jockey": "田辺 裕信",
-              "time": "1:47.4",
+              "horse": "インテルラゴス",
+              "jockey": "C.ルメール",
+              "time": "2:01.8",
+              "margin": ""
+            },
+            {
+              "position": 2,
+              "frame": "枠7橙",
+              "number": "8",
+              "horse": "シアルナーレ",
+              "jockey": "戸崎 圭太",
+              "time": "2:01.9",
+              "margin": "１／２"
+            },
+            {
+              "position": 3,
+              "frame": "枠8桃",
+              "number": "10",
+              "horse": "ウイニングレイ",
+              "jockey": "松岡 正海",
+              "time": "2:02.2",
               "margin": "１ 3/4"
             }
           ],
           "payouts": {
             "単勝": [
               {
-                "combo": "3",
-                "amount": "110円"
+                "combo": "4",
+                "amount": "250円"
               }
             ],
             "複勝": [
               {
-                "combo": "3",
-                "amount": "100円"
-              },
-              {
-                "combo": "12",
-                "amount": "220円"
-              },
-              {
                 "combo": "4",
-                "amount": "180円"
+                "amount": "140円"
+              },
+              {
+                "combo": "8",
+                "amount": "150円"
+              },
+              {
+                "combo": "10",
+                "amount": "390円"
               }
             ],
             "枠連": [
               {
-                "combo": "3-8",
-                "amount": "150円"
+                "combo": "4-7",
+                "amount": "400円"
               }
             ],
             "馬連": [
               {
-                "combo": "3-12",
-                "amount": "880円"
+                "combo": "4-8",
+                "amount": "400円"
               }
             ],
             "馬単": [
               {
-                "combo": "3-12",
-                "amount": "960円"
+                "combo": "4-8",
+                "amount": "720円"
               }
             ],
             "ワイド": [
               {
-                "combo": "3-12",
-                "amount": "320円"
+                "combo": "4-8",
+                "amount": "250円"
               },
               {
-                "combo": "3-4",
-                "amount": "310円"
+                "combo": "4-10",
+                "amount": "860円"
               },
               {
-                "combo": "4-12",
-                "amount": "1,260円"
+                "combo": "8-10",
+                "amount": "910円"
               }
             ],
             "3連複": [
               {
-                "combo": "3-4-12",
-                "amount": "1,890円"
+                "combo": "4-8-10",
+                "amount": "1,860円"
               }
             ],
             "3連単": [
               {
-                "combo": "3-12-4",
-                "amount": "4,440円"
+                "combo": "4-8-10",
+                "amount": "5,340円"
               }
             ]
           },
           "jockey": "C.ルメール",
-          "horse": "ダノンダックス",
-          "win_payout": "110円"
+          "horse": "インテルラゴス",
+          "win_payout": "250円"
         },
         {
-          "race": 2,
-          "race_name": "2歳未勝利",
+          "race": 3,
+          "race_name": "メイクデビュー東京",
           "course": "芝1400m",
           "top3": [
             {
               "position": 1,
-              "frame": "枠5黄",
-              "number": "9",
-              "horse": "ピクシーブラスト",
-              "jockey": "菊沢 一樹",
-              "time": "1:21.8",
+              "frame": "枠1白",
+              "number": "2",
+              "horse": "ソードオブステート",
+              "jockey": "田辺 裕信",
+              "time": "1:22.8",
               "margin": ""
             },
             {
               "position": 2,
-              "frame": "枠1白",
-              "number": "1",
-              "horse": "ヨドノプレミアム",
-              "jockey": "佐々木 大輔",
-              "time": "1:21.9",
+              "frame": "枠4青",
+              "number": "7",
+              "horse": "タンタフェリチア",
+              "jockey": "横山 和生",
+              "time": "1:22.8",
               "margin": "クビ"
             },
             {
               "position": 3,
               "frame": "枠1白",
-              "number": "2",
-              "horse": "クリガーレ",
-              "jockey": "丸田 恭介",
-              "time": "1:22.5",
-              "margin": "３ 1/2"
+              "number": "1",
+              "horse": "リアシュアー",
+              "jockey": "黛 弘人",
+              "time": "1:23.5",
+              "margin": "４"
             }
           ],
           "payouts": {
             "単勝": [
-              {
-                "combo": "9",
-                "amount": "260円"
-              }
-            ],
-            "複勝": [
-              {
-                "combo": "9",
-                "amount": "150円"
-              },
-              {
-                "combo": "1",
-                "amount": "180円"
-              },
               {
                 "combo": "2",
-                "amount": "420円"
-              }
-            ],
-            "枠連": [
-              {
-                "combo": "1-5",
-                "amount": "410円"
-              }
-            ],
-            "馬連": [
-              {
-                "combo": "1-9",
-                "amount": "650円"
-              }
-            ],
-            "馬単": [
-              {
-                "combo": "9-1",
-                "amount": "1,040円"
-              }
-            ],
-            "ワイド": [
-              {
-                "combo": "1-9",
-                "amount": "340円"
-              },
-              {
-                "combo": "2-9",
-                "amount": "1,270円"
-              },
-              {
-                "combo": "1-2",
-                "amount": "1,620円"
-              }
-            ],
-            "3連複": [
-              {
-                "combo": "1-2-9",
-                "amount": "4,070円"
-              }
-            ],
-            "3連単": [
-              {
-                "combo": "9-1-2",
-                "amount": "11,650円"
-              }
-            ]
-          },
-          "jockey": "菊沢 一樹",
-          "horse": "ピクシーブラスト",
-          "win_payout": "260円"
-        },
-        {
-          "race": 3,
-          "race_name": "メイクデビュー東京",
-          "course": "ダート1600m",
-          "top3": [
-            {
-              "position": 1,
-              "frame": "枠5黄",
-              "number": "9",
-              "horse": "ヴェントセラーレ",
-              "jockey": "津村 明秀",
-              "time": "1:39.9",
-              "margin": ""
-            },
-            {
-              "position": 2,
-              "frame": "枠8桃",
-              "number": "15",
-              "horse": "ドーリック",
-              "jockey": "荻野 極",
-              "time": "1:40.6",
-              "margin": "４"
-            },
-            {
-              "position": 3,
-              "frame": "枠5黄",
-              "number": "10",
-              "horse": "エコロゴッド",
-              "jockey": "菊沢 一樹",
-              "time": "1:40.7",
-              "margin": "１／２"
-            }
-          ],
-          "payouts": {
-            "単勝": [
-              {
-                "combo": "9",
-                "amount": "1,350円"
-              }
-            ],
-            "複勝": [
-              {
-                "combo": "9",
-                "amount": "400円"
-              },
-              {
-                "combo": "15",
-                "amount": "700円"
-              },
-              {
-                "combo": "10",
-                "amount": "630円"
-              }
-            ],
-            "枠連": [
-              {
-                "combo": "5-8",
-                "amount": "7,110円"
-              }
-            ],
-            "馬連": [
-              {
-                "combo": "9-15",
-                "amount": "9,000円"
-              }
-            ],
-            "馬単": [
-              {
-                "combo": "9-15",
-                "amount": "15,390円"
-              }
-            ],
-            "ワイド": [
-              {
-                "combo": "9-15",
-                "amount": "2,240円"
-              },
-              {
-                "combo": "9-10",
-                "amount": "3,390円"
-              },
-              {
-                "combo": "10-15",
-                "amount": "9,070円"
-              }
-            ],
-            "3連複": [
-              {
-                "combo": "9-10-15",
-                "amount": "76,460円"
-              }
-            ],
-            "3連単": [
-              {
-                "combo": "9-15-10",
-                "amount": "328,230円"
-              }
-            ]
-          },
-          "jockey": "津村 明秀",
-          "horse": "ヴェントセラーレ",
-          "win_payout": "1,350円"
-        },
-        {
-          "race": 4,
-          "race_name": "障害3歳以上未勝利",
-          "course": "芝3000m",
-          "top3": [
-            {
-              "position": 1,
-              "frame": "枠8桃",
-              "number": "13",
-              "horse": "タガノバルコス",
-              "jockey": "高田 潤",
-              "time": "3:21.4",
-              "margin": ""
-            },
-            {
-              "position": 2,
-              "frame": "枠5黄",
-              "number": "8",
-              "horse": "グランナヴィール",
-              "jockey": "上野 翔",
-              "time": "3:22.7",
-              "margin": "８"
-            },
-            {
-              "position": 3,
-              "frame": "枠6緑",
-              "number": "9",
-              "horse": "キャプテンシー",
-              "jockey": "中村 将之",
-              "time": "3:23.1",
-              "margin": "２ 1/2"
-            }
-          ],
-          "payouts": {
-            "単勝": [
-              {
-                "combo": "13",
-                "amount": "430円"
-              }
-            ],
-            "複勝": [
-              {
-                "combo": "13",
-                "amount": "160円"
-              },
-              {
-                "combo": "8",
-                "amount": "140円"
-              },
-              {
-                "combo": "9",
-                "amount": "550円"
-              }
-            ],
-            "枠連": [
-              {
-                "combo": "5-8",
-                "amount": "440円"
-              }
-            ],
-            "馬連": [
-              {
-                "combo": "8-13",
-                "amount": "610円"
-              }
-            ],
-            "馬単": [
-              {
-                "combo": "13-8",
-                "amount": "1,290円"
-              }
-            ],
-            "ワイド": [
-              {
-                "combo": "8-13",
-                "amount": "310円"
-              },
-              {
-                "combo": "9-13",
-                "amount": "1,670円"
-              },
-              {
-                "combo": "8-9",
-                "amount": "1,360円"
-              }
-            ],
-            "3連複": [
-              {
-                "combo": "8-9-13",
-                "amount": "4,640円"
-              }
-            ],
-            "3連単": [
-              {
-                "combo": "13-8-9",
-                "amount": "18,450円"
-              }
-            ]
-          },
-          "jockey": "高田 潤",
-          "horse": "タガノバルコス",
-          "win_payout": "430円"
-        },
-        {
-          "race": 5,
-          "race_name": "メイクデビュー東京",
-          "course": "芝2000m",
-          "top3": [
-            {
-              "position": 1,
-              "frame": "枠6緑",
-              "number": "7",
-              "horse": "シルヴァノーブル",
-              "jockey": "横山 典弘",
-              "time": "2:03.9",
-              "margin": ""
-            },
-            {
-              "position": 2,
-              "frame": "枠3赤",
-              "number": "3",
-              "horse": "ロジヴィジョン",
-              "jockey": "西村 淳也",
-              "time": "2:04.5",
-              "margin": "３ 1/2"
-            },
-            {
-              "position": 3,
-              "frame": "枠8桃",
-              "number": "12",
-              "horse": "ランパディアス",
-              "jockey": "坂井 瑠星",
-              "time": "2:04.7",
-              "margin": "１ 1/4"
-            }
-          ],
-          "payouts": {
-            "単勝": [
-              {
-                "combo": "7",
-                "amount": "310円"
-              }
-            ],
-            "複勝": [
-              {
-                "combo": "7",
-                "amount": "180円"
-              },
-              {
-                "combo": "3",
-                "amount": "330円"
-              },
-              {
-                "combo": "12",
-                "amount": "230円"
-              }
-            ],
-            "枠連": [
-              {
-                "combo": "3-6",
-                "amount": "2,280円"
-              }
-            ],
-            "馬連": [
-              {
-                "combo": "3-7",
-                "amount": "2,290円"
-              }
-            ],
-            "馬単": [
-              {
-                "combo": "7-3",
-                "amount": "3,180円"
-              }
-            ],
-            "ワイド": [
-              {
-                "combo": "3-7",
-                "amount": "680円"
-              },
-              {
-                "combo": "7-12",
-                "amount": "450円"
-              },
-              {
-                "combo": "3-12",
-                "amount": "970円"
-              }
-            ],
-            "3連複": [
-              {
-                "combo": "3-7-12",
-                "amount": "5,080円"
-              }
-            ],
-            "3連単": [
-              {
-                "combo": "7-3-12",
-                "amount": "26,240円"
-              }
-            ]
-          },
-          "jockey": "横山 典弘",
-          "horse": "シルヴァノーブル",
-          "win_payout": "310円"
-        },
-        {
-          "race": 6,
-          "race_name": "メイクデビュー東京",
-          "course": "芝1600m",
-          "top3": [
-            {
-              "position": 1,
-              "frame": "枠4青",
-              "number": "5",
-              "horse": "ジョーティス",
-              "jockey": "C.ルメール",
-              "time": "1:35.6",
-              "margin": ""
-            },
-            {
-              "position": 2,
-              "frame": "枠6緑",
-              "number": "10",
-              "horse": "シドニーハーバー",
-              "jockey": "荻野 極",
-              "time": "1:35.6",
-              "margin": "ハナ"
-            },
-            {
-              "position": 3,
-              "frame": "枠7橙",
-              "number": "12",
-              "horse": "ディアム",
-              "jockey": "横山 武史",
-              "time": "1:35.8",
-              "margin": "１ 1/4"
-            }
-          ],
-          "payouts": {
-            "単勝": [
-              {
-                "combo": "5",
                 "amount": "190円"
               }
             ],
             "複勝": [
               {
-                "combo": "5",
-                "amount": "110円"
+                "combo": "2",
+                "amount": "120円"
               },
               {
-                "combo": "10",
-                "amount": "160円"
+                "combo": "7",
+                "amount": "180円"
               },
               {
-                "combo": "12",
-                "amount": "290円"
+                "combo": "1",
+                "amount": "2,330円"
               }
             ],
             "枠連": [
               {
-                "combo": "4-6",
-                "amount": "400円"
+                "combo": "1-4",
+                "amount": "370円"
               }
             ],
             "馬連": [
               {
-                "combo": "5-10",
-                "amount": "480円"
+                "combo": "2-7",
+                "amount": "670円"
               }
             ],
             "馬単": [
               {
-                "combo": "5-10",
-                "amount": "700円"
+                "combo": "2-7",
+                "amount": "1,140円"
               }
             ],
             "ワイド": [
               {
-                "combo": "5-10",
-                "amount": "240円"
+                "combo": "2-7",
+                "amount": "350円"
               },
               {
-                "combo": "5-12",
-                "amount": "650円"
+                "combo": "1-2",
+                "amount": "4,390円"
               },
               {
-                "combo": "10-12",
-                "amount": "990円"
+                "combo": "1-7",
+                "amount": "11,600円"
               }
             ],
             "3連複": [
               {
-                "combo": "5-10-12",
-                "amount": "2,230円"
+                "combo": "1-2-7",
+                "amount": "22,220円"
               }
             ],
             "3連単": [
               {
-                "combo": "5-10-12",
-                "amount": "5,150円"
+                "combo": "2-7-1",
+                "amount": "54,440円"
+              }
+            ]
+          },
+          "jockey": "田辺 裕信",
+          "horse": "ソードオブステート",
+          "win_payout": "190円"
+        },
+        {
+          "race": 4,
+          "race_name": "障害3歳以上オープン",
+          "course": "芝3100m",
+          "top3": [
+            {
+              "position": 1,
+              "frame": "枠3赤",
+              "number": "3",
+              "horse": "ブライトマン",
+              "jockey": "大江原 圭",
+              "time": "3:25.5",
+              "margin": ""
+            },
+            {
+              "position": 2,
+              "frame": "枠6緑",
+              "number": "7",
+              "horse": "ブラックバラード",
+              "jockey": "伴 啓太",
+              "time": "3:26.8",
+              "margin": "８"
+            },
+            {
+              "position": 3,
+              "frame": "枠4青",
+              "number": "4",
+              "horse": "エーオーキング",
+              "jockey": "草野 太郎",
+              "time": "3:27.2",
+              "margin": "２"
+            }
+          ],
+          "payouts": {
+            "単勝": [
+              {
+                "combo": "3",
+                "amount": "410円"
+              }
+            ],
+            "複勝": [
+              {
+                "combo": "3",
+                "amount": "170円"
+              },
+              {
+                "combo": "7",
+                "amount": "240円"
+              },
+              {
+                "combo": "4",
+                "amount": "840円"
+              }
+            ],
+            "枠連": [
+              {
+                "combo": "3-6",
+                "amount": "570円"
+              }
+            ],
+            "馬連": [
+              {
+                "combo": "3-7",
+                "amount": "2,050円"
+              }
+            ],
+            "馬単": [
+              {
+                "combo": "3-7",
+                "amount": "3,480円"
+              }
+            ],
+            "ワイド": [
+              {
+                "combo": "3-7",
+                "amount": "840円"
+              },
+              {
+                "combo": "3-4",
+                "amount": "1,360円"
+              },
+              {
+                "combo": "4-7",
+                "amount": "2,970円"
+              }
+            ],
+            "3連複": [
+              {
+                "combo": "3-4-7",
+                "amount": "11,740円"
+              }
+            ],
+            "3連単": [
+              {
+                "combo": "3-7-4",
+                "amount": "39,700円"
+              }
+            ]
+          },
+          "jockey": "大江原 圭",
+          "horse": "ブライトマン",
+          "win_payout": "410円"
+        },
+        {
+          "race": 5,
+          "race_name": "メイクデビュー東京",
+          "course": "芝1800m",
+          "top3": [
+            {
+              "position": 1,
+              "frame": "枠3赤",
+              "number": "3",
+              "horse": "ヴァルカモニカ",
+              "jockey": "C.ルメール",
+              "time": "1:46.5",
+              "margin": ""
+            },
+            {
+              "position": 2,
+              "frame": "枠7橙",
+              "number": "8",
+              "horse": "ヒシホライゾン",
+              "jockey": "佐々木 大輔",
+              "time": "1:47.6",
+              "margin": "７"
+            },
+            {
+              "position": 3,
+              "frame": "枠1白",
+              "number": "1",
+              "horse": "センチュリースカイ",
+              "jockey": "丹内 祐次",
+              "time": "1:48.2",
+              "margin": "３ 1/2"
+            }
+          ],
+          "payouts": {
+            "単勝": [
+              {
+                "combo": "3",
+                "amount": "150円"
+              }
+            ],
+            "複勝": [
+              {
+                "combo": "3",
+                "amount": "110円"
+              },
+              {
+                "combo": "8",
+                "amount": "120円"
+              },
+              {
+                "combo": "1",
+                "amount": "220円"
+              }
+            ],
+            "枠連": [
+              {
+                "combo": "3-7",
+                "amount": "290円"
+              }
+            ],
+            "馬連": [
+              {
+                "combo": "3-8",
+                "amount": "280円"
+              }
+            ],
+            "馬単": [
+              {
+                "combo": "3-8",
+                "amount": "420円"
+              }
+            ],
+            "ワイド": [
+              {
+                "combo": "3-8",
+                "amount": "190円"
+              },
+              {
+                "combo": "1-3",
+                "amount": "400円"
+              },
+              {
+                "combo": "1-8",
+                "amount": "700円"
+              }
+            ],
+            "3連複": [
+              {
+                "combo": "1-3-8",
+                "amount": "1,300円"
+              }
+            ],
+            "3連単": [
+              {
+                "combo": "3-8-1",
+                "amount": "2,580円"
               }
             ]
           },
           "jockey": "C.ルメール",
-          "horse": "ジョーティス",
-          "win_payout": "190円"
+          "horse": "ヴァルカモニカ",
+          "win_payout": "150円"
         },
         {
-          "race": 7,
+          "race": 6,
           "race_name": "3歳以上1勝クラス",
           "course": "ダート1400m",
           "top3": [
             {
               "position": 1,
               "frame": "枠4青",
-              "number": "8",
-              "horse": "アバレリュウ",
-              "jockey": "野中 悠太郎",
-              "time": "1:24.9",
+              "number": "7",
+              "horse": "チームユートピア",
+              "jockey": "佐々木 大輔",
+              "time": "1:25.2",
               "margin": ""
             },
             {
               "position": 2,
-              "frame": "枠7橙",
-              "number": "13",
-              "horse": "ペロ",
-              "jockey": "丸山 元気",
-              "time": "",
-              "margin": "アタマ"
+              "frame": "枠1白",
+              "number": "1",
+              "horse": "ミヤエスケープ",
+              "jockey": "菊沢 一樹",
+              "time": "1:25.3",
+              "margin": "１／２"
             },
             {
               "position": 3,
-              "frame": "枠5黄",
-              "number": "10",
-              "horse": "ヘルヴェティオス",
-              "jockey": "坂井 瑠星",
-              "time": "",
-              "margin": "１"
+              "frame": "枠8桃",
+              "number": "15",
+              "horse": "オテンバプリンセス",
+              "jockey": "小林 美駒",
+              "time": "1:25.7",
+              "margin": "２ 1/2"
             }
           ],
           "payouts": {
             "単勝": [
               {
-                "combo": "8",
-                "amount": "940円"
+                "combo": "7",
+                "amount": "230円"
               }
             ],
             "複勝": [
               {
-                "combo": "8",
-                "amount": "270円"
+                "combo": "7",
+                "amount": "130円"
               },
               {
-                "combo": "13",
-                "amount": "220円"
+                "combo": "1",
+                "amount": "300円"
               },
               {
-                "combo": "10",
-                "amount": "200円"
+                "combo": "15",
+                "amount": "240円"
               }
             ],
             "枠連": [
               {
-                "combo": "4-7",
-                "amount": "1,160円"
+                "combo": "1-4",
+                "amount": "830円"
               }
             ],
             "馬連": [
               {
-                "combo": "8-13",
-                "amount": "3,700円"
+                "combo": "1-7",
+                "amount": "1,180円"
               }
             ],
             "馬単": [
               {
-                "combo": "8-13",
-                "amount": "8,430円"
+                "combo": "7-1",
+                "amount": "1,650円"
               }
             ],
             "ワイド": [
               {
-                "combo": "8-13",
-                "amount": "1,020円"
+                "combo": "1-7",
+                "amount": "530円"
               },
               {
-                "combo": "8-10",
-                "amount": "930円"
+                "combo": "7-15",
+                "amount": "470円"
               },
               {
-                "combo": "10-13",
-                "amount": "800円"
+                "combo": "1-15",
+                "amount": "1,480円"
               }
             ],
             "3連複": [
               {
-                "combo": "8-10-13",
-                "amount": "6,940円"
+                "combo": "1-7-15",
+                "amount": "3,410円"
               }
             ],
             "3連単": [
               {
-                "combo": "8-13-10",
-                "amount": "42,510円"
+                "combo": "7-1-15",
+                "amount": "11,710円"
               }
             ]
           },
-          "jockey": "野中 悠太郎",
-          "horse": "アバレリュウ",
-          "win_payout": "940円"
+          "jockey": "佐々木 大輔",
+          "horse": "チームユートピア",
+          "win_payout": "230円"
+        },
+        {
+          "race": 7,
+          "race_name": "3歳以上1勝クラス",
+          "course": "芝1400m",
+          "top3": [
+            {
+              "position": 1,
+              "frame": "枠1白",
+              "number": "2",
+              "horse": "グリオンヴール",
+              "jockey": "C.ルメール",
+              "time": "1:20.6",
+              "margin": ""
+            },
+            {
+              "position": 2,
+              "frame": "枠7橙",
+              "number": "14",
+              "horse": "ワディアルリヤハ",
+              "jockey": "戸崎 圭太",
+              "time": "1:20.8",
+              "margin": "１ 1/4"
+            },
+            {
+              "position": 3,
+              "frame": "枠8桃",
+              "number": "16",
+              "horse": "ピエドゥラパン",
+              "jockey": "津村 明秀",
+              "time": "1:20.9",
+              "margin": "１／２"
+            }
+          ],
+          "payouts": {
+            "単勝": [
+              {
+                "combo": "2",
+                "amount": "180円"
+              }
+            ],
+            "複勝": [
+              {
+                "combo": "2",
+                "amount": "110円"
+              },
+              {
+                "combo": "14",
+                "amount": "180円"
+              },
+              {
+                "combo": "16",
+                "amount": "390円"
+              }
+            ],
+            "枠連": [
+              {
+                "combo": "1-7",
+                "amount": "460円"
+              }
+            ],
+            "馬連": [
+              {
+                "combo": "2-14",
+                "amount": "560円"
+              }
+            ],
+            "馬単": [
+              {
+                "combo": "2-14",
+                "amount": "690円"
+              }
+            ],
+            "ワイド": [
+              {
+                "combo": "2-14",
+                "amount": "250円"
+              },
+              {
+                "combo": "2-16",
+                "amount": "750円"
+              },
+              {
+                "combo": "14-16",
+                "amount": "1,760円"
+              }
+            ],
+            "3連複": [
+              {
+                "combo": "2-14-16",
+                "amount": "3,890円"
+              }
+            ],
+            "3連単": [
+              {
+                "combo": "2-14-16",
+                "amount": "7,540円"
+              }
+            ]
+          },
+          "jockey": "C.ルメール",
+          "horse": "グリオンヴール",
+          "win_payout": "180円"
         },
         {
           "race": 8,
           "race_name": "3歳以上1勝クラス",
+          "course": "ダート1600m",
+          "top3": [
+            {
+              "position": 1,
+              "frame": "枠8桃",
+              "number": "15",
+              "horse": "ファンタイムギフト",
+              "jockey": "田辺 裕信",
+              "time": "1:37.5",
+              "margin": ""
+            },
+            {
+              "position": 2,
+              "frame": "枠6緑",
+              "number": "12",
+              "horse": "スターエンブレム",
+              "jockey": "内田 博幸",
+              "time": "1:37.8",
+              "margin": "１ 3/4"
+            },
+            {
+              "position": 3,
+              "frame": "枠3赤",
+              "number": "5",
+              "horse": "エドワードバローズ",
+              "jockey": "岩田 康誠",
+              "time": "1:37.8",
+              "margin": "ハナ"
+            }
+          ],
+          "payouts": {
+            "単勝": [
+              {
+                "combo": "15",
+                "amount": "1,440円"
+              }
+            ],
+            "複勝": [
+              {
+                "combo": "15",
+                "amount": "750円"
+              },
+              {
+                "combo": "12",
+                "amount": "1,540円"
+              },
+              {
+                "combo": "5",
+                "amount": "870円"
+              }
+            ],
+            "枠連": [
+              {
+                "combo": "6-8",
+                "amount": "5,780円"
+              }
+            ],
+            "馬連": [
+              {
+                "combo": "12-15",
+                "amount": "8,700円"
+              }
+            ],
+            "馬単": [
+              {
+                "combo": "15-12",
+                "amount": "21,200円"
+              }
+            ],
+            "ワイド": [
+              {
+                "combo": "12-15",
+                "amount": "2,620円"
+              },
+              {
+                "combo": "5-15",
+                "amount": "2,020円"
+              },
+              {
+                "combo": "5-12",
+                "amount": "4,100円"
+              }
+            ],
+            "3連複": [
+              {
+                "combo": "5-12-15",
+                "amount": "36,540円"
+              }
+            ],
+            "3連単": [
+              {
+                "combo": "15-12-5",
+                "amount": "219,420円"
+              }
+            ]
+          },
+          "jockey": "田辺 裕信",
+          "horse": "ファンタイムギフト",
+          "win_payout": "1,440円"
+        },
+        {
+          "race": 9,
+          "race_name": "八ヶ岳特別",
           "course": "芝1800m",
+          "top3": [
+            {
+              "position": 1,
+              "frame": "枠7橙",
+              "number": "9",
+              "horse": "ファムクラジューズ",
+              "jockey": "菊沢 一樹",
+              "time": "1:44.0",
+              "margin": ""
+            },
+            {
+              "position": 2,
+              "frame": "枠6緑",
+              "number": "8",
+              "horse": "ドッグウッド",
+              "jockey": "戸崎 圭太",
+              "time": "1:45.0",
+              "margin": "６"
+            },
+            {
+              "position": 3,
+              "frame": "枠4青",
+              "number": "4",
+              "horse": "フィールドノート",
+              "jockey": "C.ルメール",
+              "time": "1:45.1",
+              "margin": "１／２"
+            }
+          ],
+          "payouts": {
+            "単勝": [
+              {
+                "combo": "9",
+                "amount": "880円"
+              }
+            ],
+            "複勝": [
+              {
+                "combo": "9",
+                "amount": "250円"
+              },
+              {
+                "combo": "8",
+                "amount": "260円"
+              },
+              {
+                "combo": "4",
+                "amount": "120円"
+              }
+            ],
+            "枠連": [
+              {
+                "combo": "6-7",
+                "amount": "770円"
+              }
+            ],
+            "馬連": [
+              {
+                "combo": "8-9",
+                "amount": "3,360円"
+              }
+            ],
+            "馬単": [
+              {
+                "combo": "9-8",
+                "amount": "6,190円"
+              }
+            ],
+            "ワイド": [
+              {
+                "combo": "8-9",
+                "amount": "1,100円"
+              },
+              {
+                "combo": "4-9",
+                "amount": "490円"
+              },
+              {
+                "combo": "4-8",
+                "amount": "490円"
+              }
+            ],
+            "3連複": [
+              {
+                "combo": "4-8-9",
+                "amount": "2,700円"
+              }
+            ],
+            "3連単": [
+              {
+                "combo": "9-8-4",
+                "amount": "19,360円"
+              }
+            ]
+          },
+          "jockey": "菊沢 一樹",
+          "horse": "ファムクラジューズ",
+          "win_payout": "880円"
+        },
+        {
+          "race": 10,
+          "race_name": "白秋ステークス",
+          "course": "芝1400m",
+          "top3": [
+            {
+              "position": 1,
+              "frame": "枠6緑",
+              "number": "12",
+              "horse": "フォーゲル",
+              "jockey": "池添 謙一",
+              "time": "1:20.4",
+              "margin": ""
+            },
+            {
+              "position": 2,
+              "frame": "枠2黒",
+              "number": "3",
+              "horse": "ホウオウシェリー",
+              "jockey": "津村 明秀",
+              "time": "1:20.5",
+              "margin": "クビ"
+            },
+            {
+              "position": 3,
+              "frame": "枠3赤",
+              "number": "6",
+              "horse": "サトミノキラリ",
+              "jockey": "小林 美駒",
+              "time": "1:20.5",
+              "margin": "アタマ"
+            }
+          ],
+          "payouts": {
+            "単勝": [
+              {
+                "combo": "12",
+                "amount": "1,820円"
+              }
+            ],
+            "複勝": [
+              {
+                "combo": "12",
+                "amount": "450円"
+              },
+              {
+                "combo": "3",
+                "amount": "310円"
+              },
+              {
+                "combo": "6",
+                "amount": "910円"
+              }
+            ],
+            "枠連": [
+              {
+                "combo": "2-6",
+                "amount": "6,830円"
+              }
+            ],
+            "馬連": [
+              {
+                "combo": "3-12",
+                "amount": "7,940円"
+              }
+            ],
+            "馬単": [
+              {
+                "combo": "12-3",
+                "amount": "16,760円"
+              }
+            ],
+            "ワイド": [
+              {
+                "combo": "3-12",
+                "amount": "2,200円"
+              },
+              {
+                "combo": "6-12",
+                "amount": "5,890円"
+              },
+              {
+                "combo": "3-6",
+                "amount": "3,850円"
+              }
+            ],
+            "3連複": [
+              {
+                "combo": "3-6-12",
+                "amount": "68,180円"
+              }
+            ],
+            "3連単": [
+              {
+                "combo": "12-3-6",
+                "amount": "442,450円"
+              }
+            ]
+          },
+          "jockey": "池添 謙一",
+          "horse": "フォーゲル",
+          "win_payout": "1,820円"
+        },
+        {
+          "race": 11,
+          "race_name": "グリーンチャンネルカップ",
+          "course": "ダート1600m",
+          "top3": [
+            {
+              "position": 1,
+              "frame": "枠3赤",
+              "number": "5",
+              "horse": "ドンエレクトス",
+              "jockey": "三浦 皇成",
+              "time": "1:35.1",
+              "margin": ""
+            },
+            {
+              "position": 2,
+              "frame": "枠3赤",
+              "number": "4",
+              "horse": "ヘニーガイスト",
+              "jockey": "横山 武史",
+              "time": "1:35.3",
+              "margin": "３／４"
+            },
+            {
+              "position": 3,
+              "frame": "枠1白",
+              "number": "1",
+              "horse": "ルヴァレドクール",
+              "jockey": "横山 和生",
+              "time": "1:35.4",
+              "margin": "３／４"
+            }
+          ],
+          "payouts": {
+            "単勝": [
+              {
+                "combo": "5",
+                "amount": "420円"
+              }
+            ],
+            "複勝": [
+              {
+                "combo": "5",
+                "amount": "150円"
+              },
+              {
+                "combo": "4",
+                "amount": "120円"
+              },
+              {
+                "combo": "1",
+                "amount": "210円"
+              }
+            ],
+            "枠連": [
+              {
+                "combo": "3-3",
+                "amount": "520円"
+              }
+            ],
+            "馬連": [
+              {
+                "combo": "4-5",
+                "amount": "550円"
+              }
+            ],
+            "馬単": [
+              {
+                "combo": "5-4",
+                "amount": "1,200円"
+              }
+            ],
+            "ワイド": [
+              {
+                "combo": "4-5",
+                "amount": "270円"
+              },
+              {
+                "combo": "1-5",
+                "amount": "580円"
+              },
+              {
+                "combo": "1-4",
+                "amount": "380円"
+              }
+            ],
+            "3連複": [
+              {
+                "combo": "1-4-5",
+                "amount": "1,320円"
+              }
+            ],
+            "3連単": [
+              {
+                "combo": "5-4-1",
+                "amount": "5,610円"
+              }
+            ]
+          },
+          "jockey": "三浦 皇成",
+          "horse": "ドンエレクトス",
+          "win_payout": "420円"
+        },
+        {
+          "race": 12,
+          "race_name": "3歳以上2勝クラス",
+          "course": "ダート1400m",
           "top3": [
             {
               "position": 1,
               "frame": "枠4青",
               "number": "8",
-              "horse": "フリーヤ",
-              "jockey": "横山 武史",
-              "time": "1:46.8",
+              "horse": "マジッククッキー",
+              "jockey": "石神 深道",
+              "time": "1:22.4",
               "margin": ""
             },
             {
               "position": 2,
-              "frame": "枠4青",
-              "number": "7",
-              "horse": "ディバインウインド",
-              "jockey": "西村 淳也",
-              "time": "1:46.8",
-              "margin": "アタマ"
+              "frame": "枠3赤",
+              "number": "6",
+              "horse": "ヘリテージブルーム",
+              "jockey": "田辺 裕信",
+              "time": "1:23.9",
+              "margin": "９"
             },
             {
               "position": 3,
-              "frame": "枠2黒",
-              "number": "3",
-              "horse": "ティラーノ",
-              "jockey": "原 優介",
-              "time": "1:46.9",
+              "frame": "枠6緑",
+              "number": "12",
+              "horse": "ケブランリ",
+              "jockey": "戸崎 圭太",
+              "time": "1:24.0",
               "margin": "１／２"
             }
           ],
@@ -765,385 +1177,71 @@
             "単勝": [
               {
                 "combo": "8",
-                "amount": "3,790円"
+                "amount": "330円"
               }
             ],
             "複勝": [
               {
                 "combo": "8",
-                "amount": "670円"
+                "amount": "140円"
               },
-              {
-                "combo": "7",
-                "amount": "190円"
-              },
-              {
-                "combo": "3",
-                "amount": "3,580円"
-              }
-            ],
-            "枠連": [
-              {
-                "combo": "4-4",
-                "amount": "5,320円"
-              }
-            ],
-            "馬連": [
-              {
-                "combo": "7-8",
-                "amount": "5,880円"
-              }
-            ],
-            "馬単": [
-              {
-                "combo": "8-7",
-                "amount": "18,320円"
-              }
-            ],
-            "ワイド": [
-              {
-                "combo": "7-8",
-                "amount": "1,750円"
-              },
-              {
-                "combo": "3-8",
-                "amount": "28,760円"
-              },
-              {
-                "combo": "3-7",
-                "amount": "9,080円"
-              }
-            ],
-            "3連複": [
-              {
-                "combo": "3-7-8",
-                "amount": "217,670円"
-              }
-            ],
-            "3連単": [
-              {
-                "combo": "8-7-3",
-                "amount": "1,882,150円"
-              }
-            ]
-          },
-          "jockey": "横山 武史",
-          "horse": "フリーヤ",
-          "win_payout": "3,790円"
-        },
-        {
-          "race": 9,
-          "race_name": "tvk賞",
-          "course": "芝1400m",
-          "top3": [
-            {
-              "position": 1,
-              "frame": "枠6緑",
-              "number": "11",
-              "horse": "ウフドゥウフ",
-              "jockey": "田辺 裕信",
-              "time": "1:20.8",
-              "margin": ""
-            },
-            {
-              "position": 2,
-              "frame": "枠8桃",
-              "number": "15",
-              "horse": "ラパンチュール",
-              "jockey": "丹内 祐次",
-              "time": "1:21.0",
-              "margin": "１ 1/4"
-            },
-            {
-              "position": 3,
-              "frame": "枠6緑",
-              "number": "10",
-              "horse": "スペルーチェ",
-              "jockey": "C.ルメール",
-              "time": "1:21.3",
-              "margin": "１ 3/4"
-            }
-          ],
-          "payouts": {
-            "単勝": [
-              {
-                "combo": "11",
-                "amount": "800円"
-              }
-            ],
-            "複勝": [
-              {
-                "combo": "11",
-                "amount": "270円"
-              },
-              {
-                "combo": "15",
-                "amount": "300円"
-              },
-              {
-                "combo": "10",
-                "amount": "160円"
-              }
-            ],
-            "枠連": [
-              {
-                "combo": "6-8",
-                "amount": "1,180円"
-              }
-            ],
-            "馬連": [
-              {
-                "combo": "11-15",
-                "amount": "4,270円"
-              }
-            ],
-            "馬単": [
-              {
-                "combo": "11-15",
-                "amount": "7,410円"
-              }
-            ],
-            "ワイド": [
-              {
-                "combo": "11-15",
-                "amount": "1,240円"
-              },
-              {
-                "combo": "10-11",
-                "amount": "630円"
-              },
-              {
-                "combo": "10-15",
-                "amount": "790円"
-              }
-            ],
-            "3連複": [
-              {
-                "combo": "10-11-15",
-                "amount": "3,790円"
-              }
-            ],
-            "3連単": [
-              {
-                "combo": "11-15-10",
-                "amount": "31,630円"
-              }
-            ]
-          },
-          "jockey": "田辺 裕信",
-          "horse": "ウフドゥウフ",
-          "win_payout": "800円"
-        },
-        {
-          "race": 10,
-          "race_name": "赤富士ステークス",
-          "course": "ダート1600m",
-          "top3": [
-            {
-              "position": 1,
-              "frame": "枠3赤",
-              "number": "6",
-              "horse": "クールブロン",
-              "jockey": "三浦 皇成",
-              "time": "1:35.8",
-              "margin": ""
-            },
-            {
-              "position": 2,
-              "frame": "枠3赤",
-              "number": "5",
-              "horse": "オンザムービー",
-              "jockey": "横山 典弘",
-              "time": "1:35.8",
-              "margin": "アタマ"
-            },
-            {
-              "position": 3,
-              "frame": "枠4青",
-              "number": "8",
-              "horse": "ルグランヴァン",
-              "jockey": "原 優介",
-              "time": "1:36.0",
-              "margin": "１"
-            }
-          ],
-          "payouts": {
-            "単勝": [
               {
                 "combo": "6",
-                "amount": "3,150円"
-              }
-            ],
-            "複勝": [
-              {
-                "combo": "6",
-                "amount": "510円"
-              },
-              {
-                "combo": "5",
                 "amount": "130円"
               },
               {
-                "combo": "8",
-                "amount": "190円"
+                "combo": "12",
+                "amount": "200円"
               }
             ],
             "枠連": [
               {
-                "combo": "3-3",
-                "amount": "4,270円"
+                "combo": "3-4",
+                "amount": "490円"
               }
             ],
             "馬連": [
-              {
-                "combo": "5-6",
-                "amount": "4,450円"
-              }
-            ],
-            "馬単": [
-              {
-                "combo": "6-5",
-                "amount": "12,810円"
-              }
-            ],
-            "ワイド": [
-              {
-                "combo": "5-6",
-                "amount": "1,390円"
-              },
               {
                 "combo": "6-8",
-                "amount": "2,250円"
-              },
-              {
-                "combo": "5-8",
-                "amount": "320円"
-              }
-            ],
-            "3連複": [
-              {
-                "combo": "5-6-8",
-                "amount": "6,550円"
-              }
-            ],
-            "3連単": [
-              {
-                "combo": "6-5-8",
-                "amount": "75,000円"
-              }
-            ]
-          },
-          "jockey": "三浦 皇成",
-          "horse": "クールブロン",
-          "win_payout": "3,150円"
-        },
-        {
-          "race": 11,
-          "race_name": "第77回 毎日王冠",
-          "course": "芝1800m",
-          "top3": [
-            {
-              "position": 1,
-              "frame": "枠1白",
-              "number": "1",
-              "horse": "セイウンハーデス",
-              "jockey": "幸 英明",
-              "time": "1:45.5",
-              "margin": ""
-            },
-            {
-              "position": 2,
-              "frame": "枠7橙",
-              "number": "13",
-              "horse": "ホウオウビスケッツ",
-              "jockey": "岩田 康誠",
-              "time": "1:45.5",
-              "margin": "ハナ"
-            },
-            {
-              "position": 3,
-              "frame": "枠2黒",
-              "number": "3",
-              "horse": "レディネス",
-              "jockey": "横山 典弘",
-              "time": "1:45.7",
-              "margin": "１ 1/4"
-            }
-          ],
-          "payouts": {
-            "単勝": [
-              {
-                "combo": "1",
-                "amount": "1,120円"
-              }
-            ],
-            "複勝": [
-              {
-                "combo": "1",
-                "amount": "400円"
-              },
-              {
-                "combo": "13",
-                "amount": "720円"
-              },
-              {
-                "combo": "3",
-                "amount": "590円"
-              }
-            ],
-            "枠連": [
-              {
-                "combo": "1-7",
-                "amount": "1,070円"
-              }
-            ],
-            "馬連": [
-              {
-                "combo": "1-13",
-                "amount": "12,480円"
+                "amount": "560円"
               }
             ],
             "馬単": [
               {
-                "combo": "1-13",
-                "amount": "24,340円"
+                "combo": "8-6",
+                "amount": "910円"
               }
             ],
             "ワイド": [
               {
-                "combo": "1-13",
-                "amount": "2,820円"
+                "combo": "6-8",
+                "amount": "280円"
               },
               {
-                "combo": "1-3",
-                "amount": "2,750円"
+                "combo": "8-12",
+                "amount": "520円"
               },
               {
-                "combo": "3-13",
-                "amount": "5,180円"
+                "combo": "6-12",
+                "amount": "450円"
               }
             ],
             "3連複": [
               {
-                "combo": "1-3-13",
-                "amount": "50,820円"
+                "combo": "6-8-12",
+                "amount": "1,470円"
               }
             ],
             "3連単": [
               {
-                "combo": "1-13-3",
-                "amount": "347,930円"
+                "combo": "8-6-12",
+                "amount": "5,780円"
               }
             ]
           },
-          "jockey": "幸 英明",
-          "horse": "セイウンハーデス",
-          "win_payout": "1,120円"
-        },
-        {
-          "race": 12,
-          "course": "ダート1600m",
-          "race_name": "3歳以上2勝クラス"
+          "jockey": "石神 深道",
+          "horse": "マジッククッキー",
+          "win_payout": "330円"
         }
       ]
     },
@@ -1153,993 +1251,669 @@
         {
           "race": 1,
           "race_name": "2歳未勝利",
-          "course": "ダート1800m",
-          "top3": [
-            {
-              "position": 1,
-              "frame": "枠1白",
-              "number": "1",
-              "horse": "マーズエクレール",
-              "jockey": "鮫島 克駿",
-              "time": "1:54.0",
-              "margin": ""
-            },
-            {
-              "position": 2,
-              "frame": "枠8桃",
-              "number": "8",
-              "horse": "ジュンヴァグネル",
-              "jockey": "斎藤 新",
-              "time": "1:54.4",
-              "margin": "２ 1/2"
-            },
-            {
-              "position": 3,
-              "frame": "枠3赤",
-              "number": "3",
-              "horse": "プリメラエストレラ",
-              "jockey": "北村 友一",
-              "time": "1:54.5",
-              "margin": "１／２"
-            }
-          ],
-          "payouts": {
-            "単勝": [
-              {
-                "combo": "1",
-                "amount": "180円"
-              }
-            ],
-            "複勝": [
-              {
-                "combo": "1",
-                "amount": "190円"
-              },
-              {
-                "combo": "8",
-                "amount": "470円"
-              },
-              {
-                "combo": "3",
-                "amount": "570円"
-              }
-            ],
-            "枠連": [],
-            "馬連": [
-              {
-                "combo": "1-8",
-                "amount": "1,200円"
-              }
-            ],
-            "馬単": [
-              {
-                "combo": "1-8",
-                "amount": "1,420円"
-              }
-            ],
-            "ワイド": [
-              {
-                "combo": "1-8",
-                "amount": "400円"
-              },
-              {
-                "combo": "1-3",
-                "amount": "510円"
-              },
-              {
-                "combo": "3-8",
-                "amount": "1,090円"
-              }
-            ],
-            "3連複": [
-              {
-                "combo": "1-3-8",
-                "amount": "3,640円"
-              }
-            ],
-            "3連単": [
-              {
-                "combo": "1-8-3",
-                "amount": "13,540円"
-              }
-            ]
-          },
-          "jockey": "鮫島 克駿",
-          "horse": "マーズエクレール",
-          "win_payout": "180円"
-        },
-        {
-          "race": 2,
-          "race_name": "2歳未勝利",
-          "course": "芝1600m",
-          "top3": [
-            {
-              "position": 1,
-              "frame": "枠8桃",
-              "number": "8",
-              "horse": "レイクイーン",
-              "jockey": "松山 弘平",
-              "time": "1:32.9",
-              "margin": ""
-            },
-            {
-              "position": 2,
-              "frame": "枠3赤",
-              "number": "3",
-              "horse": "ブロッサムスピア",
-              "jockey": "M.デムーロ",
-              "time": "1:33.2",
-              "margin": "１ 1/2"
-            },
-            {
-              "position": 3,
-              "frame": "枠4青",
-              "number": "4",
-              "horse": "キシゲヒーロー",
-              "jockey": "角田 大和",
-              "time": "1:34.0",
-              "margin": "５"
-            }
-          ],
-          "payouts": {
-            "単勝": [
-              {
-                "combo": "8",
-                "amount": "260円"
-              }
-            ],
-            "複勝": [
-              {
-                "combo": "8",
-                "amount": "110円"
-              },
-              {
-                "combo": "3",
-                "amount": "110円"
-              },
-              {
-                "combo": "4",
-                "amount": "150円"
-              }
-            ],
-            "枠連": [
-              {
-                "combo": "3-8",
-                "amount": "210円"
-              }
-            ],
-            "馬連": [
-              {
-                "combo": "3-8",
-                "amount": "250円"
-              }
-            ],
-            "馬単": [
-              {
-                "combo": "8-3",
-                "amount": "530円"
-              }
-            ],
-            "ワイド": [
-              {
-                "combo": "3-8",
-                "amount": "140円"
-              },
-              {
-                "combo": "4-8",
-                "amount": "300円"
-              },
-              {
-                "combo": "3-4",
-                "amount": "310円"
-              }
-            ],
-            "3連複": [
-              {
-                "combo": "3-4-8",
-                "amount": "650円"
-              }
-            ],
-            "3連単": [
-              {
-                "combo": "8-3-4",
-                "amount": "1,970円"
-              }
-            ]
-          },
-          "jockey": "松山 弘平",
-          "horse": "レイクイーン",
-          "win_payout": "260円"
-        },
-        {
-          "race": 3,
-          "race_name": "メイクデビュー京都",
           "course": "ダート1400m",
-          "top3": [
-            {
-              "position": 1,
-              "frame": "枠1白",
-              "number": "1",
-              "horse": "ミホマル",
-              "jockey": "横山 和生",
-              "time": "1:25.2",
-              "margin": ""
-            },
-            {
-              "position": 2,
-              "frame": "枠7橙",
-              "number": "14",
-              "horse": "タガノゲイル",
-              "jockey": "田口 貫太",
-              "time": "1:25.9",
-              "margin": "４"
-            },
-            {
-              "position": 3,
-              "frame": "枠5黄",
-              "number": "10",
-              "horse": "ランスオブナイト",
-              "jockey": "太宰 啓介",
-              "time": "1:26.1",
-              "margin": "１"
-            }
-          ],
-          "payouts": {
-            "単勝": [
-              {
-                "combo": "1",
-                "amount": "430円"
-              }
-            ],
-            "複勝": [
-              {
-                "combo": "1",
-                "amount": "160円"
-              },
-              {
-                "combo": "14",
-                "amount": "150円"
-              },
-              {
-                "combo": "10",
-                "amount": "750円"
-              }
-            ],
-            "枠連": [
-              {
-                "combo": "1-7",
-                "amount": "870円"
-              }
-            ],
-            "馬連": [
-              {
-                "combo": "1-14",
-                "amount": "810円"
-              }
-            ],
-            "馬単": [
-              {
-                "combo": "1-14",
-                "amount": "1,660円"
-              }
-            ],
-            "ワイド": [
-              {
-                "combo": "1-14",
-                "amount": "410円"
-              },
-              {
-                "combo": "1-10",
-                "amount": "3,560円"
-              },
-              {
-                "combo": "10-14",
-                "amount": "1,830円"
-              }
-            ],
-            "3連複": [
-              {
-                "combo": "1-10-14",
-                "amount": "10,250円"
-              }
-            ],
-            "3連単": [
-              {
-                "combo": "1-14-10",
-                "amount": "46,130円"
-              }
-            ]
-          },
-          "jockey": "横山 和生",
-          "horse": "ミホマル",
-          "win_payout": "430円"
-        },
-        {
-          "race": 4,
-          "race_name": "メイクデビュー京都",
-          "course": "芝1400m",
           "top3": [
             {
               "position": 1,
               "frame": "枠3赤",
               "number": "5",
-              "horse": "ブライトスクリプト",
-              "jockey": "池添 謙一",
-              "time": "1:20.5",
-              "margin": ""
-            },
-            {
-              "position": 2,
-              "frame": "枠8桃",
-              "number": "16",
-              "horse": "ヘヴンインザレイン",
-              "jockey": "川田 将雅",
-              "time": "1:20.8",
-              "margin": "２"
-            },
-            {
-              "position": 3,
-              "frame": "枠2黒",
-              "number": "3",
-              "horse": "スイートリディア",
-              "jockey": "北村 友一",
-              "time": "1:21.1",
-              "margin": "１ 3/4"
-            }
-          ],
-          "payouts": {
-            "単勝": [
-              {
-                "combo": "5",
-                "amount": "150円"
-              }
-            ],
-            "複勝": [
-              {
-                "combo": "5",
-                "amount": "110円"
-              },
-              {
-                "combo": "16",
-                "amount": "180円"
-              },
-              {
-                "combo": "3",
-                "amount": "290円"
-              },
-              {
-                "combo": "9",
-                "amount": "220円"
-              }
-            ],
-            "枠連": [
-              {
-                "combo": "3-8",
-                "amount": "830円"
-              }
-            ],
-            "馬連": [
-              {
-                "combo": "5-16",
-                "amount": "990円"
-              }
-            ],
-            "馬単": [
-              {
-                "combo": "5-16",
-                "amount": "1,190円"
-              }
-            ],
-            "ワイド": [
-              {
-                "combo": "5-16",
-                "amount": "270円"
-              },
-              {
-                "combo": "3-5",
-                "amount": "550円"
-              },
-              {
-                "combo": "5-9",
-                "amount": "370円"
-              },
-              {
-                "combo": "3-16",
-                "amount": "1,640円"
-              },
-              {
-                "combo": "9-16",
-                "amount": "1,180円"
-              }
-            ],
-            "3連複": [
-              {
-                "combo": "3-5-16",
-                "amount": "3,470円"
-              },
-              {
-                "combo": "5-9-16",
-                "amount": "2,210円"
-              }
-            ],
-            "3連単": [
-              {
-                "combo": "5-16-3",
-                "amount": "8,830円"
-              },
-              {
-                "combo": "5-16-9",
-                "amount": "5,140円"
-              }
-            ]
-          },
-          "jockey": "池添 謙一",
-          "horse": "ブライトスクリプト",
-          "win_payout": "150円"
-        },
-        {
-          "race": 5,
-          "race_name": "メイクデビュー京都",
-          "course": "芝2000m",
-          "top3": [
-            {
-              "position": 1,
-              "frame": "枠6緑",
-              "number": "8",
-              "horse": "トロカアニマダ",
-              "jockey": "国分 恭介",
-              "time": "2:01.8",
-              "margin": ""
-            },
-            {
-              "position": 2,
-              "frame": "枠2黒",
-              "number": "2",
-              "horse": "アンバーライト",
-              "jockey": "田山 旺佑",
-              "time": "2:02.0",
-              "margin": "１ 1/2"
-            },
-            {
-              "position": 3,
-              "frame": "枠5黄",
-              "number": "6",
-              "horse": "ジーティーギャング",
-              "jockey": "松山 弘平",
-              "time": "2:02.1",
-              "margin": "クビ"
-            }
-          ],
-          "payouts": {
-            "単勝": [
-              {
-                "combo": "8",
-                "amount": "610円"
-              }
-            ],
-            "複勝": [
-              {
-                "combo": "8",
-                "amount": "200円"
-              },
-              {
-                "combo": "2",
-                "amount": "550円"
-              },
-              {
-                "combo": "6",
-                "amount": "150円"
-              }
-            ],
-            "枠連": [
-              {
-                "combo": "2-6",
-                "amount": "13,290円"
-              }
-            ],
-            "馬連": [
-              {
-                "combo": "2-8",
-                "amount": "13,360円"
-              }
-            ],
-            "馬単": [
-              {
-                "combo": "8-2",
-                "amount": "24,770円"
-              }
-            ],
-            "ワイド": [
-              {
-                "combo": "2-8",
-                "amount": "2,220円"
-              },
-              {
-                "combo": "6-8",
-                "amount": "340円"
-              },
-              {
-                "combo": "2-6",
-                "amount": "1,530円"
-              }
-            ],
-            "3連複": [
-              {
-                "combo": "2-6-8",
-                "amount": "9,010円"
-              }
-            ],
-            "3連単": [
-              {
-                "combo": "8-2-6",
-                "amount": "109,130円"
-              }
-            ]
-          },
-          "jockey": "国分 恭介",
-          "horse": "トロカアニマダ",
-          "win_payout": "610円"
-        },
-        {
-          "race": 6,
-          "race_name": "3歳以上1勝クラス",
-          "course": "ダート1800m",
-          "top3": [
-            {
-              "position": 1,
-              "frame": "枠1白",
-              "number": "2",
-              "horse": "エアアルチーナ",
-              "jockey": "松山 弘平",
-              "time": "1:50.6",
-              "margin": ""
-            },
-            {
-              "position": 2,
-              "frame": "枠6緑",
-              "number": "12",
-              "horse": "マーゴットバディ",
-              "jockey": "鮫島 克駿",
-              "time": "1:50.7",
-              "margin": "クビ"
-            },
-            {
-              "position": 3,
-              "frame": "枠2黒",
-              "number": "4",
-              "horse": "ブームバップビート",
-              "jockey": "小沢 大仁",
-              "time": "1:51.7",
-              "margin": "６"
-            }
-          ],
-          "payouts": {
-            "単勝": [
-              {
-                "combo": "2",
-                "amount": "350円"
-              }
-            ],
-            "複勝": [
-              {
-                "combo": "2",
-                "amount": "160円"
-              },
-              {
-                "combo": "12",
-                "amount": "160円"
-              },
-              {
-                "combo": "4",
-                "amount": "200円"
-              }
-            ],
-            "枠連": [
-              {
-                "combo": "1-6",
-                "amount": "1,030円"
-              }
-            ],
-            "馬連": [
-              {
-                "combo": "2-12",
-                "amount": "1,120円"
-              }
-            ],
-            "馬単": [
-              {
-                "combo": "2-12",
-                "amount": "1,730円"
-              }
-            ],
-            "ワイド": [
-              {
-                "combo": "2-12",
-                "amount": "420円"
-              },
-              {
-                "combo": "2-4",
-                "amount": "740円"
-              },
-              {
-                "combo": "4-12",
-                "amount": "600円"
-              }
-            ],
-            "3連複": [
-              {
-                "combo": "2-4-12",
-                "amount": "2,710円"
-              }
-            ],
-            "3連単": [
-              {
-                "combo": "2-12-4",
-                "amount": "10,910円"
-              }
-            ]
-          },
-          "jockey": "松山 弘平",
-          "horse": "エアアルチーナ",
-          "win_payout": "350円"
-        },
-        {
-          "race": 7,
-          "race_name": "3歳以上1勝クラス",
-          "course": "芝1200m",
-          "top3": [
-            {
-              "position": 1,
-              "frame": "枠2黒",
-              "number": "4",
-              "horse": "マウンテンバローズ",
-              "jockey": "川田 将雅",
-              "time": "1:08.1",
-              "margin": ""
-            },
-            {
-              "position": 2,
-              "frame": "枠5黄",
-              "number": "9",
-              "horse": "ベルサ",
-              "jockey": "今村 聖奈",
-              "time": "",
-              "margin": "１"
-            },
-            {
-              "position": 3,
-              "frame": "枠1白",
-              "number": "2",
-              "horse": "グロリアスマーチ",
-              "jockey": "鮫島 克駿",
-              "time": "",
-              "margin": "クビ"
-            }
-          ],
-          "payouts": {
-            "単勝": [
-              {
-                "combo": "4",
-                "amount": "600円"
-              }
-            ],
-            "複勝": [
-              {
-                "combo": "4",
-                "amount": "260円"
-              },
-              {
-                "combo": "9",
-                "amount": "240円"
-              },
-              {
-                "combo": "2",
-                "amount": "410円"
-              }
-            ],
-            "枠連": [
-              {
-                "combo": "2-5",
-                "amount": "1,670円"
-              }
-            ],
-            "馬連": [
-              {
-                "combo": "4-9",
-                "amount": "2,260円"
-              }
-            ],
-            "馬単": [
-              {
-                "combo": "4-9",
-                "amount": "3,650円"
-              }
-            ],
-            "ワイド": [
-              {
-                "combo": "4-9",
-                "amount": "920円"
-              },
-              {
-                "combo": "2-4",
-                "amount": "1,160円"
-              },
-              {
-                "combo": "2-9",
-                "amount": "1,360円"
-              }
-            ],
-            "3連複": [
-              {
-                "combo": "2-4-9",
-                "amount": "6,340円"
-              }
-            ],
-            "3連単": [
-              {
-                "combo": "4-9-2",
-                "amount": "29,770円"
-              }
-            ]
-          },
-          "jockey": "川田 将雅",
-          "horse": "マウンテンバローズ",
-          "win_payout": "600円"
-        },
-        {
-          "race": 8,
-          "race_name": "3歳以上2勝クラス",
-          "course": "ダート1400m",
-          "top3": [
-            {
-              "position": 1,
-              "frame": "枠5黄",
-              "number": "10",
-              "horse": "ザックザク",
-              "jockey": "北村 友一",
-              "time": "1:23.5",
-              "margin": ""
-            },
-            {
-              "position": 2,
-              "frame": "枠3赤",
-              "number": "6",
-              "horse": "ジューンアゲイン",
-              "jockey": "田山 旺佑",
-              "time": "1:23.6",
-              "margin": "クビ"
-            },
-            {
-              "position": 3,
-              "frame": "枠1白",
-              "number": "1",
-              "horse": "ライトオブヌカタ",
-              "jockey": "富田 暁",
-              "time": "1:24.1",
-              "margin": "３"
-            }
-          ],
-          "payouts": {
-            "単勝": [
-              {
-                "combo": "10",
-                "amount": "460円"
-              }
-            ],
-            "複勝": [
-              {
-                "combo": "10",
-                "amount": "140円"
-              },
-              {
-                "combo": "6",
-                "amount": "150円"
-              },
-              {
-                "combo": "1",
-                "amount": "180円"
-              }
-            ],
-            "枠連": [
-              {
-                "combo": "3-5",
-                "amount": "580円"
-              }
-            ],
-            "馬連": [
-              {
-                "combo": "6-10",
-                "amount": "680円"
-              }
-            ],
-            "馬単": [
-              {
-                "combo": "10-6",
-                "amount": "1,360円"
-              }
-            ],
-            "ワイド": [
-              {
-                "combo": "6-10",
-                "amount": "300円"
-              },
-              {
-                "combo": "1-10",
-                "amount": "570円"
-              },
-              {
-                "combo": "1-6",
-                "amount": "490円"
-              }
-            ],
-            "3連複": [
-              {
-                "combo": "1-6-10",
-                "amount": "1,650円"
-              }
-            ],
-            "3連単": [
-              {
-                "combo": "10-6-1",
-                "amount": "7,990円"
-              }
-            ]
-          },
-          "jockey": "北村 友一",
-          "horse": "ザックザク",
-          "win_payout": "460円"
-        },
-        {
-          "race": 9,
-          "race_name": "大原ステークス",
-          "course": "芝2000m",
-          "top3": [
-            {
-              "position": 1,
-              "frame": "枠4青",
-              "number": "8",
-              "horse": "ヴィスマール",
-              "jockey": "小沢 大仁",
-              "time": "1:57.9",
-              "margin": ""
-            },
-            {
-              "position": 2,
-              "frame": "枠7橙",
-              "number": "14",
-              "horse": "ミュージシャン",
-              "jockey": "松山 弘平",
-              "time": "1:58.0",
-              "margin": "クビ"
-            },
-            {
-              "position": 3,
-              "frame": "枠2黒",
-              "number": "4",
-              "horse": "チェルノボーグ",
-              "jockey": "西塚 洸二",
-              "time": "1:58.0",
-              "margin": "クビ"
-            }
-          ],
-          "payouts": {
-            "単勝": [
-              {
-                "combo": "8",
-                "amount": "3,610円"
-              }
-            ],
-            "複勝": [
-              {
-                "combo": "8",
-                "amount": "720円"
-              },
-              {
-                "combo": "14",
-                "amount": "240円"
-              },
-              {
-                "combo": "4",
-                "amount": "720円"
-              }
-            ],
-            "枠連": [
-              {
-                "combo": "4-7",
-                "amount": "1,520円"
-              }
-            ],
-            "馬連": [
-              {
-                "combo": "8-14",
-                "amount": "9,660円"
-              }
-            ],
-            "馬単": [
-              {
-                "combo": "8-14",
-                "amount": "31,520円"
-              }
-            ],
-            "ワイド": [
-              {
-                "combo": "8-14",
-                "amount": "1,880円"
-              },
-              {
-                "combo": "4-8",
-                "amount": "5,560円"
-              },
-              {
-                "combo": "4-14",
-                "amount": "2,400円"
-              }
-            ],
-            "3連複": [
-              {
-                "combo": "4-8-14",
-                "amount": "45,060円"
-              }
-            ],
-            "3連単": [
-              {
-                "combo": "8-14-4",
-                "amount": "450,280円"
-              }
-            ]
-          },
-          "jockey": "小沢 大仁",
-          "horse": "ヴィスマール",
-          "win_payout": "3,610円"
-        },
-        {
-          "race": 10,
-          "race_name": "藤森ステークス",
-          "course": "ダート1200m",
-          "top3": [
-            {
-              "position": 1,
-              "frame": "枠7橙",
-              "number": "14",
-              "horse": "ゼットエール",
-              "jockey": "松本 大輝",
-              "time": "1:09.8",
+              "horse": "ペアスターロード",
+              "jockey": "坂井 瑠星",
+              "time": "1:25.0",
               "margin": ""
             },
             {
               "position": 2,
               "frame": "枠8桃",
               "number": "15",
-              "horse": "ルージュラナキラ",
-              "jockey": "斎藤 新",
-              "time": "",
-              "margin": "クビ"
+              "horse": "ゴールデンレシオ",
+              "jockey": "柴田 裕一郎",
+              "time": "1:25.5",
+              "margin": "３ 1/2"
             },
             {
               "position": 3,
-              "frame": "枠4青",
-              "number": "7",
-              "horse": "メイショウホウレン",
-              "jockey": "浜中 俊",
-              "time": "",
-              "margin": "１ 3/4"
+              "frame": "枠7橙",
+              "number": "13",
+              "horse": "ジョルティーニ",
+              "jockey": "松山 弘平",
+              "time": "1:25.9",
+              "margin": "２ 1/2"
             }
           ],
           "payouts": {
             "単勝": [
               {
-                "combo": "14",
-                "amount": "310円"
+                "combo": "5",
+                "amount": "450円"
               }
             ],
             "複勝": [
               {
-                "combo": "14",
-                "amount": "150円"
+                "combo": "5",
+                "amount": "130円"
               },
               {
                 "combo": "15",
-                "amount": "450円"
+                "amount": "130円"
+              },
+              {
+                "combo": "13",
+                "amount": "110円"
+              }
+            ],
+            "枠連": [
+              {
+                "combo": "3-8",
+                "amount": "770円"
+              }
+            ],
+            "馬連": [
+              {
+                "combo": "5-15",
+                "amount": "1,340円"
+              }
+            ],
+            "馬単": [
+              {
+                "combo": "5-15",
+                "amount": "2,650円"
+              }
+            ],
+            "ワイド": [
+              {
+                "combo": "5-15",
+                "amount": "470円"
+              },
+              {
+                "combo": "5-13",
+                "amount": "200円"
+              },
+              {
+                "combo": "13-15",
+                "amount": "230円"
+              }
+            ],
+            "3連複": [
+              {
+                "combo": "5-13-15",
+                "amount": "920円"
+              }
+            ],
+            "3連単": [
+              {
+                "combo": "5-15-13",
+                "amount": "6,860円"
+              }
+            ]
+          },
+          "jockey": "坂井 瑠星",
+          "horse": "ペアスターロード",
+          "win_payout": "450円"
+        },
+        {
+          "race": 2,
+          "race_name": "2歳未勝利",
+          "course": "芝1800m",
+          "top3": [
+            {
+              "position": 1,
+              "frame": "枠1白",
+              "number": "1",
+              "horse": "イッペイ",
+              "jockey": "浜中 俊",
+              "time": "1:45.5",
+              "margin": "レコード"
+            },
+            {
+              "position": 2,
+              "frame": "枠7橙",
+              "number": "7",
+              "horse": "リーベラーリア",
+              "jockey": "荻野 極",
+              "time": "1:45.5",
+              "margin": "クビ"
+            },
+            {
+              "position": 3,
+              "frame": "枠3赤",
+              "number": "3",
+              "horse": "メイショウジェード",
+              "jockey": "太宰 啓介",
+              "time": "1:45.7",
+              "margin": "１ 1/4"
+            }
+          ],
+          "payouts": {
+            "単勝": [
+              {
+                "combo": "1",
+                "amount": "790円"
+              }
+            ],
+            "複勝": [
+              {
+                "combo": "1",
+                "amount": "210円"
+              },
+              {
+                "combo": "7",
+                "amount": "340円"
+              },
+              {
+                "combo": "3",
+                "amount": "120円"
+              }
+            ],
+            "枠連": [
+              {
+                "combo": "1-7",
+                "amount": "1,340円"
+              }
+            ],
+            "馬連": [
+              {
+                "combo": "1-7",
+                "amount": "4,180円"
+              }
+            ],
+            "馬単": [
+              {
+                "combo": "1-7",
+                "amount": "8,100円"
+              }
+            ],
+            "ワイド": [
+              {
+                "combo": "1-7",
+                "amount": "1,210円"
+              },
+              {
+                "combo": "1-3",
+                "amount": "340円"
+              },
+              {
+                "combo": "3-7",
+                "amount": "670円"
+              }
+            ],
+            "3連複": [
+              {
+                "combo": "1-3-7",
+                "amount": "3,450円"
+              }
+            ],
+            "3連単": [
+              {
+                "combo": "1-7-3",
+                "amount": "29,590円"
+              }
+            ]
+          },
+          "jockey": "浜中 俊",
+          "horse": "イッペイ",
+          "win_payout": "790円"
+        },
+        {
+          "race": 3,
+          "race_name": "3歳以上1勝クラス",
+          "course": "ダート1400m",
+          "top3": [
+            {
+              "position": 1,
+              "frame": "枠1白",
+              "number": "2",
+              "horse": "ワイズギャング",
+              "jockey": "古川 吉洋",
+              "time": "1:23.4",
+              "margin": ""
+            },
+            {
+              "position": 2,
+              "frame": "枠7橙",
+              "number": "13",
+              "horse": "キンダープンシュ",
+              "jockey": "M.デムーロ",
+              "time": "1:23.4",
+              "margin": "クビ"
+            },
+            {
+              "position": 3,
+              "frame": "枠3赤",
+              "number": "6",
+              "horse": "チリーゴールド",
+              "jockey": "菱田 裕二",
+              "time": "1:23.8",
+              "margin": "２ 1/2"
+            }
+          ],
+          "payouts": {
+            "単勝": [
+              {
+                "combo": "2",
+                "amount": "850円"
+              }
+            ],
+            "複勝": [
+              {
+                "combo": "2",
+                "amount": "260円"
+              },
+              {
+                "combo": "13",
+                "amount": "360円"
+              },
+              {
+                "combo": "6",
+                "amount": "2,550円"
+              }
+            ],
+            "枠連": [
+              {
+                "combo": "1-7",
+                "amount": "340円"
+              }
+            ],
+            "馬連": [
+              {
+                "combo": "2-13",
+                "amount": "4,740円"
+              }
+            ],
+            "馬単": [
+              {
+                "combo": "2-13",
+                "amount": "8,380円"
+              }
+            ],
+            "ワイド": [
+              {
+                "combo": "2-13",
+                "amount": "1,630円"
+              },
+              {
+                "combo": "2-6",
+                "amount": "7,700円"
+              },
+              {
+                "combo": "6-13",
+                "amount": "16,050円"
+              }
+            ],
+            "3連複": [
+              {
+                "combo": "2-6-13",
+                "amount": "179,860円"
+              }
+            ],
+            "3連単": [
+              {
+                "combo": "2-13-6",
+                "amount": "707,280円"
+              }
+            ]
+          },
+          "jockey": "古川 吉洋",
+          "horse": "ワイズギャング",
+          "win_payout": "850円"
+        },
+        {
+          "race": 4,
+          "race_name": "メイクデビュー京都",
+          "course": "ダート1800m",
+          "top3": [
+            {
+              "position": 1,
+              "frame": "枠5黄",
+              "number": "8",
+              "horse": "デラスゴイガン",
+              "jockey": "松山 弘平",
+              "time": "1:54.5",
+              "margin": ""
+            },
+            {
+              "position": 2,
+              "frame": "枠8桃",
+              "number": "13",
+              "horse": "ベラジオアゲーラ",
+              "jockey": "北村 友一",
+              "time": "1:54.5",
+              "margin": "クビ"
+            },
+            {
+              "position": 3,
+              "frame": "枠7橙",
+              "number": "12",
+              "horse": "バルチックアンバー",
+              "jockey": "西村 淳也",
+              "time": "1:56.3",
+              "margin": "大差"
+            }
+          ],
+          "payouts": {
+            "単勝": [
+              {
+                "combo": "8",
+                "amount": "750円"
+              }
+            ],
+            "複勝": [
+              {
+                "combo": "8",
+                "amount": "230円"
+              },
+              {
+                "combo": "13",
+                "amount": "220円"
+              },
+              {
+                "combo": "12",
+                "amount": "170円"
+              }
+            ],
+            "枠連": [
+              {
+                "combo": "5-8",
+                "amount": "890円"
+              }
+            ],
+            "馬連": [
+              {
+                "combo": "8-13",
+                "amount": "1,960円"
+              }
+            ],
+            "馬単": [
+              {
+                "combo": "8-13",
+                "amount": "3,760円"
+              }
+            ],
+            "ワイド": [
+              {
+                "combo": "8-13",
+                "amount": "770円"
+              },
+              {
+                "combo": "8-12",
+                "amount": "910円"
+              },
+              {
+                "combo": "12-13",
+                "amount": "650円"
+              }
+            ],
+            "3連複": [
+              {
+                "combo": "8-12-13",
+                "amount": "3,540円"
+              }
+            ],
+            "3連単": [
+              {
+                "combo": "8-13-12",
+                "amount": "22,260円"
+              }
+            ]
+          },
+          "jockey": "松山 弘平",
+          "horse": "デラスゴイガン",
+          "win_payout": "750円"
+        },
+        {
+          "race": 5,
+          "race_name": "メイクデビュー京都",
+          "course": "芝1600m",
+          "top3": [
+            {
+              "position": 1,
+              "frame": "枠6緑",
+              "number": "11",
+              "horse": "レッドシーカー",
+              "jockey": "松山 弘平",
+              "time": "1:33.9",
+              "margin": ""
+            },
+            {
+              "position": 2,
+              "frame": "枠5黄",
+              "number": "9",
+              "horse": "ディープリメンバー",
+              "jockey": "古川 吉洋",
+              "time": "1:34.1",
+              "margin": "１ 1/4"
+            },
+            {
+              "position": 3,
+              "frame": "枠8桃",
+              "number": "15",
+              "horse": "ポネンテ",
+              "jockey": "田山 旺佑",
+              "time": "1:34.3",
+              "margin": "１ 1/4"
+            }
+          ],
+          "payouts": {
+            "単勝": [
+              {
+                "combo": "11",
+                "amount": "530円"
+              }
+            ],
+            "複勝": [
+              {
+                "combo": "11",
+                "amount": "180円"
+              },
+              {
+                "combo": "9",
+                "amount": "140円"
+              },
+              {
+                "combo": "15",
+                "amount": "370円"
+              }
+            ],
+            "枠連": [
+              {
+                "combo": "5-6",
+                "amount": "750円"
+              }
+            ],
+            "馬連": [
+              {
+                "combo": "9-11",
+                "amount": "930円"
+              }
+            ],
+            "馬単": [
+              {
+                "combo": "11-9",
+                "amount": "1,780円"
+              }
+            ],
+            "ワイド": [
+              {
+                "combo": "9-11",
+                "amount": "370円"
+              },
+              {
+                "combo": "11-15",
+                "amount": "1,580円"
+              },
+              {
+                "combo": "9-15",
+                "amount": "870円"
+              }
+            ],
+            "3連複": [
+              {
+                "combo": "9-11-15",
+                "amount": "3,860円"
+              }
+            ],
+            "3連単": [
+              {
+                "combo": "11-9-15",
+                "amount": "17,590円"
+              }
+            ]
+          },
+          "jockey": "松山 弘平",
+          "horse": "レッドシーカー",
+          "win_payout": "530円"
+        },
+        {
+          "race": 6,
+          "race_name": "3歳以上1勝クラス",
+          "course": "芝2000m",
+          "top3": [
+            {
+              "position": 1,
+              "frame": "枠5黄",
+              "number": "10",
+              "horse": "キッコベッロ",
+              "jockey": "荻野 極",
+              "time": "1:57.2",
+              "margin": ""
+            },
+            {
+              "position": 2,
+              "frame": "枠1白",
+              "number": "1",
+              "horse": "ノンブルドール",
+              "jockey": "西村 淳也",
+              "time": "1:57.2",
+              "margin": "アタマ"
+            },
+            {
+              "position": 3,
+              "frame": "枠6緑",
+              "number": "12",
+              "horse": "ムスクレスト",
+              "jockey": "鮫島 克駿",
+              "time": "1:57.2",
+              "margin": "ハナ"
+            }
+          ],
+          "payouts": {
+            "単勝": [
+              {
+                "combo": "10",
+                "amount": "690円"
+              }
+            ],
+            "複勝": [
+              {
+                "combo": "10",
+                "amount": "270円"
+              },
+              {
+                "combo": "1",
+                "amount": "240円"
+              },
+              {
+                "combo": "12",
+                "amount": "610円"
+              }
+            ],
+            "枠連": [
+              {
+                "combo": "1-5",
+                "amount": "780円"
+              }
+            ],
+            "馬連": [
+              {
+                "combo": "1-10",
+                "amount": "2,480円"
+              }
+            ],
+            "馬単": [
+              {
+                "combo": "10-1",
+                "amount": "4,480円"
+              }
+            ],
+            "ワイド": [
+              {
+                "combo": "1-10",
+                "amount": "1,060円"
+              },
+              {
+                "combo": "10-12",
+                "amount": "3,230円"
+              },
+              {
+                "combo": "1-12",
+                "amount": "2,730円"
+              }
+            ],
+            "3連複": [
+              {
+                "combo": "1-10-12",
+                "amount": "18,960円"
+              }
+            ],
+            "3連単": [
+              {
+                "combo": "10-1-12",
+                "amount": "91,330円"
+              }
+            ]
+          },
+          "jockey": "荻野 極",
+          "horse": "キッコベッロ",
+          "win_payout": "690円"
+        },
+        {
+          "race": 7,
+          "race_name": "3歳以上1勝クラス",
+          "course": "ダート1400m",
+          "top3": [
+            {
+              "position": 1,
+              "frame": "枠3赤",
+              "number": "5",
+              "horse": "パンサーズ",
+              "jockey": "松若 風馬",
+              "time": "1:23.6",
+              "margin": ""
+            },
+            {
+              "position": 2,
+              "frame": "枠2黒",
+              "number": "4",
+              "horse": "ダノンクロム",
+              "jockey": "西村 淳也",
+              "time": "1:23.9",
+              "margin": "１ 1/2"
+            },
+            {
+              "position": 3,
+              "frame": "枠4青",
+              "number": "7",
+              "horse": "ブロンテス",
+              "jockey": "幸 英明",
+              "time": "1:23.9",
+              "margin": "ハナ"
+            }
+          ],
+          "payouts": {
+            "単勝": [
+              {
+                "combo": "5",
+                "amount": "470円"
+              }
+            ],
+            "複勝": [
+              {
+                "combo": "5",
+                "amount": "190円"
+              },
+              {
+                "combo": "4",
+                "amount": "850円"
               },
               {
                 "combo": "7",
@@ -2148,257 +1922,561 @@
             ],
             "枠連": [
               {
-                "combo": "7-8",
-                "amount": "1,870円"
+                "combo": "2-3",
+                "amount": "7,460円"
               }
             ],
             "馬連": [
               {
-                "combo": "14-15",
-                "amount": "3,720円"
+                "combo": "4-5",
+                "amount": "10,590円"
               }
             ],
             "馬単": [
               {
-                "combo": "14-15",
-                "amount": "5,560円"
+                "combo": "5-4",
+                "amount": "16,310円"
               }
             ],
             "ワイド": [
               {
-                "combo": "14-15",
-                "amount": "1,540円"
+                "combo": "4-5",
+                "amount": "3,020円"
               },
               {
-                "combo": "7-14",
-                "amount": "430円"
+                "combo": "5-7",
+                "amount": "560円"
               },
               {
-                "combo": "7-15",
-                "amount": "2,050円"
+                "combo": "4-7",
+                "amount": "2,940円"
               }
             ],
             "3連複": [
               {
-                "combo": "7-14-15",
-                "amount": "6,330円"
+                "combo": "4-5-7",
+                "amount": "14,700円"
               }
             ],
             "3連単": [
               {
-                "combo": "14-15-7",
-                "amount": "33,270円"
+                "combo": "5-4-7",
+                "amount": "113,060円"
               }
             ]
           },
-          "jockey": "松本 大輝",
-          "horse": "ゼットエール",
-          "win_payout": "310円"
+          "jockey": "松若 風馬",
+          "horse": "パンサーズ",
+          "win_payout": "470円"
         },
         {
-          "race": 11,
-          "race_name": "第61回 京都大賞典",
-          "course": "芝2400m",
+          "race": 8,
+          "race_name": "3歳以上2勝クラス",
+          "course": "芝2000m",
           "top3": [
             {
               "position": 1,
-              "frame": "枠6緑",
-              "number": "12",
-              "horse": "エコロディノス",
-              "jockey": "田口 貫太",
-              "time": "2:24.0",
+              "frame": "枠5黄",
+              "number": "5",
+              "horse": "ブレットパス",
+              "jockey": "荻野 極",
+              "time": "1:56.1",
+              "margin": "レコード"
+            },
+            {
+              "position": 2,
+              "frame": "枠7橙",
+              "number": "9",
+              "horse": "アクロフェイズ",
+              "jockey": "西村 淳也",
+              "time": "1:56.1",
+              "margin": "クビ"
+            },
+            {
+              "position": 3,
+              "frame": "枠4青",
+              "number": "4",
+              "horse": "サトノアイボリー",
+              "jockey": "川田 将雅",
+              "time": "1:56.4",
+              "margin": "１ 3/4"
+            }
+          ],
+          "payouts": {
+            "単勝": [
+              {
+                "combo": "5",
+                "amount": "590円"
+              }
+            ],
+            "複勝": [
+              {
+                "combo": "5",
+                "amount": "130円"
+              },
+              {
+                "combo": "9",
+                "amount": "110円"
+              },
+              {
+                "combo": "4",
+                "amount": "140円"
+              }
+            ],
+            "枠連": [
+              {
+                "combo": "5-7",
+                "amount": "450円"
+              }
+            ],
+            "馬連": [
+              {
+                "combo": "5-9",
+                "amount": "370円"
+              }
+            ],
+            "馬単": [
+              {
+                "combo": "5-9",
+                "amount": "1,310円"
+              }
+            ],
+            "ワイド": [
+              {
+                "combo": "5-9",
+                "amount": "200円"
+              },
+              {
+                "combo": "4-5",
+                "amount": "360円"
+              },
+              {
+                "combo": "4-9",
+                "amount": "230円"
+              }
+            ],
+            "3連複": [
+              {
+                "combo": "4-5-9",
+                "amount": "520円"
+              }
+            ],
+            "3連単": [
+              {
+                "combo": "5-9-4",
+                "amount": "4,490円"
+              }
+            ]
+          },
+          "jockey": "荻野 極",
+          "horse": "ブレットパス",
+          "win_payout": "590円"
+        },
+        {
+          "race": 9,
+          "race_name": "りんどう賞",
+          "course": "芝1400m",
+          "top3": [
+            {
+              "position": 1,
+              "frame": "枠7橙",
+              "number": "7",
+              "horse": "ラムラベイ",
+              "jockey": "松若 風馬",
+              "time": "1:21.7",
               "margin": ""
             },
             {
               "position": 2,
-              "frame": "枠5黄",
-              "number": "10",
-              "horse": "マイネルエンペラー",
-              "jockey": "吉村 誠之助",
-              "time": "2:24.1",
-              "margin": "３／４"
+              "frame": "枠6緑",
+              "number": "6",
+              "horse": "ヴィヴェローネ",
+              "jockey": "松山 弘平",
+              "time": "1:21.8",
+              "margin": "クビ"
+            },
+            {
+              "position": 3,
+              "frame": "枠4青",
+              "number": "4",
+              "horse": "セイウンリリーナ",
+              "jockey": "幸 英明",
+              "time": "1:21.9",
+              "margin": "１／２"
+            }
+          ],
+          "payouts": {
+            "単勝": [
+              {
+                "combo": "7",
+                "amount": "170円"
+              }
+            ],
+            "複勝": [
+              {
+                "combo": "7",
+                "amount": "110円"
+              },
+              {
+                "combo": "6",
+                "amount": "150円"
+              },
+              {
+                "combo": "4",
+                "amount": "440円"
+              }
+            ],
+            "枠連": [],
+            "馬連": [
+              {
+                "combo": "6-7",
+                "amount": "410円"
+              }
+            ],
+            "馬単": [
+              {
+                "combo": "7-6",
+                "amount": "590円"
+              }
+            ],
+            "ワイド": [
+              {
+                "combo": "6-7",
+                "amount": "180円"
+              },
+              {
+                "combo": "4-7",
+                "amount": "870円"
+              },
+              {
+                "combo": "4-6",
+                "amount": "1,680円"
+              }
+            ],
+            "3連複": [
+              {
+                "combo": "4-6-7",
+                "amount": "3,210円"
+              }
+            ],
+            "3連単": [
+              {
+                "combo": "7-6-4",
+                "amount": "8,040円"
+              }
+            ]
+          },
+          "jockey": "松若 風馬",
+          "horse": "ラムラベイ",
+          "win_payout": "170円"
+        },
+        {
+          "race": 10,
+          "race_name": "大山崎ステークス",
+          "course": "ダート1200m",
+          "top3": [
+            {
+              "position": 1,
+              "frame": "枠4青",
+              "number": "8",
+              "horse": "アメリカンチケット",
+              "jockey": "小崎 綾也",
+              "time": "1:10.5",
+              "margin": ""
+            },
+            {
+              "position": 2,
+              "frame": "枠7橙",
+              "number": "14",
+              "horse": "ルクスデイジー",
+              "jockey": "川田 将雅",
+              "time": "1:10.8",
+              "margin": "１ 3/4"
             },
             {
               "position": 3,
               "frame": "枠3赤",
               "number": "6",
-              "horse": "アクアヴァーナル",
-              "jockey": "松山 弘平",
-              "time": "2:24.2",
-              "margin": "クビ"
+              "horse": "ウルスクローム",
+              "jockey": "田口 貫太",
+              "time": "1:10.8",
+              "margin": "アタマ"
             }
           ],
           "payouts": {
             "単勝": [
               {
-                "combo": "12",
-                "amount": "2,900円"
+                "combo": "8",
+                "amount": "640円"
               }
             ],
             "複勝": [
               {
-                "combo": "12",
-                "amount": "850円"
+                "combo": "8",
+                "amount": "240円"
               },
               {
-                "combo": "10",
-                "amount": "510円"
+                "combo": "14",
+                "amount": "130円"
               },
               {
                 "combo": "6",
-                "amount": "210円"
+                "amount": "130円"
               }
             ],
             "枠連": [
               {
-                "combo": "5-6",
-                "amount": "8,100円"
+                "combo": "4-7",
+                "amount": "900円"
               }
             ],
             "馬連": [
               {
-                "combo": "10-12",
-                "amount": "19,520円"
+                "combo": "8-14",
+                "amount": "1,770円"
               }
             ],
             "馬単": [
               {
-                "combo": "12-10",
-                "amount": "37,490円"
+                "combo": "8-14",
+                "amount": "2,940円"
               }
             ],
             "ワイド": [
               {
-                "combo": "10-12",
-                "amount": "5,150円"
+                "combo": "8-14",
+                "amount": "640円"
               },
               {
-                "combo": "6-12",
-                "amount": "4,080円"
+                "combo": "6-8",
+                "amount": "540円"
               },
               {
-                "combo": "6-10",
-                "amount": "2,530円"
+                "combo": "6-14",
+                "amount": "250円"
               }
             ],
             "3連複": [
               {
-                "combo": "6-10-12",
-                "amount": "55,890円"
+                "combo": "6-8-14",
+                "amount": "2,280円"
               }
             ],
             "3連単": [
               {
-                "combo": "12-10-6",
-                "amount": "357,300円"
+                "combo": "8-14-6",
+                "amount": "9,670円"
               }
             ]
           },
-          "jockey": "田口 貫太",
-          "horse": "エコロディノス",
-          "win_payout": "2,900円"
+          "jockey": "小崎 綾也",
+          "horse": "アメリカンチケット",
+          "win_payout": "640円"
         },
         {
-          "race": 12,
-          "race_name": "3歳以上2勝クラス",
+          "race": 11,
+          "race_name": "オパールステークス",
           "course": "芝1200m",
           "top3": [
             {
               "position": 1,
-              "frame": "枠6緑",
-              "number": "11",
-              "horse": "アイニードユー",
-              "jockey": "川田 将雅",
-              "time": "1:08.1",
+              "frame": "枠3赤",
+              "number": "6",
+              "horse": "リリージョワ",
+              "jockey": "浜中 俊",
+              "time": "1:06.7",
               "margin": ""
             },
             {
               "position": 2,
-              "frame": "枠1白",
-              "number": "2",
-              "horse": "スイミーユニバンス",
-              "jockey": "浜中 俊",
-              "time": "",
-              "margin": "１"
+              "frame": "枠8桃",
+              "number": "18",
+              "horse": "ディアナザール",
+              "jockey": "川田 将雅",
+              "time": "1:06.7",
+              "margin": "クビ"
             },
             {
               "position": 3,
-              "frame": "枠7橙",
-              "number": "14",
-              "horse": "マーゴットミスト",
-              "jockey": "田口 貫太",
-              "time": "",
+              "frame": "枠4青",
+              "number": "8",
+              "horse": "レッドエヴァンス",
+              "jockey": "西村 淳也",
+              "time": "1:06.7",
               "margin": "クビ"
             }
           ],
           "payouts": {
             "単勝": [
               {
-                "combo": "11",
+                "combo": "6",
+                "amount": "650円"
+              }
+            ],
+            "複勝": [
+              {
+                "combo": "6",
+                "amount": "290円"
+              },
+              {
+                "combo": "18",
+                "amount": "250円"
+              },
+              {
+                "combo": "8",
+                "amount": "270円"
+              }
+            ],
+            "枠連": [
+              {
+                "combo": "3-8",
+                "amount": "1,340円"
+              }
+            ],
+            "馬連": [
+              {
+                "combo": "6-18",
+                "amount": "3,030円"
+              }
+            ],
+            "馬単": [
+              {
+                "combo": "6-18",
+                "amount": "5,330円"
+              }
+            ],
+            "ワイド": [
+              {
+                "combo": "6-18",
+                "amount": "1,380円"
+              },
+              {
+                "combo": "6-8",
+                "amount": "1,510円"
+              },
+              {
+                "combo": "8-18",
+                "amount": "1,040円"
+              }
+            ],
+            "3連複": [
+              {
+                "combo": "6-8-18",
+                "amount": "8,200円"
+              }
+            ],
+            "3連単": [
+              {
+                "combo": "6-18-8",
+                "amount": "38,250円"
+              }
+            ]
+          },
+          "jockey": "浜中 俊",
+          "horse": "リリージョワ",
+          "win_payout": "650円"
+        },
+        {
+          "race": 12,
+          "race_name": "3歳以上2勝クラス",
+          "course": "ダート1800m",
+          "top3": [
+            {
+              "position": 1,
+              "frame": "枠8桃",
+              "number": "14",
+              "horse": "システマソラー",
+              "jockey": "川田 将雅",
+              "time": "1:51.0",
+              "margin": ""
+            },
+            {
+              "position": 2,
+              "frame": "枠3赤",
+              "number": "4",
+              "horse": "ジーニアスバローズ",
+              "jockey": "松若 風馬",
+              "time": "1:51.3",
+              "margin": "１ 1/2"
+            },
+            {
+              "position": 3,
+              "frame": "枠6緑",
+              "number": "10",
+              "horse": "ショーダンサー",
+              "jockey": "国分 優作",
+              "time": "1:51.3",
+              "margin": "アタマ"
+            }
+          ],
+          "payouts": {
+            "単勝": [
+              {
+                "combo": "14",
                 "amount": "220円"
               }
             ],
             "複勝": [
               {
-                "combo": "11",
-                "amount": "140円"
-              },
-              {
-                "combo": "2",
-                "amount": "1,480円"
-              },
-              {
                 "combo": "14",
-                "amount": "310円"
+                "amount": "110円"
+              },
+              {
+                "combo": "4",
+                "amount": "840円"
+              },
+              {
+                "combo": "10",
+                "amount": "280円"
               }
             ],
             "枠連": [
               {
-                "combo": "1-6",
-                "amount": "2,620円"
+                "combo": "3-8",
+                "amount": "2,640円"
               }
             ],
             "馬連": [
               {
-                "combo": "2-11",
-                "amount": "7,420円"
+                "combo": "4-14",
+                "amount": "6,800円"
               }
             ],
             "馬単": [
               {
-                "combo": "11-2",
-                "amount": "10,310円"
+                "combo": "14-4",
+                "amount": "9,370円"
               }
             ],
             "ワイド": [
               {
-                "combo": "2-11",
-                "amount": "2,690円"
+                "combo": "4-14",
+                "amount": "2,080円"
               },
               {
-                "combo": "11-14",
-                "amount": "600円"
+                "combo": "10-14",
+                "amount": "610円"
               },
               {
-                "combo": "2-14",
-                "amount": "5,620円"
+                "combo": "4-10",
+                "amount": "6,070円"
               }
             ],
             "3連複": [
               {
-                "combo": "2-11-14",
-                "amount": "14,780円"
+                "combo": "4-10-14",
+                "amount": "19,160円"
               }
             ],
             "3連単": [
               {
-                "combo": "11-2-14",
-                "amount": "76,110円"
+                "combo": "14-4-10",
+                "amount": "71,530円"
               }
             ]
           },
           "jockey": "川田 将雅",
-          "horse": "アイニードユー",
+          "horse": "システマソラー",
           "win_payout": "220円"
         }
       ]
