@@ -920,67 +920,47 @@ def featured_races_today(ymd: str, local_epg: list[dict]) -> list[dict]:
     year, mm, dd = ymd[:4], ymd[4:6], ymd[6:8]
 
     # JRA: read graded races from the date-specific official programme.
-    # The "今週の注目レース" page can roll to the next week on Sunday evening,
-    # while the dated programme remains stable for the whole day.
+    # Parse the visible page text instead of depending on JRA's table DOM.
+    # This survives Sunday-evening changes to "今週の注目レース".
     try:
         cal_url = f"https://www.jra.go.jp/keiba/calendar{year}/{year}/{mm}/{mm}{dd}.html"
         cal_soup = BeautifulSoup(fetch(cal_url), "html.parser")
+        cal_text = clean(cal_soup)
 
-        for table in cal_soup.find_all("table"):
-            # Venue headings are not consistently h2/h3. Find the nearest
-            # preceding text that looks like "4回東京2日".
-            venue = ""
-            prev = table.find_previous(string=re.compile(
-                r"\d+回(?:札幌|函館|福島|新潟|東京|中山|中京|京都|阪神|小倉)\d+日"
-            ))
-            if prev:
-                vm = re.search(
-                    r"(札幌|函館|福島|新潟|東京|中山|中京|京都|阪神|小倉)",
-                    clean(prev),
-                )
-                if vm:
-                    venue = vm.group(1)
-            if not venue:
-                continue
-
-            for tr in table.find_all("tr"):
-                cells = tr.find_all(["th","td"], recursive=False)
-                vals = [clean(x) for x in cells]
-                if len(vals) < 3:
-                    continue
-                rm = re.search(r"^(\d{1,2})(?:レース|R)", vals[0])
-                if not rm:
+        venue_pat = r"(札幌|函館|福島|新潟|東京|中山|中京|京都|阪神|小倉)"
+        sections = list(re.finditer(
+            rf"\d+回{venue_pat}\d+日\s+(.*?)(?=\d+回{venue_pat}\d+日|表示モード|$)",
+            cal_text,
+        ))
+        for sec in sections:
+            venue = sec.group(1)
+            body = sec.group(2)
+            for rm in re.finditer(
+                r"(\d{1,2})レース\s+(.+?)\s+(\d{1,2})時(\d{2})分",
+                body,
+            ):
+                race_no = int(rm.group(1))
+                row = clean(rm.group(2))
+                if not re.search(r"[（(](?:G|Ｇ|J・G|Ｊ・Ｇ)[ⅠⅡⅢ123]+[）)]", row):
                     continue
 
-                row_text = " ".join(vals)
-                if not re.search(r"[（(](?:G|Ｇ|J・G|Ｊ・Ｇ)[ⅠⅡⅢ123]+[）)]", row_text):
-                    continue
-
-                name_cell = cells[1]
-                a = name_cell.find("a")
-                race_name = clean(a) if a else vals[1]
-                # Keep the race title and grade, strip following conditions.
                 race_name = re.sub(
                     r"\s+(?:2歳|3歳|4歳|3歳以上|4歳以上).*$",
                     "",
-                    race_name,
+                    row,
                 ).strip()
                 race_name = re.sub(r"^第\d+回\s*", "", race_name)
                 race_name = re.sub(r"^農林水産省賞典\s*", "", race_name).strip()
-
-                tm = re.search(r"(\d{1,2})時(\d{2})分", vals[-1])
-                time_text = f"{int(tm.group(1)):02d}:{tm.group(2)}" if tm else ""
-                horses = []
-                if a and a.get("href"):
-                    race_url = urljoin(cal_url, a.get("href"))
-                    base = race_url.rsplit("/", 1)[0] + "/"
-                    horses = _featured_horses_from_page(urljoin(base, "horse.html"))
+                time_text = f"{int(rm.group(3)):02d}:{rm.group(4)}"
 
                 featured.append({
                     "source":"JRA","venue":venue,
-                    "race":f"{int(rm.group(1))}R",
-                    "name":race_name,"time":time_text,"horses":horses,
+                    "race":f"{race_no}R",
+                    "name":race_name,"time":time_text,"horses":[],
                 })
+
+        jra_names = [x.get("name","") for x in featured if x.get("source") == "JRA"]
+        print(f"[GAMBLE] JRA featured: {', '.join(jra_names) if jra_names else 'none'}")
     except Exception as exc:
         print(f"[GAMBLE] JRA featured failed: {exc}")
 
