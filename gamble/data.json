@@ -1,8 +1,8 @@
 {
   "date": "2026-10-04",
   "date_label": "2026年10月04日",
-  "updated_at": "11:47:47",
-  "updated_at_iso": "2026-10-04T11:47:47.733603+09:00",
+  "updated_at": "11:49:36",
+  "updated_at_iso": "2026-10-04T11:49:36.956942+09:00",
   "jra_switch_time": "17:00",
   "keirin": {
     "phase": "デイ",
@@ -59,9 +59,13 @@
           {
             "race": 3,
             "time": "11:43",
-            "status": "結果待ち",
-            "order": [],
-            "payout": ""
+            "status": "確定",
+            "order": [
+              1,
+              3,
+              2
+            ],
+            "payout": "17,460円"
           },
           {
             "race": 4,
@@ -315,6 +319,105 @@
       ]
     }
   ],
+  "local_feature": {
+    "venues": [
+      {
+        "name": "盛岡",
+        "code": "10",
+        "races": [
+          {
+            "race": 1,
+            "winner": "エイシズハイ",
+            "jockey": "高橋悠",
+            "trifecta": "3,040円",
+            "order": [
+              5,
+              1,
+              6
+            ],
+            "status": "確定"
+          },
+          {
+            "race": 2,
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
+            "status": "結果待ち"
+          },
+          {
+            "race": 3,
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
+            "status": "発走前"
+          },
+          {
+            "race": 4,
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
+            "status": "発走前"
+          },
+          {
+            "race": 5,
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
+            "status": "発走前"
+          },
+          {
+            "race": 6,
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
+            "status": "発走前"
+          },
+          {
+            "race": 7,
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
+            "status": "発走前"
+          },
+          {
+            "race": 8,
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
+            "status": "発走前"
+          },
+          {
+            "race": 9,
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
+            "status": "発走前"
+          },
+          {
+            "race": 10,
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
+            "status": "発走前"
+          },
+          {
+            "race": 11,
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
+            "status": "発走前"
+          },
+          {
+            "race": 12,
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
+            "status": "発走前"
+          }
+        ]
+      }
+    ]
+  },
   "local_night": {
     "venues": []
   },
