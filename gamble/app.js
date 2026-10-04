@@ -127,9 +127,9 @@ function keirinDetailCard(v){
       const value=keirinPayoutText(x,label);
       return '<td class="bet-cell bet-'+label.replace(/[0-9]/g,"")+'"><b>'+esc(label)+'</b><span>'+esc(value)+'</span></td>';
     }).join("");
+    const startTime=raceStartIfUpcoming(x.scheduled_time||x.time,x.status,!!(x.winner||x.payout));
     rows+='<tr class="'+(isFinal?"final-row":"")+'">'+
-      '<td class="r">'+esc(x.race)+'R</td>'+
-      '<td class="time">'+esc(raceStartIfUpcoming(x.scheduled_time||x.time,x.status,!!(x.winner||x.payout)))+'</td>'+
+      '<td class="r"><strong>'+esc(x.race)+'R</strong>'+(startTime?'<small>'+esc(startTime)+'</small>':'')+'</td>'+
       '<td class="class-col">'+esc(cls||"—")+'</td>'+
       '<td class="name">'+raceNameMarquee(name)+'</td>'+
       '<td class="winner">'+esc(x.winner||"---")+'</td>'+
@@ -143,7 +143,7 @@ function keirinDetailCard(v){
   return '<article class="keirin-detail-card">'+
     '<div class="keirin-detail-head"><span class="sport-tag keirin">競輪</span><strong>'+esc(venue)+'</strong><b>'+esc(grade)+'</b><em>'+esc(event)+'</em></div>'+
     '<div class="keirin-detail-table-wrap">'+
-      '<table class="keirin-detail-table"><thead><tr><th>R</th><th>発走</th><th>級</th><th>レース</th><th>勝者</th><th>出身</th><th>枠複</th><th>枠単</th><th>2車複</th><th>2車単</th><th>ワイド</th><th>3連複</th><th>3連単</th></tr></thead><tbody>'+rows+'</tbody></table>'+
+      '<table class="keirin-detail-table"><thead><tr><th>R</th><th>級</th><th>レース</th><th>勝者</th><th>出身</th><th>枠複</th><th>枠単</th><th>2車複</th><th>2車単</th><th>ワイド</th><th>3連複</th><th>3連単</th></tr></thead><tbody>'+rows+'</tbody></table>'+
     '</div>'+
   '</article>';
 }
@@ -220,9 +220,9 @@ function boatDetailCard(v){
     const payoutCells=BOAT_PAYOUT_TYPES.map(label=>
       '<td class="bet-cell bet-'+label.replace(/[0-9]/g,"")+'">'+boatPayoutHtml(x,label)+'</td>'
     ).join("");
+    const startTime=raceStartIfUpcoming(x.scheduled_time,x.status,!!(x.payout||(x.order||[]).length));
     rows+='<tr class="'+(isFinal?"final-row":"")+'">'+
-      '<td class="r">'+r+'R</td>'+
-      '<td class="time">'+esc(raceStartIfUpcoming(x.scheduled_time,x.status,!!(x.payout||(x.order||[]).length)))+'</td>'+
+      '<td class="r"><strong>'+r+'R</strong>'+(startTime?'<small>'+esc(startTime)+'</small>':'')+'</td>'+
       '<td class="name">'+raceNameMarquee(x.race_name||"—")+'</td>'+
       payoutCells+
       '<td class="winner">'+esc(x.winner||"")+'</td>'+
@@ -231,7 +231,7 @@ function boatDetailCard(v){
   return '<article class="boat-detail-card">'+
     '<div class="boat-detail-head"><span class="sport-tag boat">ボート</span><strong>'+esc(v.name||"---")+'</strong><b>SG</b><em>'+esc(v.event_name||"")+'</em></div>'+
     '<div class="boat-detail-table-wrap">'+
-      '<table class="boat-detail-table"><thead><tr><th>R</th><th>発走</th><th>レース</th><th>3連単</th><th>3連複</th><th>2連単</th><th>2連複</th><th>拡連複</th><th>単勝</th><th>複勝</th><th>優勝者</th></tr></thead><tbody>'+rows+'</tbody></table>'+
+      '<table class="boat-detail-table"><thead><tr><th>R</th><th>レース</th><th>3連単</th><th>3連複</th><th>2連単</th><th>2連複</th><th>拡連複</th><th>単勝</th><th>複勝</th><th>優勝者</th></tr></thead><tbody>'+rows+'</tbody></table>'+
     '</div>'+
   '</article>';
 }
