@@ -36,7 +36,7 @@ function compactCard(v,kind){
   const klass=kind==="keirin"?"result-card keirin-card":"result-card";
   const winnerHead=kind==="keirin"?'<th class="winner-name">勝者</th><th class="winner-origin">出身</th>':"";
   const table='<table class="compact-table"><thead><tr><th class="rcol">R</th><th class="race-label">レース名・種別</th>'+winnerHead+'<th class="ocol">3連単</th><th class="pcol">払戻金</th></tr></thead><tbody>'+raceRows(v.races,raceCount,kind)+'</tbody></table>';
-  const body=kind==="boat"?'<div class="boat-table-viewport">'+table+'</div>':table;
+  const body='<div class="result-table-viewport auto-vscroll">'+table+'</div>';
   return '<article class="'+klass+'"><div class="card-head"><div class="card-title">'+esc(title)+grade+'</div><div class="event">'+esc(event)+'</div></div>'+body+'</article>';
 }
 function renderKeirin(){
@@ -58,7 +58,7 @@ function showScreen(mode){
   main?.classList.add("screen-"+screenMode);
   document.querySelector(".keirin-block")?.classList.toggle("active",screenMode==="keirin");
   document.querySelector(".boat-block")?.classList.toggle("active",screenMode==="boat");
-  if(screenMode==="boat") setupBoatVerticalScrolls(true);
+  setupAllVerticalScrolls(true);
 }
 function renderBoats(){
   const host=document.getElementById("boat-grid");
@@ -69,7 +69,7 @@ function renderBoats(){
     return;
   }
   host.innerHTML=boats.map(function(v){return compactCard(v,"boat")}).join("");
-  setupBoatVerticalScrolls(true);
+  setupAllVerticalScrolls(true);
 }
 function cleanJockey(s){return String(s||"").replace(/(?<=[\u3040-\u30ff\u3400-\u9fff])\s+(?=[\u3040-\u30ff\u3400-\u9fff])/g,"")}
 function trifectaJra(r){
@@ -83,7 +83,9 @@ function raceInfoText(x){
 }
 function horseRaceInfoCell(x){
   const name=raceInfoText(x);
-  const course=x?.course||"";
+  const rawCourse=String(x?.course||"");
+  const cm=rawCourse.match(/(芝|ダート|障害|直)[^0-9]{0,12}([0-9,]{3,5})\s*m?/);
+  const course=cm?(cm[1]+cm[2].replace(/,/g,"")+"m"):"馬場・距離取得中";
   return '<td class="race-label race-info-two" title="'+esc([name,course].filter(Boolean).join(" "))+'">'+
     '<div class="race-name-line marquee-check"><div class="marquee-track"><span class="marquee-text">'+esc(name)+'</span><span class="marquee-copy" aria-hidden="true">'+esc(name)+'</span></div></div>'+
     '<div class="race-course-line">'+esc(course)+'</div>'+
@@ -99,7 +101,8 @@ function jraVenueCard(v){
     const tri=trifectaJra(x);
     rows+='<tr><td class="jr">'+r+'R</td>'+horseRaceInfoCell(x)+'<td class="horse '+(horse?"":"pending")+'">'+esc(horse||"発走前")+'</td><td class="jockey">'+esc(jockey)+'</td><td class="tri-combo-cell '+(tri.combo?"":"pending")+'">'+esc(tri.combo||"---")+'</td><td class="pay '+(tri.amount?"":"pending")+'">'+esc(tri.amount||"")+'</td></tr>';
   }
-  return '<article class="jra-card unified-race-card"><div class="card-head"><div class="card-title">'+esc(v.name||"---")+'</div><div class="event">JRA</div></div><table class="jra-table"><thead><tr><th class="jr">R</th><th class="race-label">レース名 / 距離</th><th>勝ち馬</th><th class="jockey">騎手</th><th class="tri-combo-cell">3連単</th><th class="pay">払戻</th></tr></thead><tbody>'+rows+'</tbody></table></article>';
+  const table='<table class="jra-table"><thead><tr><th class="jr">R</th><th class="race-label">レース名 / 馬場・距離</th><th>勝ち馬</th><th class="jockey">騎手</th><th class="tri-combo-cell">3連単</th><th class="pay">払戻</th></tr></thead><tbody>'+rows+'</tbody></table>';
+  return '<article class="jra-card unified-race-card"><div class="card-head"><div class="card-title">'+esc(v.name||"---")+'</div><div class="event">JRA</div></div><div class="horse-table-viewport auto-vscroll">'+table+'</div></article>';
 }
 function localVenueCard(v){
   const map=new Map((v.races||[]).map(function(x){return [Number(x.race),x]}));
@@ -109,7 +112,8 @@ function localVenueCard(v){
     const combo=Array.isArray(x.order)&&x.order.length>=3?x.order.join("-"):"";
     rows+='<tr><td class="jr">'+r+'R</td>'+horseRaceInfoCell(x)+'<td class="horse '+(x.winner?"":"pending")+'">'+esc(x.winner||x.status||"発走前")+'</td><td class="jockey">'+esc(x.jockey||"")+'</td><td class="tri-combo-cell '+(combo?"":"pending")+'">'+esc(combo||"---")+'</td><td class="pay '+(x.trifecta?"":"pending")+'">'+esc(x.trifecta||"")+'</td></tr>';
   }
-  return '<article class="jra-card unified-race-card"><div class="card-head"><div class="card-title">'+esc(v.name||"---")+'</div><div class="event">地方</div></div><table class="jra-table"><thead><tr><th class="jr">R</th><th class="race-label">レース名・種別</th><th>勝ち馬</th><th class="jockey">騎手</th><th class="tri-combo-cell">3連単</th><th class="pay">払戻</th></tr></thead><tbody>'+rows+'</tbody></table></article>';
+  const table='<table class="jra-table"><thead><tr><th class="jr">R</th><th class="race-label">レース名 / 馬場・距離</th><th>勝ち馬</th><th class="jockey">騎手</th><th class="tri-combo-cell">3連単</th><th class="pay">払戻</th></tr></thead><tbody>'+rows+'</tbody></table>';
+  return '<article class="jra-card unified-race-card"><div class="card-head"><div class="card-title">'+esc(v.name||"---")+'</div><div class="event">地方</div></div><div class="horse-table-viewport auto-vscroll">'+table+'</div></article>';
 }
 function featuredRaceCard(items){
   const rows=(items||[]).map(function(x){
@@ -123,8 +127,45 @@ function featuredRaceCard(items){
   }).join("");
   return '<article class="jra-card featured-race-card">'+
     '<div class="card-head"><div class="card-title">本日のメイン競走</div><div class="event">自動更新</div></div>'+
-    '<div class="featured-race-viewport"><div class="featured-race-track">'+rows+'</div></div>'+
+    '<div class="featured-race-viewport auto-vscroll"><div class="featured-race-track">'+rows+'</div></div>'+
   '</article>';
+}
+function setupAllVerticalScrolls(reset){
+  requestAnimationFrame(function(){
+    document.querySelectorAll(".auto-vscroll").forEach(function(box){
+      const max=Math.max(0,box.scrollHeight-box.clientHeight);
+      const needs=box.clientHeight>0&&max>2;
+      box.classList.toggle("needs-vscroll",needs);
+      if(reset||!needs){
+        box.scrollTop=0;
+        box.dataset.dir="1";
+        box.dataset.hold=needs?"20":"0";
+      }
+    });
+  });
+}
+function stepAllVerticalScrolls(){
+  document.querySelectorAll(".auto-vscroll.needs-vscroll").forEach(function(box){
+    if(box.clientHeight<=0) return;
+    const max=Math.max(0,box.scrollHeight-box.clientHeight);
+    if(max<=2) return;
+    let hold=Number(box.dataset.hold||0);
+    if(hold>0){
+      box.dataset.hold=String(hold-1);
+      return;
+    }
+    const dir=Number(box.dataset.dir||1);
+    box.scrollTop+=dir;
+    if(box.scrollTop>=max-1){
+      box.scrollTop=max;
+      box.dataset.dir="-1";
+      box.dataset.hold="20";
+    }else if(box.scrollTop<=1){
+      box.scrollTop=0;
+      box.dataset.dir="1";
+      box.dataset.hold="20";
+    }
+  });
 }
 function setupFeaturedRaceScroll(reset){
   requestAnimationFrame(function(){
@@ -230,6 +271,7 @@ function renderRight(){
   }
   updateMarquees();
   setupFeaturedRaceScroll(true);
+  setupAllVerticalScrolls(true);
 }
 function render(){
   renderKeirin();renderBoats();renderRight();updateMarquees();
@@ -256,8 +298,7 @@ function tick(){
 }
 setInterval(tick,1000);tick();
 load();setInterval(load,30000);
-setInterval(stepBoatVerticalScrolls,70);
-setInterval(stepFeaturedRaceScroll,80);
+setInterval(stepAllVerticalScrolls,80);
 const SCREEN_ORDER=["keirin","race","boat"];
 setInterval(function(){
   const i=SCREEN_ORDER.indexOf(screenMode);
