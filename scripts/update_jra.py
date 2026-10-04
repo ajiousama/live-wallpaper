@@ -341,12 +341,40 @@ def normalize_course_text(text: str) -> str:
     return ""
 
 
+def netkeiba_race_course(race_page: dict) -> str:
+    race_id = (
+        f'{race_page.get("year","")}{race_page.get("venue_code","")}'
+        f'{race_page.get("meet","")}{race_page.get("day","")}'
+        f'{int(race_page.get("race",0)):02d}'
+    )
+    if len(race_id) != 12:
+        return ""
+    try:
+        soup = soup_get(
+            "https://race.netkeiba.com/race/shutuba.html?race_id=" + race_id
+        )
+    except Exception:
+        return ""
+    text = clean_text(soup)
+    course = normalize_course_text(text)
+    if course:
+        return course
+    m = re.search(r"(芝|ダート|ダ|障害)\s*([0-9,]{3,5})\s*m", text)
+    if not m:
+        return ""
+    surface = "ダート" if m.group(1) == "ダ" else m.group(1)
+    return f"{surface}{m.group(2).replace(',','')}m"
+
+
 def current_race_course(race_page: dict) -> str:
     try:
         soup = soup_cname_get("/JRADB/accessD.html", race_page["cname"])
+        course = normalize_course_text(clean_text(soup))
+        if course:
+            return course
     except Exception:
-        return ""
-    return normalize_course_text(clean_text(soup))
+        pass
+    return netkeiba_race_course(race_page)
 
 
 def discover_historical_landing() -> BeautifulSoup:
