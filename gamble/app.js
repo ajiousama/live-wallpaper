@@ -1,327 +1,216 @@
 const DATA_URL="./data.json";
 const JRA_URL="../jra/data.json";
-let data=null,jra=null,screenMode="keirin",screenShownAt=performance.now();
+const PHASES=["モーニング","デイ","ナイター","ミッドナイト"];
+const PAYOUT_TYPES=["単勝","複勝","枠連","馬連","馬単","ワイド","3連複","3連単"];
+let data=null,jra=null,screenMode="モーニング",screenShownAt=performance.now();
 
-function esc(v){return String(v??"").replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]})}
+function esc(v){
+  return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+}
 function jstNow(){
-  const parts=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Tokyo",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit",hourCycle:"h23"}).formatToParts(new Date());
-  const get=function(t){return parts.find(function(p){return p.type===t})?.value||""};
-  return {hour:+get("hour"),minute:+get("minute"),second:+get("second"),clock:get("hour")+":"+get("minute")};
+  const parts=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Tokyo",hour:"2-digit",minute:"2-digit",hourCycle:"h23"}).formatToParts(new Date());
+  const get=t=>parts.find(p=>p.type===t)?.value||"";
+  return get("hour")+":"+get("minute");
+}
+function normalizePhase(v){
+  const s=String(v||"");
+  if(s.includes("オーバーミッド")||s.includes("ミッド")) return "ミッドナイト";
+  if(s.includes("モーニング")) return "モーニング";
+  if(s.includes("ナイター")) return "ナイター";
+  return "デイ";
 }
 function numBox(n){return '<span class="num n'+Number(n)+'">'+esc(n)+'</span>'}
 function orderHtml(order){
-  if(!Array.isArray(order)||order.length<3) return '<span class="pending">---</span>';
+  if(!Array.isArray(order)||order.length<3) return '<span class="muted">---</span>';
   return '<span class="order">'+order.slice(0,3).map(numBox).join("")+'</span>';
 }
-function raceRows(races,count,kind){
-  const map=new Map((races||[]).map(function(r){return [Number(r.race),r]}));
-  let out="";
-  const rows=Math.max(1,Math.min(12,Number(count)||12));
-  for(let r=1;r<=rows;r++){
-    const x=map.get(r)||{race:r,status:"発走前",order:[],payout:""};
-    const rawRaceName=x.race_name||x.race_type||"—";
-    const classMatch=kind==="keirin"?rawRaceName.match(/^[ＡAＳSＬL]級/):null;
-    const classLabel=classMatch?classMatch[0].replace("A","Ａ").replace("S","Ｓ").replace("L","Ｌ"):"";
-    const raceName=classMatch?rawRaceName.slice(classMatch[0].length).trim():rawRaceName;
-    const classCell=kind==="keirin"?'<td class="class-col '+(classLabel?"":"pending")+'">'+esc(classLabel||"---")+'</td>':"";
-    const winnerCell=kind==="keirin"?'<td class="winner-name '+(x.winner?"":"pending")+'">'+esc(x.winner||"---")+'</td><td class="winner-origin '+(x.origin?"":"pending")+'">'+esc(x.origin||"---")+'</td>':"";
-    out+='<tr><td class="rcol">'+r+'R</td>'+classCell+'<td class="race-label marquee-check" title="'+esc(raceName)+'"><div class="marquee-track"><span class="marquee-text">'+esc(raceName)+'</span><span class="marquee-copy" aria-hidden="true">'+esc(raceName)+'</span></div></td>'+winnerCell+'<td class="ocol">'+orderHtml(x.order)+'</td><td class="pcol '+(x.payout?"":"pending")+'">'+esc(x.payout||x.status||"発走前")+'</td></tr>';
+function raceNameMarquee(name){
+  const t=name||"—";
+  return '<div class="marquee-check" title="'+esc(t)+'"><div class="marquee-track"><span class="marquee-text">'+esc(t)+'</span><span class="marquee-copy" aria-hidden="true">'+esc(t)+'</span></div></div>';
+}
+function horseCourse(x){
+  const raw=String(x?.course||"");
+  let m=raw.match(/(芝|ダート|障害|直)[^0-9]{0,12}([0-9,]{3,5})\s*m?/);
+  if(!m){
+    const rev=raw.match(/([0-9,]{3,5})\s*(?:m|メートル).*?[（(](芝|ダート|障害|直)/);
+    m=rev?[rev[0],rev[2],rev[1]]:null;
   }
+  return m?(m[1]+m[2].replace(/,/g,"")+"m"):"取得中";
+}
+function phaseItems(phase){
+  const out=[];
+  for(const v of data?.keirin?.venues||[]){
+    if(normalizePhase(v.type)===phase) out.push({sport:"競輪",kind:"keirin",venue:v});
+  }
+  for(const v of data?.boats||[]){
+    if(normalizePhase(v.day_type)===phase) out.push({sport:"ボート",kind:"boat",venue:v});
+  }
+  for(const v of data?.local_all?.venues||[]){
+    if(normalizePhase(v.day_type)===phase) out.push({sport:"地方",kind:"local",venue:v});
+  }
+  const sportOrder={keirin:0,boat:1,local:2};
+  out.sort((a,b)=>(sportOrder[a.kind]-sportOrder[b.kind])||String(a.venue.name||a.venue.venue||"").localeCompare(String(b.venue.name||b.venue.venue||""),"ja"));
   return out;
 }
-function compactCard(v,kind){
-  const title=v.display_name||v.name||v.venue||"---";
-  const event=v.event_name||"";
-  const tags=kind==="keirin"?[v.type,v.grade].filter(Boolean).join(" / "):(kind==="boat"?[v.day_type].filter(Boolean).join(" / "):"");
-  const grade=tags?' <small>'+esc(tags)+'</small>':"";
-  const raceCount=kind==="keirin"
-    ?((v.race_ids||[]).length||(v.races||[]).reduce(function(m,x){return Math.max(m,Number(x.race)||0)},0)||12)
-    :12;
-  const klass=kind==="keirin"?"result-card keirin-card":"result-card";
-  const classHead=kind==="keirin"?'<th class="class-col">級</th>':"";
-  const winnerHead=kind==="keirin"?'<th class="winner-name">勝者</th><th class="winner-origin">出身</th>':"";
-  const table='<table class="compact-table"><thead><tr><th class="rcol">R</th>'+classHead+'<th class="race-label">レース名</th>'+winnerHead+'<th class="ocol">3連単</th><th class="pcol">払戻金</th></tr></thead><tbody>'+raceRows(v.races,raceCount,kind)+'</tbody></table>';
-  const body='<div class="result-table-viewport auto-vscroll">'+table+'</div>';
-  return '<article class="'+klass+'"><div class="card-head"><div class="card-title">'+esc(title)+grade+'</div><div class="event">'+esc(event)+'</div></div>'+body+'</article>';
+function phaseCardHead(item){
+  const v=item.venue;
+  const name=v.display_name||v.name||v.venue||"---";
+  let extra="";
+  if(item.kind==="keirin") extra=[v.grade].filter(Boolean).join(" ");
+  if(item.kind==="boat") extra=v.event_name||"";
+  return '<div class="card-head"><span class="sport-tag '+item.kind+'">'+item.sport+'</span><strong>'+esc(name)+'</strong><small>'+esc(extra)+'</small></div>';
 }
-function renderKeirin(){
-  const host=document.getElementById("keirin-grid");
-  const venues=data?.keirin?.venues||[];
-  document.getElementById("keirin-phase").textContent=venues.length?("本日開催 "+venues.length+"場"):"開催なし";
-  if(!venues.length){
-    host.className="all-venue-grid keirin-all auto-vscroll sport-grid-vscroll";
-    host.innerHTML='<div class="empty-card">本日の競輪開催はありません</div>';
-    return;
+function keirinRows(v){
+  const races=v.races||[];
+  let rows="";
+  for(const x of races){
+    const raw=x.race_name||"—";
+    const cm=raw.match(/^[ＡAＳSＬL]級/);
+    const cls=cm?cm[0].replace("A","Ａ").replace("S","Ｓ").replace("L","Ｌ"):"";
+    const name=cm?raw.slice(cm[0].length).trim():raw;
+    rows+='<tr>'+
+      '<td class="r">'+esc(x.race)+'R</td>'+
+      '<td class="class-col">'+esc(cls||"—")+'</td>'+
+      '<td class="name">'+raceNameMarquee(name)+'</td>'+
+      '<td class="winner">'+esc(x.winner||"---")+'</td>'+
+      '<td class="origin">'+esc(x.origin||"---")+'</td>'+
+      '<td class="combo">'+orderHtml(x.order)+'</td>'+
+      '<td class="pay">'+esc(x.payout||x.status||"発走前")+'</td>'+
+    '</tr>';
   }
-  host.className="all-venue-grid keirin-all auto-vscroll sport-grid-vscroll";
-  host.innerHTML=venues.map(function(v){return compactCard(v,"keirin")}).join("");
+  return '<table class="phase-table keirin-table"><thead><tr><th>R</th><th>級</th><th>レース</th><th>勝者</th><th>出身</th><th>3連単</th><th>払戻</th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
-function showScreen(mode){
-  screenMode=["keirin","race","boat"].includes(mode)?mode:"keirin";
-  screenShownAt=performance.now();
-  const main=document.querySelector(".main-grid");
-  main?.classList.remove("screen-keirin","screen-race","screen-boat");
-  main?.classList.add("screen-"+screenMode);
-  document.querySelector(".keirin-block")?.classList.toggle("active",screenMode==="keirin");
-  document.querySelector(".boat-block")?.classList.toggle("active",screenMode==="boat");
-  setupAllVerticalScrolls(true);
-  const activeGrid=currentSportGrid();
-  if(activeGrid) activeGrid.scrollTop=0;
-}
-function renderBoats(){
-  const host=document.getElementById("boat-grid");
-  const boats=data?.boats||[];
-  host.className="all-venue-grid boat-all auto-vscroll sport-grid-vscroll";
-  if(!boats.length){
-    host.innerHTML='<div class="empty-card">本日のボート開催情報を取得中</div>';
-    return;
-  }
-  host.innerHTML=boats.map(function(v){return compactCard(v,"boat")}).join("");
-  setupAllVerticalScrolls(true);
-}
-function cleanJockey(s){return String(s||"").replace(/(?<=[\u3040-\u30ff\u3400-\u9fff])\s+(?=[\u3040-\u30ff\u3400-\u9fff])/g,"")}
-function trifectaJra(r){
-  const a=r?.payouts?.["3連単"];
-  if(!Array.isArray(a)||!a[0]) return {combo:"",amount:""};
-  return {combo:a[0].combo||"",amount:a[0].amount||""};
-}
-function raceInfoText(x){
-  if(!x) return "レース情報待ち";
-  return x.race_name||"レース情報待ち";
-}
-function horseRaceInfoCell(x){
-  const name=raceInfoText(x);
-  const rawCourse=String(x?.course||"");
-  let cm=rawCourse.match(/(芝|ダート|障害|直)[^0-9]{0,12}([0-9,]{3,5})\s*m?/);
-  if(!cm){
-    const rev=rawCourse.match(/([0-9,]{3,5})\s*(?:m|メートル).*?[（(](芝|ダート|障害|直)/);
-    cm=rev?[rev[0],rev[2],rev[1]]:null;
-  }
-  const course=cm?(cm[1]+cm[2].replace(/,/g,"")+"m"):"馬場・距離取得中";
-  return '<td class="race-label race-info-two" title="'+esc([name,course].filter(Boolean).join(" "))+'">'+
-    '<div class="race-name-line marquee-check"><div class="marquee-track"><span class="marquee-text">'+esc(name)+'</span><span class="marquee-copy" aria-hidden="true">'+esc(name)+'</span></div></div>'+
-    '<div class="race-course-line">'+esc(course)+'</div>'+
-  '</td>';
-}
-function jraVenueCard(v){
-  const map=new Map((v.results||[]).map(function(x){return [Number(x.race),x]}));
+function boatRows(v){
+  const map=new Map((v.races||[]).map(x=>[Number(x.race),x]));
   let rows="";
   for(let r=1;r<=12;r++){
-    const x=map.get(r)||{};
-    const horse=x.horse||x.top3?.[0]?.horse||"";
-    const jockey=cleanJockey(x.jockey||x.top3?.[0]?.jockey||"");
-    const tri=trifectaJra(x);
-    rows+='<tr><td class="jr">'+r+'R</td>'+horseRaceInfoCell(x)+'<td class="horse '+(horse?"":"pending")+'">'+esc(horse||"発走前")+'</td><td class="jockey">'+esc(jockey)+'</td><td class="tri-combo-cell '+(tri.combo?"":"pending")+'">'+esc(tri.combo||"---")+'</td><td class="pay '+(tri.amount?"":"pending")+'">'+esc(tri.amount||"")+'</td></tr>';
+    const x=map.get(r)||{race:r,status:"発走前",order:[],payout:""};
+    rows+='<tr>'+
+      '<td class="r">'+r+'R</td>'+
+      '<td class="name">'+raceNameMarquee(x.race_name||"—")+'</td>'+
+      '<td class="combo">'+orderHtml(x.order)+'</td>'+
+      '<td class="pay">'+esc(x.payout||x.status||"発走前")+'</td>'+
+    '</tr>';
   }
-  const table='<table class="jra-table"><thead><tr><th class="jr">R</th><th class="race-label">レース名 / 馬場・距離</th><th>勝ち馬</th><th class="jockey">騎手</th><th class="tri-combo-cell">3連単</th><th class="pay">払戻</th></tr></thead><tbody>'+rows+'</tbody></table>';
-  return '<article class="jra-card unified-race-card"><div class="card-head"><div class="card-title">'+esc(v.name||"---")+'</div><div class="event">JRA</div></div><div class="horse-table-viewport auto-vscroll">'+table+'</div></article>';
+  return '<table class="phase-table boat-table"><thead><tr><th>R</th><th>レース</th><th>3連単</th><th>払戻</th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
-function localVenueCard(v){
+function localRows(v){
   const races=v.races||[];
-  const map=new Map(races.map(function(x){return [Number(x.race),x]}));
-  const raceCount=Math.max(1,races.reduce(function(m,x){return Math.max(m,Number(x.race)||0)},0));
   let rows="";
-  for(let r=1;r<=raceCount;r++){
-    const x=map.get(r)||{};
-    const combo=Array.isArray(x.order)&&x.order.length>=3?x.order.join("-"):"";
-    rows+='<tr><td class="jr">'+r+'R</td>'+horseRaceInfoCell(x)+'<td class="horse '+(x.winner?"":"pending")+'">'+esc(x.winner||x.status||"発走前")+'</td><td class="jockey">'+esc(x.jockey||"")+'</td><td class="tri-combo-cell '+(combo?"":"pending")+'">'+esc(combo||"---")+'</td><td class="pay '+(x.trifecta?"":"pending")+'">'+esc(x.trifecta||"")+'</td></tr>';
+  for(const x of races){
+    rows+='<tr>'+
+      '<td class="r">'+esc(x.race)+'R</td>'+
+      '<td class="local-info"><div>'+raceNameMarquee(x.race_name||"—")+'</div><b>'+esc(horseCourse(x))+'</b></td>'+
+      '<td class="winner">'+esc(x.winner||x.status||"発走前")+'</td>'+
+      '<td class="jockey">'+esc(x.jockey||"")+'</td>'+
+      '<td class="combo">'+orderHtml(x.order)+'</td>'+
+      '<td class="pay">'+esc(x.trifecta||"")+'</td>'+
+    '</tr>';
   }
-  const table='<table class="jra-table"><thead><tr><th class="jr">R</th><th class="race-label">レース名 / 馬場・距離</th><th>勝ち馬</th><th class="jockey">騎手</th><th class="tri-combo-cell">3連単</th><th class="pay">払戻</th></tr></thead><tbody>'+rows+'</tbody></table>';
-  return '<article class="jra-card unified-race-card"><div class="card-head"><div class="card-title">'+esc(v.name||"---")+'</div><div class="event">地方</div></div><div class="horse-table-viewport auto-vscroll">'+table+'</div></article>';
+  return '<table class="phase-table local-table"><thead><tr><th>R</th><th>レース/馬場距離</th><th>勝ち馬</th><th>騎手</th><th>3連単</th><th>払戻</th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
-function featuredRaceCard(items){
-  const rows=(items||[]).map(function(x){
-    const where=[x.venue,x.race].filter(Boolean).join(" ");
-    const horses=Array.isArray(x.horses)&&x.horses.length?x.horses.join("・"):"情報取得中";
-    return '<div class="featured-race-item">'+
-      '<div class="featured-meta"><span class="featured-source">'+esc(x.source||"MAIN")+'</span><span>'+esc(where)+'</span><span class="featured-time">'+esc(x.time?x.time+" 発走予定":"")+'</span></div>'+
-      '<div class="featured-name">'+esc(x.name||"---")+'</div>'+
-      '<div class="featured-horses"><span>有力馬</span> '+esc(horses)+'</div>'+
-    '</div>';
+function phaseCard(item){
+  const body=item.kind==="keirin"?keirinRows(item.venue):item.kind==="boat"?boatRows(item.venue):localRows(item.venue);
+  return '<article class="phase-card '+item.kind+'-card">'+phaseCardHead(item)+'<div class="card-table-wrap">'+body+'</div></article>';
+}
+function renderPhase(phase){
+  const items=phaseItems(phase);
+  const host=document.getElementById("phase-grid");
+  const cols=Math.max(1,Math.min(5,items.length||1));
+  host.style.setProperty("--cols",cols);
+  host.innerHTML=items.length?items.map(phaseCard).join(""):'<div class="empty-card">'+esc(phase)+'開催なし</div>';
+  document.getElementById("screen-title").textContent=phase;
+  document.getElementById("screen-sub").textContent=items.length?("競輪・ボート・地方 "+items.length+"場"):"開催なし";
+  updateMarquees();
+}
+function payoutItems(r,label){
+  const arr=r?.payouts?.[label];
+  if(!Array.isArray(arr)||!arr.length) return "---";
+  return arr.map(x=>[x.combo,x.amount].filter(Boolean).join(" ")).join(" / ");
+}
+function jraRaceBlock(r,no){
+  const top=Array.isArray(r?.top3)?r.top3:[];
+  const places=[1,2,3].map(pos=>{
+    const x=top.find(y=>Number(y.position)===pos)||{};
+    const horse=x.horse||"---";
+    const num=x.number?x.number+" ":"";
+    return '<span class="place p'+pos+'"><b>'+pos+'着</b> '+esc(num+horse)+'</span>';
   }).join("");
-  return '<article class="jra-card featured-race-card">'+
-    '<div class="card-head"><div class="card-title">本日のメイン競走</div><div class="event">自動更新</div></div>'+
-    '<div class="featured-race-viewport auto-vscroll"><div class="featured-race-track">'+rows+'</div></div>'+
-  '</article>';
+  const payouts=PAYOUT_TYPES.map(label=>
+    '<div class="payout-item"><b>'+label+'</b><span>'+esc(payoutItems(r,label))+'</span></div>'
+  ).join("");
+  const name=r?.race_name||"レース情報取得中";
+  const course=horseCourse(r);
+  return '<div class="jra-race">'+
+    '<div class="jra-race-main"><strong>'+no+'R</strong><span class="jra-race-name">'+raceNameMarquee(name)+'</span><em>'+esc(course)+'</em></div>'+
+    '<div class="places">'+places+'</div>'+
+    '<div class="payout-grid">'+payouts+'</div>'+
+  '</div>';
 }
-function setupAllVerticalScrolls(reset){
-  requestAnimationFrame(function(){
-    document.querySelectorAll(".auto-vscroll:not(.sport-grid-vscroll)").forEach(function(box){
-      const max=Math.max(0,box.scrollHeight-box.clientHeight);
-      const needs=box.clientHeight>0&&max>2;
-      box.classList.toggle("needs-vscroll",needs);
-      if(reset||!needs){
-        box.scrollTop=0;
-        box.dataset.dir="1";
-        box.dataset.hold=needs?"20":"0";
-      }
-    });
-  });
+function jraVenueCard(v){
+  const map=new Map((v.results||[]).map(x=>[Number(x.race),x]));
+  let races="";
+  for(let no=1;no<=12;no++) races+=jraRaceBlock(map.get(no)||{},no);
+  return '<article class="jra-venue-card"><div class="jra-venue-head"><strong>'+esc(v.name||"---")+'</strong><span>1〜3着 / 全掛式払戻</span></div><div class="jra-venue-scroll sync-vscroll">'+races+'</div></article>';
 }
-function stepAllVerticalScrolls(){
-  document.querySelectorAll(".auto-vscroll.needs-vscroll:not(.sport-grid-vscroll)").forEach(function(box){
-    if(box.clientHeight<=0) return;
+function featuredCard(items){
+  const rows=(items||[]).map(x=>{
+    const horses=Array.isArray(x.horses)&&x.horses.length?x.horses.join("・"):"情報取得中";
+    return '<div class="featured-item"><div><b>'+esc(x.source||"MAIN")+'</b> '+esc([x.venue,x.race].filter(Boolean).join(" "))+' <time>'+esc(x.time||"")+'</time></div><strong>'+esc(x.name||"---")+'</strong><small>有力馬 '+esc(horses)+'</small></div>';
+  }).join("");
+  return '<article class="featured-card"><div class="jra-venue-head"><strong>本日のメイン競走</strong></div><div class="featured-scroll sync-vscroll">'+rows+'</div></article>';
+}
+function renderJra(){
+  const venues=jra?.venues||[];
+  const featured=data?.featured_races||[];
+  const host=document.getElementById("jra-grid");
+  const showFeatured=venues.length>0&&venues.length<3&&featured.length>0;
+  host.className="jra-dedicated-grid jra-count-"+venues.length+(showFeatured?" with-featured":"");
+  host.innerHTML=venues.length?(venues.map(jraVenueCard).join("")+(showFeatured?featuredCard(featured):"")):'<div class="empty-card">JRA開催なし</div>';
+  document.getElementById("screen-title").textContent="JRA";
+  document.getElementById("screen-sub").textContent=venues.length?(venues.map(v=>v.name).join("・")+" / 1〜3着＋全掛式払戻"):"開催なし";
+  updateMarquees();
+}
+function availableScreens(){
+  const a=PHASES.filter(p=>phaseItems(p).length>0);
+  if((jra?.venues||[]).length) a.push("JRA");
+  return a.length?a:["デイ"];
+}
+function showScreen(mode){
+  screenMode=mode;
+  screenShownAt=performance.now();
+  const isJra=mode==="JRA";
+  document.getElementById("phase-screen").classList.toggle("active",!isJra);
+  document.getElementById("jra-screen").classList.toggle("active",isJra);
+  if(isJra) renderJra(); else renderPhase(mode);
+  document.querySelectorAll(".sport-grid-vscroll,.sync-vscroll").forEach(x=>x.scrollTop=0);
+}
+function syncScrollPosition(){
+  const elapsed=(performance.now()-screenShownAt)%20000;
+  let pos=0;
+  if(elapsed<1200) pos=0;
+  else if(elapsed<8800) pos=(elapsed-1200)/7600;
+  else if(elapsed<10400) pos=1;
+  else if(elapsed<18000) pos=1-(elapsed-10400)/7600;
+  else pos=0;
+  const targets=screenMode==="JRA"
+    ?document.querySelectorAll("#jra-screen.active .sync-vscroll")
+    :document.querySelectorAll("#phase-screen.active .sport-grid-vscroll");
+  targets.forEach(box=>{
     const max=Math.max(0,box.scrollHeight-box.clientHeight);
-    if(max<=2) return;
-    let hold=Number(box.dataset.hold||0);
-    if(hold>0){
-      box.dataset.hold=String(hold-1);
-      return;
-    }
-    const dir=Number(box.dataset.dir||1);
-    box.scrollTop+=dir;
-    if(box.scrollTop>=max-1){
-      box.scrollTop=max;
-      box.dataset.dir="-1";
-      box.dataset.hold="20";
-    }else if(box.scrollTop<=1){
-      box.scrollTop=0;
-      box.dataset.dir="1";
-      box.dataset.hold="20";
-    }
-  });
-}
-function setupFeaturedRaceScroll(reset){
-  requestAnimationFrame(function(){
-    document.querySelectorAll(".featured-race-viewport").forEach(function(box){
-      const max=Math.max(0,box.scrollHeight-box.clientHeight);
-      box.classList.toggle("needs-vscroll",max>2);
-      if(reset){
-        box.scrollTop=0;
-        box.dataset.dir="1";
-        box.dataset.hold="25";
-      }
-    });
-  });
-}
-function stepFeaturedRaceScroll(){
-  if(screenMode!=="race") return;
-  document.querySelectorAll(".featured-race-viewport.needs-vscroll").forEach(function(box){
-    const max=Math.max(0,box.scrollHeight-box.clientHeight);
-    if(max<=2) return;
-    let hold=Number(box.dataset.hold||0);
-    if(hold>0){
-      box.dataset.hold=String(hold-1);
-      return;
-    }
-    const dir=Number(box.dataset.dir||1);
-    box.scrollTop+=dir;
-    if(box.scrollTop>=max-1){
-      box.scrollTop=max;
-      box.dataset.dir="-1";
-      box.dataset.hold="25";
-    }else if(box.scrollTop<=1){
-      box.scrollTop=0;
-      box.dataset.dir="1";
-      box.dataset.hold="25";
-    }
-  });
-}
-function setupBoatVerticalScrolls(reset){
-  requestAnimationFrame(function(){
-    document.querySelectorAll(".boat-table-viewport").forEach(function(box){
-      const max=Math.max(0,box.scrollHeight-box.clientHeight);
-      const needs=max>2;
-      box.classList.toggle("needs-vscroll",needs);
-      if(reset || !needs){
-        box.scrollTop=0;
-        box.dataset.dir="1";
-        box.dataset.hold=needs?"18":"0";
-      }
-    });
-  });
-}
-function stepBoatVerticalScrolls(){
-  if(screenMode!=="boat") return;
-  document.querySelectorAll(".boat-table-viewport.needs-vscroll").forEach(function(box){
-    const max=Math.max(0,box.scrollHeight-box.clientHeight);
-    if(max<=2) return;
-    let hold=Number(box.dataset.hold||0);
-    if(hold>0){
-      box.dataset.hold=String(hold-1);
-      return;
-    }
-    let dir=Number(box.dataset.dir||1);
-    box.scrollTop+=dir;
-    if(box.scrollTop>=max-1){
-      box.scrollTop=max;
-      box.dataset.dir="-1";
-      box.dataset.hold="18";
-    }else if(box.scrollTop<=1){
-      box.scrollTop=0;
-      box.dataset.dir="1";
-      box.dataset.hold="18";
-    }
-  });
-}
-function currentSportGrid(){
-  if(screenMode==="keirin") return document.getElementById("keirin-grid");
-  if(screenMode==="boat") return document.getElementById("boat-grid");
-  if(screenMode==="race") return document.getElementById("right-grid");
-  return null;
-}
-function updateSportGridScroll(){
-  const box=currentSportGrid();
-  if(box&&box.clientHeight>0){
-    const max=Math.max(0,box.scrollHeight-box.clientHeight);
+    box.scrollTop=max*Math.max(0,Math.min(1,pos));
     box.classList.toggle("needs-vscroll",max>2);
-    if(max<=2){
-      box.scrollTop=0;
-    }else{
-      const elapsed=(performance.now()-screenShownAt)%20000;
-      let pos=0;
-      if(elapsed<1500){
-        pos=0;
-      }else if(elapsed<8500){
-        pos=(elapsed-1500)/7000;
-      }else if(elapsed<10500){
-        pos=1;
-      }else if(elapsed<17500){
-        pos=1-(elapsed-10500)/7000;
-      }else{
-        pos=0;
-      }
-      box.scrollTop=max*Math.max(0,Math.min(1,pos));
-    }
-  }
-  requestAnimationFrame(updateSportGridScroll);
+  });
+  requestAnimationFrame(syncScrollPosition);
 }
 function updateMarquees(){
-  requestAnimationFrame(function(){
-    document.querySelectorAll(".marquee-check").forEach(function(box){
+  requestAnimationFrame(()=>{
+    document.querySelectorAll(".marquee-check").forEach(box=>{
       const text=box.querySelector(".marquee-text");
       if(!text) return;
       box.classList.toggle("is-marquee",text.scrollWidth>box.clientWidth+2);
     });
   });
-}
-function renderRight(){
-  const host=document.getElementById("right-grid");
-  document.getElementById("right-title").textContent="競馬 全開催場";
-  const central=(jra?.venues||[]).map(function(v){return {kind:"jra",venue:v}});
-  const local=(data?.local_all?.venues||[]).map(function(v){return {kind:"local",venue:v}});
-  const cards=central.concat(local);
-  const featured=data?.featured_races||[];
-  host.className="race-all-grid auto-vscroll sport-grid-vscroll";
-  if(!cards.length){
-    host.innerHTML='<div class="empty-card">本日の競馬開催情報を取得中</div>';
-  }else{
-    let html=cards.map(function(x){
-      return x.kind==="jra"?jraVenueCard(x.venue):localVenueCard(x.venue);
-    }).join("");
-    const hasSpare=(cards.length%4)!==0;
-    if(hasSpare&&featured.length) html+=featuredRaceCard(featured);
-    host.innerHTML=html;
-  }
-  updateMarquees();
-  setupFeaturedRaceScroll(true);
-  setupAllVerticalScrolls(true);
-}
-function render(){
-  renderKeirin();renderBoats();renderRight();updateMarquees();setupAllVerticalScrolls(true);
-  document.getElementById("updated").textContent=(data?.updated_at||jra?.updated_at||"--");
-  const src=data?.source||{};
-  document.getElementById("source").textContent="日程: "+(src.schedule||"Free WiFi EPG")+" / 競輪: "+(src.keirin||"-")+" / ボート: "+(src.boat||"-")+" / JRA: JRA公式";
 }
 async function getJson(url){
   const r=await fetch(url+"?t="+Date.now(),{cache:"no-store"});
@@ -330,23 +219,24 @@ async function getJson(url){
 }
 async function load(){
   try{
-    const values=await Promise.all([getJson(DATA_URL),getJson(JRA_URL)]);
-    data=values[0];jra=values[1];render();
+    const [d,j]=await Promise.all([getJson(DATA_URL),getJson(JRA_URL)]);
+    data=d;jra=j;
+    document.getElementById("updated").textContent=data?.updated_at||jra?.updated_at||"--";
+    const screens=availableScreens();
+    if(!screens.includes(screenMode)) screenMode=screens[0];
+    if(screenMode==="JRA") renderJra(); else renderPhase(screenMode);
   }catch(e){
     console.error(e);
-    document.getElementById("updated").textContent="取得再試行中";
+    document.getElementById("updated").textContent="再取得中";
   }
 }
-function tick(){
-  document.getElementById("clock").textContent=jstNow().clock;
+function rotate(){
+  const screens=availableScreens();
+  const i=screens.indexOf(screenMode);
+  showScreen(screens[(i+1+screens.length)%screens.length]);
 }
+function tick(){document.getElementById("clock").textContent=jstNow()}
 setInterval(tick,1000);tick();
 load();setInterval(load,30000);
-setInterval(stepAllVerticalScrolls,80);
-requestAnimationFrame(updateSportGridScroll);
-const SCREEN_ORDER=["keirin","race","boat"];
-setInterval(function(){
-  const i=SCREEN_ORDER.indexOf(screenMode);
-  showScreen(SCREEN_ORDER[(i+1)%SCREEN_ORDER.length]);
-},20000);
-showScreen("keirin");
+requestAnimationFrame(syncScrollPosition);
+setInterval(rotate,20000);
