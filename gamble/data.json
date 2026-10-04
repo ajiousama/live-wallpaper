@@ -1,8 +1,8 @@
 {
   "date": "2026-10-04",
   "date_label": "2026年10月04日",
-  "updated_at": "12:39:06",
-  "updated_at_iso": "2026-10-04T12:39:06.387862+09:00",
+  "updated_at": "13:10:04",
+  "updated_at_iso": "2026-10-04T13:10:04.297134+09:00",
   "jra_switch_time": "17:00",
   "keirin": {
     "phase": "本日開催 8場",
@@ -432,9 +432,13 @@
           {
             "race": 5,
             "time": "12:43",
-            "status": "発走前",
-            "order": [],
-            "payout": "",
+            "status": "確定",
+            "order": [
+              5,
+              9,
+              8
+            ],
+            "payout": "65,790円",
             "race_name": "Ｓ級 選抜",
             "scheduled_time": "12:43"
           },
@@ -1281,9 +1285,13 @@
         },
         {
           "race": 5,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            4,
+            1,
+            5
+          ],
+          "payout": "4円",
           "race_name": "",
           "scheduled_time": "12:50"
         },
@@ -1403,9 +1411,13 @@
         },
         {
           "race": 5,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            1,
+            4,
+            3
+          ],
+          "payout": "1円",
           "race_name": "",
           "scheduled_time": "12:40"
         },
@@ -1513,9 +1525,13 @@
         },
         {
           "race": 4,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            1,
+            5,
+            4
+          ],
+          "payout": "1円",
           "race_name": "ランチタイム戦",
           "scheduled_time": "12:35"
         },
@@ -1761,9 +1777,13 @@
         },
         {
           "race": 6,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            2,
+            4,
+            5
+          ],
+          "payout": "2円",
           "race_name": "",
           "scheduled_time": "12:54"
         },
@@ -1887,9 +1907,13 @@
         },
         {
           "race": 6,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            4,
+            1,
+            5
+          ],
+          "payout": "4円",
           "race_name": "",
           "scheduled_time": "13:00"
         },
@@ -2013,9 +2037,13 @@
         },
         {
           "race": 6,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            1,
+            2,
+            3
+          ],
+          "payout": "1円",
           "race_name": "",
           "scheduled_time": "12:48"
         },
@@ -2233,9 +2261,13 @@
         },
         {
           "race": 5,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            4,
+            6,
+            5
+          ],
+          "payout": "4円",
           "race_name": "",
           "scheduled_time": "12:38"
         },
@@ -2403,9 +2435,13 @@
         },
         {
           "race": 9,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            1,
+            2,
+            4
+          ],
+          "payout": "1円",
           "race_name": "",
           "scheduled_time": "12:42"
         },
@@ -2599,9 +2635,13 @@
         },
         {
           "race": 5,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            1,
+            4,
+            2
+          ],
+          "payout": "1円",
           "race_name": "",
           "scheduled_time": "12:45"
         },
@@ -2840,11 +2880,16 @@
           },
           {
             "race": 3,
-            "winner": "",
-            "jockey": "",
-            "trifecta": "",
-            "race_name": "Ｃ２十一組",
-            "status": "結果待ち"
+            "winner": "スチョウプリンセス",
+            "jockey": "村上忍",
+            "trifecta": "430円",
+            "order": [
+              7,
+              4,
+              2
+            ],
+            "status": "確定",
+            "race_name": "Ｃ２十一組"
           },
           {
             "race": 4,
@@ -2852,7 +2897,7 @@
             "jockey": "",
             "trifecta": "",
             "race_name": "Ｃ２十一組",
-            "status": "発走前"
+            "status": "結果待ち"
           },
           {
             "race": 5,
@@ -2926,11 +2971,16 @@
         "races": [
           {
             "race": 1,
-            "winner": "",
-            "jockey": "",
-            "trifecta": "",
-            "race_name": "有 ２歳５",
-            "status": "発走前"
+            "winner": "ダンストンルーク",
+            "jockey": "平瀬城",
+            "trifecta": "3,790円",
+            "order": [
+              8,
+              1,
+              2
+            ],
+            "status": "確定",
+            "race_name": "有 ２歳５"
           },
           {
             "race": 2,
@@ -2938,7 +2988,7 @@
             "jockey": "",
             "trifecta": "",
             "race_name": "かいと＆るり結婚記念２歳４",
-            "status": "発走前"
+            "status": "結果待ち"
           },
           {
             "race": 3,

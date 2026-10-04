@@ -2,7 +2,7 @@
   "source": "JRA公式",
   "source_date": "20261004",
   "date_label": "10月4日 日曜",
-  "updated_at": "2026-10-04 12:38 JST",
+  "updated_at": "2026-10-04 13:09 JST",
   "venues": [
     {
       "name": "東京",
@@ -521,6 +521,109 @@
           "jockey": "横山 典弘",
           "horse": "シルヴァノーブル",
           "win_payout": "310円"
+        },
+        {
+          "race": 6,
+          "race_name": "メイクデビュー東京",
+          "course": "",
+          "top3": [
+            {
+              "position": 1,
+              "frame": "枠4青",
+              "number": "5",
+              "horse": "ジョーティス",
+              "jockey": "C.ルメール",
+              "time": "1:35.6",
+              "margin": ""
+            },
+            {
+              "position": 2,
+              "frame": "枠6緑",
+              "number": "10",
+              "horse": "シドニーハーバー",
+              "jockey": "荻野 極",
+              "time": "1:35.6",
+              "margin": "ハナ"
+            },
+            {
+              "position": 3,
+              "frame": "枠7橙",
+              "number": "12",
+              "horse": "ディアム",
+              "jockey": "横山 武史",
+              "time": "1:35.8",
+              "margin": "１ 1/4"
+            }
+          ],
+          "payouts": {
+            "単勝": [
+              {
+                "combo": "5",
+                "amount": "190円"
+              }
+            ],
+            "複勝": [
+              {
+                "combo": "5",
+                "amount": "110円"
+              },
+              {
+                "combo": "10",
+                "amount": "160円"
+              },
+              {
+                "combo": "12",
+                "amount": "290円"
+              }
+            ],
+            "枠連": [
+              {
+                "combo": "4-6",
+                "amount": "400円"
+              }
+            ],
+            "馬連": [
+              {
+                "combo": "5-10",
+                "amount": "480円"
+              }
+            ],
+            "馬単": [
+              {
+                "combo": "5-10",
+                "amount": "700円"
+              }
+            ],
+            "ワイド": [
+              {
+                "combo": "5-10",
+                "amount": "240円"
+              },
+              {
+                "combo": "5-12",
+                "amount": "650円"
+              },
+              {
+                "combo": "10-12",
+                "amount": "990円"
+              }
+            ],
+            "3連複": [
+              {
+                "combo": "5-10-12",
+                "amount": "2,230円"
+              }
+            ],
+            "3連単": [
+              {
+                "combo": "5-10-12",
+                "amount": "5,150円"
+              }
+            ]
+          },
+          "jockey": "C.ルメール",
+          "horse": "ジョーティス",
+          "win_payout": "190円"
         }
       ]
     },
@@ -1056,6 +1159,109 @@
           "jockey": "国分 恭介",
           "horse": "トロカアニマダ",
           "win_payout": "610円"
+        },
+        {
+          "race": 6,
+          "race_name": "3歳以上1勝クラス",
+          "course": "",
+          "top3": [
+            {
+              "position": 1,
+              "frame": "枠1白",
+              "number": "2",
+              "horse": "エアアルチーナ",
+              "jockey": "松山 弘平",
+              "time": "1:50.6",
+              "margin": ""
+            },
+            {
+              "position": 2,
+              "frame": "枠6緑",
+              "number": "12",
+              "horse": "マーゴットバディ",
+              "jockey": "鮫島 克駿",
+              "time": "1:50.7",
+              "margin": "クビ"
+            },
+            {
+              "position": 3,
+              "frame": "枠2黒",
+              "number": "4",
+              "horse": "ブームバップビート",
+              "jockey": "小沢 大仁",
+              "time": "1:51.7",
+              "margin": "６"
+            }
+          ],
+          "payouts": {
+            "単勝": [
+              {
+                "combo": "2",
+                "amount": "350円"
+              }
+            ],
+            "複勝": [
+              {
+                "combo": "2",
+                "amount": "160円"
+              },
+              {
+                "combo": "12",
+                "amount": "160円"
+              },
+              {
+                "combo": "4",
+                "amount": "200円"
+              }
+            ],
+            "枠連": [
+              {
+                "combo": "1-6",
+                "amount": "1,030円"
+              }
+            ],
+            "馬連": [
+              {
+                "combo": "2-12",
+                "amount": "1,120円"
+              }
+            ],
+            "馬単": [
+              {
+                "combo": "2-12",
+                "amount": "1,730円"
+              }
+            ],
+            "ワイド": [
+              {
+                "combo": "2-12",
+                "amount": "420円"
+              },
+              {
+                "combo": "2-4",
+                "amount": "740円"
+              },
+              {
+                "combo": "4-12",
+                "amount": "600円"
+              }
+            ],
+            "3連複": [
+              {
+                "combo": "2-4-12",
+                "amount": "2,710円"
+              }
+            ],
+            "3連単": [
+              {
+                "combo": "2-12-4",
+                "amount": "10,910円"
+              }
+            ]
+          },
+          "jockey": "松山 弘平",
+          "horse": "エアアルチーナ",
+          "win_payout": "350円"
         }
       ]
     }
