@@ -82,8 +82,16 @@ body{background:linear-gradient(180deg,#061522,#02090f)}
 .place.p1{font-weight:1000;color:#fff4a8}
 .payout-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px 3px;padding-bottom:1px}
 .payout-item{min-width:0;display:grid;grid-template-columns:27px minmax(0,1fr);gap:2px;align-items:center;line-height:9px}
-.payout-item b{font-size:5.8px;color:#8eaf9d;white-space:nowrap}
-.payout-item span{font-size:6.2px;color:#ffe88f;white-space:normal;overflow:visible;text-overflow:clip;line-height:7px}
+.payout-item{border-radius:2px;padding:1px 2px}
+.payout-item b{font-size:5.8px;color:#fff;white-space:nowrap;font-weight:1000}
+.payout-item span{font-size:6.2px;color:#fff;white-space:normal;overflow:visible;text-overflow:clip;line-height:7px;font-weight:900}
+.payout-item.bet-tansho,.payout-item.bet-fukusho{background:#b51f2e}
+.payout-item.bet-wakuren{background:#27894d}
+.payout-item.bet-umaren{background:#8a2b96}
+.payout-item.bet-umatan{background:#8d7f16}
+.payout-item.bet-wide{background:#209c9a}
+.payout-item.bet-sanrenpuku{background:#244fb3}
+.payout-item.bet-sanrentan{background:#d66a13}
 .featured-card{border-color:#7a6430;background:#12150b}
 .featured-card .jra-venue-head{background:#4c3a0f;border-color:#7a6430}
 .featured-scroll{padding:2px}
