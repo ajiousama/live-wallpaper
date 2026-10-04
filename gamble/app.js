@@ -1,6 +1,6 @@
 const DATA_URL="./data.json";
 const JRA_URL="../jra/data.json";
-let data=null,jra=null,screenMode="keirin";
+let data=null,jra=null,screenMode="keirin",screenShownAt=performance.now();
 
 function esc(v){return String(v??"").replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]})}
 function jstNow(){
@@ -58,12 +58,14 @@ function renderKeirin(){
 }
 function showScreen(mode){
   screenMode=["keirin","race","boat"].includes(mode)?mode:"keirin";
+  screenShownAt=performance.now();
   const main=document.querySelector(".main-grid");
   main?.classList.remove("screen-keirin","screen-race","screen-boat");
   main?.classList.add("screen-"+screenMode);
   document.querySelector(".keirin-block")?.classList.toggle("active",screenMode==="keirin");
   document.querySelector(".boat-block")?.classList.toggle("active",screenMode==="boat");
   setupAllVerticalScrolls(true);
+  updateSportGridScroll();
 }
 function renderBoats(){
   const host=document.getElementById("boat-grid");
@@ -141,7 +143,7 @@ function featuredRaceCard(items){
 }
 function setupAllVerticalScrolls(reset){
   requestAnimationFrame(function(){
-    document.querySelectorAll(".auto-vscroll").forEach(function(box){
+    document.querySelectorAll(".auto-vscroll:not(.sport-grid-vscroll)").forEach(function(box){
       const max=Math.max(0,box.scrollHeight-box.clientHeight);
       const needs=box.clientHeight>0&&max>2;
       box.classList.toggle("needs-vscroll",needs);
@@ -154,7 +156,7 @@ function setupAllVerticalScrolls(reset){
   });
 }
 function stepAllVerticalScrolls(){
-  document.querySelectorAll(".auto-vscroll.needs-vscroll").forEach(function(box){
+  document.querySelectorAll(".auto-vscroll.needs-vscroll:not(.sport-grid-vscroll)").forEach(function(box){
     if(box.clientHeight<=0) return;
     const max=Math.max(0,box.scrollHeight-box.clientHeight);
     if(max<=2) return;
@@ -249,6 +251,38 @@ function stepBoatVerticalScrolls(){
     }
   });
 }
+function currentSportGrid(){
+  if(screenMode==="keirin") return document.getElementById("keirin-grid");
+  if(screenMode==="boat") return document.getElementById("boat-grid");
+  if(screenMode==="race") return document.getElementById("right-grid");
+  return null;
+}
+function updateSportGridScroll(){
+  const box=currentSportGrid();
+  if(box&&box.clientHeight>0){
+    const max=Math.max(0,box.scrollHeight-box.clientHeight);
+    box.classList.toggle("needs-vscroll",max>2);
+    if(max<=2){
+      box.scrollTop=0;
+    }else{
+      const elapsed=(performance.now()-screenShownAt)%20000;
+      let pos=0;
+      if(elapsed<1500){
+        pos=0;
+      }else if(elapsed<8500){
+        pos=(elapsed-1500)/7000;
+      }else if(elapsed<10500){
+        pos=1;
+      }else if(elapsed<17500){
+        pos=1-(elapsed-10500)/7000;
+      }else{
+        pos=0;
+      }
+      box.scrollTop=max*Math.max(0,Math.min(1,pos));
+    }
+  }
+  requestAnimationFrame(updateSportGridScroll);
+}
 function updateMarquees(){
   requestAnimationFrame(function(){
     document.querySelectorAll(".marquee-check").forEach(function(box){
@@ -308,6 +342,7 @@ function tick(){
 setInterval(tick,1000);tick();
 load();setInterval(load,30000);
 setInterval(stepAllVerticalScrolls,80);
+requestAnimationFrame(updateSportGridScroll);
 const SCREEN_ORDER=["keirin","race","boat"];
 setInterval(function(){
   const i=SCREEN_ORDER.indexOf(screenMode);
