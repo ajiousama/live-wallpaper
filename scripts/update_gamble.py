@@ -423,6 +423,17 @@ def boat_results(ymd: str, target: dict, now_minutes: int):
         "last_time":last,"active":active,"day_type":target.get("day_type",""),"races":races,
     }
 
+def nar_course_from_html(html: str) -> str:
+    if not html:
+        return ""
+    text = clean(BeautifulSoup(html, "html.parser"))
+    m = re.search(r"(芝|ダート|ダ|直)[^0-9]{0,12}([0-9,]{3,5})\s*m", text)
+    if not m:
+        return ""
+    surface = "ダート" if m.group(1) == "ダ" else m.group(1)
+    return f"{surface}{m.group(2).replace(',','')}m"
+
+
 def parse_nar_result(html: str, race_no: int):
     soup = BeautifulSoup(html,"html.parser")
     winner = jockey = ""
@@ -476,15 +487,21 @@ def local_results_for_names(ymd: str, local_epg: list[dict], names: list[str], n
             no = r["race"]
             startm = hhmm_minutes(r["time"])
             result = None
-            if now_minutes >= (startm or 9999):
+            page_html = ""
+            try:
+                url = (
+                    "https://www.keiba.go.jp/KeibaWeb/TodayRaceInfo/RaceMarkTable"
+                    f"?k_babaCode={code}&k_raceDate={ymd[:4]}%2F{ymd[4:6]}%2F{ymd[6:]}&k_raceNo={no}"
+                )
+                page_html = fetch(url)
+            except Exception:
+                page_html = ""
+            if now_minutes >= (startm or 9999) and page_html:
                 try:
-                    url = (
-                        "https://www.keiba.go.jp/KeibaWeb/TodayRaceInfo/RaceMarkTable"
-                        f"?k_babaCode={code}&k_raceDate={ymd[:4]}%2F{ymd[4:6]}%2F{ymd[6:]}&k_raceNo={no}"
-                    )
-                    result = parse_nar_result(fetch(url), no)
+                    result = parse_nar_result(page_html, no)
                 except Exception:
                     result = None
+            page_course = nar_course_from_html(page_html)
             fallback_name = r.get("race_name","")
             fallback_course = ""
             fm = re.search(r"(芝|ダート|ダ|直)\s*([0-9,]{3,5})\s*m", fallback_name)
@@ -492,15 +509,16 @@ def local_results_for_names(ymd: str, local_epg: list[dict], names: list[str], n
                 surface = "ダート" if fm.group(1) == "ダ" else fm.group(1)
                 fallback_course = f"{surface}{fm.group(2).replace(',','')}m"
                 fallback_name = (fallback_name[:fm.start()] + fallback_name[fm.end():]).strip()
+            course_value = fallback_course or page_course
             if result:
                 result["race_name"] = fallback_name
                 if not result.get("course"):
-                    result["course"] = fallback_course
+                    result["course"] = course_value
                 races.append(result)
             else:
                 races.append({
                     "race":no,"winner":"","jockey":"","trifecta":"",
-                    "race_name":fallback_name,"course":fallback_course,
+                    "race_name":fallback_name,"course":course_value,
                     "status":"結果待ち" if startm is not None and now_minutes >= startm else "発走前"
                 })
         out.append({"name":name,"code":code,"races":races})
