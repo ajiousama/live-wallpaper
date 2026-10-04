@@ -83,6 +83,37 @@ function keirinRows(v){
   }
   return '<table class="phase-table keirin-table"><thead><tr><th>R</th><th>級</th><th>レース</th><th>勝者</th><th>出身</th><th>3連単</th><th>払戻</th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
+function keirinDetailCard(v){
+  const races=v.races||[];
+  let rows="";
+  for(const x of races){
+    const raw=x.race_name||"—";
+    const cm=raw.match(/^[ＡAＳSＬL]級/);
+    const cls=cm?cm[0].replace("A","Ａ").replace("S","Ｓ").replace("L","Ｌ"):"";
+    const name=cm?raw.slice(cm[0].length).trim():raw;
+    const isFinal=/決勝/.test(raw);
+    rows+='<tr class="'+(isFinal?"final-row":"")+'">'+
+      '<td class="r">'+esc(x.race)+'R</td>'+
+      '<td class="time">'+esc(x.scheduled_time||x.time||"--:--")+'</td>'+
+      '<td class="class-col">'+esc(cls||"—")+'</td>'+
+      '<td class="name">'+raceNameMarquee(name)+'</td>'+
+      '<td class="winner">'+esc(x.winner||"---")+'</td>'+
+      '<td class="origin">'+esc(x.origin||"---")+'</td>'+
+      '<td class="combo">'+orderHtml(x.order,"keirin")+'</td>'+
+      '<td class="pay">'+esc(x.payout||"---")+'</td>'+
+      '<td class="status-col">'+esc(x.status||"発走前")+'</td>'+
+    '</tr>';
+  }
+  const venue=v.display_name||v.venue||v.name||"---";
+  const event=v.event_name||v.event_name_epg||"";
+  const grade=v.grade||"";
+  return '<article class="keirin-detail-card">'+
+    '<div class="keirin-detail-head"><span class="sport-tag keirin">競輪</span><strong>'+esc(venue)+'</strong><b>'+esc(grade)+'</b><em>'+esc(event)+'</em></div>'+
+    '<div class="keirin-detail-table-wrap">'+
+      '<table class="keirin-detail-table"><thead><tr><th>R</th><th>発走</th><th>級</th><th>レース</th><th>勝者</th><th>出身</th><th>3連単</th><th>払戻</th><th>状況</th></tr></thead><tbody>'+rows+'</tbody></table>'+
+    '</div>'+
+  '</article>';
+}
 function boatRows(v){
   const map=new Map((v.races||[]).map(x=>[Number(x.race),x]));
   let rows="";
@@ -293,11 +324,19 @@ function buildPages(){
 function renderPhasePage(page){
   const items=page.items||[];
   const host=document.getElementById("phase-grid");
-  host.className="phase-grid count-"+Math.max(1,items.length);
-  host.innerHTML=items.length?items.map(phaseCard).join(""):'<div class="empty-card">'+esc(page.phase+" "+(page.sportLabel||""))+'開催なし</div>';
+  const singleDayKeirin=page.phase==="デイ"&&page.sportKind==="keirin"&&items.length===1;
+  host.className="phase-grid count-"+Math.max(1,items.length)+(singleDayKeirin?" single-keirin-detail":"");
+  if(singleDayKeirin){
+    host.innerHTML=keirinDetailCard(items[0].venue);
+  }else{
+    host.innerHTML=items.length?items.map(phaseCard).join(""):'<div class="empty-card">'+esc(page.phase+" "+(page.sportLabel||""))+'開催なし</div>';
+  }
   document.getElementById("screen-title").textContent=page.sportLabel?(page.phase+"・"+page.sportLabel):page.phase;
   const pageText=page.total>1?(" "+page.page+"/"+page.total):"";
-  if(page.sportKind==="mixed"){
+  if(singleDayKeirin){
+    const v=items[0].venue;
+    document.getElementById("screen-sub").textContent=[v.venue||v.name,v.grade,v.event_name||v.event_name_epg].filter(Boolean).join(" / ");
+  }else if(page.sportKind==="mixed"){
     const kc=items.filter(x=>x.kind==="keirin").length;
     const bc=items.filter(x=>x.kind==="boat").length;
     document.getElementById("screen-sub").textContent="競輪 "+kc+"場 / ボート "+bc+"場"+pageText;
