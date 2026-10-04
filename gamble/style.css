@@ -140,11 +140,13 @@ body{background:linear-gradient(180deg,#061522,#02090f)}
 .boat-detail-table th,.boat-detail-table td{border-right:1px solid #27404d;border-bottom:1px solid #27404d;text-align:center;overflow:hidden;padding:1px 4px}
 .boat-detail-table th{font-size:12px;color:#9fb7c2;background:#091b26;font-weight:1000;white-space:nowrap}
 .boat-detail-table td{font-size:15px;font-weight:900;white-space:nowrap}
-.boat-detail-table .r{width:46px;color:#c8d7de}
-.boat-detail-table .time{width:68px;color:#8fd8ff}
+.boat-detail-table .r{width:54px;color:#c8d7de}
+.boat-detail-table .r strong{display:block;font-size:14px;line-height:1}
+.boat-detail-table .r small{display:block;margin-top:1px;font-size:8px;line-height:1;color:#8fd8ff;font-weight:900}
 .boat-detail-table .name{text-align:left}
 .boat-detail-table .winner{width:105px;text-align:left;color:#fff4a8;text-overflow:ellipsis}
 .boat-detail-table .bet-cell{width:auto;background:rgba(255,255,255,.018);white-space:normal;line-height:1.03}
+.boat-detail-table .bet-拡連複{width:16%}
 .boat-detail-table .bet-cell>span{display:block;font-size:10px;font-weight:900;color:#f4f8fb;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.12}
 .boat-detail-table .bet-cell:nth-last-child(2){background:rgba(45,139,255,.10)}
 .boat-detail-table .bet-cell:nth-last-child(2)>span{color:#dcecff}
@@ -164,13 +166,15 @@ body{background:linear-gradient(180deg,#061522,#02090f)}
 .keirin-detail-table th,.keirin-detail-table td{border-right:1px solid #27404d;border-bottom:1px solid #27404d;text-align:center;overflow:hidden;padding:1px 3px}
 .keirin-detail-table th{font-size:11px;color:#9fb7c2;background:#091b26;font-weight:1000;white-space:nowrap}
 .keirin-detail-table td{font-size:14px;font-weight:900;white-space:nowrap}
-.keirin-detail-table .r{width:42px;color:#c8d7de}
-.keirin-detail-table .time{width:60px;color:#8fd8ff}
+.keirin-detail-table .r{width:54px;color:#c8d7de}
+.keirin-detail-table .r strong{display:block;font-size:13px;line-height:1}
+.keirin-detail-table .r small{display:block;margin-top:1px;font-size:8px;line-height:1;color:#8fd8ff;font-weight:900}
 .keirin-detail-table .class-col{width:48px;color:#ffd56a}
-.keirin-detail-table .name{width:120px;text-align:left}
+.keirin-detail-table .name{width:128px;text-align:left}
 .keirin-detail-table .winner{width:118px;text-align:left;color:#fff;text-overflow:ellipsis}
 .keirin-detail-table .origin{width:54px;color:#c7d4da}
 .keirin-detail-table .bet-cell{width:auto;background:rgba(255,255,255,.018);white-space:normal;line-height:1.05}
+.keirin-detail-table .bet-ワイド{width:17%}
 .keirin-detail-table .bet-cell b{display:none}
 .keirin-detail-table .bet-cell span{display:block;font-size:11px;font-weight:900;color:#f4f8fb;white-space:normal;line-height:1.15}
 .keirin-detail-table .bet-cell:last-child{background:rgba(255,79,135,.08)}
@@ -343,9 +347,11 @@ body{background:linear-gradient(180deg,#061522,#02090f)}
   .boat-detail-table tbody tr{height:calc((100% - 25px)/12)}
   .boat-detail-table th{font-size:9px;padding:1px 2px}
   .boat-detail-table td{font-size:11px;padding:1px 2px}
-  .boat-detail-table .r{width:36px}
-  .boat-detail-table .time{width:52px}
+  .boat-detail-table .r{width:44px}
+  .boat-detail-table .r strong{font-size:11px}
+  .boat-detail-table .r small{font-size:6.5px}
   .boat-detail-table .winner{width:78px}
+  .boat-detail-table .bet-拡連複{width:17%}
   .boat-detail-table .bet-cell>span{font-size:7.5px;line-height:1.05}
   .boat-detail-table .num{width:19px;height:18px;font-size:9px}
   .boat-detail-table .final-row .winner{font-size:13px}
@@ -358,10 +364,11 @@ body{background:linear-gradient(180deg,#061522,#02090f)}
   .keirin-detail-table tbody tr{height:calc((100% - 25px)/12)}
   .keirin-detail-table th{font-size:9px;padding:1px 2px}
   .keirin-detail-table td{font-size:11px;padding:1px 2px}
-  .keirin-detail-table .r{width:34px}
-  .keirin-detail-table .time{width:50px}
+  .keirin-detail-table .r{width:44px}
+  .keirin-detail-table .r strong{font-size:10.5px}
+  .keirin-detail-table .r small{font-size:6.5px}
   .keirin-detail-table .class-col{width:40px}
-  .keirin-detail-table .name{width:95px}
+  .keirin-detail-table .name{width:102px}
   .keirin-detail-table .winner{width:90px}
   .keirin-detail-table .origin{width:45px}
   .keirin-detail-table .bet-cell span{font-size:8.5px;line-height:1.08}
