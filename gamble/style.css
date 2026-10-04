@@ -38,6 +38,18 @@ h1{margin:1px 0 0;font-size:31px;line-height:1;font-weight:1000;letter-spacing:.
 .jra-card .card-head{background:linear-gradient(90deg,#0c5433,#0b2227)}
 .jra-card:nth-child(2) .card-head{background:linear-gradient(90deg,#164886,#0b222b)}
 .jra-card:nth-child(3) .card-head{background:linear-gradient(90deg,#67600b,#0b2227)}
+.horse-races{min-height:0;display:grid;grid-template-rows:repeat(12,minmax(0,1fr));overflow:hidden}
+.horse-race{min-width:0;min-height:0;display:grid;grid-template-rows:minmax(20px,1fr) 15px;border-bottom:1px solid #193b31;overflow:hidden}
+.horse-result-line{min-width:0;display:grid;grid-template-columns:34px minmax(0,1fr) 72px 58px 72px;align-items:center;gap:3px;padding:1px 4px;font-size:10.5px;font-weight:900;overflow:hidden}
+.race-no{color:#cce3d7;font-weight:1000;text-align:center}.winner{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#fff}.winner-jockey{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#cfe0d8;font-size:9.5px}.tri-combo{white-space:nowrap;text-align:center;color:#ffb86d}.tri-pay{white-space:nowrap;text-align:right;color:#ffe36f}
+.race-info{position:relative;min-width:0;overflow:hidden;white-space:nowrap;padding:0 5px;background:#041118;color:#86a89a;font-size:8.5px;line-height:15px}
+.marquee-track{display:inline-flex;align-items:center;min-width:100%;width:max-content;gap:60px;white-space:nowrap;transform:translateX(0)}
+.marquee-copy{display:none}
+.race-info.is-marquee .marquee-copy{display:inline}
+.race-info.is-marquee .marquee-track{animation:jraRaceMarquee 12s linear infinite}
+@keyframes jraRaceMarquee{from{transform:translateX(0)}to{transform:translateX(calc(-50% - 30px))}}
+.right-grid.three .horse-result-line{grid-template-columns:28px minmax(0,1fr) 50px 45px 55px;gap:2px;padding:1px 2px;font-size:9px}
+.right-grid.three .winner-jockey{font-size:8px}.right-grid.three .race-info{font-size:7.5px}
 .jra-table th{height:22px;background:#071a20;color:#a8c4ba;font-size:9px}.jra-table td{font-size:11px;font-weight:800;white-space:nowrap;text-overflow:ellipsis}
 .jra-table .jr{width:31px;color:#c5dad0}.jra-table .horse{text-align:left;font-weight:1000}.jra-table .jockey{width:64px;text-align:left;color:#dce8e2}.jra-table .pay{width:74px;text-align:right;color:#ffe278;font-weight:1000}
 .right-grid.three .jra-table td{font-size:10px}.right-grid.three .jra-table .jockey{width:54px}.right-grid.three .jra-table .pay{width:67px}
@@ -45,4 +57,5 @@ footer{display:flex;justify-content:space-between;align-items:center;padding:0 8
 @media(max-width:1300px){
   #dash{padding:6px;grid-template-rows:66px 1fr 24px;gap:5px}.main-grid{grid-template-columns:44% 56%;gap:5px}.left-column{gap:5px}.block{grid-template-rows:45px 1fr}.two-grid,.right-grid{gap:4px;padding:4px}
   h1{font-size:25px}.status #clock{font-size:25px}.block h2{font-size:18px}.card-title{font-size:16px}.compact-table td{font-size:10px}.num{width:18px;height:17px;font-size:10px}.jra-table td{font-size:9.5px}
+  .horse-result-line{grid-template-columns:30px minmax(0,1fr) 58px 48px 60px;font-size:9px}.winner-jockey{font-size:8px}.race-info{font-size:7.5px}
 }
