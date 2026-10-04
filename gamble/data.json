@@ -1,8 +1,8 @@
 {
   "date": "2026-10-04",
   "date_label": "2026年10月04日",
-  "updated_at": "18:26:59",
-  "updated_at_iso": "2026-10-04T18:26:59.062166+09:00",
+  "updated_at": "18:29:23",
+  "updated_at_iso": "2026-10-04T18:29:23.204547+09:00",
   "jra_switch_time": "17:00",
   "keirin": {
     "phase": "本日開催 8場",
@@ -5223,12 +5223,17 @@
         },
         {
           "race": 8,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            1,
+            2,
+            4
+          ],
+          "payout": "550円",
           "payouts": {},
           "race_name": "",
-          "scheduled_time": "18:23"
+          "scheduled_time": "18:23",
+          "winner": ""
         },
         {
           "race": 9,
@@ -5371,7 +5376,7 @@
           ],
           "payout": "480円",
           "payouts": {},
-          "race_name": "",
+          "race_name": "ふく〜る特賞",
           "scheduled_time": "18:13",
           "winner": ""
         },
@@ -5892,7 +5897,7 @@
             "race_name": "安藤夫婦ｗｉｔｈ哲也善重Ｂ３－７  10",
             "course": "直200m",
             "scheduled_time": "18:28",
-            "status": "発走前"
+            "status": "結果待ち"
           },
           {
             "race": 10,
