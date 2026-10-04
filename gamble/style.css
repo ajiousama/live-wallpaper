@@ -25,6 +25,28 @@ body{background:linear-gradient(180deg,#061522,#02090f)}
 .phase-grid.count-4{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr))}
 .phase-grid.count-5,.phase-grid.count-6{grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr))}
 .phase-grid.boat-dense{grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr));gap:3px;padding:2px}
+.phase-grid.boat-dense{display:block;padding:2px}
+.boat-pay-board-wrap{height:100%;min-height:0;overflow:hidden;border:1px solid #285f96;background:#06141e}
+.boat-pay-board{width:100%;height:100%;border-collapse:collapse;table-layout:fixed}
+.boat-pay-board th,.boat-pay-board td{border-right:1px solid #27404d;border-bottom:1px solid #27404d;text-align:center;overflow:hidden;padding:1px 2px}
+.boat-pay-board thead tr:first-child{height:34px}
+.boat-pay-board thead tr:nth-child(2){height:19px}
+.boat-pay-board tbody tr{height:calc((100% - 53px)/12)}
+.boat-pay-corner{width:34px;background:#0a1c27;color:#9fb7c2;font-size:11px}
+.boat-pay-venue{background:#0b3159;color:#fff;padding:2px 3px!important}
+.boat-pay-venue strong{display:block;font-size:13px;line-height:1.05;white-space:nowrap}
+.boat-pay-venue small{display:block;font-size:7px;line-height:1.05;color:#a9c7e7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.boat-pay-board thead tr:nth-child(2) th{background:#071922;color:#91aab5;font-size:7px;line-height:1}
+.boat-pay-race{width:34px;background:#091b26;color:#d4e1e7;font-size:11px}
+.boat-pay-combo-cell{background:rgba(255,255,255,.02)}
+.boat-pay-combo-cell .order{gap:1px}
+.boat-pay-combo-cell .num{width:16px;min-width:16px;height:15px;font-size:8px;border-radius:2px}
+.boat-pay-amount{font-size:10px;font-weight:1000;color:#ffe58a;white-space:nowrap}
+.boat-pay-pop{font-size:9px;font-weight:900;color:#c2d3dc;white-space:nowrap}
+.boat-pay-pending-cell{background:#07131b;color:#6f8a98}
+.boat-pay-pending{display:flex;justify-content:center;align-items:center;gap:5px;white-space:nowrap}
+.boat-pay-pending b{font-size:10px;color:#8fd8ff}
+.boat-pay-pending span{font-size:8px;color:#77909d}
 .phase-grid.boat-dense .phase-card{grid-template-rows:20px 1fr}
 .phase-grid.boat-dense .card-head{gap:3px;padding:0 3px}
 .phase-grid.boat-dense .card-head strong{font-size:10px}
@@ -280,6 +302,19 @@ body{background:linear-gradient(180deg,#061522,#02090f)}
   #clock{font-size:16px}
   .phase-grid{gap:3px}
   .phase-grid.boat-dense{gap:2px;padding:1px}
+  .phase-grid.boat-dense{display:block;padding:1px}
+  .boat-pay-board thead tr:first-child{height:29px}
+  .boat-pay-board thead tr:nth-child(2){height:16px}
+  .boat-pay-board tbody tr{height:calc((100% - 45px)/12)}
+  .boat-pay-corner,.boat-pay-race{width:27px;font-size:9px}
+  .boat-pay-venue strong{font-size:11px}
+  .boat-pay-venue small{font-size:6px}
+  .boat-pay-board thead tr:nth-child(2) th{font-size:6px}
+  .boat-pay-combo-cell .num{width:12px;min-width:12px;height:12px;font-size:6.5px}
+  .boat-pay-amount{font-size:8px}
+  .boat-pay-pop{font-size:7px}
+  .boat-pay-pending b{font-size:8px}
+  .boat-pay-pending span{font-size:6.5px}
   .phase-grid.boat-dense .phase-card{grid-template-rows:18px 1fr}
   .phase-grid.boat-dense .card-head strong{font-size:9px}
   .phase-grid.boat-dense .card-head small{font-size:6px}
