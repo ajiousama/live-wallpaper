@@ -346,6 +346,35 @@ def parse_nar_result(html: str, race_no: int):
         return {"race":race_no,"winner":winner,"jockey":jockey,"trifecta":payout,"order":order,"status":"確定"}
     return None
 
+def local_results_for_names(ymd: str, local_epg: list[dict], names: list[str], now_minutes: int):
+    by_name = {v["venue"]:v for v in local_epg}
+    out = []
+    for name in names:
+        venue = by_name.get(name)
+        if not venue or name not in NAR_CODES:
+            continue
+        code = NAR_CODES[name]
+        races = []
+        for r in venue["races"]:
+            no = r["race"]
+            startm = hhmm_minutes(r["time"])
+            result = None
+            if now_minutes >= (startm or 9999):
+                try:
+                    url = (
+                        "https://www.keiba.go.jp/KeibaWeb/TodayRaceInfo/RaceMarkTable"
+                        f"?k_babaCode={code}&k_raceDate={ymd[:4]}%2F{ymd[4:6]}%2F{ymd[6:]}&k_raceNo={no}"
+                    )
+                    result = parse_nar_result(fetch(url), no)
+                except Exception:
+                    result = None
+            races.append(result or {
+                "race":no,"winner":"","jockey":"","trifecta":"",
+                "status":"結果待ち" if startm is not None and now_minutes >= startm else "発走前"
+            })
+        out.append({"name":name,"code":code,"races":races})
+    return out
+
 def local_night_results(ymd: str, local_epg: list[dict], now_minutes: int):
     candidates = []
     for venue in local_epg:
@@ -415,6 +444,7 @@ def main():
             except Exception:
                 pass
 
+    local_feature = local_results_for_names(ymd, local_epg, ["盛岡"], now_minutes)
     local_night = local_night_results(ymd,local_epg,now_minutes) if now.hour >= 16 else []
 
     payload = {
@@ -429,6 +459,7 @@ def main():
             "venues":phase_venues,
         },
         "boats":boats,
+        "local_feature":{"venues":local_feature},
         "local_night":{"venues":local_night},
         "source":{
             "schedule":"Free WiFi EPG",
