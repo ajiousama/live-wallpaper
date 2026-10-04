@@ -72,6 +72,11 @@ h1{margin:1px 0 0;font-size:31px;line-height:1;font-weight:1000;letter-spacing:.
 .keirin-all .num,.boat-all .num{width:16px;height:15px;font-size:9px;gap:1px}
 .keirin-all .order,.boat-all .order{gap:2px}
 .boat-all .result-card{grid-template-rows:24px 1fr}
+.boat-table-viewport{min-height:0;overflow:hidden;position:relative}
+.boat-table-viewport .compact-table{height:auto;min-height:100%}
+.boat-table-viewport .compact-table th{position:sticky;top:0;z-index:2}
+.boat-table-viewport .compact-table td{height:16px;line-height:14px}
+.boat-table-viewport.needs-vscroll::after{content:"↕";position:absolute;right:2px;bottom:2px;font-size:9px;color:#65bfff;background:rgba(2,10,16,.72);padding:1px 2px;border-radius:2px;pointer-events:none}
 .boat-all .card-title{font-size:12px}
 .boat-all .event{display:none}
 .boat-all .compact-table td{font-size:8px}
