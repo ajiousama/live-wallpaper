@@ -1,8 +1,8 @@
 {
   "date": "2026-10-04",
   "date_label": "2026年10月04日",
-  "updated_at": "15:35:09",
-  "updated_at_iso": "2026-10-04T15:35:09.153369+09:00",
+  "updated_at": "15:53:34",
+  "updated_at_iso": "2026-10-04T15:53:34.373035+09:00",
   "jra_switch_time": "17:00",
   "keirin": {
     "phase": "本日開催 8場",
@@ -558,9 +558,13 @@
           {
             "race": 11,
             "time": "15:47",
-            "status": "発走前",
-            "order": [],
-            "payout": "",
+            "status": "確定",
+            "order": [
+              1,
+              7,
+              2
+            ],
+            "payout": "9,290円",
             "winner": "",
             "origin": "",
             "race_name": "Ｓ級 特秀",
@@ -1853,7 +1857,7 @@
             5
           ],
           "payout": "990円",
-          "race_name": "",
+          "race_name": "戸田特賞",
           "scheduled_time": "15:25",
           "winner": ""
         },
@@ -2015,11 +2019,16 @@
         },
         {
           "race": 11,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            1,
+            2,
+            3
+          ],
+          "payout": "610円",
           "race_name": "予選特選",
-          "scheduled_time": "15:47"
+          "scheduled_time": "15:47",
+          "winner": ""
         },
         {
           "race": 12,
@@ -2158,11 +2167,16 @@
         },
         {
           "race": 10,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            2,
+            3,
+            4
+          ],
+          "payout": "1,580円",
           "race_name": "選抜戦",
-          "scheduled_time": "15:39"
+          "scheduled_time": "15:39",
+          "winner": ""
         },
         {
           "race": 11,
@@ -2322,11 +2336,16 @@
         },
         {
           "race": 11,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            1,
+            4,
+            5
+          ],
+          "payout": "3,450円",
           "race_name": "準優勝戦",
-          "scheduled_time": "15:35"
+          "scheduled_time": "15:35",
+          "winner": ""
         },
         {
           "race": 12,
@@ -2478,11 +2497,16 @@
         },
         {
           "race": 11,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            1,
+            3,
+            2
+          ],
+          "payout": "1,650円",
           "race_name": "",
-          "scheduled_time": "15:43"
+          "scheduled_time": "15:43",
+          "winner": ""
         },
         {
           "race": 12,
@@ -2634,11 +2658,16 @@
         },
         {
           "race": 11,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            1,
+            3,
+            4
+          ],
+          "payout": "740円",
           "race_name": "予選特選",
-          "scheduled_time": "15:34"
+          "scheduled_time": "15:34",
+          "winner": ""
         },
         {
           "race": 12,
@@ -2933,11 +2962,16 @@
         },
         {
           "race": 10,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
-          "race_name": "",
-          "scheduled_time": "15:31"
+          "status": "確定",
+          "order": [
+            1,
+            3,
+            2
+          ],
+          "payout": "5,400円",
+          "race_name": "予選特賞",
+          "scheduled_time": "15:31",
+          "winner": ""
         },
         {
           "race": 11,
@@ -3091,11 +3125,16 @@
         },
         {
           "race": 2,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            3,
+            4,
+            5
+          ],
+          "payout": "2,330円",
           "race_name": "",
-          "scheduled_time": "15:41"
+          "scheduled_time": "15:41",
+          "winner": ""
         },
         {
           "race": 3,
@@ -3196,7 +3235,7 @@
             6
           ],
           "payout": "3,980円",
-          "race_name": "",
+          "race_name": "予選",
           "scheduled_time": "15:25",
           "winner": ""
         },
@@ -3624,13 +3663,18 @@
           },
           {
             "race": 3,
-            "winner": "",
-            "jockey": "",
-            "trifecta": "",
-            "race_name": "十勝乃長屋雅楽８周年記念２歳Ｃ－４  10",
+            "winner": "オシマダイヤ",
+            "jockey": "島津新",
+            "trifecta": "17,020円",
+            "order": [
+              4,
+              3,
+              9
+            ],
             "course": "直200m",
-            "scheduled_time": "15:08",
-            "status": "結果待ち"
+            "status": "確定",
+            "race_name": "十勝乃長屋雅楽８周年記念２歳Ｃ－４  10",
+            "scheduled_time": "15:08"
           },
           {
             "race": 4,
@@ -3640,7 +3684,7 @@
             "race_name": "小松原拓真３０代突入記念杯２歳Ｂ－２  10",
             "course": "直200m",
             "scheduled_time": "15:43",
-            "status": "発走前"
+            "status": "結果待ち"
           },
           {
             "race": 5,
@@ -3988,7 +4032,7 @@
         "race": 11
       }
     ],
-    "payout": "206,620円",
+    "payout": "7,543,000円",
     "payout_kind": "想定"
   },
   "source": {
