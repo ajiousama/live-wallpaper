@@ -343,8 +343,29 @@ function buildPages(){
       });
     }
 
-    // それ以外は競輪→ボート→地方競馬の順で最大6場をまとめる。
-    const rest=phaseAll.filter(x=>!premiumKeirin.includes(x)&&!premiumBoat.includes(x));
+    // それ以外。デイの通常ボートが7場以上ある日は3x3で最大9場を1ページに集約。
+    let rest=phaseAll.filter(x=>!premiumKeirin.includes(x)&&!premiumBoat.includes(x));
+    if(phase==="デイ"){
+      const dayBoats=rest.filter(x=>x.kind==="boat");
+      if(dayBoats.length>=7){
+        for(let i=0;i<dayBoats.length;i+=9){
+          const chunk=dayBoats.slice(i,i+9);
+          pages.push({
+            key:"phase:デイ:boat-dense:"+Math.floor(i/9),
+            type:"phase",
+            phase:"デイ",
+            sportKind:"boat-dense",
+            sportLabel:"ボート",
+            page:Math.floor(i/9)+1,
+            total:Math.ceil(dayBoats.length/9),
+            items:chunk
+          });
+        }
+        rest=rest.filter(x=>x.kind!=="boat");
+      }
+    }
+
+    // 残りは競輪→ボート→地方競馬の順で最大6場。
     for(let i=0;i<rest.length;i+=6){
       const chunk=rest.slice(i,i+6);
       pages.push({
@@ -386,9 +407,11 @@ function renderPhasePage(page){
   const host=document.getElementById("phase-grid");
   const singleKeirinDetail=page.sportKind==="keirin-detail"&&items.length===1;
   const singleBoatDetail=page.sportKind==="boat-detail"&&items.length===1;
+  const denseBoat=page.sportKind==="boat-dense";
   host.className="phase-grid count-"+Math.max(1,items.length)
     +(singleKeirinDetail?" single-keirin-detail":"")
-    +(singleBoatDetail?" single-boat-detail":"");
+    +(singleBoatDetail?" single-boat-detail":"")
+    +(denseBoat?" boat-dense":"");
   if(singleKeirinDetail){
     host.innerHTML=keirinDetailCard(items[0].venue);
   }else if(singleBoatDetail){
@@ -404,6 +427,8 @@ function renderPhasePage(page){
   }else if(singleBoatDetail){
     const v=items[0].venue;
     document.getElementById("screen-sub").textContent=[v.name,"SG",v.event_name].filter(Boolean).join(" / ");
+  }else if(denseBoat){
+    document.getElementById("screen-sub").textContent="ボート "+items.length+"場 / 12R一覧"+pageText;
   }else if(page.sportKind==="mixed"){
     const kc=items.filter(x=>x.kind==="keirin").length;
     const bc=items.filter(x=>x.kind==="boat").length;
