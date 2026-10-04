@@ -423,15 +423,51 @@ def boat_results(ymd: str, target: dict, now_minutes: int):
         "last_time":last,"active":active,"day_type":target.get("day_type",""),"races":races,
     }
 
-def nar_course_from_html(html: str) -> str:
+def normalize_nar_course(text: str, venue: str = "") -> str:
+    text = clean(text)
+    if not text:
+        return ""
+    m = re.search(r"(芝|ダート|ダ|直)[^0-9]{0,12}([0-9,]{3,5})\s*m", text)
+    if m:
+        surface = "ダート" if m.group(1) == "ダ" else m.group(1)
+        return f"{surface}{m.group(2).replace(',','')}m"
+    m = re.search(r"(?:左|右)?\s*([0-9,]{3,5})\s*m", text)
+    if m:
+        surface = "直" if venue == "帯広" else "ダート"
+        return f"{surface}{m.group(1).replace(',','')}m"
+    return ""
+
+
+def nar_course_from_html(html: str, venue: str = "") -> str:
     if not html:
         return ""
-    text = clean(BeautifulSoup(html, "html.parser"))
-    m = re.search(r"(芝|ダート|ダ|直)[^0-9]{0,12}([0-9,]{3,5})\s*m", text)
-    if not m:
-        return ""
-    surface = "ダート" if m.group(1) == "ダ" else m.group(1)
-    return f"{surface}{m.group(2).replace(',','')}m"
+    return normalize_nar_course(clean(BeautifulSoup(html, "html.parser")), venue)
+
+
+def nar_course_map(ymd: str, code: str, venue: str) -> dict[int, str]:
+    url = (
+        "https://www.keiba.go.jp/KeibaWeb/TodayRaceInfo/RaceList"
+        f"?k_babaCode={code}&k_raceDate={ymd[:4]}%2F{ymd[4:6]}%2F{ymd[6:]}"
+    )
+    try:
+        soup = BeautifulSoup(fetch(url), "html.parser")
+    except Exception:
+        return {}
+    out: dict[int, str] = {}
+    for tr in soup.find_all("tr"):
+        cells = [clean(x) for x in tr.find_all(["th","td"], recursive=False)]
+        if not cells:
+            continue
+        rm = re.fullmatch(r"(\d{1,2})R", cells[0])
+        if not rm:
+            continue
+        no = int(rm.group(1))
+        for cell in cells[1:]:
+            course = normalize_nar_course(cell, venue)
+            if course:
+                out[no] = course
+                break
+    return out
 
 
 def parse_nar_result(html: str, race_no: int):
@@ -482,6 +518,7 @@ def local_results_for_names(ymd: str, local_epg: list[dict], names: list[str], n
         if not venue or name not in NAR_CODES:
             continue
         code = NAR_CODES[name]
+        course_map = nar_course_map(ymd, code, name)
         races = []
         for r in venue["races"]:
             no = r["race"]
@@ -501,7 +538,7 @@ def local_results_for_names(ymd: str, local_epg: list[dict], names: list[str], n
                     result = parse_nar_result(page_html, no)
                 except Exception:
                     result = None
-            page_course = nar_course_from_html(page_html)
+            page_course = nar_course_from_html(page_html, name)
             fallback_name = r.get("race_name","")
             fallback_course = ""
             fm = re.search(r"(芝|ダート|ダ|直)\s*([0-9,]{3,5})\s*m", fallback_name)
@@ -509,7 +546,7 @@ def local_results_for_names(ymd: str, local_epg: list[dict], names: list[str], n
                 surface = "ダート" if fm.group(1) == "ダ" else fm.group(1)
                 fallback_course = f"{surface}{fm.group(2).replace(',','')}m"
                 fallback_name = (fallback_name[:fm.start()] + fallback_name[fm.end():]).strip()
-            course_value = fallback_course or page_course
+            course_value = course_map.get(no,"") or fallback_course or page_course
             if result:
                 result["race_name"] = fallback_name
                 if not result.get("course"):
