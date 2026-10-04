@@ -12,7 +12,9 @@ h1{margin:1px 0 0;font-size:31px;line-height:1;font-weight:1000;letter-spacing:.
 .sub{font-size:12px;color:#b9ced8;margin-top:5px}
 .status{display:flex;align-items:center;gap:18px;font-weight:900}.live{border:1px solid #1fbf72;color:#aaf6cd;padding:7px 11px;border-radius:6px}.live span{display:inline-block;width:8px;height:8px;border-radius:50%;background:#2ce786;box-shadow:0 0 10px #2ce786;margin-right:6px}.status #updated{font-size:13px;color:#c4d7df}.status #clock{font-size:31px;letter-spacing:.05em}
 .main-grid{min-height:0;display:grid;grid-template-columns:43% 57%;gap:8px}
-.left-column{min-height:0;display:grid;grid-template-rows:1fr 1fr;gap:8px}
+.left-column{min-height:0;position:relative}
+.left-column .sport-panel{position:absolute;inset:0;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .25s ease}
+.left-column .sport-panel.active{opacity:1;visibility:visible;pointer-events:auto}
 .block{min-height:0;border:1px solid var(--line);background:linear-gradient(180deg,rgba(7,24,35,.98),rgba(4,15,23,.98));display:grid;grid-template-rows:52px 1fr;overflow:hidden}
 .keirin-block{border-color:#8a3257}.boat-block{border-color:#2369a2}.right-column{border-color:#19794a}
 .block-head{display:flex;justify-content:space-between;align-items:center;padding:6px 11px;border-bottom:1px solid var(--line);background:#0a1b27}
@@ -31,13 +33,13 @@ h1{margin:1px 0 0;font-size:31px;line-height:1;font-weight:1000;letter-spacing:.
 .compact-table th{height:20px;font-size:9px;color:#9db6c2;background:#071a25}.compact-table td{font-size:12px;font-weight:900;line-height:1}
 .compact-table .rcol{width:31px;color:#bdd0d9}.compact-table .ocol{width:94px}.compact-table .pcol{width:auto;text-align:right;padding-right:8px;color:#ffe78f}
 .order{display:flex;justify-content:center;gap:3px}.num{display:inline-grid;place-items:center;width:21px;height:20px;border-radius:3px;border:1px solid rgba(255,255,255,.28);font-size:12px;font-weight:1000;line-height:1}
-.keirin-card .compact-table td{font-size:14px}
-.keirin-card .compact-table th{font-size:10px}
-.keirin-card .num{width:23px;height:22px;font-size:13px}
-.keirin-block .two-grid.three .keirin-card .compact-table td{font-size:11px;padding-left:2px;padding-right:2px}
+.keirin-card .compact-table td{font-size:18px}
+.keirin-card .compact-table th{font-size:12px}
+.keirin-card .num{width:29px;height:27px;font-size:16px}
+.keirin-block .two-grid.three .keirin-card .compact-table td{font-size:14px;padding-left:2px;padding-right:2px}
 .keirin-block .two-grid.three .keirin-card .compact-table .rcol{width:27px}
 .keirin-block .two-grid.three .keirin-card .compact-table .ocol{width:74px}
-.keirin-block .two-grid.three .keirin-card .num{width:18px;height:19px;font-size:10px}
+.keirin-block .two-grid.three .keirin-card .num{width:23px;height:22px;font-size:13px}
 .keirin-block .two-grid.three .keirin-card .event{display:none}
 .n1{background:#fff;color:#111}.n2{background:#111;color:#fff;border-color:#6f7b80}.n3{background:#d9232e;color:#fff}.n4{background:#1762c9;color:#fff}.n5{background:#f4d421;color:#111}.n6{background:#15964b;color:#fff}.n7{background:#ec7c22;color:#111}.n8{background:#ee91b4;color:#111}.n9{background:#7a35a5;color:#fff}
 .pending{color:#617e8c!important;font-size:10px!important;text-align:center!important}
@@ -65,7 +67,7 @@ h1{margin:1px 0 0;font-size:31px;line-height:1;font-weight:1000;letter-spacing:.
 .right-grid.three .jra-table td{font-size:10px}.right-grid.three .jra-table .jockey{width:54px}.right-grid.three .jra-table .pay{width:67px}
 footer{display:flex;justify-content:space-between;align-items:center;padding:0 8px;color:#7f9ba9;font-size:10px;border-top:1px solid #173442}
 @media(max-width:1300px){
-  #dash{padding:6px;grid-template-rows:66px 1fr 24px;gap:5px}.main-grid{grid-template-columns:44% 56%;gap:5px}.left-column{gap:5px}.block{grid-template-rows:45px 1fr}.two-grid,.right-grid{gap:4px;padding:4px}
+  #dash{padding:6px;grid-template-rows:66px 1fr 24px;gap:5px}.main-grid{grid-template-columns:44% 56%;gap:5px}.block{grid-template-rows:45px 1fr}.two-grid,.right-grid{gap:4px;padding:4px}
   h1{font-size:25px}.status #clock{font-size:25px}.block h2{font-size:18px}.card-title{font-size:16px}.compact-table td{font-size:10px}.num{width:18px;height:17px;font-size:10px}.jra-table td{font-size:9.5px}
   .horse-result-line{grid-template-columns:30px minmax(0,1fr) 58px 48px 60px;font-size:9px}.winner-jockey{font-size:8px}.race-info{font-size:7.5px}
 }
