@@ -78,20 +78,23 @@ body{background:linear-gradient(180deg,#061522,#02090f)}
 .phase-table .class-col{width:42px;color:var(--gold)}
 .phase-table .name{text-align:left}
 .phase-table .winner{text-align:left;text-overflow:ellipsis}
-.phase-table .origin{width:52px}
+.phase-table .winner-stack{text-align:left;white-space:normal;vertical-align:middle}
+.phase-table .winner-stack strong{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.05}
+.phase-table .winner-stack small{display:block;margin-top:1px;font-size:.78em;line-height:1;color:#9fb7c2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .phase-table .combo{width:84px}
 .phase-table .pay{width:90px;text-align:right;color:#ffe58a;padding-right:5px}
-.keirin-table .name{width:86px}
-.keirin-table .winner{width:95px}
+.keirin-table .name{width:108px}
+.keirin-table .winner-stack{width:116px}
 .boat-table .name{width:auto}
 .boat-table .combo{width:84px}
 .boat-table .pay{width:92px}
 .local-table .local-info{width:125px;text-align:left;white-space:normal;vertical-align:middle;padding:1px 4px}
 .local-table .local-info>div{height:16px;line-height:16px;overflow:hidden;white-space:nowrap}
 .local-table .local-info>b{display:block;height:14px;line-height:14px;font-size:10px;color:#78c7a1;white-space:nowrap}
-.local-table .winner{width:105px}
-.local-table .jockey{width:72px;text-align:left;text-overflow:ellipsis}
-.local-table .combo{width:78px}
+.local-table .winner-stack{width:138px}
+.local-table .winner-stack strong{color:#f5f7f6}
+.local-table .winner-stack small{color:#9ccfb5}
+.local-table .combo{width:82px}
 .local-table .pay{width:88px}
 .phase-grid.count-4 .phase-card,.phase-grid.count-5 .phase-card,.phase-grid.count-6 .phase-card{grid-template-rows:24px 1fr}
 .phase-grid.count-4 .card-head,.phase-grid.count-5 .card-head,.phase-grid.count-6 .card-head{gap:4px;padding:1px 4px}
@@ -112,17 +115,16 @@ body{background:linear-gradient(180deg,#061522,#02090f)}
 .phase-grid.count-4 .local-table .local-info>b,.phase-grid.count-5 .local-table .local-info>b,.phase-grid.count-6 .local-table .local-info>b{height:8px;line-height:8px;font-size:7px}
 .phase-grid.count-5 .phase-table .r,.phase-grid.count-6 .phase-table .r{width:27px}
 .phase-grid.count-5 .phase-table .class-col,.phase-grid.count-6 .phase-table .class-col{width:34px}
-.phase-grid.count-5 .phase-table .origin,.phase-grid.count-6 .phase-table .origin{width:43px}
 .phase-grid.count-5 .phase-table .combo,.phase-grid.count-6 .phase-table .combo{width:66px}
 .phase-grid.count-5 .phase-table .pay,.phase-grid.count-6 .phase-table .pay{width:72px}
-.phase-grid.count-5 .keirin-table .name,.phase-grid.count-6 .keirin-table .name{width:65px}
-.phase-grid.count-5 .keirin-table .winner,.phase-grid.count-6 .keirin-table .winner{width:75px}
+.phase-grid.count-5 .keirin-table .name,.phase-grid.count-6 .keirin-table .name{width:82px}
+.phase-grid.count-5 .keirin-table .winner-stack,.phase-grid.count-6 .keirin-table .winner-stack{width:92px}
+.phase-grid.count-5 .phase-table .winner-stack small,.phase-grid.count-6 .phase-table .winner-stack small{font-size:6.5px}
 .phase-grid.count-5 .boat-table .combo,.phase-grid.count-6 .boat-table .combo{width:66px}
 .phase-grid.count-5 .boat-table .pay,.phase-grid.count-6 .boat-table .pay{width:74px}
 .phase-grid.count-5 .local-table .local-info,.phase-grid.count-6 .local-table .local-info{width:92px}
-.phase-grid.count-5 .local-table .winner,.phase-grid.count-6 .local-table .winner{width:78px}
-.phase-grid.count-5 .local-table .jockey,.phase-grid.count-6 .local-table .jockey{width:54px}
-.phase-grid.count-5 .local-table .combo,.phase-grid.count-6 .local-table .combo{width:62px}
+.phase-grid.count-5 .local-table .winner-stack,.phase-grid.count-6 .local-table .winner-stack{width:102px}
+.phase-grid.count-5 .local-table .combo,.phase-grid.count-6 .local-table .combo{width:66px}
 .phase-grid.count-5 .local-table .pay,.phase-grid.count-6 .local-table .pay{width:70px}
 .phase-grid.count-5 .num,.phase-grid.count-6 .num,
 .phase-grid.count-5 .horse-no,.phase-grid.count-6 .horse-no{width:18px;min-width:18px;height:17px;font-size:9px}
@@ -170,9 +172,10 @@ body{background:linear-gradient(180deg,#061522,#02090f)}
 .keirin-detail-table .r strong{display:block;font-size:13px;line-height:1}
 .keirin-detail-table .r small{display:block;margin-top:1px;font-size:8px;line-height:1;color:#8fd8ff;font-weight:900}
 .keirin-detail-table .class-col{width:48px;color:#ffd56a}
-.keirin-detail-table .name{width:128px;text-align:left}
-.keirin-detail-table .winner{width:118px;text-align:left;color:#fff;text-overflow:ellipsis}
-.keirin-detail-table .origin{width:54px;color:#c7d4da}
+.keirin-detail-table .name{width:150px;text-align:left}
+.keirin-detail-table .winner-stack{width:152px;text-align:left;color:#fff;white-space:normal;vertical-align:middle}
+.keirin-detail-table .winner-stack strong{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.05}
+.keirin-detail-table .winner-stack small{display:block;margin-top:2px;font-size:10px;line-height:1;color:#c7d4da;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .keirin-detail-table .bet-cell{width:auto;background:rgba(255,255,255,.018);white-space:normal;line-height:1.05}
 .keirin-detail-table .bet-ワイド{width:17%}
 .keirin-detail-table .bet-cell b{display:none}
@@ -181,7 +184,7 @@ body{background:linear-gradient(180deg,#061522,#02090f)}
 .keirin-detail-table .bet-cell:last-child span{color:#ffe58a;font-size:12px}
 .keirin-detail-table .final-row td{background-color:rgba(255,213,106,.07);border-top:1px solid #8d742f;border-bottom:1px solid #8d742f}
 .keirin-detail-table .final-row .name{color:#ffd56a}
-.keirin-detail-table .final-row .winner{color:#fff4a8;font-size:16px}
+.keirin-detail-table .final-row .winner-stack strong{color:#fff4a8;font-size:16px}
 .order{display:flex;justify-content:center;gap:1px}
 .num{display:inline-grid;place-items:center;width:22px;height:21px;border:1px solid rgba(255,255,255,.25);border-radius:3px;font-size:12px;line-height:1}
 .n1{background:#fff;color:#111}.n2{background:#111;color:#fff}.n3{background:#d9232e;color:#fff}.n4{background:#1762c9;color:#fff}.n5{background:#f4d421;color:#111}.n6{background:#15964b;color:#fff}.n7{background:#ec7c22;color:#111}.n8{background:#ee91b4;color:#111}.n9{background:#7a35a5;color:#fff}
@@ -368,12 +371,12 @@ body{background:linear-gradient(180deg,#061522,#02090f)}
   .keirin-detail-table .r strong{font-size:10.5px}
   .keirin-detail-table .r small{font-size:6.5px}
   .keirin-detail-table .class-col{width:40px}
-  .keirin-detail-table .name{width:102px}
-  .keirin-detail-table .winner{width:90px}
-  .keirin-detail-table .origin{width:45px}
+  .keirin-detail-table .name{width:118px}
+  .keirin-detail-table .winner-stack{width:118px}
+  .keirin-detail-table .winner-stack small{font-size:7.5px}
   .keirin-detail-table .bet-cell span{font-size:8.5px;line-height:1.08}
   .keirin-detail-table .bet-cell:last-child span{font-size:9.5px}
-  .keirin-detail-table .final-row .winner{font-size:13px}
+  .keirin-detail-table .final-row .winner-stack strong{font-size:13px}
   .num,.horse-no{width:18px;min-width:18px;height:17px;font-size:9px}
   .local-table .local-info>div{height:13px;line-height:13px}
   .local-table .local-info>b{height:11px;line-height:11px;font-size:8px}
