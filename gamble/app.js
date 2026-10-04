@@ -19,9 +19,13 @@ function raceRows(races,count,kind){
   const rows=Math.max(1,Math.min(12,Number(count)||12));
   for(let r=1;r<=rows;r++){
     const x=map.get(r)||{race:r,status:"発走前",order:[],payout:""};
-    const raceName=x.race_name||x.race_type||"—";
+    const rawRaceName=x.race_name||x.race_type||"—";
+    const classMatch=kind==="keirin"?rawRaceName.match(/^[ＡAＳSＬL]級/):null;
+    const classLabel=classMatch?classMatch[0].replace("A","Ａ").replace("S","Ｓ").replace("L","Ｌ"):"";
+    const raceName=classMatch?rawRaceName.slice(classMatch[0].length).trim():rawRaceName;
+    const classCell=kind==="keirin"?'<td class="class-col '+(classLabel?"":"pending")+'">'+esc(classLabel||"---")+'</td>':"";
     const winnerCell=kind==="keirin"?'<td class="winner-name '+(x.winner?"":"pending")+'">'+esc(x.winner||"---")+'</td><td class="winner-origin '+(x.origin?"":"pending")+'">'+esc(x.origin||"---")+'</td>':"";
-    out+='<tr><td class="rcol">'+r+'R</td>'+'<td class="race-label marquee-check" title="'+esc(raceName)+'"><div class="marquee-track"><span class="marquee-text">'+esc(raceName)+'</span><span class="marquee-copy" aria-hidden="true">'+esc(raceName)+'</span></div></td>'+winnerCell+'<td class="ocol">'+orderHtml(x.order)+'</td><td class="pcol '+(x.payout?"":"pending")+'">'+esc(x.payout||x.status||"発走前")+'</td></tr>';
+    out+='<tr><td class="rcol">'+r+'R</td>'+classCell+'<td class="race-label marquee-check" title="'+esc(raceName)+'"><div class="marquee-track"><span class="marquee-text">'+esc(raceName)+'</span><span class="marquee-copy" aria-hidden="true">'+esc(raceName)+'</span></div></td>'+winnerCell+'<td class="ocol">'+orderHtml(x.order)+'</td><td class="pcol '+(x.payout?"":"pending")+'">'+esc(x.payout||x.status||"発走前")+'</td></tr>';
   }
   return out;
 }
@@ -34,8 +38,9 @@ function compactCard(v,kind){
     ?((v.race_ids||[]).length||(v.races||[]).reduce(function(m,x){return Math.max(m,Number(x.race)||0)},0)||12)
     :12;
   const klass=kind==="keirin"?"result-card keirin-card":"result-card";
+  const classHead=kind==="keirin"?'<th class="class-col">級</th>':"";
   const winnerHead=kind==="keirin"?'<th class="winner-name">勝者</th><th class="winner-origin">出身</th>':"";
-  const table='<table class="compact-table"><thead><tr><th class="rcol">R</th><th class="race-label">レース名・種別</th>'+winnerHead+'<th class="ocol">3連単</th><th class="pcol">払戻金</th></tr></thead><tbody>'+raceRows(v.races,raceCount,kind)+'</tbody></table>';
+  const table='<table class="compact-table"><thead><tr><th class="rcol">R</th>'+classHead+'<th class="race-label">レース名</th>'+winnerHead+'<th class="ocol">3連単</th><th class="pcol">払戻金</th></tr></thead><tbody>'+raceRows(v.races,raceCount,kind)+'</tbody></table>';
   const body='<div class="result-table-viewport auto-vscroll">'+table+'</div>';
   return '<article class="'+klass+'"><div class="card-head"><div class="card-title">'+esc(title)+grade+'</div><div class="event">'+esc(event)+'</div></div>'+body+'</article>';
 }
