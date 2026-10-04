@@ -2,7 +2,7 @@
   "source": "JRA公式",
   "source_date": "20261004",
   "date_label": "10月4日 日曜",
-  "updated_at": "2026-10-04 14:47 JST",
+  "updated_at": "2026-10-04 15:01 JST",
   "venues": [
     {
       "name": "東京",
@@ -1898,8 +1898,106 @@
         },
         {
           "race": 10,
+          "race_name": "藤森ステークス",
           "course": "ダート1200m",
-          "race_name": "藤森ステークス"
+          "top3": [
+            {
+              "position": 1,
+              "frame": "枠7橙",
+              "number": "14",
+              "horse": "ゼットエール",
+              "jockey": "松本 大輝",
+              "time": "1:09.8",
+              "margin": ""
+            },
+            {
+              "position": 2,
+              "frame": "枠8桃",
+              "number": "15",
+              "horse": "ルージュラナキラ",
+              "jockey": "斎藤 新",
+              "time": "",
+              "margin": "クビ"
+            },
+            {
+              "position": 3,
+              "frame": "枠4青",
+              "number": "7",
+              "horse": "メイショウホウレン",
+              "jockey": "浜中 俊",
+              "time": "",
+              "margin": "１ 3/4"
+            }
+          ],
+          "payouts": {
+            "単勝": [
+              {
+                "combo": "14",
+                "amount": "310円"
+              }
+            ],
+            "複勝": [
+              {
+                "combo": "14",
+                "amount": "150円"
+              },
+              {
+                "combo": "15",
+                "amount": "450円"
+              },
+              {
+                "combo": "7",
+                "amount": "180円"
+              }
+            ],
+            "枠連": [
+              {
+                "combo": "7-8",
+                "amount": "1,870円"
+              }
+            ],
+            "馬連": [
+              {
+                "combo": "14-15",
+                "amount": "3,720円"
+              }
+            ],
+            "馬単": [
+              {
+                "combo": "14-15",
+                "amount": "5,560円"
+              }
+            ],
+            "ワイド": [
+              {
+                "combo": "14-15",
+                "amount": "1,540円"
+              },
+              {
+                "combo": "7-14",
+                "amount": "430円"
+              },
+              {
+                "combo": "7-15",
+                "amount": "2,050円"
+              }
+            ],
+            "3連複": [
+              {
+                "combo": "7-14-15",
+                "amount": "6,330円"
+              }
+            ],
+            "3連単": [
+              {
+                "combo": "14-15-7",
+                "amount": "33,270円"
+              }
+            ]
+          },
+          "jockey": "松本 大輝",
+          "horse": "ゼットエール",
+          "win_payout": "310円"
         },
         {
           "race": 11,
