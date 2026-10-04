@@ -111,6 +111,57 @@ function localVenueCard(v){
   }
   return '<article class="jra-card unified-race-card"><div class="card-head"><div class="card-title">'+esc(v.name||"---")+'</div><div class="event">地方</div></div><table class="jra-table"><thead><tr><th class="jr">R</th><th class="race-label">レース名・種別</th><th>勝ち馬</th><th class="jockey">騎手</th><th class="tri-combo-cell">3連単</th><th class="pay">払戻</th></tr></thead><tbody>'+rows+'</tbody></table></article>';
 }
+function featuredRaceCard(items){
+  const rows=(items||[]).map(function(x){
+    const where=[x.venue,x.race].filter(Boolean).join(" ");
+    const horses=Array.isArray(x.horses)&&x.horses.length?x.horses.join("・"):"情報取得中";
+    return '<div class="featured-race-item">'+
+      '<div class="featured-meta"><span class="featured-source">'+esc(x.source||"MAIN")+'</span><span>'+esc(where)+'</span><span class="featured-time">'+esc(x.time?x.time+" 発走予定":"")+'</span></div>'+
+      '<div class="featured-name">'+esc(x.name||"---")+'</div>'+
+      '<div class="featured-horses"><span>有力馬</span> '+esc(horses)+'</div>'+
+    '</div>';
+  }).join("");
+  return '<article class="jra-card featured-race-card">'+
+    '<div class="card-head"><div class="card-title">本日のメイン競走</div><div class="event">自動更新</div></div>'+
+    '<div class="featured-race-viewport"><div class="featured-race-track">'+rows+'</div></div>'+
+  '</article>';
+}
+function setupFeaturedRaceScroll(reset){
+  requestAnimationFrame(function(){
+    document.querySelectorAll(".featured-race-viewport").forEach(function(box){
+      const max=Math.max(0,box.scrollHeight-box.clientHeight);
+      box.classList.toggle("needs-vscroll",max>2);
+      if(reset){
+        box.scrollTop=0;
+        box.dataset.dir="1";
+        box.dataset.hold="25";
+      }
+    });
+  });
+}
+function stepFeaturedRaceScroll(){
+  if(screenMode!=="race") return;
+  document.querySelectorAll(".featured-race-viewport.needs-vscroll").forEach(function(box){
+    const max=Math.max(0,box.scrollHeight-box.clientHeight);
+    if(max<=2) return;
+    let hold=Number(box.dataset.hold||0);
+    if(hold>0){
+      box.dataset.hold=String(hold-1);
+      return;
+    }
+    const dir=Number(box.dataset.dir||1);
+    box.scrollTop+=dir;
+    if(box.scrollTop>=max-1){
+      box.scrollTop=max;
+      box.dataset.dir="-1";
+      box.dataset.hold="25";
+    }else if(box.scrollTop<=1){
+      box.scrollTop=0;
+      box.dataset.dir="1";
+      box.dataset.hold="25";
+    }
+  });
+}
 function setupBoatVerticalScrolls(reset){
   requestAnimationFrame(function(){
     document.querySelectorAll(".boat-table-viewport").forEach(function(box){
@@ -164,12 +215,21 @@ function renderRight(){
   const central=(jra?.venues||[]).map(function(v){return {kind:"jra",venue:v}});
   const local=(data?.local_all?.venues||[]).map(function(v){return {kind:"local",venue:v}});
   const cards=central.concat(local);
+  const featured=data?.featured_races||[];
   document.getElementById("right-note").textContent="JRA・地方競馬を全場表示";
   host.className="race-all-grid";
-  host.innerHTML=cards.length?cards.map(function(x){
-    return x.kind==="jra"?jraVenueCard(x.venue):localVenueCard(x.venue);
-  }).join(""):'<div class="empty-card">本日の競馬開催情報を取得中</div>';
+  if(!cards.length){
+    host.innerHTML='<div class="empty-card">本日の競馬開催情報を取得中</div>';
+  }else{
+    let html=cards.map(function(x){
+      return x.kind==="jra"?jraVenueCard(x.venue):localVenueCard(x.venue);
+    }).join("");
+    const hasSpare=(cards.length%4)!==0;
+    if(hasSpare&&featured.length) html+=featuredRaceCard(featured);
+    host.innerHTML=html;
+  }
   updateMarquees();
+  setupFeaturedRaceScroll(true);
 }
 function render(){
   renderKeirin();renderBoats();renderRight();updateMarquees();
@@ -197,6 +257,7 @@ function tick(){
 setInterval(tick,1000);tick();
 load();setInterval(load,30000);
 setInterval(stepBoatVerticalScrolls,70);
+setInterval(stepFeaturedRaceScroll,80);
 const SCREEN_ORDER=["keirin","race","boat"];
 setInterval(function(){
   const i=SCREEN_ORDER.indexOf(screenMode);
