@@ -1,8 +1,8 @@
 {
   "date": "2026-10-04",
   "date_label": "2026年10月04日",
-  "updated_at": "17:36:15",
-  "updated_at_iso": "2026-10-04T17:36:15.623461+09:00",
+  "updated_at": "17:59:40",
+  "updated_at_iso": "2026-10-04T17:59:40.404753+09:00",
   "jra_switch_time": "17:00",
   "keirin": {
     "phase": "本日開催 8場",
@@ -723,11 +723,15 @@
           {
             "race": 5,
             "time": "17:42",
-            "status": "発走前",
-            "order": [],
-            "payout": "",
-            "winner": "",
-            "origin": "",
+            "status": "確定",
+            "order": [
+              7,
+              1,
+              6
+            ],
+            "payout": "34,990円",
+            "winner": "太田美穂",
+            "origin": "三重",
             "race_name": "Ｌ級 ガールズ予選１",
             "scheduled_time": "17:42"
           },
@@ -947,15 +951,15 @@
               5
             ],
             "payout": "10,490円",
-            "winner": "",
-            "origin": "",
+            "winner": "田中和磨",
+            "origin": "岡山",
             "race_name": "Ａ級 初日特別選抜",
             "scheduled_time": "17:30"
           },
           {
             "race": 6,
             "time": "17:54",
-            "status": "発走前",
+            "status": "結果待ち",
             "order": [],
             "payout": "",
             "winner": "",
@@ -3166,11 +3170,16 @@
         },
         {
           "race": 6,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            1,
+            6,
+            2
+          ],
+          "payout": "930円",
           "race_name": "一般戦",
-          "scheduled_time": "17:37"
+          "scheduled_time": "17:37",
+          "winner": ""
         },
         {
           "race": 7,
@@ -3433,11 +3442,16 @@
         },
         {
           "race": 6,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
-          "race_name": "",
-          "scheduled_time": "17:46"
+          "status": "確定",
+          "order": [
+            4,
+            1,
+            2
+          ],
+          "payout": "1,970円",
+          "race_name": "予選",
+          "scheduled_time": "17:46",
+          "winner": ""
         },
         {
           "race": 7,
@@ -3649,13 +3663,18 @@
           },
           {
             "race": 11,
-            "winner": "",
-            "jockey": "",
-            "trifecta": "",
-            "race_name": "バーベナ賞Ｂ２",
+            "winner": "ソルデベラーノ",
+            "jockey": "高橋悠",
+            "trifecta": "8,880円",
+            "order": [
+              6,
+              9,
+              7
+            ],
             "course": "ダート1400m",
-            "scheduled_time": "17:13",
-            "status": "結果待ち"
+            "status": "確定",
+            "race_name": "バーベナ賞Ｂ２",
+            "scheduled_time": "17:13"
           },
           {
             "race": 12,
@@ -3665,7 +3684,7 @@
             "race_name": "重賞 Ｊ認 若駒賞２歳",
             "course": "ダート1600m",
             "scheduled_time": "17:43",
-            "status": "発走前"
+            "status": "結果待ち"
           }
         ]
       },
@@ -3929,7 +3948,7 @@
             "race_name": "ルカルカナイトフィーバー２歳Ａ－１  9",
             "course": "直200m",
             "scheduled_time": "17:58",
-            "status": "発走前"
+            "status": "結果待ち"
           },
           {
             "race": 9,
@@ -4040,13 +4059,18 @@
           },
           {
             "race": 5,
-            "winner": "",
-            "jockey": "",
-            "trifecta": "",
-            "race_name": "Ｃ２－５",
+            "winner": "アルトシュタット",
+            "jockey": "城野慈",
+            "trifecta": "760円",
+            "order": [
+              1,
+              7,
+              10
+            ],
             "course": "ダート1400m",
-            "scheduled_time": "17:03",
-            "status": "結果待ち"
+            "status": "確定",
+            "race_name": "Ｃ２－５",
+            "scheduled_time": "17:03"
           },
           {
             "race": 6,
@@ -4147,13 +4171,18 @@
           },
           {
             "race": 3,
-            "winner": "",
-            "jockey": "",
-            "trifecta": "",
-            "race_name": "２歳新馬",
+            "winner": "イイデトワイライト",
+            "jockey": "矢野貴",
+            "trifecta": "8,290円",
+            "order": [
+              3,
+              5,
+              4
+            ],
             "course": "ダート1200m",
-            "scheduled_time": "17:03",
-            "status": "結果待ち"
+            "status": "確定",
+            "race_name": "２歳新馬",
+            "scheduled_time": "17:03"
           },
           {
             "race": 4,
@@ -4163,7 +4192,7 @@
             "race_name": "ピンク・スクアーレル賞Ｃ２十八 十九",
             "course": "ダート1600m",
             "scheduled_time": "17:38",
-            "status": "発走前"
+            "status": "結果待ち"
           },
           {
             "race": 5,
