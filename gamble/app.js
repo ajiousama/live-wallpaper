@@ -211,14 +211,14 @@ function buildPages(){
   const pages=[];
   for(const phase of PHASES){
     const items=phaseItems(phase);
-    for(let i=0;i<items.length;i+=4){
-      const chunk=items.slice(i,i+4);
+    for(let i=0;i<items.length;i+=6){
+      const chunk=items.slice(i,i+6);
       pages.push({
-        key:"phase:"+phase+":"+Math.floor(i/4),
+        key:"phase:"+phase+":"+Math.floor(i/6),
         type:"phase",
         phase,
-        page:Math.floor(i/4)+1,
-        total:Math.ceil(items.length/4),
+        page:Math.floor(i/6)+1,
+        total:Math.ceil(items.length/6),
         items:chunk
       });
     }
