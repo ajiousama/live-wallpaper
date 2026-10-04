@@ -1,171 +1,111 @@
 :root{
-  --bg:#031019;--panel:#071823;--panel2:#0a202e;--line:#234556;--ink:#f4f8fb;--muted:#9db4c0;
-  --pink:#ff4f87;--blue:#2d8bff;--cyan:#37d5ff;--green:#26d07c;--gold:#ffd24a;
+  --bg:#020a10;--panel:#06141e;--line:#284554;--ink:#f4f8fb;--muted:#7692a0;
+  --pink:#ff5b8e;--blue:#55a7ff;--green:#59d391;--gold:#ffd56a;
 }
 *{box-sizing:border-box}
-html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#020a10;color:var(--ink);font-family:"BIZ UDPGothic","Yu Gothic UI","Yu Gothic","Meiryo",sans-serif}
-body{background:radial-gradient(circle at 76% 0%,#0c3146 0,transparent 36%),linear-gradient(180deg,#061522,#02090f)}
-#dash{width:100vw;height:100vh;padding:4px 5px 3px;display:grid;grid-template-rows:42px 1fr 0;gap:3px}
-.topbar{display:flex;justify-content:space-between;align-items:center;border:1px solid #25536a;background:linear-gradient(90deg,#071723,#0a2637 60%,#081823);padding:3px 8px;box-shadow:inset 0 -1px 0 rgba(65,197,255,.18)}
-.brand{min-width:0}.kicker,.mini,.sub,.note{display:none}
-h1{margin:0;font-size:22px;line-height:1;font-weight:1000;letter-spacing:.01em}
-.status{display:flex;align-items:center;gap:8px;font-weight:900}.live{border:1px solid #1fbf72;color:#aaf6cd;padding:2px 6px;border-radius:4px;font-size:10px}.live span{display:inline-block;width:6px;height:6px;border-radius:50%;background:#2ce786;box-shadow:0 0 6px #2ce786;margin-right:4px}.status #updated{font-size:10px;color:#c4d7df}.status #clock{font-size:22px;letter-spacing:.03em}
-.main-grid{min-height:0;display:grid;grid-template-columns:43% 57%;gap:3px}
-.main-grid.screen-keirin,.main-grid.screen-boat,.main-grid.screen-race{grid-template-columns:1fr}
-.main-grid.screen-keirin .left-column,.main-grid.screen-boat .left-column{grid-column:1/-1}
-.main-grid.screen-keirin .right-column,.main-grid.screen-boat .right-column{display:none}
-.main-grid.screen-race .left-column{display:none}
-.main-grid.screen-race .right-column{grid-column:1/-1}
-.left-column{min-height:0;position:relative}
-.left-column .sport-panel{position:absolute;inset:0;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .25s ease}
-.left-column .sport-panel.active{opacity:1;visibility:visible;pointer-events:auto}
-.block{min-height:0;border:1px solid var(--line);background:linear-gradient(180deg,rgba(7,24,35,.98),rgba(4,15,23,.98));display:grid;grid-template-rows:28px 1fr;overflow:hidden}
-.keirin-block{border-color:#8a3257}.boat-block{border-color:#2369a2}.right-column{border-color:#19794a}
-.block-head{display:flex;justify-content:space-between;align-items:center;padding:2px 6px;border-bottom:1px solid var(--line);background:#0a1b27}
-.keirin-block .block-head{background:linear-gradient(90deg,#361020,#101822 45%,#071923)}
-.boat-block .block-head{background:linear-gradient(90deg,#0b2d57,#0d1d2b 45%,#071923)}
-.right-head{background:linear-gradient(90deg,#0b522f,#0c1d25 45%,#071923)}
-.block h2{margin:0;font-size:16px;font-weight:1000;line-height:1}.block h2 span{color:#ff82ad;font-size:12px}
-.two-grid{min-height:0;display:grid;grid-template-columns:1fr 1fr;gap:2px;padding:2px}
-.all-venue-grid,.race-all-grid{min-height:0;height:100%;display:grid;gap:2px;padding:2px;overflow:hidden}
-.keirin-all{grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:205px}
-.boat-all{grid-template-columns:repeat(5,minmax(0,1fr));grid-auto-rows:182px}
-.race-all-grid{grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:250px}
-.keirin-block .two-grid.one{grid-template-columns:1fr}
-.keirin-block .two-grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
-.keirin-block .two-grid.four{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr))}
-.result-card{min-width:0;min-height:0;display:grid;grid-template-rows:20px 1fr;border:1px solid #315262;background:#06141e;overflow:hidden}
-.card-head{display:flex;justify-content:space-between;align-items:center;gap:4px;padding:1px 4px;border-bottom:1px solid #2a4a5b;background:#0b202d}
-.card-title{font-size:12px;font-weight:1000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.card-title small{font-size:7px;color:#bed0d8;margin-left:3px}.event{font-size:7px;color:#9db7c3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:58%;text-align:right}
-.compact-table,.jra-table{width:100%;height:100%;border-collapse:collapse;table-layout:fixed}
-.compact-table th,.compact-table td,.jra-table th,.jra-table td{border-bottom:1px solid #193746;border-right:1px solid #193746;padding:1px 4px;text-align:center;overflow:hidden}
-.compact-table th{height:20px;font-size:9px;color:#9db6c2;background:#071a25}.compact-table td{font-size:12px;font-weight:900;line-height:1}
-.compact-table .rcol{width:31px;color:#bdd0d9}.compact-table .race-label{width:110px;text-align:left;white-space:nowrap;text-overflow:ellipsis;color:#c7dbe4}.compact-table .ocol{width:94px}.compact-table .pcol{width:auto;text-align:right;padding-right:8px;color:#ffe78f}
-.order{display:flex;justify-content:center;gap:3px}.num{display:inline-grid;place-items:center;width:21px;height:20px;border-radius:3px;border:1px solid rgba(255,255,255,.28);font-size:12px;font-weight:1000;line-height:1}
-.keirin-card .compact-table td{font-size:18px}
-.keirin-card .compact-table th{font-size:12px}
-.keirin-card .num{width:29px;height:27px;font-size:16px}
-.keirin-block .two-grid.three .keirin-card .compact-table td{font-size:14px;padding-left:2px;padding-right:2px}
-.keirin-block .two-grid.three .keirin-card .compact-table .rcol{width:27px}
-.keirin-block .two-grid.three .keirin-card .compact-table .ocol{width:74px}
-.keirin-block .two-grid.three .keirin-card .num{width:23px;height:22px;font-size:13px}
-.keirin-block .two-grid.three .keirin-card .event{display:none}
-.keirin-block .two-grid.four .keirin-card .compact-table td{font-size:14px}
-.keirin-block .two-grid.four .keirin-card .compact-table th{font-size:10px}
-.keirin-block .two-grid.four .keirin-card .num{width:24px;height:23px;font-size:13px}
-.all-venue-grid .result-card{grid-template-rows:20px 1fr}
-.all-venue-grid .card-head{padding:1px 4px}
-.all-venue-grid .card-title{font-size:11px}
-.all-venue-grid .card-title small{font-size:7px}
-.all-venue-grid .event{font-size:6px}
-.keirin-all .compact-table th,.boat-all .compact-table th{height:11px;font-size:6.5px;padding:0 1px}
-.keirin-all .compact-table td,.boat-all .compact-table td{font-size:7.5px;padding:0 1px}
-.keirin-all .compact-table .rcol,.boat-all .compact-table .rcol{width:20px;padding-left:0;padding-right:0}
-.keirin-all .compact-table .class-col{width:28px;text-align:center;white-space:nowrap;color:#ffd36b;font-weight:1000;border-right:1px solid #2f5263}
-.keirin-all .compact-table .race-label{width:42px}
-.keirin-all .compact-table .winner-name{width:62px;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-right:1px solid #2f5263}
-.keirin-all .compact-table .winner-origin{width:36px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-right:1px solid #2f5263}
-.keirin-all .compact-table .ocol{width:54px}
-.keirin-all .compact-table .pcol{width:68px;padding-right:3px;white-space:nowrap}
-.boat-all .compact-table .race-label{width:62px}
-.boat-all .compact-table .ocol{width:56px}
-.boat-all .compact-table .pcol{padding-right:4px;white-space:nowrap}
-.keirin-all .num,.boat-all .num{width:16px;height:15px;font-size:9px;gap:1px}
-.keirin-all .order,.boat-all .order{gap:2px}
-.boat-all .result-card{grid-template-rows:24px 1fr}
-.auto-vscroll{min-height:0;overflow:hidden;position:relative}
-.sport-grid-vscroll{align-content:start;scroll-behavior:auto}
-.result-table-viewport .compact-table,
-.horse-table-viewport .jra-table{height:auto!important;min-height:100%}
-.auto-vscroll table th{position:sticky;top:0;z-index:2}
-.result-table-viewport .compact-table td{height:12px;line-height:11px}
-.auto-vscroll.needs-vscroll::after{content:"↕";position:absolute;right:2px;bottom:2px;font-size:9px;color:#65bfff;background:rgba(2,10,16,.72);padding:1px 2px;border-radius:2px;pointer-events:none}
-.boat-all .card-title{font-size:10px}
-.boat-all .event{display:none}
-.boat-all .compact-table td{font-size:7.2px}
-.boat-all .num{width:12px;height:11px;font-size:7px}
-.n1{background:#fff;color:#111}.n2{background:#111;color:#fff;border-color:#6f7b80}.n3{background:#d9232e;color:#fff}.n4{background:#1762c9;color:#fff}.n5{background:#f4d421;color:#111}.n6{background:#15964b;color:#fff}.n7{background:#ec7c22;color:#111}.n8{background:#ee91b4;color:#111}.n9{background:#7a35a5;color:#fff}
-.pending{color:#617e8c!important;font-size:10px!important;text-align:center!important}
-.empty-card{display:grid;place-items:center;text-align:center;color:#7896a4;font-size:14px;font-weight:900;border:1px dashed #284554;background:#06131b}
-.right-grid{min-height:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;padding:6px}
-.right-grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
-.jra-card{min-width:0;min-height:0;display:grid;grid-template-rows:42px 1fr;border:1px solid #2e6750;background:#06151b;overflow:hidden}
-.jra-card .card-head{background:linear-gradient(90deg,#0c5433,#0b2227)}
-.jra-card:nth-child(2) .card-head{background:linear-gradient(90deg,#0c5433,#0b2227)}
-.jra-card:nth-child(3) .card-head{background:linear-gradient(90deg,#0c5433,#0b2227)}
-.horse-races{min-height:0;display:grid;grid-template-rows:repeat(12,minmax(0,1fr));overflow:hidden}
-.horse-race{min-width:0;min-height:0;display:grid;grid-template-rows:minmax(20px,1fr) 15px;border-bottom:1px solid #193b31;overflow:hidden}
-.horse-result-line{min-width:0;display:grid;grid-template-columns:34px minmax(0,1fr) 72px 58px 72px;align-items:center;gap:3px;padding:1px 4px;font-size:10.5px;font-weight:900;overflow:hidden}
-.race-no{color:#cce3d7;font-weight:1000;text-align:center}.winner{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#fff}.winner-jockey{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#cfe0d8;font-size:9.5px}.tri-combo{white-space:nowrap;text-align:center;color:#ffb86d}.tri-pay{white-space:nowrap;text-align:right;color:#ffe36f}
-.race-info{position:relative;min-width:0;overflow:hidden;white-space:nowrap;padding:0 5px;background:#041118;color:#86a89a;font-size:8.5px;line-height:15px}
-.marquee-track{display:inline-flex;align-items:center;min-width:100%;width:max-content;gap:60px;white-space:nowrap;transform:translateX(0)}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--ink);font-family:"BIZ UDPGothic","Yu Gothic UI","Yu Gothic","Meiryo",sans-serif}
+body{background:linear-gradient(180deg,#061522,#02090f)}
+#dash{width:100vw;height:100vh;padding:3px 4px;display:grid;grid-template-rows:36px 1fr;gap:2px}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:2px 7px;border:1px solid #234a60;background:#081b27;min-width:0}
+.screen-heading{display:flex;align-items:baseline;gap:8px;min-width:0}
+#screen-title{font-size:19px;line-height:1;font-weight:1000;white-space:nowrap}
+#screen-sub{font-size:9px;color:#a8bfca;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.status{display:flex;align-items:center;gap:7px;font-weight:900;white-space:nowrap}
+.live{font-size:9px;color:#adf2cb;border:1px solid #21845a;border-radius:3px;padding:1px 4px}
+.live i{display:inline-block;width:5px;height:5px;border-radius:50%;background:#37df88;margin-right:3px}
+#updated{font-size:9px;color:#9fb7c2}
+#clock{font-size:19px}
+.screen{display:none;min-width:0;min-height:0}
+.screen.active{display:block}
+.phase-grid{--cols:5;height:100%;min-height:0;display:grid;grid-template-columns:repeat(var(--cols),minmax(0,1fr));grid-auto-rows:198px;align-content:start;gap:2px;padding:1px;overflow:hidden}
+.phase-card{min-width:0;min-height:0;display:grid;grid-template-rows:19px 1fr;border:1px solid #2b4856;background:#06141e;overflow:hidden}
+.card-head{min-width:0;display:grid;grid-template-columns:auto auto minmax(0,1fr);align-items:center;gap:4px;padding:1px 3px;border-bottom:1px solid #203b48;background:#0a1c27}
+.card-head strong{font-size:10px;white-space:nowrap}
+.card-head small{font-size:6.5px;color:#8fa7b3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sport-tag{font-size:7px;font-weight:1000;border-radius:2px;padding:1px 3px;white-space:nowrap}
+.sport-tag.keirin{color:#ffc1d3;border:1px solid #7b3452;background:#321322}
+.sport-tag.boat{color:#b9d9ff;border:1px solid #285f96;background:#0b2745}
+.sport-tag.local{color:#baf0d0;border:1px solid #27724d;background:#0b3221}
+.card-table-wrap{min-height:0;overflow:hidden}
+.phase-table{width:100%;height:100%;border-collapse:collapse;table-layout:fixed}
+.phase-table th,.phase-table td{height:13px;padding:0 1px;border-right:1px solid #18333f;border-bottom:1px solid #18333f;overflow:hidden;text-align:center;line-height:12px}
+.phase-table th{height:11px;background:#071922;color:#91aab5;font-size:6.3px;font-weight:900;position:sticky;top:0;z-index:2}
+.phase-table td{font-size:7.4px;font-weight:850;white-space:nowrap}
+.phase-table .r{width:19px;color:#b8cbd4;padding:0}
+.phase-table .class-col{width:27px;color:var(--gold)}
+.phase-table .name{text-align:left}
+.phase-table .winner{text-align:left;text-overflow:ellipsis}
+.phase-table .origin{width:34px}
+.phase-table .combo{width:52px}
+.phase-table .pay{width:57px;text-align:right;color:#ffe58a;padding-right:2px}
+.keirin-table .name{width:46px}
+.keirin-table .winner{width:60px}
+.boat-table .name{width:auto}
+.boat-table .combo{width:52px}
+.boat-table .pay{width:60px}
+.local-table .local-info{width:72px;text-align:left;white-space:normal;vertical-align:middle;padding:0 2px}
+.local-table .local-info>div{height:7px;line-height:7px;overflow:hidden;white-space:nowrap}
+.local-table .local-info>b{display:block;height:6px;line-height:6px;font-size:5.8px;color:#78c7a1;white-space:nowrap}
+.local-table .winner{width:62px}
+.local-table .jockey{width:34px;text-align:left;text-overflow:ellipsis}
+.local-table .combo{width:47px}
+.local-table .pay{width:55px}
+.order{display:flex;justify-content:center;gap:1px}
+.num{display:inline-grid;place-items:center;width:13px;height:11px;border:1px solid rgba(255,255,255,.25);border-radius:2px;font-size:7px;line-height:1}
+.n1{background:#fff;color:#111}.n2{background:#111;color:#fff}.n3{background:#d9232e;color:#fff}.n4{background:#1762c9;color:#fff}.n5{background:#f4d421;color:#111}.n6{background:#15964b;color:#fff}.n7{background:#ec7c22;color:#111}.n8{background:#ee91b4;color:#111}.n9{background:#7a35a5;color:#fff}
+.muted{color:#5e7a87}
+.marquee-check{min-width:0;overflow:hidden;white-space:nowrap}
+.marquee-track{display:inline-flex;align-items:center;min-width:100%;width:max-content;gap:28px;white-space:nowrap;transform:translateX(0)}
 .marquee-copy{display:none}
 .marquee-check.is-marquee .marquee-copy{display:inline}
-.marquee-check.is-marquee .marquee-track{animation:jraRaceMarquee 12s linear infinite}
-@keyframes jraRaceMarquee{from{transform:translateX(0)}to{transform:translateX(calc(-50% - 30px))}}
-.right-grid.three .horse-result-line{grid-template-columns:28px minmax(0,1fr) 50px 45px 55px;gap:2px;padding:1px 2px;font-size:9px}
-.right-grid.three .winner-jockey{font-size:8px}.right-grid.three .race-info{font-size:7.5px}
-.jra-table th{height:22px;background:#071a20;color:#a8c4ba;font-size:9px}.jra-table td{font-size:11px;font-weight:800;white-space:nowrap;text-overflow:ellipsis}
-.jra-table .jr{width:31px;color:#c5dad0}.jra-table .horse{text-align:left;font-weight:1000}.jra-table .jockey{width:64px;text-align:left;color:#dce8e2}.jra-table .pay{width:74px;text-align:right;color:#ffe278;font-weight:1000}
-.right-grid.three .jra-table td{font-size:10px}.right-grid.three .jra-table .jockey{width:54px}.right-grid.three .jra-table .pay{width:67px}
-.race-all-grid .jra-card{grid-template-rows:20px 1fr}
-.race-all-grid .unified-race-card{grid-template-rows:20px 1fr}
-.race-all-grid .unified-race-card .jra-table{height:100%}
-.race-all-grid .horse-table-viewport{min-height:0}
-.race-all-grid .horse-table-viewport .jra-table{height:auto!important;min-height:100%}
-.race-all-grid .jra-card .card-head{padding:1px 4px}
-.race-all-grid .card-title{font-size:11px}
-.race-all-grid .event{font-size:6px}
-.race-all-grid .horse-race{grid-template-rows:1fr;min-height:0}
-.race-all-grid .race-info{display:none}
-.race-all-grid .horse-result-line{grid-template-columns:20px 105px minmax(0,1fr) 52px 48px 60px;gap:2px;padding:0 3px;font-size:8.5px}
-.race-all-grid .horse-race-label{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left;color:#9fc7b5}
-.race-all-grid .winner-jockey{font-size:7.5px}
-.race-all-grid .jra-table th{height:11px;font-size:6.5px;padding:0 1px}
-.race-all-grid .jra-table td{font-size:7.2px;padding:0 1px}
-.race-all-grid .jra-table .jr{width:20px;padding-left:0;padding-right:0}
-.race-all-grid .jra-table .race-label{width:70px;text-align:left;color:#a9cdbd}
-.race-all-grid .race-info-two{padding:0 2px;vertical-align:middle;white-space:normal}
-.race-all-grid .race-name-line{height:9px;line-height:9px;overflow:hidden;white-space:nowrap;font-size:6.8px;color:#c7e0d5}
-.race-all-grid .race-course-line{height:8px;line-height:8px;overflow:hidden;white-space:nowrap;font-size:6.4px;color:#79b8a0;font-weight:900}
-.race-all-grid .jra-table .horse{width:80px;text-align:left;font-weight:1000;white-space:nowrap}
-.race-all-grid td.race-label.marquee-check{padding-left:2px;padding-right:2px}
-.race-all-grid td.race-label.marquee-check .marquee-track,
-.keirin-all td.race-label.marquee-check .marquee-track,
-.boat-all td.race-label.marquee-check .marquee-track{min-width:100%;width:max-content;gap:36px}
-.race-all-grid .jra-table .jockey{width:38px}
-.race-all-grid .jra-table .tri-combo-cell{width:48px;text-align:center;color:#ffb86d;font-weight:900;white-space:nowrap}
-.race-all-grid .jra-table .pay{width:68px;text-align:right;color:#ffe278;font-weight:1000;white-space:nowrap}
-.featured-race-card{grid-column:4;grid-template-rows:28px 1fr!important;border-color:#8a7131;background:#0d160f}
-.featured-race-card .card-head{background:linear-gradient(90deg,#5c4712,#17231c)!important}
-.featured-race-card .card-title{color:#ffe38a}
-.featured-race-viewport{min-height:0;overflow:hidden;position:relative;padding:2px 4px}
-.featured-race-track{display:flex;flex-direction:column;gap:4px}
-.featured-race-item{border:1px solid #385348;background:#07151b;padding:4px 5px;min-height:48px}
-.featured-meta{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:5px;align-items:center;font-size:7px;color:#9bb8aa}
-.featured-source{font-weight:1000;color:#ffd66f}
-.featured-time{color:#8fd8ff;white-space:nowrap}
-.featured-name{font-size:10px;font-weight:1000;line-height:1.2;margin:2px 0;color:#fff}
-.featured-horses{font-size:7.5px;line-height:1.25;color:#c7d8cf}
-.featured-horses span{color:#7fc99e;font-weight:1000}
-.featured-race-viewport.needs-vscroll::after{content:"↕";position:absolute;right:2px;bottom:2px;font-size:9px;color:#ffd66f;background:rgba(2,10,16,.78);padding:1px 2px;border-radius:2px;pointer-events:none}
-footer{display:none}
+.marquee-check.is-marquee .marquee-track{animation:marqueeX 11s linear infinite}
+@keyframes marqueeX{from{transform:translateX(0)}to{transform:translateX(calc(-50% - 14px))}}
+.empty-card{display:grid;place-items:center;height:100%;border:1px dashed #304d5a;color:#78929e;font-size:13px;font-weight:900}
+.needs-vscroll::after{content:"↕";position:sticky;float:right;right:2px;bottom:2px;font-size:8px;color:#6bc6ff;background:#031019cc;padding:1px 2px;border-radius:2px}
+.jra-dedicated-grid{height:100%;min-height:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px}
+.jra-dedicated-grid.jra-count-1{grid-template-columns:1fr}
+.jra-dedicated-grid.jra-count-2.with-featured{grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(260px,.72fr)}
+.jra-dedicated-grid.jra-count-1.with-featured{grid-template-columns:minmax(0,1fr) minmax(260px,.55fr)}
+.jra-venue-card,.featured-card{min-width:0;min-height:0;display:grid;grid-template-rows:21px 1fr;border:1px solid #276344;background:#06151b;overflow:hidden}
+.jra-venue-head{display:flex;align-items:center;justify-content:space-between;gap:5px;padding:1px 5px;border-bottom:1px solid #24533d;background:#0a3323}
+.jra-venue-head strong{font-size:12px}
+.jra-venue-head span{font-size:7px;color:#a6c6b5}
+.jra-venue-scroll,.featured-scroll{min-height:0;overflow:hidden;position:relative}
+.jra-race{min-width:0;border-bottom:1px solid #204536;padding:1px 2px}
+.jra-race-main{display:grid;grid-template-columns:24px minmax(0,1fr) 55px;align-items:center;gap:2px;height:12px}
+.jra-race-main>strong{font-size:7.5px;color:#d8eee2;text-align:center}
+.jra-race-name{min-width:0;font-size:7px;color:#d3e6dc}
+.jra-race-main>em{font-size:6.7px;font-style:normal;color:#72c797;text-align:right;white-space:nowrap}
+.places{height:13px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2px;align-items:center}
+.place{min-width:0;font-size:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#f5f7f6}
+.place b{font-size:6px;color:#87bba1}
+.place.p1{font-weight:1000;color:#fff4a8}
+.payout-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px 3px;padding-bottom:1px}
+.payout-item{min-width:0;display:grid;grid-template-columns:27px minmax(0,1fr);gap:2px;align-items:center;line-height:9px}
+.payout-item b{font-size:5.8px;color:#8eaf9d;white-space:nowrap}
+.payout-item span{font-size:6.2px;color:#ffe88f;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.featured-card{border-color:#7a6430;background:#12150b}
+.featured-card .jra-venue-head{background:#4c3a0f;border-color:#7a6430}
+.featured-scroll{padding:2px}
+.featured-item{border-bottom:1px solid #4a4932;padding:4px 3px}
+.featured-item>div{font-size:7px;color:#b8c5bc;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.featured-item>div b{color:#ffd86e}
+.featured-item time{color:#83cfff}
+.featured-item>strong{display:block;margin-top:2px;font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.featured-item>small{display:block;margin-top:2px;font-size:6.8px;color:#a8c5b5;line-height:1.2}
 @media(max-width:1300px){
-  #dash{padding:3px;grid-template-rows:38px 1fr 0;gap:2px}.main-grid{grid-template-columns:44% 56%;gap:2px}.main-grid.screen-keirin,.main-grid.screen-boat,.main-grid.screen-race{grid-template-columns:1fr}.block{grid-template-rows:26px 1fr}.two-grid,.right-grid,.all-venue-grid,.race-all-grid{gap:2px;padding:2px}
-  .keirin-all{grid-auto-rows:198px}
-  .boat-all{grid-auto-rows:178px}
-  .race-all-grid{grid-auto-rows:242px}
-  h1{font-size:20px}.status #clock{font-size:20px}.block h2{font-size:15px}.card-title{font-size:11px}.compact-table td{font-size:7.2px}.compact-table .race-label{font-size:7px}.num{width:13px;height:12px;font-size:7px}.jra-table td{font-size:7px}
-  .horse-result-line{grid-template-columns:30px minmax(0,1fr) 58px 48px 60px;font-size:9px}.winner-jockey{font-size:8px}.race-info{font-size:7.5px}
-  .race-all-grid .horse-result-line{grid-template-columns:20px 82px minmax(72px,1fr) 42px 38px 48px}
-  .race-all-grid .jra-table .race-label{width:64px}
-  .race-all-grid .race-name-line{font-size:7px}
-  .race-all-grid .race-course-line{font-size:6.5px}
-  .race-all-grid .jra-table .horse{width:75px}
-  .race-all-grid .jra-table .jockey{width:34px}
-  .race-all-grid .jra-table .tri-combo-cell{width:42px}
-  .race-all-grid .jra-table .pay{width:64px}
-  .featured-race-item{min-height:44px}
-  .featured-name{font-size:9px}
-  .featured-horses{font-size:7px}
+  #dash{grid-template-rows:32px 1fr}
+  #screen-title{font-size:16px}
+  #screen-sub,#updated{font-size:8px}
+  #clock{font-size:16px}
+  .phase-grid{grid-auto-rows:174px}
+  .phase-table th{font-size:5.8px}
+  .phase-table td{font-size:6.7px}
+  .phase-table th,.phase-table td{height:11px;line-height:10px}
+  .phase-card{grid-template-rows:17px 1fr}
+  .card-head strong{font-size:9px}
+  .num{width:11px;height:10px;font-size:6.4px}
+  .jra-race-main{height:11px}
+  .places{height:12px}
+  .payout-item span{font-size:5.8px}
 }
