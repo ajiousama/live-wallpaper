@@ -2,7 +2,7 @@
   "source": "JRA公式",
   "source_date": "20261004",
   "date_label": "10月4日 日曜",
-  "updated_at": "2026-10-04 14:28 JST",
+  "updated_at": "2026-10-04 14:33 JST",
   "venues": [
     {
       "name": "東京",
@@ -833,19 +833,23 @@
         },
         {
           "race": 9,
-          "course": "芝1400m"
+          "course": "芝1400m",
+          "race_name": "tvk賞"
         },
         {
           "race": 10,
-          "course": "ダート1600m"
+          "course": "ダート1600m",
+          "race_name": "赤富士ステークス"
         },
         {
           "race": 11,
-          "course": "芝1800m"
+          "course": "芝1800m",
+          "race_name": "毎日王冠"
         },
         {
           "race": 12,
-          "course": "ダート1600m"
+          "course": "ダート1600m",
+          "race_name": "3歳以上2勝クラス"
         }
       ]
     },
@@ -1796,15 +1800,18 @@
         },
         {
           "race": 10,
-          "course": "ダート1200m"
+          "course": "ダート1200m",
+          "race_name": "藤森ステークス"
         },
         {
           "race": 11,
-          "course": "芝2400m"
+          "course": "芝2400m",
+          "race_name": "京都大賞典"
         },
         {
           "race": 12,
-          "course": "芝1200m"
+          "course": "芝1200m",
+          "race_name": "3歳以上2勝クラス"
         }
       ]
     }

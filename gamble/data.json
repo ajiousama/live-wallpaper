@@ -1,8 +1,8 @@
 {
   "date": "2026-10-04",
   "date_label": "2026年10月04日",
-  "updated_at": "14:28:50",
-  "updated_at_iso": "2026-10-04T14:28:50.836283+09:00",
+  "updated_at": "14:33:41",
+  "updated_at_iso": "2026-10-04T14:33:41.220746+09:00",
   "jra_switch_time": "17:00",
   "keirin": {
     "phase": "本日開催 8場",
@@ -520,8 +520,8 @@
               5
             ],
             "payout": "16,860円",
-            "winner": "",
-            "origin": "",
+            "winner": "武田亮",
+            "origin": "東京",
             "race_name": "Ｓ級 特選",
             "scheduled_time": "14:14"
           },
@@ -2199,9 +2199,13 @@
         },
         {
           "race": 9,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            1,
+            2,
+            3
+          ],
+          "payout": "680円",
           "race_name": "",
           "scheduled_time": "14:25"
         },
@@ -2743,9 +2747,13 @@
         },
         {
           "race": 8,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            1,
+            3,
+            2
+          ],
+          "payout": "420円",
           "race_name": "",
           "scheduled_time": "14:28"
         },
@@ -3176,7 +3184,7 @@
             ],
             "course": "芝1600m",
             "status": "確定",
-            "race_name": "Ｂ１ 芝左1600m 晴 良 10"
+            "race_name": "Ｂ１"
           },
           {
             "race": 6,
@@ -3185,7 +3193,7 @@
             "trifecta": "",
             "race_name": "Ｃ２十組",
             "course": "ダート1200m",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 7,
@@ -3257,9 +3265,9 @@
               1,
               2
             ],
-            "course": "ダート1400m",
+            "course": "",
             "status": "確定",
-            "race_name": "有 ２歳５"
+            "race_name": "出走取消 馬体故障"
           },
           {
             "race": 2,
@@ -3285,9 +3293,9 @@
               2,
               1
             ],
-            "course": "ダート1500m",
+            "course": "",
             "status": "確定",
-            "race_name": "有 ２歳３"
+            "race_name": "競走除外 馬体故障"
           },
           {
             "race": 4,
@@ -3296,7 +3304,7 @@
             "trifecta": "",
             "race_name": "真実社会日本人コミュニティ三周年記２歳２",
             "course": "ダート1500m",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 5,
@@ -3363,7 +3371,7 @@
             "winner": "",
             "jockey": "",
             "trifecta": "",
-            "race_name": "愛猫チビたん２歳記念Ｃ２－４  10",
+            "race_name": "愛猫チビたん２歳記念Ｃ２－４",
             "course": "直200m",
             "status": "結果待ち"
           },
@@ -3372,7 +3380,7 @@
             "winner": "",
             "jockey": "",
             "trifecta": "",
-            "race_name": "博多から応援に来たよ記念２歳Ｄ－５  10",
+            "race_name": "博多から応援に来たよ記念２歳Ｄ－５",
             "course": "直200m",
             "status": "発走前"
           },
@@ -3381,7 +3389,7 @@
             "winner": "",
             "jockey": "",
             "trifecta": "",
-            "race_name": "十勝乃長屋雅楽８周年記念２歳Ｃ－４  10",
+            "race_name": "十勝乃長屋雅楽８周年記念２歳Ｃ－４",
             "course": "直200m",
             "status": "発走前"
           },
@@ -3390,7 +3398,7 @@
             "winner": "",
             "jockey": "",
             "trifecta": "",
-            "race_name": "小松原拓真３０代突入記念杯２歳Ｂ－２  10",
+            "race_name": "小松原拓真３０代突入記念杯２歳Ｂ－２",
             "course": "直200m",
             "status": "発走前"
           },
@@ -3399,7 +3407,7 @@
             "winner": "",
             "jockey": "",
             "trifecta": "",
-            "race_name": "生誕オメデトナノチャン杯Ｃ１－８  9",
+            "race_name": "生誕オメデトナノチャン杯Ｃ１－８",
             "course": "直200m",
             "status": "発走前"
           },
@@ -3408,7 +3416,7 @@
             "winner": "",
             "jockey": "",
             "trifecta": "",
-            "race_name": "Ｃ１－５  8",
+            "race_name": "Ｃ１－５",
             "course": "直200m",
             "status": "発走前"
           },
@@ -3417,7 +3425,7 @@
             "winner": "",
             "jockey": "",
             "trifecta": "",
-            "race_name": "賢哉くん祝２４歳記念Ｂ４－１混合  10",
+            "race_name": "賢哉くん祝２４歳記念Ｂ４－１混合",
             "course": "直200m",
             "status": "発走前"
           },
@@ -3426,7 +3434,7 @@
             "winner": "",
             "jockey": "",
             "trifecta": "",
-            "race_name": "ルカルカナイトフィーバー２歳Ａ－１  9",
+            "race_name": "ルカルカナイトフィーバー２歳Ａ－１",
             "course": "直200m",
             "status": "発走前"
           },
@@ -3435,7 +3443,7 @@
             "winner": "",
             "jockey": "",
             "trifecta": "",
-            "race_name": "安藤夫婦ｗｉｔｈ哲也善重Ｂ３－７  10",
+            "race_name": "安藤夫婦ｗｉｔｈ哲也善重Ｂ３－７",
             "course": "直200m",
             "status": "発走前"
           },
@@ -3444,7 +3452,7 @@
             "winner": "",
             "jockey": "",
             "trifecta": "",
-            "race_name": "真澄りち生誕記念杯Ｂ３－４  10",
+            "race_name": "真澄りち生誕記念杯Ｂ３－４",
             "course": "直200m",
             "status": "発走前"
           },
@@ -3453,8 +3461,8 @@
             "winner": "",
             "jockey": "",
             "trifecta": "",
-            "race_name": "有 特別 田山産業ばん馬大会記念Ａ１－２混合  10",
-            "course": "直200m",
+            "race_name": "出走取消 疾病",
+            "course": "",
             "status": "発走前"
           },
           {
@@ -3462,7 +3470,7 @@
             "winner": "",
             "jockey": "",
             "trifecta": "",
-            "race_name": "Ｂ２－１  10",
+            "race_name": "Ｂ２－１",
             "course": "直200m",
             "status": "発走前"
           }
@@ -3486,8 +3494,8 @@
             "winner": "",
             "jockey": "",
             "trifecta": "",
-            "race_name": "有 ２歳－４",
-            "course": "ダート1300m",
+            "race_name": "出走取消 疾病",
+            "course": "",
             "status": "発走前"
           },
           {
@@ -3522,8 +3530,8 @@
             "winner": "",
             "jockey": "",
             "trifecta": "",
-            "race_name": "有 特別 ダリア特別Ｃ３－１選抜馬",
-            "course": "ダート1600m",
+            "race_name": "出走取消 疾病",
+            "course": "",
             "status": "発走前"
           },
           {
@@ -3549,8 +3557,8 @@
             "winner": "",
             "jockey": "",
             "trifecta": "",
-            "race_name": "有 Ｃ１－２",
-            "course": "ダート1400m",
+            "race_name": "出走取消 疾病",
+            "course": "",
             "status": "発走前"
           },
           {
