@@ -541,6 +541,13 @@ def result_from_result_page(soup: BeautifulSoup) -> dict | None:
                 course = re.sub(r"^.*?コース[:：]\s*", "", t).strip()
                 break
 
+    if not course:
+        full_text = clean_text(soup)
+        cm = re.search(r"(芝|ダート|ダ|障害)\s*([0-9,]{3,5})\s*(?:m|メートル)", full_text)
+        if cm:
+            surface = "ダート" if cm.group(1) == "ダ" else cm.group(1)
+            course = f"{surface}{cm.group(2).replace(',','')}m"
+
     payouts = {label: payout_items(soup, label) for label in PAYOUT_ORDER}
     winner = top3[0]
     return {
