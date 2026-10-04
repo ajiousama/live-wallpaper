@@ -117,9 +117,11 @@ function jraVenueCard(v){
   return '<article class="jra-card unified-race-card"><div class="card-head"><div class="card-title">'+esc(v.name||"---")+'</div><div class="event">JRA</div></div><div class="horse-table-viewport auto-vscroll">'+table+'</div></article>';
 }
 function localVenueCard(v){
-  const map=new Map((v.races||[]).map(function(x){return [Number(x.race),x]}));
+  const races=v.races||[];
+  const map=new Map(races.map(function(x){return [Number(x.race),x]}));
+  const raceCount=Math.max(1,races.reduce(function(m,x){return Math.max(m,Number(x.race)||0)},0));
   let rows="";
-  for(let r=1;r<=12;r++){
+  for(let r=1;r<=raceCount;r++){
     const x=map.get(r)||{};
     const combo=Array.isArray(x.order)&&x.order.length>=3?x.order.join("-"):"";
     rows+='<tr><td class="jr">'+r+'R</td>'+horseRaceInfoCell(x)+'<td class="horse '+(x.winner?"":"pending")+'">'+esc(x.winner||x.status||"発走前")+'</td><td class="jockey">'+esc(x.jockey||"")+'</td><td class="tri-combo-cell '+(combo?"":"pending")+'">'+esc(combo||"---")+'</td><td class="pay '+(x.trifecta?"":"pending")+'">'+esc(x.trifecta||"")+'</td></tr>';
