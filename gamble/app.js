@@ -83,8 +83,14 @@ function keirinRows(v){
   }
   return '<table class="phase-table keirin-table"><thead><tr><th>R</th><th>級</th><th>レース</th><th>勝者</th><th>出身</th><th>3連単</th><th>払戻</th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
+function keirinPayoutText(x,label){
+  const arr=x?.payouts?.[label];
+  if(!Array.isArray(arr)||!arr.length) return "---";
+  return arr.map(y=>[y.combo,y.amount].filter(Boolean).join(" ")).join(" / ");
+}
 function keirinDetailCard(v){
   const races=v.races||[];
+  const payoutCols=["枠複","枠単","2車複","2車単","ワイド","3連複","3連単"];
   let rows="";
   for(const x of races){
     const raw=x.race_name||"—";
@@ -92,6 +98,10 @@ function keirinDetailCard(v){
     const cls=cm?cm[0].replace("A","Ａ").replace("S","Ｓ").replace("L","Ｌ"):"";
     const name=cm?raw.slice(cm[0].length).trim():raw;
     const isFinal=/決勝/.test(raw);
+    const payoutCells=payoutCols.map(label=>{
+      const value=keirinPayoutText(x,label);
+      return '<td class="bet-cell bet-'+label.replace(/[0-9]/g,"")+'"><b>'+esc(label)+'</b><span>'+esc(value)+'</span></td>';
+    }).join("");
     rows+='<tr class="'+(isFinal?"final-row":"")+'">'+
       '<td class="r">'+esc(x.race)+'R</td>'+
       '<td class="time">'+esc(x.scheduled_time||x.time||"--:--")+'</td>'+
@@ -99,9 +109,7 @@ function keirinDetailCard(v){
       '<td class="name">'+raceNameMarquee(name)+'</td>'+
       '<td class="winner">'+esc(x.winner||"---")+'</td>'+
       '<td class="origin">'+esc(x.origin||"---")+'</td>'+
-      '<td class="combo">'+orderHtml(x.order,"keirin")+'</td>'+
-      '<td class="pay">'+esc(x.payout||"---")+'</td>'+
-      '<td class="status-col">'+esc(x.status||"発走前")+'</td>'+
+      payoutCells+
     '</tr>';
   }
   const venue=v.display_name||v.venue||v.name||"---";
@@ -110,7 +118,7 @@ function keirinDetailCard(v){
   return '<article class="keirin-detail-card">'+
     '<div class="keirin-detail-head"><span class="sport-tag keirin">競輪</span><strong>'+esc(venue)+'</strong><b>'+esc(grade)+'</b><em>'+esc(event)+'</em></div>'+
     '<div class="keirin-detail-table-wrap">'+
-      '<table class="keirin-detail-table"><thead><tr><th>R</th><th>発走</th><th>級</th><th>レース</th><th>勝者</th><th>出身</th><th>3連単</th><th>払戻</th><th>状況</th></tr></thead><tbody>'+rows+'</tbody></table>'+
+      '<table class="keirin-detail-table"><thead><tr><th>R</th><th>発走</th><th>級</th><th>レース</th><th>勝者</th><th>出身</th><th>枠複</th><th>枠単</th><th>2車複</th><th>2車単</th><th>ワイド</th><th>3連複</th><th>3連単</th></tr></thead><tbody>'+rows+'</tbody></table>'+
     '</div>'+
   '</article>';
 }
