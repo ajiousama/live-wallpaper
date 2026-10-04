@@ -79,7 +79,7 @@ function jraVenueCard(v){
         '<span class="tri-combo '+(tri.combo?"":"pending")+'">'+esc(tri.combo||"---")+'</span>'+
         '<span class="tri-pay '+(tri.amount?"":"pending")+'">'+esc(tri.amount||"")+'</span>'+
       '</div>'+
-      '<div class="race-info marquee-check"><span class="marquee-text">'+esc(raceInfoText(x))+'</span></div>'+
+      '<div class="race-info marquee-check"><div class="marquee-track"><span class="marquee-text">'+esc(raceInfoText(x))+'</span><span class="marquee-copy" aria-hidden="true">'+esc(raceInfoText(x))+'</span></div></div>'+
     '</div>';
   }
   return '<article class="jra-card"><div class="card-head"><div class="card-title">'+esc(v.name||"---")+'</div><div class="event">1R〜12R</div></div><div class="horse-races">'+rows+'</div></article>';
