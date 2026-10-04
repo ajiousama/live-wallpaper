@@ -49,11 +49,11 @@ function renderKeirin(){
   const venues=data?.keirin?.venues||[];
   document.getElementById("keirin-phase").textContent=venues.length?("本日開催 "+venues.length+"場"):"開催なし";
   if(!venues.length){
-    host.className="all-venue-grid keirin-all";
+    host.className="all-venue-grid keirin-all auto-vscroll sport-grid-vscroll";
     host.innerHTML='<div class="empty-card">本日の競輪開催はありません</div>';
     return;
   }
-  host.className="all-venue-grid keirin-all";
+  host.className="all-venue-grid keirin-all auto-vscroll sport-grid-vscroll";
   host.innerHTML=venues.map(function(v){return compactCard(v,"keirin")}).join("");
 }
 function showScreen(mode){
@@ -68,7 +68,7 @@ function showScreen(mode){
 function renderBoats(){
   const host=document.getElementById("boat-grid");
   const boats=data?.boats||[];
-  host.className="all-venue-grid boat-all";
+  host.className="all-venue-grid boat-all auto-vscroll sport-grid-vscroll";
   if(!boats.length){
     host.innerHTML='<div class="empty-card">本日のボート開催情報を取得中</div>';
     return;
@@ -267,7 +267,7 @@ function renderRight(){
   const cards=central.concat(local);
   const featured=data?.featured_races||[];
   document.getElementById("right-note").textContent="JRA・地方競馬を全場表示";
-  host.className="race-all-grid";
+  host.className="race-all-grid auto-vscroll sport-grid-vscroll";
   if(!cards.length){
     host.innerHTML='<div class="empty-card">本日の競馬開催情報を取得中</div>';
   }else{
@@ -283,7 +283,7 @@ function renderRight(){
   setupAllVerticalScrolls(true);
 }
 function render(){
-  renderKeirin();renderBoats();renderRight();updateMarquees();
+  renderKeirin();renderBoats();renderRight();updateMarquees();setupAllVerticalScrolls(true);
   document.getElementById("updated").textContent="最終取得 "+(data?.updated_at||jra?.updated_at||"--");
   const src=data?.source||{};
   document.getElementById("source").textContent="日程: "+(src.schedule||"Free WiFi EPG")+" / 競輪: "+(src.keirin||"-")+" / ボート: "+(src.boat||"-")+" / JRA: JRA公式";
