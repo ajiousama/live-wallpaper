@@ -2,7 +2,7 @@
   "source": "JRA公式",
   "source_date": "20261004",
   "date_label": "10月4日 日曜",
-  "updated_at": "2026-10-04 11:18 JST",
+  "updated_at": "2026-10-04 11:46 JST",
   "venues": [
     {
       "name": "東京",
@@ -624,6 +624,129 @@
           "jockey": "横山 和生",
           "horse": "ミホマル",
           "win_payout": "430円"
+        },
+        {
+          "race": 4,
+          "race_name": "メイクデビュー京都",
+          "course": "",
+          "top3": [
+            {
+              "position": 1,
+              "frame": "枠3赤",
+              "number": "5",
+              "horse": "ブライトスクリプト",
+              "jockey": "池添 謙一",
+              "time": "1:20.5",
+              "margin": ""
+            },
+            {
+              "position": 2,
+              "frame": "枠8桃",
+              "number": "16",
+              "horse": "ヘヴンインザレイン",
+              "jockey": "川田 将雅",
+              "time": "1:20.8",
+              "margin": "２"
+            },
+            {
+              "position": 3,
+              "frame": "枠2黒",
+              "number": "3",
+              "horse": "スイートリディア",
+              "jockey": "北村 友一",
+              "time": "1:21.1",
+              "margin": "１ 3/4"
+            }
+          ],
+          "payouts": {
+            "単勝": [
+              {
+                "combo": "5",
+                "amount": "150円"
+              }
+            ],
+            "複勝": [
+              {
+                "combo": "5",
+                "amount": "110円"
+              },
+              {
+                "combo": "16",
+                "amount": "180円"
+              },
+              {
+                "combo": "3",
+                "amount": "290円"
+              },
+              {
+                "combo": "9",
+                "amount": "220円"
+              }
+            ],
+            "枠連": [
+              {
+                "combo": "3-8",
+                "amount": "830円"
+              }
+            ],
+            "馬連": [
+              {
+                "combo": "5-16",
+                "amount": "990円"
+              }
+            ],
+            "馬単": [
+              {
+                "combo": "5-16",
+                "amount": "1,190円"
+              }
+            ],
+            "ワイド": [
+              {
+                "combo": "5-16",
+                "amount": "270円"
+              },
+              {
+                "combo": "3-5",
+                "amount": "550円"
+              },
+              {
+                "combo": "5-9",
+                "amount": "370円"
+              },
+              {
+                "combo": "3-16",
+                "amount": "1,640円"
+              },
+              {
+                "combo": "9-16",
+                "amount": "1,180円"
+              }
+            ],
+            "3連複": [
+              {
+                "combo": "3-5-16",
+                "amount": "3,470円"
+              },
+              {
+                "combo": "5-9-16",
+                "amount": "2,210円"
+              }
+            ],
+            "3連単": [
+              {
+                "combo": "5-16-3",
+                "amount": "8,830円"
+              },
+              {
+                "combo": "5-16-9",
+                "amount": "5,140円"
+              }
+            ]
+          },
+          "jockey": "池添 謙一",
+          "horse": "ブライトスクリプト",
+          "win_payout": "150円"
         }
       ]
     }
