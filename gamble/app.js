@@ -2,6 +2,7 @@ const DATA_URL="./data.json";
 const JRA_URL="../jra/data.json";
 const PHASES=["モーニング","デイ","ナイター","ミッドナイト"];
 const PAYOUT_TYPES=["単勝","複勝","枠連","馬連","馬単","ワイド","3連複","3連単"];
+const BOAT_PAYOUT_TYPES=["3連単","3連複","2連単","2連複","拡連複","単勝","複勝"];
 let data=null,jra=null,currentPageIndex=0,screenShownAt=performance.now(),rotateTimer=null;
 
 function esc(v){
@@ -146,29 +147,37 @@ function boatRows(v){
   return '<table class="phase-table boat-table"><thead><tr><th>R</th><th>レース</th><th>3連単</th><th>払戻</th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
 function isBoatSg(v){
+  if(String(v?.grade||"").toUpperCase()==="SG") return true;
   const name=String(v?.event_name||"").normalize("NFKC");
-  return /(^|[^A-Z])SG([^A-Z]|$)/i.test(name);
+  return /(^|[^A-Z])SG([^A-Z]|$)/i.test(name)
+    ||/(ボートレースクラシック|ボートレースオールスター|グランドチャンピオン|オーシャンカップ|ボートレースメモリアル|ボートレースダービー|チャレンジカップ|グランプリ|グランプリシリーズ)/.test(name);
+}
+function boatPayoutHtml(x,label){
+  const arr=x?.payouts?.[label];
+  if(!Array.isArray(arr)||!arr.length) return '<span class="muted">---</span>';
+  return arr.map(y=>'<span>'+esc([y.combo,y.amount].filter(Boolean).join(" "))+'</span>').join("");
 }
 function boatDetailCard(v){
   const map=new Map((v.races||[]).map(x=>[Number(x.race),x]));
   let rows="";
   for(let r=1;r<=12;r++){
-    const x=map.get(r)||{race:r,status:"発走前",order:[],payout:""};
+    const x=map.get(r)||{race:r,status:"発走前",order:[],payout:"",payouts:{}};
     const isFinal=String(x.race_name||"").includes("優勝戦")&&!String(x.race_name||"").includes("準優勝");
+    const payoutCells=BOAT_PAYOUT_TYPES.map(label=>
+      '<td class="bet-cell bet-'+label.replace(/[0-9]/g,"")+'">'+boatPayoutHtml(x,label)+'</td>'
+    ).join("");
     rows+='<tr class="'+(isFinal?"final-row":"")+'">'+
       '<td class="r">'+r+'R</td>'+
       '<td class="time">'+esc(x.scheduled_time||"--:--")+'</td>'+
       '<td class="name">'+raceNameMarquee(x.race_name||"—")+'</td>'+
-      '<td class="combo">'+orderHtml(x.order,"boat")+'</td>'+
-      '<td class="pay">'+esc(x.payout||"---")+'</td>'+
+      payoutCells+
       '<td class="winner">'+esc(x.winner||"")+'</td>'+
-      '<td class="status-col">'+esc(x.status||"発走前")+'</td>'+
     '</tr>';
   }
   return '<article class="boat-detail-card">'+
     '<div class="boat-detail-head"><span class="sport-tag boat">ボート</span><strong>'+esc(v.name||"---")+'</strong><b>SG</b><em>'+esc(v.event_name||"")+'</em></div>'+
     '<div class="boat-detail-table-wrap">'+
-      '<table class="boat-detail-table"><thead><tr><th>R</th><th>発走</th><th>レース</th><th>3連単</th><th>払戻</th><th>優勝者</th><th>状況</th></tr></thead><tbody>'+rows+'</tbody></table>'+
+      '<table class="boat-detail-table"><thead><tr><th>R</th><th>発走</th><th>レース</th><th>3連単</th><th>3連複</th><th>2連単</th><th>2連複</th><th>拡連複</th><th>単勝</th><th>複勝</th><th>優勝者</th></tr></thead><tbody>'+rows+'</tbody></table>'+
     '</div>'+
   '</article>';
 }
