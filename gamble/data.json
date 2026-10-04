@@ -1,114 +1,13 @@
 {
   "date": "2026-10-04",
   "date_label": "2026年10月04日",
-  "updated_at": "10:53:09",
-  "updated_at_iso": "2026-10-04T10:53:09.038919+09:00",
+  "updated_at": "11:12:20",
+  "updated_at_iso": "2026-10-04T11:12:20.812363+09:00",
   "jra_switch_time": "17:00",
   "keirin": {
     "phase": "モーニング",
     "phase_end_minutes": 640,
     "venues": [
-      {
-        "channel": "keirin.matsudo",
-        "venue": "松戸",
-        "type": "モーニング",
-        "grade": "F2",
-        "epg_start": "202610041000",
-        "epg_stop": "202610041400",
-        "code": "31",
-        "race_ids": [
-          "202610043101",
-          "202610043102",
-          "202610043103",
-          "202610043104",
-          "202610043105",
-          "202610043106",
-          "202610043107"
-        ],
-        "event_name": "第９回みんなの競輪カップ",
-        "last_time": "10:40",
-        "last_confirmed": true,
-        "races": [
-          {
-            "race": 1,
-            "time": "08:40",
-            "status": "確定",
-            "order": [
-              2,
-              3,
-              5
-            ],
-            "payout": "6,110円"
-          },
-          {
-            "race": 2,
-            "time": "09:00",
-            "status": "確定",
-            "order": [
-              3,
-              4,
-              6
-            ],
-            "payout": "330円"
-          },
-          {
-            "race": 3,
-            "time": "09:20",
-            "status": "確定",
-            "order": [
-              7,
-              1,
-              2
-            ],
-            "payout": "1,010円"
-          },
-          {
-            "race": 4,
-            "time": "09:40",
-            "status": "確定",
-            "order": [
-              7,
-              3,
-              5
-            ],
-            "payout": "560円"
-          },
-          {
-            "race": 5,
-            "time": "10:00",
-            "status": "確定",
-            "order": [
-              2,
-              3,
-              1
-            ],
-            "payout": "3,330円"
-          },
-          {
-            "race": 6,
-            "time": "10:20",
-            "status": "確定",
-            "order": [
-              3,
-              6,
-              2
-            ],
-            "payout": "19,830円"
-          },
-          {
-            "race": 7,
-            "time": "10:40",
-            "status": "確定",
-            "order": [
-              5,
-              6,
-              3
-            ],
-            "payout": "1,220円"
-          }
-        ],
-        "display_name": "松戸"
-      },
       {
         "channel": "keirin.hofu",
         "venue": "防府",
@@ -209,6 +108,107 @@
           }
         ],
         "display_name": "防府"
+      },
+      {
+        "channel": "keirin.matsudo",
+        "venue": "松戸",
+        "type": "モーニング",
+        "grade": "F2",
+        "epg_start": "202610041000",
+        "epg_stop": "202610041400",
+        "code": "31",
+        "race_ids": [
+          "202610043101",
+          "202610043102",
+          "202610043103",
+          "202610043104",
+          "202610043105",
+          "202610043106",
+          "202610043107"
+        ],
+        "event_name": "第９回みんなの競輪カップ",
+        "last_time": "10:40",
+        "last_confirmed": true,
+        "races": [
+          {
+            "race": 1,
+            "time": "08:40",
+            "status": "確定",
+            "order": [
+              2,
+              3,
+              5
+            ],
+            "payout": "6,110円"
+          },
+          {
+            "race": 2,
+            "time": "09:00",
+            "status": "確定",
+            "order": [
+              3,
+              4,
+              6
+            ],
+            "payout": "330円"
+          },
+          {
+            "race": 3,
+            "time": "09:20",
+            "status": "確定",
+            "order": [
+              7,
+              1,
+              2
+            ],
+            "payout": "1,010円"
+          },
+          {
+            "race": 4,
+            "time": "09:40",
+            "status": "確定",
+            "order": [
+              7,
+              3,
+              5
+            ],
+            "payout": "560円"
+          },
+          {
+            "race": 5,
+            "time": "10:00",
+            "status": "確定",
+            "order": [
+              2,
+              3,
+              1
+            ],
+            "payout": "3,330円"
+          },
+          {
+            "race": 6,
+            "time": "10:20",
+            "status": "確定",
+            "order": [
+              3,
+              6,
+              2
+            ],
+            "payout": "19,830円"
+          },
+          {
+            "race": 7,
+            "time": "10:40",
+            "status": "確定",
+            "order": [
+              5,
+              6,
+              3
+            ],
+            "payout": "1,220円"
+          }
+        ],
+        "display_name": "松戸"
       }
     ]
   },
@@ -232,9 +232,13 @@
         },
         {
           "race": 2,
-          "status": "発走前",
-          "order": [],
-          "payout": ""
+          "status": "確定",
+          "order": [
+            1,
+            2,
+            4
+          ],
+          "payout": "1円"
         },
         {
           "race": 3,

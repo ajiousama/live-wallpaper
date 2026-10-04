@@ -2,7 +2,7 @@
   "source": "JRA公式",
   "source_date": "20261004",
   "date_label": "10月4日 日曜",
-  "updated_at": "2026-10-04 10:52 JST",
+  "updated_at": "2026-10-04 11:11 JST",
   "venues": [
     {
       "name": "東京",
@@ -418,6 +418,109 @@
           "jockey": "松山 弘平",
           "horse": "レイクイーン",
           "win_payout": "260円"
+        },
+        {
+          "race": 3,
+          "race_name": "メイクデビュー京都",
+          "course": "",
+          "top3": [
+            {
+              "position": 1,
+              "frame": "枠1白",
+              "number": "1",
+              "horse": "ミホマル",
+              "jockey": "横山 和生",
+              "time": "1:25.2",
+              "margin": ""
+            },
+            {
+              "position": 2,
+              "frame": "枠7橙",
+              "number": "14",
+              "horse": "タガノゲイル",
+              "jockey": "田口 貫太",
+              "time": "1:25.9",
+              "margin": "４"
+            },
+            {
+              "position": 3,
+              "frame": "枠5黄",
+              "number": "10",
+              "horse": "ランスオブナイト",
+              "jockey": "太宰 啓介",
+              "time": "1:26.1",
+              "margin": "１"
+            }
+          ],
+          "payouts": {
+            "単勝": [
+              {
+                "combo": "1",
+                "amount": "430円"
+              }
+            ],
+            "複勝": [
+              {
+                "combo": "1",
+                "amount": "160円"
+              },
+              {
+                "combo": "14",
+                "amount": "150円"
+              },
+              {
+                "combo": "10",
+                "amount": "750円"
+              }
+            ],
+            "枠連": [
+              {
+                "combo": "1-7",
+                "amount": "870円"
+              }
+            ],
+            "馬連": [
+              {
+                "combo": "1-14",
+                "amount": "810円"
+              }
+            ],
+            "馬単": [
+              {
+                "combo": "1-14",
+                "amount": "1,660円"
+              }
+            ],
+            "ワイド": [
+              {
+                "combo": "1-14",
+                "amount": "410円"
+              },
+              {
+                "combo": "1-10",
+                "amount": "3,560円"
+              },
+              {
+                "combo": "10-14",
+                "amount": "1,830円"
+              }
+            ],
+            "3連複": [
+              {
+                "combo": "1-10-14",
+                "amount": "10,250円"
+              }
+            ],
+            "3連単": [
+              {
+                "combo": "1-14-10",
+                "amount": "46,130円"
+              }
+            ]
+          },
+          "jockey": "横山 和生",
+          "horse": "ミホマル",
+          "win_payout": "430円"
         }
       ]
     }
