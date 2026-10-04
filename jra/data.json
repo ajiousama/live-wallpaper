@@ -2,7 +2,7 @@
   "source": "JRA公式",
   "source_date": "20261004",
   "date_label": "10月4日 日曜",
-  "updated_at": "2026-10-04 13:09 JST",
+  "updated_at": "2026-10-04 13:22 JST",
   "venues": [
     {
       "name": "東京",
@@ -1262,6 +1262,109 @@
           "jockey": "松山 弘平",
           "horse": "エアアルチーナ",
           "win_payout": "350円"
+        },
+        {
+          "race": 7,
+          "race_name": "3歳以上1勝クラス",
+          "course": "",
+          "top3": [
+            {
+              "position": 1,
+              "frame": "枠2黒",
+              "number": "4",
+              "horse": "マウンテンバローズ",
+              "jockey": "川田 将雅",
+              "time": "1:08.1",
+              "margin": ""
+            },
+            {
+              "position": 2,
+              "frame": "枠5黄",
+              "number": "9",
+              "horse": "ベルサ",
+              "jockey": "今村 聖奈",
+              "time": "",
+              "margin": "１"
+            },
+            {
+              "position": 3,
+              "frame": "枠1白",
+              "number": "2",
+              "horse": "グロリアスマーチ",
+              "jockey": "鮫島 克駿",
+              "time": "",
+              "margin": "クビ"
+            }
+          ],
+          "payouts": {
+            "単勝": [
+              {
+                "combo": "4",
+                "amount": "600円"
+              }
+            ],
+            "複勝": [
+              {
+                "combo": "4",
+                "amount": "260円"
+              },
+              {
+                "combo": "9",
+                "amount": "240円"
+              },
+              {
+                "combo": "2",
+                "amount": "410円"
+              }
+            ],
+            "枠連": [
+              {
+                "combo": "2-5",
+                "amount": "1,670円"
+              }
+            ],
+            "馬連": [
+              {
+                "combo": "4-9",
+                "amount": "2,260円"
+              }
+            ],
+            "馬単": [
+              {
+                "combo": "4-9",
+                "amount": "3,650円"
+              }
+            ],
+            "ワイド": [
+              {
+                "combo": "4-9",
+                "amount": "920円"
+              },
+              {
+                "combo": "2-4",
+                "amount": "1,160円"
+              },
+              {
+                "combo": "2-9",
+                "amount": "1,360円"
+              }
+            ],
+            "3連複": [
+              {
+                "combo": "2-4-9",
+                "amount": "6,340円"
+              }
+            ],
+            "3連単": [
+              {
+                "combo": "4-9-2",
+                "amount": "29,770円"
+              }
+            ]
+          },
+          "jockey": "川田 将雅",
+          "horse": "マウンテンバローズ",
+          "win_payout": "600円"
         }
       ]
     }
