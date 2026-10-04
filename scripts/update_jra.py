@@ -341,40 +341,73 @@ def normalize_course_text(text: str) -> str:
     return ""
 
 
-def netkeiba_race_course(race_page: dict) -> str:
+def _clean_prerace_name(value: str) -> str:
+    value = re.sub(r"\s+", " ", value or "").strip()
+    value = re.sub(r"^\d{1,2}R\s*", "", value)
+    value = re.sub(r"\s*(?:出馬表|オッズ|予想|結果).*$", "", value).strip()
+    if len(value) > 60:
+        return ""
+    if value in {"", "出馬表", "レース情報", "JRA", "netkeiba"}:
+        return ""
+    return value
+
+
+def _race_name_from_soup(soup: BeautifulSoup) -> str:
+    for tag in soup.find_all(class_=re.compile(r"(?:RaceName|race[_-]?name)", re.I)):
+        name = _clean_prerace_name(clean_text(tag))
+        if name:
+            return name
+    for tag in soup.find_all(["h1","h2","h3"]):
+        name = _clean_prerace_name(clean_text(tag))
+        if name and not re.search(r"(開催|出馬表|レース一覧|競馬場|本日の)", name):
+            return name
+    title = page_title(soup)
+    if title:
+        name = _clean_prerace_name(re.split(r"[｜|]", title)[0])
+        if name and not re.search(r"(JRA|netkeiba|出馬表)", name):
+            return name
+    return ""
+
+
+def netkeiba_race_meta(race_page: dict) -> dict:
     race_id = (
         f'{race_page.get("year","")}{race_page.get("venue_code","")}'
         f'{race_page.get("meet","")}{race_page.get("day","")}'
         f'{int(race_page.get("race",0)):02d}'
     )
     if len(race_id) != 12:
-        return ""
+        return {"race_name":"","course":""}
     try:
         soup = soup_get(
             "https://race.netkeiba.com/race/shutuba.html?race_id=" + race_id
         )
     except Exception:
-        return ""
+        return {"race_name":"","course":""}
     text = clean_text(soup)
     course = normalize_course_text(text)
-    if course:
-        return course
-    m = re.search(r"(芝|ダート|ダ|障害)\s*([0-9,]{3,5})\s*m", text)
-    if not m:
-        return ""
-    surface = "ダート" if m.group(1) == "ダ" else m.group(1)
-    return f"{surface}{m.group(2).replace(',','')}m"
+    if not course:
+        m = re.search(r"(芝|ダート|ダ|障害)\s*([0-9,]{3,5})\s*m", text)
+        if m:
+            surface = "ダート" if m.group(1) == "ダ" else m.group(1)
+            course = f"{surface}{m.group(2).replace(',','')}m"
+    return {"race_name":_race_name_from_soup(soup),"course":course}
 
 
-def current_race_course(race_page: dict) -> str:
+def current_race_meta(race_page: dict) -> dict:
+    name = course = ""
     try:
         soup = soup_cname_get("/JRADB/accessD.html", race_page["cname"])
-        course = normalize_course_text(clean_text(soup))
-        if course:
-            return course
+        text = clean_text(soup)
+        course = normalize_course_text(text)
+        name = _race_name_from_soup(soup)
     except Exception:
         pass
-    return netkeiba_race_course(race_page)
+
+    if not name or not course:
+        fallback = netkeiba_race_meta(race_page)
+        name = name or fallback.get("race_name","")
+        course = course or fallback.get("course","")
+    return {"race_name":name,"course":course}
 
 
 def discover_historical_landing() -> BeautifulSoup:
@@ -719,10 +752,17 @@ def main() -> None:
             race_no = race_meta["race"]
             existing_race = venue_results.get(race_no, {})
 
-            if mode == "current" and not existing_race.get("course"):
-                course = current_race_course(race_meta)
-                if course:
-                    existing_race = {**existing_race, "race": race_no, "course": course}
+            if mode == "current" and (
+                not existing_race.get("course") or not existing_race.get("race_name")
+            ):
+                prerace = current_race_meta(race_meta)
+                seeded = {**existing_race, "race": race_no}
+                if not seeded.get("course") and prerace.get("course"):
+                    seeded["course"] = prerace["course"]
+                if not seeded.get("race_name") and prerace.get("race_name"):
+                    seeded["race_name"] = prerace["race_name"]
+                if seeded != existing_race:
+                    existing_race = seeded
                     venue_results[race_no] = existing_race
                     changed = True
 
