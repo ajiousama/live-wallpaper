@@ -136,8 +136,9 @@ function jraRaceBlock(r,no){
   const places=[1,2,3].map(pos=>{
     const x=top.find(y=>Number(y.position)===pos)||{};
     const horse=x.horse||"---";
+    const jockey=x.jockey||"";
     const num=x.number?x.number+" ":"";
-    return '<span class="place p'+pos+'"><b>'+pos+'着</b> '+esc(num+horse)+'</span>';
+    return '<span class="place p'+pos+'"><b>'+pos+'着</b><span class="place-horse">'+esc(num+horse)+'</span><em>'+esc(jockey)+'</em></span>';
   }).join("");
   const payoutClass={
     "単勝":"bet-tansho","複勝":"bet-fukusho","枠連":"bet-wakuren","馬連":"bet-umaren",
