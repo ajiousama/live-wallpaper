@@ -1,8 +1,8 @@
 {
   "date": "2026-10-04",
   "date_label": "2026年10月04日",
-  "updated_at": "20:39:18",
-  "updated_at_iso": "2026-10-04T20:39:18.967447+09:00",
+  "updated_at": "20:42:16",
+  "updated_at_iso": "2026-10-04T20:42:16.082116+09:00",
   "jra_switch_time": "17:00",
   "keirin": {
     "phase": "本日開催 8場",
@@ -3192,7 +3192,7 @@
           {
             "race": 1,
             "time": "20:41",
-            "status": "発走前",
+            "status": "結果待ち",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -6851,6 +6851,22 @@
     ]
   },
   "featured_races": [
+    {
+      "source": "JRA",
+      "venue": "東京",
+      "race": "11R",
+      "name": "毎日王冠（GⅡ）",
+      "time": "15:45",
+      "horses": []
+    },
+    {
+      "source": "JRA",
+      "venue": "京都",
+      "race": "11R",
+      "name": "京都大賞典（GⅡ）",
+      "time": "15:30",
+      "horses": []
+    },
     {
       "source": "海外競馬",
       "venue": "海外",
