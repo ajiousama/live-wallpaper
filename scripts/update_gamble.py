@@ -15,6 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "gamble" / "data.json"
 JST = ZoneInfo("Asia/Tokyo")
 EPG_URL = "https://raw.githubusercontent.com/ajiousama/himitsu/main/ganble/epg.xml"
+BOAT_TODAY_URL = "https://raw.githubusercontent.com/ajiousama/himitsu/main/ganble/boatrace_today.json"
 
 KEIRIN_CODES = {
     "函館":"11","青森":"12","いわき平":"13","弥彦":"21","前橋":"22","取手":"23","宇都宮":"24",
@@ -28,10 +29,6 @@ NAR_CODES = {
     "帯広":"03","盛岡":"10","水沢":"11","浦和":"18","船橋":"19","大井":"20","川崎":"21",
     "金沢":"22","笠松":"23","名古屋":"24","園田":"27","姫路":"28","高知":"31","佐賀":"32","門別":"36",
 }
-BOAT_TARGETS = [
-    {"name":"三国","code":"10","fallback_event":"GⅠ開設73周年記念北陸艇王決戦"},
-    {"name":"浜名湖","code":"06","fallback_event":"中日スポーツシルバーカップ"},
-]
 PHASE_ORDER = ["モーニング","デイ","ナイター","ミッドナイト","オーバーミッドナイト"]
 
 session = requests.Session()
@@ -204,17 +201,13 @@ def keirin_venue_expired(v: dict, typ: str, now_minutes: int) -> bool:
     end = keirin_venue_end_minutes(v, typ)
     return bool(v.get("last_confirmed") and end is not None and now_minutes > end + 60)
 
-def choose_keirin_venues(metas: list[dict], now_minutes: int, limit: int = 4):
-    # 「時間帯を1つ選ぶ」のではなく、終了+60分を過ぎていない場から
-    # モーニング→デイ→ナイター→ミッドナイトの順に空き枠を埋める。
-    active = []
-    for v in metas:
-        typ = v.get("type","")
-        if typ not in PHASE_ORDER:
-            continue
-        if keirin_venue_expired(v, typ, now_minutes):
-            continue
-        active.append(v)
+def choose_keirin_venues(metas: list[dict], now_minutes: int):
+    # 全場表示なので終了後1時間の入替は行わない。
+    # 本日開催場をモーニング→デイ→ナイター→ミッドナイト順に当日中ずっと残す。
+    venues = [
+        v for v in metas
+        if v.get("type","") in PHASE_ORDER
+    ]
 
     def sort_key(v):
         typ = v.get("type","")
@@ -222,20 +215,13 @@ def choose_keirin_venues(metas: list[dict], now_minutes: int, limit: int = 4):
         end = keirin_venue_end_minutes(v, typ)
         return (phase_idx, end if end is not None else 9999, v.get("venue",""))
 
-    active.sort(key=sort_key)
-    selected = active[:limit]
-    labels = []
-    for v in selected:
-        typ = v.get("type","")
-        if typ and typ not in labels:
-            labels.append(typ)
+    venues.sort(key=sort_key)
     end_values = [
-        x for x in (keirin_venue_end_minutes(v, v.get("type","")) for v in selected)
+        x for x in (keirin_venue_end_minutes(v, v.get("type","")) for v in venues)
         if x is not None
     ]
-    phase_label = " / ".join(labels)
     group_end = max(end_values) if end_values else None
-    return phase_label, selected, group_end
+    return f"本日開催 {len(venues)}場", venues, group_end
 
 def fill_keirin_results(ymd: str, venues: list[dict], now_minutes: int):
     for venue in venues:
@@ -259,6 +245,30 @@ def fill_keirin_results(ymd: str, venues: list[dict], now_minutes: int):
         venue["races"] = sorted(races, key=lambda x:x["race"])
         venue["display_name"] = venue["venue"]
     return venues
+
+def boat_targets_today():
+    try:
+        raw = json.loads(fetch(BOAT_TODAY_URL))
+    except Exception:
+        return []
+    out = []
+    for label, info in raw.items():
+        if not isinstance(info, dict) or not info.get("held"):
+            continue
+        m = re.match(r"(\d{2})\s+(.+)", str(label))
+        if not m:
+            continue
+        races = info.get("races") or []
+        last_time = clean(races[-1].get("time","")) if races else ""
+        out.append({
+            "name":m.group(2).strip(),
+            "code":m.group(1),
+            "fallback_event":"",
+            "last_time":last_time,
+            "day_type":clean(info.get("day_type","")),
+        })
+    out.sort(key=lambda x:int(x["code"]))
+    return out
 
 def boat_event_name(soup: BeautifulSoup, fallback: str) -> str:
     for h in soup.find_all(["h1","h2","h3"]):
@@ -304,10 +314,9 @@ def boat_results(ymd: str, target: dict, now_minutes: int):
                 "order":[int(combo.group(1)),int(combo.group(2)),int(combo.group(3))],
                 "payout":f"{int(yen.group(1).replace(',','')):,}円",
             }
-    last = boat_last_time(ymd,code)
-    last_min = hhmm_minutes(last)
+    last = target.get("last_time","") or boat_last_time(ymd,code)
     final_done = 12 in found
-    active = not (final_done and last_min is not None and now_minutes > last_min + 60)
+    active = True
     races = []
     for no in range(1,13):
         if no in found:
@@ -317,7 +326,7 @@ def boat_results(ymd: str, target: dict, now_minutes: int):
     return {
         "name":target["name"],"code":code,
         "event_name":boat_event_name(soup,target["fallback_event"]),
-        "last_time":last,"active":active,"races":races,
+        "last_time":last,"active":active,"day_type":target.get("day_type",""),"races":races,
     }
 
 def parse_nar_result(html: str, race_no: int):
@@ -440,12 +449,13 @@ def main():
             except Exception:
                 metas.append(jobs[fut])
 
-    phase, phase_venues, phase_end = choose_keirin_venues(metas,now_minutes,4)
+    phase, phase_venues, phase_end = choose_keirin_venues(metas,now_minutes)
     phase_venues = fill_keirin_results(ymd, phase_venues, now_minutes) if phase_venues else []
 
     boats=[]
-    with ThreadPoolExecutor(max_workers=2) as ex:
-        jobs=[ex.submit(boat_results,ymd,x,now_minutes) for x in BOAT_TARGETS]
+    boat_targets = boat_targets_today()
+    with ThreadPoolExecutor(max_workers=min(8,max(1,len(boat_targets)))) as ex:
+        jobs=[ex.submit(boat_results,ymd,x,now_minutes) for x in boat_targets]
         for fut in jobs:
             try:
                 boats.append(fut.result())
