@@ -2,7 +2,7 @@ const DATA_URL="./data.json";
 const JRA_URL="../jra/data.json";
 const PHASES=["モーニング","デイ","ナイター","ミッドナイト"];
 const PAYOUT_TYPES=["単勝","複勝","枠連","馬連","馬単","ワイド","3連複","3連単"];
-let data=null,jra=null,screenMode="モーニング",screenShownAt=performance.now();
+let data=null,jra=null,currentPageIndex=0,screenShownAt=performance.now();
 
 function esc(v){
   return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
@@ -116,14 +116,39 @@ function phaseCard(item){
   const body=item.kind==="keirin"?keirinRows(item.venue):item.kind==="boat"?boatRows(item.venue):localRows(item.venue);
   return '<article class="phase-card '+item.kind+'-card">'+phaseCardHead(item)+'<div class="card-table-wrap">'+body+'</div></article>';
 }
-function renderPhase(phase){
-  const items=phaseItems(phase);
+function buildPages(){
+  const pages=[];
+  for(const phase of PHASES){
+    const items=phaseItems(phase);
+    for(let i=0;i<items.length;i+=4){
+      const chunk=items.slice(i,i+4);
+      pages.push({
+        key:"phase:"+phase+":"+Math.floor(i/4),
+        type:"phase",
+        phase,
+        page:Math.floor(i/4)+1,
+        total:Math.ceil(items.length/4),
+        items:chunk
+      });
+    }
+  }
+  for(const v of (jra?.venues||[])){
+    pages.push({
+      key:"jra:"+(v.name||""),
+      type:"jra",
+      venue:v
+    });
+  }
+  return pages.length?pages:[{key:"phase:デイ:0",type:"phase",phase:"デイ",page:1,total:1,items:[]}];
+}
+function renderPhasePage(page){
+  const items=page.items||[];
   const host=document.getElementById("phase-grid");
-  const cols=Math.max(1,Math.min(5,items.length||1));
-  host.style.setProperty("--cols",cols);
-  host.innerHTML=items.length?items.map(phaseCard).join(""):'<div class="empty-card">'+esc(phase)+'開催なし</div>';
-  document.getElementById("screen-title").textContent=phase;
-  document.getElementById("screen-sub").textContent=items.length?("競輪・ボート・地方 "+items.length+"場"):"開催なし";
+  host.className="phase-grid count-"+Math.max(1,items.length);
+  host.innerHTML=items.length?items.map(phaseCard).join(""):'<div class="empty-card">'+esc(page.phase)+'開催なし</div>';
+  document.getElementById("screen-title").textContent=page.phase;
+  const pageText=page.total>1?(" "+page.page+"/"+page.total):"";
+  document.getElementById("screen-sub").textContent=(items.length?("競輪・ボート・地方 "+items.length+"場"):"開催なし")+pageText;
   updateMarquees();
 }
 function payoutItems(r,label){
@@ -159,56 +184,45 @@ function jraVenueCard(v){
   const map=new Map((v.results||[]).map(x=>[Number(x.race),x]));
   let races="";
   for(let no=1;no<=12;no++) races+=jraRaceBlock(map.get(no)||{},no);
-  return '<article class="jra-venue-card"><div class="jra-venue-head"><strong>'+esc(v.name||"---")+'</strong><span>1〜3着 / 全掛式払戻</span></div><div class="jra-venue-scroll sync-vscroll">'+races+'</div></article>';
+  return '<article class="jra-venue-card"><div class="jra-venue-head"><strong>'+esc(v.name||"---")+'</strong><span>1〜3着＋騎手 / 全掛式払戻</span></div><div class="jra-venue-scroll sync-vscroll">'+races+'</div></article>';
 }
-function featuredCard(items){
-  const rows=(items||[]).map(x=>{
-    const horses=Array.isArray(x.horses)&&x.horses.length?x.horses.join("・"):"情報取得中";
-    return '<div class="featured-item"><div><b>'+esc(x.source||"MAIN")+'</b> '+esc([x.venue,x.race].filter(Boolean).join(" "))+' <time>'+esc(x.time||"")+'</time></div><strong>'+esc(x.name||"---")+'</strong><small>有力馬 '+esc(horses)+'</small></div>';
-  }).join("");
-  return '<article class="featured-card"><div class="jra-venue-head"><strong>本日のメイン競走</strong></div><div class="featured-scroll sync-vscroll">'+rows+'</div></article>';
-}
-function renderJra(){
-  const venues=jra?.venues||[];
-  const featured=data?.featured_races||[];
+function renderJraPage(page){
+  const v=page.venue;
   const host=document.getElementById("jra-grid");
-  const showFeatured=venues.length===1&&featured.length>0;
-  host.className="jra-dedicated-grid jra-count-"+venues.length+(showFeatured?" with-featured":"");
-  host.innerHTML=venues.length?(venues.map(jraVenueCard).join("")+(showFeatured?featuredCard(featured):"")):'<div class="empty-card">JRA開催なし</div>';
-  document.getElementById("screen-title").textContent="JRA";
-  document.getElementById("screen-sub").textContent=venues.length?(venues.map(v=>v.name).join("・")+" / 1〜3着＋全掛式払戻"):"開催なし";
+  host.className="jra-dedicated-grid single-venue";
+  host.innerHTML=v?jraVenueCard(v):'<div class="empty-card">JRA開催なし</div>';
+  document.getElementById("screen-title").textContent="JRA "+(v?.name||"");
+  document.getElementById("screen-sub").textContent="1〜3着＋騎手 / 全掛式払戻";
   updateMarquees();
 }
-function availableScreens(){
-  const a=PHASES.filter(p=>phaseItems(p).length>0);
-  if((jra?.venues||[]).length) a.push("JRA");
-  return a.length?a:["デイ"];
-}
-function showScreen(mode){
-  screenMode=mode;
+function showPage(index){
+  const pages=buildPages();
+  currentPageIndex=((index%pages.length)+pages.length)%pages.length;
+  const page=pages[currentPageIndex];
   screenShownAt=performance.now();
-  const isJra=mode==="JRA";
+  const isJra=page.type==="jra";
   document.getElementById("phase-screen").classList.toggle("active",!isJra);
   document.getElementById("jra-screen").classList.toggle("active",isJra);
-  if(isJra) renderJra(); else renderPhase(mode);
-  document.querySelectorAll(".sport-grid-vscroll,.sync-vscroll").forEach(x=>x.scrollTop=0);
+  if(isJra) renderJraPage(page); else renderPhasePage(page);
+  document.querySelectorAll(".sync-vscroll").forEach(x=>x.scrollTop=0);
 }
 function syncScrollPosition(){
-  const elapsed=(performance.now()-screenShownAt)%20000;
-  let pos=0;
-  if(elapsed<1200) pos=0;
-  else if(elapsed<8800) pos=(elapsed-1200)/7600;
-  else if(elapsed<10400) pos=1;
-  else if(elapsed<18000) pos=1-(elapsed-10400)/7600;
-  else pos=0;
-  const targets=screenMode==="JRA"
-    ?document.querySelectorAll("#jra-screen.active .sync-vscroll")
-    :document.querySelectorAll("#phase-screen.active .sport-grid-vscroll");
-  targets.forEach(box=>{
-    const max=Math.max(0,box.scrollHeight-box.clientHeight);
-    box.scrollTop=max*Math.max(0,Math.min(1,pos));
-    box.classList.toggle("needs-vscroll",max>2);
-  });
+  const pages=buildPages();
+  const page=pages[currentPageIndex]||pages[0];
+  if(page?.type==="jra"){
+    const elapsed=(performance.now()-screenShownAt)%20000;
+    let pos=0;
+    if(elapsed<1200) pos=0;
+    else if(elapsed<8800) pos=(elapsed-1200)/7600;
+    else if(elapsed<10400) pos=1;
+    else if(elapsed<18000) pos=1-(elapsed-10400)/7600;
+    else pos=0;
+    document.querySelectorAll("#jra-screen.active .sync-vscroll").forEach(box=>{
+      const max=Math.max(0,box.scrollHeight-box.clientHeight);
+      box.scrollTop=max*Math.max(0,Math.min(1,pos));
+      box.classList.toggle("needs-vscroll",max>2);
+    });
+  }
   requestAnimationFrame(syncScrollPosition);
 }
 function updateMarquees(){
@@ -228,20 +242,22 @@ async function getJson(url){
 async function load(){
   try{
     const [d,j]=await Promise.all([getJson(DATA_URL),getJson(JRA_URL)]);
+    const oldPages=buildPages();
+    const oldKey=oldPages[currentPageIndex]?.key||"";
     data=d;jra=j;
     document.getElementById("updated").textContent=data?.updated_at||jra?.updated_at||"--";
-    const screens=availableScreens();
-    if(!screens.includes(screenMode)) screenMode=screens[0];
-    if(screenMode==="JRA") renderJra(); else renderPhase(screenMode);
+    const pages=buildPages();
+    const keep=Math.max(0,pages.findIndex(p=>p.key===oldKey));
+    currentPageIndex=keep>=0?keep:0;
+    showPage(currentPageIndex);
   }catch(e){
     console.error(e);
     document.getElementById("updated").textContent="再取得中";
   }
 }
 function rotate(){
-  const screens=availableScreens();
-  const i=screens.indexOf(screenMode);
-  showScreen(screens[(i+1+screens.length)%screens.length]);
+  const pages=buildPages();
+  showPage((currentPageIndex+1)%pages.length);
 }
 function tick(){document.getElementById("clock").textContent=jstNow()}
 setInterval(tick,1000);tick();
