@@ -325,20 +325,28 @@ def current_result_link(race_page: dict) -> dict | None:
     return {"kind": "cname_get", "path": "/JRADB/accessS.html", "cname": cname}
 
 
+def normalize_course_text(text: str) -> str:
+    if not text:
+        return ""
+    # JRA標準: コース：1,800メートル（ダート・右）
+    m = re.search(r"([0-9,]{3,5})\s*(?:m|メートル).*?[（(](芝|ダート|ダ|障害)", text)
+    if m:
+        surface = "ダート" if m.group(2) == "ダ" else m.group(2)
+        return f"{surface}{m.group(1).replace(',','')}m"
+    # 念のため逆順表記にも対応
+    m = re.search(r"(芝|ダート|ダ|障害)[^0-9]{0,16}([0-9,]{3,5})\s*(?:m|メートル)", text)
+    if m:
+        surface = "ダート" if m.group(1) == "ダ" else m.group(1)
+        return f"{surface}{m.group(2).replace(',','')}m"
+    return ""
+
+
 def current_race_course(race_page: dict) -> str:
     try:
         soup = soup_cname_get("/JRADB/accessD.html", race_page["cname"])
     except Exception:
         return ""
-    text = clean_text(soup)
-    m = re.search(
-        r"(芝|ダート|ダ|障害)[^0-9]{0,16}([0-9,]{3,5})\s*(?:m|メートル)",
-        text,
-    )
-    if not m:
-        return ""
-    surface = "ダート" if m.group(1) == "ダ" else m.group(1)
-    return f"{surface}{m.group(2).replace(',','')}m"
+    return normalize_course_text(clean_text(soup))
 
 
 def discover_historical_landing() -> BeautifulSoup:
@@ -554,15 +562,12 @@ def result_from_result_page(soup: BeautifulSoup) -> dict | None:
         for node in caption.find_all(["p", "li", "span"]):
             t = clean_text(node)
             if "コース：" in t or "コース:" in t:
-                course = re.sub(r"^.*?コース[:：]\s*", "", t).strip()
+                raw_course = re.sub(r"^.*?コース[:：]\s*", "", t).strip()
+                course = normalize_course_text(raw_course)
                 break
 
     if not course:
-        full_text = clean_text(soup)
-        cm = re.search(r"(芝|ダート|ダ|障害)\s*([0-9,]{3,5})\s*(?:m|メートル)", full_text)
-        if cm:
-            surface = "ダート" if cm.group(1) == "ダ" else cm.group(1)
-            course = f"{surface}{cm.group(2).replace(',','')}m"
+        course = normalize_course_text(clean_text(soup))
 
     payouts = {label: payout_items(soup, label) for label in PAYOUT_ORDER}
     winner = top3[0]
