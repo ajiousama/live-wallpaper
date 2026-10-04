@@ -146,6 +146,41 @@ function boatRows(v){
   }
   return '<table class="phase-table boat-table"><thead><tr><th>R</th><th>レース</th><th>3連単</th><th>払戻</th></tr></thead><tbody>'+rows+'</tbody></table>';
 }
+function boatBoardCell(x){
+  const decided=Array.isArray(x?.order)&&x.order.length>=3&&x?.payout;
+  if(!decided){
+    return '<div class="boat-pay-pending"><b>'+esc(x?.scheduled_time||"--:--")+'</b><span>'+esc(x?.status||"発走前")+'</span></div>';
+  }
+  return '<div class="boat-pay-cell">'+
+    '<div class="boat-pay-combo">'+orderHtml(x.order,"boat")+'</div>'+
+    '<strong>'+esc(x.payout)+'</strong>'+
+    '<em>'+esc(x.popularity?x.popularity+"人気":"—")+'</em>'+
+  '</div>';
+}
+function boatPayBoard(items){
+  const venues=items.map(x=>x.venue);
+  const maps=venues.map(v=>new Map((v.races||[]).map(r=>[Number(r.race),r])));
+  const head=venues.map(v=>
+    '<th class="boat-pay-venue" colspan="3"><strong>'+esc(v.name||"---")+'</strong><small>'+esc(v.event_name||"")+'</small></th>'
+  ).join("");
+  const sub=venues.map(()=>'<th>組番</th><th>3連単</th><th>人気</th>').join("");
+  let body="";
+  for(let r=1;r<=12;r++){
+    const cells=maps.map(m=>{
+      const x=m.get(r)||{race:r,status:"発走前",order:[],payout:"",scheduled_time:""};
+      if(!(Array.isArray(x.order)&&x.order.length>=3&&x.payout)){
+        return '<td class="boat-pay-pending-cell" colspan="3"><div class="boat-pay-pending"><b>'+esc(x.scheduled_time||"--:--")+'</b><span>'+esc(x.status||"発走前")+'</span></div></td>';
+      }
+      return '<td class="boat-pay-combo-cell">'+orderHtml(x.order,"boat")+'</td>'+
+        '<td class="boat-pay-amount">'+esc(x.payout)+'</td>'+
+        '<td class="boat-pay-pop">'+esc(x.popularity||"—")+'</td>';
+    }).join("");
+    body+='<tr><th class="boat-pay-race">'+r+'R</th>'+cells+'</tr>';
+  }
+  return '<div class="boat-pay-board-wrap"><table class="boat-pay-board">'+
+    '<thead><tr><th class="boat-pay-corner" rowspan="2">R</th>'+head+'</tr><tr>'+sub+'</tr></thead>'+
+    '<tbody>'+body+'</tbody></table></div>';
+}
 function isBoatSg(v){
   if(String(v?.grade||"").toUpperCase()==="SG") return true;
   const name=String(v?.event_name||"").normalize("NFKC");
@@ -416,6 +451,8 @@ function renderPhasePage(page){
     host.innerHTML=keirinDetailCard(items[0].venue);
   }else if(singleBoatDetail){
     host.innerHTML=boatDetailCard(items[0].venue);
+  }else if(denseBoat){
+    host.innerHTML=boatPayBoard(items);
   }else{
     host.innerHTML=items.length?items.map(phaseCard).join(""):'<div class="empty-card">'+esc(page.phase+" "+(page.sportLabel||""))+'開催なし</div>';
   }
