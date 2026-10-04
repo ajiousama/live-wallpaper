@@ -188,6 +188,22 @@ def keirin_meta(ymd: str, sched: dict):
         "last_time":last_time, "last_confirmed":last_confirmed,
     }
 
+def keirin_venue_end_minutes(v: dict, typ: str) -> int | None:
+    lm = hhmm_minutes(v.get("last_time",""), rollover="ミッドナイト" in typ)
+    if lm is not None:
+        return lm
+    stop = v.get("epg_stop","")
+    if len(stop) >= 12:
+        lm = int(stop[8:10]) * 60 + int(stop[10:12])
+        if "ミッドナイト" in typ and lm < 6 * 60:
+            lm += 1440
+        return lm
+    return None
+
+def keirin_venue_expired(v: dict, typ: str, now_minutes: int) -> bool:
+    end = keirin_venue_end_minutes(v, typ)
+    return bool(v.get("last_confirmed") and end is not None and now_minutes > end + 60)
+
 def choose_keirin_phase(metas: list[dict], now_minutes: int):
     grouped = {x:[] for x in PHASE_ORDER}
     for v in metas:
@@ -197,21 +213,20 @@ def choose_keirin_phase(metas: list[dict], now_minutes: int):
         venues = grouped.get(typ) or []
         if not venues:
             continue
-        end_values = []
-        all_final = True
-        for v in venues:
-            lm = hhmm_minutes(v.get("last_time",""), rollover="ミッドナイト" in typ)
-            if lm is None:
-                stop = v.get("epg_stop","")
-                if len(stop) >= 12:
-                    lm = int(stop[8:10])*60 + int(stop[10:12])
-            if lm is not None:
-                end_values.append(lm)
-            all_final = all_final and bool(v.get("last_confirmed"))
+
+        # 各場ごとに「最終R確定＋60分」で表示終了。
+        # その時間帯の全場が消えたら、次の時間帯へ自動で進む。
+        active = [v for v in venues if not keirin_venue_expired(v, typ, now_minutes)]
+        if not active:
+            continue
+
+        end_values = [
+            x for x in (keirin_venue_end_minutes(v, typ) for v in active)
+            if x is not None
+        ]
         group_end = max(end_values) if end_values else None
-        closed = bool(all_final and group_end is not None and now_minutes > group_end + 60)
-        if not closed:
-            return typ, venues, group_end
+        return typ, active, group_end
+
     return "", [], None
 
 def fill_keirin_results(ymd: str, venues: list[dict], now_minutes: int):
