@@ -12,6 +12,15 @@ function jstNow(){
   const get=t=>parts.find(p=>p.type===t)?.value||"";
   return get("hour")+":"+get("minute");
 }
+function jstYmd(){
+  const parts=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Tokyo",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(new Date());
+  const get=t=>parts.find(p=>p.type===t)?.value||"";
+  return get("year")+get("month")+get("day");
+}
+function jraIsCurrentDay(){
+  const src=String(jra?.source_date||"").replace(/\D/g,"").slice(0,8);
+  return !!src&&src===jstYmd();
+}
 function normalizePhase(v){
   const s=String(v||"");
   if(s.includes("オーバーミッド")||s.includes("ミッド")) return "ミッドナイト";
@@ -156,6 +165,7 @@ function phaseCard(item){
   return '<article class="phase-card '+item.kind+'-card">'+phaseCardHead(item)+'<div class="card-table-wrap">'+body+'</div></article>';
 }
 function jraRaceResult(venueName,raceNo){
+  if(!jraIsCurrentDay()) return {};
   const venue=(jra?.venues||[]).find(v=>v.name===venueName);
   return (venue?.results||[]).find(r=>Number(r.race)===Number(raceNo))||{};
 }
@@ -203,18 +213,29 @@ function specialItems(){
     });
   }
 
-  // JRA: 当日の各場メイン。勝ち馬＋勝利騎手が最優先。
-  for(const v of jra?.venues||[]){
-    const r=(v.results||[]).find(x=>Number(x.race)===11)||{};
-    if(!r.race_name) continue;
-    const first=Array.isArray(r.top3)?(r.top3.find(x=>Number(x.position)===1)||{}):{};
-    const tri=Array.isArray(r?.payouts?.["3連単"])?r.payouts["3連単"][0]:null;
-    out.push({
-      kind:"jra",source:"JRA",venue:v.name||"",race:"11R",name:r.race_name||"",
-      time:r.time||"",winner:first.horse||"",sub:first.jockey?("騎手 "+first.jockey):"",
-      order:tri?.combo?String(tri.combo).split(/[-－]/).map(Number):[],
-      payout:tri?.amount||"",status:first.horse?"確定":"発走前"
-    });
+  // JRA: 当日データだけ使う。前日データは絶対に特別ページへ混ぜない。
+  if(jraIsCurrentDay()){
+    for(const v of jra?.venues||[]){
+      const r=(v.results||[]).find(x=>Number(x.race)===11)||{};
+      if(!r.race_name) continue;
+      const first=Array.isArray(r.top3)?(r.top3.find(x=>Number(x.position)===1)||{}):{};
+      const tri=Array.isArray(r?.payouts?.["3連単"])?r.payouts["3連単"][0]:null;
+      out.push({
+        kind:"jra",source:"JRA",venue:v.name||"",race:"11R",name:r.race_name||"",
+        time:r.time||"",winner:first.horse||"",sub:first.jockey?("騎手 "+first.jockey):"",
+        order:tri?.combo?String(tri.combo).split(/[-－]/).map(Number):[],
+        payout:tri?.amount||"",status:first.horse?"確定":"発走前"
+      });
+    }
+  }else{
+    for(const x of data?.featured_races||[]){
+      if(x.source!=="JRA") continue;
+      out.push({
+        kind:"jra",source:"JRA",venue:x.venue||"",race:x.race||"11R",
+        name:x.name||"",time:x.time||"",winner:"",sub:"",
+        order:[],payout:"",status:"発走前"
+      });
+    }
   }
 
   // 海外発売対象の大レース。
@@ -228,8 +249,8 @@ function specialItems(){
     });
   }
 
-  // WIN5: 対象5Rの勝ち馬をJRA結果から順次埋める。
-  const targets=data?.win5?.targets||[];
+  // WIN5: JRA当日データが有効な日にだけ結果を結合。
+  const targets=jraIsCurrentDay()?(data?.win5?.targets||[]):[];
   if(targets.length){
     const legs=targets.map((t,i)=>{
       const r=jraRaceResult(t.venue,t.race);
@@ -307,17 +328,15 @@ function buildPages(){
   }
 
   const specials=specialItems();
-  if(specials.length){
-    pages.push({
-      key:"special:all",
-      type:"special",
-      page:1,
-      total:1,
-      items:specials
-    });
-  }
+  pages.push({
+    key:"special:all",
+    type:"special",
+    page:1,
+    total:1,
+    items:specials
+  });
 
-  const jraVenues=jra?.venues||[];
+  const jraVenues=jraIsCurrentDay()?(jra?.venues||[]):[];
   for(let i=0;i<jraVenues.length;i+=2){
     pages.push({
       key:"jra:"+Math.floor(i/2),
