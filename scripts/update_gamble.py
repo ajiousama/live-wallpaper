@@ -571,6 +571,7 @@ def local_results_for_names(ymd: str, local_epg: list[dict], names: list[str], n
             course_value = fallback_course or page_course
             if result:
                 result["race_name"] = fallback_name
+                result["scheduled_time"] = start_time
                 if not result.get("course"):
                     result["course"] = course_value
                 races.append(result)
@@ -578,9 +579,23 @@ def local_results_for_names(ymd: str, local_epg: list[dict], names: list[str], n
                 races.append({
                     "race":no,"winner":"","jockey":"","trifecta":"",
                     "race_name":fallback_name,"course":course_value,
+                    "scheduled_time":start_time,
                     "status":"結果待ち" if startm is not None and now_minutes >= startm else "発走前"
                 })
-        out.append({"name":name,"code":code,"races":races})
+
+        times = [hhmm_minutes(x.get("scheduled_time","")) for x in races]
+        times = [x for x in times if x is not None]
+        first_min = min(times) if times else None
+        last_min = max(times) if times else None
+        if last_min is not None and last_min >= 23 * 60:
+            day_type = "ミッドナイト"
+        elif first_min is not None and first_min < 10 * 60:
+            day_type = "モーニング"
+        elif last_min is not None and last_min >= 18 * 60:
+            day_type = "ナイター"
+        else:
+            day_type = "デイ"
+        out.append({"name":name,"code":code,"day_type":day_type,"races":races})
     return out
 
 def local_night_results(ymd: str, local_epg: list[dict], now_minutes: int):
