@@ -928,20 +928,18 @@ def featured_races_today(ymd: str, local_epg: list[dict]) -> list[dict]:
         cal_text = clean(cal_soup)
 
         venue_pat = r"(札幌|函館|福島|新潟|東京|中山|中京|京都|阪神|小倉)"
-        sections = list(re.finditer(
-            rf"\d+回{venue_pat}\d+日\s+(.*?)(?=\d+回{venue_pat}\d+日|表示モード|$)",
-            cal_text,
-        ))
+        section_pat = rf"\d+\s*回\s*{venue_pat}\s*\d+\s*日\s+(.*?)(?=\d+\s*回\s*{venue_pat}\s*\d+\s*日|表示モード|$)"
+        sections = list(re.finditer(section_pat, cal_text))
         for sec in sections:
             venue = sec.group(1)
             body = sec.group(2)
             for rm in re.finditer(
-                r"(\d{1,2})レース\s+(.+?)\s+(\d{1,2})時(\d{2})分",
+                r"(\d{1,2})\s*レース\s+(.+?)\s+(\d{1,2})\s*時\s*(\d{2})\s*分",
                 body,
             ):
                 race_no = int(rm.group(1))
                 row = clean(rm.group(2))
-                if not re.search(r"[（(](?:G|Ｇ|J・G|Ｊ・Ｇ)[ⅠⅡⅢ123]+[）)]", row):
+                if not re.search(r"[（(]\s*(?:G|Ｇ|J\s*[・･]\s*G|Ｊ\s*[・･]\s*Ｇ)\s*[ⅠⅡⅢIVX123]+\s*[）)]", row):
                     continue
 
                 race_name = re.sub(
@@ -960,7 +958,15 @@ def featured_races_today(ymd: str, local_epg: list[dict]) -> list[dict]:
                 })
 
         jra_names = [x.get("name","") for x in featured if x.get("source") == "JRA"]
-        print(f"[GAMBLE] JRA featured: {', '.join(jra_names) if jra_names else 'none'}")
+        if not jra_names:
+            # Keep diagnostics short but enough to catch future JRA markup/spacing changes.
+            markers = []
+            for key in ("東京", "京都", "毎日王冠", "京都大賞典", "GⅡ", "GII"):
+                if key in cal_text:
+                    markers.append(key)
+            print(f"[GAMBLE] JRA featured: none / calendar markers: {', '.join(markers) or 'none'}")
+        else:
+            print(f"[GAMBLE] JRA featured: {', '.join(jra_names)}")
     except Exception as exc:
         print(f"[GAMBLE] JRA featured failed: {exc}")
 
