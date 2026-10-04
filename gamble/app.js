@@ -241,15 +241,24 @@ async function getJson(url){
 }
 async function load(){
   try{
-    const [d,j]=await Promise.all([getJson(DATA_URL),getJson(JRA_URL)]);
+    const hadData=!!data||!!jra;
     const oldPages=buildPages();
     const oldKey=oldPages[currentPageIndex]?.key||"";
+    const [d,j]=await Promise.all([getJson(DATA_URL),getJson(JRA_URL)]);
     data=d;jra=j;
     document.getElementById("updated").textContent=data?.updated_at||jra?.updated_at||"--";
     const pages=buildPages();
-    const keep=Math.max(0,pages.findIndex(p=>p.key===oldKey));
-    currentPageIndex=keep>=0?keep:0;
-    showPage(currentPageIndex);
+    const found=pages.findIndex(p=>p.key===oldKey);
+    currentPageIndex=found>=0?found:0;
+    if(!hadData){
+      showPage(currentPageIndex);
+    }else{
+      const page=pages[currentPageIndex];
+      const isJra=page.type==="jra";
+      document.getElementById("phase-screen").classList.toggle("active",!isJra);
+      document.getElementById("jra-screen").classList.toggle("active",isJra);
+      if(isJra) renderJraPage(page); else renderPhasePage(page);
+    }
   }catch(e){
     console.error(e);
     document.getElementById("updated").textContent="再取得中";
