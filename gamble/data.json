@@ -1,12 +1,12 @@
 {
   "date": "2026-10-04",
   "date_label": "2026年10月04日",
-  "updated_at": "11:49:36",
-  "updated_at_iso": "2026-10-04T11:49:36.956942+09:00",
+  "updated_at": "11:54:30",
+  "updated_at_iso": "2026-10-04T11:54:30.901074+09:00",
   "jra_switch_time": "17:00",
   "keirin": {
-    "phase": "デイ",
-    "phase_end_minutes": 985,
+    "phase": "デイ / ナイター / ミッドナイト",
+    "phase_end_minutes": 1392,
     "venues": [
       {
         "channel": "keirin.matsusaka",
@@ -132,6 +132,297 @@
           }
         ],
         "display_name": "松阪"
+      },
+      {
+        "channel": "keirin.iwakitaira",
+        "venue": "いわき平",
+        "type": "ナイター",
+        "grade": "",
+        "epg_start": "202610041951",
+        "epg_stop": "202610042019",
+        "code": "13",
+        "race_ids": [
+          "202610041301",
+          "202610041302",
+          "202610041303",
+          "202610041304",
+          "202610041305",
+          "202610041306",
+          "202610041307",
+          "202610041308",
+          "202610041309",
+          "202610041310",
+          "202610041311"
+        ],
+        "event_name": "サンスポ・ソラモギ・しいたけＣ",
+        "last_time": "20:16",
+        "last_confirmed": false,
+        "races": [
+          {
+            "race": 1,
+            "time": "16:07",
+            "status": "発走前",
+            "order": [],
+            "payout": ""
+          },
+          {
+            "race": 2,
+            "time": "16:32",
+            "status": "発走前",
+            "order": [],
+            "payout": ""
+          },
+          {
+            "race": 3,
+            "time": "16:54",
+            "status": "発走前",
+            "order": [],
+            "payout": ""
+          },
+          {
+            "race": 4,
+            "time": "17:18",
+            "status": "発走前",
+            "order": [],
+            "payout": ""
+          },
+          {
+            "race": 5,
+            "time": "17:42",
+            "status": "発走前",
+            "order": [],
+            "payout": ""
+          },
+          {
+            "race": 6,
+            "time": "18:06",
+            "status": "発走前",
+            "order": [],
+            "payout": ""
+          },
+          {
+            "race": 7,
+            "time": "18:30",
+            "status": "発走前",
+            "order": [],
+            "payout": ""
+          },
+          {
+            "race": 8,
+            "time": "18:56",
+            "status": "発走前",
+            "order": [],
+            "payout": ""
+          },
+          {
+            "race": 9,
+            "time": "19:22",
+            "status": "発走前",
+            "order": [],
+            "payout": ""
+          },
+          {
+            "race": 10,
+            "time": "19:48",
+            "status": "発走前",
+            "order": [],
+            "payout": ""
+          },
+          {
+            "race": 11,
+            "time": "20:16",
+            "status": "発走前",
+            "order": [],
+            "payout": ""
+          }
+        ],
+        "display_name": "いわき平"
+      },
+      {
+        "channel": "keirin.matsuyama",
+        "venue": "松山",
+        "type": "ナイター",
+        "grade": "",
+        "epg_start": "202610042005",
+        "epg_stop": "202610042033",
+        "code": "75",
+        "race_ids": [
+          "202610047501",
+          "202610047502",
+          "202610047503",
+          "202610047504",
+          "202610047505",
+          "202610047506",
+          "202610047507",
+          "202610047508",
+          "202610047509",
+          "202610047510",
+          "202610047511",
+          "202610047512"
+        ],
+        "event_name": "サンケイスポーツ×ウィンチケ杯",
+        "last_time": "20:30",
+        "last_confirmed": false,
+        "races": [
+          {
+            "race": 1,
+            "time": "15:55",
+            "status": "発走前",
+            "order": [],
+            "payout": ""
+          },
+          {
+            "race": 2,
+            "time": "16:18",
+            "status": "発走前",
+            "order": [],
+            "payout": ""
+          },
+          {
+            "race": 3,
+            "time": "16:42",
+            "status": "発走前",
+            "order": [],
+            "payout": ""
+          },
+          {
+            "race": 4,
+            "time": "17:06",
+            "status": "発走前",
+            "order": [],
+            "payout": ""
+          },
+          {
+            "race": 5,
+            "time": "17:30",
+            "status": "発走前",
+            "order": [],
+            "payout": ""
+          },
+          {
+            "race": 6,
+            "time": "17:54",
+            "status": "発走前",
+            "order": [],
+            "payout": ""
+          },
+          {
+            "race": 7,
+            "time": "18:18",
+            "status": "発走前",
+            "order": [],
+            "payout": ""
+          },
+          {
+            "race": 8,
+            "time": "18:43",
+            "status": "発走前",
+            "order": [],
+            "payout": ""
+          },
+          {
+            "race": 9,
+            "time": "19:09",
+            "status": "発走前",
+            "order": [],
+            "payout": ""
+          },
+          {
+            "race": 10,
+            "time": "19:35",
+            "status": "発走前",
+            "order": [],
+            "payout": ""
+          },
+          {
+            "race": 11,
+            "time": "20:02",
+            "status": "発走前",
+            "order": [],
+            "payout": ""
+          },
+          {
+            "race": 12,
+            "time": "20:30",
+            "status": "発走前",
+            "order": [],
+            "payout": ""
+          }
+        ],
+        "display_name": "松山"
+      },
+      {
+        "channel": "keirin.takeo",
+        "venue": "武雄",
+        "type": "ミッドナイト",
+        "grade": "",
+        "epg_start": "202610042248",
+        "epg_stop": "202610042315",
+        "code": "84",
+        "race_ids": [
+          "202610048401",
+          "202610048402",
+          "202610048403",
+          "202610048404",
+          "202610048405",
+          "202610048406",
+          "202610048407"
+        ],
+        "event_name": "オッズパーク杯",
+        "last_time": "23:12",
+        "last_confirmed": false,
+        "races": [
+          {
+            "race": 1,
+            "time": "20:41",
+            "status": "発走前",
+            "order": [],
+            "payout": ""
+          },
+          {
+            "race": 2,
+            "time": "21:05",
+            "status": "発走前",
+            "order": [],
+            "payout": ""
+          },
+          {
+            "race": 3,
+            "time": "21:29",
+            "status": "発走前",
+            "order": [],
+            "payout": ""
+          },
+          {
+            "race": 4,
+            "time": "21:53",
+            "status": "発走前",
+            "order": [],
+            "payout": ""
+          },
+          {
+            "race": 5,
+            "time": "22:18",
+            "status": "発走前",
+            "order": [],
+            "payout": ""
+          },
+          {
+            "race": 6,
+            "time": "22:45",
+            "status": "発走前",
+            "order": [],
+            "payout": ""
+          },
+          {
+            "race": 7,
+            "time": "23:12",
+            "status": "発走前",
+            "order": [],
+            "payout": ""
+          }
+        ],
+        "display_name": "武雄"
       }
     ]
   },
