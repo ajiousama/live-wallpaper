@@ -1,8 +1,8 @@
 {
   "date": "2026-10-04",
   "date_label": "2026年10月04日",
-  "updated_at": "15:06:07",
-  "updated_at_iso": "2026-10-04T15:06:07.620241+09:00",
+  "updated_at": "15:12:04",
+  "updated_at_iso": "2026-10-04T15:12:04.339867+09:00",
   "jra_switch_time": "17:00",
   "keirin": {
     "phase": "本日開催 8場",
@@ -1804,7 +1804,7 @@
             3
           ],
           "payout": "36,440円",
-          "race_name": "",
+          "race_name": "戸田特賞",
           "scheduled_time": "14:54"
         },
         {
@@ -2231,9 +2231,13 @@
         },
         {
           "race": 10,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            2,
+            3,
+            5
+          ],
+          "payout": "1,450円",
           "race_name": "準優勝戦",
           "scheduled_time": "15:00"
         },
@@ -2522,7 +2526,7 @@
             4
           ],
           "payout": "1,020円",
-          "race_name": "",
+          "race_name": "予選特賞",
           "scheduled_time": "14:57"
         },
         {
@@ -2791,9 +2795,13 @@
         },
         {
           "race": 9,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
+          "status": "確定",
+          "order": [
+            4,
+            1,
+            2
+          ],
+          "payout": "1,270円",
           "race_name": "",
           "scheduled_time": "15:05"
         },
@@ -3450,13 +3458,18 @@
           },
           {
             "race": 2,
-            "winner": "",
-            "jockey": "",
-            "trifecta": "",
-            "race_name": "博多から応援に来たよ記念２歳Ｄ－５",
+            "winner": "ゴールドブリオン",
+            "jockey": "西将太",
+            "trifecta": "21,530円",
+            "order": [
+              10,
+              9,
+              8
+            ],
             "course": "直200m",
-            "scheduled_time": "15:05",
-            "status": "結果待ち"
+            "status": "確定",
+            "race_name": "博多から応援に来たよ記念２歳Ｄ－５",
+            "scheduled_time": "15:05"
           },
           {
             "race": 3,
