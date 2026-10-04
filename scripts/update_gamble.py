@@ -412,6 +412,12 @@ def boat_results(ymd: str, target: dict, now_minutes: int):
 def parse_nar_result(html: str, race_no: int):
     soup = BeautifulSoup(html,"html.parser")
     winner = jockey = ""
+    full_text = clean(soup)
+    course = ""
+    cm = re.search(r"(芝|ダート|ダ|直)\s*([0-9,]{3,5})\s*m", full_text)
+    if cm:
+        surface = "ダート" if cm.group(1) == "ダ" else cm.group(1)
+        course = f"{surface}{cm.group(2).replace(',','')}m"
     for table in soup.find_all("table"):
         header = clean(table)
         if "着順" not in header or "馬名" not in header or "騎手" not in header:
@@ -440,7 +446,7 @@ def parse_nar_result(html: str, race_no: int):
                 payout=f"{int(y.group(1).replace(',','')):,}円"
             break
     if winner:
-        return {"race":race_no,"winner":winner,"jockey":jockey,"trifecta":payout,"order":order,"status":"確定"}
+        return {"race":race_no,"winner":winner,"jockey":jockey,"trifecta":payout,"order":order,"course":course,"status":"確定"}
     return None
 
 def local_results_for_names(ymd: str, local_epg: list[dict], names: list[str], now_minutes: int):
@@ -465,13 +471,22 @@ def local_results_for_names(ymd: str, local_epg: list[dict], names: list[str], n
                     result = parse_nar_result(fetch(url), no)
                 except Exception:
                     result = None
+            fallback_name = r.get("race_name","")
+            fallback_course = ""
+            fm = re.search(r"(芝|ダート|ダ|直)\s*([0-9,]{3,5})\s*m", fallback_name)
+            if fm:
+                surface = "ダート" if fm.group(1) == "ダ" else fm.group(1)
+                fallback_course = f"{surface}{fm.group(2).replace(',','')}m"
+                fallback_name = (fallback_name[:fm.start()] + fallback_name[fm.end():]).strip()
             if result:
-                result["race_name"] = r.get("race_name","")
+                result["race_name"] = fallback_name
+                if not result.get("course"):
+                    result["course"] = fallback_course
                 races.append(result)
             else:
                 races.append({
                     "race":no,"winner":"","jockey":"","trifecta":"",
-                    "race_name":r.get("race_name",""),
+                    "race_name":fallback_name,"course":fallback_course,
                     "status":"結果待ち" if startm is not None and now_minutes >= startm else "発走前"
                 })
         out.append({"name":name,"code":code,"races":races})
