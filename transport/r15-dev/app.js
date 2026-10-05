@@ -971,8 +971,22 @@
       const info = String(record.info || '');
       const coupled = info.match(/(いしづち\d+号)/);
       if (coupled) items.push(`${coupled[1]}を併結`);
-      if (/岡山/.test(String(record.dest || ''))) items.push('岡山で山陽新幹線に乗換');
+      const service = String(record.service || '');
+      const time = padTime(record.time || '');
+      if (service === 'しおかぜ30号' && time === '18:39') {
+        items.push('新幹線 最終連絡：岡山で山陽新幹線に乗換');
+      } else if (/岡山/.test(String(record.dest || ''))) {
+        items.push('岡山で山陽新幹線に乗換');
+      }
       if (/岡山・高松/.test(String(record.dest || ''))) items.push('宇多津で岡山方面・高松方面に分割');
+      if (service === '宇和海27号' && time === '19:30') {
+        items.push('予土線 最終連絡：宇和島21:06着 → 予土線21:11発');
+      }
+      if (service === 'いしづち102号' && time === '19:32') {
+        items.push('高知方面 最終連絡：多度津 → 南風27号');
+        items.push('徳島方面 最終連絡：高松 → うずしお33号');
+        items.push('サンライズ瀬戸 最終連絡：坂出で乗換');
+      }
     } else {
       items.push('各駅停車');
       const info = String(record.info || '');
