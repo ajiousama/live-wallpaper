@@ -7,6 +7,11 @@
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
   <title>松山交通案内 FreeWiFi TV</title>
+  <script>
+    if(new URLSearchParams(location.search).get('pc')==='1'){
+      document.documentElement.classList.add('company-pc');
+    }
+  </script>
   <link rel="stylesheet" href="../r15-dev/style.css?v=__BUILD_ID__" />
   <link rel="stylesheet" href="freewifi.css?v=__BUILD_ID__" />
 </head>
