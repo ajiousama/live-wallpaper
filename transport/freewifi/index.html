@@ -8,7 +8,11 @@
   <meta http-equiv="Expires" content="0" />
   <title>松山交通案内 FreeWiFi TV</title>
   <script>
-    if(new URLSearchParams(location.search).get('pc')==='1'){
+    const p=new URLSearchParams(location.search);
+    const explicitPc=p.get('pc')==='1';
+    const winPc=/Windows NT/i.test(navigator.userAgent);
+    const pcSizedScreen=(screen.width>=1280 && screen.width<=1600 && screen.height>=700 && screen.height<=1000);
+    if(explicitPc || (winPc && pcSizedScreen)){
       document.documentElement.classList.add('company-pc');
     }
   </script>
