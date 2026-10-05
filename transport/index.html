@@ -10,16 +10,18 @@
 <script>
 (function(){
   var target='./freewifi/';
-  var qs=location.search||'';
-  var hash=location.hash||'';
-  location.replace(target+qs+hash);
+  var u=new URL(target,location.href);
+  new URLSearchParams(location.search).forEach(function(v,k){u.searchParams.set(k,v);});
+  u.searchParams.set('pc','1');
+  u.hash=location.hash||'';
+  location.replace(u.href);
 })();
 </script>
 <noscript>
-  <meta http-equiv="refresh" content="0;url=./freewifi/">
+  <meta http-equiv="refresh" content="0;url=./freewifi/?pc=1">
 </noscript>
 </head>
 <body>
-<p><a href="./freewifi/">R15 松山交通案内を開く</a></p>
+<p><a href="./freewifi/?pc=1">R15 松山交通案内を開く</a></p>
 </body>
 </html>
