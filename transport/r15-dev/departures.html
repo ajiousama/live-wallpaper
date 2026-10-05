@@ -1,159 +1,25 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja" data-build="__BUILD_ID__">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="0" />
-  <title>松山交通総合発着案内 FINAL</title>
-  <link rel="stylesheet" href="style.css?v=__BUILD_ID__" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>松山交通総合発着案内 R15</title>
+<script>
+(function(){
+  var target='../freewifi/';
+  var qs=location.search||'';
+  var hash=location.hash||'';
+  location.replace(target+qs+hash);
+})();
+</script>
+<noscript>
+  <meta http-equiv="refresh" content="0;url=../freewifi/">
+</noscript>
 </head>
 <body>
-  <main id="wall" aria-label="松山総合交通ダッシュボード">
-    <header class="hero">
-      <div class="hero-left">
-        <div class="eyebrow">EHIME ・ JAPAN ・ TRANSPORT DASHBOARD</div>
-        <div class="hero-title-row">
-          <h1>松山 <span>DEPARTURES</span></h1>
-        </div>
-        <p class="hero-sub">JR・空港・高速バス・フェリーの次便案内</p>
-      </div>
-      <div class="hero-center" aria-live="polite">
-        <div class="live-system-status"><span class="live-dot"></span>交通・防災 LIVE</div>
-        <div class="mode-countdown" id="mode-countdown">表示切替まで あと15秒</div>
-        <div class="data-status" id="data-status">ダイヤ確認 ---</div>
-      </div>
-      <div class="hero-right">
-        <div class="date" id="date-label">0000.00.00 月</div>
-        <div class="clock" id="clock-label">00:00<span>:00</span></div>
-        <div class="tz">JAPAN STANDARD TIME</div>
-      </div>
-    </header>
-
-    <section class="grid">
-      <section class="panel panel-rail" id="panel-rail">
-        <div class="panel-head">
-          <div class="head-main">
-            <div class="panel-no">01 / RAIL</div>
-            <h2>JR 松山駅 <small>MATSUYAMA STATION</small></h2>
-          </div>
-          <div class="mode-badge" id="rail-badge">宇和島方面</div>
-        </div>
-        <div class="table-head rail-head">
-          <span>列車</span><span>時刻</span><span>行先</span>
-        </div>
-        <div class="rows" id="rail-rows"></div>
-        <div class="note" id="rail-note">JR案内を準備中です</div>
-      </section>
-
-      <section class="panel panel-air" id="panel-air">
-        <div class="panel-head">
-          <div class="head-main">
-            <div class="panel-no">02 / AIR</div>
-            <h2>松山空港 <small>MATSUYAMA AIRPORT</small></h2>
-          </div>
-          <div class="mode-badge" id="air-badge">出発案内</div>
-        </div>
-        <div class="table-head service-head">
-          <span>時刻</span><span id="air-place-head">行先</span><span>航空会社 / 便名</span><span>区分</span>
-        </div>
-        <div class="rows" id="air-rows"></div>
-        <div class="note" id="air-note">空港アクセス案内を準備中です</div>
-      </section>
-
-      <section class="panel panel-bus" id="panel-bus">
-        <div class="panel-head">
-          <div class="head-main">
-            <div class="panel-no">03 / BUS</div>
-            <h2>高速・中距離バス <small>EXPRESS / REGIONAL BUS</small></h2>
-          </div>
-          <div class="mode-badge" id="bus-badge">出発案内</div>
-        </div>
-        <div class="table-head service-head">
-          <span>時刻 / 終着</span><span>運行会社</span><span id="bus-place-head">行先</span><span id="bus-terminal-head">乗車場所 / 経由</span>
-        </div>
-        <div class="rows" id="bus-rows"></div>
-        <div class="note" id="bus-note">高速バス補足案内を準備中です</div>
-      </section>
-
-      <section class="panel panel-port" id="panel-port">
-        <div class="panel-head">
-          <div class="head-main">
-            <div class="panel-no">04 / FERRY</div>
-            <h2>愛媛・周辺フェリー <small>EHIME / SHIKOKU FERRY</small></h2>
-          </div>
-          <div class="mode-badge" id="port-badge">出航案内</div>
-        </div>
-        <div class="table-head port-head">
-          <span>時刻 / 到着</span><span>行先 / 寄港</span><span>運航会社 / 船種</span>
-        </div>
-        <div class="rows" id="port-rows"></div>
-        <div class="note" id="port-note">フェリー補足案内を準備中です</div>
-      </section>
-    </section>
-
-
-
-    <section class="disaster-overlay" id="disaster-overlay" hidden aria-live="assertive">
-      <div class="disaster-grid">
-        <article class="disaster-card disaster-summary">
-          <div class="disaster-head"><span>⚠</span><strong>松山市 防災情報</strong><em id="disaster-time">LIVE</em></div>
-          <div class="disaster-body">
-            <div class="disaster-mainline" id="disaster-mainline">防災情報を確認しています</div>
-            <div class="quake-summary" id="quake-summary">現在、大きな地震情報はありません</div>
-            <div class="quake-confirm-wrap" id="quake-confirm-wrap">
-              <button type="button" class="quake-confirm-btn" id="quake-confirm">確認して閉じる</button>
-              <span>松山への影響がないことを確認した場合</span>
-            </div>
-            <div class="disaster-source" id="disaster-source">P2P地震情報 / 気象庁</div>
-          </div>
-        </article>
-        <article class="disaster-card disaster-eew">
-          <div class="disaster-head danger"><span>⚠</span><strong>緊急地震速報</strong><em id="eew-serial">—</em></div>
-          <div class="disaster-body eew-body">
-            <div class="eew-scale-wrap"><span>松山市 予想震度</span><b id="eew-scale">—</b></div>
-            <div class="eew-countdown"><span>主要動到達まで</span><b id="eew-countdown">—</b></div>
-            <div class="eew-detail" id="eew-detail">現在、緊急地震速報はありません</div>
-          </div>
-          <div class="audio-cue disaster-action-ticker"><span class="disaster-action-track"><span class="disaster-action-set"><span>詳細はテレビを見て確認してください</span><span>衝撃に備えてください</span><span>揺れが収まるまで体や頭を守ってください</span></span><span class="disaster-action-set" aria-hidden="true"><span>詳細はテレビを見て確認してください</span><span>衝撃に備えてください</span><span>揺れが収まるまで体や頭を守ってください</span></span></span></div>
-        </article>
-        <article class="disaster-card disaster-weather">
-          <div class="disaster-head weather"><span>⚠</span><strong>気象警報・注意報</strong><em>松山市</em></div>
-          <div class="disaster-body">
-            <div class="weather-title" id="weather-title">発表中の警報・注意報はありません</div>
-            <div class="weather-list" id="weather-list">—</div>
-            <div class="weather-issued" id="weather-issued">松山地方気象台</div>
-          </div>
-          <div class="audio-cue">気象庁発表情報を自動監視</div>
-        </article>
-        <article class="disaster-card disaster-tsunami">
-          <div class="disaster-head tsunami"><span>⚠</span><strong>津波情報</strong><em id="tsunami-grade">—</em></div>
-          <div class="disaster-body">
-            <div class="tsunami-main" id="tsunami-main">現在、愛媛県沿岸への津波警報等はありません</div>
-            <div class="tsunami-detail" id="tsunami-detail">—</div>
-          </div>
-          <div class="audio-cue">沿岸部では気象庁・自治体の避難情報を優先してください</div>
-        </article>
-      </div>
-    </section>
-
-    <div class="update-modal" id="update-modal" hidden>
-      <div class="update-card" role="dialog" aria-modal="true" aria-labelledby="update-title">
-        <div class="update-kicker">MONTHLY TIMETABLE CHECK</div>
-        <h3 id="update-title">交通ダイヤを更新しますか？</h3>
-        <p id="update-message">新しい月になりました。航空便・空港バス・高速バス・フェリーなどのダイヤ確認をおすすめします。</p>
-        <div class="update-actions">
-          <button type="button" id="update-now">更新する</button>
-          <button type="button" id="update-keep">今月はこのまま</button>
-          <button type="button" id="update-later">あとで</button>
-        </div>
-        <div class="update-help" id="update-help"></div>
-      </div>
-    </div>
-  </main>
-
-  <script src="schedule.js?v=__BUILD_ID__"></script>
-  <script src="app.js?v=__BUILD_ID__"></script>
+<p><a href="../freewifi/">松山交通総合発着案内を開く</a></p>
 </body>
 </html>
