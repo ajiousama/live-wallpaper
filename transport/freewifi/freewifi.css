@@ -381,3 +381,10 @@ body.freewifi-tv .panel-port .ferry-mini-logo{
   font-size:10px!important;
   max-width:180px!important;
 }
+
+
+/* Company PC compact presentation */
+html.company-pc body.freewifi-tv #wall{
+  transform:translate(-50%,-50%) scale(.82)!important;
+  transform-origin:center center!important;
+}
