@@ -383,8 +383,142 @@ body.freewifi-tv .panel-port .ferry-mini-logo{
 }
 
 
-/* Company PC compact presentation */
+/* Company PC compact presentation
+   Keep the same outer frame/position as the former workplace R15.
+   Only compact the contents inside the one-page FreeWiFi layout. */
 html.company-pc body.freewifi-tv #wall{
-  transform:translate(-50%,-50%) scale(.82)!important;
+  width:1180px!important;
+  height:650px!important;
+  transform:translate(-50%,-50%)!important;
   transform-origin:center center!important;
+  padding:12px 16px 12px!important;
+}
+
+html.company-pc body.freewifi-tv .hero{
+  height:72px!important;
+  margin-bottom:10px!important;
+  padding-bottom:8px!important;
+}
+html.company-pc body.freewifi-tv .eyebrow{font-size:9px!important}
+html.company-pc body.freewifi-tv .hero h1{font-size:38px!important}
+html.company-pc body.freewifi-tv .hero h1 span{font-size:16px!important}
+html.company-pc body.freewifi-tv .hero-center{min-width:390px!important}
+html.company-pc body.freewifi-tv .freewifi-page-status{font-size:12px!important}
+html.company-pc body.freewifi-tv .date{font-size:13px!important}
+html.company-pc body.freewifi-tv .clock{font-size:44px!important}
+
+html.company-pc body.freewifi-tv .grid{height:544px!important}
+html.company-pc body.freewifi-tv .panel{
+  grid-template-rows:44px 26px 1fr 32px!important;
+}
+html.company-pc body.freewifi-tv .panel-head{padding:0 12px!important}
+html.company-pc body.freewifi-tv .panel-no{font-size:8px!important}
+html.company-pc body.freewifi-tv .head-main h2{font-size:23px!important}
+html.company-pc body.freewifi-tv .head-main h2 small{font-size:9px!important}
+html.company-pc body.freewifi-tv .mode-badge{
+  min-width:86px!important;
+  max-width:220px!important;
+  padding:5px 9px!important;
+  font-size:11px!important;
+}
+html.company-pc body.freewifi-tv .table-head{
+  font-size:10px!important;
+  padding:0 10px!important;
+  column-gap:8px!important;
+}
+html.company-pc body.freewifi-tv .rows{
+  gap:4px!important;
+  padding:6px 8px 4px!important;
+}
+html.company-pc body.freewifi-tv .row{
+  min-height:40px!important;
+  flex:0 0 40px!important;
+  padding:0 10px!important;
+  column-gap:8px!important;
+}
+html.company-pc body.freewifi-tv .row.placeholder{
+  min-height:40px!important;
+  flex:0 0 40px!important;
+}
+html.company-pc body.freewifi-tv .cell{font-size:13px!important}
+html.company-pc body.freewifi-tv .cell.time{font-size:16px!important}
+html.company-pc body.freewifi-tv .cell.main{font-size:16px!important}
+html.company-pc body.freewifi-tv .cell.sub{font-size:12px!important}
+html.company-pc body.freewifi-tv .service-wrap .name{font-size:15px!important}
+html.company-pc body.freewifi-tv .service-wrap .code{font-size:11px!important}
+html.company-pc body.freewifi-tv .note{
+  padding:0 12px!important;
+  font-size:12px!important;
+}
+
+/* JR */
+html.company-pc body.freewifi-tv .rail-head{
+  grid-template-columns:190px 82px 1fr!important;
+}
+html.company-pc body.freewifi-tv #rail-rows{
+  gap:4px!important;
+  padding:6px 8px 4px!important;
+}
+html.company-pc body.freewifi-tv #rail-rows .rail-row{
+  min-height:40px!important;
+  flex:0 0 40px!important;
+}
+html.company-pc body.freewifi-tv #rail-rows .rail-primary{
+  height:25px!important;
+  grid-template-columns:190px 82px 1fr!important;
+  padding:0 10px!important;
+  column-gap:8px!important;
+}
+html.company-pc body.freewifi-tv #rail-rows .rail-detail{
+  height:14px!important;
+  font-size:9px!important;
+  padding:0 9px!important;
+}
+html.company-pc body.freewifi-tv #rail-rows .rail-primary .cell.time{font-size:15px!important}
+html.company-pc body.freewifi-tv #rail-rows .rail-primary .cell.main{font-size:15px!important}
+html.company-pc body.freewifi-tv .rail-kind-badge{
+  height:20px!important;min-width:44px!important;font-size:10px!important
+}
+html.company-pc body.freewifi-tv .rail-name-badge{
+  height:20px!important;min-width:64px!important;max-width:135px!important;font-size:9.5px!important
+}
+
+/* AIR / BUS */
+html.company-pc body.freewifi-tv .panel-air .air-mini-logo{
+  transform:scale(.95)!important;
+  transform-origin:left center!important;
+}
+html.company-pc body.freewifi-tv .panel-bus .bus-mini-logo{
+  height:20px!important;
+  font-size:10px!important;
+  max-width:165px!important;
+}
+
+/* Ferry */
+html.company-pc body.freewifi-tv #panel-port{
+  grid-template-rows:44px 1fr 32px!important;
+}
+html.company-pc body.freewifi-tv #port-rows.freewifi-port-groups{
+  gap:4px!important;
+  padding:5px 8px 4px!important;
+}
+html.company-pc body.freewifi-tv .freewifi-port-group{
+  grid-template-rows:20px repeat(var(--freewifi-port-row-count,1),minmax(0,1fr))!important;
+  gap:2px!important;
+  padding:2px!important;
+}
+html.company-pc body.freewifi-tv .freewifi-port-group-head{
+  font-size:11px!important;
+  padding:0 8px!important;
+}
+html.company-pc body.freewifi-tv .freewifi-port-group>.row{
+  min-height:0!important;
+  height:auto!important;
+  flex:none!important;
+  padding:0 9px!important;
+}
+html.company-pc body.freewifi-tv .panel-port .ferry-mini-logo{
+  height:19px!important;
+  font-size:9px!important;
+  max-width:165px!important;
 }
