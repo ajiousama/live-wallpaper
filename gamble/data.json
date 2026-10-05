@@ -1,8 +1,8 @@
 {
   "date": "2026-10-06",
   "date_label": "2026年10月06日",
-  "updated_at": "06:11:25",
-  "updated_at_iso": "2026-10-06T06:11:25.782247+09:00",
+  "updated_at": "08:46:37",
+  "updated_at_iso": "2026-10-06T08:46:37.336413+09:00",
   "jra_switch_time": "17:00",
   "keirin": {
     "phase": "本日開催 7場",
@@ -34,12 +34,55 @@
           {
             "race": 1,
             "time": "08:30",
-            "status": "発走前",
-            "order": [],
-            "payout": "",
-            "payouts": {},
-            "winner": "",
-            "origin": "",
+            "status": "確定",
+            "order": [
+              4,
+              1,
+              2
+            ],
+            "payout": "3,360円",
+            "payouts": {
+              "2車複": [
+                {
+                  "combo": "1-4",
+                  "amount": "740円"
+                }
+              ],
+              "2車単": [
+                {
+                  "combo": "4>1",
+                  "amount": "1,540円"
+                }
+              ],
+              "3連複": [
+                {
+                  "combo": "1-2-4",
+                  "amount": "800円"
+                }
+              ],
+              "3連単": [
+                {
+                  "combo": "4>1>2",
+                  "amount": "3,360円"
+                }
+              ],
+              "ワイド": [
+                {
+                  "combo": "1-4",
+                  "amount": "400円"
+                },
+                {
+                  "combo": "2-4",
+                  "amount": "250円"
+                },
+                {
+                  "combo": "1-2",
+                  "amount": "340円"
+                }
+              ]
+            },
+            "winner": "倉野隆太郎",
+            "origin": "三重",
             "race_name": "",
             "scheduled_time": ""
           },
