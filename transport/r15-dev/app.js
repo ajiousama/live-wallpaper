@@ -1478,13 +1478,27 @@
     const directionMark=arrival?'⭐到着⭐':'💎出発💎';
     const disruptionLabel=arrival?'遅延・到着変更':'欠航・遅延';
 
+    const busHtml=`
+      <span class="air-bottom-bus air-bottom-limo"><b>リムジン</b><span>松山空港発　${limoText}</span></span>
+      <span class="air-bottom-sep">◆</span>
+      <span class="air-bottom-bus air-bottom-ordinary"><b>普通便</b><span>松山空港発　${ordinaryText}</span></span>
+      <span class="air-bottom-sep">◆</span>
+      <span class="air-bottom-stops"><b>普通便 主な停留所</b><span>${bus.ordinaryStops}</span></span>`;
+
     el.className='note air-bottom-info';
     el.innerHTML=`
-      <div class="air-bottom-disruption"><b>${directionMark} ${disruptionLabel}</b><span class="air-bottom-disruption-text">${disruptionHtml}</span></div>
+      <div class="air-bottom-disruption">
+        <b>${directionMark} ${disruptionLabel}</b>
+        <div class="air-bottom-scroll"><div class="air-bottom-scroll-track air-bottom-scroll-alert">
+          <span class="air-bottom-scroll-set">${disruptionHtml}</span>
+          <span class="air-bottom-scroll-set" aria-hidden="true">${disruptionHtml}</span>
+        </div></div>
+      </div>
       <div class="air-bottom-buses">
-        <div class="air-bottom-bus air-bottom-limo"><b>リムジン</b><span>松山空港発　${limoText}</span></div>
-        <div class="air-bottom-bus air-bottom-ordinary"><b>普通便</b><span>松山空港発　${ordinaryText}</span></div>
-        <div class="air-bottom-stops"><b>普通便 主な停留所</b><span>${bus.ordinaryStops}</span></div>
+        <div class="air-bottom-scroll"><div class="air-bottom-scroll-track air-bottom-scroll-bus">
+          <span class="air-bottom-scroll-set">${busHtml}</span>
+          <span class="air-bottom-scroll-set" aria-hidden="true">${busHtml}</span>
+        </div></div>
       </div>`;
   }
 
