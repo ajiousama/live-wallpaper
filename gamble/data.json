@@ -1,8 +1,8 @@
 {
   "date": "2026-10-06",
   "date_label": "2026年10月06日",
-  "updated_at": "10:09:27",
-  "updated_at_iso": "2026-10-06T10:09:27.297664+09:00",
+  "updated_at": "10:15:44",
+  "updated_at_iso": "2026-10-06T10:15:44.866073+09:00",
   "jra_switch_time": "17:00",
   "keirin": {
     "phase": "本日開催 7場",
@@ -309,7 +309,7 @@
           {
             "race": 6,
             "time": "10:14",
-            "status": "発走前",
+            "status": "結果待ち",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -1351,13 +1351,18 @@
         },
         {
           "race": 4,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
-          "popularity": "",
+          "status": "確定",
+          "order": [
+            5,
+            1,
+            2
+          ],
+          "payout": "2,480円",
+          "popularity": "7",
           "payouts": {},
           "race_name": "ガチトク予選",
-          "scheduled_time": "10:05"
+          "scheduled_time": "10:05",
+          "winner": ""
         },
         {
           "race": 5,
