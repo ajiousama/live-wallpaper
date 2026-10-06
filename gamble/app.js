@@ -441,7 +441,7 @@ function buildPages(){
     }
   }
 
-  const specials=specialItems().filter(x=>!COMPANY_MODE || x.kind==="keirin" || x.kind==="local");
+  const specials=specialItems().filter(x=>!COMPANY_MODE || x.kind==="keirin" || x.kind==="local" || x.kind==="jra" || x.kind==="win5");
   if(specials.length){
     pages.push({
       key:"special:all",
@@ -452,17 +452,15 @@ function buildPages(){
     });
   }
 
-  if(!COMPANY_MODE){
-    const jraVenues=jraIsCurrentDay()?(jra?.venues||[]):[];
-    for(let i=0;i<jraVenues.length;i+=2){
-      pages.push({
-        key:"jra:"+Math.floor(i/2),
-        type:"jra",
-        page:Math.floor(i/2)+1,
-        total:Math.ceil(jraVenues.length/2),
-        venues:jraVenues.slice(i,i+2)
-      });
-    }
+  const jraVenues=jraIsCurrentDay()?(jra?.venues||[]):[];
+  for(let i=0;i<jraVenues.length;i+=2){
+    pages.push({
+      key:"jra:"+Math.floor(i/2),
+      type:"jra",
+      page:Math.floor(i/2)+1,
+      total:Math.ceil(jraVenues.length/2),
+      venues:jraVenues.slice(i,i+2)
+    });
   }
   return pages.length?pages:[{key:"phase:デイ:0",type:"phase",phase:"デイ",page:1,total:1,items:[]}];
 }
