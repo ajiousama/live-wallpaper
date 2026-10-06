@@ -6,6 +6,12 @@ const PAYOUT_TYPES=["単勝","複勝","枠連","馬連","馬単","ワイド","3�
 const BOAT_PAYOUT_TYPES=["3連単","3連複","2連単","2連複","拡連複","単勝","複勝"];
 const COMPANY_MODE=new URLSearchParams(location.search).get("company")==="1";
 document.documentElement.classList.toggle("company-mode",COMPANY_MODE);
+function jstWeekday(){
+  const wd=new Intl.DateTimeFormat("en-US",{timeZone:"Asia/Tokyo",weekday:"short"}).format(new Date());
+  return !["Sat","Sun"].includes(wd);
+}
+const COMPANY_WEEKDAY=COMPANY_MODE && jstWeekday();
+document.documentElement.classList.toggle("company-weekday",COMPANY_WEEKDAY);
 let data=null,jra=null,currentPageIndex=0,screenShownAt=performance.now(),rotateTimer=null;
 
 function esc(v){
@@ -367,7 +373,11 @@ function specialItems(){
 function buildPages(){
   const pages=[];
   for(const phase of PHASES){
-    const phaseAll=phaseItems(phase).filter(x=>!COMPANY_MODE || x.kind==="keirin" || x.kind==="local");
+    const phaseAll=phaseItems(phase).filter(x=>{
+      if(!COMPANY_MODE) return true;
+      if(COMPANY_WEEKDAY) return x.kind==="keirin";
+      return x.kind==="keirin" || x.kind==="local";
+    });
 
     const premiumKeirin=phaseAll.filter(x=>
       x.kind==="keirin" && /^(G1|G2|G3|GP)$/i.test(String(x.venue?.grade||""))
@@ -410,10 +420,12 @@ function buildPages(){
     // 会社PCは時間帯ごとに競輪 / 地方競馬を完全分離。
     // 例: モーニング・競輪 → モーニング・地方競馬 → デイ・競輪...
     if(COMPANY_MODE){
-      const companyGroups=[
-        {kind:"keirin",label:"競輪"},
-        {kind:"local",label:"地方競馬"}
-      ];
+      const companyGroups=COMPANY_WEEKDAY
+        ? [{kind:"keirin",label:"競輪"}]
+        : [
+            {kind:"keirin",label:"競輪"},
+            {kind:"local",label:"地方競馬"}
+          ];
       for(const group of companyGroups){
         const items=rest.filter(x=>x.kind===group.kind);
         for(let i=0;i<items.length;i+=4){
@@ -470,7 +482,11 @@ function buildPages(){
     }
   }
 
-  const specials=specialItems().filter(x=>!COMPANY_MODE || x.kind==="keirin" || x.kind==="local" || x.kind==="jra" || x.kind==="win5");
+  const specials=specialItems().filter(x=>{
+    if(!COMPANY_MODE) return true;
+    if(COMPANY_WEEKDAY) return x.kind==="keirin";
+    return x.kind==="keirin" || x.kind==="local" || x.kind==="jra" || x.kind==="win5";
+  });
   if(specials.length){
     if(COMPANY_MODE){
       for(let i=0;i<specials.length;i+=4){
@@ -493,15 +509,17 @@ function buildPages(){
     }
   }
 
-  const jraVenues=jraIsCurrentDay()?(jra?.venues||[]):[];
-  for(let i=0;i<jraVenues.length;i+=2){
-    pages.push({
-      key:"jra:"+Math.floor(i/2),
-      type:"jra",
-      page:Math.floor(i/2)+1,
-      total:Math.ceil(jraVenues.length/2),
-      venues:jraVenues.slice(i,i+2)
-    });
+  if(!COMPANY_WEEKDAY){
+    const jraVenues=jraIsCurrentDay()?(jra?.venues||[]):[];
+    for(let i=0;i<jraVenues.length;i+=2){
+      pages.push({
+        key:"jra:"+Math.floor(i/2),
+        type:"jra",
+        page:Math.floor(i/2)+1,
+        total:Math.ceil(jraVenues.length/2),
+        venues:jraVenues.slice(i,i+2)
+      });
+    }
   }
   return pages.length?pages:[{key:"phase:デイ:0",type:"phase",phase:"デイ",page:1,total:1,items:[]}];
 }
