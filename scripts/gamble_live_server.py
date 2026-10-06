@@ -12,7 +12,7 @@ import update_gamble
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "gamble" / "data.json"
 PORT = int(os.environ.get("PORT", "10000"))
-TARGET_INTERVAL = 60.0
+TARGET_INTERVAL = 30.0
 
 lock = threading.Lock()
 cached = b"{}"
