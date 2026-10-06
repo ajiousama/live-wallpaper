@@ -160,7 +160,7 @@
     const raw=String(airline||'').trim();
     const a=raw.toUpperCase();
 
-    const logo=(cls,label,src,fallback)=>`<span class="air-mini-logo ${cls}" aria-label="${label}"><span class="air-logo-fallback">${fallback}</span><img src="${src}" alt="${label}" loading="eager" referrerpolicy="no-referrer"></span>`;
+    const logo=(cls,label,src,fallback)=>`<span class="air-mini-logo ${cls}" aria-label="${label}"><span class="air-logo-fallback">${fallback}</span><img src="${src}" alt="${label}" loading="eager" referrerpolicy="no-referrer" onerror="this.remove()"></span>`;
 
     // Use the same logo artwork that Matsuyama Airport publishes on its flight page
     // whenever that artwork is available.
@@ -191,8 +191,10 @@
     let nums=Array.isArray(r?.liveRaw?.numbers) ? r.liveRaw.numbers.map(String).filter(Boolean) : [];
     if(!nums.length) nums=[String(p.number||'')].filter(Boolean);
 
-    // Preserve codeshares even when the live endpoint is temporarily unavailable.
-    if(nums.length===1){
+    // Preserve known codeshares only for static fallback. When the official live
+    // endpoint supplies flight numbers, display exactly what it publishes.
+    const hasLiveNumbers=Array.isArray(r?.liveRaw?.numbers);
+    if(!hasLiveNumbers && nums.length===1){
       const n=nums[0];
       if(/IBEX/i.test(p.airline) && /^3[3-8]$/.test(n)) nums.push(`31${n}`);
       if(/Jetstar/i.test(p.airline) && JETSTAR_JAL_CODESHARE[n]) nums.push(JETSTAR_JAL_CODESHARE[n]);
@@ -1116,6 +1118,20 @@
   function renderTopLiveAlert(now) {
     const el=$('top-live-alert');
     if(!el)return;
+
+    // Airport pages have their own information hierarchy. Never leak JR/bus
+    // approach alerts into the Matsuyama Airport departure/arrival board.
+    if(document.body.classList.contains('air-board-page')){
+      const cls='hero-alert top-live-alert';
+      if(el.dataset.alertClass!==cls || el.dataset.alertHtml!==''){
+        el.className=cls;
+        el.innerHTML='';
+        el.dataset.alertClass=cls;
+        el.dataset.alertHtml='';
+      }
+      return;
+    }
+
     let cls='hero-alert top-live-alert';
     let html='';
     const city=ichitsuboTakeover(now);
