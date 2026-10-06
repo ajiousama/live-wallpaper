@@ -18,6 +18,10 @@
   const gambleScreen = document.getElementById('gamble-screen');
   const gambleFrame = document.getElementById('gamble-frame');
   const status = document.getElementById('freewifi-page-status');
+  const webPrev = document.getElementById('web-page-prev');
+  const webNext = document.getElementById('web-page-next');
+
+
 
   // Company PC gamble page is intentionally limited to keirin + local horse racing.
   if(gambleFrame && document.documentElement.classList.contains('company-pc')){
@@ -90,6 +94,9 @@
     const left = Math.max(0, Math.ceil((nextPageAt - Date.now()) / 1000));
     status.textContent = `${page.label}　｜　次画面まで ${left}秒`;
   }
+
+  if(webPrev) webPrev.addEventListener('click', ()=>showPage(pageIndex - 1));
+  if(webNext) webNext.addEventListener('click', ()=>showPage(pageIndex + 1));
 
   showPage(0);
   setInterval(updatePageCountdown, 1000);
