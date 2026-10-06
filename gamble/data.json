@@ -1,8 +1,8 @@
 {
   "date": "2026-10-07",
   "date_label": "2026年10月07日",
-  "updated_at": "00:15:33",
-  "updated_at_iso": "2026-10-07T00:15:33.480121+09:00",
+  "updated_at": "04:50:18",
+  "updated_at_iso": "2026-10-07T04:50:18.974059+09:00",
   "jra_switch_time": "17:00",
   "keirin": {
     "phase": "本日開催 7場",
@@ -712,38 +712,6 @@
         "display_name": "四日市"
       },
       {
-        "channel": "keirin.maebashi",
-        "venue": "前橋",
-        "type": "ミッドナイト",
-        "grade": "F2",
-        "epg_start": "202610072030",
-        "epg_stop": "202610072330",
-        "race_meta": {},
-        "event_name_epg": "",
-        "code": "22",
-        "race_ids": [
-          "202610072201"
-        ],
-        "event_name": "",
-        "last_time": "",
-        "last_confirmed": false,
-        "races": [
-          {
-            "race": 1,
-            "time": "",
-            "status": "発走前",
-            "order": [],
-            "payout": "",
-            "payouts": {},
-            "winner": "",
-            "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
-          }
-        ],
-        "display_name": "前橋"
-      },
-      {
         "channel": "keirin.ogaki",
         "venue": "大垣",
         "type": "ミッドナイト",
@@ -754,16 +722,120 @@
         "event_name_epg": "",
         "code": "44",
         "race_ids": [
-          "202610074401"
+          "202610074401",
+          "202610074402",
+          "202610074403",
+          "202610074404",
+          "202610074405",
+          "202610074406",
+          "202610074407",
+          "202610074408",
+          "202610074409"
         ],
-        "event_name": "",
-        "last_time": "",
+        "event_name": "楽天Ｋドリームス杯",
+        "last_time": "23:20",
         "last_confirmed": false,
         "races": [
           {
             "race": 1,
-            "time": "",
-            "status": "発走前",
+            "time": "20:40",
+            "status": "結果待ち",
+            "order": [],
+            "payout": "",
+            "payouts": {},
+            "winner": "",
+            "origin": "",
+            "race_name": "",
+            "scheduled_time": ""
+          },
+          {
+            "race": 2,
+            "time": "21:00",
+            "status": "結果待ち",
+            "order": [],
+            "payout": "",
+            "payouts": {},
+            "winner": "",
+            "origin": "",
+            "race_name": "",
+            "scheduled_time": ""
+          },
+          {
+            "race": 3,
+            "time": "21:20",
+            "status": "結果待ち",
+            "order": [],
+            "payout": "",
+            "payouts": {},
+            "winner": "",
+            "origin": "",
+            "race_name": "",
+            "scheduled_time": ""
+          },
+          {
+            "race": 4,
+            "time": "21:40",
+            "status": "結果待ち",
+            "order": [],
+            "payout": "",
+            "payouts": {},
+            "winner": "",
+            "origin": "",
+            "race_name": "",
+            "scheduled_time": ""
+          },
+          {
+            "race": 5,
+            "time": "22:00",
+            "status": "結果待ち",
+            "order": [],
+            "payout": "",
+            "payouts": {},
+            "winner": "",
+            "origin": "",
+            "race_name": "",
+            "scheduled_time": ""
+          },
+          {
+            "race": 6,
+            "time": "22:20",
+            "status": "結果待ち",
+            "order": [],
+            "payout": "",
+            "payouts": {},
+            "winner": "",
+            "origin": "",
+            "race_name": "",
+            "scheduled_time": ""
+          },
+          {
+            "race": 7,
+            "time": "22:40",
+            "status": "結果待ち",
+            "order": [],
+            "payout": "",
+            "payouts": {},
+            "winner": "",
+            "origin": "",
+            "race_name": "",
+            "scheduled_time": ""
+          },
+          {
+            "race": 8,
+            "time": "23:00",
+            "status": "結果待ち",
+            "order": [],
+            "payout": "",
+            "payouts": {},
+            "winner": "",
+            "origin": "",
+            "race_name": "",
+            "scheduled_time": ""
+          },
+          {
+            "race": 9,
+            "time": "23:20",
+            "status": "結果待ち",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -774,6 +846,142 @@
           }
         ],
         "display_name": "大垣"
+      },
+      {
+        "channel": "keirin.maebashi",
+        "venue": "前橋",
+        "type": "ミッドナイト",
+        "grade": "F2",
+        "epg_start": "202610072030",
+        "epg_stop": "202610072330",
+        "race_meta": {},
+        "event_name_epg": "",
+        "code": "22",
+        "race_ids": [
+          "202610072201",
+          "202610072202",
+          "202610072203",
+          "202610072204",
+          "202610072205",
+          "202610072206",
+          "202610072207",
+          "202610072208",
+          "202610072209"
+        ],
+        "event_name": "前検日コメならウィンチケット杯",
+        "last_time": "23:30",
+        "last_confirmed": false,
+        "races": [
+          {
+            "race": 1,
+            "time": "20:50",
+            "status": "結果待ち",
+            "order": [],
+            "payout": "",
+            "payouts": {},
+            "winner": "",
+            "origin": "",
+            "race_name": "",
+            "scheduled_time": ""
+          },
+          {
+            "race": 2,
+            "time": "21:10",
+            "status": "結果待ち",
+            "order": [],
+            "payout": "",
+            "payouts": {},
+            "winner": "",
+            "origin": "",
+            "race_name": "",
+            "scheduled_time": ""
+          },
+          {
+            "race": 3,
+            "time": "21:30",
+            "status": "結果待ち",
+            "order": [],
+            "payout": "",
+            "payouts": {},
+            "winner": "",
+            "origin": "",
+            "race_name": "",
+            "scheduled_time": ""
+          },
+          {
+            "race": 4,
+            "time": "21:50",
+            "status": "結果待ち",
+            "order": [],
+            "payout": "",
+            "payouts": {},
+            "winner": "",
+            "origin": "",
+            "race_name": "",
+            "scheduled_time": ""
+          },
+          {
+            "race": 5,
+            "time": "22:10",
+            "status": "結果待ち",
+            "order": [],
+            "payout": "",
+            "payouts": {},
+            "winner": "",
+            "origin": "",
+            "race_name": "",
+            "scheduled_time": ""
+          },
+          {
+            "race": 6,
+            "time": "22:30",
+            "status": "結果待ち",
+            "order": [],
+            "payout": "",
+            "payouts": {},
+            "winner": "",
+            "origin": "",
+            "race_name": "",
+            "scheduled_time": ""
+          },
+          {
+            "race": 7,
+            "time": "22:50",
+            "status": "結果待ち",
+            "order": [],
+            "payout": "",
+            "payouts": {},
+            "winner": "",
+            "origin": "",
+            "race_name": "",
+            "scheduled_time": ""
+          },
+          {
+            "race": 8,
+            "time": "23:10",
+            "status": "結果待ち",
+            "order": [],
+            "payout": "",
+            "payouts": {},
+            "winner": "",
+            "origin": "",
+            "race_name": "",
+            "scheduled_time": ""
+          },
+          {
+            "race": 9,
+            "time": "23:30",
+            "status": "結果待ち",
+            "order": [],
+            "payout": "",
+            "payouts": {},
+            "winner": "",
+            "origin": "",
+            "race_name": "",
+            "scheduled_time": ""
+          }
+        ],
+        "display_name": "前橋"
       }
     ]
   },
