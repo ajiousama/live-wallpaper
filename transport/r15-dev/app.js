@@ -217,7 +217,8 @@
   }
 
   function airServiceHtml(r,p) {
-    const items=airServiceItems(r,p);
+    // Keep the board readable: show the operating flight + at most one codeshare.
+    const items=airServiceItems(r,p).slice(0,2);
     return items.map((item,index)=>{
       const logo=airlineMiniLogo(item.airline) || `<span class="airline-text-logo">${item.airline}</span>`;
       return `<span class="air-service-brand${index?' codeshare-brand':''}">${logo}<span class="air-flight-no">${item.number||'—'}</span></span>`;
