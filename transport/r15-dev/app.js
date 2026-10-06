@@ -2196,9 +2196,13 @@
     const airHead = document.querySelector('#panel-air .table-head');
     const busHead = document.querySelector('#panel-bus .table-head');
     const portHead = document.querySelector('#panel-port .table-head');
-    airHead.innerHTML = dep
-      ? '<span>時刻</span><span>行先</span><span>航空会社</span><span>便名</span><span>区分</span>'
-      : '<span>出発地</span><span>航空会社</span><span>便名</span><span>区分</span><span>到着時刻</span>';
+    airHead.innerHTML = FREEWIFI_TV
+      ? (dep
+          ? '<span>航空会社・便名</span><span>行先</span><span>出発時刻</span><span>ご案内</span>'
+          : '<span>航空会社・便名</span><span>出発地</span><span>到着時刻</span><span>ご案内</span>')
+      : (dep
+          ? '<span>時刻</span><span>行先</span><span>航空会社</span><span>便名</span><span>区分</span>'
+          : '<span>出発地</span><span>航空会社</span><span>便名</span><span>区分</span><span>到着時刻</span>');
     busHead.innerHTML = dep
       ? '<span>時刻 / 終着</span><span>行先 / 経由地</span><span>乗車場所</span><span>運行会社</span>'
       : '<span>出発地</span><span>到着場所</span><span>運行会社</span><span>到着時刻</span>';
