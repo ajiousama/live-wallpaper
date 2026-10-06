@@ -1418,3 +1418,35 @@ body.freewifi-tv.air-board-page #air-rows .air-mini-logo-jal img{
 html.company-pc body.freewifi-tv.air-board-page #air-rows .air-mini-logo-jal img{
   transform:scale(1.18)!important;
 }
+
+
+/* Manual page switcher: ordinary web view only */
+body.freewifi-tv .web-page-switcher{
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  z-index:120;
+  display:flex;
+  gap:8px;
+  opacity:.92;
+}
+body.freewifi-tv .web-page-switcher button{
+  appearance:none;
+  border:1px solid rgba(255,255,255,.32);
+  border-radius:8px;
+  background:rgba(4,18,27,.88);
+  color:#fff;
+  padding:9px 14px;
+  font:800 14px/1 "Yu Gothic UI","Meiryo",sans-serif;
+  box-shadow:0 3px 12px rgba(0,0,0,.35);
+  cursor:pointer;
+}
+body.freewifi-tv .web-page-switcher button:hover{
+  background:rgba(14,52,70,.96);
+}
+body.freewifi-tv .web-page-switcher button:active{
+  transform:translateY(1px);
+}
+html.company-pc body.freewifi-tv .web-page-switcher{
+  display:none!important;
+}
