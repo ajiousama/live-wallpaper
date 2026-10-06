@@ -4,6 +4,7 @@ const JRA_URL="https://raw.githubusercontent.com/ajiousama/live-wallpaper/main/j
 const PHASES=["モーニング","デイ","ナイター","ミッドナイト"];
 const PAYOUT_TYPES=["単勝","複勝","枠連","馬連","馬単","ワイド","3連複","3連単"];
 const BOAT_PAYOUT_TYPES=["3連単","3連複","2連単","2連複","拡連複","単勝","複勝"];
+const COMPANY_MODE=new URLSearchParams(location.search).get("company")==="1";
 let data=null,jra=null,currentPageIndex=0,screenShownAt=performance.now(),rotateTimer=null;
 
 function esc(v){
@@ -365,12 +366,12 @@ function specialItems(){
 function buildPages(){
   const pages=[];
   for(const phase of PHASES){
-    const phaseAll=phaseItems(phase);
+    const phaseAll=phaseItems(phase).filter(x=>!COMPANY_MODE || x.kind==="keirin" || x.kind==="local");
 
     const premiumKeirin=phaseAll.filter(x=>
       x.kind==="keirin" && /^(G1|G2|G3|GP)$/i.test(String(x.venue?.grade||""))
     );
-    const premiumBoat=phaseAll.filter(x=>x.kind==="boat"&&isBoatSg(x.venue));
+    const premiumBoat=COMPANY_MODE ? [] : phaseAll.filter(x=>x.kind==="boat"&&isBoatSg(x.venue));
 
     // 競輪G3以上は1場ずつ全掛式の詳細ページ。
     for(const item of premiumKeirin){
@@ -440,24 +441,28 @@ function buildPages(){
     }
   }
 
-  const specials=specialItems();
-  pages.push({
-    key:"special:all",
-    type:"special",
-    page:1,
-    total:1,
-    items:specials
-  });
-
-  const jraVenues=jraIsCurrentDay()?(jra?.venues||[]):[];
-  for(let i=0;i<jraVenues.length;i+=2){
+  const specials=specialItems().filter(x=>!COMPANY_MODE || x.kind==="keirin" || x.kind==="local");
+  if(specials.length){
     pages.push({
-      key:"jra:"+Math.floor(i/2),
-      type:"jra",
-      page:Math.floor(i/2)+1,
-      total:Math.ceil(jraVenues.length/2),
-      venues:jraVenues.slice(i,i+2)
+      key:"special:all",
+      type:"special",
+      page:1,
+      total:1,
+      items:specials
     });
+  }
+
+  if(!COMPANY_MODE){
+    const jraVenues=jraIsCurrentDay()?(jra?.venues||[]):[];
+    for(let i=0;i<jraVenues.length;i+=2){
+      pages.push({
+        key:"jra:"+Math.floor(i/2),
+        type:"jra",
+        page:Math.floor(i/2)+1,
+        total:Math.ceil(jraVenues.length/2),
+        venues:jraVenues.slice(i,i+2)
+      });
+    }
   }
   return pages.length?pages:[{key:"phase:デイ:0",type:"phase",phase:"デイ",page:1,total:1,items:[]}];
 }
