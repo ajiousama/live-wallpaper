@@ -21,16 +21,6 @@
 </head>
 <body class="freewifi-tv">
   <main id="wall" aria-label="松山総合交通ダッシュボード">
-    <section class="global-live-strip" id="global-live-strip" aria-live="polite">
-      <div class="global-live-card global-live-rail" id="global-live-rail">
-        <strong>🚆 市坪駅</strong>
-        <span class="global-live-value" id="global-ichitsubo">列車情報を取得中</span>
-      </div>
-      <div class="global-live-card global-live-bus" id="global-live-bus">
-        <strong>🚌 マドンナスタジアム</strong>
-        <span class="global-live-value" id="global-madonna">バス情報を取得中</span>
-      </div>
-    </section>
     <header class="hero">
       <div class="hero-left transport-hero-title">
         <div class="eyebrow">EHIME ・ JAPAN ・ TRANSPORT DASHBOARD</div>
@@ -49,6 +39,7 @@
       </div>
       <div class="hero-center" aria-live="polite">
         <div class="freewifi-page-status" id="freewifi-page-status">01 / 04　JR 松山駅</div>
+        <div class="hero-alert top-live-alert" id="top-live-alert"></div>
         <div class="live-system-status"><span class="live-dot"></span>交通・防災 LIVE</div>
         <div class="mode-countdown" id="mode-countdown">表示切替まで あと15秒</div>
         <div class="data-status" id="data-status">ダイヤ確認 ---</div>
