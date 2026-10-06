@@ -1,8 +1,8 @@
 {
   "date": "2026-10-07",
   "date_label": "2026年10月07日",
-  "updated_at": "08:31:18",
-  "updated_at_iso": "2026-10-07T08:31:18.694395+09:00",
+  "updated_at": "08:59:03",
+  "updated_at_iso": "2026-10-07T08:59:03.770995+09:00",
   "jra_switch_time": "17:00",
   "keirin": {
     "phase": "本日開催 7場",
@@ -997,13 +997,18 @@
       "races": [
         {
           "race": 1,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
-          "popularity": "",
+          "status": "確定",
+          "order": [
+            1,
+            4,
+            3
+          ],
+          "payout": "1,050円",
+          "popularity": "3",
           "payouts": {},
-          "race_name": "",
-          "scheduled_time": "08:35"
+          "race_name": "予選",
+          "scheduled_time": "08:35",
+          "winner": ""
         },
         {
           "race": 2,
@@ -1128,13 +1133,18 @@
       "races": [
         {
           "race": 1,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
-          "popularity": "",
+          "status": "確定",
+          "order": [
+            1,
+            2,
+            5
+          ],
+          "payout": "1,360円",
+          "popularity": "6",
           "payouts": {},
           "race_name": "朝トク一般",
-          "scheduled_time": "08:47"
+          "scheduled_time": "08:47",
+          "winner": ""
         },
         {
           "race": 2,
