@@ -2041,3 +2041,15 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
 .kotobus-word{color:#d35a00}
 .shinki-word{color:#b3392c}
 .panel-bus .bus-mini-logo{max-width:105px}
+
+
+/* ferry brand marks */
+.ferry-orange-mark{font-weight:1000;letter-spacing:.02em}
+.brand-wave-mark{font-size:1.35em;font-weight:1000;line-height:.7}
+.brand-route94{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:14px;border-radius:8px;background:#f3a11a;color:#fff;font-size:9px;font-weight:1000}
+.jumbo-word{color:#b30045;font-weight:1000;letter-spacing:-.03em}
+.municipal-mark{font-weight:1000}
+.ferry-logo-pair{display:inline-flex;align-items:center;gap:3px;min-width:0}
+.ferry-logo-pair .ferry-mini-logo{max-width:76px;padding-left:4px;padding-right:4px}
+.ferry-logo-ishizaki{background:#eef4ff;color:#214f98;border:1px solid #9bb6dc;font-size:9px;font-style:italic;letter-spacing:-.02em}
+.panel-port .ferry-mini-logo{max-width:135px}
