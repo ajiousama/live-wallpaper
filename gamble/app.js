@@ -1,4 +1,5 @@
-const DATA_URL="https://raw.githubusercontent.com/ajiousama/live-wallpaper/main/gamble/data.json";
+const DATA_URL="https://live-wallpaper-gamble-fast.onrender.com/data.json";
+const DATA_FALLBACK="https://raw.githubusercontent.com/ajiousama/live-wallpaper/main/gamble/data.json";
 const JRA_URL="https://raw.githubusercontent.com/ajiousama/live-wallpaper/main/jra/data.json";
 const PHASES=["モーニング","デイ","ナイター","ミッドナイト"];
 const PAYOUT_TYPES=["単勝","複勝","枠連","馬連","馬単","ワイド","3連複","3連単"];
@@ -630,17 +631,24 @@ function updateMarquees(){
     });
   });
 }
-async function getJson(url){
-  const r=await fetch(url+"?t="+Date.now(),{cache:"no-store"});
-  if(!r.ok) throw new Error(url+" "+r.status);
-  return r.json();
+async function getJson(url,fallback=""){
+  try{
+    const r=await fetch(url+(url.includes("?")?"&":"?")+"t="+Date.now(),{cache:"no-store"});
+    if(!r.ok) throw new Error(url+" "+r.status);
+    return r.json();
+  }catch(err){
+    if(!fallback) throw err;
+    const r=await fetch(fallback+"?t="+Date.now(),{cache:"no-store"});
+    if(!r.ok) throw err;
+    return r.json();
+  }
 }
 async function load(){
   try{
     const hadData=!!data||!!jra;
     const oldPages=buildPages();
     const oldKey=oldPages[currentPageIndex]?.key||"";
-    const [d,j]=await Promise.all([getJson(DATA_URL),getJson(JRA_URL)]);
+    const [d,j]=await Promise.all([getJson(DATA_URL,DATA_FALLBACK),getJson(JRA_URL)]);
     data=d;jra=j;
     document.getElementById("updated").textContent=data?.updated_at||jra?.updated_at||"--";
     const pages=buildPages();
@@ -684,5 +692,5 @@ function tick(){
   }
 }
 setInterval(tick,1000);tick();
-load();setInterval(load,10000);
+load();setInterval(load,5000);
 requestAnimationFrame(syncScrollPosition);
