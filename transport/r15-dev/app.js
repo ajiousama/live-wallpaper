@@ -1678,7 +1678,10 @@
       const msg=dep?'本日の出発便は終了しました':'本日の到着便は終了しました';
       const detail=last ? (dep?`最終出発便：${last.place}行　${last.time}　出発済み`:`最終到着便：${last.place}発　${last.time}　到着済み`) : '';
       root.innerHTML=`<div class="air-end-state"><div class="air-end-mode">✈ ${mode}</div><div class="air-end-message">${msg}</div>${detail?`<div class="air-end-detail">${detail}</div>`:''}</div>`;
-    } else (FREEWIFI_TV ? rows.slice(0,10) : rows).forEach(r=>{
+    } else {
+      const companyPc=document.documentElement.classList.contains('company-pc');
+      const visibleRows=FREEWIFI_TV ? rows.slice(0,companyPc?11:10) : rows;
+      visibleRows.forEach(r=>{
       const row=document.createElement('div');row.className=`row${r.isFinal?' is-final':''}${dep&&isDepartSoon(r,japanNow())?' depart-soon':''}`;
       const p=parseAirService(r.service); const finalBadge=dep&&r.isFinal?badgeHtml('final','最終便'):''; const place=dep?`→ ${r.dest}`:`${r.dest} →`; const firstBadge=r.isNextDayStart?badgeHtml('first',dep?'始発':'初便'):''; const airlineLogo=airlineMiniLogo(p.airline); const airlineName=airlineLogo||`<span class="name">${p.airline}</span>`;
       const status=String(r.liveStatus||r.info||''); const statusClass=`cell sub air-status${status.length>10?' long-status':''}${/まもなく到着|ただいま到着/.test(status)?' arriving':''}`;
@@ -1688,7 +1691,9 @@
       if(dep){row.innerHTML=`<div class="cell time">${timeHtml}</div><div class="cell main air-place">${place} ${firstBadge}${finalBadge}</div><div class="cell service air-airline-cell"><div class="service-wrap airline-service-wrap">${airlineName}</div></div><div class="cell air-flight-cell">${p.number||'—'}</div><div class="${statusClass}">${overflowScrollHtml(status,'air-status-scroll')}</div>`;}
       else{row.innerHTML=`<div class="cell main">${place} ${firstBadge}${finalBadge}</div><div class="cell service air-airline-cell"><div class="service-wrap airline-service-wrap">${airlineName}</div></div><div class="cell air-flight-cell">${p.number||'—'}</div><div class="${statusClass}">${overflowScrollHtml(status,'air-status-scroll')}</div><div class="cell time">${timeHtml}</div>`;}
       root.appendChild(row);
-    }); activatePanelOverflow(root); restoreScroll('air'); attachScrollMemory('air');
+      });
+    }
+    activatePanelOverflow(root); restoreScroll('air'); attachScrollMemory('air');
   }
 
   const BUS_JOINT_OPERATORS = {
