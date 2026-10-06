@@ -1,8 +1,8 @@
 {
   "date": "2026-10-06",
   "date_label": "2026年10月06日",
-  "updated_at": "09:18:39",
-  "updated_at_iso": "2026-10-06T09:18:39.970254+09:00",
+  "updated_at": "09:28:37",
+  "updated_at_iso": "2026-10-06T09:28:37.346100+09:00",
   "jra_switch_time": "17:00",
   "keirin": {
     "phase": "本日開催 7場",
@@ -191,8 +191,8 @@
                 }
               ]
             },
-            "winner": "",
-            "origin": "",
+            "winner": "田口守",
+            "origin": "山口",
             "race_name": "",
             "scheduled_time": ""
           },
@@ -1235,13 +1235,18 @@
         },
         {
           "race": 2,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
-          "popularity": "",
+          "status": "確定",
+          "order": [
+            1,
+            6,
+            3
+          ],
+          "payout": "1,350円",
+          "popularity": "5",
           "payouts": {},
           "race_name": "狙いトク特選",
-          "scheduled_time": "09:13"
+          "scheduled_time": "09:13",
+          "winner": ""
         },
         {
           "race": 3,
