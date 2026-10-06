@@ -16,7 +16,15 @@
 
   const TRANSPORT_IDS = ['panel-rail','panel-air','panel-bus','panel-port'];
   const gambleScreen = document.getElementById('gamble-screen');
+  const gambleFrame = document.getElementById('gamble-frame');
   const status = document.getElementById('freewifi-page-status');
+
+  // Company PC gamble page is intentionally limited to keirin + local horse racing.
+  if(gambleFrame && document.documentElement.classList.contains('company-pc')){
+    const u = new URL(gambleFrame.getAttribute('src') || '../../gamble/', location.href);
+    u.searchParams.set('company','1');
+    gambleFrame.src = u.toString();
+  }
 
   let pageIndex = 0;
   let nextPageAt = Date.now() + pages[0].duration;
