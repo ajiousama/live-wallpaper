@@ -22,12 +22,20 @@
 <body class="freewifi-tv">
   <main id="wall" aria-label="松山総合交通ダッシュボード">
     <header class="hero">
-      <div class="hero-left">
+      <div class="hero-left transport-hero-title">
         <div class="eyebrow">EHIME ・ JAPAN ・ TRANSPORT DASHBOARD</div>
         <div class="hero-title-row">
           <h1>松山 <span>DEPARTURES</span></h1>
         </div>
-        <p class="hero-sub">FreeWiFi TV・各交通機関を60秒ずつ表示</p>
+        <p class="hero-sub">FreeWiFi TV・交通案内を自動切替</p>
+      </div>
+      <div class="hero-left air-hero-title" aria-hidden="true">
+        <div class="air-sign-icon">✈</div>
+        <div class="air-sign-copy">
+          <div class="air-sign-main"><span class="air-dep-label">出発</span><span class="air-arr-label">到着</span></div>
+          <div class="air-sign-en"><span class="air-dep-label">Departures</span><span class="air-arr-label">Arrivals</span></div>
+        </div>
+        <div class="air-sign-airport">松山空港</div>
       </div>
       <div class="hero-center" aria-live="polite">
         <div class="freewifi-page-status" id="freewifi-page-status">01 / 04　JR 松山駅</div>
@@ -67,8 +75,8 @@
           </div>
           <div class="mode-badge" id="air-badge">出発案内</div>
         </div>
-        <div class="table-head service-head">
-          <span>時刻</span><span id="air-place-head">行先</span><span>航空会社 / 便名</span><span>区分</span>
+        <div class="table-head service-head air-board-head">
+          <span>航空会社・便名</span><span id="air-place-head">行先</span><span>出発時刻</span><span>ご案内</span>
         </div>
         <div class="rows" id="air-rows"></div>
         <div class="note" id="air-note">空港アクセス案内を準備中です</div>
