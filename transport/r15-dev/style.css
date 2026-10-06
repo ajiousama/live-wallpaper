@@ -2053,3 +2053,42 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
 .ferry-logo-pair .ferry-mini-logo{max-width:76px;padding-left:4px;padding-right:4px}
 .ferry-logo-ishizaki{background:#eef4ff;color:#214f98;border:1px solid #9bb6dc;font-size:9px;font-style:italic;letter-spacing:-.02em}
 .panel-port .ferry-mini-logo{max-width:135px}
+
+
+/* WILLER Express: high-contrast treatment for workplace readability */
+.bus-logo-willer{
+  background:#d90073!important;
+  color:#fff!important;
+  border:1px solid #ff66b7!important;
+  min-width:112px!important;
+  max-width:132px!important;
+  padding:0 8px!important;
+  gap:4px!important;
+  box-shadow:0 0 0 1px rgba(255,255,255,.08) inset;
+}
+.bus-logo-willer .willer-word{
+  color:#fff!important;
+  font-size:1.08em!important;
+  font-weight:1000!important;
+  letter-spacing:-.035em!important;
+}
+.bus-logo-willer .willer-express-word{
+  color:#fff!important;
+  font-size:.66em!important;
+  font-weight:1000!important;
+  letter-spacing:.08em!important;
+}
+html.company-pc body.freewifi-tv .panel-bus .bus-logo-willer{
+  min-width:145px!important;
+  width:145px!important;
+  max-width:145px!important;
+  height:32px!important;
+  padding:0 10px!important;
+  gap:6px!important;
+}
+html.company-pc body.freewifi-tv .panel-bus .bus-logo-willer .willer-word{
+  font-size:16px!important;
+}
+html.company-pc body.freewifi-tv .panel-bus .bus-logo-willer .willer-express-word{
+  font-size:10px!important;
+}
