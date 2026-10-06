@@ -1121,78 +1121,46 @@
       : '';
   }
 
-  function ichitsuboHeaderInfo(now) {
-    const generatedAt=Date.parse(String(approachLive.generatedAtJst||''));
-    const fresh=!Number.isFinite(generatedAt) || (Date.now()-generatedAt)<=45000;
-    const raw=fresh && Array.isArray(approachLive.ichitsubo?.approaching)
-      ? approachLive.ichitsubo.approaching
-      : [];
-    const active=raw.filter(x=>{
-      const mins=Number(x?.minutesToIchitsubo);
-      return !Number.isFinite(mins) || mins>=0;
-    }).slice(0,2);
-
-    if(active.length){
-      return active.map(x=>{
-        const dir=ichitsuboDirection(x)==='north'?'松山方面':'宇和島方面';
-        const kind=String(x?.kind||'');
-        const mins=Number(x?.minutesToIchitsubo);
-        const when=Number.isFinite(mins)?(mins<=1?'まもなく':`約${mins}分`):'接近';
-        if(kind==='deadhead') return `${dir}｜回送 通過 ${when}`;
-        if(kind==='freight') return `${dir}｜貨物 通過 ${when}`;
-        if(kind==='pass') return `${dir}｜列車 通過 ${when}`;
-        const dest=cleanStation(x?.destination||'');
-        return `${dir}｜${dest?dest+'行｜':''}${when}`;
-      }).join('　◆　');
-    }
+  function ichitsuboTopInfo(now) {
+    const live=ichitsuboTakeover(now);
+    if(live?.items?.length) return live.items;
 
     const north=auxUpcoming('ichitsubo','north',now,1)[0]||null;
     const south=auxUpcoming('ichitsubo','south',now,1)[0]||null;
-    const parts=[];
-    if(north) parts.push(`松山方面｜次 ${padTime(north.time)} ${cleanStation(north.dest||north.destination||'')||'列車'}行`);
-    else parts.push('松山方面｜運行終了');
-    if(south) parts.push(`宇和島方面｜次 ${padTime(south.time)} ${cleanStation(south.dest||south.destination||'')||'列車'}行`);
-    else parts.push('宇和島方面｜運行終了');
-    return parts.join('　◆　');
-  }
-
-  function madonnaHeaderInfo(now) {
-    const live=approachLive.madonna;
-    const generatedAt=Date.parse(String(approachLive.generatedAtJst||''));
-    const fresh=!Number.isFinite(generatedAt) || (Date.now()-generatedAt)<=90000;
-    if(approachLive.ok && live?.ok && fresh && isKnownStadiumScheduledTime(live.scheduledDeparture,now)){
-      const t=padTime(live.predictedDeparture||live.scheduledDeparture);
-      if(t){
-        const diff=minutesUntil(t,now.minutes);
-        if(Number.isFinite(diff) && diff>=0){
-          const lead=diff<=2?'まもなく発車':diff<=4?'まもなく到着':`あと${diff}分`;
-          return `51系統 松山市駅行｜${t}発｜${lead}`;
-        }
-      }
+    const items=[];
+    if(north){
+      items.push(`🚆 市坪駅 松山方面｜次列車 ${padTime(north.time)}　${cleanStation(north.dest||north.destination||'')||'列車'}行`);
+    } else {
+      items.push('🚆 市坪駅 松山方面｜運行終了');
     }
-    const next=nextAux('stadium',null,now);
-    return next
-      ? `51系統 松山市駅行｜次便 ${padTime(next.time)}発`
-      : '51系統 松山市駅行｜本日の運行終了';
+    if(south){
+      items.push(`🚆 市坪駅 宇和島方面｜次列車 ${padTime(south.time)}　${cleanStation(south.dest||south.destination||'')||'列車'}行`);
+    } else {
+      items.push('🚆 市坪駅 宇和島方面｜運行終了');
+    }
+    return items;
   }
 
   function renderTopLiveAlert(now) {
-    const rail=$('global-ichitsubo');
-    const bus=$('global-madonna');
-    if(!rail || !bus) return;
+    const el=$('top-live-alert');
+    if(!el)return;
 
-    const railText=ichitsuboHeaderInfo(now);
-    const busText=madonnaHeaderInfo(now);
+    const cityItems=ichitsuboTopInfo(now);
+    const busTakeover=madonnaTakeover(now);
+    const madonnaInfo=madonnaTopInfo(now);
+    const busItems=busTakeover?.items?.length
+      ? busTakeover.items
+      : (madonnaInfo ? [`🚌 ${madonnaInfo}`] : ['🚌 マドンナスタジアム｜本日の運行終了']);
 
-    if(rail.textContent!==railText) rail.textContent=railText;
-    if(bus.textContent!==busText) bus.textContent=busText;
+    const items=[...cityItems,...busItems];
+    const cls='hero-alert top-live-alert active fast-scroll';
+    const html=tickerHtml(items);
 
-    const cityLive=!!ichitsuboTakeover(now);
-    const busLive=!!madonnaTakeover(now);
-    const railCard=$('global-live-rail');
-    const busCard=$('global-live-bus');
-    if(railCard) railCard.classList.toggle('is-live',cityLive);
-    if(busCard) busCard.classList.toggle('is-live',busLive);
+    if(el.dataset.alertClass===cls && el.dataset.alertHtml===html) return;
+    el.className=cls;
+    el.innerHTML=html;
+    el.dataset.alertClass=cls;
+    el.dataset.alertHtml=html;
   }
 
   function railReachText(r) {
