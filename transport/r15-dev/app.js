@@ -2489,6 +2489,22 @@
   window.addEventListener('resize', scale);
   window.addEventListener('resize', ()=>activateOverflowScroll(document));
   scale();
+
+  // FreeWiFi/company-PC controller: keep page and departure/arrival timing in lockstep.
+  window.MATSUYAMA_TRANSPORT_UI = {
+    setMode(index, durationMs) {
+      ['rail','air','bus','port'].forEach(rememberScroll);
+      state.modeIndex = Number(index) % 2;
+      const duration = Number(durationMs) > 0 ? Number(durationMs) : MODE_SWITCH_MS;
+      nextModeSwitchAt = Date.now() + duration;
+      renderAll();
+      updateModeCountdown();
+    },
+    getMode() {
+      return state.modeIndex % 2;
+    }
+  };
+
   // FINAL polling: fast approach 15s / disaster 10s / slower service status 60s.
   Promise.all([loadApproach(),loadSlowLive(),loadDisasterLive()]).then(()=>renderAll());
   setInterval(()=>{loadApproach().then(()=>{cachedNotes.rail=railTickerItems(japanNow());cachedNotes.bus=busTickerItems(japanNow());updateNotes();});},15000);
@@ -2499,5 +2515,13 @@
   setInterval(checkDeployment,DEPLOY_CHECK_MS);
   updateModeCountdown();
   setInterval(()=>{const now=japanNow();$('date-label').textContent=now.date;$('clock-label').innerHTML=`${now.time}<span>:${now.sec}</span>`;renderDisaster(now);renderTopLiveAlert(now);cachedNotes.rail=railTickerItems(now);cachedNotes.air=airportAccessTickerItems(now);cachedNotes.bus=busTickerItems(now);updateNotes();updateModeCountdown();},1000);
-  setInterval(()=>{['rail','air','bus','port'].forEach(rememberScroll);state.modeIndex=(state.modeIndex+1)%2;nextModeSwitchAt=Date.now()+MODE_SWITCH_MS;renderAll();updateModeCountdown();},MODE_SWITCH_MS);
+  if (!FREEWIFI_TV) {
+    setInterval(()=>{
+      ['rail','air','bus','port'].forEach(rememberScroll);
+      state.modeIndex=(state.modeIndex+1)%2;
+      nextModeSwitchAt=Date.now()+MODE_SWITCH_MS;
+      renderAll();
+      updateModeCountdown();
+    },MODE_SWITCH_MS);
+  }
 })();
