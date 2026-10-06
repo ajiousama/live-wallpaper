@@ -2172,7 +2172,6 @@
       '.cell.main.air-place',
       '.service-wrap .name',
       '.service-wrap .code',
-      '.operator-wrap span:not(.bus-mini-logo)',
       '.bus-destination-line',
       '.bus-via-line',
       '.bus-place-scroll',
@@ -2194,6 +2193,7 @@
       if (el.classList.contains('port-route') && el.querySelector('.port-dest-wrap')) return;
       if (el.classList.contains('air-status') && el.querySelector('.overflow-scroll')) return;
       if (el.classList.contains('no-auto-scroll')) return;
+      if (el.closest('.bus-mini-logo')) return;
 
       const wrap=document.createElement('span');
       wrap.className='overflow-scroll auto-overflow';
