@@ -1369,6 +1369,27 @@
       : [];
     freights.forEach(x=>push({...x,kind:'freight'},'freight'));
 
+    const terminals=Array.isArray(approachLive.ichitsubo?.matsuyamaTerminatingArrivals)
+      ? approachLive.ichitsubo.matsuyamaTerminatingArrivals
+      : [];
+    terminals.forEach(x=>{
+      const position=cleanStation(x?.position||'');
+      if(!position || String(x?.side||'')!==side) return;
+      const key=`${String(x?.trainNum||'')}|${position}|${side}`;
+      if(seen.has(key)) return;
+      seen.add(key);
+
+      const info=railLiveTrainLabel(x);
+      const badge=info.kind==='limited'
+        ? railTickerServiceHtml('limited',info.service)
+        : railTickerServiceHtml('local');
+      const origin=cleanStation(x?.origin||'');
+      const delay=Number(x?.delayMinutes)||0;
+      const originText=origin?`｜${origin}発`:'';
+      const delayText=delay>0?`｜${delay}分遅れ`:'';
+      out.push(`<span class="rail-position-live">📍 現在位置 ${position}｜${badge} 松山止まり${originText}${delayText}</span>`);
+    });
+
     return out;
   }
 
@@ -1700,7 +1721,9 @@
       const arrival=padTime(x.arrival||'');
       let diff=arrival?toMinutes(arrival)-now.minutes:NaN;
       if(Number.isFinite(diff) && diff < -720) diff += 1440;
-      return {...x,arrival,diff};
+      const position=cleanStation(x.position||'');
+      const delay=Number(x.delayMinutes)||0;
+      return {...x,arrival,diff,position,delay};
     }).filter(x=>x.arrival && x.side===side && Number.isFinite(x.diff) && x.diff>=-1 && x.diff<=180);
   }
 
@@ -1710,6 +1733,8 @@
     const info=railLiveTrainLabel(x);
     const serviceBadge=railServiceBadgeHtml(info.kind,info.kind==='limited'?info.service:'');
     const details=['この列車は松山止まりです'];
+    if(x.position) details.push(`📍現在位置 ${x.position}`);
+    if(x.delay>0) details.push(`${x.delay}分遅れ`);
     const turnback=railTurnbackLabel(x.turnback,now);
     if(turnback) details.push(turnback);
     row.innerHTML=`
