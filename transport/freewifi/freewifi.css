@@ -1362,3 +1362,59 @@ html.company-pc body.freewifi-tv.air-board-page #air-rows .scheduled-time{
 html.company-pc body.freewifi-tv.air-board-page #air-rows .air-guidance{
   font-size:17px!important;
 }
+
+
+/* AIR preview R63 — delayed/changed times always remain visible */
+body.freewifi-tv.air-board-page #air-rows .air-time-changed{
+  height:100%!important;
+  display:grid!important;
+  grid-template-rows:16px 1fr!important;
+  align-content:center!important;
+  align-items:center!important;
+  gap:0!important;
+}
+body.freewifi-tv.air-board-page #air-rows .scheduled-time-row{
+  display:flex!important;
+  align-items:center!important;
+  gap:3px!important;
+  height:16px!important;
+  line-height:16px!important;
+  white-space:nowrap!important;
+}
+body.freewifi-tv.air-board-page #air-rows .scheduled-label{
+  color:#8ea7b3!important;
+  font-size:10px!important;
+  font-weight:900!important;
+}
+body.freewifi-tv.air-board-page #air-rows .air-time-changed .scheduled-time{
+  color:#c8d5db!important;
+  font-size:13px!important;
+  font-weight:900!important;
+}
+body.freewifi-tv.air-board-page #air-rows .air-time-changed .air-time-arrow{
+  color:#ff9a18!important;
+  font-size:12px!important;
+  line-height:1!important;
+}
+body.freewifi-tv.air-board-page #air-rows .air-time-changed .live-time.changed{
+  display:block!important;
+  color:#ffe84a!important;
+  font-size:27px!important;
+  font-weight:1000!important;
+  line-height:27px!important;
+  white-space:nowrap!important;
+}
+html.company-pc body.freewifi-tv.air-board-page #air-rows .air-time-changed .live-time.changed{
+  font-size:29px!important;
+  line-height:29px!important;
+}
+
+/* JAL optical sizing — same box, larger crane/wordmark balance vs ANA */
+body.freewifi-tv.air-board-page #air-rows .air-mini-logo-jal img{
+  transform:scale(1.16)!important;
+  transform-origin:center!important;
+  padding:0!important;
+}
+html.company-pc body.freewifi-tv.air-board-page #air-rows .air-mini-logo-jal img{
+  transform:scale(1.18)!important;
+}
