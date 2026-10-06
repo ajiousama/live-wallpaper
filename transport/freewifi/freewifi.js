@@ -1,23 +1,25 @@
 (() => {
-  // Eight independent 10-second screens.
-  // No nested mode timer: each logical screen explicitly selects its own mode.
+  // Eight transport screens + one gamble screen.
+  // Transport pages are 10 seconds. Gamble gets 20 seconds so its own dashboard
+  // has enough time to be useful without changing the gamble app's internal rotation.
   const pages = [
-    {id:'panel-rail', mode:0, label:'01 / 08　JR 松山駅　宇和島方面'},
-    {id:'panel-rail', mode:1, label:'02 / 08　JR 松山駅　今治方面'},
-    {id:'panel-air',  mode:0, label:'03 / 08　松山空港　出発'},
-    {id:'panel-air',  mode:1, label:'04 / 08　松山空港　到着'},
-    {id:'panel-bus',  mode:0, label:'05 / 08　高速・中距離バス　出発'},
-    {id:'panel-bus',  mode:1, label:'06 / 08　高速・中距離バス　到着'},
-    {id:'panel-port', mode:0, label:'07 / 08　フェリー　出航'},
-    {id:'panel-port', mode:1, label:'08 / 08　フェリー　到着'}
+    {id:'panel-rail', mode:0, duration:10000, label:'01 / 09　JR 松山駅　宇和島方面'},
+    {id:'panel-rail', mode:1, duration:10000, label:'02 / 09　JR 松山駅　今治方面'},
+    {id:'panel-air',  mode:0, duration:10000, label:'03 / 09　松山空港　出発'},
+    {id:'panel-air',  mode:1, duration:10000, label:'04 / 09　松山空港　到着'},
+    {id:'panel-bus',  mode:0, duration:10000, label:'05 / 09　高速・中距離バス　出発'},
+    {id:'panel-bus',  mode:1, duration:10000, label:'06 / 09　高速・中距離バス　到着'},
+    {id:'panel-port', mode:0, duration:10000, label:'07 / 09　フェリー　出航'},
+    {id:'panel-port', mode:1, duration:10000, label:'08 / 09　フェリー　到着'},
+    {id:'gamble-screen', gamble:true, duration:20000, label:'09 / 09　ギャンブル'}
   ];
 
-  const PANEL_IDS = ['panel-rail','panel-air','panel-bus','panel-port'];
-  const PAGE_MS = 10000;
+  const TRANSPORT_IDS = ['panel-rail','panel-air','panel-bus','panel-port'];
+  const gambleScreen = document.getElementById('gamble-screen');
   const status = document.getElementById('freewifi-page-status');
 
   let pageIndex = 0;
-  let nextPageAt = Date.now() + PAGE_MS;
+  let nextPageAt = Date.now() + pages[0].duration;
   let pageTimer = null;
 
   function ui(){
@@ -28,17 +30,24 @@
     pageIndex = (index + pages.length) % pages.length;
     const page = pages[pageIndex];
 
-    PANEL_IDS.forEach(id=>{
+    TRANSPORT_IDS.forEach(id=>{
       const el = document.getElementById(id);
-      if(el) el.classList.toggle('freewifi-active', id === page.id);
+      if(el) el.classList.toggle('freewifi-active', !page.gamble && id === page.id);
     });
 
-    const controller = ui();
-    if(controller && typeof controller.setMode === 'function'){
-      controller.setMode(page.mode, PAGE_MS);
+    if(gambleScreen){
+      gambleScreen.hidden = !page.gamble;
+      gambleScreen.classList.toggle('freewifi-active', !!page.gamble);
     }
 
-    nextPageAt = Date.now() + PAGE_MS;
+    if(!page.gamble){
+      const controller = ui();
+      if(controller && typeof controller.setMode === 'function'){
+        controller.setMode(page.mode, page.duration);
+      }
+    }
+
+    nextPageAt = Date.now() + page.duration;
     updatePageCountdown();
     scheduleNextPage();
   }
@@ -53,8 +62,9 @@
 
   function updatePageCountdown(){
     if(!status) return;
+    const page = pages[pageIndex];
     const left = Math.max(0, Math.ceil((nextPageAt - Date.now()) / 1000));
-    status.textContent = `${pages[pageIndex].label}　｜　次画面まで ${left}秒`;
+    status.textContent = `${page.label}　｜　次画面まで ${left}秒`;
   }
 
   showPage(0);
