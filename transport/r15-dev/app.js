@@ -1369,27 +1369,6 @@
       : [];
     freights.forEach(x=>push({...x,kind:'freight'},'freight'));
 
-    const terminals=Array.isArray(approachLive.ichitsubo?.matsuyamaTerminatingArrivals)
-      ? approachLive.ichitsubo.matsuyamaTerminatingArrivals
-      : [];
-    terminals.forEach(x=>{
-      const position=cleanStation(x?.position||'');
-      if(!position || String(x?.side||'')!==side) return;
-      const key=`${String(x?.trainNum||'')}|${position}|${side}`;
-      if(seen.has(key)) return;
-      seen.add(key);
-
-      const info=railLiveTrainLabel(x);
-      const badge=info.kind==='limited'
-        ? railTickerServiceHtml('limited',info.service)
-        : railTickerServiceHtml('local');
-      const origin=cleanStation(x?.origin||'');
-      const delay=Number(x?.delayMinutes)||0;
-      const originText=origin?`｜${origin}発`:'';
-      const delayText=delay>0?`｜${delay}分遅れ`:'';
-      out.push(`<span class="rail-position-live">📍 現在位置 ${position}｜${badge} 松山止まり${originText}${delayText}</span>`);
-    });
-
     return out;
   }
 
