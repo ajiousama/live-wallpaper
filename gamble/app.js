@@ -1,5 +1,5 @@
-const DATA_URL="./data.json";
-const JRA_URL="../jra/data.json";
+const DATA_URL="https://raw.githubusercontent.com/ajiousama/live-wallpaper/main/gamble/data.json";
+const JRA_URL="https://raw.githubusercontent.com/ajiousama/live-wallpaper/main/jra/data.json";
 const PHASES=["モーニング","デイ","ナイター","ミッドナイト"];
 const PAYOUT_TYPES=["単勝","複勝","枠連","馬連","馬単","ワイド","3連複","3連単"];
 const BOAT_PAYOUT_TYPES=["3連単","3連複","2連単","2連複","拡連複","単勝","複勝"];
@@ -684,5 +684,5 @@ function tick(){
   }
 }
 setInterval(tick,1000);tick();
-load();setInterval(load,30000);
+load();setInterval(load,10000);
 requestAnimationFrame(syncScrollPosition);
