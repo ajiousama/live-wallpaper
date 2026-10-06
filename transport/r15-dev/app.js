@@ -3,7 +3,7 @@
   const $ = (id) => document.getElementById(id);
   const FREEWIFI_TV = document.body.classList.contains('freewifi-tv');
   const CURRENT_BUILD = document.documentElement.dataset.build || '';
-  const DEPLOY_CHECK_MS = 60000;
+  const DEPLOY_CHECK_MS = document.documentElement.classList.contains('company-pc') ? 10000 : 60000;
 
   async function checkDeployment() {
     try {
@@ -14,6 +14,10 @@
       if (next && CURRENT_BUILD && CURRENT_BUILD !== '__BUILD_ID__' && next !== CURRENT_BUILD) {
         const u = new URL(location.href);
         u.searchParams.set('v', next);
+        if(document.documentElement.classList.contains('company-pc')){
+          u.searchParams.set('pc','1');
+          u.searchParams.set('_reload',String(Date.now()));
+        }
         location.replace(u.toString());
       }
     } catch(e) {}
