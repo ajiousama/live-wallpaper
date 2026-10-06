@@ -403,8 +403,36 @@ function buildPages(){
       });
     }
 
-    // それ以外。デイの通常ボートが7場以上ある日は3x3で最大9場を1ページに集約。
+    // それ以外。
     let rest=phaseAll.filter(x=>!premiumKeirin.includes(x)&&!premiumBoat.includes(x));
+
+    // 会社PCは時間帯ごとに競輪 / 地方競馬を完全分離。
+    // 例: モーニング・競輪 → モーニング・地方競馬 → デイ・競輪...
+    if(COMPANY_MODE){
+      const companyGroups=[
+        {kind:"keirin",label:"競輪"},
+        {kind:"local",label:"地方競馬"}
+      ];
+      for(const group of companyGroups){
+        const items=rest.filter(x=>x.kind===group.kind);
+        for(let i=0;i<items.length;i+=6){
+          const chunk=items.slice(i,i+6);
+          pages.push({
+            key:"phase:"+phase+":"+group.kind+":"+Math.floor(i/6),
+            type:"phase",
+            phase,
+            sportKind:group.kind,
+            sportLabel:group.label,
+            page:Math.floor(i/6)+1,
+            total:Math.ceil(items.length/6),
+            items:chunk
+          });
+        }
+      }
+      continue;
+    }
+
+    // Free WiFi側は従来どおり。デイの通常ボートが7場以上なら3x3で集約。
     if(phase==="デイ"){
       const dayBoats=rest.filter(x=>x.kind==="boat");
       if(dayBoats.length>=7){
@@ -425,7 +453,7 @@ function buildPages(){
       }
     }
 
-    // 残りは競輪→ボート→地方競馬の順で最大6場。
+    // Free WiFi側の残りは競輪→ボート→地方競馬の順で最大6場。
     for(let i=0;i<rest.length;i+=6){
       const chunk=rest.slice(i,i+6);
       pages.push({
