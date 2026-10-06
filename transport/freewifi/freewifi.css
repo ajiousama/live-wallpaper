@@ -1022,3 +1022,119 @@ html.company-pc body.freewifi-tv .panel-port .ferry-logo-pair .ferry-mini-logo{
   padding:0 4px!important;
   font-size:10px!important;
 }
+
+
+/* v58: Company PC readability pass — enlarge the information, not the frame */
+html.company-pc body.freewifi-tv .freewifi-page-status{
+  font-size:16px!important;
+  font-weight:900!important;
+}
+html.company-pc body.freewifi-tv .date{font-size:17px!important}
+html.company-pc body.freewifi-tv .clock{font-size:56px!important}
+html.company-pc body.freewifi-tv .head-main h2{font-size:34px!important}
+html.company-pc body.freewifi-tv .head-main h2 small{font-size:13px!important}
+html.company-pc body.freewifi-tv .mode-badge{
+  font-size:16px!important;
+  font-weight:1000!important;
+}
+html.company-pc body.freewifi-tv .table-head{
+  font-size:14px!important;
+  font-weight:1000!important;
+}
+html.company-pc body.freewifi-tv .cell{font-size:18px!important}
+html.company-pc body.freewifi-tv .cell.time{font-size:23px!important}
+html.company-pc body.freewifi-tv .cell.main{font-size:23px!important}
+html.company-pc body.freewifi-tv .cell.sub{font-size:16px!important}
+html.company-pc body.freewifi-tv .service-wrap .name{font-size:20px!important}
+html.company-pc body.freewifi-tv .service-wrap .code{font-size:14px!important}
+html.company-pc body.freewifi-tv .note{font-size:16px!important}
+
+/* JR */
+html.company-pc body.freewifi-tv #rail-rows .rail-primary .cell.time{font-size:22px!important}
+html.company-pc body.freewifi-tv #rail-rows .rail-primary .cell.main{font-size:22px!important}
+html.company-pc body.freewifi-tv #rail-rows .rail-detail{font-size:12.5px!important}
+html.company-pc body.freewifi-tv .rail-kind-badge{
+  height:24px!important;
+  min-width:50px!important;
+  font-size:13px!important;
+}
+html.company-pc body.freewifi-tv .rail-name-badge{
+  height:24px!important;
+  min-width:76px!important;
+  max-width:160px!important;
+  font-size:12.5px!important;
+}
+
+/* BUS */
+html.company-pc body.freewifi-tv .panel-bus.dep-mode .bus-time-stack .primary-time,
+html.company-pc body.freewifi-tv .panel-bus.arrival-columns .bus-arrival-time{
+  font-size:20px!important;
+}
+html.company-pc body.freewifi-tv .panel-bus.dep-mode .bus-dest-main,
+html.company-pc body.freewifi-tv .panel-bus.dep-mode .bus-dest-main .dest-line,
+html.company-pc body.freewifi-tv .panel-bus .bus-destination-line,
+html.company-pc body.freewifi-tv .panel-bus.arrival-columns .arrival-place,
+html.company-pc body.freewifi-tv .panel-bus.arrival-columns .arrival-terminal{
+  font-size:19px!important;
+  font-weight:1000!important;
+}
+html.company-pc body.freewifi-tv .panel-bus .bus-via-line,
+html.company-pc body.freewifi-tv .panel-bus .bus-ehime-route,
+html.company-pc body.freewifi-tv .panel-bus.dep-mode .bus-terminal-time,
+html.company-pc body.freewifi-tv .panel-bus.arrival-columns .arrival-departure-time,
+html.company-pc body.freewifi-tv .panel-bus.arrival-columns .arrival-continuation{
+  font-size:13px!important;
+}
+html.company-pc body.freewifi-tv .bus-stop-badge{
+  height:25px!important;
+  min-width:66px!important;
+  max-width:145px!important;
+  padding:0 9px!important;
+  font-size:13px!important;
+}
+
+/* FERRY */
+html.company-pc body.freewifi-tv .panel-port .port-time-stack .primary-time{
+  font-size:20px!important;
+}
+html.company-pc body.freewifi-tv .panel-port .port-dest-main,
+html.company-pc body.freewifi-tv .panel-port .port-route{
+  font-size:18px!important;
+  font-weight:1000!important;
+}
+html.company-pc body.freewifi-tv .panel-port .port-via-line{
+  font-size:12.5px!important;
+}
+html.company-pc body.freewifi-tv .panel-port .port-time-stack .port-arrival-line{
+  font-size:11.5px!important;
+}
+html.company-pc body.freewifi-tv .panel-port .freewifi-port-group-head{
+  font-size:13px!important;
+  font-weight:1000!important;
+}
+html.company-pc body.freewifi-tv .panel-port .service-wrap .name{
+  font-size:14px!important;
+}
+html.company-pc body.freewifi-tv .panel-port .service-wrap .code{
+  font-size:11.5px!important;
+}
+
+/* AIR */
+html.company-pc body.freewifi-tv.air-board-page .air-sign-main{font-size:40px!important}
+html.company-pc body.freewifi-tv.air-board-page .air-sign-en{font-size:22px!important}
+html.company-pc body.freewifi-tv.air-board-page .air-sign-airport{font-size:18px!important}
+html.company-pc body.freewifi-tv.air-board-page #air-rows .air-place{font-size:21px!important}
+html.company-pc body.freewifi-tv.air-board-page #air-rows .air-board-time{font-size:20px!important}
+html.company-pc body.freewifi-tv.air-board-page #air-rows .air-flight-no{font-size:18px!important}
+html.company-pc body.freewifi-tv.air-board-page #air-rows .air-guidance{font-size:17px!important}
+html.company-pc body.freewifi-tv.air-board-page #air-rows .air-service-brand .air-mini-logo{
+  min-width:76px!important;
+  width:76px!important;
+  height:29px!important;
+  flex-basis:76px!important;
+}
+html.company-pc body.freewifi-tv.air-board-page #air-rows .air-service-brand.codeshare-brand .air-mini-logo{
+  min-width:70px!important;
+  width:70px!important;
+  flex-basis:70px!important;
+}
