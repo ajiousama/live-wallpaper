@@ -1447,9 +1447,7 @@ body.freewifi-tv .web-page-switcher button:hover{
 body.freewifi-tv .web-page-switcher button:active{
   transform:translateY(1px);
 }
-html.company-pc body.freewifi-tv .web-page-switcher{
-  display:none!important;
-}
+/* Web browser view, including ?pc=1, keeps the manual switcher visible. */
 
 
 /* Airport bottom information bar: disruption + outbound airport buses */
