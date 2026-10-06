@@ -2369,7 +2369,7 @@
         row.innerHTML = `
           <div class="cell main port-route">${arrivalRoute}</div>
           <div class="cell service">${service}</div>
-          <div class="cell time">${r.time}頃予定</div>`;
+          <div class="cell time port-arrival-time">${r.time}頃予定</div>`;
       }
       return row;
     };
