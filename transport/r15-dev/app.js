@@ -1328,7 +1328,52 @@
     return out;
   }
 
+  function railKnownPositionTickerItems(now) {
+    const generatedAt=Date.parse(String(approachLive.generatedAtJst||''));
+    if(!approachLive.ok || (Number.isFinite(generatedAt) && Date.now()-generatedAt>45000)) return [];
+
+    const side=currentRailDir();
+    const seen=new Set();
+    const out=[];
+    const push=(x, kindOverride='')=>{
+      const position=cleanStation(x?.position||'');
+      if(!position) return;
+      const dir=ichitsuboDirection(x);
+      if(dir!==side) return;
+
+      const key=`${String(x?.trainNum||'')}|${position}|${dir}`;
+      if(seen.has(key)) return;
+      seen.add(key);
+
+      const kind=kindOverride||String(x?.kind||'');
+      const badge=railApproachBadgeHtml({...x,kind});
+      const dest=cleanStation(x?.destination||'');
+      const delay=Number(x?.delayMinutes)||0;
+      const delayText=delay>0?`｜${delay}分遅れ`:'';
+      const destText=dest?`｜${dest}行`:'';
+      out.push(`<span class="rail-position-live">📍 現在位置 ${position}｜${badge}${destText}${delayText}</span>`);
+    };
+
+    const approaching=Array.isArray(approachLive.ichitsubo?.approaching)
+      ? approachLive.ichitsubo.approaching
+      : [];
+    approaching.forEach(x=>push(x));
+
+    const deadheads=Array.isArray(approachLive.ichitsubo?.matsuyamaDeadheads)
+      ? approachLive.ichitsubo.matsuyamaDeadheads
+      : [];
+    deadheads.forEach(x=>push({...x,kind:'deadhead'},'deadhead'));
+
+    const freights=Array.isArray(approachLive.ichitsubo?.matsuyamaFreights)
+      ? approachLive.ichitsubo.matsuyamaFreights
+      : [];
+    freights.forEach(x=>push({...x,kind:'freight'},'freight'));
+
+    return out;
+  }
+
   function railTickerItems(now) {
+    const positions=railKnownPositionTickerItems(now);
     const specials=railSpecialFinalTickerItems(now);
     const takeover=ichitsuboTakeover(now); if(takeover) return [...takeover.items,...specials];
     const north=auxUpcoming('ichitsubo','north',now,1)[0]||null;
@@ -1348,7 +1393,7 @@
       const pos=freight.position?`｜現在位置 ${freight.position}`:'';
       items.push(`JR松山駅｜${railTickerServiceHtml('freight')} ${freight.passTime} 通過予定｜${route}${pos}`);
     }
-    return [...items,...specials];
+    return [...positions,...items,...specials];
   }
 
 
