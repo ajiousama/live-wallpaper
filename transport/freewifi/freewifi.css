@@ -388,7 +388,7 @@ body.freewifi-tv .panel-port .ferry-mini-logo{
    Only compact the contents inside the one-page FreeWiFi layout. */
 html.company-pc body.freewifi-tv #wall{
   width:1180px!important;
-  height:650px!important;
+  height:790px!important;
   padding:12px 16px 12px!important;
 }
 
@@ -405,22 +405,22 @@ html.company-pc body.freewifi-tv .freewifi-page-status{font-size:12px!important}
 html.company-pc body.freewifi-tv .date{font-size:13px!important}
 html.company-pc body.freewifi-tv .clock{font-size:44px!important}
 
-html.company-pc body.freewifi-tv .grid{height:544px!important}
+html.company-pc body.freewifi-tv .grid{height:680px!important}
 html.company-pc body.freewifi-tv .panel{
   grid-template-rows:44px 26px 1fr 32px!important;
 }
 html.company-pc body.freewifi-tv .panel-head{padding:0 12px!important}
 html.company-pc body.freewifi-tv .panel-no{font-size:8px!important}
-html.company-pc body.freewifi-tv .head-main h2{font-size:23px!important}
-html.company-pc body.freewifi-tv .head-main h2 small{font-size:9px!important}
+html.company-pc body.freewifi-tv .head-main h2{font-size:27px!important}
+html.company-pc body.freewifi-tv .head-main h2 small{font-size:10px!important}
 html.company-pc body.freewifi-tv .mode-badge{
   min-width:86px!important;
   max-width:220px!important;
   padding:5px 9px!important;
-  font-size:11px!important;
+  font-size:12px!important;
 }
 html.company-pc body.freewifi-tv .table-head{
-  font-size:10px!important;
+  font-size:11px!important;
   padding:0 10px!important;
   column-gap:8px!important;
 }
@@ -429,24 +429,24 @@ html.company-pc body.freewifi-tv .rows{
   padding:6px 8px 4px!important;
 }
 html.company-pc body.freewifi-tv .row{
-  min-height:40px!important;
-  flex:0 0 40px!important;
+  min-height:48px!important;
+  flex:0 0 48px!important;
   padding:0 10px!important;
   column-gap:8px!important;
 }
 html.company-pc body.freewifi-tv .row.placeholder{
-  min-height:40px!important;
-  flex:0 0 40px!important;
+  min-height:48px!important;
+  flex:0 0 48px!important;
 }
-html.company-pc body.freewifi-tv .cell{font-size:13px!important}
-html.company-pc body.freewifi-tv .cell.time{font-size:16px!important}
-html.company-pc body.freewifi-tv .cell.main{font-size:16px!important}
-html.company-pc body.freewifi-tv .cell.sub{font-size:12px!important}
-html.company-pc body.freewifi-tv .service-wrap .name{font-size:15px!important}
-html.company-pc body.freewifi-tv .service-wrap .code{font-size:11px!important}
+html.company-pc body.freewifi-tv .cell{font-size:15px!important}
+html.company-pc body.freewifi-tv .cell.time{font-size:18px!important}
+html.company-pc body.freewifi-tv .cell.main{font-size:18px!important}
+html.company-pc body.freewifi-tv .cell.sub{font-size:13px!important}
+html.company-pc body.freewifi-tv .service-wrap .name{font-size:17px!important}
+html.company-pc body.freewifi-tv .service-wrap .code{font-size:12px!important}
 html.company-pc body.freewifi-tv .note{
   padding:0 12px!important;
-  font-size:12px!important;
+  font-size:13px!important;
 }
 
 /* JR */
@@ -458,8 +458,8 @@ html.company-pc body.freewifi-tv #rail-rows{
   padding:6px 8px 4px!important;
 }
 html.company-pc body.freewifi-tv #rail-rows .rail-row{
-  min-height:40px!important;
-  flex:0 0 40px!important;
+  min-height:48px!important;
+  flex:0 0 48px!important;
 }
 html.company-pc body.freewifi-tv #rail-rows .rail-primary{
   height:25px!important;
@@ -468,17 +468,17 @@ html.company-pc body.freewifi-tv #rail-rows .rail-primary{
   column-gap:8px!important;
 }
 html.company-pc body.freewifi-tv #rail-rows .rail-detail{
-  height:14px!important;
-  font-size:9px!important;
+  height:17px!important;
+  font-size:10px!important;
   padding:0 9px!important;
 }
-html.company-pc body.freewifi-tv #rail-rows .rail-primary .cell.time{font-size:15px!important}
-html.company-pc body.freewifi-tv #rail-rows .rail-primary .cell.main{font-size:15px!important}
+html.company-pc body.freewifi-tv #rail-rows .rail-primary .cell.time{font-size:17px!important}
+html.company-pc body.freewifi-tv #rail-rows .rail-primary .cell.main{font-size:17px!important}
 html.company-pc body.freewifi-tv .rail-kind-badge{
-  height:20px!important;min-width:44px!important;font-size:10px!important
+  height:22px!important;min-width:46px!important;font-size:11px!important
 }
 html.company-pc body.freewifi-tv .rail-name-badge{
-  height:20px!important;min-width:64px!important;max-width:135px!important;font-size:9.5px!important
+  height:22px!important;min-width:68px!important;max-width:145px!important;font-size:10.5px!important
 }
 
 /* AIR / BUS */
