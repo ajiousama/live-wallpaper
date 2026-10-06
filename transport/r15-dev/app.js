@@ -716,21 +716,21 @@
 
   function ferryMiniLogo(name) {
     const n=String(name||'').trim();
-    if(n==='四国開発フェリー') return '<span class="ferry-mini-logo ferry-logo-orange"><span class="ferry-brand-main">オレンジフェリー</span></span>';
-    if(n==='中島汽船') return '<span class="ferry-mini-logo ferry-logo-nakajima">中島汽船</span>';
-    if(n==='防予フェリー') return '<span class="ferry-mini-logo ferry-logo-boyo">防予フェリー</span>';
-    if(n==='国道九四フェリー') return '<span class="ferry-mini-logo ferry-logo-94">国道九四フェリー</span>';
-    if(n==='宇和島運輸') return '<span class="ferry-mini-logo ferry-logo-uwajima"><span class="ferry-brand-main">宇和島運輸</span></span>';
-    if(n==='ジャンボフェリー') return '<span class="ferry-mini-logo ferry-logo-jumbo"><span class="ferry-brand-main">ジャンボフェリー</span></span>';
-    if(n==='今治市営') return '<span class="ferry-mini-logo ferry-logo-imabari">今治市営</span>';
-    if(n==='大三島ブルーライン') return '<span class="ferry-mini-logo ferry-logo-blue"><span class="ferry-brand-main">大三島ブルーライン</span></span>';
-    if(n==='芸予汽船') return '<span class="ferry-mini-logo ferry-logo-geiyo">芸予汽船</span>';
-    if(n==='瀬戸内海汽船・石崎汽船') return '<span class="ferry-mini-logo ferry-logo-setouchi">瀬戸内海汽船・石崎汽船</span>';
-    if(n==='青島海運') return '<span class="ferry-mini-logo ferry-logo-aoshima">青島海運</span>';
-    if(n==='新居浜市営') return '<span class="ferry-mini-logo ferry-logo-niihama">新居浜市営</span>';
+
+    if(n==='四国開発フェリー') return '<span class="ferry-mini-logo ferry-logo-orange brand-logo-custom"><span class="ferry-orange-mark">ORANGE</span><span class="brand-sub">FERRY</span></span>';
+    if(n==='中島汽船') return '<span class="ferry-mini-logo ferry-logo-nakajima brand-logo-custom"><span class="brand-wave-mark">≈</span><span class="brand-word">中島汽船</span></span>';
+    if(n==='防予フェリー') return '<span class="ferry-mini-logo ferry-logo-boyo brand-logo-custom"><span class="brand-word">防予</span><span class="brand-sub">FERRY</span></span>';
+    if(n==='国道九四フェリー') return '<span class="ferry-mini-logo ferry-logo-94 brand-logo-custom"><span class="brand-route94">94</span><span class="brand-sub">FERRY</span></span>';
+    if(n==='宇和島運輸') return '<span class="ferry-mini-logo ferry-logo-uwajima brand-logo-custom"><span class="brand-word">宇和島運輸</span></span>';
+    if(n==='ジャンボフェリー') return '<span class="ferry-mini-logo ferry-logo-jumbo brand-logo-custom"><span class="brand-word jumbo-word">JUMBO</span><span class="brand-sub">FERRY</span></span>';
+    if(n==='今治市営') return '<span class="ferry-mini-logo ferry-logo-imabari brand-logo-custom"><span class="municipal-mark">今治市</span><span class="brand-sub">市営船</span></span>';
+    if(n==='大三島ブルーライン') return '<span class="ferry-mini-logo ferry-logo-blue brand-logo-custom"><span class="brand-wave-mark">〜</span><span class="brand-word">BLUE LINE</span></span>';
+    if(n==='芸予汽船') return '<span class="ferry-mini-logo ferry-logo-geiyo brand-logo-custom"><span class="brand-word">芸予汽船</span></span>';
+    if(n==='瀬戸内海汽船・石崎汽船') return '<span class="ferry-logo-pair"><span class="ferry-mini-logo ferry-logo-setouchi brand-logo-custom">瀬戸内海汽船</span><span class="ferry-mini-logo ferry-logo-ishizaki brand-logo-custom">ISHIZAKI</span></span>';
+    if(n==='青島海運') return '<span class="ferry-mini-logo ferry-logo-aoshima brand-logo-custom"><span class="brand-word">青島海運</span></span>';
+    if(n==='新居浜市営') return '<span class="ferry-mini-logo ferry-logo-niihama brand-logo-custom"><span class="municipal-mark">新居浜市</span><span class="brand-sub">渡海船</span></span>';
     return '';
   }
-
 
   const PORT_WARNING = '⚠ 乗り場注意：松山観光港・三津浜港・高浜港・今治港・東予港・新居浜東港・高松東港・八幡浜港・三崎港は、それぞれ乗り場が違います';
   const EHIME_PORTS = new Set(['松山観光港','三津浜港','高浜港','今治港','東予港','新居浜東港','八幡浜港','三崎港']);
@@ -1825,34 +1825,55 @@
     const parts=raw.split(/\s*\/\s*/).filter(Boolean).map(x=>BUS_OPERATOR_TOKEN[x]||x);
     return parts;
   }
+  function operatorLogoImage(kind, cls, label, src, fallback) {
+    return `<span class="${kind}-mini-logo ${cls} brand-logo-image no-auto-scroll" title="${label}">
+      <span class="brand-logo-fallback">${fallback}</span>
+      <img src="${src}" alt="${label}" loading="eager" referrerpolicy="no-referrer">
+    </span>`;
+  }
+
   function busMiniLogo(name) {
     const n=String(name||'').trim();
+
+    // Exact artwork confirmed from the operators' official websites.
+    if(n==='両備バス') return operatorLogoImage(
+      'bus','bus-logo-ryobi','両備バス',
+      'https://www.ryobi-holdings.jp/bus/master/wp-content/themes/ryobi-bus/images/logo.png',
+      '両備バス'
+    );
+    if(n==='中国バス') return operatorLogoImage(
+      'bus','bus-logo-chugoku bus-logo-official-dark','中国バス',
+      'https://www.chugokubus.jp/wp-content/themes/chugokubus/_assets/_mi/img/footerLogo.png',
+      '中国バス'
+    );
+
+    // Branded fallbacks for operators whose official web artwork cannot be safely
+    // hot-linked. These keep the real corporate colours/wordmark direction rather
+    // than falling back to plain text.
     const defs=[
-      [/^伊予鉄バス$/, '伊予鉄バス', 'iyo'],
-      [/^伊予鉄南予バス$/, '伊予鉄南予バス', 'nanyo'],
-      [/^JR四国バス$/, 'JR四国バス', 'jrshikoku'],
-      [/^西日本JRバス$/, '西日本JRバス', 'jrwest'],
-      [/^JR東海バス$/, 'JR東海バス', 'jrtokai'],
-      [/^四国高速バス$/, '四国高速バス', 'shikoku'],
-      [/^徳島バス$/, '徳島バス', 'tokushima'],
-      [/^両備バス$/, '両備バス', 'ryobi'],
-      [/^下電バス$/, '下電バス', 'shimoden'],
-      [/^とさでん交通$/, 'とさでんバス', 'tosaden'],
-      [/^阪急観光バス$/, '阪急観光バス', 'hankyu'],
-      [/^名鉄バス$/, '名鉄バス', 'meitetsu'],
-      [/^せとうちバス$/, 'せとうちバス', 'setouchi'],
-      [/^西東京バス$/, '西東京バス', 'nishitokyo'],
-      [/^WILLER EXPRESS$/, 'WILLERバス', 'willer'],
-      [/^宇和島自動車$/, '宇和島バス', 'uwajima'],
-      [/^中国バス$/, '中国バス', 'chugoku'],
-      [/^本四バス$/, '本四バス', 'honshi'],
-      [/^琴平バス$/, '琴平バス', 'kotobus'],
-      [/^神姫バス$/, '神姫バス', 'shinki'],
-      [/^しまなみバス$/, 'しまなみバス', 'shimanami']
+      [/^伊予鉄バス$/, '<span class="brand-word iyotetsu-word">IYOTETSU</span>', 'iyo'],
+      [/^伊予鉄南予バス$/, '<span class="brand-word iyotetsu-word">IYOTETSU</span><span class="brand-sub">南予</span>', 'nanyo'],
+      [/^JR四国バス$/, '<span class="brand-jr">JR</span><span class="brand-word">四国バス</span>', 'jrshikoku'],
+      [/^西日本JRバス$/, '<span class="brand-jr">JR</span><span class="brand-word">西日本</span>', 'jrwest'],
+      [/^JR東海バス$/, '<span class="brand-jr">JR</span><span class="brand-word">東海バス</span>', 'jrtokai'],
+      [/^四国高速バス$/, '<span class="brand-mark-circle"></span><span class="brand-word">四国高速</span>', 'shikoku'],
+      [/^徳島バス$/, '<span class="brand-word tokubus-word">TOKUBUS</span>', 'tokushima'],
+      [/^下電バス$/, '<span class="brand-word">SHIMODEN</span><span class="brand-sub">BUS</span>', 'shimoden'],
+      [/^とさでん交通$/, '<span class="brand-word">とさでん</span><span class="brand-sub">交通</span>', 'tosaden'],
+      [/^阪急観光バス$/, '<span class="brand-hankyu-mark">H</span><span class="brand-word">HANKYU</span>', 'hankyu'],
+      [/^名鉄バス$/, '<span class="brand-meitetsu-mark">M</span><span class="brand-word">名鉄バス</span>', 'meitetsu'],
+      [/^せとうちバス$/, '<span class="brand-word">せとうち</span><span class="brand-sub">BUS</span>', 'setouchi'],
+      [/^西東京バス$/, '<span class="brand-word">NISHITOKYO</span><span class="brand-sub">BUS</span>', 'nishitokyo'],
+      [/^WILLER EXPRESS$/, '<span class="brand-word willer-word">WILLER</span>', 'willer'],
+      [/^宇和島自動車$/, '<span class="brand-word">宇和島</span><span class="brand-sub">BUS</span>', 'uwajima'],
+      [/^本四バス$/, '<span class="brand-word">本四バス</span>', 'honshi'],
+      [/^琴平バス$/, '<span class="brand-word kotobus-word">KOTOBUS</span>', 'kotobus'],
+      [/^神姫バス$/, '<span class="brand-word shinki-word">SHINKI BUS</span>', 'shinki'],
+      [/^しまなみバス$/, '<span class="brand-word">しまなみ</span><span class="brand-sub">BUS</span>', 'shimanami']
     ];
     const hit=defs.find(([re])=>re.test(n));
     if(!hit) return `<span class="bus-mini-logo bus-logo-generic no-auto-scroll">${n||'—'}</span>`;
-    return `<span class="bus-mini-logo bus-logo-${hit[2]} no-auto-scroll" title="${n}">${hit[1]}</span>`;
+    return `<span class="bus-mini-logo bus-logo-${hit[2]} brand-logo-custom no-auto-scroll" title="${n}">${hit[1]}</span>`;
   }
   function busOperatorHtml(r) {
     const parts=busOperatorParts(r);
