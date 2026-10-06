@@ -1651,3 +1651,41 @@ body.freewifi-tv #top-live-alert{
 body.freewifi-tv.air-board-page #top-live-alert{
   display:block!important;
 }
+
+
+/* Airport vertical rebalance after restoring the shared top marquee.
+   Keep the two-line bottom ticker visible for the full 15-second page. */
+body.freewifi-tv.air-board-page #panel-air{
+  grid-template-rows:34px minmax(0,1fr) 80px!important;
+}
+body.freewifi-tv.air-board-page #air-note.air-bottom-info{
+  height:80px!important;
+  min-height:80px!important;
+  grid-template-rows:34px 44px!important;
+  row-gap:2px!important;
+  position:relative;
+  z-index:4;
+}
+body.freewifi-tv.air-board-page .air-bottom-scroll-alert,
+body.freewifi-tv.air-board-page .air-bottom-scroll-bus{
+  animation-name:airportBottomFullScroll!important;
+  animation-duration:7.35s!important;
+  animation-timing-function:linear!important;
+  animation-iteration-count:2!important;
+  animation-fill-mode:none!important;
+}
+html.company-pc body.freewifi-tv.air-board-page #panel-air{
+  grid-template-rows:34px minmax(0,1fr) 82px!important;
+}
+html.company-pc body.freewifi-tv.air-board-page #air-note.air-bottom-info{
+  height:82px!important;
+  min-height:82px!important;
+  grid-template-rows:35px 45px!important;
+  row-gap:2px!important;
+}
+html.company-pc body.freewifi-tv.air-board-page .air-bottom-scroll-alert,
+html.company-pc body.freewifi-tv.air-board-page .air-bottom-scroll-bus{
+  animation-duration:7.35s!important;
+  animation-iteration-count:2!important;
+  animation-fill-mode:none!important;
+}
