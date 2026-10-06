@@ -1689,3 +1689,57 @@ html.company-pc body.freewifi-tv.air-board-page .air-bottom-scroll-bus{
   animation-iteration-count:2!important;
   animation-fill-mode:none!important;
 }
+
+
+/* Shared top marquee: seamless loop + enough vertical room for JR/bus badges. */
+body.freewifi-tv #top-live-alert{
+  width:min(100%,620px)!important;
+  max-width:620px!important;
+  height:32px!important;
+  min-height:32px!important;
+  margin:1px 0 2px!important;
+  padding:0!important;
+  box-sizing:border-box!important;
+  overflow:hidden!important;
+  line-height:32px!important;
+  text-overflow:clip!important;
+}
+body.freewifi-tv #top-live-alert .marquee{
+  width:100%!important;
+  height:32px!important;
+  overflow:hidden!important;
+  white-space:nowrap!important;
+}
+body.freewifi-tv #top-live-alert .marquee-track{
+  height:32px!important;
+  min-height:32px!important;
+  display:flex!important;
+  align-items:center!important;
+  gap:0!important;
+}
+body.freewifi-tv #top-live-alert .marquee-track>span{
+  height:32px!important;
+  min-height:32px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  box-sizing:border-box!important;
+  padding:2px 42px 2px 0!important;
+  line-height:28px!important;
+  flex:0 0 auto!important;
+}
+body.freewifi-tv #top-live-alert .rail-kind-badge,
+body.freewifi-tv #top-live-alert .rail-name-badge{
+  max-height:24px!important;
+  height:24px!important;
+  line-height:22px!important;
+  box-sizing:border-box!important;
+}
+body.freewifi-tv #top-live-alert .ticker-sep{
+  flex:0 0 auto!important;
+}
+html.company-pc body.freewifi-tv #top-live-alert{
+  width:min(100%,600px)!important;
+  max-width:600px!important;
+  height:32px!important;
+  min-height:32px!important;
+}
