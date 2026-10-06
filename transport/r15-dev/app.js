@@ -156,30 +156,33 @@
     return { airline: airlineMap[m[1]] || m[1], number: m[2] };
   }
 
+  const AIR_LOGO_BASE=new URL('../assets/airlines/', document.currentScript?.src || location.href).href;
+  const airLogoAsset=(name)=>AIR_LOGO_BASE+name;
+
   function airlineMiniLogo(airline) {
     const raw=String(airline||'').trim();
     const a=raw.toUpperCase();
 
-    const logo=(cls,label,src,fallback)=>`<span class="air-mini-logo ${cls}" aria-label="${label}"><span class="air-logo-fallback">${fallback}</span><img src="${src}" alt="${label}" loading="eager" referrerpolicy="no-referrer"></span>`;
+    const logo=(cls,label,src,fallback)=>`<span class="air-mini-logo ${cls}" aria-label="${label}"><span class="air-logo-fallback">${fallback}</span><img src="${src}" alt="${label}" loading="eager" referrerpolicy="no-referrer" onerror="this.remove()"></span>`;
 
     // Use the same logo artwork that Matsuyama Airport publishes on its flight page
     // whenever that artwork is available.
     if(a==='ANA') return logo('air-mini-logo-ana','ANA',
-      'https://www.matsuyama-airport.co.jp/img/logo/ANA.png','ANA');
+      airLogoAsset('ana.svg'),'ANA');
     if(a==='JAL') return logo('air-mini-logo-jal','JAL',
-      'https://www.matsuyama-airport.co.jp/img/logo/JAL.png','JAL');
+      airLogoAsset('jal.png'),'JAL');
     if(/IBEX/.test(a)) return logo('air-mini-logo-ibex','IBEXエアラインズ',
-      'https://www.matsuyama-airport.co.jp/img/logo/IBX.png','IBEX');
+      airLogoAsset('ibex.png'),'IBEX');
     if(/ジェットスター|JETSTAR/.test(a)) return logo('air-mini-logo-jetstar','ジェットスター・ジャパン',
-      'https://www.matsuyama-airport.co.jp/img/logo/JJP.png','Jetstar');
+      airLogoAsset('jetstar.svg'),'Jetstar');
     if(/チェジュ|JEJU/.test(raw)) return logo('air-mini-logo-jeju','チェジュ航空',
-      'https://www.matsuyama-airport.co.jp/img/logo/JJA.png','JEJUair');
+      airLogoAsset('jeju.svg'),'JEJUair');
     if(/エアプサン|AIR BUSAN/.test(raw)) return logo('air-mini-logo-busan','エアプサン',
-      'https://www.matsuyama-airport.co.jp/img/logo/ABL.png','AIR BUSAN');
+      airLogoAsset('air-busan.svg'),'AIR BUSAN');
     if(/アシアナ|ASIANA/.test(raw)) return logo('air-mini-logo-asiana','アシアナ航空',
-      'https://www.matsuyama-airport.co.jp/img/logo/9593.png','ASIANA');
+      airLogoAsset('asiana.svg'),'ASIANA');
     if(/エバー|EVA/.test(raw)) return logo('air-mini-logo-eva','エバー航空',
-      'https://commons.wikimedia.org/wiki/Special:Redirect/file/Logo_EVA_Air.svg','EVA AIR');
+      airLogoAsset('eva.svg'),'EVA AIR');
     return '';
   }
 
@@ -191,8 +194,10 @@
     let nums=Array.isArray(r?.liveRaw?.numbers) ? r.liveRaw.numbers.map(String).filter(Boolean) : [];
     if(!nums.length) nums=[String(p.number||'')].filter(Boolean);
 
-    // Preserve codeshares even when the live endpoint is temporarily unavailable.
-    if(nums.length===1){
+    // Preserve known codeshares only for static fallback. When the official live
+    // endpoint supplies flight numbers, display exactly what it publishes.
+    const hasLiveNumbers=Array.isArray(r?.liveRaw?.numbers);
+    if(!hasLiveNumbers && nums.length===1){
       const n=nums[0];
       if(/IBEX/i.test(p.airline) && /^3[3-8]$/.test(n)) nums.push(`31${n}`);
       if(/Jetstar/i.test(p.airline) && JETSTAR_JAL_CODESHARE[n]) nums.push(JETSTAR_JAL_CODESHARE[n]);
@@ -1116,6 +1121,20 @@
   function renderTopLiveAlert(now) {
     const el=$('top-live-alert');
     if(!el)return;
+
+    // Airport pages have their own information hierarchy. Never leak JR/bus
+    // approach alerts into the Matsuyama Airport departure/arrival board.
+    if(document.body.classList.contains('air-board-page')){
+      const cls='hero-alert top-live-alert';
+      if(el.dataset.alertClass!==cls || el.dataset.alertHtml!==''){
+        el.className=cls;
+        el.innerHTML='';
+        el.dataset.alertClass=cls;
+        el.dataset.alertHtml='';
+      }
+      return;
+    }
+
     let cls='hero-alert top-live-alert';
     let html='';
     const city=ichitsuboTakeover(now);
@@ -1739,7 +1758,10 @@
       const airlineKey=/ANA/i.test(p.airline)?'ana':/JAL/i.test(p.airline)?'jal':/IBEX/i.test(p.airline)?'ibex':/Jetstar/i.test(p.airline)?'jetstar':/チェジュ/i.test(p.airline)?'jeju':/エアプサン/i.test(p.airline)?'busan':/エバー/i.test(p.airline)?'eva':'other';
       row.classList.add(`airline-${airlineKey}`);
       const status=String(r.liveStatus||r.info||'').trim();
-      const guidance=status||'—';
+      const guidanceBase=status||'—';
+      const guidance=(Number.isFinite(delta)&&delta!==0 && !new RegExp(`[+-]${Math.abs(delta)}分`).test(guidanceBase))
+        ? `${guidanceBase}　${delta>0?'遅れ':'早着'} ${delta>0?'+':''}${delta}分`
+        : guidanceBase;
       const guidanceAlert=/遅|欠航|運休|変更|受付|保安|搭乗|まもなく|到着/.test(guidance);
       const statusClass=`cell air-guidance${guidanceAlert?' air-guidance-alert':''}${guidance.length>14?' long-status':''}`;
       const changed=r.liveChangedTime||r.time;
@@ -1747,7 +1769,7 @@
       const delta=Number(r.liveDelta);
       const deltaHtml=Number.isFinite(delta)&&delta!==0?`<span class="air-delay-minutes ${delta<0?'air-early':''}">${delta>0?'+':''}${delta}分</span>`:'';
       const timeHtml=changed!==scheduled
-        ?`<div class="air-time-wrap"><span class="scheduled-time">${scheduled}</span><span class="air-time-arrow">→</span><span class="live-time changed">${changed}</span>${deltaHtml}</div>`
+        ?`<div class="air-time-wrap air-time-changed"><span class="scheduled-time-row"><span class="scheduled-label">定刻</span><span class="scheduled-time">${scheduled}</span><span class="air-time-arrow">→</span></span><span class="live-time changed">${changed}</span></div>`
         :`<div class="air-time-wrap"><span class="live-time">${changed}</span></div>`;
       row.innerHTML=`
         <div class="cell air-service-cell">
