@@ -1,69 +1,54 @@
 (() => {
+  // Eight independent 10-second screens.
+  // No nested mode timer: each logical screen explicitly selects its own mode.
   const pages = [
-    {id:'panel-rail', label:'01 / 04　JR 松山駅'},
-    {id:'panel-air',  label:'02 / 04　松山空港'},
-    {id:'panel-bus',  label:'03 / 04　高速・中距離バス'},
-    {id:'panel-port', label:'04 / 04　フェリー'}
+    {id:'panel-rail', mode:0, label:'01 / 08　JR 松山駅　宇和島方面'},
+    {id:'panel-rail', mode:1, label:'02 / 08　JR 松山駅　今治方面'},
+    {id:'panel-air',  mode:0, label:'03 / 08　松山空港　出発'},
+    {id:'panel-air',  mode:1, label:'04 / 08　松山空港　到着'},
+    {id:'panel-bus',  mode:0, label:'05 / 08　高速・中距離バス　出発'},
+    {id:'panel-bus',  mode:1, label:'06 / 08　高速・中距離バス　到着'},
+    {id:'panel-port', mode:0, label:'07 / 08　フェリー　出航'},
+    {id:'panel-port', mode:1, label:'08 / 08　フェリー　到着'}
   ];
 
-  // One mode for 10 seconds. Pages with two modes therefore stay 20 seconds.
-  // phase 0 = departure / south, phase 1 = arrival / north.
-  const MODE_MS = 10000;
-  const PAGE_MS = MODE_MS * 2;
-
+  const PANEL_IDS = ['panel-rail','panel-air','panel-bus','panel-port'];
+  const PAGE_MS = 10000;
   const status = document.getElementById('freewifi-page-status');
+
   let pageIndex = 0;
-  let phase = 0;
-  let nextPhaseAt = Date.now() + MODE_MS;
   let nextPageAt = Date.now() + PAGE_MS;
-  let phaseTimer = null;
+  let pageTimer = null;
 
   function ui(){
     return window.MATSUYAMA_TRANSPORT_UI || null;
   }
 
-  function applyMode(){
-    const controller = ui();
-    if(controller && typeof controller.setMode === 'function'){
-      controller.setMode(phase, MODE_MS);
-    }
-  }
-
-  function showPage(index, resetMode = true){
+  function showPage(index){
     pageIndex = (index + pages.length) % pages.length;
-    pages.forEach((p,i)=>{
-      const el = document.getElementById(p.id);
-      if(el) el.classList.toggle('freewifi-active', i === pageIndex);
+    const page = pages[pageIndex];
+
+    PANEL_IDS.forEach(id=>{
+      const el = document.getElementById(id);
+      if(el) el.classList.toggle('freewifi-active', id === page.id);
     });
 
-    if(resetMode){
-      phase = 0;
-      applyMode();
+    const controller = ui();
+    if(controller && typeof controller.setMode === 'function'){
+      controller.setMode(page.mode, PAGE_MS);
     }
 
-    const now = Date.now();
-    nextPhaseAt = now + MODE_MS;
-    nextPageAt = now + (phase === 0 ? PAGE_MS : MODE_MS);
+    nextPageAt = Date.now() + PAGE_MS;
     updatePageCountdown();
+    scheduleNextPage();
   }
 
-  function advancePhase(){
-    if(phase === 0){
-      // Stay on the same page and show the second mode.
-      phase = 1;
-      applyMode();
-      nextPhaseAt = Date.now() + MODE_MS;
-      nextPageAt = nextPhaseAt;
-    } else {
-      // Both modes were shown. Move to the next page and always start with departures/south.
-      showPage(pageIndex + 1, true);
-    }
-    scheduleNextPhase();
-  }
-
-  function scheduleNextPhase(){
-    clearTimeout(phaseTimer);
-    phaseTimer = setTimeout(advancePhase, Math.max(0, nextPhaseAt - Date.now()));
+  function scheduleNextPage(){
+    clearTimeout(pageTimer);
+    pageTimer = setTimeout(
+      ()=>showPage(pageIndex + 1),
+      Math.max(0, nextPageAt - Date.now())
+    );
   }
 
   function updatePageCountdown(){
@@ -72,7 +57,6 @@
     status.textContent = `${pages[pageIndex].label}　｜　次画面まで ${left}秒`;
   }
 
-  showPage(0, true);
-  scheduleNextPhase();
+  showPage(0);
   setInterval(updatePageCountdown, 1000);
 })();
