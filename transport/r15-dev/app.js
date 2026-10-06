@@ -1596,7 +1596,7 @@
     }));
     const visible = [...services, ...terminalArrivals, ...deadheads, ...freights]
       .sort((a,b)=>a._sortMinutes-b._sortMinutes)
-      .slice(0, FREEWIFI_TV ? 10 : 3);
+      .slice(0, FREEWIFI_TV ? (document.documentElement.classList.contains('company-pc') ? 11 : 10) : 3);
 
     if (!visible.length) {
       const last = lastRailMovement(now);
