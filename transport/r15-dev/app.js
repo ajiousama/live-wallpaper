@@ -165,21 +165,21 @@
     // Use the same logo artwork that Matsuyama Airport publishes on its flight page
     // whenever that artwork is available.
     if(a==='ANA') return logo('air-mini-logo-ana','ANA',
-      'https://www.matsuyama-airport.co.jp/img/logo/ANA.png','ANA');
+      'https://upload.wikimedia.org/wikipedia/commons/8/8d/All_Nippon_Airways_Logo.svg','ANA');
     if(a==='JAL') return logo('air-mini-logo-jal','JAL',
       'https://www.matsuyama-airport.co.jp/img/logo/JAL.png','JAL');
     if(/IBEX/.test(a)) return logo('air-mini-logo-ibex','IBEXエアラインズ',
-      'https://www.matsuyama-airport.co.jp/img/logo/IBX.png','IBEX');
+      'https://newscast.jp/attachments/GGxKzaX071Sa4bUQShUJ.png','IBEX');
     if(/ジェットスター|JETSTAR/.test(a)) return logo('air-mini-logo-jetstar','ジェットスター・ジャパン',
-      'https://www.matsuyama-airport.co.jp/img/logo/JJP.png','Jetstar');
+      'https://upload.wikimedia.org/wikipedia/commons/8/8f/Jetstar_logo.svg','Jetstar');
     if(/チェジュ|JEJU/.test(raw)) return logo('air-mini-logo-jeju','チェジュ航空',
-      'https://www.matsuyama-airport.co.jp/img/logo/JJA.png','JEJUair');
+      'https://upload.wikimedia.org/wikipedia/commons/f/f2/Jeju_Air_Logo.svg','JEJUair');
     if(/エアプサン|AIR BUSAN/.test(raw)) return logo('air-mini-logo-busan','エアプサン',
-      'https://www.matsuyama-airport.co.jp/img/logo/ABL.png','AIR BUSAN');
+      'https://upload.wikimedia.org/wikipedia/commons/0/01/Air_Busan_logo.svg','AIR BUSAN');
     if(/アシアナ|ASIANA/.test(raw)) return logo('air-mini-logo-asiana','アシアナ航空',
-      'https://www.matsuyama-airport.co.jp/img/logo/9593.png','ASIANA');
+      'https://upload.wikimedia.org/wikipedia/commons/7/74/Asiana_Airlines.svg','ASIANA');
     if(/エバー|EVA/.test(raw)) return logo('air-mini-logo-eva','エバー航空',
-      'https://commons.wikimedia.org/wiki/Special:Redirect/file/Logo_EVA_Air.svg','EVA AIR');
+      'https://upload.wikimedia.org/wikipedia/commons/c/cf/Logo_EVA_Air.svg','EVA AIR');
     return '';
   }
 
