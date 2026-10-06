@@ -1174,3 +1174,247 @@ html.company-pc body.freewifi-tv.air-board-page #air-rows .air-codeshare-sep{
   margin:0!important;
   font-size:13px!important;
 }
+
+
+/* AIR preview R60 — one geometry for header + every departure/arrival row */
+body.freewifi-tv.air-board-page{
+  --air-board-cols:310px minmax(300px,1fr) 160px minmax(270px,1fr);
+}
+body.freewifi-tv.air-board-page #panel-air .air-board-head,
+body.freewifi-tv.air-board-page #air-rows .air-board-row,
+html.company-pc body.freewifi-tv.air-board-page #panel-air .air-board-head,
+html.company-pc body.freewifi-tv.air-board-page #air-rows .air-board-row{
+  grid-template-columns:var(--air-board-cols)!important;
+  column-gap:0!important;
+}
+body.freewifi-tv.air-board-page #air-rows .air-service-cell{
+  min-width:0!important;
+  overflow:hidden!important;
+  padding-left:18px!important;
+  padding-right:8px!important;
+}
+body.freewifi-tv.air-board-page #air-rows .airline-service-wrap{
+  width:100%!important;
+  min-width:0!important;
+  flex-direction:row!important;
+  flex-wrap:nowrap!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  gap:4px!important;
+  overflow:hidden!important;
+  white-space:nowrap!important;
+}
+body.freewifi-tv.air-board-page #air-rows .air-service-brand{
+  display:inline-flex!important;
+  flex-direction:row!important;
+  flex-wrap:nowrap!important;
+  align-items:center!important;
+  gap:4px!important;
+  min-width:0!important;
+  flex:0 0 auto!important;
+}
+body.freewifi-tv.air-board-page #air-rows .air-service-brand .air-mini-logo{
+  min-width:72px!important;
+  width:72px!important;
+  height:28px!important;
+  flex:0 0 72px!important;
+}
+body.freewifi-tv.air-board-page #air-rows .air-service-brand.codeshare-brand .air-mini-logo{
+  min-width:66px!important;
+  width:66px!important;
+  height:27px!important;
+  flex-basis:66px!important;
+}
+body.freewifi-tv.air-board-page #air-rows .air-service-brand .air-flight-no{
+  font-size:17px!important;
+  line-height:1!important;
+}
+body.freewifi-tv.air-board-page #air-rows .air-service-brand.codeshare-brand .air-flight-no{
+  font-size:14px!important;
+}
+body.freewifi-tv.air-board-page #air-rows .air-codeshare-sep{
+  margin:0 1px!important;
+  flex:0 0 auto!important;
+  font-size:13px!important;
+}
+body.freewifi-tv.air-board-page #air-rows .air-place{
+  min-width:0!important;
+  overflow:hidden!important;
+  white-space:nowrap!important;
+  text-overflow:clip!important;
+}
+body.freewifi-tv.air-board-page #panel-air .air-board-head>span,
+body.freewifi-tv.air-board-page #air-rows .air-board-row>.cell{
+  box-sizing:border-box!important;
+}
+body.freewifi-tv.air-board-page #top-live-alert{
+  display:none!important;
+}
+body.freewifi-tv.air-board-page .hero-center{
+  justify-content:center!important;
+}
+body.freewifi-tv.air-board-page .live-system-status{
+  margin-top:2px!important;
+}
+html.company-pc body.freewifi-tv.air-board-page{
+  --air-board-cols:310px minmax(300px,1fr) 155px minmax(260px,1fr);
+}
+html.company-pc body.freewifi-tv.air-board-page #air-rows .air-place{
+  font-size:20px!important;
+}
+
+
+/* AIR preview R61 — keep the longer Departures title inside the left header block */
+html.company-pc body.freewifi-tv.air-board-page .air-hero-title{
+  min-width:410px!important;
+  max-width:410px!important;
+  gap:9px!important;
+}
+html.company-pc body.freewifi-tv.air-board-page .air-sign-copy{
+  gap:7px!important;
+}
+html.company-pc body.freewifi-tv.air-board-page .air-sign-main{
+  font-size:38px!important;
+}
+html.company-pc body.freewifi-tv.air-board-page .air-sign-en{
+  font-size:18px!important;
+}
+html.company-pc body.freewifi-tv.air-board-page .air-sign-airport{
+  margin-left:0!important;
+  font-size:15px!important;
+}
+
+
+/* AIR preview R62 — TIME is the primary visual anchor */
+body.freewifi-tv.air-board-page{
+  --air-board-cols:310px minmax(250px,.86fr) 142px minmax(355px,1.34fr);
+}
+html.company-pc body.freewifi-tv.air-board-page{
+  --air-board-cols:310px minmax(240px,.82fr) 138px minmax(370px,1.38fr);
+}
+
+/* Destination: narrower and visually pulled left */
+body.freewifi-tv.air-board-page #panel-air .air-board-head>span:nth-child(2),
+body.freewifi-tv.air-board-page #air-rows .air-place{
+  padding-left:10px!important;
+  padding-right:8px!important;
+}
+body.freewifi-tv.air-board-page #air-rows .air-place{
+  justify-content:flex-start!important;
+  font-size:19px!important;
+  letter-spacing:-.02em!important;
+}
+
+/* Time: bigger, heavier, tighter right edge */
+body.freewifi-tv.air-board-page #panel-air .air-board-head>span:nth-child(3),
+body.freewifi-tv.air-board-page #air-rows .air-board-time{
+  padding-left:9px!important;
+  padding-right:4px!important;
+}
+body.freewifi-tv.air-board-page #air-rows .air-board-time{
+  justify-content:flex-start!important;
+  font-family:"Arial Narrow","Bahnschrift SemiBold","Segoe UI",sans-serif!important;
+  font-size:27px!important;
+  font-weight:1000!important;
+  letter-spacing:.015em!important;
+  font-variant-numeric:tabular-nums lining-nums!important;
+  color:#fff!important;
+}
+body.freewifi-tv.air-board-page #air-rows .air-time-wrap{
+  width:100%!important;
+  gap:4px!important;
+}
+body.freewifi-tv.air-board-page #air-rows .live-time{
+  font-family:"Arial Narrow","Bahnschrift SemiBold","Segoe UI",sans-serif!important;
+  font-size:28px!important;
+  font-weight:1000!important;
+  line-height:1!important;
+  letter-spacing:.01em!important;
+}
+body.freewifi-tv.air-board-page #air-rows .scheduled-time{
+  font-family:"Arial Narrow","Bahnschrift SemiBold","Segoe UI",sans-serif!important;
+  font-size:19px!important;
+  font-weight:900!important;
+}
+body.freewifi-tv.air-board-page #air-rows .air-time-arrow{
+  font-size:18px!important;
+}
+
+/* Guidance gets every pixel recovered from destination/time */
+body.freewifi-tv.air-board-page #panel-air .air-board-head>span:nth-child(4),
+body.freewifi-tv.air-board-page #air-rows .air-guidance{
+  padding-left:12px!important;
+  padding-right:10px!important;
+}
+body.freewifi-tv.air-board-page #air-rows .air-guidance{
+  font-size:17px!important;
+  line-height:1.08!important;
+}
+html.company-pc body.freewifi-tv.air-board-page #air-rows .air-board-time{
+  font-size:29px!important;
+}
+html.company-pc body.freewifi-tv.air-board-page #air-rows .live-time{
+  font-size:30px!important;
+}
+html.company-pc body.freewifi-tv.air-board-page #air-rows .scheduled-time{
+  font-size:20px!important;
+}
+html.company-pc body.freewifi-tv.air-board-page #air-rows .air-guidance{
+  font-size:17px!important;
+}
+
+
+/* AIR preview R63 — delayed/changed times always remain visible */
+body.freewifi-tv.air-board-page #air-rows .air-time-changed{
+  height:100%!important;
+  display:grid!important;
+  grid-template-rows:16px 1fr!important;
+  align-content:center!important;
+  align-items:center!important;
+  gap:0!important;
+}
+body.freewifi-tv.air-board-page #air-rows .scheduled-time-row{
+  display:flex!important;
+  align-items:center!important;
+  gap:3px!important;
+  height:16px!important;
+  line-height:16px!important;
+  white-space:nowrap!important;
+}
+body.freewifi-tv.air-board-page #air-rows .scheduled-label{
+  color:#8ea7b3!important;
+  font-size:10px!important;
+  font-weight:900!important;
+}
+body.freewifi-tv.air-board-page #air-rows .air-time-changed .scheduled-time{
+  color:#c8d5db!important;
+  font-size:13px!important;
+  font-weight:900!important;
+}
+body.freewifi-tv.air-board-page #air-rows .air-time-changed .air-time-arrow{
+  color:#ff9a18!important;
+  font-size:12px!important;
+  line-height:1!important;
+}
+body.freewifi-tv.air-board-page #air-rows .air-time-changed .live-time.changed{
+  display:block!important;
+  color:#ffe84a!important;
+  font-size:27px!important;
+  font-weight:1000!important;
+  line-height:27px!important;
+  white-space:nowrap!important;
+}
+html.company-pc body.freewifi-tv.air-board-page #air-rows .air-time-changed .live-time.changed{
+  font-size:29px!important;
+  line-height:29px!important;
+}
+
+/* JAL optical sizing — same box, larger crane/wordmark balance vs ANA */
+body.freewifi-tv.air-board-page #air-rows .air-mini-logo-jal img{
+  transform:scale(1.16)!important;
+  transform-origin:center!important;
+  padding:0!important;
+}
+html.company-pc body.freewifi-tv.air-board-page #air-rows .air-mini-logo-jal img{
+  transform:scale(1.18)!important;
+}
