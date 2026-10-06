@@ -1,8 +1,8 @@
 {
   "date": "2026-10-06",
   "date_label": "2026年10月06日",
-  "updated_at": "10:23:32",
-  "updated_at_iso": "2026-10-06T10:23:32.895138+09:00",
+  "updated_at": "10:45:31",
+  "updated_at_iso": "2026-10-06T10:45:31.121211+09:00",
   "jra_switch_time": "17:00",
   "keirin": {
     "phase": "本日開催 7場",
@@ -29,7 +29,7 @@
         ],
         "event_name": "介護サービスのセービング杯",
         "last_time": "10:35",
-        "last_confirmed": false,
+        "last_confirmed": true,
         "races": [
           {
             "race": 1,
@@ -356,20 +356,63 @@
                 }
               ]
             },
-            "winner": "",
-            "origin": "",
+            "winner": "池田憲昭",
+            "origin": "香川",
             "race_name": "",
             "scheduled_time": ""
           },
           {
             "race": 7,
             "time": "10:35",
-            "status": "発走前",
-            "order": [],
-            "payout": "",
-            "payouts": {},
-            "winner": "",
-            "origin": "",
+            "status": "確定",
+            "order": [
+              2,
+              5,
+              4
+            ],
+            "payout": "4,950円",
+            "payouts": {
+              "2車複": [
+                {
+                  "combo": "2-5",
+                  "amount": "370円"
+                }
+              ],
+              "2車単": [
+                {
+                  "combo": "2>5",
+                  "amount": "560円"
+                }
+              ],
+              "3連複": [
+                {
+                  "combo": "2-4-5",
+                  "amount": "2,170円"
+                }
+              ],
+              "3連単": [
+                {
+                  "combo": "2>5>4",
+                  "amount": "4,950円"
+                }
+              ],
+              "ワイド": [
+                {
+                  "combo": "2-5",
+                  "amount": "260円"
+                },
+                {
+                  "combo": "2-4",
+                  "amount": "590円"
+                },
+                {
+                  "combo": "4-5",
+                  "amount": "1,300円"
+                }
+              ]
+            },
+            "winner": "真鍋顕汰",
+            "origin": "三重",
             "race_name": "",
             "scheduled_time": ""
           }
@@ -407,7 +450,7 @@
           {
             "race": 1,
             "time": "10:45",
-            "status": "発走前",
+            "status": "結果待ち",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -1409,13 +1452,18 @@
         },
         {
           "race": 5,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
-          "popularity": "",
+          "status": "確定",
+          "order": [
+            5,
+            1,
+            6
+          ],
+          "payout": "85,590円",
+          "popularity": "68",
           "payouts": {},
           "race_name": "",
-          "scheduled_time": "10:32"
+          "scheduled_time": "10:32",
+          "winner": ""
         },
         {
           "race": 6,
@@ -2024,13 +2072,18 @@
       "races": [
         {
           "race": 1,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
-          "popularity": "",
+          "status": "確定",
+          "order": [
+            2,
+            3,
+            1
+          ],
+          "payout": "9,300円",
+          "popularity": "33",
           "payouts": {},
           "race_name": "",
-          "scheduled_time": "10:36"
+          "scheduled_time": "10:36",
+          "winner": ""
         },
         {
           "race": 2,
@@ -2155,13 +2208,18 @@
       "races": [
         {
           "race": 1,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
-          "popularity": "",
+          "status": "確定",
+          "order": [
+            1,
+            3,
+            5
+          ],
+          "payout": "2,830円",
+          "popularity": "5",
           "payouts": {},
-          "race_name": "",
-          "scheduled_time": "10:31"
+          "race_name": "予選",
+          "scheduled_time": "10:31",
+          "winner": ""
         },
         {
           "race": 2,
@@ -2946,7 +3004,7 @@
             "race_name": "Ｃ級未勝利Ｃ２７",
             "course": "ダート1400m",
             "scheduled_time": "10:40",
-            "status": "発走前"
+            "status": "結果待ち"
           },
           {
             "race": 2,
