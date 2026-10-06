@@ -389,8 +389,6 @@ body.freewifi-tv .panel-port .ferry-mini-logo{
 html.company-pc body.freewifi-tv #wall{
   width:1180px!important;
   height:650px!important;
-  transform:translate(-50%,-50%)!important;
-  transform-origin:center center!important;
   padding:12px 16px 12px!important;
 }
 
