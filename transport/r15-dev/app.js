@@ -1758,15 +1758,15 @@
       const airlineKey=/ANA/i.test(p.airline)?'ana':/JAL/i.test(p.airline)?'jal':/IBEX/i.test(p.airline)?'ibex':/Jetstar/i.test(p.airline)?'jetstar':/チェジュ/i.test(p.airline)?'jeju':/エアプサン/i.test(p.airline)?'busan':/エバー/i.test(p.airline)?'eva':'other';
       row.classList.add(`airline-${airlineKey}`);
       const status=String(r.liveStatus||r.info||'').trim();
+      const changed=r.liveChangedTime||r.time;
+      const scheduled=r.liveScheduled||r.time;
+      const delta=Number(r.liveDelta);
       const guidanceBase=status||'—';
       const guidance=(Number.isFinite(delta)&&delta!==0 && !new RegExp(`[+-]${Math.abs(delta)}分`).test(guidanceBase))
         ? `${guidanceBase}　${delta>0?'遅れ':'早着'} ${delta>0?'+':''}${delta}分`
         : guidanceBase;
       const guidanceAlert=/遅|欠航|運休|変更|受付|保安|搭乗|まもなく|到着/.test(guidance);
       const statusClass=`cell air-guidance${guidanceAlert?' air-guidance-alert':''}${guidance.length>14?' long-status':''}`;
-      const changed=r.liveChangedTime||r.time;
-      const scheduled=r.liveScheduled||r.time;
-      const delta=Number(r.liveDelta);
       const deltaHtml=Number.isFinite(delta)&&delta!==0?`<span class="air-delay-minutes ${delta<0?'air-early':''}">${delta>0?'+':''}${delta}分</span>`:'';
       const timeHtml=changed!==scheduled
         ?`<div class="air-time-wrap air-time-changed"><span class="scheduled-time-row"><span class="scheduled-label">定刻</span><span class="scheduled-time">${scheduled}</span><span class="air-time-arrow">→</span></span><span class="live-time changed">${changed}</span></div>`
