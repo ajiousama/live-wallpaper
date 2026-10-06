@@ -1,8 +1,8 @@
 {
   "date": "2026-10-06",
   "date_label": "2026年10月06日",
-  "updated_at": "22:50:41",
-  "updated_at_iso": "2026-10-06T22:50:41.002239+09:00",
+  "updated_at": "23:02:53",
+  "updated_at_iso": "2026-10-06T23:02:53.220521+09:00",
   "jra_switch_time": "17:00",
   "keirin": {
     "phase": "本日開催 7場",
@@ -3798,7 +3798,7 @@
           {
             "race": 8,
             "time": "23:00",
-            "status": "発走前",
+            "status": "結果待ち",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -4217,12 +4217,55 @@
           {
             "race": 7,
             "time": "22:50",
-            "status": "結果待ち",
-            "order": [],
-            "payout": "",
-            "payouts": {},
-            "winner": "",
-            "origin": "",
+            "status": "確定",
+            "order": [
+              2,
+              1,
+              3
+            ],
+            "payout": "1,280円",
+            "payouts": {
+              "2車複": [
+                {
+                  "combo": "1-2",
+                  "amount": "110円"
+                }
+              ],
+              "2車単": [
+                {
+                  "combo": "2>1",
+                  "amount": "360円"
+                }
+              ],
+              "3連複": [
+                {
+                  "combo": "1-2-3",
+                  "amount": "310円"
+                }
+              ],
+              "3連単": [
+                {
+                  "combo": "2>1>3",
+                  "amount": "1,280円"
+                }
+              ],
+              "ワイド": [
+                {
+                  "combo": "1-2",
+                  "amount": "130円"
+                },
+                {
+                  "combo": "2-3",
+                  "amount": "240円"
+                },
+                {
+                  "combo": "1-3",
+                  "amount": "260円"
+                }
+              ]
+            },
+            "winner": "伊藤亮",
+            "origin": "埼玉",
             "race_name": "Ａ級 予選",
             "scheduled_time": "22:50"
           },
@@ -6533,13 +6576,18 @@
         },
         {
           "race": 12,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
-          "popularity": "",
+          "status": "確定",
+          "order": [
+            1,
+            4,
+            6
+          ],
+          "payout": "1,760円",
+          "popularity": "7",
           "payouts": {},
           "race_name": "予選特選",
-          "scheduled_time": "22:54"
+          "scheduled_time": "22:54",
+          "winner": ""
         }
       ]
     },
