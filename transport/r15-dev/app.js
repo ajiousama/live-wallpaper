@@ -1121,46 +1121,78 @@
       : '';
   }
 
-  function renderTopLiveAlert(now) {
-    const el=$('top-live-alert');
-    if(!el)return;
+  function ichitsuboHeaderInfo(now) {
+    const generatedAt=Date.parse(String(approachLive.generatedAtJst||''));
+    const fresh=!Number.isFinite(generatedAt) || (Date.now()-generatedAt)<=45000;
+    const raw=fresh && Array.isArray(approachLive.ichitsubo?.approaching)
+      ? approachLive.ichitsubo.approaching
+      : [];
+    const active=raw.filter(x=>{
+      const mins=Number(x?.minutesToIchitsubo);
+      return !Number.isFinite(mins) || mins>=0;
+    }).slice(0,2);
 
-    // Airport pages have their own information hierarchy. Never leak JR/bus
-    // approach alerts into the Matsuyama Airport departure/arrival board.
-    if(document.body.classList.contains('air-board-page')){
-      const cls='hero-alert top-live-alert';
-      if(el.dataset.alertClass!==cls || el.dataset.alertHtml!==''){
-        el.className=cls;
-        el.innerHTML='';
-        el.dataset.alertClass=cls;
-        el.dataset.alertHtml='';
+    if(active.length){
+      return active.map(x=>{
+        const dir=ichitsuboDirection(x)==='north'?'松山方面':'宇和島方面';
+        const kind=String(x?.kind||'');
+        const mins=Number(x?.minutesToIchitsubo);
+        const when=Number.isFinite(mins)?(mins<=1?'まもなく':`約${mins}分`):'接近';
+        if(kind==='deadhead') return `${dir}｜回送 通過 ${when}`;
+        if(kind==='freight') return `${dir}｜貨物 通過 ${when}`;
+        if(kind==='pass') return `${dir}｜列車 通過 ${when}`;
+        const dest=cleanStation(x?.destination||'');
+        return `${dir}｜${dest?dest+'行｜':''}${when}`;
+      }).join('　◆　');
+    }
+
+    const north=auxUpcoming('ichitsubo','north',now,1)[0]||null;
+    const south=auxUpcoming('ichitsubo','south',now,1)[0]||null;
+    const parts=[];
+    if(north) parts.push(`松山方面｜次 ${padTime(north.time)} ${cleanStation(north.dest||north.destination||'')||'列車'}行`);
+    else parts.push('松山方面｜運行終了');
+    if(south) parts.push(`宇和島方面｜次 ${padTime(south.time)} ${cleanStation(south.dest||south.destination||'')||'列車'}行`);
+    else parts.push('宇和島方面｜運行終了');
+    return parts.join('　◆　');
+  }
+
+  function madonnaHeaderInfo(now) {
+    const live=approachLive.madonna;
+    const generatedAt=Date.parse(String(approachLive.generatedAtJst||''));
+    const fresh=!Number.isFinite(generatedAt) || (Date.now()-generatedAt)<=90000;
+    if(approachLive.ok && live?.ok && fresh && isKnownStadiumScheduledTime(live.scheduledDeparture,now)){
+      const t=padTime(live.predictedDeparture||live.scheduledDeparture);
+      if(t){
+        const diff=minutesUntil(t,now.minutes);
+        if(Number.isFinite(diff) && diff>=0){
+          const lead=diff<=2?'まもなく発車':diff<=4?'まもなく到着':`あと${diff}分`;
+          return `51系統 松山市駅行｜${t}発｜${lead}`;
+        }
       }
-      return;
     }
+    const next=nextAux('stadium',null,now);
+    return next
+      ? `51系統 松山市駅行｜次便 ${padTime(next.time)}発`
+      : '51系統 松山市駅行｜本日の運行終了';
+  }
 
-    let cls='hero-alert top-live-alert';
-    let html='';
-    const city=ichitsuboTakeover(now);
-    const bus=madonnaTakeover(now);
+  function renderTopLiveAlert(now) {
+    const rail=$('global-ichitsubo');
+    const bus=$('global-madonna');
+    if(!rail || !bus) return;
 
-    // Top ticker is reserved for live alerts only:
-    // approaching / passing / imminent departure. Routine "next service" info
-    // belongs in the normal panel ticker and must never appear here.
-    if(city){
-      cls='hero-alert top-live-alert active stop-live fast-scroll';
-      html=tickerHtml(city.items);
-    } else if(bus){
-      cls='hero-alert top-live-alert active bus-live fast-scroll';
-      html=tickerHtml(bus.items);
-    }
+    const railText=ichitsuboHeaderInfo(now);
+    const busText=madonnaHeaderInfo(now);
 
-    // Keep the marquee running smoothly. Do not rebuild the top ticker when the
-    // visible alert text has not changed.
-    if (el.dataset.alertClass === cls && el.dataset.alertHtml === html) return;
-    el.className = cls;
-    el.innerHTML = html;
-    el.dataset.alertClass = cls;
-    el.dataset.alertHtml = html;
+    if(rail.textContent!==railText) rail.textContent=railText;
+    if(bus.textContent!==busText) bus.textContent=busText;
+
+    const cityLive=!!ichitsuboTakeover(now);
+    const busLive=!!madonnaTakeover(now);
+    const railCard=$('global-live-rail');
+    const busCard=$('global-live-bus');
+    if(railCard) railCard.classList.toggle('is-live',cityLive);
+    if(busCard) busCard.classList.toggle('is-live',busLive);
   }
 
   function railReachText(r) {
