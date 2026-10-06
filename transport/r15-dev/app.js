@@ -1465,6 +1465,7 @@
     };
   }
 
+  let airportBottomSignature='';
   function renderAirportBottomInfo(now) {
     const el=$('air-note');
     if(!el) return;
@@ -1484,6 +1485,10 @@
       <span class="air-bottom-bus air-bottom-ordinary"><b>普通便</b><span>松山空港発　${ordinaryText}</span></span>
       <span class="air-bottom-sep">◆</span>
       <span class="air-bottom-stops"><b>普通便 主な停留所</b><span>${bus.ordinaryStops}</span></span>`;
+
+    const sig=[directionMark,disruptionLabel,disruptionHtml,limoText,ordinaryText,bus.ordinaryStops].join('||');
+    if(airportBottomSignature===sig && el.classList.contains('air-bottom-info')) return;
+    airportBottomSignature=sig;
 
     el.className='note air-bottom-info';
     el.innerHTML=`
