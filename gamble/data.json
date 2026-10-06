@@ -1,8 +1,8 @@
 {
   "date": "2026-10-06",
   "date_label": "2026年10月06日",
-  "updated_at": "23:07:35",
-  "updated_at_iso": "2026-10-06T23:07:35.988334+09:00",
+  "updated_at": "23:11:19",
+  "updated_at_iso": "2026-10-06T23:11:19.173400+09:00",
   "jra_switch_time": "17:00",
   "keirin": {
     "phase": "本日開催 7場",
@@ -3845,8 +3845,8 @@
                 }
               ]
             },
-            "winner": "",
-            "origin": "",
+            "winner": "邊見竜馬",
+            "origin": "福島",
             "race_name": "Ａ級 特予選",
             "scheduled_time": "23:00"
           },
@@ -4315,7 +4315,7 @@
           {
             "race": 8,
             "time": "23:10",
-            "status": "発走前",
+            "status": "結果待ち",
             "order": [],
             "payout": "",
             "payouts": {},
