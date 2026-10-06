@@ -1417,6 +1417,71 @@
     return items.length?items:[''];
   }
 
+
+  function airportDisruptionItems(now) {
+    const airport=slowLive.airport;
+    if(!airport?.ok) return [{type:'loading',text:'運航情報取得中'}];
+
+    const rows=[
+      ...(Array.isArray(airport.departures)?airport.departures.map(x=>({...x,_dir:'出'})):[]),
+      ...(Array.isArray(airport.arrivals)?airport.arrivals.map(x=>({...x,_dir:'着'})):[])
+    ];
+    const items=[];
+    rows.forEach(x=>{
+      const status=String(x?.status||'').trim();
+      const delta=Number(x?.deltaMinutes);
+      const isCancel=/欠航|運休/.test(status);
+      const isDelay=(Number.isFinite(delta)&&delta>0)||/遅延|遅れ/.test(status);
+      if(!isCancel&&!isDelay) return;
+
+      const nums=Array.isArray(x?.numbers)?x.numbers.map(String).filter(Boolean):[];
+      const flight=nums[0]||'便名不明';
+      const staticRow=data.records.find(r=>r.board==='air' && String(parseAirService(r.service).number)===flight);
+      const airline=staticRow?parseAirService(staticRow.service).airline:'';
+      const carrier=airline?airline.replace('エアラインズ',''):'';
+      const place=String(x?.place||'').replace(/[（(].*?[）)]/g,'').trim();
+      let detail=status;
+      if(isDelay && Number.isFinite(delta)&&delta>0 && !/[0-9]+分/.test(detail)) detail=`遅れ +${delta}分`;
+      if(!detail) detail=isCancel?'欠航':'遅延';
+      items.push({
+        type:isCancel?'cancel':'delay',
+        text:`${x._dir} ${carrier?carrier+' ':''}${flight}${place?' '+place:''}　${detail}`
+      });
+    });
+    return items.length?items.slice(0,3):[{type:'ok',text:'現在、欠航・遅延情報なし'}];
+  }
+
+  function airportNextTimes(now) {
+    const weekend=now.dow===0||now.dow===6;
+    const limo=LIMO_AIRPORT_TO_CITY.filter(t=>toMinutes(t)>=now.minutes).slice(0,2);
+    const ordinaryList=weekend?ORDINARY_WEEKEND_AIRPORT_TO_CITY:ORDINARY_WEEKDAY_AIRPORT_TO_CITY;
+    const ordinary=ordinaryList.filter(([t])=>toMinutes(t)>=now.minutes).slice(0,2);
+    return {
+      limo,
+      ordinary,
+      ordinaryStops:'南吉田口 → 富久口 → 空港通り → JR松山駅前 → 愛媛新聞社前 → 松山市駅'
+    };
+  }
+
+  function renderAirportBottomInfo(now) {
+    const el=$('air-note');
+    if(!el) return;
+    const disruption=airportDisruptionItems(now);
+    const bus=airportNextTimes(now);
+    const disruptionHtml=disruption.map(x=>`<span class="air-bottom-alert air-bottom-${x.type}">${x.text}</span>`).join('<span class="air-bottom-dot">・</span>');
+    const limoText=bus.limo.length?bus.limo.map(t=>`${t}発`).join(' ／ '):'本日運行終了';
+    const ordinaryText=bus.ordinary.length?bus.ordinary.map(x=>`${x[0]}発`).join(' ／ '):'本日運行終了';
+
+    el.className='note air-bottom-info';
+    el.innerHTML=`
+      <div class="air-bottom-disruption"><b>欠航・遅延</b><span class="air-bottom-disruption-text">${disruptionHtml}</span></div>
+      <div class="air-bottom-buses">
+        <div class="air-bottom-bus air-bottom-limo"><b>リムジン</b><span>松山空港発　${limoText}</span></div>
+        <div class="air-bottom-bus air-bottom-ordinary"><b>普通便</b><span>松山空港発　${ordinaryText}</span></div>
+        <div class="air-bottom-stops"><b>普通便 主な停留所</b><span>${bus.ordinaryStops}</span></div>
+      </div>`;
+  }
+
   const scrollState = {};
   function modeKey(board) {
     if (board === 'rail') return `${board}-${currentRailDir()}`;
@@ -2576,9 +2641,10 @@
     if(tickerSignature[key]===sig)return; tickerSignature[key]=sig; const el=$(id); el.className=`note${cls?' '+cls:''}`; el.innerHTML=tickerHtml(safeItems);
   }
   function updateNotes() {
-    updatePersistentTicker('rail-note','rail',railTickerItems(japanNow()));
-    updatePersistentTicker('air-note','air',airportAccessTickerItems(japanNow()));
-    updatePersistentTicker('bus-note','bus',busTickerItems(japanNow()));
+    const now=japanNow();
+    updatePersistentTicker('rail-note','rail',railTickerItems(now));
+    renderAirportBottomInfo(now);
+    updatePersistentTicker('bus-note','bus',busTickerItems(now));
     updatePersistentTicker('port-note','port',ferryTickerItems());
   }
 
