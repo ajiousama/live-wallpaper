@@ -1909,9 +1909,24 @@
       const scheduled=r.liveScheduled||r.time;
       const delta=Number(r.liveDelta);
       const guidanceBase=status||'—';
-      const guidance=(Number.isFinite(delta)&&delta!==0 && !new RegExp(`[+-]${Math.abs(delta)}分`).test(guidanceBase))
+      let guidance=(Number.isFinite(delta)&&delta!==0 && !new RegExp(`[+-]${Math.abs(delta)}分`).test(guidanceBase))
         ? `${guidanceBase}　${delta>0?'遅れ':'早着'} ${delta>0?'+':''}${delta}分`
         : guidanceBase;
+
+      if(!dep){
+        const raw=r.liveRaw||{};
+        const originAirport=String(raw.originAirport||'').trim();
+        const scheduledOrigin=padTime(raw.originDepartureScheduled||'');
+        const actualOrigin=padTime(raw.originDepartureActual||raw.originDepartureChanged||'');
+        if(originAirport && actualOrigin){
+          const prefix=scheduledOrigin && actualOrigin===scheduledOrigin ? '定刻通り ' : '';
+          const originInfo=`${prefix}${actualOrigin}に${originAirport}を出発`;
+          guidance = guidance && guidance!=='—' ? `${guidance}　｜　${originInfo}` : originInfo;
+        } else if(originAirport && scheduledOrigin){
+          const originInfo=`${originAirport} ${scheduledOrigin}発（定刻）`;
+          guidance = guidance && guidance!=='—' ? `${guidance}　｜　${originInfo}` : originInfo;
+        }
+      }
       const guidanceAlert=/遅|欠航|運休|変更|受付|保安|搭乗|まもなく|到着/.test(guidance);
       const statusClass=`cell air-guidance${guidanceAlert?' air-guidance-alert':''}${guidance.length>14?' long-status':''}`;
       const deltaHtml=Number.isFinite(delta)&&delta!==0?`<span class="air-delay-minutes ${delta<0?'air-early':''}">${delta>0?'+':''}${delta}分</span>`:'';
