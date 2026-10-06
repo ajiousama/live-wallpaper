@@ -419,3 +419,151 @@ body{background:linear-gradient(180deg,#061522,#02090f)}
   .win5-result>strong{font-size:13px}
   .win5-result>b{font-size:14px}
 }
+
+
+/* Company-PC readability: fewer cards, larger type, stronger hierarchy */
+html.company-mode #dash{
+  padding:5px 6px;
+  grid-template-rows:46px 1fr;
+  gap:4px;
+}
+html.company-mode .topbar{padding:4px 10px}
+html.company-mode #screen-title{font-size:25px!important}
+html.company-mode #screen-sub{font-size:12px!important}
+html.company-mode .live{font-size:11px!important;padding:2px 6px}
+html.company-mode #updated{font-size:11px!important}
+html.company-mode #next-switch{font-size:12px!important;min-width:98px;padding:3px 7px}
+html.company-mode #clock{font-size:25px!important}
+
+html.company-mode .phase-grid{
+  gap:7px;
+  padding:4px;
+}
+html.company-mode .phase-grid.count-1 .phase-card,
+html.company-mode .phase-grid.count-2 .phase-card,
+html.company-mode .phase-grid.count-3 .phase-card,
+html.company-mode .phase-grid.count-4 .phase-card{
+  grid-template-rows:34px 1fr!important;
+}
+html.company-mode .phase-grid.count-1 .card-head,
+html.company-mode .phase-grid.count-2 .card-head,
+html.company-mode .phase-grid.count-3 .card-head,
+html.company-mode .phase-grid.count-4 .card-head{
+  gap:7px!important;
+  padding:3px 7px!important;
+}
+html.company-mode .phase-grid.count-1 .card-head strong,
+html.company-mode .phase-grid.count-2 .card-head strong,
+html.company-mode .phase-grid.count-3 .card-head strong,
+html.company-mode .phase-grid.count-4 .card-head strong{
+  font-size:17px!important;
+}
+html.company-mode .phase-grid.count-1 .card-head small,
+html.company-mode .phase-grid.count-2 .card-head small,
+html.company-mode .phase-grid.count-3 .card-head small,
+html.company-mode .phase-grid.count-4 .card-head small{
+  font-size:10px!important;
+}
+html.company-mode .phase-grid.count-1 .sport-tag,
+html.company-mode .phase-grid.count-2 .sport-tag,
+html.company-mode .phase-grid.count-3 .sport-tag,
+html.company-mode .phase-grid.count-4 .sport-tag{
+  font-size:11px!important;
+  padding:2px 5px!important;
+}
+html.company-mode .phase-grid.count-1 .phase-table th,
+html.company-mode .phase-grid.count-2 .phase-table th,
+html.company-mode .phase-grid.count-3 .phase-table th,
+html.company-mode .phase-grid.count-4 .phase-table th{
+  height:23px!important;
+  font-size:10px!important;
+  padding:1px 2px!important;
+}
+html.company-mode .phase-grid.count-1 .phase-table td,
+html.company-mode .phase-grid.count-2 .phase-table td,
+html.company-mode .phase-grid.count-3 .phase-table td,
+html.company-mode .phase-grid.count-4 .phase-table td{
+  font-size:12px!important;
+  padding:1px 2px!important;
+  line-height:1.05!important;
+}
+html.company-mode .phase-grid.count-1 .num,
+html.company-mode .phase-grid.count-2 .num,
+html.company-mode .phase-grid.count-3 .num,
+html.company-mode .phase-grid.count-4 .num,
+html.company-mode .phase-grid.count-1 .horse-no,
+html.company-mode .phase-grid.count-2 .horse-no,
+html.company-mode .phase-grid.count-3 .horse-no,
+html.company-mode .phase-grid.count-4 .horse-no{
+  width:20px!important;
+  min-width:20px!important;
+  height:19px!important;
+  font-size:10px!important;
+}
+html.company-mode .phase-table .winner-stack small{font-size:9px!important}
+html.company-mode .local-table .local-info>div{height:14px!important;line-height:14px!important}
+html.company-mode .local-table .local-info>b{height:12px!important;line-height:12px!important;font-size:9px!important}
+
+/* Premium keirin */
+html.company-mode .keirin-detail-card{grid-template-rows:54px 1fr}
+html.company-mode .keirin-detail-head strong{font-size:29px}
+html.company-mode .keirin-detail-head>b{font-size:18px}
+html.company-mode .keirin-detail-head>em{font-size:17px}
+html.company-mode .keirin-detail-table th{font-size:12px}
+html.company-mode .keirin-detail-table td{font-size:15px}
+html.company-mode .keirin-detail-table .r strong{font-size:14px}
+html.company-mode .keirin-detail-table .r small{font-size:9px}
+html.company-mode .keirin-detail-table .winner-stack small{font-size:11px}
+html.company-mode .keirin-detail-table .bet-cell span{font-size:12px}
+html.company-mode .keirin-detail-table .bet-cell:last-child span{font-size:13px}
+
+/* JRA */
+html.company-mode .jra-dedicated-grid{gap:5px}
+html.company-mode .jra-venue-card{grid-template-rows:34px 1fr}
+html.company-mode .jra-venue-head strong{font-size:21px}
+html.company-mode .jra-venue-head span{font-size:11px}
+html.company-mode .jra-race{padding:3px 5px}
+html.company-mode .jra-race-main{grid-template-columns:38px minmax(0,1fr) 84px;min-height:23px}
+html.company-mode .jra-race-main>strong{font-size:15px}
+html.company-mode .jra-race-name{font-size:15px}
+html.company-mode .jra-race-main>em{font-size:12px}
+html.company-mode .place{font-size:13px}
+html.company-mode .place b{font-size:10px}
+html.company-mode .place em{font-size:11px}
+html.company-mode .payout-item{grid-template-columns:39px minmax(0,1fr);line-height:14px}
+html.company-mode .payout-item b{font-size:10px}
+html.company-mode .payout-item span{font-size:12px;line-height:13px}
+
+/* Special/JRA/WIN5 cards: never cram more than four in company mode */
+html.company-mode .special-grid{
+  gap:7px;
+  padding:4px;
+}
+html.company-mode .special-grid.count-1 .special-card,
+html.company-mode .special-grid.count-2 .special-card,
+html.company-mode .special-grid.count-3 .special-card,
+html.company-mode .special-grid.count-4 .special-card{
+  grid-template-rows:34px auto minmax(0,1fr) auto!important;
+}
+html.company-mode .special-grid.count-1 .special-head,
+html.company-mode .special-grid.count-2 .special-head,
+html.company-mode .special-grid.count-3 .special-head,
+html.company-mode .special-grid.count-4 .special-head{
+  padding:3px 7px!important;
+}
+html.company-mode .special-grid.count-1 .special-head span,
+html.company-mode .special-grid.count-2 .special-head span,
+html.company-mode .special-grid.count-3 .special-head span,
+html.company-mode .special-grid.count-4 .special-head span{font-size:10px!important}
+html.company-mode .special-grid.count-1 .special-head strong,
+html.company-mode .special-grid.count-2 .special-head strong,
+html.company-mode .special-grid.count-3 .special-head strong,
+html.company-mode .special-grid.count-4 .special-head strong{font-size:13px!important}
+html.company-mode .special-grid.count-1 .special-name,
+html.company-mode .special-grid.count-2 .special-name,
+html.company-mode .special-grid.count-3 .special-name,
+html.company-mode .special-grid.count-4 .special-name{font-size:17px!important;padding:6px 8px 3px!important}
+html.company-mode .special-grid.count-1 .special-winner>strong,
+html.company-mode .special-grid.count-2 .special-winner>strong,
+html.company-mode .special-grid.count-3 .special-winner>strong,
+html.company-mode .special-grid.count-4 .special-winner>strong{font-size:23px!important}
