@@ -5,6 +5,7 @@ const PHASES=["モーニング","デイ","ナイター","ミッドナイト"];
 const PAYOUT_TYPES=["単勝","複勝","枠連","馬連","馬単","ワイド","3連複","3連単"];
 const BOAT_PAYOUT_TYPES=["3連単","3連複","2連単","2連複","拡連複","単勝","複勝"];
 const COMPANY_MODE=new URLSearchParams(location.search).get("company")==="1";
+document.documentElement.classList.toggle("company-mode",COMPANY_MODE);
 let data=null,jra=null,currentPageIndex=0,screenShownAt=performance.now(),rotateTimer=null;
 
 function esc(v){
@@ -415,16 +416,16 @@ function buildPages(){
       ];
       for(const group of companyGroups){
         const items=rest.filter(x=>x.kind===group.kind);
-        for(let i=0;i<items.length;i+=6){
-          const chunk=items.slice(i,i+6);
+        for(let i=0;i<items.length;i+=4){
+          const chunk=items.slice(i,i+4);
           pages.push({
             key:"phase:"+phase+":"+group.kind+":"+Math.floor(i/6),
             type:"phase",
             phase,
             sportKind:group.kind,
             sportLabel:group.label,
-            page:Math.floor(i/6)+1,
-            total:Math.ceil(items.length/6),
+            page:Math.floor(i/4)+1,
+            total:Math.ceil(items.length/4),
             items:chunk
           });
         }
