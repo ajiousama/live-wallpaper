@@ -126,7 +126,12 @@ body.freewifi-tv .panel-port.dep-mode .freewifi-port-group>.row{
   grid-template-columns:130px minmax(0,1fr) 190px!important
 }
 body.freewifi-tv .panel-port.arrival-columns .freewifi-port-group>.row{
-  grid-template-columns:minmax(0,1fr) 175px 175px!important
+  grid-template-columns:minmax(0,1fr) 210px 175px!important
+}
+body.freewifi-tv .panel-port.arrival-columns .freewifi-port-group>.row > .cell.service{
+  justify-content:flex-start!important;
+  padding-left:0!important;
+  padding-right:6px!important;
 }
 body.freewifi-tv .panel-port.arrival-columns .port-arrival-time{
   white-space:nowrap!important;
@@ -1614,7 +1619,7 @@ html.company-pc body.freewifi-tv .web-page-switcher{
 }
 
 html.company-pc body.freewifi-tv .panel-port.arrival-columns .freewifi-port-group>.row{
-  grid-template-columns:minmax(0,1fr) 170px 180px!important;
+  grid-template-columns:minmax(0,1fr) 210px 180px!important;
 }
 html.company-pc body.freewifi-tv .panel-port.arrival-columns .port-arrival-time{
   font-size:20px!important;
