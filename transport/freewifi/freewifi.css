@@ -1520,10 +1520,10 @@ body.freewifi-tv.air-board-page .air-bottom-scroll-track{
   will-change:transform;
 }
 body.freewifi-tv.air-board-page .air-bottom-scroll-alert{
-  animation:airportBottomFullScroll 4.8s linear infinite;
+  animation:airportBottomFullScroll 6.8s linear 2 forwards;
 }
 body.freewifi-tv.air-board-page .air-bottom-scroll-bus{
-  animation:airportBottomFullScroll 5.8s linear infinite;
+  animation:airportBottomFullScroll 6.8s linear 2 forwards;
 }
 body.freewifi-tv.air-board-page .air-bottom-scroll-set{
   display:inline-flex;
@@ -1602,11 +1602,11 @@ html.company-pc body.freewifi-tv.air-board-page .air-bottom-bus>b,
 html.company-pc body.freewifi-tv.air-board-page .air-bottom-stops>b{
   font-size:11px;
 }
-html.company-pc body.freewifi-tv.air-board-page .air-bottom-scroll-alert{
-  animation-duration:4.8s;
-}
+html.company-pc body.freewifi-tv.air-board-page .air-bottom-scroll-alert,
 html.company-pc body.freewifi-tv.air-board-page .air-bottom-scroll-bus{
-  animation-duration:5.8s;
+  animation-duration:6.8s;
+  animation-iteration-count:2;
+  animation-fill-mode:forwards;
 }
 @media (prefers-reduced-motion:reduce){
   body.freewifi-tv.air-board-page .air-bottom-scroll-track{animation:none!important}
