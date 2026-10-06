@@ -162,52 +162,61 @@
 
     const logo=(cls,label,src,fallback)=>`<span class="air-mini-logo ${cls}" aria-label="${label}"><span class="air-logo-fallback">${fallback}</span><img src="${src}" alt="${label}" loading="eager" referrerpolicy="no-referrer"></span>`;
 
-    if(a==='ANA') return logo(
-      'air-mini-logo-ana','ANA',
-      'https://commons.wikimedia.org/wiki/Special:Redirect/file/ANA-Logo.svg',
-      'ANA'
-    );
-    if(a==='JAL') return logo(
-      'air-mini-logo-jal','JAL',
-      'https://commons.wikimedia.org/wiki/Special:Redirect/file/Japan_Airlines_%E2%80%9DJAL%22_Wordmark_%282011%29.svg',
-      'JAL'
-    );
-    if(/IBEX/.test(a)) return logo(
-      'air-mini-logo-ibex','IBEXエアラインズ',
-      'https://newscast.jp/attachments/LxeaiUv311WOXj8XDPTY.png',
-      'IBEX'
-    );
-    if(/FDA|フジドリーム/.test(a)) return logo(
-      'air-mini-logo-fda','FDA',
-      'https://commons.wikimedia.org/wiki/Special:Redirect/file/Fuji_Dream_Airlines_logo_%282008%2C_FDA%29.svg',
-      'FDA'
-    );
-    if(/ジェットスター|JETSTAR/i.test(raw)) return logo(
-      'air-mini-logo-jetstar','Jetstar',
-      'https://commons.wikimedia.org/wiki/Special:Redirect/file/Jetstar_logo.svg',
-      'Jetstar'
-    );
-    if(/チェジュ|JEJU/.test(raw)) return logo(
-      'air-mini-logo-jeju','チェジュ航空',
-      'https://commons.wikimedia.org/wiki/Special:Redirect/file/Jeju_Air_Logo.svg',
-      'JEJU'
-    );
-    if(/エバー|EVA/.test(raw)) return logo(
-      'air-mini-logo-eva','エバー航空',
-      'https://commons.wikimedia.org/wiki/Special:Redirect/file/Logo_EVA_Air.svg',
-      'EVA'
-    );
-    if(/エアプサン|AIR BUSAN/.test(raw)) return logo(
-      'air-mini-logo-busan','エアプサン',
-      'https://commons.wikimedia.org/wiki/Special:Redirect/file/Air_Busan_logo.svg',
-      'AIR BUSAN'
-    );
-    if(/マレーシア|MALAYSIA/.test(raw)) return logo(
-      'air-mini-logo-malaysia','マレーシア航空',
-      'https://commons.wikimedia.org/wiki/Special:Redirect/file/Malaysia-airlines-logo-alt.png',
-      'MALAYSIA'
-    );
+    // Use the same logo artwork that Matsuyama Airport publishes on its flight page
+    // whenever that artwork is available.
+    if(a==='ANA') return logo('air-mini-logo-ana','ANA',
+      'https://www.matsuyama-airport.co.jp/img/logo/ANA.png','ANA');
+    if(a==='JAL') return logo('air-mini-logo-jal','JAL',
+      'https://www.matsuyama-airport.co.jp/img/logo/JAL.png','JAL');
+    if(/IBEX/.test(a)) return logo('air-mini-logo-ibex','IBEXエアラインズ',
+      'https://www.matsuyama-airport.co.jp/img/logo/IBX.png','IBEX');
+    if(/ジェットスター|JETSTAR/.test(a)) return logo('air-mini-logo-jetstar','ジェットスター・ジャパン',
+      'https://www.matsuyama-airport.co.jp/img/logo/JJP.png','Jetstar');
+    if(/チェジュ|JEJU/.test(raw)) return logo('air-mini-logo-jeju','チェジュ航空',
+      'https://www.matsuyama-airport.co.jp/img/logo/JJA.png','JEJUair');
+    if(/エアプサン|AIR BUSAN/.test(raw)) return logo('air-mini-logo-busan','エアプサン',
+      'https://www.matsuyama-airport.co.jp/img/logo/ABL.png','AIR BUSAN');
+    if(/アシアナ|ASIANA/.test(raw)) return logo('air-mini-logo-asiana','アシアナ航空',
+      'https://www.matsuyama-airport.co.jp/img/logo/9593.png','ASIANA');
+    if(/エバー|EVA/.test(raw)) return logo('air-mini-logo-eva','エバー航空',
+      'https://commons.wikimedia.org/wiki/Special:Redirect/file/Logo_EVA_Air.svg','EVA AIR');
     return '';
+  }
+
+  const JETSTAR_JAL_CODESHARE = {
+    '400':'6110','401':'6111','404':'6114','405':'6115','408':'6112','409':'6119'
+  };
+
+  function airServiceItems(r,p) {
+    let nums=Array.isArray(r?.liveRaw?.numbers) ? r.liveRaw.numbers.map(String).filter(Boolean) : [];
+    if(!nums.length) nums=[String(p.number||'')].filter(Boolean);
+
+    // Preserve codeshares even when the live endpoint is temporarily unavailable.
+    if(nums.length===1){
+      const n=nums[0];
+      if(/IBEX/i.test(p.airline) && /^3[3-8]$/.test(n)) nums.push(`31${n}`);
+      if(/Jetstar/i.test(p.airline) && JETSTAR_JAL_CODESHARE[n]) nums.push(JETSTAR_JAL_CODESHARE[n]);
+      if(/エアプサン|AIR BUSAN/i.test(p.airline) && n==='133') nums.push('9593');
+      if(/エアプサン|AIR BUSAN/i.test(p.airline) && n==='134') nums.push('9594');
+    }
+
+    return nums.map((number,index)=>{
+      let airline=p.airline;
+      if(index>0){
+        if(/^313[3-8]$/.test(number)) airline='ANA';
+        else if(/^611\d$/.test(number)) airline='JAL';
+        else if(/^959[34]$/.test(number)) airline='アシアナ航空';
+      }
+      return {airline,number};
+    });
+  }
+
+  function airServiceHtml(r,p) {
+    const items=airServiceItems(r,p);
+    return items.map((item,index)=>{
+      const logo=airlineMiniLogo(item.airline) || `<span class="airline-text-logo">${item.airline}</span>`;
+      return `<span class="air-service-brand${index?' codeshare-brand':''}">${logo}<span class="air-flight-no">${item.number||'—'}</span></span>`;
+    }).join('<span class="air-codeshare-sep">/</span>');
   }
 
 
@@ -1726,9 +1735,8 @@
       const finalBadge=dep&&r.isFinal?badgeHtml('final','最終便'):'';
       const place=String(r.dest||'—');
       const firstBadge=r.isNextDayStart?badgeHtml('first',dep?'始発':'初便'):'';
-      const airlineLogo=airlineMiniLogo(p.airline);
-      const airlineName=airlineLogo||`<span class="name">${p.airline}</span>`;
-      const airlineKey=/ANA/i.test(p.airline)?'ana':/JAL/i.test(p.airline)?'jal':/IBEX/i.test(p.airline)?'ibex':/FDA/i.test(p.airline)?'fda':'other';
+      const airlineName=airServiceHtml(r,p);
+      const airlineKey=/ANA/i.test(p.airline)?'ana':/JAL/i.test(p.airline)?'jal':/IBEX/i.test(p.airline)?'ibex':/Jetstar/i.test(p.airline)?'jetstar':/チェジュ/i.test(p.airline)?'jeju':/エアプサン/i.test(p.airline)?'busan':/エバー/i.test(p.airline)?'eva':'other';
       row.classList.add(`airline-${airlineKey}`);
       const status=String(r.liveStatus||r.info||'').trim();
       const guidance=status||'—';
@@ -1744,7 +1752,7 @@
       row.innerHTML=`
         <div class="cell air-service-cell">
           <span class="airline-strip" aria-hidden="true"></span>
-          <div class="service-wrap airline-service-wrap">${airlineName}<span class="air-flight-no">${p.number||'—'}</span></div>
+          <div class="service-wrap airline-service-wrap">${airlineName}</div>
         </div>
         <div class="cell main air-place">${place} ${firstBadge}${finalBadge}</div>
         <div class="cell time air-board-time">${timeHtml}</div>
