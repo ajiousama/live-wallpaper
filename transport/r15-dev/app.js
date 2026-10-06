@@ -1418,21 +1418,22 @@
   }
 
 
-  function airportDisruptionItems(now) {
+  function airportDisruptionItems(now, direction) {
     const airport=slowLive.airport;
     if(!airport?.ok) return [{type:'loading',text:'運航情報取得中'}];
 
-    const rows=[
-      ...(Array.isArray(airport.departures)?airport.departures.map(x=>({...x,_dir:'出'})):[]),
-      ...(Array.isArray(airport.arrivals)?airport.arrivals.map(x=>({...x,_dir:'着'})):[])
-    ];
+    const arrival=direction==='arrival';
+    const rows=arrival
+      ? (Array.isArray(airport.arrivals)?airport.arrivals:[])
+      : (Array.isArray(airport.departures)?airport.departures:[]);
     const items=[];
     rows.forEach(x=>{
       const status=String(x?.status||'').trim();
       const delta=Number(x?.deltaMinutes);
-      const isCancel=/欠航|運休/.test(status);
+      const isCancel=!arrival && /欠航|運休/.test(status);
       const isDelay=(Number.isFinite(delta)&&delta>0)||/遅延|遅れ/.test(status);
-      if(!isCancel&&!isDelay) return;
+      const isArrivalChange=arrival && /変更|到着予定/.test(status);
+      if(!isCancel&&!isDelay&&!isArrivalChange) return;
 
       const nums=Array.isArray(x?.numbers)?x.numbers.map(String).filter(Boolean):[];
       const flight=nums[0]||'便名不明';
@@ -1442,13 +1443,14 @@
       const place=String(x?.place||'').replace(/[（(].*?[）)]/g,'').trim();
       let detail=status;
       if(isDelay && Number.isFinite(delta)&&delta>0 && !/[0-9]+分/.test(detail)) detail=`遅れ +${delta}分`;
-      if(!detail) detail=isCancel?'欠航':'遅延';
+      if(!detail) detail=isCancel?'欠航':(arrival?'到着遅延':'遅延');
       items.push({
         type:isCancel?'cancel':'delay',
-        text:`${x._dir} ${carrier?carrier+' ':''}${flight}${place?' '+place:''}　${detail}`
+        text:`${carrier?carrier+' ':''}${flight}${place?' '+place:''}　${detail}`
       });
     });
-    return items.length?items.slice(0,3):[{type:'ok',text:'現在、欠航・遅延情報なし'}];
+    const clearText=arrival?'現在、到着便の遅延情報なし':'現在、出発便の欠航・遅延情報なし';
+    return items.length?items.slice(0,3):[{type:'ok',text:clearText}];
   }
 
   function airportNextTimes(now) {
@@ -1466,15 +1468,19 @@
   function renderAirportBottomInfo(now) {
     const el=$('air-note');
     if(!el) return;
-    const disruption=airportDisruptionItems(now);
+    const direction=currentDirection();
+    const arrival=direction==='arrival';
+    const disruption=airportDisruptionItems(now,direction);
     const bus=airportNextTimes(now);
     const disruptionHtml=disruption.map(x=>`<span class="air-bottom-alert air-bottom-${x.type}">${x.text}</span>`).join('<span class="air-bottom-dot">・</span>');
     const limoText=bus.limo.length?bus.limo.map(t=>`${t}発`).join(' ／ '):'本日運行終了';
     const ordinaryText=bus.ordinary.length?bus.ordinary.map(x=>`${x[0]}発`).join(' ／ '):'本日運行終了';
+    const directionMark=arrival?'⭐到着⭐':'💎出発💎';
+    const disruptionLabel=arrival?'遅延・到着変更':'欠航・遅延';
 
     el.className='note air-bottom-info';
     el.innerHTML=`
-      <div class="air-bottom-disruption"><b>欠航・遅延</b><span class="air-bottom-disruption-text">${disruptionHtml}</span></div>
+      <div class="air-bottom-disruption"><b>${directionMark} ${disruptionLabel}</b><span class="air-bottom-disruption-text">${disruptionHtml}</span></div>
       <div class="air-bottom-buses">
         <div class="air-bottom-bus air-bottom-limo"><b>リムジン</b><span>松山空港発　${limoText}</span></div>
         <div class="air-bottom-bus air-bottom-ordinary"><b>普通便</b><span>松山空港発　${ordinaryText}</span></div>
