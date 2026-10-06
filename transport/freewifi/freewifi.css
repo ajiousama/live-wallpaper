@@ -1450,3 +1450,125 @@ body.freewifi-tv .web-page-switcher button:active{
 html.company-pc body.freewifi-tv .web-page-switcher{
   display:none!important;
 }
+
+
+/* Airport bottom information bar: disruption + outbound airport buses */
+body.freewifi-tv.air-board-page #panel-air{
+  grid-template-rows:34px 1fr 66px!important;
+}
+body.freewifi-tv.air-board-page #air-note.air-bottom-info{
+  height:66px!important;
+  min-height:66px!important;
+  display:grid!important;
+  grid-template-rows:28px 38px!important;
+  padding:0!important;
+  background:#0c1217!important;
+  border-top:1px solid #34434c!important;
+  color:#edf5f8!important;
+  overflow:hidden!important;
+  white-space:normal!important;
+}
+body.freewifi-tv.air-board-page .air-bottom-disruption{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+  padding:0 10px;
+  background:#151a1e;
+  border-bottom:1px solid #2a353d;
+  font-size:12px;
+  line-height:1;
+}
+body.freewifi-tv.air-board-page .air-bottom-disruption>b{
+  flex:0 0 auto;
+  color:#ffb13b;
+  font-size:12px;
+  font-weight:1000;
+}
+body.freewifi-tv.air-board-page .air-bottom-disruption-text{
+  min-width:0;
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+  font-weight:800;
+}
+body.freewifi-tv.air-board-page .air-bottom-alert.air-bottom-cancel{color:#ff665c}
+body.freewifi-tv.air-board-page .air-bottom-alert.air-bottom-delay{color:#ffe04d}
+body.freewifi-tv.air-board-page .air-bottom-alert.air-bottom-ok{color:#8fe6ae}
+body.freewifi-tv.air-board-page .air-bottom-alert.air-bottom-loading{color:#c6d4db}
+body.freewifi-tv.air-board-page .air-bottom-dot{color:#60717a;margin:0 3px}
+
+body.freewifi-tv.air-board-page .air-bottom-buses{
+  display:grid;
+  grid-template-columns:220px 220px minmax(0,1fr);
+  align-items:stretch;
+  min-width:0;
+}
+body.freewifi-tv.air-board-page .air-bottom-bus,
+body.freewifi-tv.air-board-page .air-bottom-stops{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  min-width:0;
+  padding:0 9px;
+  border-right:1px solid #26343c;
+  font-size:11.5px;
+  font-weight:800;
+  line-height:1.05;
+}
+body.freewifi-tv.air-board-page .air-bottom-bus>b,
+body.freewifi-tv.air-board-page .air-bottom-stops>b{
+  flex:0 0 auto;
+  padding:4px 6px;
+  border-radius:3px;
+  font-size:10.5px;
+  font-weight:1000;
+}
+body.freewifi-tv.air-board-page .air-bottom-limo>b{
+  background:#f58220;
+  color:#fff;
+}
+body.freewifi-tv.air-board-page .air-bottom-ordinary>b{
+  background:#174f8a;
+  color:#fff;
+}
+body.freewifi-tv.air-board-page .air-bottom-stops>b{
+  background:#293943;
+  color:#dceaf0;
+}
+body.freewifi-tv.air-board-page .air-bottom-bus>span,
+body.freewifi-tv.air-board-page .air-bottom-stops>span{
+  min-width:0;
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+}
+body.freewifi-tv.air-board-page .air-bottom-stops{
+  border-right:0;
+}
+
+html.company-pc body.freewifi-tv.air-board-page #panel-air{
+  grid-template-rows:34px 1fr 70px!important;
+}
+html.company-pc body.freewifi-tv.air-board-page #air-note.air-bottom-info{
+  height:70px!important;
+  min-height:70px!important;
+  grid-template-rows:29px 41px!important;
+}
+html.company-pc body.freewifi-tv.air-board-page .air-bottom-disruption{
+  font-size:13px;
+  padding:0 12px;
+}
+html.company-pc body.freewifi-tv.air-board-page .air-bottom-disruption>b{font-size:13px}
+html.company-pc body.freewifi-tv.air-board-page .air-bottom-buses{
+  grid-template-columns:238px 238px minmax(0,1fr);
+}
+html.company-pc body.freewifi-tv.air-board-page .air-bottom-bus,
+html.company-pc body.freewifi-tv.air-board-page .air-bottom-stops{
+  font-size:12.5px;
+  padding:0 10px;
+}
+html.company-pc body.freewifi-tv.air-board-page .air-bottom-bus>b,
+html.company-pc body.freewifi-tv.air-board-page .air-bottom-stops>b{
+  font-size:11px;
+}
