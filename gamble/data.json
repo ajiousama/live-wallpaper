@@ -1,8 +1,8 @@
 {
   "date": "2026-10-06",
   "date_label": "2026年10月06日",
-  "updated_at": "22:00:47",
-  "updated_at_iso": "2026-10-06T22:00:47.089548+09:00",
+  "updated_at": "22:14:35",
+  "updated_at_iso": "2026-10-06T22:14:35.757502+09:00",
   "jra_switch_time": "17:00",
   "keirin": {
     "phase": "本日開催 7場",
@@ -3633,12 +3633,55 @@
           {
             "race": 5,
             "time": "22:00",
-            "status": "結果待ち",
-            "order": [],
-            "payout": "",
-            "payouts": {},
-            "winner": "",
-            "origin": "",
+            "status": "確定",
+            "order": [
+              4,
+              3,
+              2
+            ],
+            "payout": "4,720円",
+            "payouts": {
+              "2車複": [
+                {
+                  "combo": "3-4",
+                  "amount": "1,000円"
+                }
+              ],
+              "2車単": [
+                {
+                  "combo": "4>3",
+                  "amount": "2,210円"
+                }
+              ],
+              "3連複": [
+                {
+                  "combo": "2-3-4",
+                  "amount": "1,000円"
+                }
+              ],
+              "3連単": [
+                {
+                  "combo": "4>3>2",
+                  "amount": "4,720円"
+                }
+              ],
+              "ワイド": [
+                {
+                  "combo": "3-4",
+                  "amount": "280円"
+                },
+                {
+                  "combo": "2-4",
+                  "amount": "320円"
+                },
+                {
+                  "combo": "2-3",
+                  "amount": "430円"
+                }
+              ]
+            },
+            "winner": "丹波孝佑",
+            "origin": "大阪",
             "race_name": "Ａ級 特予選",
             "scheduled_time": "22:00"
           },
@@ -3978,7 +4021,7 @@
           {
             "race": 5,
             "time": "22:10",
-            "status": "発走前",
+            "status": "結果待ち",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -6288,13 +6331,18 @@
         },
         {
           "race": 10,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
-          "popularity": "",
+          "status": "確定",
+          "order": [
+            3,
+            1,
+            5
+          ],
+          "payout": "3,220円",
+          "popularity": "12",
           "payouts": {},
           "race_name": "",
-          "scheduled_time": "22:05"
+          "scheduled_time": "22:05",
+          "winner": ""
         },
         {
           "race": 11,
