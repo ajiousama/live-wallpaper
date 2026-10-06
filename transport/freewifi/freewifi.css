@@ -1468,18 +1468,15 @@ body.freewifi-tv.air-board-page #air-note.air-bottom-info{
   white-space:normal!important;
 }
 body.freewifi-tv.air-board-page .air-bottom-disruption{
-  display:grid;
-  grid-template-columns:max-content minmax(0,1fr);
-  align-items:center;
-  gap:12px;
+  display:block;
   min-width:0;
-  padding:0 10px;
+  padding:0;
   background:#151a1e;
   border-bottom:1px solid #2a353d;
   font-size:12px;
   line-height:1;
 }
-body.freewifi-tv.air-board-page .air-bottom-disruption>b{
+body.freewifi-tv.air-board-page .air-bottom-direction{
   color:#ffb13b;
   font-size:12px;
   font-weight:1000;
@@ -1502,30 +1499,31 @@ body.freewifi-tv.air-board-page .air-bottom-scroll{
   align-items:center;
 }
 body.freewifi-tv.air-board-page .air-bottom-scroll-track{
-  display:flex;
+  display:inline-flex;
   align-items:center;
   width:max-content;
-  min-width:100%;
+  min-width:0;
+  padding-left:100%;
   white-space:nowrap;
   will-change:transform;
 }
 body.freewifi-tv.air-board-page .air-bottom-scroll-alert{
-  animation:airportBottomScroll 22s linear infinite;
+  animation:airportBottomFullScroll 19s linear infinite;
 }
 body.freewifi-tv.air-board-page .air-bottom-scroll-bus{
-  animation:airportBottomScroll 30s linear infinite;
+  animation:airportBottomFullScroll 27s linear infinite;
 }
 body.freewifi-tv.air-board-page .air-bottom-scroll-set{
   display:inline-flex;
   align-items:center;
   gap:12px;
   flex:0 0 auto;
-  padding-right:52px;
+  padding-right:36px;
   font-weight:800;
 }
-@keyframes airportBottomScroll{
+@keyframes airportBottomFullScroll{
   from{transform:translateX(0)}
-  to{transform:translateX(-50%)}
+  to{transform:translateX(-100%)}
 }
 body.freewifi-tv.air-board-page .air-bottom-alert.air-bottom-cancel{color:#ff665c}
 body.freewifi-tv.air-board-page .air-bottom-alert.air-bottom-delay{color:#ffe04d}
@@ -1579,10 +1577,9 @@ html.company-pc body.freewifi-tv.air-board-page #air-note.air-bottom-info{
 }
 html.company-pc body.freewifi-tv.air-board-page .air-bottom-disruption{
   font-size:13px;
-  padding:0 12px;
-  gap:14px;
+  padding:0;
 }
-html.company-pc body.freewifi-tv.air-board-page .air-bottom-disruption>b{font-size:13px}
+html.company-pc body.freewifi-tv.air-board-page .air-bottom-direction{font-size:13px}
 html.company-pc body.freewifi-tv.air-board-page .air-bottom-buses{padding:0 10px}
 html.company-pc body.freewifi-tv.air-board-page .air-bottom-bus,
 html.company-pc body.freewifi-tv.air-board-page .air-bottom-stops{
