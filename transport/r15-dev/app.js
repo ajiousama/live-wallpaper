@@ -1864,7 +1864,7 @@
       [/^名鉄バス$/, '<span class="brand-meitetsu-mark">M</span><span class="brand-word">名鉄バス</span>', 'meitetsu'],
       [/^せとうちバス$/, '<span class="brand-word">せとうち</span><span class="brand-sub">BUS</span>', 'setouchi'],
       [/^西東京バス$/, '<span class="brand-word">NISHITOKYO</span><span class="brand-sub">BUS</span>', 'nishitokyo'],
-      [/^WILLER EXPRESS$/, '<span class="brand-word willer-word">WILLER</span>', 'willer'],
+      [/^WILLER EXPRESS$/, '<span class="brand-word willer-word">WILLER</span><span class="willer-express-word">EXPRESS</span>', 'willer'],
       [/^宇和島自動車$/, '<span class="brand-word">宇和島</span><span class="brand-sub">BUS</span>', 'uwajima'],
       [/^本四バス$/, '<span class="brand-word">本四バス</span>', 'honshi'],
       [/^琴平バス$/, '<span class="brand-word kotobus-word">KOTOBUS</span>', 'kotobus'],
