@@ -2016,3 +2016,28 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
 #top-live-alert .marquee-track{
   animation-duration:7.5s!important;
 }
+
+
+/* operator logo image support */
+.brand-logo-image{position:relative;overflow:hidden}
+.brand-logo-image img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center;z-index:2}
+.brand-logo-image .brand-logo-fallback{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;width:100%;height:100%;font-weight:900}
+.bus-logo-official-dark{background:#152231!important;border-color:#4b6073!important}
+.bus-logo-official-dark img{padding:2px 4px;box-sizing:border-box}
+.bus-logo-ryobi{background:#fff!important;border-color:#8fb0d0!important}
+.bus-logo-ryobi img{padding:2px 5px;box-sizing:border-box}
+.brand-logo-custom{gap:3px;padding-left:6px;padding-right:6px}
+.brand-word{font-weight:1000;letter-spacing:-.02em}
+.brand-sub{font-size:.72em;font-weight:900;opacity:.88;letter-spacing:.02em}
+.iyotetsu-word{color:#fff;font-weight:1000;letter-spacing:-.04em}
+.brand-jr{display:inline-block;color:#1976a8;font-size:1.18em;font-weight:1000;font-style:italic;letter-spacing:-.12em;margin-right:2px}
+.bus-logo-jrtokai .brand-jr{color:#e56b00}
+.bus-logo-jrwest .brand-jr{color:#1677b8}
+.brand-mark-circle{width:10px;height:10px;border-radius:50%;border:3px solid #dc7d00;box-sizing:border-box;display:inline-block}
+.tokubus-word{color:#2e6aa4;text-shadow:1px 0 0 #d54b43}
+.brand-hankyu-mark{display:inline-flex;width:15px;height:15px;align-items:center;justify-content:center;background:#fff;color:#6b2636;font-weight:1000;border-radius:1px}
+.brand-meitetsu-mark{display:inline-flex;width:15px;height:15px;align-items:center;justify-content:center;border:2px solid #d31c2b;color:#d31c2b;font-weight:1000;transform:skew(-8deg)}
+.willer-word{color:#d00072}
+.kotobus-word{color:#d35a00}
+.shinki-word{color:#b3392c}
+.panel-bus .bus-mini-logo{max-width:105px}
