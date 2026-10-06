@@ -659,7 +659,8 @@ body.freewifi-tv.air-board-page #air-rows .air-board-row{
   display:grid!important;
   grid-template-columns:270px minmax(280px,1fr) 170px minmax(300px,1.15fr)!important;
   min-height:50px!important;
-  flex:1 1 0!important;
+  height:50px!important;
+  flex:0 0 50px!important;
   padding:0!important;
   column-gap:0!important;
   align-items:stretch!important;
@@ -823,6 +824,8 @@ html.company-pc body.freewifi-tv.air-board-page .air-sign-main{font-size:36px}
 html.company-pc body.freewifi-tv.air-board-page .air-sign-en{font-size:20px}
 html.company-pc body.freewifi-tv.air-board-page #air-rows .air-board-row{
   min-height:49px!important;
+  height:49px!important;
+  flex:0 0 49px!important;
 }
 html.company-pc body.freewifi-tv.air-board-page #air-rows .air-place{font-size:19px!important}
 html.company-pc body.freewifi-tv.air-board-page #air-rows .air-flight-no{font-size:17px!important}
