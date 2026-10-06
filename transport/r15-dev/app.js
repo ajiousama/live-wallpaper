@@ -723,18 +723,20 @@
   function ferryMiniLogo(name) {
     const n=String(name||'').trim();
 
-    if(n==='四国開発フェリー') return '<span class="ferry-mini-logo ferry-logo-orange brand-logo-custom"><span class="ferry-orange-mark">ORANGE</span><span class="brand-sub">FERRY</span></span>';
-    if(n==='中島汽船') return '<span class="ferry-mini-logo ferry-logo-nakajima brand-logo-custom"><span class="brand-wave-mark">≈</span><span class="brand-word">中島汽船</span></span>';
-    if(n==='防予フェリー') return '<span class="ferry-mini-logo ferry-logo-boyo brand-logo-custom"><span class="brand-word">防予</span><span class="brand-sub">FERRY</span></span>';
-    if(n==='国道九四フェリー') return '<span class="ferry-mini-logo ferry-logo-94 brand-logo-custom"><span class="brand-word">国道九四フェリー</span></span>';
-    if(n==='宇和島運輸') return '<span class="ferry-mini-logo ferry-logo-uwajima brand-logo-custom"><span class="brand-word">宇和島運輸</span></span>';
-    if(n==='ジャンボフェリー') return '<span class="ferry-mini-logo ferry-logo-jumbo brand-logo-custom"><span class="brand-word jumbo-word">JUMBO</span><span class="brand-sub">FERRY</span></span>';
-    if(n==='今治市営') return '<span class="ferry-mini-logo ferry-logo-imabari brand-logo-custom"><span class="municipal-mark">今治市</span><span class="brand-sub">市営船</span></span>';
-    if(n==='大三島ブルーライン') return '<span class="ferry-mini-logo ferry-logo-blue brand-logo-custom"><span class="brand-wave-mark">〜</span><span class="brand-word">BLUE LINE</span></span>';
-    if(n==='芸予汽船') return '<span class="ferry-mini-logo ferry-logo-geiyo brand-logo-custom"><span class="brand-word">芸予汽船</span></span>';
-    if(n==='瀬戸内海汽船・石崎汽船') return '<span class="ferry-logo-pair"><span class="ferry-mini-logo ferry-logo-setouchi brand-logo-custom">瀬戸内海汽船</span><span class="ferry-mini-logo ferry-logo-ishizaki brand-logo-custom">ISHIZAKI</span></span>';
-    if(n==='青島海運') return '<span class="ferry-mini-logo ferry-logo-aoshima brand-logo-custom"><span class="brand-word">青島海運</span></span>';
-    if(n==='新居浜市営') return '<span class="ferry-mini-logo ferry-logo-niihama brand-logo-custom"><span class="municipal-mark">新居浜市</span><span class="brand-sub">渡海船</span></span>';
+    // Keep the established company colors, but use plain readable operator names
+    // instead of forcing each operator into a pseudo-logo treatment.
+    if(n==='四国開発フェリー') return '<span class="ferry-mini-logo ferry-logo-orange">四国開発フェリー</span>';
+    if(n==='中島汽船') return '<span class="ferry-mini-logo ferry-logo-nakajima">中島汽船</span>';
+    if(n==='防予フェリー') return '<span class="ferry-mini-logo ferry-logo-boyo">防予フェリー</span>';
+    if(n==='国道九四フェリー') return '<span class="ferry-mini-logo ferry-logo-94">国道九四フェリー</span>';
+    if(n==='宇和島運輸') return '<span class="ferry-mini-logo ferry-logo-uwajima">宇和島運輸</span>';
+    if(n==='ジャンボフェリー') return '<span class="ferry-mini-logo ferry-logo-jumbo">ジャンボフェリー</span>';
+    if(n==='今治市営') return '<span class="ferry-mini-logo ferry-logo-imabari">今治市営</span>';
+    if(n==='大三島ブルーライン') return '<span class="ferry-mini-logo ferry-logo-blue">大三島ブルーライン</span>';
+    if(n==='芸予汽船') return '<span class="ferry-mini-logo ferry-logo-geiyo">芸予汽船</span>';
+    if(n==='瀬戸内海汽船・石崎汽船') return '<span class="ferry-logo-pair"><span class="ferry-mini-logo ferry-logo-setouchi">瀬戸内海汽船</span><span class="ferry-mini-logo ferry-logo-ishizaki">石崎汽船</span></span>';
+    if(n==='青島海運') return '<span class="ferry-mini-logo ferry-logo-aoshima">青島海運</span>';
+    if(n==='新居浜市営') return '<span class="ferry-mini-logo ferry-logo-niihama">新居浜市営</span>';
     return '';
   }
 
