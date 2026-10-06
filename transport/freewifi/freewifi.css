@@ -1262,3 +1262,24 @@ html.company-pc body.freewifi-tv.air-board-page{
 html.company-pc body.freewifi-tv.air-board-page #air-rows .air-place{
   font-size:20px!important;
 }
+
+
+/* AIR preview R61 — keep the longer Departures title inside the left header block */
+html.company-pc body.freewifi-tv.air-board-page .air-hero-title{
+  min-width:410px!important;
+  max-width:410px!important;
+  gap:9px!important;
+}
+html.company-pc body.freewifi-tv.air-board-page .air-sign-copy{
+  gap:7px!important;
+}
+html.company-pc body.freewifi-tv.air-board-page .air-sign-main{
+  font-size:38px!important;
+}
+html.company-pc body.freewifi-tv.air-board-page .air-sign-en{
+  font-size:18px!important;
+}
+html.company-pc body.freewifi-tv.air-board-page .air-sign-airport{
+  margin-left:0!important;
+  font-size:15px!important;
+}
