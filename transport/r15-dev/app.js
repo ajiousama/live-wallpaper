@@ -2463,15 +2463,21 @@
   function scale() {
     const wall = $('wall');
     const freeWifiTv = FREEWIFI_TV || new URLSearchParams(location.search).get('freewifi') === '1';
-    const iconSpace = freeWifiTv ? 0 : (window.innerWidth >= 900 ? 300 : 12);
-    const edge = freeWifiTv ? 8 : 16;
+    const companyPc = document.documentElement.classList.contains('company-pc');
+
+    // Company PC keeps the former workplace geometry:
+    // leave the desktop/icon area on the left and anchor the board to the right.
+    const workplaceGeometry = companyPc || !freeWifiTv;
+    const iconSpace = workplaceGeometry ? (window.innerWidth >= 900 ? 300 : 12) : 0;
+    const edge = workplaceGeometry ? 16 : 8;
     const usableW = Math.max(320, window.innerWidth - iconSpace - edge * 2);
-    const usableH = window.innerHeight - (freeWifiTv ? 16 : 32);
+    const usableH = window.innerHeight - (workplaceGeometry ? 32 : 16);
     const baseH = wall.offsetHeight || 724;
-    const ratio = freeWifiTv
-      ? Math.min(usableW / 1220, usableH / baseH)
-      : Math.min(0.88, usableW / 1180, usableH / baseH);
-    if (freeWifiTv) {
+    const ratio = workplaceGeometry
+      ? Math.min(0.88, usableW / 1180, usableH / baseH)
+      : Math.min(usableW / 1220, usableH / baseH);
+
+    if (!workplaceGeometry) {
       wall.style.left = '50%';
       wall.style.right = 'auto';
       wall.style.top = '50%';
