@@ -1138,3 +1138,39 @@ html.company-pc body.freewifi-tv.air-board-page #air-rows .air-service-brand.cod
   width:70px!important;
   flex-basis:70px!important;
 }
+
+
+/* AIR v59: codeshare carriers must stay on ONE row */
+body.freewifi-tv.air-board-page #air-rows .airline-service-wrap{
+  flex-direction:row!important;
+  flex-wrap:nowrap!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+}
+body.freewifi-tv.air-board-page #air-rows .air-service-brand{
+  flex-direction:row!important;
+  flex-wrap:nowrap!important;
+  align-items:center!important;
+  flex:0 0 auto!important;
+}
+body.freewifi-tv.air-board-page #panel-air .air-board-head,
+body.freewifi-tv.air-board-page #air-rows .air-board-row{
+  grid-template-columns:292px minmax(250px,1fr) 155px minmax(250px,1fr)!important;
+}
+html.company-pc body.freewifi-tv.air-board-page #panel-air .air-board-head,
+html.company-pc body.freewifi-tv.air-board-page #air-rows .air-board-row{
+  grid-template-columns:305px minmax(245px,1fr) 150px minmax(235px,1fr)!important;
+}
+html.company-pc body.freewifi-tv.air-board-page #air-rows .air-service-cell{
+  padding-left:18px!important;
+  padding-right:8px!important;
+}
+html.company-pc body.freewifi-tv.air-board-page #air-rows .airline-service-wrap{
+  gap:4px!important;
+}
+html.company-pc body.freewifi-tv.air-board-page #air-rows .air-codeshare-sep{
+  margin:0!important;
+  font-size:13px!important;
+}
