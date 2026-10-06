@@ -57,6 +57,27 @@ jobs:
       - name: Update wallpaper health status
         run: python scripts/update_data.py
 
+      - name: Cache airline logos into Pages artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          OUT="transport/assets/airlines"
+          mkdir -p "$OUT"
+          get_logo() {
+            local url="$1"
+            local out="$2"
+            curl -fL --retry 4 --retry-delay 2 --connect-timeout 15 --max-time 60               -A "Mozilla/5.0 GitHub-Actions live-wallpaper"               "$url" -o "$OUT/$out"
+            test -s "$OUT/$out"
+          }
+          get_logo "https://upload.wikimedia.org/wikipedia/commons/8/8d/All_Nippon_Airways_Logo.svg" "ana.svg"
+          get_logo "https://www.matsuyama-airport.co.jp/img/logo/JAL.png" "jal.png"
+          get_logo "https://newscast.jp/attachments/GGxKzaX071Sa4bUQShUJ.png" "ibex.png"
+          get_logo "https://upload.wikimedia.org/wikipedia/commons/8/8f/Jetstar_logo.svg" "jetstar.svg"
+          get_logo "https://upload.wikimedia.org/wikipedia/commons/f/f2/Jeju_Air_Logo.svg" "jeju.svg"
+          get_logo "https://upload.wikimedia.org/wikipedia/commons/0/01/Air_Busan_logo.svg" "air-busan.svg"
+          get_logo "https://upload.wikimedia.org/wikipedia/commons/7/74/Asiana_Airlines.svg" "asiana.svg"
+          get_logo "https://upload.wikimedia.org/wikipedia/commons/c/cf/Logo_EVA_Air.svg" "eva.svg"
+
       - name: Persist live result changes
         run: |
           if git diff --quiet -- jra/data.json gamble/data.json; then
