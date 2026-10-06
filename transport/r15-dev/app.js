@@ -159,17 +159,56 @@
   function airlineMiniLogo(airline) {
     const raw=String(airline||'').trim();
     const a=raw.toUpperCase();
-    if(a==='JAL') return '<span class="air-mini-logo air-mini-logo-jal" aria-label="JAL"><span>JAL</span></span>';
-    if(a==='ANA') return '<span class="air-mini-logo air-mini-logo-ana" aria-label="ANA"><span>ANA</span></span>';
-    if(/IBEX/.test(a)) return '<span class="air-mini-logo air-mini-logo-ibex" aria-label="IBEXエアラインズ"><span class="air-brand-main">IBEX</span></span>';
-    if(/ジェットスター|JETSTAR/i.test(raw)) return '<span class="air-mini-logo air-mini-logo-jetstar" aria-label="Jetstar"><span class="air-star-mark">★</span><span class="air-brand-main">Jetstar</span></span>';
-    if(/チェジュ|JEJU/.test(raw)) return '<span class="air-mini-logo air-mini-logo-jeju" aria-label="チェジュ航空"><span class="air-brand-main">チェジュ</span><span class="air-jeju-i">i</span></span>';
-    if(/エバー|EVA/.test(raw)) return '<span class="air-mini-logo air-mini-logo-eva" aria-label="エバー航空"><span class="air-eva-dot"></span><span class="air-brand-main">エバー</span></span>';
-    if(/エアプサン|AIR BUSAN/.test(raw)) return '<span class="air-mini-logo air-mini-logo-busan" aria-label="エアプサン"><span class="air-busan-wing"></span><span class="air-brand-main">エアプサン</span></span>';
-    if(/マレーシア|MALAYSIA/.test(raw)) return '<span class="air-mini-logo air-mini-logo-malaysia" aria-label="マレーシア航空"><span class="air-my-mark"></span><span class="air-brand-main">マレーシア</span></span>';
+
+    const logo=(cls,label,src,fallback)=>`<span class="air-mini-logo ${cls}" aria-label="${label}"><span class="air-logo-fallback">${fallback}</span><img src="${src}" alt="${label}" loading="eager" referrerpolicy="no-referrer"></span>`;
+
+    if(a==='ANA') return logo(
+      'air-mini-logo-ana','ANA',
+      'https://commons.wikimedia.org/wiki/Special:Redirect/file/ANA-Logo.svg',
+      'ANA'
+    );
+    if(a==='JAL') return logo(
+      'air-mini-logo-jal','JAL',
+      'https://commons.wikimedia.org/wiki/Special:Redirect/file/Japan_Airlines_%E2%80%9DJAL%22_Wordmark_%282011%29.svg',
+      'JAL'
+    );
+    if(/IBEX/.test(a)) return logo(
+      'air-mini-logo-ibex','IBEXエアラインズ',
+      'https://newscast.jp/attachments/LxeaiUv311WOXj8XDPTY.png',
+      'IBEX'
+    );
+    if(/FDA|フジドリーム/.test(a)) return logo(
+      'air-mini-logo-fda','FDA',
+      'https://commons.wikimedia.org/wiki/Special:Redirect/file/Fuji_Dream_Airlines_logo_%282008%2C_FDA%29.svg',
+      'FDA'
+    );
+    if(/ジェットスター|JETSTAR/i.test(raw)) return logo(
+      'air-mini-logo-jetstar','Jetstar',
+      'https://commons.wikimedia.org/wiki/Special:Redirect/file/Jetstar_logo.svg',
+      'Jetstar'
+    );
+    if(/チェジュ|JEJU/.test(raw)) return logo(
+      'air-mini-logo-jeju','チェジュ航空',
+      'https://commons.wikimedia.org/wiki/Special:Redirect/file/Jeju_Air_Logo.svg',
+      'JEJU'
+    );
+    if(/エバー|EVA/.test(raw)) return logo(
+      'air-mini-logo-eva','エバー航空',
+      'https://commons.wikimedia.org/wiki/Special:Redirect/file/Logo_EVA_Air.svg',
+      'EVA'
+    );
+    if(/エアプサン|AIR BUSAN/.test(raw)) return logo(
+      'air-mini-logo-busan','エアプサン',
+      'https://commons.wikimedia.org/wiki/Special:Redirect/file/Air_Busan_logo.svg',
+      'AIR BUSAN'
+    );
+    if(/マレーシア|MALAYSIA/.test(raw)) return logo(
+      'air-mini-logo-malaysia','マレーシア航空',
+      'https://commons.wikimedia.org/wiki/Special:Redirect/file/Malaysia-airlines-logo-alt.png',
+      'MALAYSIA'
+    );
     return '';
   }
-
 
 
   function padTime(t) {
