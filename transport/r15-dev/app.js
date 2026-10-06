@@ -1519,8 +1519,16 @@
     const disruption=airportDisruptionItems(now,direction);
     const bus=airportNextTimes(now);
     const disruptionHtml=disruption.map(x=>`<span class="air-bottom-alert air-bottom-${x.type}">${x.text}</span>`).join('<span class="air-bottom-dot">・</span>');
-    const limoText=bus.limo.length?bus.limo.map(t=>`${t}発`).join(' ／ '):'本日運行終了';
-    const ordinaryText=bus.ordinary.length?bus.ordinary.map(x=>`${x[0]}発`).join(' ／ '):'本日運行終了';
+    const twoDepartureText=(times)=>{
+      if(!times.length) return '本日運行終了';
+      const first=times[0];
+      const next=times[1];
+      return next
+        ? `先発 ${first}発　｜　次発 ${next}発`
+        : `先発 ${first}発　｜　次発なし`;
+    };
+    const limoText=twoDepartureText(bus.limo);
+    const ordinaryText=twoDepartureText(bus.ordinary.map(x=>x[0]));
     const directionMark=arrival?'⭐到着⭐':'💎出発💎';
     const disruptionLabel=arrival?'遅延・到着変更':'欠航・遅延';
 
