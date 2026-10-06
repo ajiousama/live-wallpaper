@@ -1,18 +1,22 @@
 (() => {
-  // Eight transport screens + one gamble screen.
-  // Transport pages are 10 seconds. Gamble gets 20 seconds so its own dashboard
-  // has enough time to be useful without changing the gamble app's internal rotation.
-  const pages = [
-    {id:'panel-rail', mode:0, duration:15000, label:'01 / 09　JR 松山駅　宇和島方面'},
-    {id:'panel-rail', mode:1, duration:15000, label:'02 / 09　JR 松山駅　今治方面'},
-    {id:'panel-air',  mode:0, duration:15000, label:'03 / 09　松山空港　出発'},
-    {id:'panel-air',  mode:1, duration:15000, label:'04 / 09　松山空港　到着'},
-    {id:'panel-bus',  mode:0, duration:15000, label:'05 / 09　高速・中距離バス　出発'},
-    {id:'panel-bus',  mode:1, duration:15000, label:'06 / 09　高速・中距離バス　到着'},
-    {id:'panel-port', mode:0, duration:15000, label:'07 / 09　フェリー　出航'},
-    {id:'panel-port', mode:1, duration:15000, label:'08 / 09　フェリー　到着'},
-    {id:'gamble-screen', gamble:true, duration:20000, label:'09 / 09　ギャンブル'}
+  const companyPc = document.documentElement.classList.contains('company-pc');
+
+  // Web/FreeWiFi: eight transport screens + gamble.
+  // Workplace PC: transport only; do not load or rotate into gamble.
+  const transportPages = [
+    {id:'panel-rail', mode:0, duration:15000, title:'JR 松山駅　宇和島方面'},
+    {id:'panel-rail', mode:1, duration:15000, title:'JR 松山駅　今治方面'},
+    {id:'panel-air',  mode:0, duration:15000, title:'松山空港　出発'},
+    {id:'panel-air',  mode:1, duration:15000, title:'松山空港　到着'},
+    {id:'panel-bus',  mode:0, duration:15000, title:'高速・中距離バス　出発'},
+    {id:'panel-bus',  mode:1, duration:15000, title:'高速・中距離バス　到着'},
+    {id:'panel-port', mode:0, duration:15000, title:'フェリー　出航'},
+    {id:'panel-port', mode:1, duration:15000, title:'フェリー　到着'}
   ];
+  const rawPages = companyPc
+    ? transportPages
+    : [...transportPages,{id:'gamble-screen', gamble:true, duration:20000, title:'ギャンブル'}];
+  const pages = rawPages.map((p,i)=>({...p,label:`${String(i+1).padStart(2,'0')} / ${String(rawPages.length).padStart(2,'0')}　${p.title}`}));
 
   const TRANSPORT_IDS = ['panel-rail','panel-air','panel-bus','panel-port'];
   const gambleScreen = document.getElementById('gamble-screen');
@@ -23,11 +27,13 @@
 
 
 
-  // Company PC gamble page is intentionally limited to keirin + local horse racing.
-  if(gambleFrame && document.documentElement.classList.contains('company-pc')){
-    const u = new URL(gambleFrame.getAttribute('src') || '../../gamble/', location.href);
-    u.searchParams.set('company','1');
-    gambleFrame.src = u.toString();
+  // Workplace PC does not use gamble at all; avoid loading the iframe.
+  if(companyPc){
+    if(gambleFrame){
+      gambleFrame.removeAttribute('src');
+      gambleFrame.src = 'about:blank';
+    }
+    if(gambleScreen) gambleScreen.hidden = true;
   }
 
   let pageIndex = 0;
