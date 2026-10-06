@@ -720,7 +720,7 @@
     if(n==='四国開発フェリー') return '<span class="ferry-mini-logo ferry-logo-orange brand-logo-custom"><span class="ferry-orange-mark">ORANGE</span><span class="brand-sub">FERRY</span></span>';
     if(n==='中島汽船') return '<span class="ferry-mini-logo ferry-logo-nakajima brand-logo-custom"><span class="brand-wave-mark">≈</span><span class="brand-word">中島汽船</span></span>';
     if(n==='防予フェリー') return '<span class="ferry-mini-logo ferry-logo-boyo brand-logo-custom"><span class="brand-word">防予</span><span class="brand-sub">FERRY</span></span>';
-    if(n==='国道九四フェリー') return '<span class="ferry-mini-logo ferry-logo-94 brand-logo-custom"><span class="brand-route94">94</span><span class="brand-sub">FERRY</span></span>';
+    if(n==='国道九四フェリー') return '<span class="ferry-mini-logo ferry-logo-94 brand-logo-custom"><span class="brand-word">国道九四フェリー</span></span>';
     if(n==='宇和島運輸') return '<span class="ferry-mini-logo ferry-logo-uwajima brand-logo-custom"><span class="brand-word">宇和島運輸</span></span>';
     if(n==='ジャンボフェリー') return '<span class="ferry-mini-logo ferry-logo-jumbo brand-logo-custom"><span class="brand-word jumbo-word">JUMBO</span><span class="brand-sub">FERRY</span></span>';
     if(n==='今治市営') return '<span class="ferry-mini-logo ferry-logo-imabari brand-logo-custom"><span class="municipal-mark">今治市</span><span class="brand-sub">市営船</span></span>';
