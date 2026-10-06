@@ -472,13 +472,25 @@ function buildPages(){
 
   const specials=specialItems().filter(x=>!COMPANY_MODE || x.kind==="keirin" || x.kind==="local" || x.kind==="jra" || x.kind==="win5");
   if(specials.length){
-    pages.push({
-      key:"special:all",
-      type:"special",
-      page:1,
-      total:1,
-      items:specials
-    });
+    if(COMPANY_MODE){
+      for(let i=0;i<specials.length;i+=4){
+        pages.push({
+          key:"special:company:"+Math.floor(i/4),
+          type:"special",
+          page:Math.floor(i/4)+1,
+          total:Math.ceil(specials.length/4),
+          items:specials.slice(i,i+4)
+        });
+      }
+    }else{
+      pages.push({
+        key:"special:all",
+        type:"special",
+        page:1,
+        total:1,
+        items:specials
+      });
+    }
   }
 
   const jraVenues=jraIsCurrentDay()?(jra?.venues||[]):[];
