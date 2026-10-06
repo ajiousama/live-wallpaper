@@ -1283,3 +1283,82 @@ html.company-pc body.freewifi-tv.air-board-page .air-sign-airport{
   margin-left:0!important;
   font-size:15px!important;
 }
+
+
+/* AIR preview R62 — TIME is the primary visual anchor */
+body.freewifi-tv.air-board-page{
+  --air-board-cols:310px minmax(250px,.86fr) 142px minmax(355px,1.34fr);
+}
+html.company-pc body.freewifi-tv.air-board-page{
+  --air-board-cols:310px minmax(240px,.82fr) 138px minmax(370px,1.38fr);
+}
+
+/* Destination: narrower and visually pulled left */
+body.freewifi-tv.air-board-page #panel-air .air-board-head>span:nth-child(2),
+body.freewifi-tv.air-board-page #air-rows .air-place{
+  padding-left:10px!important;
+  padding-right:8px!important;
+}
+body.freewifi-tv.air-board-page #air-rows .air-place{
+  justify-content:flex-start!important;
+  font-size:19px!important;
+  letter-spacing:-.02em!important;
+}
+
+/* Time: bigger, heavier, tighter right edge */
+body.freewifi-tv.air-board-page #panel-air .air-board-head>span:nth-child(3),
+body.freewifi-tv.air-board-page #air-rows .air-board-time{
+  padding-left:9px!important;
+  padding-right:4px!important;
+}
+body.freewifi-tv.air-board-page #air-rows .air-board-time{
+  justify-content:flex-start!important;
+  font-family:"Arial Narrow","Bahnschrift SemiBold","Segoe UI",sans-serif!important;
+  font-size:27px!important;
+  font-weight:1000!important;
+  letter-spacing:.015em!important;
+  font-variant-numeric:tabular-nums lining-nums!important;
+  color:#fff!important;
+}
+body.freewifi-tv.air-board-page #air-rows .air-time-wrap{
+  width:100%!important;
+  gap:4px!important;
+}
+body.freewifi-tv.air-board-page #air-rows .live-time{
+  font-family:"Arial Narrow","Bahnschrift SemiBold","Segoe UI",sans-serif!important;
+  font-size:28px!important;
+  font-weight:1000!important;
+  line-height:1!important;
+  letter-spacing:.01em!important;
+}
+body.freewifi-tv.air-board-page #air-rows .scheduled-time{
+  font-family:"Arial Narrow","Bahnschrift SemiBold","Segoe UI",sans-serif!important;
+  font-size:19px!important;
+  font-weight:900!important;
+}
+body.freewifi-tv.air-board-page #air-rows .air-time-arrow{
+  font-size:18px!important;
+}
+
+/* Guidance gets every pixel recovered from destination/time */
+body.freewifi-tv.air-board-page #panel-air .air-board-head>span:nth-child(4),
+body.freewifi-tv.air-board-page #air-rows .air-guidance{
+  padding-left:12px!important;
+  padding-right:10px!important;
+}
+body.freewifi-tv.air-board-page #air-rows .air-guidance{
+  font-size:17px!important;
+  line-height:1.08!important;
+}
+html.company-pc body.freewifi-tv.air-board-page #air-rows .air-board-time{
+  font-size:29px!important;
+}
+html.company-pc body.freewifi-tv.air-board-page #air-rows .live-time{
+  font-size:30px!important;
+}
+html.company-pc body.freewifi-tv.air-board-page #air-rows .scheduled-time{
+  font-size:20px!important;
+}
+html.company-pc body.freewifi-tv.air-board-page #air-rows .air-guidance{
+  font-size:17px!important;
+}
