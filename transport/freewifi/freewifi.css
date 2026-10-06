@@ -874,3 +874,76 @@ body.freewifi-tv.air-board-page #air-rows .air-mini-logo-ibex img{
   object-fit:cover;
   object-position:center;
 }
+
+
+/* Matsuyama Airport: real operating + codeshare airline logos */
+body.freewifi-tv.air-board-page #air-rows .airline-service-wrap{
+  display:flex!important;
+  align-items:center!important;
+  gap:5px!important;
+  overflow:hidden!important;
+  white-space:nowrap!important;
+}
+body.freewifi-tv.air-board-page #air-rows .air-service-brand{
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:5px!important;
+  min-width:0;
+  flex:0 0 auto;
+}
+body.freewifi-tv.air-board-page #air-rows .air-codeshare-sep{
+  flex:0 0 auto;
+  color:#8ea8c7;
+  font-size:12px;
+  font-weight:900;
+  margin:0 1px;
+}
+body.freewifi-tv.air-board-page #air-rows .air-service-brand .air-mini-logo{
+  min-width:68px!important;
+  width:68px!important;
+  height:25px!important;
+  padding:1px 3px!important;
+  flex:0 0 68px!important;
+}
+body.freewifi-tv.air-board-page #air-rows .air-service-brand.codeshare-brand .air-mini-logo{
+  min-width:62px!important;
+  width:62px!important;
+  flex-basis:62px!important;
+}
+body.freewifi-tv.air-board-page #air-rows .air-service-brand .air-flight-no{
+  font-size:15px!important;
+  line-height:1!important;
+  min-width:0!important;
+}
+body.freewifi-tv.air-board-page #air-rows .air-service-brand.codeshare-brand .air-flight-no{
+  font-size:13px!important;
+}
+body.freewifi-tv.air-board-page #air-rows .airline-text-logo{
+  display:inline-flex;
+  align-items:center;
+  height:25px;
+  padding:0 5px;
+  background:#fff;
+  color:#17212a;
+  font-size:9px;
+  font-weight:1000;
+  border-radius:1px;
+}
+body.freewifi-tv.air-board-page #air-rows .air-mini-logo-jal img,
+body.freewifi-tv.air-board-page #air-rows .air-mini-logo-ana img,
+body.freewifi-tv.air-board-page #air-rows .air-mini-logo-ibex img,
+body.freewifi-tv.air-board-page #air-rows .air-mini-logo-jetstar img,
+body.freewifi-tv.air-board-page #air-rows .air-mini-logo-jeju img,
+body.freewifi-tv.air-board-page #air-rows .air-mini-logo-busan img,
+body.freewifi-tv.air-board-page #air-rows .air-mini-logo-asiana img,
+body.freewifi-tv.air-board-page #air-rows .air-mini-logo-eva img{
+  object-fit:contain!important;
+  object-position:center!important;
+  padding:1px 3px!important;
+}
+
+/* primary-carrier accent bars */
+body.freewifi-tv.air-board-page #air-rows .airline-jetstar .airline-strip{background:#f58220}
+body.freewifi-tv.air-board-page #air-rows .airline-jeju .airline-strip{background:#f36f21}
+body.freewifi-tv.air-board-page #air-rows .airline-busan .airline-strip{background:#b7d51c}
+body.freewifi-tv.air-board-page #air-rows .airline-eva .airline-strip{background:#008f72}
