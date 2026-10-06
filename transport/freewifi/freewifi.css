@@ -949,3 +949,76 @@ body.freewifi-tv.air-board-page #air-rows .airline-busan .airline-strip{backgrou
 body.freewifi-tv.air-board-page #air-rows .airline-eva .airline-strip{background:#008f72}
 
 /* deploy bump: Matsuyama airline logos */
+
+
+/* v57: make BUS/FERRY operator logos actually readable */
+body.freewifi-tv .panel-bus .bus-mini-logo{
+  min-width:92px!important;
+  width:auto!important;
+  height:27px!important;
+  padding:0 8px!important;
+  font-size:12.5px!important;
+  max-width:190px!important;
+}
+body.freewifi-tv .panel-bus .brand-logo-image{
+  min-width:118px!important;
+  width:118px!important;
+}
+body.freewifi-tv .panel-bus .brand-logo-image img{
+  padding:2px 7px!important;
+  box-sizing:border-box!important;
+}
+body.freewifi-tv .panel-port .ferry-mini-logo{
+  min-width:100px!important;
+  width:auto!important;
+  height:27px!important;
+  padding:0 8px!important;
+  font-size:12px!important;
+  max-width:190px!important;
+}
+body.freewifi-tv .panel-port .ferry-logo-pair .ferry-mini-logo{
+  min-width:82px!important;
+  width:82px!important;
+  max-width:82px!important;
+  padding:0 4px!important;
+  font-size:9.5px!important;
+}
+
+/* Company-PC has 48px transport rows, so use the available height instead of tiny badges. */
+html.company-pc body.freewifi-tv .panel-bus .bus-mini-logo{
+  min-width:112px!important;
+  width:auto!important;
+  height:31px!important;
+  padding:0 9px!important;
+  font-size:14px!important;
+  max-width:205px!important;
+}
+html.company-pc body.freewifi-tv .panel-bus .brand-logo-image{
+  min-width:138px!important;
+  width:138px!important;
+}
+html.company-pc body.freewifi-tv .panel-bus .brand-logo-image img{
+  padding:2px 8px!important;
+}
+html.company-pc body.freewifi-tv .panel-bus .brand-sub{
+  font-size:10px!important;
+}
+html.company-pc body.freewifi-tv .panel-port .ferry-mini-logo{
+  min-width:115px!important;
+  width:auto!important;
+  height:30px!important;
+  padding:0 9px!important;
+  font-size:13px!important;
+  max-width:205px!important;
+}
+html.company-pc body.freewifi-tv .panel-port .ferry-logo-pair{
+  gap:5px!important;
+}
+html.company-pc body.freewifi-tv .panel-port .ferry-logo-pair .ferry-mini-logo{
+  min-width:94px!important;
+  width:94px!important;
+  max-width:94px!important;
+  height:29px!important;
+  padding:0 4px!important;
+  font-size:10px!important;
+}
