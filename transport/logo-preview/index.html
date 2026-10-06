@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>実装ロゴ見本</title>
+<link rel="stylesheet" href="../r15-dev/style.css">
+<link rel="stylesheet" href="../freewifi/freewifi.css">
+<style>
+html,body{width:auto!important;height:auto!important;overflow:auto!important}
+body{margin:0!important;background:#07131a!important;color:#eef8ff!important;font-family:"Yu Gothic UI","Meiryo",sans-serif!important}
+#preview{max-width:1500px;margin:auto;padding:20px}
+h1{font-size:34px;margin:0 0 6px}
+p{margin:0 0 18px;color:#a9bdc7}
+section{margin:18px 0;padding:14px;border:1px solid #2d4a57;background:#0a1b23}
+h2{margin:0 0 12px;font-size:22px}
+.logo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:10px}
+.logo-card{min-height:86px;display:flex;align-items:center;gap:14px;padding:12px;border:1px solid #29434e;background:#071820}
+.logo-sample{min-width:160px;display:flex;align-items:center;justify-content:flex-start;gap:5px}
+.logo-name{font-size:15px;font-weight:900}
+.logo-type{font-size:11px;color:#8da5b0;margin-top:3px}
+.air-demo{display:flex;align-items:center;gap:5px}
+.air-demo .air-mini-logo{transform:none!important}
+.air-demo .air-service-brand{display:flex!important;align-items:center!important;gap:5px!important}
+.air-demo .air-flight-no{font-size:15px!important}
+.air-demo .air-codeshare-sep{font-size:12px!important}
+.panel-bus,.panel-port{display:block!important;position:static!important;background:none!important;border:0!important}
+.panel-bus .bus-mini-logo{height:32px!important;font-size:14px!important;max-width:200px!important}
+.panel-port .ferry-mini-logo{height:30px!important;font-size:13px!important;max-width:205px!important}
+.panel-port .ferry-logo-pair .ferry-mini-logo{height:29px!important}
+.official-note{display:inline-block;padding:2px 5px;border:1px solid #55717f;border-radius:3px;color:#bed0d8;font-size:10px;margin-left:6px}
+</style>
+</head>
+<body class="freewifi-tv company-pc air-board-page"><main id="preview">
+<h1>いま実装しているロゴ全部</h1>
+<p>航空・コードシェア・高速バス・フェリー。現在のコードと同じロゴ／同じ自作マークを並べた確認用ページ。</p>
+
+<section><h2>航空会社</h2><div class="logo-grid" id="air"></div></section>
+<section><h2>コードシェア</h2><div class="logo-grid" id="share"></div></section>
+<section><h2>バス会社</h2><div class="logo-grid panel-bus" id="bus"></div></section>
+<section><h2>フェリー・旅客船</h2><div class="logo-grid panel-port" id="ferry"></div></section>
+</main>
+<script>
+const imageLogo=(cls,label,src,fallback)=>`<span class="air-mini-logo ${cls}"><span class="air-logo-fallback">${fallback}</span><img src="${src}" alt="${label}"></span>`;
+const airlines=[
+["ANA",imageLogo("air-mini-logo-ana","ANA","https://www.matsuyama-airport.co.jp/img/logo/ANA.png","ANA"),"公式"],
+["JAL",imageLogo("air-mini-logo-jal","JAL","https://www.matsuyama-airport.co.jp/img/logo/JAL.png","JAL"),"公式"],
+["IBEX",imageLogo("air-mini-logo-ibex","IBEX","https://www.matsuyama-airport.co.jp/img/logo/IBX.png","IBEX"),"公式"],
+["Jetstar",imageLogo("air-mini-logo-jetstar","Jetstar","https://www.matsuyama-airport.co.jp/img/logo/JJP.png","Jetstar"),"公式"],
+["チェジュ航空",imageLogo("air-mini-logo-jeju","チェジュ航空","https://www.matsuyama-airport.co.jp/img/logo/JJA.png","JEJUair"),"公式"],
+["エアプサン",imageLogo("air-mini-logo-busan","エアプサン","https://www.matsuyama-airport.co.jp/img/logo/ABL.png","AIR BUSAN"),"公式"],
+["アシアナ航空",imageLogo("air-mini-logo-asiana","アシアナ航空","https://www.matsuyama-airport.co.jp/img/logo/9593.png","ASIANA"),"公式"],
+["エバー航空",imageLogo("air-mini-logo-eva","EVA","https://commons.wikimedia.org/wiki/Special:Redirect/file/Logo_EVA_Air.svg","EVA AIR"),"実ロゴ"]
+];
+document.getElementById("air").innerHTML=airlines.map(x=>`<div class="logo-card"><div class="logo-sample air-demo">${x[1]}</div><div><div class="logo-name">${x[0]}<span class="official-note">${x[2]}</span></div></div></div>`).join("");
+
+const A=Object.fromEntries(airlines.map(x=>[x[0],x[1]]));
+const shares=[["IBEX＋ANA",A.IBEX,A.ANA],["Jetstar＋JAL",A.Jetstar,A.JAL],["エアプサン＋アシアナ",A["エアプサン"],A["アシアナ航空"]]];
+document.getElementById("share").innerHTML=shares.map(x=>`<div class="logo-card"><div class="logo-sample air-demo"><span class="air-service-brand">${x[1]}</span><span class="air-codeshare-sep">/</span><span class="air-service-brand codeshare-brand">${x[2]}</span></div><div class="logo-name">${x[0]}</div></div>`).join("");
+
+const buses=[
+["伊予鉄バス",'<span class="bus-mini-logo bus-logo-iyo brand-logo-custom"><span class="brand-word iyotetsu-word">IYOTETSU</span></span>',"自作"],
+["伊予鉄南予バス",'<span class="bus-mini-logo bus-logo-nanyo brand-logo-custom"><span class="brand-word iyotetsu-word">IYOTETSU</span><span class="brand-sub">南予</span></span>',"自作"],
+["JR四国バス",'<span class="bus-mini-logo bus-logo-jrshikoku brand-logo-custom"><span class="brand-jr">JR</span><span class="brand-word">四国バス</span></span>',"自作"],
+["西日本JRバス",'<span class="bus-mini-logo bus-logo-jrwest brand-logo-custom"><span class="brand-jr">JR</span><span class="brand-word">西日本</span></span>',"自作"],
+["JR東海バス",'<span class="bus-mini-logo bus-logo-jrtokai brand-logo-custom"><span class="brand-jr">JR</span><span class="brand-word">東海バス</span></span>',"自作"],
+["四国高速バス",'<span class="bus-mini-logo bus-logo-shikoku brand-logo-custom"><span class="brand-mark-circle"></span><span class="brand-word">四国高速</span></span>',"自作"],
+["徳島バス",'<span class="bus-mini-logo bus-logo-tokushima brand-logo-custom"><span class="brand-word tokubus-word">TOKUBUS</span></span>',"自作"],
+["下電バス",'<span class="bus-mini-logo bus-logo-shimoden brand-logo-custom"><span class="brand-word">SHIMODEN</span><span class="brand-sub">BUS</span></span>',"自作"],
+["とさでん交通",'<span class="bus-mini-logo bus-logo-tosaden brand-logo-custom"><span class="brand-word">とさでん</span><span class="brand-sub">交通</span></span>',"自作"],
+["阪急観光バス",'<span class="bus-mini-logo bus-logo-hankyu brand-logo-custom"><span class="brand-hankyu-mark">H</span><span class="brand-word">HANKYU</span></span>',"自作"],
+["名鉄バス",'<span class="bus-mini-logo bus-logo-meitetsu brand-logo-custom"><span class="brand-meitetsu-mark">M</span><span class="brand-word">名鉄バス</span></span>',"自作"],
+["せとうちバス",'<span class="bus-mini-logo bus-logo-setouchi brand-logo-custom"><span class="brand-word">せとうち</span><span class="brand-sub">BUS</span></span>',"自作"],
+["西東京バス",'<span class="bus-mini-logo bus-logo-nishitokyo brand-logo-custom"><span class="brand-word">NISHITOKYO</span><span class="brand-sub">BUS</span></span>',"自作"],
+["WILLER EXPRESS",'<span class="bus-mini-logo bus-logo-willer brand-logo-custom"><span class="brand-word willer-word">WILLER</span><span class="willer-express-word">EXPRESS</span></span>',"自作・修正版"],
+["宇和島自動車",'<span class="bus-mini-logo bus-logo-uwajima brand-logo-custom"><span class="brand-word">宇和島</span><span class="brand-sub">BUS</span></span>',"自作"],
+["本四バス",'<span class="bus-mini-logo bus-logo-honshi brand-logo-custom"><span class="brand-word">本四バス</span></span>',"自作"],
+["琴平バス",'<span class="bus-mini-logo bus-logo-kotobus brand-logo-custom"><span class="brand-word kotobus-word">KOTOBUS</span></span>',"自作"],
+["神姫バス",'<span class="bus-mini-logo bus-logo-shinki brand-logo-custom"><span class="brand-word shinki-word">SHINKI BUS</span></span>',"自作"],
+["しまなみバス",'<span class="bus-mini-logo bus-logo-shimanami brand-logo-custom"><span class="brand-word">しまなみ</span><span class="brand-sub">BUS</span></span>',"自作"],
+["両備バス",'<span class="bus-mini-logo bus-logo-ryobi brand-logo-image"><span class="brand-logo-fallback">両備バス</span><img src="https://www.ryobi-holdings.jp/bus/master/wp-content/themes/ryobi-bus/images/logo.png"></span>',"公式"],
+["中国バス",'<span class="bus-mini-logo bus-logo-chugoku bus-logo-official-dark brand-logo-image"><span class="brand-logo-fallback">中国バス</span><img src="https://www.chugokubus.jp/wp-content/themes/chugokubus/_assets/_mi/img/footerLogo.png"></span>',"公式"]
+];
+document.getElementById("bus").innerHTML=buses.map(x=>`<div class="logo-card"><div class="logo-sample">${x[1]}</div><div><div class="logo-name">${x[0]}<span class="official-note">${x[2]}</span></div></div></div>`).join("");
+
+const ferries=[
+["オレンジフェリー",'<span class="ferry-mini-logo ferry-logo-orange brand-logo-custom"><span class="ferry-orange-mark">ORANGE</span><span class="brand-sub">FERRY</span></span>'],
+["中島汽船",'<span class="ferry-mini-logo ferry-logo-nakajima brand-logo-custom"><span class="brand-wave-mark">≈</span><span class="brand-word">中島汽船</span></span>'],
+["防予フェリー",'<span class="ferry-mini-logo ferry-logo-boyo brand-logo-custom"><span class="brand-word">防予</span><span class="brand-sub">FERRY</span></span>'],
+["国道九四フェリー",'<span class="ferry-mini-logo ferry-logo-94 brand-logo-custom"><span class="brand-word">国道九四フェリー</span></span>'],
+["宇和島運輸",'<span class="ferry-mini-logo ferry-logo-uwajima brand-logo-custom"><span class="brand-word">宇和島運輸</span></span>'],
+["ジャンボフェリー",'<span class="ferry-mini-logo ferry-logo-jumbo brand-logo-custom"><span class="brand-word jumbo-word">JUMBO</span><span class="brand-sub">FERRY</span></span>'],
+["今治市営",'<span class="ferry-mini-logo ferry-logo-imabari brand-logo-custom"><span class="municipal-mark">今治市</span><span class="brand-sub">市営船</span></span>'],
+["大三島ブルーライン",'<span class="ferry-mini-logo ferry-logo-blue brand-logo-custom"><span class="brand-wave-mark">〜</span><span class="brand-word">BLUE LINE</span></span>'],
+["芸予汽船",'<span class="ferry-mini-logo ferry-logo-geiyo brand-logo-custom"><span class="brand-word">芸予汽船</span></span>'],
+["瀬戸内海汽船＋石崎汽船",'<span class="ferry-logo-pair"><span class="ferry-mini-logo ferry-logo-setouchi brand-logo-custom">瀬戸内海汽船</span><span class="ferry-mini-logo ferry-logo-ishizaki brand-logo-custom">ISHIZAKI</span></span>'],
+["青島海運",'<span class="ferry-mini-logo ferry-logo-aoshima brand-logo-custom"><span class="brand-word">青島海運</span></span>'],
+["新居浜市営",'<span class="ferry-mini-logo ferry-logo-niihama brand-logo-custom"><span class="municipal-mark">新居浜市</span><span class="brand-sub">渡海船</span></span>']
+];
+document.getElementById("ferry").innerHTML=ferries.map(x=>`<div class="logo-card"><div class="logo-sample">${x[1]}</div><div><div class="logo-name">${x[0]}<span class="official-note">自作</span></div></div></div>`).join("");
+</script>
+</body></html>
