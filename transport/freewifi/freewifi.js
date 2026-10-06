@@ -40,11 +40,27 @@
       gambleScreen.classList.toggle('freewifi-active', !!page.gamble);
     }
 
+    const isAir = page.id === 'panel-air' && !page.gamble;
+    document.body.classList.toggle('air-board-page', isAir);
+    document.body.classList.toggle('air-board-arrival', isAir && page.mode === 1);
+
     if(!page.gamble){
       const controller = ui();
       if(controller && typeof controller.setMode === 'function'){
         controller.setMode(page.mode, page.duration);
       }
+    }
+
+    if(isAir){
+      requestAnimationFrame(()=>{
+        const rows=[...document.querySelectorAll('#air-rows .air-board-row')];
+        rows.forEach((row,i)=>{
+          row.classList.remove('air-flip-in');
+          row.style.setProperty('--air-flip-delay', `${i*42}ms`);
+          void row.offsetWidth;
+          row.classList.add('air-flip-in');
+        });
+      });
     }
 
     nextPageAt = Date.now() + page.duration;
