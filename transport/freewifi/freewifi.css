@@ -827,3 +827,47 @@ html.company-pc body.freewifi-tv.air-board-page #air-rows .air-board-row{
 html.company-pc body.freewifi-tv.air-board-page #air-rows .air-place{font-size:19px!important}
 html.company-pc body.freewifi-tv.air-board-page #air-rows .air-flight-no{font-size:17px!important}
 html.company-pc body.freewifi-tv.air-board-page #air-rows .air-guidance{font-size:15px!important}
+
+
+/* Real airline logo artwork inside airport board */
+body.freewifi-tv .air-mini-logo{
+  position:relative;
+  overflow:hidden;
+}
+body.freewifi-tv .air-mini-logo img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  object-position:center;
+  background:#fff;
+  z-index:2;
+}
+body.freewifi-tv .air-mini-logo .air-logo-fallback{
+  position:relative;
+  z-index:1;
+  display:flex;
+  width:100%;
+  height:100%;
+  align-items:center;
+  justify-content:center;
+  font-weight:1000;
+  color:#123;
+  background:#fff;
+}
+body.freewifi-tv.air-board-page #air-rows .air-mini-logo{
+  min-width:86px!important;
+  width:86px!important;
+  height:29px!important;
+  padding:2px 5px!important;
+  background:#fff!important;
+}
+body.freewifi-tv.air-board-page #air-rows .air-mini-logo img{
+  padding:2px 5px;
+  box-sizing:border-box;
+}
+body.freewifi-tv.air-board-page #air-rows .air-mini-logo-ibex img{
+  object-fit:cover;
+  object-position:center;
+}
