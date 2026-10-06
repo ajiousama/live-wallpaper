@@ -1626,3 +1626,112 @@ html.company-pc body.freewifi-tv .panel-port.arrival-columns .port-arrival-time{
   font-weight:1000!important;
   white-space:nowrap!important;
 }
+
+
+/* Global live strip: Ichitsubo + Madonna stay visible on all 9 screens */
+body.freewifi-tv #wall{
+  position:relative!important;
+}
+body.freewifi-tv .global-live-strip{
+  position:absolute;
+  z-index:70;
+  top:4px;
+  left:8px;
+  right:8px;
+  height:32px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  gap:6px;
+  pointer-events:none;
+}
+body.freewifi-tv .global-live-card{
+  min-width:0;
+  height:32px;
+  display:grid;
+  grid-template-columns:max-content minmax(0,1fr);
+  align-items:center;
+  gap:9px;
+  padding:0 10px;
+  box-sizing:border-box;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:4px;
+  background:rgba(7,18,25,.96);
+  box-shadow:0 2px 8px rgba(0,0,0,.28);
+  color:#eaf5f8;
+}
+body.freewifi-tv .global-live-card strong{
+  white-space:nowrap;
+  font-size:12px;
+  font-weight:1000;
+  letter-spacing:.02em;
+}
+body.freewifi-tv .global-live-value{
+  min-width:0;
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+  font-size:12px;
+  font-weight:900;
+}
+body.freewifi-tv .global-live-rail{
+  border-left:4px solid #39a9e8;
+}
+body.freewifi-tv .global-live-bus{
+  border-left:4px solid #ef8a22;
+}
+body.freewifi-tv .global-live-card.is-live{
+  background:rgba(45,20,8,.97);
+  border-color:rgba(255,176,50,.62);
+}
+body.freewifi-tv .global-live-card.is-live .global-live-value{
+  color:#ffd768;
+}
+body.freewifi-tv .hero{
+  margin-top:36px!important;
+}
+body.freewifi-tv .grid{
+  height:541px!important;
+}
+body.freewifi-tv .gamble-screen{
+  top:36px!important;
+  bottom:0!important;
+  left:0!important;
+  right:0!important;
+}
+body.freewifi-tv .gamble-screen iframe{
+  height:100%!important;
+}
+
+html.company-pc body.freewifi-tv .global-live-strip{
+  top:5px;
+  left:16px;
+  right:16px;
+  height:34px;
+  gap:8px;
+}
+html.company-pc body.freewifi-tv .global-live-card{
+  height:34px;
+  padding:0 12px;
+  gap:10px;
+}
+html.company-pc body.freewifi-tv .global-live-card strong{
+  font-size:13px;
+}
+html.company-pc body.freewifi-tv .global-live-value{
+  font-size:13px;
+}
+html.company-pc body.freewifi-tv .hero{
+  margin-top:36px!important;
+}
+html.company-pc body.freewifi-tv .grid{
+  height:644px!important;
+}
+html.company-pc body.freewifi-tv .gamble-screen{
+  top:40px!important;
+}
+
+/* Airport keeps its own board styling, but the common live strip remains above it. */
+body.freewifi-tv.air-board-page .global-live-strip{
+  background:transparent;
+}
