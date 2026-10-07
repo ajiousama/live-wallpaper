@@ -1125,40 +1125,24 @@
       : '';
   }
 
-  function ichitsuboTopInfo(now) {
-    const live=ichitsuboTakeover(now);
-    if(live?.items?.length) return live.items;
-
-    const north=auxUpcoming('ichitsubo','north',now,1)[0]||null;
-    const south=auxUpcoming('ichitsubo','south',now,1)[0]||null;
-    const items=[];
-    if(north){
-      items.push(`🚆 市坪駅 松山方面｜次列車 ${padTime(north.time)}　${cleanStation(north.dest||north.destination||'')||'列車'}行`);
-    } else {
-      items.push('🚆 市坪駅 松山方面｜運行終了');
-    }
-    if(south){
-      items.push(`🚆 市坪駅 宇和島方面｜次列車 ${padTime(south.time)}　${cleanStation(south.dest||south.destination||'')||'列車'}行`);
-    } else {
-      items.push('🚆 市坪駅 宇和島方面｜運行終了');
-    }
-    return items;
-  }
-
   function renderTopLiveAlert(now) {
     const el=$('top-live-alert');
     if(!el)return;
 
-    const cityItems=ichitsuboTopInfo(now);
-    const busTakeover=madonnaTakeover(now);
-    const madonnaInfo=madonnaTopInfo(now);
-    const busItems=busTakeover?.items?.length
-      ? busTakeover.items
-      : (madonnaInfo ? [`🚌 ${madonnaInfo}`] : ['🚌 マドンナスタジアム｜本日の運行終了']);
+    let cls='hero-alert top-live-alert';
+    let html='';
+    const city=ichitsuboTakeover(now);
+    const bus=madonnaTakeover(now);
 
-    const items=[...cityItems,...busItems];
-    const cls='hero-alert top-live-alert active fast-scroll';
-    const html=tickerHtml(items);
+    // Return to the original behavior: the top marquee only runs for live approach
+    // / imminent-departure alerts. Routine next-service information stays out.
+    if(city){
+      cls='hero-alert top-live-alert active stop-live fast-scroll';
+      html=tickerHtml(city.items);
+    } else if(bus){
+      cls='hero-alert top-live-alert active bus-live fast-scroll';
+      html=tickerHtml(bus.items);
+    }
 
     if(el.dataset.alertClass===cls && el.dataset.alertHtml===html) return;
     el.className=cls;
