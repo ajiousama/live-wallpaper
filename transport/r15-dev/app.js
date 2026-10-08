@@ -2493,16 +2493,19 @@
       if (dep) {
         const departurePosition=ferryDeparturePosition(r,japanNow());
         row.innerHTML = `
-          <div class="cell time port-time-stack">${portTimeStackHtml(r)}</div>
-          <div class="cell main port-route"><div class="port-departure-route-wrap">${portDepartureDestinationHtml(r,`${firstBadge}${finalBadge}`)}${departurePosition ? `<span class="port-estimated-position port-departure-position">${departurePosition}</span>` : ''}</div></div>
-          <div class="cell service">${service}</div>`;
+          <div class="cell main port-route port-route-main">${portDepartureDestinationHtml(r,`${firstBadge}${finalBadge}`)}</div>
+          <div class="cell sub port-route-guidance">${departurePosition || '—'}</div>
+          <div class="cell service">${service}</div>
+          <div class="cell time port-departure-time">${r.time}発</div>`;
       } else {
         const arrivalRoute = isHiroshimaKureVia(r)
           ? portKureUnifiedHtml(r,'arrival',`${firstBadge}${finalBadge}`)
           : `${route} ${firstBadge}${finalBadge}`;
         const estimatedPosition=ferryEstimatedPosition(r,japanNow());
+        const routeGuidance=estimatedPosition ? `現在 ${estimatedPosition}付近航行中（見込）` : '—';
         row.innerHTML = `
-          <div class="cell main port-route"><div class="port-arrival-route-wrap"><span class="port-arrival-route-line">${arrivalRoute}</span>${estimatedPosition ? `<span class="port-estimated-position">現在 ${estimatedPosition}付近航行中（見込）</span>` : ''}</div></div>
+          <div class="cell main port-route port-route-main"><span class="port-arrival-route-line">${arrivalRoute}</span></div>
+          <div class="cell sub port-route-guidance">${routeGuidance}</div>
           <div class="cell service">${service}</div>
           <div class="cell time port-arrival-time">${r.time}頃予定</div>`;
       }
