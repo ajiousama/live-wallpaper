@@ -502,6 +502,100 @@
     return { ...record, direction: 'arrival', time: t, origin: record.dest, originDepartureTime: originTime, arrivalPort: record.port, estimatedArrival: !record.reverseArrivalTime, _arrivalNextDay:arrivalNextDay };
   }
 
+
+  function estimatedJourneyProgress(departureTime, arrivalTime, now, departureDay='') {
+    const depText=padTime(departureTime||'');
+    const arrText=padTime(arrivalTime||'');
+    if(!/^\d{2}:\d{2}$/.test(depText) || !/^\d{2}:\d{2}$/.test(arrText)) return null;
+
+    let dep=toMinutes(depText);
+    let arr=toMinutes(arrText);
+    const cur=now.minutes;
+
+    if(String(departureDay||'').includes('前日')) {
+      dep-=1440;
+    } else if(arr<dep) {
+      arr+=1440;
+    }
+
+    if(!Number.isFinite(dep) || !Number.isFinite(arr) || arr<=dep) return null;
+    if(cur<dep || cur>arr) return null;
+    return Math.max(0,Math.min(1,(cur-dep)/(arr-dep)));
+  }
+
+  function estimatedWaypoint(points, progress) {
+    if(!Array.isArray(points) || !points.length || !Number.isFinite(progress)) return '';
+    const index=Math.max(0,Math.min(points.length-1,Math.round(progress*(points.length-1))));
+    return String(points[index]||'').trim();
+  }
+
+  function busEstimatedRoutePoints(record) {
+    const origin=String(record.origin||record.dest||'').trim();
+    const key=`${origin} ${record.source||''} ${record.service||''}`;
+
+    if(/東京|横浜/.test(key)) return ['首都圏','東名高速','名古屋周辺','京阪神','淡路島','徳島道','川内IC','松山市内'];
+    if(/名古屋/.test(key)) return ['名古屋','新名神','京阪神','淡路島','徳島道','川内IC','松山市内'];
+    if(/大阪|京都|USJ/.test(key)) return ['大阪・京都','神戸周辺','淡路島','徳島道','川之江JCT','川内IC','松山市内'];
+    if(/神戸/.test(key)) return ['神戸','淡路島','徳島道','川之江JCT','川内IC','松山市内'];
+    if(/高松/.test(key)) return ['高松','坂出','善通寺','川之江JCT','新居浜','川内IC','松山市内'];
+    if(/徳島|鳴門/.test(key)) return ['徳島','脇町','三好','川之江JCT','新居浜','川内IC','松山市内'];
+    if(/高知/.test(key)) return ['高知','大豊','川之江JCT','新居浜','川内IC','松山市内'];
+    if(/岡山/.test(key)) return ['岡山','瀬戸大橋','坂出','川之江JCT','新居浜','川内IC','松山市内'];
+    if(/福山|新尾道/.test(key)) return ['福山・尾道','しまなみ海道','今治','菊間','北条','松山市内'];
+    if(/福岡/.test(key)) return ['福岡','北九州','山口','広島周辺','しまなみ海道','今治','松山市内'];
+    if(/新居浜/.test(key)) return ['新居浜','西条','小松','川内','松山市内'];
+    if(/今治|宮浦/.test(key)) return ['今治周辺','菊間','北条','松山市内'];
+    if(/三崎/.test(key)) return ['三崎','八幡浜','大洲','内子','伊予市','松山市内'];
+    if(/宇和島|城辺/.test(key)) return ['宇和島','大洲','内子','伊予市','松山市内'];
+
+    const label=origin.replace(/[（(].*?[）)]/g,'').trim()||'出発地';
+    return [label,'高速道路上','愛媛県内','松山市内'];
+  }
+
+  function busEstimatedPosition(record, now) {
+    const arrival=padTime(record.arrivalTerminalTime||record.time||'');
+    let departure=padTime(record.originDepartureTime||'');
+    let departureDay=String(record.originDepartureDay||'');
+
+    if(!departure && /^\d{2}:\d{2}$/.test(arrival)) {
+      const origin=String(record.origin||record.dest||'');
+      departure=addMinutes(arrival,-busTravelMinutes(origin));
+      if(toMinutes(departure)>toMinutes(arrival)) departureDay='前日';
+    }
+
+    const progress=estimatedJourneyProgress(departure,arrival,now,departureDay);
+    return progress===null ? '' : estimatedWaypoint(busEstimatedRoutePoints(record),progress);
+  }
+
+  function ferryEstimatedRoutePoints(record) {
+    const origin=String(record.origin||record.dest||'').trim();
+    const arrival=String(record.arrivalPort||record.port||'').trim();
+    const key=`${origin} ${arrival} ${record.service||''} ${record.source||''}`;
+
+    if(/広島/.test(origin)) return ['広島港沖','似島沖','呉沖','安芸灘','斎灘',arrival?arrival+'沖':'松山沖'];
+    if(/呉/.test(origin)) return ['呉港沖','倉橋島沖','安芸灘','斎灘',arrival?arrival+'沖':'松山沖'];
+    if(/大浦|中島|睦月|野忽那/.test(origin)) return ['中島沖','睦月島沖','野忽那島沖','興居島沖','高浜沖',arrival?arrival+'沖':'松山沖'];
+    if(/別府/.test(origin)) return ['別府湾','国東半島沖','豊後水道','佐田岬沖','伊予灘',arrival?arrival+'沖':'八幡浜沖'];
+    if(/臼杵/.test(origin)) return ['臼杵湾','豊後水道','佐田岬沖','伊予灘',arrival?arrival+'沖':'八幡浜沖'];
+    if(/佐賀関/.test(origin)) return ['佐賀関沖','豊予海峡','佐田岬沖',arrival?arrival+'沖':'三崎港沖'];
+    if(/神戸/.test(origin)) return ['神戸港沖','大阪湾','明石海峡','播磨灘','小豆島沖','備讃瀬戸',arrival?arrival+'沖':'高松港沖'];
+    if(/大阪/.test(origin)) return ['大阪湾','明石海峡','播磨灘','燧灘',arrival?arrival+'沖':'東予港沖'];
+    if(/高松/.test(origin)) return ['高松港沖','備讃瀬戸','燧灘',arrival?arrival+'沖':'新居浜港沖'];
+    if(/今治|大三島|宮浦/.test(key)) return [origin?origin+'沖':'しまなみ海道','しまなみ海道','来島海峡',arrival?arrival+'沖':'今治沖'];
+
+    const from=origin?origin.replace(/港$/,'')+'沖':'出発港沖';
+    const to=arrival?arrival.replace(/港$/,'')+'沖':'到着港沖';
+    return [from,'航路中間',to];
+  }
+
+  function ferryEstimatedPosition(record, now) {
+    const departure=padTime(record.originDepartureTime||record.reverseTime||'');
+    const arrival=padTime(record.time||record.arrivalTime||'');
+    const departureDay=String(record.originDepartureDay||'');
+    const progress=estimatedJourneyProgress(departure,arrival,now,departureDay);
+    return progress===null ? '' : estimatedWaypoint(ferryEstimatedRoutePoints(record),progress);
+  }
+
   function getBoardRecords(board, now) {
     const displayIso = boardDisplayIso(board, now);
     const rows = recordsForDay(board, (board === 'rail' || board === 'air') ? displayIso : now.iso);
@@ -2167,6 +2261,7 @@
       '.port-via-line',
       '.port-arrival-line',
       '.port-route',
+      '.port-estimated-position',
       '.air-status'
     ].join(',');
 
@@ -2344,6 +2439,7 @@
         const terminal = String(r.arrivalTerminal || r.stop || '松山市駅').trim() || '松山市駅';
         const terminalTime = padTime(r.arrivalTerminalTime || r.time || '') || '—';
         const operator = busOperatorHtml(r);
+        const estimatedPosition = busEstimatedPosition(r,japanNow());
         row.innerHTML = `
           <div class="cell main arrival-origin">
             <span class="arrival-place">${overflowScrollHtml(origin,'bus-origin-scroll')} ${firstBadge}${finalBadge}</span>
@@ -2351,6 +2447,7 @@
           </div>
           <div class="cell sub arrival-terminal-wrap">
             <span class="arrival-terminal">${overflowScrollHtml(terminal,'bus-terminal-scroll')}</span>
+            ${estimatedPosition ? `<span class="arrival-continuation bus-estimated-position">現在 ${estimatedPosition}付近走行中（見込）</span>` : ''}
           </div>
           <div class="cell service bus-arrival-operator">${operator}</div>
           <div class="cell time bus-arrival-time">${terminalTime}頃予定</div>`;
@@ -2383,8 +2480,9 @@
         const arrivalRoute = isHiroshimaKureVia(r)
           ? portKureUnifiedHtml(r,'arrival',`${firstBadge}${finalBadge}`)
           : `${route} ${firstBadge}${finalBadge}`;
+        const estimatedPosition=ferryEstimatedPosition(r,japanNow());
         row.innerHTML = `
-          <div class="cell main port-route">${arrivalRoute}</div>
+          <div class="cell main port-route"><div class="port-arrival-route-wrap">${arrivalRoute}${estimatedPosition ? `<span class="port-estimated-position">現在 ${estimatedPosition}付近航行中（見込）</span>` : ''}</div></div>
           <div class="cell service">${service}</div>
           <div class="cell time port-arrival-time">${r.time}頃予定</div>`;
       }
