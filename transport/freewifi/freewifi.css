@@ -1879,3 +1879,41 @@ body.freewifi-tv .freewifi-port-kyushu .port-arrival-route-wrap{
   min-width:0!important;
   max-width:none!important;
 }
+
+
+/* 2026-10-08: keep ferry arrival route on one line; current-position info sits below, right aligned. */
+body.freewifi-tv .panel-port.arrival-columns .port-arrival-route-wrap{
+  align-items:flex-end!important;
+  text-align:right!important;
+}
+body.freewifi-tv .panel-port.arrival-columns .port-arrival-route-line{
+  display:block!important;
+  width:max-content!important;
+  max-width:100%!important;
+  margin-left:auto!important;
+  white-space:nowrap!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+  text-align:right!important;
+}
+body.freewifi-tv .panel-port.arrival-columns .port-estimated-position{
+  margin-left:auto!important;
+  white-space:nowrap!important;
+  text-align:right!important;
+}
+
+/* Airport: once that direction has ended, show a static message rather than scrolling stale delay info. */
+body.freewifi-tv.air-board-page .air-bottom-scroll-alert.air-bottom-ended{
+  animation:none!important;
+  transform:none!important;
+  width:100%!important;
+  justify-content:center!important;
+}
+body.freewifi-tv.air-board-page .air-bottom-scroll-alert.air-bottom-ended .air-bottom-scroll-set{
+  width:100%!important;
+  justify-content:center!important;
+  padding-right:0!important;
+}
+body.freewifi-tv.air-board-page .air-bottom-alert.air-bottom-ended{
+  color:#b8c8cf!important;
+}
