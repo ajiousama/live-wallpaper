@@ -2011,3 +2011,44 @@ html.company-pc body.freewifi-tv .panel-port.arrival-columns .freewifi-port-grou
 html.company-pc body.freewifi-tv .panel-port .port-route-guidance{
   font-size:13px!important;
 }
+
+
+/* 2026-10-08: BUS departure adds current-position estimate between route and boarding place. */
+body.freewifi-tv .panel-bus.dep-mode .table-head,
+body.freewifi-tv .panel-bus.dep-mode #bus-rows .row{
+  grid-template-columns:120px minmax(230px,1.25fr) minmax(185px,.9fr) 190px 175px!important;
+  column-gap:8px!important;
+}
+body.freewifi-tv .panel-bus.dep-mode .bus-departure-position-cell{
+  min-width:0!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  overflow:hidden!important;
+}
+body.freewifi-tv .panel-bus.dep-mode .bus-departure-position{
+  display:block!important;
+  max-width:100%!important;
+  color:#9fe7ff!important;
+  font-size:13px!important;
+  font-weight:900!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:clip!important;
+}
+html.company-pc body.freewifi-tv .panel-bus.dep-mode .table-head,
+html.company-pc body.freewifi-tv .panel-bus.dep-mode #bus-rows .row{
+  grid-template-columns:112px minmax(220px,1.2fr) minmax(175px,.9fr) 180px 165px!important;
+}
+html.company-pc body.freewifi-tv .panel-bus.dep-mode .bus-departure-position{
+  font-size:13px!important;
+}
+
+/* Hiroshima ferry legacy via layout is disabled in the new single-row four-column view. */
+body.freewifi-tv .panel-port .port-kure-unified{
+  width:auto!important;
+  max-width:none!important;
+  display:inline!important;
+  overflow:visible!important;
+  white-space:nowrap!important;
+}
