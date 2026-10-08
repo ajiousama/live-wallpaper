@@ -1,8 +1,8 @@
 {
   "date": "2026-10-08",
   "date_label": "2026年10月08日",
-  "updated_at": "22:33:37",
-  "updated_at_iso": "2026-10-08T22:33:37.076785+09:00",
+  "updated_at": "22:38:42",
+  "updated_at_iso": "2026-10-08T22:38:42.734664+09:00",
   "jra_switch_time": "17:00",
   "keirin": {
     "phase": "本日開催 7場",
@@ -3724,10 +3724,53 @@
           {
             "race": 6,
             "time": "22:30",
-            "status": "結果待ち",
-            "order": [],
-            "payout": "",
-            "payouts": {},
+            "status": "確定",
+            "order": [
+              5,
+              2,
+              3
+            ],
+            "payout": "4,910円",
+            "payouts": {
+              "2車複": [
+                {
+                  "combo": "2-5",
+                  "amount": "1,110円"
+                }
+              ],
+              "2車単": [
+                {
+                  "combo": "5>2",
+                  "amount": "2,200円"
+                }
+              ],
+              "3連複": [
+                {
+                  "combo": "2-3-5",
+                  "amount": "1,200円"
+                }
+              ],
+              "3連単": [
+                {
+                  "combo": "5>2>3",
+                  "amount": "4,910円"
+                }
+              ],
+              "ワイド": [
+                {
+                  "combo": "2-5",
+                  "amount": "430円"
+                },
+                {
+                  "combo": "3-5",
+                  "amount": "450円"
+                },
+                {
+                  "combo": "2-3",
+                  "amount": "380円"
+                }
+              ]
+            },
             "winner": "",
             "origin": "",
             "race_name": "Ａ級 特選",
@@ -5841,13 +5884,18 @@
         },
         {
           "race": 11,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
-          "popularity": "",
+          "status": "確定",
+          "order": [
+            1,
+            4,
+            3
+          ],
+          "payout": "1,880円",
+          "popularity": "7",
           "payouts": {},
           "race_name": "準優勝戦",
-          "scheduled_time": "22:30"
+          "scheduled_time": "22:30",
+          "winner": ""
         },
         {
           "race": 12,
