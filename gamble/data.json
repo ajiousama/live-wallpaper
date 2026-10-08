@@ -1,8 +1,8 @@
 {
   "date": "2026-10-08",
   "date_label": "2026年10月08日",
-  "updated_at": "22:25:31",
-  "updated_at_iso": "2026-10-08T22:25:31.512980+09:00",
+  "updated_at": "22:31:29",
+  "updated_at_iso": "2026-10-08T22:31:29.292273+09:00",
   "jra_switch_time": "17:00",
   "keirin": {
     "phase": "本日開催 7場",
@@ -3340,8 +3340,8 @@
                 }
               ]
             },
-            "winner": "",
-            "origin": "",
+            "winner": "星野辰也",
+            "origin": "栃木",
             "race_name": "Ａ級 特選",
             "scheduled_time": "22:20"
           },
@@ -3724,7 +3724,7 @@
           {
             "race": 6,
             "time": "22:30",
-            "status": "発走前",
+            "status": "結果待ち",
             "order": [],
             "payout": "",
             "payouts": {},
