@@ -532,24 +532,25 @@
   function busEstimatedRoutePoints(record) {
     const origin=String(record.origin||record.dest||'').trim();
     const key=`${origin} ${record.source||''} ${record.service||''}`;
+    const terminal=String(record.arrivalTerminal||record.stop||'松山市駅').trim()||'松山市駅';
 
-    if(/東京|横浜/.test(key)) return ['首都圏','東名高速','名古屋周辺','京阪神','淡路島','徳島道','川内IC','松山市内'];
-    if(/名古屋/.test(key)) return ['名古屋','新名神','京阪神','淡路島','徳島道','川内IC','松山市内'];
-    if(/大阪|京都|USJ/.test(key)) return ['大阪・京都','神戸周辺','淡路島','徳島道','川之江JCT','川内IC','松山市内'];
-    if(/神戸/.test(key)) return ['神戸','淡路島','徳島道','川之江JCT','川内IC','松山市内'];
-    if(/高松/.test(key)) return ['高松','坂出','善通寺','川之江JCT','新居浜','川内IC','松山市内'];
-    if(/徳島|鳴門/.test(key)) return ['徳島','脇町','三好','川之江JCT','新居浜','川内IC','松山市内'];
-    if(/高知/.test(key)) return ['高知','大豊','川之江JCT','新居浜','川内IC','松山市内'];
-    if(/岡山/.test(key)) return ['岡山','瀬戸大橋','坂出','川之江JCT','新居浜','川内IC','松山市内'];
-    if(/福山|新尾道/.test(key)) return ['福山・尾道','しまなみ海道','今治','菊間','北条','松山市内'];
-    if(/福岡/.test(key)) return ['福岡','北九州','山口','広島周辺','しまなみ海道','今治','松山市内'];
-    if(/新居浜/.test(key)) return ['新居浜','西条','小松','川内','松山市内'];
-    if(/今治|宮浦/.test(key)) return ['今治周辺','菊間','北条','松山市内'];
-    if(/三崎/.test(key)) return ['三崎','八幡浜','大洲','内子','伊予市','松山市内'];
-    if(/宇和島|城辺/.test(key)) return ['宇和島','大洲','内子','伊予市','松山市内'];
+    if(/東京|横浜/.test(key)) return ['首都圏','東名高速','名古屋周辺','京阪神','淡路島','徳島道','川内IC','松山IC',terminal];
+    if(/名古屋/.test(key)) return ['名古屋','新名神','京阪神','淡路島','徳島道','川内IC','松山IC',terminal];
+    if(/大阪|京都|USJ/.test(key)) return ['大阪・京都','神戸周辺','淡路島','徳島道','川之江JCT','川内IC','松山IC',terminal];
+    if(/神戸/.test(key)) return ['神戸','淡路島','徳島道','川之江JCT','川内IC','松山IC',terminal];
+    if(/高松/.test(key)) return ['高松','坂出','善通寺','川之江JCT','新居浜','川内IC','松山IC',terminal];
+    if(/徳島|鳴門/.test(key)) return ['徳島','脇町','三好','川之江JCT','新居浜','川内IC','松山IC',terminal];
+    if(/高知/.test(key)) return ['高知','大豊','川之江JCT','新居浜','川内IC','松山IC',terminal];
+    if(/岡山/.test(key)) return ['岡山','瀬戸大橋','坂出','川之江JCT','新居浜','川内IC','松山IC',terminal];
+    if(/福山|新尾道/.test(key)) return ['福山・尾道','しまなみ海道','今治','菊間','北条','堀江',terminal];
+    if(/福岡/.test(key)) return ['福岡','北九州','山口','広島周辺','しまなみ海道','今治','北条','堀江',terminal];
+    if(/新居浜/.test(key)) return ['新居浜','西条','小松','川内IC','松山IC',terminal];
+    if(/今治|宮浦/.test(key)) return ['今治周辺','菊間','北条','堀江',terminal];
+    if(/三崎/.test(key)) return ['三崎','八幡浜','大洲','内子','伊予市','松山IC',terminal];
+    if(/宇和島|城辺/.test(key)) return ['宇和島','大洲','内子','伊予市','松山IC',terminal];
 
     const label=origin.replace(/[（(].*?[）)]/g,'').trim()||'出発地';
-    return [label,'高速道路上','愛媛県内','松山市内'];
+    return [label,'高速道路上','愛媛県内','松山IC',terminal];
   }
 
   function busEstimatedPosition(record, now) {
