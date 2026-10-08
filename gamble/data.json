@@ -1,8 +1,8 @@
 {
   "date": "2026-10-08",
   "date_label": "2026年10月08日",
-  "updated_at": "23:08:16",
-  "updated_at_iso": "2026-10-08T23:08:16.319953+09:00",
+  "updated_at": "23:11:58",
+  "updated_at_iso": "2026-10-08T23:11:58.602904+09:00",
   "jra_switch_time": "17:00",
   "keirin": {
     "phase": "本日開催 7場",
@@ -3450,8 +3450,8 @@
                 }
               ]
             },
-            "winner": "",
-            "origin": "",
+            "winner": "篠原輝利",
+            "origin": "茨城",
             "race_name": "Ａ級 チャレンジ決勝",
             "scheduled_time": "23:00"
           },
@@ -3920,7 +3920,7 @@
           {
             "race": 8,
             "time": "23:10",
-            "status": "発走前",
+            "status": "結果待ち",
             "order": [],
             "payout": "",
             "payouts": {},
