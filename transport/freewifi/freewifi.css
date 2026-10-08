@@ -1952,3 +1952,62 @@ html.company-pc body.freewifi-tv .panel-port.dep-mode .port-departure-position{
   font-size:13px!important;
   font-weight:1000!important;
 }
+
+
+/* 2026-10-08: ferry uses a single horizontal row:
+   route/destination | route guidance/current position | operator | time. */
+body.freewifi-tv .panel-port.dep-mode .freewifi-port-group>.row,
+body.freewifi-tv .panel-port.arrival-columns .freewifi-port-group>.row{
+  grid-template-columns:minmax(300px,1.25fr) minmax(260px,1fr) 190px 175px!important;
+  column-gap:10px!important;
+}
+body.freewifi-tv .panel-port .port-route-main{
+  min-width:0!important;
+  text-align:left!important;
+  justify-content:flex-start!important;
+  overflow:visible!important;
+}
+body.freewifi-tv .panel-port .port-route-main .port-dest-wrap{
+  width:auto!important;
+  align-items:flex-start!important;
+  text-align:left!important;
+}
+body.freewifi-tv .panel-port .port-route-main .port-dest-main,
+body.freewifi-tv .panel-port .port-route-main .port-via-line,
+body.freewifi-tv .panel-port .port-arrival-route-line{
+  margin-left:0!important;
+  text-align:left!important;
+  white-space:nowrap!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+}
+body.freewifi-tv .panel-port .port-route-guidance{
+  min-width:0!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  text-align:center!important;
+  color:#9fe7ff!important;
+  font-size:12px!important;
+  font-weight:900!important;
+  white-space:nowrap!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+}
+body.freewifi-tv .panel-port .port-departure-time,
+body.freewifi-tv .panel-port .port-arrival-time{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+  font-size:20px!important;
+  font-weight:1000!important;
+  white-space:nowrap!important;
+  overflow:visible!important;
+}
+html.company-pc body.freewifi-tv .panel-port.dep-mode .freewifi-port-group>.row,
+html.company-pc body.freewifi-tv .panel-port.arrival-columns .freewifi-port-group>.row{
+  grid-template-columns:minmax(300px,1.25fr) minmax(255px,1fr) 185px 180px!important;
+}
+html.company-pc body.freewifi-tv .panel-port .port-route-guidance{
+  font-size:13px!important;
+}
