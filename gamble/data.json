@@ -1,8 +1,8 @@
 {
   "date": "2026-10-08",
   "date_label": "2026年10月08日",
-  "updated_at": "22:49:46",
-  "updated_at_iso": "2026-10-08T22:49:46.762666+09:00",
+  "updated_at": "22:55:19",
+  "updated_at_iso": "2026-10-08T22:55:19.972613+09:00",
   "jra_switch_time": "17:00",
   "keirin": {
     "phase": "本日開催 7場",
@@ -3395,8 +3395,8 @@
                 }
               ]
             },
-            "winner": "",
-            "origin": "",
+            "winner": "丹波孝佑",
+            "origin": "大阪",
             "race_name": "Ａ級 特選",
             "scheduled_time": "22:40"
           },
@@ -3822,10 +3822,53 @@
           {
             "race": 7,
             "time": "22:50",
-            "status": "発走前",
-            "order": [],
-            "payout": "",
-            "payouts": {},
+            "status": "確定",
+            "order": [
+              6,
+              4,
+              3
+            ],
+            "payout": "9,930円",
+            "payouts": {
+              "2車複": [
+                {
+                  "combo": "4-6",
+                  "amount": "1,650円"
+                }
+              ],
+              "2車単": [
+                {
+                  "combo": "6>4",
+                  "amount": "1,610円"
+                }
+              ],
+              "3連複": [
+                {
+                  "combo": "3-4-6",
+                  "amount": "2,380円"
+                }
+              ],
+              "3連単": [
+                {
+                  "combo": "6>4>3",
+                  "amount": "9,930円"
+                }
+              ],
+              "ワイド": [
+                {
+                  "combo": "4-6",
+                  "amount": "650円"
+                },
+                {
+                  "combo": "3-6",
+                  "amount": "510円"
+                },
+                {
+                  "combo": "3-4",
+                  "amount": "1,030円"
+                }
+              ]
+            },
             "winner": "",
             "origin": "",
             "race_name": "Ａ級 特選",
@@ -6153,183 +6196,123 @@
         "races": [
           {
             "race": 1,
-            "winner": "ジュンオーズ",
-            "jockey": "大山真",
-            "trifecta": "1,620円",
-            "order": [
-              3,
-              4,
-              2
-            ],
-            "course": "ダート1400m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "Ｃ２三３歳以上",
-            "scheduled_time": "10:25"
+            "course": "",
+            "scheduled_time": "10:25",
+            "status": "結果待ち"
           },
           {
             "race": 2,
-            "winner": "ヴェニスクィーン",
-            "jockey": "山本咲",
-            "trifecta": "16,400円",
-            "order": [
-              4,
-              3,
-              7
-            ],
-            "course": "ダート1230m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "Ｃ２二３歳以上",
-            "scheduled_time": "10:43"
+            "course": "",
+            "scheduled_time": "10:43",
+            "status": "結果待ち"
           },
           {
             "race": 3,
-            "winner": "ストリートクイーン",
-            "jockey": "廣瀬航",
-            "trifecta": "1,090円",
-            "order": [
-              3,
-              8,
-              9
-            ],
-            "course": "ダート1400m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "Ｃ２二３歳以上",
-            "scheduled_time": "11:13"
+            "course": "",
+            "scheduled_time": "11:13",
+            "status": "結果待ち"
           },
           {
             "race": 4,
-            "winner": "アラタマオーソ",
-            "jockey": "廣瀬航",
-            "trifecta": "3,270円",
-            "order": [
-              6,
-              5,
-              10
-            ],
-            "course": "ダート1400m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "安福田７ハロンＣ３二３歳以上",
-            "scheduled_time": "11:43"
+            "course": "",
+            "scheduled_time": "11:43",
+            "status": "結果待ち"
           },
           {
             "race": 5,
-            "winner": "ギャラン",
-            "jockey": "★塩津璃",
-            "trifecta": "20,340円",
-            "order": [
-              8,
-              2,
-              9
-            ],
-            "course": "ダート1400m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "有 窟屋７ハロンＣ３一３歳以上",
-            "scheduled_time": "12:13"
+            "course": "",
+            "scheduled_time": "12:13",
+            "status": "結果待ち"
           },
           {
             "race": 6,
-            "winner": "エイラク",
-            "jockey": "★塩津璃",
-            "trifecta": "9,670円",
-            "order": [
-              3,
-              10,
-              5
-            ],
-            "course": "ダート820m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "Ｃ３ ３歳以上",
-            "scheduled_time": "12:43"
+            "course": "",
+            "scheduled_time": "12:43",
+            "status": "結果待ち"
           },
           {
             "race": 7,
-            "winner": "ジャスティンアポロ",
-            "jockey": "吉村智",
-            "trifecta": "4,990円",
-            "order": [
-              8,
-              6,
-              1
-            ],
-            "course": "ダート1230m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "Ｃ２一３歳以上",
-            "scheduled_time": "13:13"
+            "course": "",
+            "scheduled_time": "13:13",
+            "status": "結果待ち"
           },
           {
             "race": 8,
-            "winner": "ハバタクジユウニ",
-            "jockey": "田野豊",
-            "trifecta": "3,140円",
-            "order": [
-              8,
-              6,
-              9
-            ],
-            "course": "ダート1400m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "Ｃ２一３歳以上",
-            "scheduled_time": "13:43"
+            "course": "",
+            "scheduled_time": "13:43",
+            "status": "結果待ち"
           },
           {
             "race": 9,
-            "winner": "フェアリータイザン",
-            "jockey": "田野豊",
-            "trifecta": "5,110円",
-            "order": [
-              5,
-              9,
-              7
-            ],
-            "course": "ダート820m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "Ｃ１ ３歳以上",
-            "scheduled_time": "14:13"
+            "course": "",
+            "scheduled_time": "14:13",
+            "status": "結果待ち"
           },
           {
             "race": 10,
-            "winner": "ウィスピースノー",
-            "jockey": "新庄海",
-            "trifecta": "7,260円",
-            "order": [
-              12,
-              3,
-              10
-            ],
-            "course": "ダート1400m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "特別 ＹＪＳトライアルラウンド園田 第１戦Ｃ３",
-            "scheduled_time": "14:48"
+            "course": "",
+            "scheduled_time": "14:48",
+            "status": "結果待ち"
           },
           {
             "race": 11,
-            "winner": "ファンシンレディー",
-            "jockey": "◇佐々世",
-            "trifecta": "675,240円",
-            "order": [
-              4,
-              10,
-              1
-            ],
-            "course": "ダート1400m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "特別 ＤＡＳＨよかわ開設１８周年記念Ｂ２ ３歳",
-            "scheduled_time": "15:23"
+            "course": "",
+            "scheduled_time": "15:23",
+            "status": "結果待ち"
           },
           {
             "race": 12,
-            "winner": "マエストロライト",
-            "jockey": "河原菜",
-            "trifecta": "57,740円",
-            "order": [
-              12,
-              11,
-              3
-            ],
-            "course": "ダート1400m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "特別 ＹＪＳトライアルラウンド園田 第２戦Ｃ２",
-            "scheduled_time": "15:58"
+            "course": "",
+            "scheduled_time": "15:58",
+            "status": "結果待ち"
           }
         ]
       },
@@ -6340,168 +6323,113 @@
         "races": [
           {
             "race": 1,
-            "winner": "テーオーベリー",
-            "jockey": "塚本征",
-            "trifecta": "580円",
-            "order": [
-              6,
-              4,
-              7
-            ],
-            "course": "ダート1400m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "２歳３組牝馬",
-            "scheduled_time": "10:35"
+            "course": "",
+            "scheduled_time": "10:35",
+            "status": "結果待ち"
           },
           {
             "race": 2,
-            "winner": "ティルマン",
-            "jockey": "塚本征",
-            "trifecta": "920円",
-            "order": [
-              2,
-              6,
-              5
-            ],
-            "course": "ダート1400m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "美穂子ぎりぎり４０代誰か助けて２歳２",
-            "scheduled_time": "10:53"
+            "course": "",
+            "scheduled_time": "10:53",
+            "status": "結果待ち"
           },
           {
             "race": 3,
-            "winner": "ビーストウォーズ",
-            "jockey": "渡邊竜",
-            "trifecta": "920円",
-            "order": [
-              2,
-              4,
-              7
-            ],
-            "course": "ダート1580m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "ちるタイムおかん生誕記念Ｃ１４",
-            "scheduled_time": "11:23"
+            "course": "",
+            "scheduled_time": "11:23",
+            "status": "結果待ち"
           },
           {
             "race": 4,
-            "winner": "メイプルラブリー",
-            "jockey": "加藤聡",
-            "trifecta": "1,280円",
-            "order": [
-              5,
-              1,
-              6
-            ],
-            "course": "ダート1400m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "令和８年熊本地震被災地支援レースＣ１３",
-            "scheduled_time": "11:58"
+            "course": "",
+            "scheduled_time": "11:58",
+            "status": "結果待ち"
           },
           {
             "race": 5,
-            "winner": "ムーンウォーリア",
-            "jockey": "渡邊竜",
-            "trifecta": "26,110円",
-            "order": [
-              3,
-              6,
-              5
-            ],
-            "course": "ダート1400m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "特別 栗きんとん特別Ａ４",
-            "scheduled_time": "12:28"
+            "course": "",
+            "scheduled_time": "12:28",
+            "status": "結果待ち"
           },
           {
             "race": 6,
-            "winner": "ベストロマンス",
-            "jockey": "東川慎",
-            "trifecta": "5,340円",
-            "order": [
-              7,
-              3,
-              5
-            ],
-            "course": "ダート1400m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "久世良輔＆小島愛笠馬Ｘ出演記念Ｃ１２",
-            "scheduled_time": "12:58"
+            "course": "",
+            "scheduled_time": "12:58",
+            "status": "結果待ち"
           },
           {
             "race": 7,
-            "winner": "エルモサカスターノ",
-            "jockey": "渡邊竜",
-            "trifecta": "890円",
-            "order": [
-              1,
-              3,
-              6
-            ],
-            "course": "ダート1580m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "りの！ＲＩＮＯ！リノ！杯☆Ｃ１１",
-            "scheduled_time": "13:28"
+            "course": "",
+            "scheduled_time": "13:28",
+            "status": "結果待ち"
           },
           {
             "race": 8,
-            "winner": "トパーズテソーロ",
-            "jockey": "筒井勇",
-            "trifecta": "1,160円",
-            "order": [
-              2,
-              8,
-              7
-            ],
-            "course": "ダート1400m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "Ｃ１０組",
-            "scheduled_time": "14:03"
+            "course": "",
+            "scheduled_time": "14:03",
+            "status": "結果待ち"
           },
           {
             "race": 9,
-            "winner": "アルレーヴ",
-            "jockey": "藤原幹",
-            "trifecta": "25,810円",
-            "order": [
-              7,
-              4,
-              5
-            ],
-            "course": "ダート1400m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "特別 富有柿特別２歳１",
-            "scheduled_time": "14:38"
+            "course": "",
+            "scheduled_time": "14:38",
+            "status": "結果待ち"
           },
           {
             "race": 10,
-            "winner": "オレオス",
-            "jockey": "東川慎",
-            "trifecta": "620円",
-            "order": [
-              2,
-              6,
-              8
-            ],
-            "course": "ダート1400m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "マックル賞Ｃ９",
-            "scheduled_time": "15:13"
+            "course": "",
+            "scheduled_time": "15:13",
+            "status": "結果待ち"
           },
           {
             "race": 11,
-            "winner": "キャトルブランシュ",
-            "jockey": "渡邊竜",
-            "trifecta": "5,950円",
-            "order": [
-              11,
-              9,
-              3
-            ],
-            "course": "ダート1400m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "重賞 Ｊ認 ネクストスター笠松２歳・オープン",
-            "scheduled_time": "15:48"
+            "course": "",
+            "scheduled_time": "15:48",
+            "status": "結果待ち"
           }
         ]
       },
@@ -6512,183 +6440,123 @@
         "races": [
           {
             "race": 1,
-            "winner": "カナデ",
-            "jockey": "宮内勇",
-            "trifecta": "2,690円",
-            "order": [
-              9,
-              4,
-              2
-            ],
-            "course": "ダート1000m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "エンジョイ！日高町ＤＡＹ賞２歳未勝利",
-            "scheduled_time": "14:05"
+            "course": "",
+            "scheduled_time": "14:05",
+            "status": "結果待ち"
           },
           {
             "race": 2,
-            "winner": "スティールゴールド",
-            "jockey": "桑村真",
-            "trifecta": "660円",
-            "order": [
-              9,
-              3,
-              7
-            ],
-            "course": "ダート1100m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "絶品！とねっこジンギスカン賞２歳未勝利",
-            "scheduled_time": "14:23"
+            "course": "",
+            "scheduled_time": "14:23",
+            "status": "結果待ち"
           },
           {
             "race": 3,
-            "winner": "ミーディアムセラア",
-            "jockey": "服部茂",
-            "trifecta": "3,140円",
-            "order": [
-              8,
-              4,
-              9
-            ],
-            "course": "ダート1200m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "日高町ふるさと納税大感謝賞２歳未勝利",
-            "scheduled_time": "14:53"
+            "course": "",
+            "scheduled_time": "14:53",
+            "status": "結果待ち"
           },
           {
             "race": 4,
-            "winner": "パーフェクトパティ",
-            "jockey": "☆藤田駕",
-            "trifecta": "2,730円",
-            "order": [
-              11,
-              9,
-              8
-            ],
-            "course": "ダート1200m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "日高町観光まちづくり協会賞Ｃ４－２",
-            "scheduled_time": "15:28"
+            "course": "",
+            "scheduled_time": "15:28",
+            "status": "結果待ち"
           },
           {
             "race": 5,
-            "winner": "ガヤーズベース",
-            "jockey": "落合玄",
-            "trifecta": "5,520円",
-            "order": [
-              10,
-              5,
-              12
-            ],
-            "course": "ダート1200m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "道の駅樹海ロード日高賞Ｃ４－２",
-            "scheduled_time": "16:03"
+            "course": "",
+            "scheduled_time": "16:03",
+            "status": "結果待ち"
           },
           {
             "race": 6,
-            "winner": "ツリーオブライフ",
-            "jockey": "桑村真",
-            "trifecta": "520円",
-            "order": [
-              6,
-              4,
-              7
-            ],
-            "course": "ダート1000m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "特別 早見和真特別２歳オープン",
-            "scheduled_time": "16:38"
+            "course": "",
+            "scheduled_time": "16:38",
+            "status": "結果待ち"
           },
           {
             "race": 7,
-            "winner": "ゴールドアイリーン",
-            "jockey": "金山昇",
-            "trifecta": "17,610円",
-            "order": [
-              2,
-              10,
-              3
-            ],
-            "course": "ダート1500m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "有 ルシナ賞Ｃ３－２Ｃ４－１",
-            "scheduled_time": "17:08"
+            "course": "",
+            "scheduled_time": "17:08",
+            "status": "結果待ち"
           },
           {
             "race": 8,
-            "winner": "フォーティンブラス",
-            "jockey": "服部茂",
-            "trifecta": "1,020円",
-            "order": [
-              4,
-              7,
-              6
-            ],
-            "course": "ダート1800m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "日高町建設協会賞Ｃ３－２Ｃ４－１",
-            "scheduled_time": "17:38"
+            "course": "",
+            "scheduled_time": "17:38",
+            "status": "結果待ち"
           },
           {
             "race": 9,
-            "winner": "アクアトレジャー",
-            "jockey": "宮内勇",
-            "trifecta": "50,310円",
-            "order": [
-              12,
-              5,
-              11
-            ],
-            "course": "ダート1700m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "特別 日高町家畜自衛防疫組合特別Ｃ３－２Ｃ４－",
-            "scheduled_time": "18:13"
+            "course": "",
+            "scheduled_time": "18:13",
+            "status": "結果待ち"
           },
           {
             "race": 10,
-            "winner": "トレヴェナ",
-            "jockey": "桑村真",
-            "trifecta": "5,510円",
-            "order": [
-              5,
-              8,
-              6
-            ],
-            "course": "ダート1000m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "有 特別 グランシャリオドリーム７０Ａ１～Ａ３－１",
-            "scheduled_time": "18:43"
+            "course": "",
+            "scheduled_time": "18:43",
+            "status": "結果待ち"
           },
           {
             "race": 11,
-            "winner": "ブリッツファング",
-            "jockey": "宮内勇",
-            "trifecta": "5,760円",
-            "order": [
-              5,
-              6,
-              4
-            ],
-            "course": "ダート1200m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "有 特別 ザ・ロイヤルファミリー記念特別Ａ１～Ａ３",
-            "scheduled_time": "19:18"
+            "course": "",
+            "scheduled_time": "19:18",
+            "status": "結果待ち"
           },
           {
             "race": 12,
-            "winner": "ゼロアワー",
-            "jockey": "落合玄",
-            "trifecta": "8,470円",
-            "order": [
-              7,
-              4,
-              12
-            ],
-            "course": "ダート1700m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "重賞 グランシャリオクイーンズ一般牝馬オープン",
-            "scheduled_time": "19:58"
+            "course": "",
+            "scheduled_time": "19:58",
+            "status": "結果待ち"
           }
         ]
       },
@@ -6699,183 +6567,123 @@
         "races": [
           {
             "race": 1,
-            "winner": "ロイヤルドリーム",
-            "jockey": "藤田凌",
-            "trifecta": "27,830円",
-            "order": [
-              2,
-              6,
-              3
-            ],
-            "course": "ダート1600m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "３歳一 二",
-            "scheduled_time": "14:15"
+            "course": "",
+            "scheduled_time": "14:15",
+            "status": "結果待ち"
           },
           {
             "race": 2,
-            "winner": "ルクラ",
-            "jockey": "藤本現",
-            "trifecta": "3,090円",
-            "order": [
-              10,
-              12,
-              2
-            ],
-            "course": "ダート1200m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "有 ３歳一 二",
-            "scheduled_time": "14:33"
+            "course": "",
+            "scheduled_time": "14:33",
+            "status": "結果待ち"
           },
           {
             "race": 3,
-            "winner": "タルガフローリオ",
-            "jockey": "御神訓",
-            "trifecta": "3,500円",
-            "order": [
-              6,
-              3,
-              4
-            ],
-            "course": "ダート1600m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "２歳三 四",
-            "scheduled_time": "15:05"
+            "course": "",
+            "scheduled_time": "15:05",
+            "status": "結果待ち"
           },
           {
             "race": 4,
-            "winner": "ラインホープ",
-            "jockey": "藤本現",
-            "trifecta": "3,580円",
-            "order": [
-              3,
-              10,
-              9
-            ],
-            "course": "ダート1200m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "２歳三 四",
-            "scheduled_time": "15:38"
+            "course": "",
+            "scheduled_time": "15:38",
+            "status": "結果待ち"
           },
           {
             "race": 5,
-            "winner": "ダノンアルプス",
-            "jockey": "安藤洋",
-            "trifecta": "5,230円",
-            "order": [
-              6,
-              10,
-              3
-            ],
-            "course": "ダート1600m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "Ｃ２七 八 九",
-            "scheduled_time": "16:10"
+            "course": "",
+            "scheduled_time": "16:10",
+            "status": "結果待ち"
           },
           {
             "race": 6,
-            "winner": "タケゾウ",
-            "jockey": "藤田凌",
-            "trifecta": "32,500円",
-            "order": [
-              12,
-              9,
-              7
-            ],
-            "course": "ダート1400m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "Ｃ２七 八 九",
-            "scheduled_time": "16:43"
+            "course": "",
+            "scheduled_time": "16:43",
+            "status": "結果待ち"
           },
           {
             "race": 7,
-            "winner": "サイゴニアイハカツ",
-            "jockey": "和田譲",
-            "trifecta": "446,100円",
-            "order": [
-              8,
-              12,
-              9
-            ],
-            "course": "ダート1200m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "Ｃ２七 八 九",
-            "scheduled_time": "17:15"
+            "course": "",
+            "scheduled_time": "17:15",
+            "status": "結果待ち"
           },
           {
             "race": 8,
-            "winner": "アドマイヤエアル",
-            "jockey": "矢野貴",
-            "trifecta": "1,010円",
-            "order": [
-              7,
-              1,
-              4
-            ],
-            "course": "ダート1600m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "シャーリー・テンプル賞Ｃ１五 六",
-            "scheduled_time": "17:48"
+            "course": "",
+            "scheduled_time": "17:48",
+            "status": "結果待ち"
           },
           {
             "race": 9,
-            "winner": "メイショウアキカゼ",
-            "jockey": "和田譲",
-            "trifecta": "19,420円",
-            "order": [
-              3,
-              8,
-              4
-            ],
-            "course": "ダート1200m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "清秋賞Ｃ１五 六",
-            "scheduled_time": "18:23"
+            "course": "",
+            "scheduled_time": "18:23",
+            "status": "結果待ち"
           },
           {
             "race": 10,
-            "winner": "ペピタドーロ",
-            "jockey": "石川倭",
-            "trifecta": "5,510円",
-            "order": [
-              2,
-              5,
-              6
-            ],
-            "course": "ダート1400m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "特別 銀杏坂賞Ｂ３三選抜特別",
-            "scheduled_time": "18:58"
+            "course": "",
+            "scheduled_time": "18:58",
+            "status": "結果待ち"
           },
           {
             "race": 11,
-            "winner": "ゼーロス",
-            "jockey": "笹川翼",
-            "trifecta": "85,210円",
-            "order": [
-              12,
-              8,
-              13
-            ],
-            "course": "ダート1200m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "重賞 東京盃JpnII",
-            "scheduled_time": "19:33"
+            "course": "",
+            "scheduled_time": "19:33",
+            "status": "結果待ち"
           },
           {
             "race": 12,
-            "winner": "ピンナダ",
-            "jockey": "藤本現",
-            "trifecta": "22,180円",
-            "order": [
-              13,
-              1,
-              8
-            ],
-            "course": "ダート1650m",
-            "status": "確定",
+            "winner": "",
+            "jockey": "",
+            "trifecta": "",
             "race_name": "特別 みずがめ座特別Ｃ１十Ｃ２一選抜",
-            "scheduled_time": "20:13"
+            "course": "",
+            "scheduled_time": "20:13",
+            "status": "結果待ち"
           }
         ]
       }
