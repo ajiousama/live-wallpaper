@@ -1598,7 +1598,9 @@
         position: cleanStation(x.position||''),
         delay
       };
-    }).filter(x=>x.arrival);
+    // Do not put scheduled-only deadheads on the Matsuyama timetable.
+    // A deadhead is shown only while JR live data provides a current position.
+    }).filter(x=>x.arrival && x.position);
   }
 
   function matsuyamaFreightPasses(now) {
