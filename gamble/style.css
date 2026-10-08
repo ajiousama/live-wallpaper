@@ -590,3 +590,127 @@ html.company-mode #page-next{
   font-size:12px!important;
   padding:5px 9px!important;
 }
+
+
+/* Daily finals / main races: compact 3-column summary */
+.main-race-summary{
+  height:100%;
+  min-height:0;
+  display:grid;
+  grid-template-columns:1.15fr .85fr 1.15fr;
+  gap:5px;
+  padding:3px;
+  overflow:hidden;
+}
+.main-race-section{
+  min-width:0;
+  min-height:0;
+  display:grid;
+  grid-template-rows:34px 1fr;
+  border:1px solid #314b59;
+  background:#06141e;
+  overflow:hidden;
+}
+.main-race-section-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:4px 8px;
+  font-weight:1000;
+  border-bottom:1px solid #314b59;
+  background:#0a1c27;
+}
+.main-race-section-head span{font-size:17px}
+.main-race-section-head b{font-size:10px;color:#9fb7c2}
+.main-race-section.keirin{border-color:#7b3452}
+.main-race-section.keirin .main-race-section-head{background:#321322;border-color:#7b3452;color:#ffd5e1}
+.main-race-section.boat{border-color:#285f96}
+.main-race-section.boat .main-race-section-head{background:#0b3159;border-color:#285f96;color:#cfe5ff}
+.main-race-section.horse{border-color:#27724d}
+.main-race-section.horse .main-race-section-head{background:#0b3221;border-color:#27724d;color:#d2f5df}
+.main-race-list{
+  min-height:0;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+.main-race-row{
+  min-height:0;
+  flex:1 1 0;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(110px,.72fr);
+  align-items:center;
+  gap:7px;
+  padding:4px 7px;
+  border-bottom:1px solid #18333f;
+}
+.main-race-row:last-child{border-bottom:0}
+.main-race-place{min-width:0}
+.main-race-place b{
+  display:block;
+  font-size:14px;
+  line-height:1.05;
+  color:#fff;
+  white-space:nowrap;
+}
+.main-race-place span{
+  display:block;
+  margin-top:2px;
+  font-size:10px;
+  line-height:1.05;
+  color:#9fb7c2;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.main-race-result{
+  min-width:0;
+  text-align:right;
+}
+.main-race-result strong{
+  display:block;
+  font-size:15px;
+  line-height:1.05;
+  color:#fff4a8;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.main-race-result strong.pending{color:#8fd8ff}
+.main-race-result small{
+  display:block;
+  margin-top:2px;
+  font-size:9px;
+  color:#a9bdc7;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.main-race-result em{
+  display:block;
+  margin-top:2px;
+  font-size:10px;
+  font-style:normal;
+  font-weight:1000;
+  color:#ffe18a;
+  white-space:nowrap;
+}
+.main-race-empty{
+  flex:1;
+  display:grid;
+  place-items:center;
+  color:#607b88;
+  font-size:12px;
+  font-weight:900;
+}
+html.company-mode .main-race-summary{
+  grid-template-columns:1.15fr .85fr 1.15fr;
+  gap:6px;
+  padding:4px;
+}
+html.company-mode .main-race-section-head{height:38px}
+html.company-mode .main-race-section-head span{font-size:19px}
+html.company-mode .main-race-place b{font-size:16px}
+html.company-mode .main-race-place span{font-size:11px}
+html.company-mode .main-race-result strong{font-size:17px}
+html.company-mode .main-race-result small{font-size:10px}
