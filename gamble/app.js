@@ -342,8 +342,10 @@ function specialItems(){
   }
 
   // 海外発売対象の大レース。
+  // JRAの日本時間の発売日が当日と一致するものだけ表示する。
   for(const x of data?.featured_races||[]){
     if(x.source!=="海外競馬") continue;
+    if(String(x.sale_date||"")!==String(data?.date||"")) continue;
     out.push({
       kind:"overseas",source:"海外G1",venue:x.venue||"海外",race:x.race||"",
       name:x.name||"",time:x.time||"",winner:x.winner||"",
