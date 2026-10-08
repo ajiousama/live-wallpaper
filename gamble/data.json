@@ -1,8 +1,8 @@
 {
   "date": "2026-10-09",
   "date_label": "2026年10月09日",
-  "updated_at": "02:24:31",
-  "updated_at_iso": "2026-10-09T02:24:31.428201+09:00",
+  "updated_at": "07:19:24",
+  "updated_at_iso": "2026-10-09T07:19:24.075344+09:00",
   "jra_switch_time": "17:00",
   "keirin": {
     "phase": "本日開催 8場",
@@ -12,10 +12,39 @@
         "channel": "keirin.takeo",
         "venue": "武雄",
         "type": "モーニング",
-        "grade": "F2",
-        "epg_start": "202610091000",
-        "epg_stop": "202610091400",
-        "race_meta": {},
+        "grade": "",
+        "epg_start": "202610091013",
+        "epg_stop": "202610091033",
+        "race_meta": {
+          "1": {
+            "name": "ガールズ予選１",
+            "time": "08:30"
+          },
+          "2": {
+            "name": "ガールズ予選１",
+            "time": "08:50"
+          },
+          "3": {
+            "name": "チャレンジ予選",
+            "time": "09:10"
+          },
+          "4": {
+            "name": "チャレンジ予選",
+            "time": "09:30"
+          },
+          "5": {
+            "name": "チャレンジ予選",
+            "time": "09:50"
+          },
+          "6": {
+            "name": "チャレンジ予選",
+            "time": "10:10"
+          },
+          "7": {
+            "name": "チャレンジ予選",
+            "time": "10:30"
+          }
+        },
         "event_name_epg": "",
         "code": "84",
         "race_ids": [
@@ -34,86 +63,86 @@
           {
             "race": 1,
             "time": "08:30",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "ガールズ予選１",
+            "scheduled_time": "08:30"
           },
           {
             "race": 2,
             "time": "08:50",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "ガールズ予選１",
+            "scheduled_time": "08:50"
           },
           {
             "race": 3,
             "time": "09:10",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "チャレンジ予選",
+            "scheduled_time": "09:10"
           },
           {
             "race": 4,
             "time": "09:30",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "チャレンジ予選",
+            "scheduled_time": "09:30"
           },
           {
             "race": 5,
             "time": "09:50",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "チャレンジ予選",
+            "scheduled_time": "09:50"
           },
           {
             "race": 6,
             "time": "10:10",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "チャレンジ予選",
+            "scheduled_time": "10:10"
           },
           {
             "race": 7,
             "time": "10:30",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "チャレンジ予選",
+            "scheduled_time": "10:30"
           }
         ],
         "display_name": "武雄"
@@ -122,10 +151,39 @@
         "channel": "keirin.kochi",
         "venue": "こうち",
         "type": "モーニング",
-        "grade": "F2",
-        "epg_start": "202610091000",
-        "epg_stop": "202610091400",
-        "race_meta": {},
+        "grade": "",
+        "epg_start": "202610091023",
+        "epg_stop": "202610091043",
+        "race_meta": {
+          "1": {
+            "name": "チャレンジ一般",
+            "time": "08:40"
+          },
+          "2": {
+            "name": "チャレンジ一般",
+            "time": "09:00"
+          },
+          "3": {
+            "name": "チャレンジ一般",
+            "time": "09:20"
+          },
+          "4": {
+            "name": "チャレンジ選抜",
+            "time": "09:40"
+          },
+          "5": {
+            "name": "チャレンジ選抜",
+            "time": "10:00"
+          },
+          "6": {
+            "name": "チャレンジ選抜",
+            "time": "10:20"
+          },
+          "7": {
+            "name": "チャレンジ決勝",
+            "time": "10:40"
+          }
+        },
         "event_name_epg": "",
         "race_ids": [],
         "event_name": "",
@@ -138,10 +196,55 @@
         "channel": "keirin.shizuoka",
         "venue": "静岡",
         "type": "デイ",
-        "grade": "F2",
-        "epg_start": "202610091030",
-        "epg_stop": "202610091700",
-        "race_meta": {},
+        "grade": "",
+        "epg_start": "202610091534",
+        "epg_stop": "202610091611",
+        "race_meta": {
+          "1": {
+            "name": "チャレンジ一般",
+            "time": "10:57"
+          },
+          "2": {
+            "name": "チャレンジ一般",
+            "time": "11:21"
+          },
+          "3": {
+            "name": "チャレンジ選抜",
+            "time": "11:45"
+          },
+          "4": {
+            "name": "チャレンジ選抜",
+            "time": "12:10"
+          },
+          "5": {
+            "name": "特一般",
+            "time": "12:37"
+          },
+          "6": {
+            "name": "特一般",
+            "time": "13:07"
+          },
+          "7": {
+            "name": "特 選",
+            "time": "13:40"
+          },
+          "8": {
+            "name": "特 選",
+            "time": "14:17"
+          },
+          "9": {
+            "name": "特 選",
+            "time": "14:54"
+          },
+          "10": {
+            "name": "チャレンジ決勝",
+            "time": "15:31"
+          },
+          "11": {
+            "name": "決 勝",
+            "time": "16:08"
+          }
+        },
         "event_name_epg": "",
         "code": "38",
         "race_ids": [
@@ -164,134 +267,134 @@
           {
             "race": 1,
             "time": "10:57",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "チャレンジ一般",
+            "scheduled_time": "10:57"
           },
           {
             "race": 2,
             "time": "11:21",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "チャレンジ一般",
+            "scheduled_time": "11:21"
           },
           {
             "race": 3,
             "time": "11:45",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "チャレンジ選抜",
+            "scheduled_time": "11:45"
           },
           {
             "race": 4,
             "time": "12:10",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "チャレンジ選抜",
+            "scheduled_time": "12:10"
           },
           {
             "race": 5,
             "time": "12:37",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "特一般",
+            "scheduled_time": "12:37"
           },
           {
             "race": 6,
             "time": "13:07",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "特一般",
+            "scheduled_time": "13:07"
           },
           {
             "race": 7,
             "time": "13:40",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "特 選",
+            "scheduled_time": "13:40"
           },
           {
             "race": 8,
             "time": "14:17",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "特 選",
+            "scheduled_time": "14:17"
           },
           {
             "race": 9,
             "time": "14:54",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "特 選",
+            "scheduled_time": "14:54"
           },
           {
             "race": 10,
             "time": "15:31",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "チャレンジ決勝",
+            "scheduled_time": "15:31"
           },
           {
             "race": 11,
             "time": "16:08",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "決 勝",
+            "scheduled_time": "16:08"
           }
         ],
         "display_name": "静岡"
@@ -300,10 +403,59 @@
         "channel": "keirin.yahiko",
         "venue": "弥彦",
         "type": "デイ",
-        "grade": "G1",
-        "epg_start": "202610091030",
-        "epg_stop": "202610091700",
-        "race_meta": {},
+        "grade": "",
+        "epg_start": "202610091553",
+        "epg_stop": "202610091633",
+        "race_meta": {
+          "1": {
+            "name": "一次予選",
+            "time": "10:45"
+          },
+          "2": {
+            "name": "一次予選",
+            "time": "11:09"
+          },
+          "3": {
+            "name": "一次予選",
+            "time": "11:33"
+          },
+          "4": {
+            "name": "一次予選",
+            "time": "11:57"
+          },
+          "5": {
+            "name": "一次予選",
+            "time": "12:22"
+          },
+          "6": {
+            "name": "一次予選",
+            "time": "12:52"
+          },
+          "7": {
+            "name": "一次予選",
+            "time": "13:22"
+          },
+          "8": {
+            "name": "一次予選",
+            "time": "13:59"
+          },
+          "9": {
+            "name": "一次予選",
+            "time": "14:36"
+          },
+          "10": {
+            "name": "特別選抜予選",
+            "time": "15:13"
+          },
+          "11": {
+            "name": "特別選抜予選",
+            "time": "15:50"
+          },
+          "12": {
+            "name": "日競杯",
+            "time": "16:30"
+          }
+        },
         "event_name_epg": "",
         "code": "21",
         "race_ids": [
@@ -327,146 +479,146 @@
           {
             "race": 1,
             "time": "10:45",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "一次予選",
+            "scheduled_time": "10:45"
           },
           {
             "race": 2,
             "time": "11:09",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "一次予選",
+            "scheduled_time": "11:09"
           },
           {
             "race": 3,
             "time": "11:33",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "一次予選",
+            "scheduled_time": "11:33"
           },
           {
             "race": 4,
             "time": "11:57",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "一次予選",
+            "scheduled_time": "11:57"
           },
           {
             "race": 5,
             "time": "12:22",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "一次予選",
+            "scheduled_time": "12:22"
           },
           {
             "race": 6,
             "time": "12:52",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "一次予選",
+            "scheduled_time": "12:52"
           },
           {
             "race": 7,
             "time": "13:22",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "一次予選",
+            "scheduled_time": "13:22"
           },
           {
             "race": 8,
             "time": "13:59",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "一次予選",
+            "scheduled_time": "13:59"
           },
           {
             "race": 9,
             "time": "14:36",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "一次予選",
+            "scheduled_time": "14:36"
           },
           {
             "race": 10,
             "time": "15:13",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "特別選抜予選",
+            "scheduled_time": "15:13"
           },
           {
             "race": 11,
             "time": "15:50",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "特別選抜予選",
+            "scheduled_time": "15:50"
           },
           {
             "race": 12,
             "time": "16:30",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "日競杯",
+            "scheduled_time": "16:30"
           }
         ],
         "display_name": "弥彦"
@@ -475,10 +627,59 @@
         "channel": "keirin.hiratsuka",
         "venue": "平塚",
         "type": "ナイター",
-        "grade": "F1",
-        "epg_start": "202610091500",
-        "epg_stop": "202610092100",
-        "race_meta": {},
+        "grade": "",
+        "epg_start": "202610091957",
+        "epg_stop": "202610092021",
+        "race_meta": {
+          "1": {
+            "name": "一 般",
+            "time": "15:55"
+          },
+          "2": {
+            "name": "一 般",
+            "time": "16:22"
+          },
+          "3": {
+            "name": "準決勝",
+            "time": "16:49"
+          },
+          "4": {
+            "name": "準決勝",
+            "time": "17:12"
+          },
+          "5": {
+            "name": "準決勝",
+            "time": "17:35"
+          },
+          "6": {
+            "name": "ガールズ予選２",
+            "time": "17:58"
+          },
+          "7": {
+            "name": "ガールズ予選２",
+            "time": "18:21"
+          },
+          "8": {
+            "name": "一般",
+            "time": "18:44"
+          },
+          "9": {
+            "name": "一 般",
+            "time": "19:07"
+          },
+          "10": {
+            "name": "準決勝",
+            "time": "19:30"
+          },
+          "11": {
+            "name": "準決勝",
+            "time": "19:54"
+          },
+          "12": {
+            "name": "準決勝",
+            "time": "20:18"
+          }
+        },
         "event_name_epg": "",
         "code": "35",
         "race_ids": [
@@ -502,146 +703,146 @@
           {
             "race": 1,
             "time": "15:55",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "一 般",
+            "scheduled_time": "15:55"
           },
           {
             "race": 2,
             "time": "16:22",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "一 般",
+            "scheduled_time": "16:22"
           },
           {
             "race": 3,
             "time": "16:49",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "準決勝",
+            "scheduled_time": "16:49"
           },
           {
             "race": 4,
             "time": "17:12",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "準決勝",
+            "scheduled_time": "17:12"
           },
           {
             "race": 5,
             "time": "17:35",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "準決勝",
+            "scheduled_time": "17:35"
           },
           {
             "race": 6,
             "time": "17:58",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "ガールズ予選２",
+            "scheduled_time": "17:58"
           },
           {
             "race": 7,
             "time": "18:21",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "ガールズ予選２",
+            "scheduled_time": "18:21"
           },
           {
             "race": 8,
             "time": "18:44",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "一般",
+            "scheduled_time": "18:44"
           },
           {
             "race": 9,
             "time": "19:07",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "一 般",
+            "scheduled_time": "19:07"
           },
           {
             "race": 10,
             "time": "19:30",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "準決勝",
+            "scheduled_time": "19:30"
           },
           {
             "race": 11,
             "time": "19:54",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "準決勝",
+            "scheduled_time": "19:54"
           },
           {
             "race": 12,
             "time": "20:18",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "準決勝",
+            "scheduled_time": "20:18"
           }
         ],
         "display_name": "平塚"
@@ -650,10 +851,59 @@
         "channel": "keirin.yokkaichi",
         "venue": "四日市",
         "type": "ナイター",
-        "grade": "F1",
-        "epg_start": "202610091500",
-        "epg_stop": "202610092100",
-        "race_meta": {},
+        "grade": "",
+        "epg_start": "202610092009",
+        "epg_stop": "202610092033",
+        "race_meta": {
+          "1": {
+            "name": "一 般",
+            "time": "16:13"
+          },
+          "2": {
+            "name": "一 般",
+            "time": "16:37"
+          },
+          "3": {
+            "name": "特 選",
+            "time": "17:01"
+          },
+          "4": {
+            "name": "特 選",
+            "time": "17:24"
+          },
+          "5": {
+            "name": "一 般",
+            "time": "17:47"
+          },
+          "6": {
+            "name": "一 般",
+            "time": "18:10"
+          },
+          "7": {
+            "name": "一 般",
+            "time": "18:33"
+          },
+          "8": {
+            "name": "特 選",
+            "time": "18:56"
+          },
+          "9": {
+            "name": "特 選",
+            "time": "19:19"
+          },
+          "10": {
+            "name": "特 選",
+            "time": "19:42"
+          },
+          "11": {
+            "name": "決 勝",
+            "time": "20:06"
+          },
+          "12": {
+            "name": "決勝",
+            "time": "20:30"
+          }
+        },
         "event_name_epg": "",
         "code": "48",
         "race_ids": [
@@ -677,146 +927,146 @@
           {
             "race": 1,
             "time": "16:13",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "一 般",
+            "scheduled_time": "16:13"
           },
           {
             "race": 2,
             "time": "16:37",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "一 般",
+            "scheduled_time": "16:37"
           },
           {
             "race": 3,
             "time": "17:01",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "特 選",
+            "scheduled_time": "17:01"
           },
           {
             "race": 4,
             "time": "17:24",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "特 選",
+            "scheduled_time": "17:24"
           },
           {
             "race": 5,
             "time": "17:47",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "一 般",
+            "scheduled_time": "17:47"
           },
           {
             "race": 6,
             "time": "18:10",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "一 般",
+            "scheduled_time": "18:10"
           },
           {
             "race": 7,
             "time": "18:33",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "一 般",
+            "scheduled_time": "18:33"
           },
           {
             "race": 8,
             "time": "18:56",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "特 選",
+            "scheduled_time": "18:56"
           },
           {
             "race": 9,
             "time": "19:19",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "特 選",
+            "scheduled_time": "19:19"
           },
           {
             "race": 10,
             "time": "19:42",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "特 選",
+            "scheduled_time": "19:42"
           },
           {
             "race": 11,
             "time": "20:06",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "決 勝",
+            "scheduled_time": "20:06"
           },
           {
             "race": 12,
             "time": "20:30",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "決勝",
+            "scheduled_time": "20:30"
           }
         ],
         "display_name": "四日市"
@@ -825,10 +1075,47 @@
         "channel": "keirin.kawasaki",
         "venue": "かわさき",
         "type": "ミッドナイト",
-        "grade": "F2",
-        "epg_start": "202610092030",
-        "epg_stop": "202610092330",
-        "race_meta": {},
+        "grade": "",
+        "epg_start": "202610092303",
+        "epg_stop": "202610092323",
+        "race_meta": {
+          "1": {
+            "name": "チャレンジ予選",
+            "time": "20:40"
+          },
+          "2": {
+            "name": "チャレンジ予選",
+            "time": "21:00"
+          },
+          "3": {
+            "name": "チャレンジ予選",
+            "time": "21:20"
+          },
+          "4": {
+            "name": "チャレンジ予選",
+            "time": "21:40"
+          },
+          "5": {
+            "name": "特予選",
+            "time": "22:00"
+          },
+          "6": {
+            "name": "特予選",
+            "time": "22:20"
+          },
+          "7": {
+            "name": "特予選",
+            "time": "22:40"
+          },
+          "8": {
+            "name": "特予選",
+            "time": "23:00"
+          },
+          "9": {
+            "name": "初日特別選抜",
+            "time": "23:20"
+          }
+        },
         "event_name_epg": "",
         "race_ids": [],
         "event_name": "",
@@ -841,10 +1128,47 @@
         "channel": "keirin.nara",
         "venue": "奈良",
         "type": "ミッドナイト",
-        "grade": "F2",
-        "epg_start": "202610092030",
-        "epg_stop": "202610092330",
-        "race_meta": {},
+        "grade": "",
+        "epg_start": "202610092313",
+        "epg_stop": "202610092333",
+        "race_meta": {
+          "1": {
+            "name": "チャレンジ予選",
+            "time": "20:50"
+          },
+          "2": {
+            "name": "チャレンジ予選",
+            "time": "21:10"
+          },
+          "3": {
+            "name": "チャレンジ予選",
+            "time": "21:30"
+          },
+          "4": {
+            "name": "チャレンジ予選",
+            "time": "21:50"
+          },
+          "5": {
+            "name": "特予選",
+            "time": "22:10"
+          },
+          "6": {
+            "name": "特予選",
+            "time": "22:30"
+          },
+          "7": {
+            "name": "特予選",
+            "time": "22:50"
+          },
+          "8": {
+            "name": "特予選",
+            "time": "23:10"
+          },
+          "9": {
+            "name": "初日特別選抜",
+            "time": "23:30"
+          }
+        },
         "event_name_epg": "",
         "code": "53",
         "race_ids": [
@@ -865,110 +1189,110 @@
           {
             "race": 1,
             "time": "20:50",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "チャレンジ予選",
+            "scheduled_time": "20:50"
           },
           {
             "race": 2,
             "time": "21:10",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "チャレンジ予選",
+            "scheduled_time": "21:10"
           },
           {
             "race": 3,
             "time": "21:30",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "チャレンジ予選",
+            "scheduled_time": "21:30"
           },
           {
             "race": 4,
             "time": "21:50",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "チャレンジ予選",
+            "scheduled_time": "21:50"
           },
           {
             "race": 5,
             "time": "22:10",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "特予選",
+            "scheduled_time": "22:10"
           },
           {
             "race": 6,
             "time": "22:30",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "特予選",
+            "scheduled_time": "22:30"
           },
           {
             "race": 7,
             "time": "22:50",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "特予選",
+            "scheduled_time": "22:50"
           },
           {
             "race": 8,
             "time": "23:10",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "特予選",
+            "scheduled_time": "23:10"
           },
           {
             "race": 9,
             "time": "23:30",
-            "status": "結果待ち",
+            "status": "発走前",
             "order": [],
             "payout": "",
             "payouts": {},
             "winner": "",
             "origin": "",
-            "race_name": "",
-            "scheduled_time": ""
+            "race_name": "初日特別選抜",
+            "scheduled_time": "23:30"
           }
         ],
         "display_name": "奈良"
@@ -2564,7 +2888,7 @@
             "race_name": "Ｃ８組",
             "course": "ダート1580m",
             "scheduled_time": "16:23",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 2,
@@ -2574,7 +2898,7 @@
             "race_name": "阪口幸治生誕＆生還記念杯Ｃ７",
             "course": "ダート1400m",
             "scheduled_time": "10:53",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 3,
@@ -2584,7 +2908,7 @@
             "race_name": "神谷美紗都☆誕生６か月記念Ｃ６",
             "course": "ダート1400m",
             "scheduled_time": "11:23",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 4,
@@ -2594,7 +2918,7 @@
             "race_name": "令和８年熊本地震被災地支援レースＣ５",
             "course": "ダート1580m",
             "scheduled_time": "11:53",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 5,
@@ -2604,7 +2928,7 @@
             "race_name": "Ｃ４組",
             "course": "ダート1400m",
             "scheduled_time": "12:28",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 6,
@@ -2614,7 +2938,7 @@
             "race_name": "祝！千々和・澤島入籍記念Ｃ３",
             "course": "ダート1400m",
             "scheduled_time": "12:58",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 7,
@@ -2624,7 +2948,7 @@
             "race_name": "第２回おにぎり２７０食達成記念Ｃ２",
             "course": "ダート1580m",
             "scheduled_time": "13:28",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 8,
@@ -2634,7 +2958,7 @@
             "race_name": "Ｂ８組",
             "course": "ダート1400m",
             "scheduled_time": "13:58",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 9,
@@ -2644,7 +2968,7 @@
             "race_name": "Ｂ７組",
             "course": "ダート1580m",
             "scheduled_time": "14:33",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 10,
@@ -2654,7 +2978,7 @@
             "race_name": "Ｂ６組",
             "course": "ダート1400m",
             "scheduled_time": "15:03",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 11,
@@ -2664,7 +2988,7 @@
             "race_name": "特別 秋刀魚特別Ｃ１－２",
             "course": "ダート1400m",
             "scheduled_time": "15:33",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 12,
@@ -2674,7 +2998,7 @@
             "race_name": "特別 五平餅特別Ｃ１－１牝馬",
             "course": "ダート1400m",
             "scheduled_time": "16:03",
-            "status": "結果待ち"
+            "status": "発走前"
           }
         ]
       },
@@ -2691,7 +3015,7 @@
             "race_name": "Ｃ３三３歳以上",
             "course": "ダート1400m",
             "scheduled_time": "16:33",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 2,
@@ -2701,7 +3025,7 @@
             "race_name": "２歳オープン",
             "course": "ダート1400m",
             "scheduled_time": "14:23",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 3,
@@ -2711,7 +3035,7 @@
             "race_name": "Ｃ２三３歳以上",
             "course": "ダート1400m",
             "scheduled_time": "14:53",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 4,
@@ -2721,7 +3045,7 @@
             "race_name": "特別 Ｃ１ ３歳以上特別",
             "course": "ダート1700m",
             "scheduled_time": "15:23",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 5,
@@ -2731,7 +3055,7 @@
             "race_name": "Ｃ２二３歳以上",
             "course": "ダート1400m",
             "scheduled_time": "15:53",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 6,
@@ -2741,7 +3065,7 @@
             "race_name": "Ｃ２一３歳以上",
             "course": "ダート1400m",
             "scheduled_time": "16:28",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 7,
@@ -2751,7 +3075,7 @@
             "race_name": "Ｃ３二３歳以上",
             "course": "ダート1400m",
             "scheduled_time": "17:03",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 8,
@@ -2761,7 +3085,7 @@
             "race_name": "Ｃ３一３歳以上",
             "course": "ダート1400m",
             "scheduled_time": "17:38",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 9,
@@ -2771,7 +3095,7 @@
             "race_name": "特別 Ａ１Ａ２ ３歳以上特別",
             "course": "ダート1400m",
             "scheduled_time": "18:13",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 10,
@@ -2781,7 +3105,7 @@
             "race_name": "有 シクラメン賞Ｃ１ ３歳以上",
             "course": "ダート1400m",
             "scheduled_time": "18:48",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 11,
@@ -2791,7 +3115,7 @@
             "race_name": "特別 尼崎市制１１０周年記念Ｂ１Ｂ２ ３歳以上",
             "course": "ダート820m",
             "scheduled_time": "19:23",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 12,
@@ -2801,7 +3125,7 @@
             "race_name": "サンゴ賞Ｃ３ ３歳以上",
             "course": "ダート1230m",
             "scheduled_time": "20:03",
-            "status": "結果待ち"
+            "status": "発走前"
           }
         ]
       },
@@ -2818,7 +3142,7 @@
             "race_name": "２歳一 二",
             "course": "ダート1200m",
             "scheduled_time": "20:53",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 2,
@@ -2828,7 +3152,7 @@
             "race_name": "Ｃ２三",
             "course": "ダート1000m",
             "scheduled_time": "15:38",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 3,
@@ -2838,7 +3162,7 @@
             "race_name": "特別 Ｊ指 とき特別２歳一 二選抜",
             "course": "ダート1600m",
             "scheduled_time": "16:10",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 4,
@@ -2848,7 +3172,7 @@
             "race_name": "Ｃ２四 五 六",
             "course": "ダート1600m",
             "scheduled_time": "16:43",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 5,
@@ -2858,7 +3182,7 @@
             "race_name": "Ｃ２四 五 六",
             "course": "ダート1400m",
             "scheduled_time": "17:15",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 6,
@@ -2868,7 +3192,7 @@
             "race_name": "サンチャゴ賞Ｃ２四 五 六",
             "course": "ダート1200m",
             "scheduled_time": "17:48",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 7,
@@ -2878,7 +3202,7 @@
             "race_name": "Ｃ１二 三 四",
             "course": "ダート1600m",
             "scheduled_time": "18:23",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 8,
@@ -2888,7 +3212,7 @@
             "race_name": "特別 金風特別Ｃ１二 三 四選抜",
             "course": "ダート1400m",
             "scheduled_time": "18:58",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 9,
@@ -2898,7 +3222,7 @@
             "race_name": "特別 汝、星のごとく賞Ｂ２三選抜特別",
             "course": "ダート1400m",
             "scheduled_time": "19:33",
-            "status": "結果待ち"
+            "status": "発走前"
           },
           {
             "race": 10,
@@ -2908,7 +3232,7 @@
             "race_name": "特別 神無月特別Ｃ１二 三 四選抜",
             "course": "ダート1200m",
             "scheduled_time": "20:13",
-            "status": "結果待ち"
+            "status": "発走前"
           }
         ]
       }
