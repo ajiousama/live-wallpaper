@@ -1551,6 +1551,10 @@
     if(!airport?.ok) return [{type:'loading',text:'運航情報取得中'}];
 
     const arrival=direction==='arrival';
+    const activeRows=liveFlightRows(now) || nextRows('air',now);
+    if(!Array.isArray(activeRows) || !activeRows.length){
+      return [{type:'ended',text:arrival?'本日の到着便は終了しました':'本日の出発便は終了しました'}];
+    }
     const rows=arrival
       ? (Array.isArray(airport.arrivals)?airport.arrivals:[])
       : (Array.isArray(airport.departures)?airport.departures:[]);
@@ -1601,6 +1605,7 @@
     const arrival=direction==='arrival';
     const disruption=airportDisruptionItems(now,direction);
     const bus=airportNextTimes(now);
+    const ended=disruption.length===1 && disruption[0]?.type==='ended';
     const disruptionHtml=disruption.map(x=>`<span class="air-bottom-alert air-bottom-${x.type}">${x.text}</span>`).join('<span class="air-bottom-dot">・</span>');
     const twoDepartureText=(times)=>{
       if(!times.length) return '本日運行終了';
@@ -1629,9 +1634,9 @@
     el.className='note air-bottom-info';
     el.innerHTML=`
       <div class="air-bottom-disruption">
-        <div class="air-bottom-scroll"><div class="air-bottom-scroll-track air-bottom-scroll-alert">
+        <div class="air-bottom-scroll"><div class="air-bottom-scroll-track air-bottom-scroll-alert${ended?' air-bottom-ended':''}">
           <span class="air-bottom-scroll-set"><b class="air-bottom-direction">${directionMark} ${disruptionLabel}</b><span class="air-bottom-sep">◆</span>${disruptionHtml}</span>
-          <span class="air-bottom-scroll-set" aria-hidden="true"><b class="air-bottom-direction">${directionMark} ${disruptionLabel}</b><span class="air-bottom-sep">◆</span>${disruptionHtml}</span>
+          ${ended?'':`<span class="air-bottom-scroll-set" aria-hidden="true"><b class="air-bottom-direction">${directionMark} ${disruptionLabel}</b><span class="air-bottom-sep">◆</span>${disruptionHtml}</span>`}
         </div></div>
       </div>
       <div class="air-bottom-buses">
@@ -2488,7 +2493,7 @@
           : `${route} ${firstBadge}${finalBadge}`;
         const estimatedPosition=ferryEstimatedPosition(r,japanNow());
         row.innerHTML = `
-          <div class="cell main port-route"><div class="port-arrival-route-wrap">${arrivalRoute}${estimatedPosition ? `<span class="port-estimated-position">現在 ${estimatedPosition}付近航行中（見込）</span>` : ''}</div></div>
+          <div class="cell main port-route"><div class="port-arrival-route-wrap"><span class="port-arrival-route-line">${arrivalRoute}</span>${estimatedPosition ? `<span class="port-estimated-position">現在 ${estimatedPosition}付近航行中（見込）</span>` : ''}</div></div>
           <div class="cell service">${service}</div>
           <div class="cell time port-arrival-time">${r.time}頃予定</div>`;
       }
