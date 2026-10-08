@@ -605,6 +605,14 @@
     return toMinutes(departure)>=now.minutes ? `${port} 停泊中（見込）` : '';
   }
 
+  function ferryRouteGuidance(record, direction, now) {
+    const via=portViaLabel(record);
+    const position=direction==='departure'
+      ? ferryDeparturePosition(record,now)
+      : (()=>{ const p=ferryEstimatedPosition(record,now); return p ? `現在 ${p}付近航行中（見込）` : ''; })();
+    return [via,position].filter(Boolean).join(' ｜ ') || '—';
+  }
+
   function getBoardRecords(board, now) {
     const displayIso = boardDisplayIso(board, now);
     const rows = recordsForDay(board, (board === 'rail' || board === 'air') ? displayIso : now.iso);
@@ -891,10 +899,8 @@
     const localPort=record.port || '松山観光港';
     const from=direction==='arrival' ? '広島港' : localPort;
     const to=direction==='arrival' ? localPort : '広島港';
-    // This route is short enough to stay fixed. Do not let the Ehime badge
-    // artificially trigger scrolling on "広島港 → 松山観光港".
     const main=`<span class="route-port">${from}</span><span class="route-arrow"> → </span><span class="route-port">${to}</span>${badges?' '+badges:''}`;
-    return `<div class="port-dest-wrap port-kure-unified"><span class="port-dest-main no-auto-scroll">${main}</span><span class="port-via-line">${overflowScrollHtml('呉経由','port-via-scroll')}</span></div>`;
+    return `<span class="port-dest-main port-kure-unified no-auto-scroll">${main}</span>`;
   }
 
   function portRoute(record, direction = 'departure') {
@@ -2426,6 +2432,13 @@
   function busBoardingSubline(r) {
     return busEhimeRoute(r);
   }
+
+  function busDeparturePosition(r, now) {
+    const departure=padTime(r.time||'');
+    if(!/^\d{2}:\d{2}$/.test(departure) || toMinutes(departure)<now.minutes) return '';
+    const place=String(r.originName||r.stop||'松山市駅').trim()||'松山市駅';
+    return `${place}付近（見込）`;
+  }
   function renderBus(rows) {
     const root = $('bus-rows'); root.innerHTML = '';
     const dep = currentDirection() === 'departure';
@@ -2444,9 +2457,11 @@
         const rightBottom = busBoardingSubline(r);
         const terminal = busTerminalArrivalLabel(r);
         const ferryExtra = r.kind === 'ferrybus' ? '<span class="route-sub">フェリー連絡</span>' : '';
+        const departurePosition=busDeparturePosition(r,japanNow());
         row.innerHTML = `
           <div class="cell time bus-time-stack"><span class="primary-time">${r.time}</span>${terminal?`<span class="bus-terminal-time">${terminal}</span>`:''}</div>
           <div class="cell main bus-dest-cell"><span class="bus-dest-main">${busDestinationHtml(r,`${firstBadge}${finalBadge}`)}</span>${ferryExtra}</div>
+          <div class="cell sub bus-departure-position-cell"><span class="bus-departure-position">${departurePosition||'—'}</span></div>
           <div class="cell sub bus-boarding-cell"><div class="service-wrap"><span class="name bus-place-logo">${rightTop}</span><span class="code bus-ehime-route">${rightBottom?overflowScrollHtml(rightBottom,'bus-ehime-route-scroll'):''}</span></div></div>
           <div class="cell service">${busOperatorHtml(r)}</div>`;
       } else {
@@ -2491,18 +2506,17 @@
       const operatorHtml=ferryLogo||`<span class="name">${op.name}</span>`;
       const service = `<div class="service-wrap ferry-service-wrap">${operatorHtml}<span class="code">${op.type}</span></div>`;
       if (dep) {
-        const departurePosition=ferryDeparturePosition(r,japanNow());
+        const routeGuidance=ferryRouteGuidance(r,'departure',japanNow());
         row.innerHTML = `
           <div class="cell main port-route port-route-main">${portDepartureDestinationHtml(r,`${firstBadge}${finalBadge}`)}</div>
-          <div class="cell sub port-route-guidance">${departurePosition || '—'}</div>
+          <div class="cell sub port-route-guidance">${routeGuidance}</div>
           <div class="cell service">${service}</div>
           <div class="cell time port-departure-time">${r.time}発</div>`;
       } else {
         const arrivalRoute = isHiroshimaKureVia(r)
           ? portKureUnifiedHtml(r,'arrival',`${firstBadge}${finalBadge}`)
           : `${route} ${firstBadge}${finalBadge}`;
-        const estimatedPosition=ferryEstimatedPosition(r,japanNow());
-        const routeGuidance=estimatedPosition ? `現在 ${estimatedPosition}付近航行中（見込）` : '—';
+        const routeGuidance=ferryRouteGuidance(r,'arrival',japanNow());
         row.innerHTML = `
           <div class="cell main port-route port-route-main"><span class="port-arrival-route-line">${arrivalRoute}</span></div>
           <div class="cell sub port-route-guidance">${routeGuidance}</div>
@@ -2567,7 +2581,7 @@
           ? '<span>時刻</span><span>行先</span><span>航空会社</span><span>便名</span><span>区分</span>'
           : '<span>出発地</span><span>航空会社</span><span>便名</span><span>区分</span><span>到着時刻</span>');
     busHead.innerHTML = dep
-      ? '<span>時刻 / 終着</span><span>行先 / 経由地</span><span>乗車場所</span><span>運行会社</span>'
+      ? '<span>時刻 / 終着</span><span>行先 / 経由地</span><span>現在位置（見込）</span><span>乗車場所</span><span>運行会社</span>'
       : '<span>出発地</span><span>現在位置（見込）</span><span>到着場所</span><span>運行会社</span><span>到着時刻</span>';
     portHead.innerHTML = dep
       ? '<span>時刻 / 到着</span><span>出発港 → 行先 / 寄港</span><span>運航会社 / 船種</span>'
