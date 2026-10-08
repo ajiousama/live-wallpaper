@@ -1630,11 +1630,13 @@
       <div class="air-bottom-disruption">
         <div class="air-bottom-scroll"><div class="air-bottom-scroll-track air-bottom-scroll-alert">
           <span class="air-bottom-scroll-set"><b class="air-bottom-direction">${directionMark} ${disruptionLabel}</b><span class="air-bottom-sep">◆</span>${disruptionHtml}</span>
+          <span class="air-bottom-scroll-set" aria-hidden="true"><b class="air-bottom-direction">${directionMark} ${disruptionLabel}</b><span class="air-bottom-sep">◆</span>${disruptionHtml}</span>
         </div></div>
       </div>
       <div class="air-bottom-buses">
         <div class="air-bottom-scroll"><div class="air-bottom-scroll-track air-bottom-scroll-bus">
           <span class="air-bottom-scroll-set">${busHtml}</span>
+          <span class="air-bottom-scroll-set" aria-hidden="true">${busHtml}</span>
         </div></div>
       </div>`;
   }
