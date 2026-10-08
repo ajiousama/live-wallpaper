@@ -597,6 +597,14 @@
     return progress===null ? '' : estimatedWaypoint(ferryEstimatedRoutePoints(record),progress);
   }
 
+  function ferryDeparturePosition(record, now) {
+    const port=String(record.port||'出発港').trim()||'出発港';
+    const departure=padTime(record.time||'');
+    if(!/^\d{2}:\d{2}$/.test(departure)) return '';
+    if(record.isNextDayStart) return `${port} 停泊中（見込）`;
+    return toMinutes(departure)>=now.minutes ? `${port} 停泊中（見込）` : '';
+  }
+
   function getBoardRecords(board, now) {
     const displayIso = boardDisplayIso(board, now);
     const rows = recordsForDay(board, (board === 'rail' || board === 'air') ? displayIso : now.iso);
@@ -2483,9 +2491,10 @@
       const operatorHtml=ferryLogo||`<span class="name">${op.name}</span>`;
       const service = `<div class="service-wrap ferry-service-wrap">${operatorHtml}<span class="code">${op.type}</span></div>`;
       if (dep) {
+        const departurePosition=ferryDeparturePosition(r,japanNow());
         row.innerHTML = `
           <div class="cell time port-time-stack">${portTimeStackHtml(r)}</div>
-          <div class="cell main port-route">${portDepartureDestinationHtml(r,`${firstBadge}${finalBadge}`)}</div>
+          <div class="cell main port-route"><div class="port-departure-route-wrap">${portDepartureDestinationHtml(r,`${firstBadge}${finalBadge}`)}${departurePosition ? `<span class="port-estimated-position port-departure-position">${departurePosition}</span>` : ''}</div></div>
           <div class="cell service">${service}</div>`;
       } else {
         const arrivalRoute = isHiroshimaKureVia(r)
