@@ -1743,3 +1743,44 @@ html.company-pc body.freewifi-tv #top-live-alert{
   height:32px!important;
   min-height:32px!important;
 }
+
+
+/* BUS arrival: use the open middle space for estimated current position. */
+body.freewifi-tv .panel-bus.arrival-columns .table-head,
+body.freewifi-tv .panel-bus.arrival-columns #bus-rows .row{
+  grid-template-columns:minmax(210px,1.1fr) minmax(245px,1.15fr) 155px 175px 135px!important;
+}
+body.freewifi-tv .panel-bus.arrival-columns .bus-estimated-position-cell{
+  min-width:0;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  overflow:hidden;
+  padding-left:8px!important;
+  padding-right:8px!important;
+}
+body.freewifi-tv .panel-bus.arrival-columns .bus-estimated-position{
+  display:block;
+  min-width:0;
+  max-width:100%;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:clip;
+  color:#9fe7ff;
+  font-size:15px;
+  font-weight:900;
+  letter-spacing:-.01em;
+}
+body.freewifi-tv .panel-bus.arrival-columns .bus-estimated-position-empty{
+  color:#5f7884;
+  font-size:12px;
+  font-weight:700;
+}
+html.company-pc body.freewifi-tv .panel-bus.arrival-columns .table-head,
+html.company-pc body.freewifi-tv .panel-bus.arrival-columns #bus-rows .row{
+  grid-template-columns:minmax(210px,1.1fr) minmax(245px,1.15fr) 150px 175px 140px!important;
+}
+html.company-pc body.freewifi-tv .panel-bus.arrival-columns .bus-estimated-position{
+  font-size:16px;
+  font-weight:1000;
+}
