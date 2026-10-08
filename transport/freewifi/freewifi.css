@@ -1811,3 +1811,37 @@ html.company-pc body.freewifi-tv .panel-port.arrival-columns .port-estimated-pos
   font-size:13px;
   font-weight:1000;
 }
+
+
+/* 2026-10-08: airport lower tickers loop continuously without blank reset. */
+body.freewifi-tv.air-board-page .air-bottom-scroll-track{
+  padding-left:0!important;
+}
+body.freewifi-tv.air-board-page .air-bottom-scroll-alert,
+body.freewifi-tv.air-board-page .air-bottom-scroll-bus{
+  animation:airportBottomSeamlessLoop 12s linear infinite!important;
+}
+body.freewifi-tv.air-board-page .air-bottom-scroll-set{
+  padding-right:42px!important;
+}
+@keyframes airportBottomSeamlessLoop{
+  from{transform:translateX(0)}
+  to{transform:translateX(-50%)}
+}
+
+/* 2026-10-08: ferry route information, including estimated current position, is right aligned. */
+body.freewifi-tv .panel-port .port-route{
+  text-align:right!important;
+}
+body.freewifi-tv .panel-port .port-dest-wrap,
+body.freewifi-tv .panel-port.arrival-columns .port-arrival-route-wrap{
+  width:100%!important;
+  align-items:flex-end!important;
+  text-align:right!important;
+}
+body.freewifi-tv .panel-port .port-dest-main,
+body.freewifi-tv .panel-port .port-via-line,
+body.freewifi-tv .panel-port.arrival-columns .port-estimated-position{
+  margin-left:auto!important;
+  text-align:right!important;
+}
