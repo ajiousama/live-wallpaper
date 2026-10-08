@@ -6972,16 +6972,7 @@
       }
     ]
   },
-  "featured_races": [
-    {
-      "source": "海外競馬",
-      "venue": "海外",
-      "race": "",
-      "name": "凱旋門賞",
-      "time": "",
-      "horses": []
-    }
-  ],
+  "featured_races": [],
   "win5": {
     "targets": [],
     "payout": "",
