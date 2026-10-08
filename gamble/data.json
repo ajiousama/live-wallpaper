@@ -1,8 +1,8 @@
 {
   "date": "2026-10-08",
   "date_label": "2026年10月08日",
-  "updated_at": "22:38:42",
-  "updated_at_iso": "2026-10-08T22:38:42.734664+09:00",
+  "updated_at": "22:42:01",
+  "updated_at_iso": "2026-10-08T22:42:01.088224+09:00",
   "jra_switch_time": "17:00",
   "keirin": {
     "phase": "本日開催 7場",
@@ -3348,7 +3348,7 @@
           {
             "race": 7,
             "time": "22:40",
-            "status": "発走前",
+            "status": "結果待ち",
             "order": [],
             "payout": "",
             "payouts": {},
@@ -3771,8 +3771,8 @@
                 }
               ]
             },
-            "winner": "",
-            "origin": "",
+            "winner": "新井僚太郎",
+            "origin": "山梨",
             "race_name": "Ａ級 特選",
             "scheduled_time": "22:30"
           },
