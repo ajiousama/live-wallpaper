@@ -970,39 +970,74 @@ def featured_races_today(ymd: str, local_epg: list[dict]) -> list[dict]:
     except Exception as exc:
         print(f"[GAMBLE] JRA featured failed: {exc}")
 
-    # JRA overseas sales: add today's overseas headline race when present.
+    # JRA overseas sales:
+    # Use JRA's official "発売レース" list, then verify the JAPAN sale date
+    # on each race page. Never infer an active sale from news dates on the
+    # overseas top page (that caused old races such as the Arc to linger).
     try:
-        overseas_url = "https://www.jra.go.jp/keiba/overseas/"
-        soup = BeautifulSoup(fetch(overseas_url), "html.parser")
-        text = clean(soup)
-        date_pat = rf"{int(mm)}月\s*{int(dd)}日"
-        if re.search(date_pat, text):
-            name = ""
-            nm = re.search(r"([^\s]+?)(?:G1|GⅠ)", text)
-            if nm:
-                name = nm.group(1)
-                name = re.sub(r"^\d{4}", "", name)
-                name = name.strip("（(【[「『・:：- ")
-            tm = re.search(
-                rf"発走予定時刻.*?{date_pat}.*?(\d{{1,2}})時(\d{{2}})分",
-                text,
+        overseas_list_url = "https://www.jra.go.jp/keiba/overseas/racelist/"
+        list_soup = BeautifulSoup(fetch(overseas_list_url), "html.parser")
+        target_md = (int(mm), int(dd))
+        page_cache: dict[str, str] = {}
+        seen_overseas: set[tuple[str, str]] = set()
+
+        for a in list_soup.find_all("a", href=True):
+            race_name = clean(a)
+            href = a.get("href", "")
+            race_url = urljoin(overseas_list_url, href)
+            if "/keiba/overseas/race/" not in race_url:
+                continue
+            if not re.search(r"(?:G1|GⅠ|ＧⅠ)", race_name):
+                continue
+
+            # Normalize sub-pages to that race's top page.
+            mbase = re.search(r"(.*/keiba/overseas/race/[^/]+/)", race_url)
+            if not mbase:
+                continue
+            base = mbase.group(1)
+            index_url = urljoin(base, "index.html")
+
+            if index_url not in page_cache:
+                page_cache[index_url] = clean(BeautifulSoup(fetch(index_url), "html.parser"))
+            detail_text = page_cache[index_url]
+
+            # The only date that controls inclusion is JRA's Japanese sale date.
+            sale_m = re.search(
+                r"発売開始時刻.*?日本時間\s*(\d{1,2})月\s*(\d{1,2})日",
+                detail_text,
             )
-            time_text = f"{int(tm.group(1)):02d}:{tm.group(2)}" if tm else ""
-            race_link = None
-            for a in soup.find_all("a", href=True):
-                href = a.get("href","")
-                if "/keiba/overseas/race/" in href and href.endswith(("index.html","horse.html")):
-                    race_link = urljoin(overseas_url, href)
-                    break
-            horses = []
-            if race_link:
-                base = race_link.rsplit("/", 1)[0] + "/"
-                horses = _featured_horses_from_page(urljoin(base, "horse.html"))
-            if name:
-                featured.append({
-                    "source":"海外競馬","venue":"海外","race":"",
-                    "name":name,"time":time_text,"horses":horses,
-                })
+            if not sale_m:
+                continue
+            sale_md = (int(sale_m.group(1)), int(sale_m.group(2)))
+            if sale_md != target_md:
+                continue
+
+            time_m = re.search(
+                r"発走予定時刻.*?日本時間\s*\d{1,2}月\s*\d{1,2}日.*?(\d{1,2})時\s*(\d{2})分",
+                detail_text,
+            )
+            time_text = f"{int(time_m.group(1)):02d}:{time_m.group(2)}" if time_m else ""
+
+            display_name = re.sub(r"\s*[（(]\s*(?:G1|GⅠ|ＧⅠ)\s*[）)]\s*$", "", race_name).strip()
+            key = (display_name, index_url)
+            if not display_name or key in seen_overseas:
+                continue
+            seen_overseas.add(key)
+
+            horses = _featured_horses_from_page(urljoin(base, "horse.html"))
+            featured.append({
+                "source":"海外競馬",
+                "venue":"海外",
+                "race":"",
+                "name":display_name,
+                "time":time_text,
+                "horses":horses,
+                "sale_date":f"{year}-{mm}-{dd}",
+                "jra_sale_url":index_url,
+            })
+
+        names = [x.get("name","") for x in featured if x.get("source") == "海外競馬"]
+        print(f"[GAMBLE] JRA overseas sales today: {', '.join(names) if names else 'none'}")
     except Exception as exc:
         print(f"[GAMBLE] overseas featured failed: {exc}")
 
