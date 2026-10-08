@@ -567,3 +567,26 @@ html.company-mode .special-grid.count-1 .special-winner>strong,
 html.company-mode .special-grid.count-2 .special-winner>strong,
 html.company-mode .special-grid.count-3 .special-winner>strong,
 html.company-mode .special-grid.count-4 .special-winner>strong{font-size:23px!important}
+
+
+/* Manual page advance for quick checking without waiting for auto rotation. */
+#page-next{
+  appearance:none;
+  border:1px solid #4f7f99;
+  border-radius:4px;
+  background:#0d2b3b;
+  color:#dff5ff;
+  font:inherit;
+  font-size:10px;
+  font-weight:1000;
+  line-height:1;
+  padding:4px 7px;
+  cursor:pointer;
+  white-space:nowrap;
+}
+#page-next:hover{background:#12384c}
+#page-next:active{transform:translateY(1px)}
+html.company-mode #page-next{
+  font-size:12px!important;
+  padding:5px 9px!important;
+}
