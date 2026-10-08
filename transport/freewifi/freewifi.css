@@ -1845,3 +1845,20 @@ body.freewifi-tv .panel-port.arrival-columns .port-estimated-position{
   margin-left:auto!important;
   text-align:right!important;
 }
+
+
+/* 2026-10-08: "その他の航路" never uses ellipsis, for both departures and arrivals. */
+body.freewifi-tv .freewifi-port-other .port-route,
+body.freewifi-tv .freewifi-port-other .port-dest-main,
+body.freewifi-tv .freewifi-port-other .port-via-line,
+body.freewifi-tv .freewifi-port-other .port-arrival-route-wrap,
+body.freewifi-tv .freewifi-port-other .port-estimated-position{
+  text-overflow:clip!important;
+  overflow:visible!important;
+  white-space:normal!important;
+}
+body.freewifi-tv .freewifi-port-other .port-dest-wrap,
+body.freewifi-tv .freewifi-port-other .port-arrival-route-wrap{
+  min-width:0!important;
+  max-width:none!important;
+}
