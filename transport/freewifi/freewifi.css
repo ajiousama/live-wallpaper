@@ -1917,3 +1917,38 @@ body.freewifi-tv.air-board-page .air-bottom-scroll-alert.air-bottom-ended .air-b
 body.freewifi-tv.air-board-page .air-bottom-alert.air-bottom-ended{
   color:#b8c8cf!important;
 }
+
+
+/* 2026-10-08: ferry departure board shows assumed current vessel position before sailing. */
+body.freewifi-tv .panel-port.dep-mode .port-departure-route-wrap{
+  width:100%!important;
+  min-width:0!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:flex-end!important;
+  justify-content:center!important;
+  text-align:right!important;
+  line-height:1.05!important;
+}
+body.freewifi-tv .panel-port.dep-mode .port-departure-route-wrap > .port-dest-wrap{
+  width:100%!important;
+  align-items:flex-end!important;
+  text-align:right!important;
+}
+body.freewifi-tv .panel-port.dep-mode .port-departure-position{
+  display:block!important;
+  max-width:100%!important;
+  margin-top:3px!important;
+  margin-left:auto!important;
+  color:#9fe7ff!important;
+  font-size:12px!important;
+  font-weight:900!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:clip!important;
+  text-align:right!important;
+}
+html.company-pc body.freewifi-tv .panel-port.dep-mode .port-departure-position{
+  font-size:13px!important;
+  font-weight:1000!important;
+}
