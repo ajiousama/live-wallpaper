@@ -2257,6 +2257,7 @@
       '.arrival-terminal',
       '.arrival-continuation',
       '.arrival-departure-time',
+      '.bus-estimated-position',
       '.port-dest-main',
       '.port-via-line',
       '.port-arrival-line',
@@ -2445,9 +2446,11 @@
             <span class="arrival-place">${overflowScrollHtml(origin,'bus-origin-scroll')} ${firstBadge}${finalBadge}</span>
             <span class="arrival-departure-time">${depDay}${r.originDepartureTime || '—'}出発</span>
           </div>
+          <div class="cell sub bus-estimated-position-cell">
+            ${estimatedPosition ? `<span class="bus-estimated-position">現在 ${estimatedPosition}付近走行中（見込）</span>` : '<span class="bus-estimated-position bus-estimated-position-empty">位置見込なし</span>'}
+          </div>
           <div class="cell sub arrival-terminal-wrap">
             <span class="arrival-terminal">${overflowScrollHtml(terminal,'bus-terminal-scroll')}</span>
-            ${estimatedPosition ? `<span class="arrival-continuation bus-estimated-position">現在 ${estimatedPosition}付近走行中（見込）</span>` : ''}
           </div>
           <div class="cell service bus-arrival-operator">${operator}</div>
           <div class="cell time bus-arrival-time">${terminalTime}頃予定</div>`;
@@ -2545,7 +2548,7 @@
           : '<span>出発地</span><span>航空会社</span><span>便名</span><span>区分</span><span>到着時刻</span>');
     busHead.innerHTML = dep
       ? '<span>時刻 / 終着</span><span>行先 / 経由地</span><span>乗車場所</span><span>運行会社</span>'
-      : '<span>出発地</span><span>到着場所</span><span>運行会社</span><span>到着時刻</span>';
+      : '<span>出発地</span><span>現在位置（見込）</span><span>到着場所</span><span>運行会社</span><span>到着時刻</span>';
     portHead.innerHTML = dep
       ? '<span>時刻 / 到着</span><span>出発港 → 行先 / 寄港</span><span>運航会社 / 船種</span>'
       : '<span>出発港 → 到着港</span><span>運航会社 / 船種</span><span>到着時刻</span>';
