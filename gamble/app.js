@@ -860,6 +860,7 @@ async function load(){
       document.getElementById("phase-screen").classList.toggle("active",!isJra);
       document.getElementById("jra-screen").classList.toggle("active",isJra);
       if(isJra) renderJraPage(page);
+      else if(page.type==="main-races") renderMainRacePage(page);
       else if(page.type==="special") renderSpecialPage(page);
       else renderPhasePage(page);
     }
@@ -890,5 +891,21 @@ function tick(){
   }
 }
 setInterval(tick,1000);tick();
+
+const pageNextButton=document.getElementById("page-next");
+if(pageNextButton){
+  pageNextButton.addEventListener("click",()=>{
+    const pages=buildPages();
+    if(!pages.length) return;
+    showPage((currentPageIndex+1)%pages.length);
+  });
+}
+document.addEventListener("keydown",e=>{
+  if(e.key==="ArrowRight" || e.key==="PageDown"){
+    const pages=buildPages();
+    if(pages.length) showPage((currentPageIndex+1)%pages.length);
+  }
+});
+
 load();setInterval(load,5000);
 requestAnimationFrame(syncScrollPosition);
