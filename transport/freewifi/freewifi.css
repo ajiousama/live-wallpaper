@@ -1862,3 +1862,20 @@ body.freewifi-tv .freewifi-port-other .port-arrival-route-wrap{
   min-width:0!important;
   max-width:none!important;
 }
+
+
+/* 2026-10-08: 九州航路も出発・到着とも省略記号を使わず全文表示。 */
+body.freewifi-tv .freewifi-port-kyushu .port-route,
+body.freewifi-tv .freewifi-port-kyushu .port-dest-main,
+body.freewifi-tv .freewifi-port-kyushu .port-via-line,
+body.freewifi-tv .freewifi-port-kyushu .port-arrival-route-wrap,
+body.freewifi-tv .freewifi-port-kyushu .port-estimated-position{
+  text-overflow:clip!important;
+  overflow:visible!important;
+  white-space:normal!important;
+}
+body.freewifi-tv .freewifi-port-kyushu .port-dest-wrap,
+body.freewifi-tv .freewifi-port-kyushu .port-arrival-route-wrap{
+  min-width:0!important;
+  max-width:none!important;
+}
