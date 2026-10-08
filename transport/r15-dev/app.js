@@ -654,11 +654,32 @@
     if (board === 'port') {
       const deps = rows.map(r => ({ ...r, direction: 'departure', minutes: toMinutes(r.time) }));
       if (currentDirection() === 'departure') return deps.sort((a,b)=>rMinutes(a)-rMinutes(b));
+
+      // Ferry arrival board is rolling 24-hour information.
+      // Keep departures from today even when they arrive after midnight,
+      // and also include previous-day overnight sailings that arrive today.
       const prevIso=shiftIso(now.iso,-1);
       const prevDeps=recordsForDay('port',prevIso).map(r=>({...r,direction:'departure',minutes:toMinutes(r.time)}));
-      const sameDay=deps.filter(r=>!r.noSyntheticArrival).map(synthPortArrival).filter(r=>!r._arrivalNextDay);
-      const overnight=prevDeps.filter(r=>!r.noSyntheticArrival).map(synthPortArrival).filter(r=>r._arrivalNextDay).map(r=>({...r,originDepartureDay:'前日'}));
-      return [...sameDay,...overnight].map(r=>({...r,minutes:toMinutes(r.time)})).sort((a,b)=>rMinutes(a)-rMinutes(b));
+
+      const sameDay=deps
+        .filter(r=>!r.noSyntheticArrival)
+        .map(synthPortArrival)
+        .map(r=>({
+          ...r,
+          minutes:toMinutes(r.time)+(r._arrivalNextDay?1440:0)
+        }));
+
+      const overnight=prevDeps
+        .filter(r=>!r.noSyntheticArrival)
+        .map(synthPortArrival)
+        .filter(r=>r._arrivalNextDay)
+        .map(r=>({
+          ...r,
+          originDepartureDay:'前日',
+          minutes:toMinutes(r.time)
+        }));
+
+      return [...overnight,...sameDay].sort((a,b)=>rMinutes(a)-rMinutes(b));
     }
     return [];
   }
