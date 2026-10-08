@@ -370,6 +370,111 @@ function specialItems(){
   }
   return out;
 }
+function mainRaceItems(){
+  const out=[];
+
+  // 競輪: 「準決勝」は除外し、その日の本当の決勝だけ。
+  for(const v of data?.keirin?.venues||[]){
+    for(const r of v.races||[]){
+      const rn=String(r.race_name||"");
+      if(!rn.includes("決勝") || rn.includes("準決勝")) continue;
+      out.push({
+        kind:"keirin",
+        source:"競輪 決勝",
+        venue:v.venue||v.name||"",
+        race:(r.race||"")+"R",
+        name:rn,
+        time:r.scheduled_time||r.time||"",
+        winner:r.winner||"",
+        sub:r.origin?("出身 "+r.origin):"",
+        order:r.order||[],
+        payout:r.payout||"",
+        status:r.status||"発走前"
+      });
+    }
+  }
+
+  // ボート: 優勝戦だけ。準優勝戦は入れない。
+  for(const v of data?.boats||[]){
+    for(const r of v.races||[]){
+      const rn=String(r.race_name||"");
+      if(!rn.includes("優勝戦") || rn.includes("準優勝")) continue;
+      out.push({
+        kind:"boat",
+        source:"ボート 優勝戦",
+        venue:v.name||"",
+        race:(r.race||"")+"R",
+        name:[v.event_name,rn].filter(Boolean).join(" / "),
+        time:r.scheduled_time||r.time||"",
+        winner:r.winner||"",
+        sub:r.winner?"優勝レーサー":"",
+        order:r.order||[],
+        payout:r.payout||"",
+        status:r.status||"発走前"
+      });
+    }
+  }
+
+  // 地方競馬: 各場1レース。重賞を最優先し、なければ終盤の特別・賞、
+  // それもなければ最終レースを「本日のメイン」とする。
+  for(const v of data?.local_all?.venues||[]){
+    const races=(v.races||[]).slice();
+    if(!races.length) continue;
+    const graded=races.filter(r=>/重賞|Jpn[123IⅤⅢⅡⅠ]+/i.test(String(r.race_name||"")));
+    const lateFeature=races
+      .filter(r=>Number(r.race)>=10 && /特別|賞|記念|杯|ドリーム|選抜/.test(String(r.race_name||"")))
+      .sort((x,y)=>Number(y.race)-Number(x.race));
+    const last=races.slice().sort((x,y)=>Number(y.race)-Number(x.race))[0];
+    const r=graded.slice().sort((x,y)=>Number(y.race)-Number(x.race))[0] || lateFeature[0] || last;
+    if(!r) continue;
+    out.push({
+      kind:"local",
+      source:/重賞|Jpn/i.test(String(r.race_name||""))?"地方 重賞":"地方 メイン",
+      venue:v.name||"",
+      race:(r.race||"")+"R",
+      name:String(r.race_name||"").replace(/^\s*(重賞|特別)\s*/,""),
+      time:r.scheduled_time||r.time||"",
+      winner:r.winner||"",
+      sub:r.jockey?("騎手 "+r.jockey):"",
+      order:r.order||[],
+      payout:r.trifecta||r.payout||"",
+      status:r.status||"発走前"
+    });
+  }
+
+  // JRA開催日は featured_races の当日メインを追加。
+  if(jraIsCurrentDay()){
+    for(const x of data?.featured_races||[]){
+      if(x.source!=="JRA") continue;
+      const raceNo=Number(String(x.race||"11R").replace(/\D/g,""))||11;
+      const r=jraRaceResult(x.venue,raceNo);
+      const first=Array.isArray(r.top3)?(r.top3.find(y=>Number(y.position)===1)||{}):{};
+      const tri=Array.isArray(r?.payouts?.["3連単"])?r.payouts["3連単"][0]:null;
+      out.push({
+        kind:"jra",
+        source:"JRA メイン",
+        venue:x.venue||"",
+        race:x.race||raceNo+"R",
+        name:x.name||r.race_name||"",
+        time:x.time||r.time||"",
+        winner:first.horse||"",
+        sub:first.jockey?("騎手 "+first.jockey):"",
+        order:tri?.combo?String(tri.combo).split(/[-－]/).map(Number):[],
+        payout:tri?.amount||"",
+        status:first.horse?"確定":"発走前",
+        horses:x.horses||[]
+      });
+    }
+  }
+
+  const kindOrder={keirin:0,boat:1,local:2,jra:3};
+  return out.sort((x,y)=>
+    (kindOrder[x.kind]??9)-(kindOrder[y.kind]??9) ||
+    String(x.venue||"").localeCompare(String(y.venue||""),"ja") ||
+    Number(String(x.race||"").replace(/\D/g,""))-Number(String(y.race||"").replace(/\D/g,""))
+  );
+}
+
 function buildPages(){
   const pages=[];
   for(const phase of PHASES){
@@ -478,6 +583,24 @@ function buildPages(){
         page:Math.floor(i/6)+1,
         total:Math.ceil(rest.length/6),
         items:chunk
+      });
+    }
+  }
+
+  const mainRaces=mainRaceItems().filter(x=>{
+    if(!COMPANY_MODE) return true;
+    if(COMPANY_WEEKDAY) return x.kind==="keirin" || x.kind==="local";
+    return x.kind==="keirin" || x.kind==="boat" || x.kind==="local" || x.kind==="jra";
+  });
+  if(mainRaces.length){
+    const perPage=COMPANY_MODE?4:9;
+    for(let i=0;i<mainRaces.length;i+=perPage){
+      pages.push({
+        key:"main-races:"+Math.floor(i/perPage),
+        type:"main-races",
+        page:Math.floor(i/perPage)+1,
+        total:Math.ceil(mainRaces.length/perPage),
+        items:mainRaces.slice(i,i+perPage)
       });
     }
   }
@@ -633,6 +756,18 @@ function win5Card(x){
     '<div class="win5-result"><span>的中馬番</span><strong>'+esc(hit||"結果待ち")+'</strong><span>'+(x.payout_kind?esc(x.payout_kind)+"払戻":"払戻")+'</span><b>'+esc(x.payout||"---")+'</b></div>'+
   '</article>';
 }
+function renderMainRacePage(page){
+  const host=document.getElementById("phase-grid");
+  const items=page.items||[];
+  host.className="special-grid main-race-grid count-"+Math.max(1,items.length);
+  host.innerHTML=items.length
+    ? items.map(specialRaceCard).join("")
+    : '<div class="empty-card">本日の優勝戦・決勝戦・メインレース情報なし</div>';
+  document.getElementById("screen-title").textContent="本日の優勝戦・決勝戦・メインレース";
+  const pageText=page.total>1?(" "+page.page+"/"+page.total):"";
+  document.getElementById("screen-sub").textContent="本日 "+items.length+"レース"+pageText;
+  updateMarquees();
+}
 function renderSpecialPage(page){
   const host=document.getElementById("phase-grid");
   const items=page.items||[];
@@ -660,6 +795,7 @@ function showPage(index){
   document.getElementById("phase-screen").classList.toggle("active",!isJra);
   document.getElementById("jra-screen").classList.toggle("active",isJra);
   if(isJra) renderJraPage(page);
+  else if(page.type==="main-races") renderMainRacePage(page);
   else if(page.type==="special") renderSpecialPage(page);
   else renderPhasePage(page);
   document.querySelectorAll(".sync-vscroll").forEach(x=>x.scrollTop=0);
