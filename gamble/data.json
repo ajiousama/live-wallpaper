@@ -1,8 +1,8 @@
 {
   "date": "2026-10-08",
   "date_label": "2026年10月08日",
-  "updated_at": "22:08:08",
-  "updated_at_iso": "2026-10-08T22:08:08.147820+09:00",
+  "updated_at": "22:25:31",
+  "updated_at_iso": "2026-10-08T22:25:31.512980+09:00",
   "jra_switch_time": "17:00",
   "keirin": {
     "phase": "本日開催 7場",
@@ -3285,18 +3285,61 @@
                 }
               ]
             },
-            "winner": "",
-            "origin": "",
+            "winner": "竹田和幸",
+            "origin": "岐阜",
             "race_name": "Ａ級 特一般",
             "scheduled_time": "22:00"
           },
           {
             "race": 6,
             "time": "22:20",
-            "status": "発走前",
-            "order": [],
-            "payout": "",
-            "payouts": {},
+            "status": "確定",
+            "order": [
+              2,
+              3,
+              4
+            ],
+            "payout": "2,550円",
+            "payouts": {
+              "2車複": [
+                {
+                  "combo": "2-3",
+                  "amount": "310円"
+                }
+              ],
+              "2車単": [
+                {
+                  "combo": "2>3",
+                  "amount": "320円"
+                }
+              ],
+              "3連複": [
+                {
+                  "combo": "2-3-4",
+                  "amount": "1,400円"
+                }
+              ],
+              "3連単": [
+                {
+                  "combo": "2>3>4",
+                  "amount": "2,550円"
+                }
+              ],
+              "ワイド": [
+                {
+                  "combo": "2-3",
+                  "amount": "150円"
+                },
+                {
+                  "combo": "2-4",
+                  "amount": "320円"
+                },
+                {
+                  "combo": "3-4",
+                  "amount": "560円"
+                }
+              ]
+            },
             "winner": "",
             "origin": "",
             "race_name": "Ａ級 特選",
@@ -3626,12 +3669,55 @@
           {
             "race": 5,
             "time": "22:10",
-            "status": "発走前",
-            "order": [],
-            "payout": "",
-            "payouts": {},
-            "winner": "",
-            "origin": "",
+            "status": "確定",
+            "order": [
+              1,
+              5,
+              6
+            ],
+            "payout": "7,200円",
+            "payouts": {
+              "2車複": [
+                {
+                  "combo": "1-5",
+                  "amount": "150円"
+                }
+              ],
+              "2車単": [
+                {
+                  "combo": "1>5",
+                  "amount": "290円"
+                }
+              ],
+              "3連複": [
+                {
+                  "combo": "1-5-6",
+                  "amount": "2,440円"
+                }
+              ],
+              "3連単": [
+                {
+                  "combo": "1>5>6",
+                  "amount": "7,200円"
+                }
+              ],
+              "ワイド": [
+                {
+                  "combo": "1-5",
+                  "amount": "170円"
+                },
+                {
+                  "combo": "1-6",
+                  "amount": "370円"
+                },
+                {
+                  "combo": "5-6",
+                  "amount": "1,440円"
+                }
+              ]
+            },
+            "winner": "高橋雅之",
+            "origin": "千葉",
             "race_name": "Ａ級 特選",
             "scheduled_time": "22:10"
           },
@@ -5740,13 +5826,18 @@
         },
         {
           "race": 10,
-          "status": "発走前",
-          "order": [],
-          "payout": "",
-          "popularity": "",
+          "status": "確定",
+          "order": [
+            1,
+            4,
+            3
+          ],
+          "payout": "2,520円",
+          "popularity": "9",
           "payouts": {},
           "race_name": "準優勝戦",
-          "scheduled_time": "22:05"
+          "scheduled_time": "22:05",
+          "winner": ""
         },
         {
           "race": 11,
