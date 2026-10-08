@@ -1789,7 +1789,7 @@
       const position=cleanStation(x.position||'');
       const delay=Number(x.delayMinutes)||0;
       return {...x,arrival,diff,position,delay};
-    }).filter(x=>x.arrival && x.side===side && Number.isFinite(x.diff) && x.diff>=-1 && x.diff<=180);
+    }).filter(x=>x.arrival && x.position && x.side===side && Number.isFinite(x.diff) && x.diff>=-1 && x.diff<=180);
   }
 
   function appendMatsuyamaTerminalArrivalRow(root,x,now) {
