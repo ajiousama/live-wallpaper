@@ -683,6 +683,59 @@
     }
     return [];
   }
+  function portRolling24Rows(now) {
+    const dep=currentDirection()==='departure';
+    const prevIso=shiftIso(now.iso,-1);
+    const nextIso=shiftIso(now.iso,1);
+    const today=recordsForDay('port',now.iso);
+    const tomorrow=recordsForDay('port',nextIso);
+    const out=[];
+
+    if(dep){
+      today.forEach(r=>{
+        const m=toMinutes(r.time);
+        if(m>=now.minutes) out.push({...r,direction:'departure',minutes:m,_serviceIso:now.iso});
+      });
+      tomorrow.forEach(r=>{
+        const m=1440+toMinutes(r.time);
+        if(m<=now.minutes+1440) out.push({...r,direction:'departure',minutes:m,_serviceIso:nextIso,isNextDayStart:true});
+      });
+    }else{
+      const pushArrival=(src,baseIso,baseOffset)=>{
+        src.filter(r=>!r.noSyntheticArrival).map(synthPortArrival).forEach(r=>{
+          let m=toMinutes(r.time);
+          if(r._arrivalNextDay) m+=1440;
+          m+=baseOffset;
+          if(m>=now.minutes && m<=now.minutes+1440){
+            out.push({...r,minutes:m,_serviceIso:baseIso});
+          }
+        });
+      };
+
+      const prev=recordsForDay('port',prevIso);
+      // Previous-day sailings that cross midnight arrive on the current day.
+      prev.filter(r=>!r.noSyntheticArrival).map(synthPortArrival).filter(r=>r._arrivalNextDay).forEach(r=>{
+        const m=toMinutes(r.time);
+        if(m>=now.minutes && m<=now.minutes+1440){
+          out.push({...r,originDepartureDay:'前日',minutes:m,_serviceIso:prevIso});
+        }
+      });
+
+      pushArrival(today,now.iso,0);
+      pushArrival(tomorrow,nextIso,1440);
+    }
+
+    const seen=new Set();
+    return out
+      .sort((x,y)=>rMinutes(x)-rMinutes(y))
+      .filter(r=>{
+        const key=`${r.id||''}|${r._serviceIso||''}|${r.direction||''}|${r.time||''}|${r.origin||''}`;
+        if(seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+  }
+
   function rMinutes(r){return typeof r.minutes==='number'?r.minutes:toMinutes(r.time)}
   function finalDepartureKey(board,r) {
     if (board==='rail') return 'JR松山駅';
@@ -716,6 +769,27 @@
   }
 
   function nextRows(board, now) {
+    // Ferries are a rolling 24-hour board, not a calendar-day board.
+    // Keep overnight sailings visible until arrival, including next-day arrivals.
+    if(board==='port'){
+      const list=portRolling24Rows(now);
+      const finalTimes=new Map();
+      const departureCounts=new Map();
+      finalDepartureRows(board,now).forEach(r=>{
+        const key=finalDepartureKey(board,r);
+        const m=rMinutes(r);
+        departureCounts.set(key,(departureCounts.get(key)||0)+1);
+        if(!finalTimes.has(key)||m>finalTimes.get(key)) finalTimes.set(key,m);
+      });
+      return list.map(r=>{
+        const key=finalDepartureKey(board,r);
+        const enoughServices=(departureCounts.get(key)||0)>=2;
+        const sameDayDeparture=currentDirection()==='departure' && !r.isNextDayStart && r._serviceIso===now.iso;
+        const isFinal=sameDayDeparture && enoughServices && finalTimes.has(key) && finalTimes.get(key)===toMinutes(r.time);
+        return {...r,isFinal};
+      });
+    }
+
     const list = getBoardRecords(board, now);
 
     // Unified definition:
@@ -741,22 +815,7 @@
         isNextDayStart: false
       };
     });
-    if (board !== 'port') return upcoming;
-
-    // Ferry board is always-on. Append tomorrow's first services when needed.
-    // Tomorrow's rows are not "today's final service".
-    if (upcoming.length >= 4) return upcoming;
-    const nextIso = shiftIso(now.iso, 1);
-    const nextCtx = dayContext(nextIso);
-    const nextNow = { ...now, iso: nextIso, dow: nextCtx.dow, minutes: 0 };
-    const nextList = getBoardRecords('port', nextNow);
-    const need = Math.max(0, 4 - upcoming.length);
-    const nextRows = nextList.slice(0, need).map((r,i) => ({
-      ...r,
-      isFinal: false,
-      isNextDayStart: i === 0
-    }));
-    return [...upcoming, ...nextRows];
+    return upcoming;
   }
 
   function railStops(record) {
