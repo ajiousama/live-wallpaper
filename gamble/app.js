@@ -593,16 +593,13 @@ function buildPages(){
     return x.kind==="keirin" || x.kind==="boat" || x.kind==="local" || x.kind==="jra";
   });
   if(mainRaces.length){
-    const perPage=COMPANY_MODE?4:9;
-    for(let i=0;i<mainRaces.length;i+=perPage){
-      pages.push({
-        key:"main-races:"+Math.floor(i/perPage),
-        type:"main-races",
-        page:Math.floor(i/perPage)+1,
-        total:Math.ceil(mainRaces.length/perPage),
-        items:mainRaces.slice(i,i+perPage)
-      });
-    }
+    pages.push({
+      key:"main-races:summary",
+      type:"main-races",
+      page:1,
+      total:1,
+      items:mainRaces
+    });
   }
 
   const specials=specialItems().filter(x=>{
@@ -756,17 +753,43 @@ function win5Card(x){
     '<div class="win5-result"><span>的中馬番</span><strong>'+esc(hit||"結果待ち")+'</strong><span>'+(x.payout_kind?esc(x.payout_kind)+"払戻":"払戻")+'</span><b>'+esc(x.payout||"---")+'</b></div>'+
   '</article>';
 }
+function mainRaceCompactRow(x){
+  const where=[x.venue,x.race].filter(Boolean).join(" ");
+  const hasResult=!!x.winner||!!x.payout;
+  const status=raceDisplayStatus(x.time,x.status,hasResult);
+  const time=raceStartIfUpcoming(x.time,status,hasResult);
+  const result=x.winner
+    ? '<strong>'+esc(x.winner)+'</strong><small>'+esc(x.sub||"")+'</small>'
+    : '<strong class="pending">'+esc(status||"発走前")+'</strong><small>'+esc(time?time+" 発走":"")+'</small>';
+  const payout=x.payout?'<em>'+esc(x.payout)+'</em>':'';
+  return '<div class="main-race-row '+esc(x.kind||"")+'">'+
+    '<div class="main-race-place"><b>'+esc(where||"---")+'</b><span>'+esc(x.name||"---")+'</span></div>'+
+    '<div class="main-race-result">'+result+payout+'</div>'+
+  '</div>';
+}
 function renderMainRacePage(page){
   const host=document.getElementById("phase-grid");
   const items=page.items||[];
-  host.className="special-grid main-race-grid count-"+Math.max(1,items.length);
-  host.innerHTML=items.length
-    ? items.map(specialRaceCard).join("")
-    : '<div class="empty-card">本日の優勝戦・決勝戦・メインレース情報なし</div>';
+  const keirin=items.filter(x=>x.kind==="keirin");
+  const boat=items.filter(x=>x.kind==="boat");
+  const horse=items.filter(x=>x.kind==="local"||x.kind==="jra"||x.kind==="overseas");
+
+  const section=(cls,label,list,emptyText)=>
+    '<section class="main-race-section '+cls+'">'+
+      '<div class="main-race-section-head"><span>'+label+'</span><b>'+list.length+'件</b></div>'+
+      '<div class="main-race-list">'+
+        (list.length?list.map(mainRaceCompactRow).join(""):'<div class="main-race-empty">'+emptyText+'</div>')+
+      '</div>'+
+    '</section>';
+
+  host.className="main-race-summary";
+  host.innerHTML=
+    section("keirin","競輪　決勝",keirin,"本日の決勝なし")+
+    section("boat","ボート　優勝戦",boat,"本日の優勝戦なし")+
+    section("horse","競馬　メイン",horse,"本日のメインなし");
+
   document.getElementById("screen-title").textContent="本日の優勝戦・決勝戦・メインレース";
-  const pageText=page.total>1?(" "+page.page+"/"+page.total):"";
-  document.getElementById("screen-sub").textContent="本日 "+items.length+"レース"+pageText;
-  updateMarquees();
+  document.getElementById("screen-sub").textContent="競輪 "+keirin.length+"件 / ボート "+boat.length+"件 / 競馬 "+horse.length+"件";
 }
 function renderSpecialPage(page){
   const host=document.getElementById("phase-grid");
