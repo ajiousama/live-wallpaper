@@ -83,9 +83,24 @@ function render(){
 }
 async function load(){
   try{
-    const r=await fetch("./showtimes.json?t="+Math.floor(Date.now()/300000),{cache:"no-store"});
-    if(!r.ok)throw Error("HTTP "+r.status);
-    const payload=await r.json(),age=Date.now()-Date.parse(payload.generatedAt);
+    // GitHub Actions' GITHUB_TOKEN commits may not rebuild Pages. Read the latest
+    // repository JSON directly; use the Pages snapshot only as a fallback.
+    const paths=[
+      "https://raw.githubusercontent.com/ajiousama/live-wallpaper/main/transport/cinema/showtimes.json?t="+Date.now(),
+      "./showtimes.json?t="+Date.now()
+    ];
+    let payload=null;
+    for(const url of paths){
+      try{
+        const r=await fetch(url,{cache:"no-store"});
+        if(!r.ok)continue;
+        const candidate=await r.json();
+        const age=Date.now()-Date.parse(candidate.generatedAt);
+        if(candidate.theaters&&Number.isFinite(age)&&age>=-300000&&age<=18*3600000){payload=candidate;break}
+      }catch(_){}
+    }
+    if(!payload)throw Error("No fresh showtimes source");
+    const age=Date.now()-Date.parse(payload.generatedAt);
     if(!payload.theaters||!Number.isFinite(age)||age< -300000||age>18*3600000)
       throw Error("unavailable/stale");
     if(!venues.every(v=>Array.isArray(payload.theaters[v.id]?.shows)))
