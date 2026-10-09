@@ -54,6 +54,8 @@ const dateJst=ms=>{const d=new Date(ms+JST);return d.getUTCFullYear()+"-"+two(d.
 const startMs=(date,time)=>Date.parse(date+"T"+time+":00+09:00");
 const cards=[],tickers=[];
 let snapshot=null,updatedAt=0,pageStart=performance.now(),animationStart=performance.now();
+const clockFormat=new Intl.DateTimeFormat("ja-JP",{timeZone:"Asia/Tokyo",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false});
+let lastSecond=-1;
 function marquee(host,parts){
   const track=document.createElement("div");track.className="ticker-track";
   let first=null;
@@ -87,8 +89,8 @@ function showFilm(group,into,pills){
 }
 function render(){
   const now=Date.now(),today=dateJst(now),tomorrow=dateJst(now+86400000);
+  let changed=false;
   for(const c of cards){
-    c.track.replaceChildren();c.pills=[];
     const input=(snapshot?.theaters?.[c.v.id]?.shows||[]).filter(s=>s&&typeof s.title==="string"&&s.title.length>0&&/^\d\d:\d\d$/.test(s.time)&&
       (s.date===today||s.date===tomorrow)&&startMs(s.date,s.time)>now);
     const todayList=input.filter(s=>s.date===today);
@@ -99,6 +101,10 @@ function render(){
       const g=groupMap.get(s.title);if(!g.times.some(x=>x.start===start))g.times.push({time:s.time,start});
     }
     const groups=[...groupMap.values()].sort((a,b)=>a.first-b.first);
+    const signature=JSON.stringify(groups.map(g=>[g.title,g.times.map(t=>t.start)]));
+    if(c.signature===signature)continue;
+    c.signature=signature;changed=true;
+    c.track.replaceChildren();c.pills=[];
     const fragment=document.createDocumentFragment();
     for(const g of groups)showFilm(g,fragment,c.pills);
     c.track.appendChild(fragment);
@@ -108,12 +114,13 @@ function render(){
       while(duplicate.firstChild)c.track.appendChild(duplicate.firstChild)}
     else if(!groups.length){const empty=document.createElement("div");empty.className="empty";
       empty.textContent=snapshot?"この先の上映予定はありません":"上映情報を更新待ち";c.track.appendChild(empty)}
+    c.pills=Array.from(c.track.querySelectorAll(".showtime"));
     c.track.style.transform="translateY(0)";
   }
   document.getElementById("data-info").textContent=updatedAt?
     "上映データ "+new Intl.DateTimeFormat("ja-JP",{timeZone:"Asia/Tokyo",month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit"}).format(updatedAt)+"更新／各館の公式情報で最終確認"
     :"上映データを確認できていません／料金は通常一般の目安";
-  animationStart=performance.now();
+  if(changed)animationStart=performance.now();
 }
 function measure(){
   for(const t of tickers){t.width=t.first.getBoundingClientRect().width;
@@ -145,7 +152,8 @@ function tick(nowPerf){
     t.track.style.transform="translateX(-"+shift.toFixed(2)+"px)"}
   const elapsed=Math.max(0,nowPerf-pageStart)%DURATION;
   document.getElementById("remaining").textContent="次の画面まで "+Math.ceil((DURATION-elapsed)/1000)+"秒";
-  document.getElementById("clock").textContent=new Intl.DateTimeFormat("ja-JP",{timeZone:"Asia/Tokyo",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false}).format(Date.now());
+  const second=Math.floor(Date.now()/1000);
+  if(second!==lastSecond){lastSecond=second;document.getElementById("clock").textContent=clockFormat.format(Date.now());}
   requestAnimationFrame(tick);
 }
 window.addEventListener("message",e=>{if(e.origin!==location.origin||e.data?.type!=="cinema-page-active")return;
