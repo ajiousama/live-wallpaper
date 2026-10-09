@@ -2068,6 +2068,28 @@
     return { time: last._time, dest: String(last.dest || '').trim() || '—', service: String(last.service || '').trim() || '', kind: String(last.kind || ''), direction:String(last.direction||''), displayIso };
   }
 
+  // Approximate flight phase, not a tracked aircraft position.
+  function airportApproximatePosition(r, departure, now) {
+    const status=String(r.liveStatus||r.info||'');
+    if(/欠航|運休|取消|キャンセル/.test(status)) return '';
+    const arrivalOrDeparture=padTime(r.liveChangedTime||r.time||'');
+    if(!/^\d{2}:\d{2}$/.test(arrivalOrDeparture) || r.isNextDayStart) return '';
+    if(departure){
+      const minutesLeft=toMinutes(arrivalOrDeparture)-now.minutes;
+      // No gate or aircraft assignment is known, so do not assert an exact berth.
+      return minutesLeft>=0 && minutesLeft<=25 ? '松山空港 出発準備中（見込）' : '';
+    }
+    const raw=r.liveRaw||{};
+    const origin=String(raw.originAirport||r.dest||'出発地').trim();
+    const dep=padTime(raw.originDepartureActual||raw.originDepartureChanged||raw.originDepartureScheduled||'');
+    if(!/^\d{2}:\d{2}$/.test(dep)) return '';
+    const progress=estimatedJourneyProgress(dep,arrivalOrDeparture,now,'');
+    if(progress===null || /到着済み|ただいま到着/.test(status)) return '';
+    const label=progress<0.15 ? `${origin}周辺` : progress<0.8 ? '航路中間' : '松山空港接近';
+    // An official departure timestamp, when supplied, is not an ADS-B fix.
+    return `${label}（時刻表による見込）`;
+  }
+
   function renderAir(rows) {
     const root=$('air-rows'); root.innerHTML=''; const dep=currentDirection()==='departure';
     root.classList.remove('air-end');
@@ -2113,6 +2135,8 @@
           guidance = guidance && guidance!=='—' ? `${guidance}　｜　${originInfo}` : originInfo;
         }
       }
+      const approx=airportApproximatePosition(r,dep,japanNow());
+      if(approx) guidance=guidance && guidance!=='—' ? `${guidance}　｜　${approx}` : approx;
       const guidanceAlert=/遅|欠航|運休|変更|受付|保安|搭乗|まもなく|到着/.test(guidance);
       const statusClass=`cell air-guidance${guidanceAlert?' air-guidance-alert':''}${guidance.length>14?' long-status':''}`;
       const deltaHtml=Number.isFinite(delta)&&delta!==0?`<span class="air-delay-minutes ${delta<0?'air-early':''}">${delta>0?'+':''}${delta}分</span>`:'';
