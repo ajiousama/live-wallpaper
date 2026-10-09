@@ -601,15 +601,28 @@
     const port=String(record.port||'出発港').trim()||'出発港';
     const departure=padTime(record.time||'');
     if(!/^\d{2}:\d{2}$/.test(departure)) return '';
-    if(record.isNextDayStart) return `${port} 停泊中（見込）`;
-    return toMinutes(departure)>=now.minutes ? `${port} 停泊中（見込）` : '';
+    // A future departure is not evidence that a vessel is already berthed.
+    // Keep the estimate only shortly before today's departure.
+    if(record.isNextDayStart) return '';
+    const untilDeparture=toMinutes(departure)-now.minutes;
+    return untilDeparture>=0 && untilDeparture<=20 ? `${port} 停泊中（見込）` : '';
   }
 
   function ferryRouteGuidance(record, direction, now) {
     const via=portViaLabel(record);
     const position=direction==='departure'
       ? ferryDeparturePosition(record,now)
-      : (()=>{ const p=ferryEstimatedPosition(record,now); return p ? `現在 ${p}付近航行中（見込）` : ''; })();
+      : (()=>{
+          const departure=padTime(record.originDepartureTime||record.reverseTime||'');
+          const arrival=padTime(record.time||record.arrivalTime||'');
+          const progress=estimatedJourneyProgress(departure,arrival,now,String(record.originDepartureDay||''));
+          if(progress===null) return ''; // Do not claim the ship is underway before departure.
+          const p=ferryEstimatedPosition(record,now);
+          if(!p) return '';
+          if(progress<=0.02) return `現在 ${p}（出航直後・見込）`;
+          if(progress>=0.98) return `現在 ${p}（到着間近・見込）`;
+          return `現在 ${p}付近航行中（見込）`;
+        })();
     return [via,position].filter(Boolean).join(' ｜ ') || '—';
   }
 

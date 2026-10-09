@@ -1,0 +1,170 @@
+{
+  "description": "Candidate AIS fleet registry, not verified live positions. Do not infer a vessel assignment from a scheduled departure. Confirm MMSI against multiple sources before production use.",
+  "positionMaxAgeSeconds": 900,
+  "ships": [
+    {
+      "source": "koku94",
+      "name": "涼かぜ",
+      "mmsi": "431015925",
+      "verification": "candidate"
+    },
+    {
+      "source": "koku94",
+      "name": "遊なぎ",
+      "mmsi": "431008024",
+      "verification": "candidate"
+    },
+    {
+      "source": "koku94",
+      "name": "速なみ",
+      "mmsi": "431003061",
+      "verification": "candidate"
+    },
+    {
+      "source": "uwajima_beppu",
+      "name": "れいめい丸",
+      "mmsi": "431019177",
+      "verification": "candidate"
+    },
+    {
+      "source": "uwajima_beppu",
+      "name": "あけぼの丸",
+      "mmsi": "431010539",
+      "verification": "candidate"
+    },
+    {
+      "source": "uwajima_beppu",
+      "name": "あかつき丸",
+      "mmsi": "431005421",
+      "verification": "candidate"
+    },
+    {
+      "source": "uwajima_usuki",
+      "name": "れいめい丸",
+      "mmsi": "431019177",
+      "verification": "candidate"
+    },
+    {
+      "source": "uwajima_usuki",
+      "name": "あけぼの丸",
+      "mmsi": "431010539",
+      "verification": "candidate"
+    },
+    {
+      "source": "uwajima_usuki",
+      "name": "あかつき丸",
+      "mmsi": "431005421",
+      "verification": "candidate"
+    },
+    {
+      "source": "orange_toyo",
+      "name": "おれんじ おおさか",
+      "mmsi": "431012251",
+      "verification": "candidate"
+    },
+    {
+      "source": "orange_toyo",
+      "name": "おれんじ えひめ",
+      "mmsi": "431011673",
+      "verification": "candidate"
+    },
+    {
+      "source": "orange_niihama",
+      "name": "おれんじホープ",
+      "mmsi": "431501801",
+      "verification": "candidate"
+    },
+    {
+      "source": "boyo",
+      "name": "おれんじぐれいす",
+      "mmsi": "431000523",
+      "verification": "candidate"
+    },
+    {
+      "source": "boyo",
+      "name": "おれんじじゅぴたー",
+      "mmsi": "431000501",
+      "verification": "candidate"
+    },
+    {
+      "source": "port",
+      "name": "シーパセオ",
+      "mmsi": "431013557",
+      "verification": "candidate"
+    },
+    {
+      "source": "port",
+      "name": "シーパセオ2",
+      "mmsi": "431015341",
+      "verification": "candidate"
+    },
+    {
+      "source": "jumbo_ferry_reference",
+      "name": "あおい",
+      "mmsi": "431019761",
+      "verification": "candidate"
+    },
+    {
+      "source": "jumbo_ferry_reference",
+      "name": "りつりん2",
+      "mmsi": "431000458",
+      "verification": "candidate"
+    }
+  ],
+  "unresolved": [
+    {
+      "source": "nakajima_mitsuhama",
+      "names": [
+        "ななしま",
+        "じんわ",
+        "なかじま"
+      ],
+      "mmsi": null
+    },
+    {
+      "source": "nakajima_west",
+      "names": [
+        "ななしま",
+        "じんわ",
+        "なかじま"
+      ],
+      "mmsi": null
+    },
+    {
+      "source": "port_highspeed",
+      "names": [
+        "SeaMAX"
+      ],
+      "mmsi": null
+    },
+    {
+      "source": "imabari_geiyo",
+      "names": [
+        "第一ちどり",
+        "つばめ"
+      ],
+      "mmsi": null
+    },
+    {
+      "source": "imabari_sekizen",
+      "names": [
+        "第二せきぜん"
+      ],
+      "mmsi": null
+    },
+    {
+      "source": "imabari_blue",
+      "names": [
+        "みしま"
+      ],
+      "mmsi": null
+    },
+    {
+      "source": "imabari_tobishima",
+      "names": [
+        "とびしま"
+      ],
+      "mmsi": null
+    }
+  ]
+}
