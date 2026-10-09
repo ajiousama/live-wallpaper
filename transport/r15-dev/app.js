@@ -2515,7 +2515,10 @@
 
   function busDeparturePosition(r, now) {
     const departure=padTime(r.time||'');
-    if(!/^\d{2}:\d{2}$/.test(departure) || toMinutes(departure)<now.minutes) return '';
+    if(!/^\d{2}:\d{2}$/.test(departure) || r.isNextDayStart) return '';
+    const remaining=toMinutes(departure)-now.minutes;
+    // A timetable alone cannot establish where a bus is hours before its departure.
+    if(remaining<0 || remaining>20) return '';
     const place=String(r.originName||r.stop||'松山市駅').trim()||'松山市駅';
     return `${place}付近（見込）`;
   }
