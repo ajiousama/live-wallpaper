@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>映画 上映案内｜衣山・重信・エミフルMASAKI</title>
+<style>
+:root{color-scheme:dark;font-family:"Yu Gothic","Meiryo",system-ui,sans-serif}
+*{box-sizing:border-box}html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#07111c;color:#f2f8ff}
+main{width:100%;height:100%;padding:clamp(10px,1.7vw,24px)}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:3px solid #e6a54d;padding-bottom:10px;margin-bottom:14px}
+h1{font-size:clamp(23px,3.1vw,40px);margin:0;letter-spacing:.06em}
+.sub{color:#a8bfd5;font-size:clamp(12px,1.4vw,17px)}
+.cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.cinema{min-width:0;border:1px solid #3a4b60;background:#101e2c;border-radius:6px;overflow:hidden}
+.cinema h2{margin:0;font-size:clamp(19px,2vw,26px);padding:10px 12px;border-bottom:2px solid var(--accent);background:#1b2d3c}
+.labels{display:grid;grid-template-columns:76px minmax(0,1fr);gap:8px;color:#9bafc3;padding:7px 12px;font-size:13px;border-bottom:1px solid #405069}
+.viewport{height:234px;overflow:hidden;position:relative}
+.track{will-change:transform}
+.entry{height:78px;display:grid;grid-template-columns:76px minmax(0,1fr);gap:8px;align-items:center;padding:5px 12px;border-bottom:1px solid #35475a}
+.time{font-variant-numeric:tabular-nums;font-weight:850;font-size:clamp(19px,2.2vw,31px)}
+.title{font-weight:750;font-size:clamp(14px,1.5vw,20px);line-height:1.3;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.format{font-size:12px;color:#a5b6c6}.entry.blink .time,.entry.blink .title{animation:flash 1s steps(1,end) infinite}
+@keyframes flash{0%,49%{color:#ffe16a;background:#5b3a0a}50%,100%{color:#fff;background:transparent}}
+.empty{height:100%;display:grid;place-items:center;text-align:center;color:#a8bfd5;padding:12px;font-size:17px}
+.footer{display:flex;justify-content:space-between;gap:12px;margin-top:14px;color:#b4c7d7;font-size:13px}
+.source{font-size:12px;color:#889caf;margin-top:8px}
+@media(max-width:750px){main{padding:8px}.cols{gap:6px}.cinema h2{padding:9px 5px;font-size:15px}.labels{grid-template-columns:1fr;padding:5px;font-size:10px}.labels span:last-child{display:none}.entry{grid-template-columns:1fr;grid-template-rows:26px 1fr;gap:0;height:82px;padding:3px 5px}.viewport{height:246px}.time{font-size:21px}.title{font-size:12px}.format{display:none}.footer{font-size:10px}}
+@media(prefers-reduced-motion:reduce){.entry.blink .time,.entry.blink .title{animation:none;color:#ffe16a}}
+</style></head>
+<body><main>
+<header><div><div class="sub">MATSUYAMA / CINEMA SHOWTIMES</div><h1>🎬 映画 上映案内</h1></div><div class="sub" style="text-align:right">重信・エミフル・衣山<br><span id="clock">--:--</span></div></header>
+<section class="cols" id="cinemas"></section>
+<div class="footer"><span id="data-info">上映データを確認しています</span><span id="remaining">次の画面まで 30秒</span></div>
+<div class="source">上映時刻は参考情報です。変更・中止の場合があります。最終確認は各映画館の公式サイトで。</div>
+</main>
+<script>
+(()=>{
+"use strict";
+const venues=[{id:"shigenobu",name:"重信",color:"#84dfa5"},{id:"masaki",name:"エミフル",color:"#ffd180"},{id:"kinuyama",name:"衣山",color:"#70c7ff"}];
+const root=document.getElementById("cinemas"),cards=[];
+let cycleStart=performance.now(),snapshot=null,updatedAt=0;
+const JST=9*60*60*1000,duration=30000,scrollTime=25000;
+const two=n=>String(n).padStart(2,"0");
+const jstDate=ms=>{const d=new Date(ms+JST);return d.getUTCFullYear()+"-"+two(d.getUTCMonth()+1)+"-"+two(d.getUTCDate())};
+const timeMs=(date,time)=>Date.parse(date+"T"+time+":00+09:00");
+function addEntry(track,x){
+  const entry=document.createElement("div");entry.className="entry";
+  entry.dataset.start=String(timeMs(x.date,x.time));
+  const time=document.createElement("div");time.className="time";time.textContent=x.time;
+  const detail=document.createElement("div");
+  const title=document.createElement("div");title.className="title";title.textContent=x.title;
+  const format=document.createElement("div");format.className="format";
+  format.textContent=x.durationMinutes?x.durationMinutes+"分　｜　"+(x.date===jstDate(Date.now())?"本日":"翌日"):"";
+  detail.append(title,format);entry.append(time,detail);track.appendChild(entry);
+}
+for(const v of venues){
+  const box=document.createElement("article");box.className="cinema";box.style.setProperty("--accent",v.color);
+  const h=document.createElement("h2");h.textContent=v.name;
+  const labels=document.createElement("div");labels.className="labels";labels.innerHTML="<span>START</span><span>作品名</span>";
+  const viewport=document.createElement("div");viewport.className="viewport";
+  const track=document.createElement("div");track.className="track";viewport.appendChild(track);
+  box.append(h,labels,viewport);root.appendChild(box);cards.push({v,track,viewport,entries:[]});
+}
+function render(){
+  const now=Date.now();const today=jstDate(now),tomorrow=jstDate(now+86400000);
+  const theaters=snapshot?.theaters||{};
+  for(const c of cards){
+    c.track.replaceChildren();
+    const items=(theaters[c.v.id]?.shows||[]).filter(x=>x && (x.date===today||x.date===tomorrow) &&
+      /^\d\d:\d\d$/.test(x.time)&&typeof x.title==="string"&&x.title.length>0 && timeMs(x.date,x.time)>now)
+      .sort((a,b)=>timeMs(a.date,a.time)-timeMs(b.date,b.time));
+    // Tomorrow's first screenings show only after all of today's future shows disappear.
+    const todayItems=items.filter(x=>x.date===today);
+    const display=todayItems.length?todayItems:items.filter(x=>x.date===tomorrow);
+    display.forEach(x=>addEntry(c.track,x));
+    if(!display.length){const x=document.createElement("div");x.className="empty";
+      x.textContent=snapshot?"この先の上映情報はありません":"上映スケジュール更新待ち";c.track.appendChild(x);}
+    c.entries=Array.from(c.track.querySelectorAll(".entry"));
+    c.track.style.transform="translateY(0)";
+  }
+  const latest=updatedAt?new Date(updatedAt):null;
+  document.getElementById("data-info").textContent=latest?
+     "最終データ更新 "+new Intl.DateTimeFormat("ja-JP",{timeZone:"Asia/Tokyo",month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit"}).format(latest)+" ／ 各館独立スクロール"
+    :"上映データを取得できていません";
+}
+async function load(){
+  try{
+    const r=await fetch("./showtimes.json?t="+Math.floor(Date.now()/300000),{cache:"no-store"});
+    if(!r.ok)throw Error("HTTP "+r.status);
+    const payload=await r.json(),age=Date.now()-Date.parse(payload.generatedAt);
+    if(!payload.theaters||!Number.isFinite(age)||age< -300000||age>18*3600000)
+      throw Error("unavailable/stale");
+    if(!venues.every(v=>Array.isArray(payload.theaters[v.id]?.shows)))
+      throw Error("missing theater");
+    snapshot=payload;updatedAt=Date.parse(payload.generatedAt);
+  }catch(err){snapshot=null;updatedAt=0;}
+  render();
+}
+function tick(ts){
+  const elapsed=Math.max(0,ts-cycleStart)%duration;
+  const fraction=Math.min(elapsed/scrollTime,1);
+  const now=Date.now();
+  for(const c of cards){
+    const rowHeight=c.entries[0]?.offsetHeight||78;
+    const maxShift=Math.max(0,(c.entries.length-3)*rowHeight);
+    c.track.style.transform="translateY(-"+Math.round(maxShift*fraction)+"px)";
+    for(const e of c.entries){
+      const diff=Number(e.dataset.start)-now;
+      e.classList.toggle("blink",diff>0&&diff<=180000);
+    }
+  }
+  document.getElementById("remaining").textContent="次の画面まで "+Math.ceil((duration-elapsed)/1000)+"秒";
+  document.getElementById("clock").textContent=new Intl.DateTimeFormat("ja-JP",{timeZone:"Asia/Tokyo",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false}).format(now);
+  requestAnimationFrame(tick);
+}
+window.addEventListener("message",ev=>{if(ev.origin!==location.origin||ev.data?.type!=="cinema-page-active")return;cycleStart=performance.now();load()});
+setInterval(()=>{load()},5*60000);
+setInterval(()=>{render()},15000);
+load();requestAnimationFrame(tick);
+})();
+</script></body></html>
