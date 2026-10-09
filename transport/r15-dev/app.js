@@ -601,8 +601,11 @@
     const port=String(record.port||'出発港').trim()||'出発港';
     const departure=padTime(record.time||'');
     if(!/^\d{2}:\d{2}$/.test(departure)) return '';
-    if(record.isNextDayStart) return `${port} 停泊中（見込）`;
-    return toMinutes(departure)>=now.minutes ? `${port} 停泊中（見込）` : '';
+    // A future departure is not evidence that a vessel is already berthed.
+    // Keep the estimate only shortly before today's departure.
+    if(record.isNextDayStart) return '';
+    const untilDeparture=toMinutes(departure)-now.minutes;
+    return untilDeparture>=0 && untilDeparture<=20 ? `${port} 停泊中（見込）` : '';
   }
 
   function ferryRouteGuidance(record, direction, now) {
