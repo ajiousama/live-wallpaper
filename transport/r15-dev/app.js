@@ -601,15 +601,28 @@
     const port=String(record.port||'出発港').trim()||'出発港';
     const departure=padTime(record.time||'');
     if(!/^\d{2}:\d{2}$/.test(departure)) return '';
-    if(record.isNextDayStart) return `${port} 停泊中（見込）`;
-    return toMinutes(departure)>=now.minutes ? `${port} 停泊中（見込）` : '';
+    // A future departure is not evidence that a vessel is already berthed.
+    // Keep the estimate only shortly before today's departure.
+    if(record.isNextDayStart) return '';
+    const untilDeparture=toMinutes(departure)-now.minutes;
+    return untilDeparture>=0 && untilDeparture<=20 ? `${port} 停泊中（見込）` : '';
   }
 
   function ferryRouteGuidance(record, direction, now) {
     const via=portViaLabel(record);
     const position=direction==='departure'
       ? ferryDeparturePosition(record,now)
-      : (()=>{ const p=ferryEstimatedPosition(record,now); return p ? `現在 ${p}付近航行中（見込）` : ''; })();
+      : (()=>{
+          const departure=padTime(record.originDepartureTime||record.reverseTime||'');
+          const arrival=padTime(record.time||record.arrivalTime||'');
+          const progress=estimatedJourneyProgress(departure,arrival,now,String(record.originDepartureDay||''));
+          if(progress===null) return ''; // Do not claim the ship is underway before departure.
+          const p=ferryEstimatedPosition(record,now);
+          if(!p) return '';
+          if(progress<=0.02) return `現在 ${p}（出航直後・見込）`;
+          if(progress>=0.98) return `現在 ${p}（到着間近・見込）`;
+          return `現在 ${p}付近航行中（見込）`;
+        })();
     return [via,position].filter(Boolean).join(' ｜ ') || '—';
   }
 
@@ -2068,6 +2081,28 @@
     return { time: last._time, dest: String(last.dest || '').trim() || '—', service: String(last.service || '').trim() || '', kind: String(last.kind || ''), direction:String(last.direction||''), displayIso };
   }
 
+  // Approximate flight phase, not a tracked aircraft position.
+  function airportApproximatePosition(r, departure, now) {
+    const status=String(r.liveStatus||r.info||'');
+    if(/欠航|運休|取消|キャンセル/.test(status)) return '';
+    const arrivalOrDeparture=padTime(r.liveChangedTime||r.time||'');
+    if(!/^\d{2}:\d{2}$/.test(arrivalOrDeparture) || r.isNextDayStart) return '';
+    if(departure){
+      const minutesLeft=toMinutes(arrivalOrDeparture)-now.minutes;
+      // No gate or aircraft assignment is known, so do not assert an exact berth.
+      return minutesLeft>=0 && minutesLeft<=25 ? '松山空港 出発準備中（見込）' : '';
+    }
+    const raw=r.liveRaw||{};
+    const origin=String(raw.originAirport||r.dest||'出発地').trim();
+    const dep=padTime(raw.originDepartureActual||raw.originDepartureChanged||raw.originDepartureScheduled||'');
+    if(!/^\d{2}:\d{2}$/.test(dep)) return '';
+    const progress=estimatedJourneyProgress(dep,arrivalOrDeparture,now,'');
+    if(progress===null || /到着済み|ただいま到着/.test(status)) return '';
+    const label=progress<0.15 ? `${origin}周辺` : progress<0.8 ? '航路中間' : '松山空港接近';
+    // An official departure timestamp, when supplied, is not an ADS-B fix.
+    return `${label}（時刻表による見込）`;
+  }
+
   function renderAir(rows) {
     const root=$('air-rows'); root.innerHTML=''; const dep=currentDirection()==='departure';
     root.classList.remove('air-end');
@@ -2113,6 +2148,8 @@
           guidance = guidance && guidance!=='—' ? `${guidance}　｜　${originInfo}` : originInfo;
         }
       }
+      const approx=airportApproximatePosition(r,dep,japanNow());
+      if(approx) guidance=guidance && guidance!=='—' ? `${guidance}　｜　${approx}` : approx;
       const guidanceAlert=/遅|欠航|運休|変更|受付|保安|搭乗|まもなく|到着/.test(guidance);
       const statusClass=`cell air-guidance${guidanceAlert?' air-guidance-alert':''}${guidance.length>14?' long-status':''}`;
       const deltaHtml=Number.isFinite(delta)&&delta!==0?`<span class="air-delay-minutes ${delta<0?'air-early':''}">${delta>0?'+':''}${delta}分</span>`:'';
@@ -2515,7 +2552,10 @@
 
   function busDeparturePosition(r, now) {
     const departure=padTime(r.time||'');
-    if(!/^\d{2}:\d{2}$/.test(departure) || toMinutes(departure)<now.minutes) return '';
+    if(!/^\d{2}:\d{2}$/.test(departure) || r.isNextDayStart) return '';
+    const remaining=toMinutes(departure)-now.minutes;
+    // A timetable alone cannot establish where a bus is hours before its departure.
+    if(remaining<0 || remaining>20) return '';
     const place=String(r.originName||r.stop||'松山市駅').trim()||'松山市駅';
     return `${place}付近（見込）`;
   }
