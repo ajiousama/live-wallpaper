@@ -1,8 +1,8 @@
 (() => {
   const companyPc = document.documentElement.classList.contains('company-pc');
 
-  // Web/FreeWiFi: eight transport screens + gamble.
-  // Workplace PC: transport only; do not load or rotate into gamble.
+  // Web/FreeWiFi: eight transport screens + cinema + gamble.
+  // Workplace PC: transport and cinema only; do not load or rotate into gamble.
   const transportPages = [
     {id:'panel-rail', mode:0, duration:15000, title:'JR 松山駅　宇和島方面'},
     {id:'panel-rail', mode:1, duration:15000, title:'JR 松山駅　今治方面'},
@@ -13,14 +13,17 @@
     {id:'panel-port', mode:0, duration:15000, title:'フェリー　出航'},
     {id:'panel-port', mode:1, duration:15000, title:'フェリー　到着'}
   ];
+  const cinemaPage = {id:'cinema-screen', cinema:true, duration:30000, title:'映画上映案内（3館）'};
   const rawPages = companyPc
-    ? transportPages
-    : [...transportPages,{id:'gamble-screen', gamble:true, duration:20000, title:'ギャンブル'}];
+    ? [...transportPages,cinemaPage]
+    : [...transportPages,cinemaPage,{id:'gamble-screen', gamble:true, duration:20000, title:'ギャンブル'}];
   const pages = rawPages.map((p,i)=>({...p,label:`${String(i+1).padStart(2,'0')} / ${String(rawPages.length).padStart(2,'0')}　${p.title}`}));
 
   const TRANSPORT_IDS = ['panel-rail','panel-air','panel-bus','panel-port'];
   const gambleScreen = document.getElementById('gamble-screen');
   const gambleFrame = document.getElementById('gamble-frame');
+  const cinemaScreen = document.getElementById('cinema-screen');
+  const cinemaFrame = document.getElementById('cinema-frame');
   const status = document.getElementById('freewifi-page-status');
   const webPrev = document.getElementById('web-page-prev');
   const webNext = document.getElementById('web-page-next');
@@ -53,6 +56,13 @@
       if(el) el.classList.toggle('freewifi-active', !page.gamble && id === page.id);
     });
 
+    if(cinemaScreen){
+      cinemaScreen.hidden = !page.cinema;
+      cinemaScreen.classList.toggle('freewifi-active', !!page.cinema);
+      if(page.cinema && cinemaFrame){
+        try { cinemaFrame.contentWindow?.postMessage({type:'cinema-page-active'},location.origin); } catch(e) {}
+      }
+    }
     if(gambleScreen){
       gambleScreen.hidden = !page.gamble;
       gambleScreen.classList.toggle('freewifi-active', !!page.gamble);
@@ -62,7 +72,7 @@
     document.body.classList.toggle('air-board-page', isAir);
     document.body.classList.toggle('air-board-arrival', isAir && page.mode === 1);
 
-    if(!page.gamble){
+    if(!page.gamble && !page.cinema){
       const controller = ui();
       if(controller && typeof controller.setMode === 'function'){
         controller.setMode(page.mode, page.duration);
