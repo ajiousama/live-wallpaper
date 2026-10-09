@@ -1,134 +1,159 @@
 <!doctype html>
 <html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>映画 上映案内｜衣山・重信・エミフルMASAKI</title>
+<title>映画上映案内｜重信・エミフルMASAKI・衣山</title>
 <style>
 :root{color-scheme:dark;font-family:"Yu Gothic","Meiryo",system-ui,sans-serif}
-*{box-sizing:border-box}html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#07111c;color:#f2f8ff}
-main{width:100%;height:100%;padding:clamp(10px,1.7vw,24px)}
-header{display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:3px solid #e6a54d;padding-bottom:10px;margin-bottom:14px}
-h1{font-size:clamp(23px,3.1vw,40px);margin:0;letter-spacing:.06em}
-.sub{color:#a8bfd5;font-size:clamp(12px,1.4vw,17px)}
-.cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.cinema{min-width:0;border:1px solid #3a4b60;background:#101e2c;border-radius:6px;overflow:hidden}
-.cinema h2{margin:0;font-size:clamp(19px,2vw,26px);padding:10px 12px;border-bottom:2px solid var(--accent);background:#1b2d3c}
-.labels{display:grid;grid-template-columns:76px minmax(0,1fr);gap:8px;color:#9bafc3;padding:7px 12px;font-size:13px;border-bottom:1px solid #405069}
-.viewport{height:234px;overflow:hidden;position:relative}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#07111c;color:#f1f8ff}
+main{height:100%;padding:clamp(7px,1.3vw,14px);display:flex;flex-direction:column;gap:8px;overflow:hidden}
+header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 4px 8px;border-bottom:2px solid #dda95e;flex-shrink:0}
+h1{font-size:clamp(24px,2.9vw,34px);margin:0}.sub{font-size:clamp(10px,1.2vw,14px);color:#b8c8d8}
+.cols,.notice-cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.cols{min-height:0;flex:1}
+.cinema{min-width:0;min-height:0;background:#101e2c;border:1px solid #3b5065;border-radius:5px;display:flex;flex-direction:column;overflow:hidden}
+.cinema h2{font-size:clamp(18px,1.9vw,24px);color:var(--accent);margin:0;padding:8px 10px;border-bottom:3px solid var(--accent);background:#192b3b;flex-shrink:0}
+.labels{color:#9eb6cb;padding:4px 11px;font-size:12px;background:#112132;flex-shrink:0}
+.viewport{flex:1;min-height:0;overflow:hidden}
 .track{will-change:transform}
-.entry{height:78px;display:grid;grid-template-columns:76px minmax(0,1fr);gap:8px;align-items:center;padding:5px 12px;border-bottom:1px solid #35475a}
-.time{font-variant-numeric:tabular-nums;font-weight:850;font-size:clamp(19px,2.2vw,31px)}
-.title{font-weight:750;font-size:clamp(14px,1.5vw,20px);line-height:1.3;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
-.format{font-size:12px;color:#a5b6c6}.entry.blink .time,.entry.blink .title{animation:flash 1s steps(1,end) infinite}
-@keyframes flash{0%,49%{color:#ffe16a;background:#5b3a0a}50%,100%{color:#fff;background:transparent}}
-.empty{height:100%;display:grid;place-items:center;text-align:center;color:#a8bfd5;padding:12px;font-size:17px}
-.footer{display:flex;justify-content:space-between;gap:12px;margin-top:14px;color:#b4c7d7;font-size:13px}
-.source{font-size:12px;color:#889caf;margin-top:8px}
-@media(max-width:750px){main{padding:8px}.cols{gap:6px}.cinema h2{padding:9px 5px;font-size:15px}.labels{grid-template-columns:1fr;padding:5px;font-size:10px}.labels span:last-child{display:none}.entry{grid-template-columns:1fr;grid-template-rows:26px 1fr;gap:0;height:82px;padding:3px 5px}.viewport{height:246px}.time{font-size:21px}.title{font-size:12px}.format{display:none}.footer{font-size:10px}}
-@media(prefers-reduced-motion:reduce){.entry.blink .time,.entry.blink .title{animation:none;color:#ffe16a}}
+.film{height:86px;border-bottom:1px solid #324c62;display:flex;flex-direction:column;justify-content:center;gap:6px;padding:6px 10px}
+.title{font-weight:800;font-size:clamp(14px,1.55vw,19px);line-height:1.25;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.times{display:flex;flex-wrap:wrap;gap:4px 7px;overflow:hidden;max-height:48px}
+.showtime{color:#eaf4ff;background:#1c3850;border:1px solid #41617b;border-radius:3px;font-size:clamp(14px,1.3vw,18px);font-weight:800;padding:1px 4px;font-variant-numeric:tabular-nums}
+.showtime.blink{animation:flash 1s steps(1,end) infinite}
+@keyframes flash{0%,49%{color:#1b1809;background:#ffe067;border-color:#ffe067}50%,100%{color:#fff;background:#62470f;border-color:#a88b42}}
+.empty{padding:20px 8px;text-align:center;color:#afc1d0;font-size:16px}
+.notices,.fees{flex-shrink:0;min-width:0}
+.section-title{color:#d6e5f4;font-size:13px;font-weight:850;letter-spacing:.06em;margin-bottom:3px}
+.notice-bar,.fee-bar{height:42px;min-width:0;overflow:hidden;background:#1a2e42;border:1px solid #3e586e;border-left:4px solid var(--accent);border-radius:3px;position:relative}
+.ticker-track{display:flex;align-items:center;will-change:transform;width:max-content;height:100%}
+.ticker-set{display:flex;align-items:center;flex:0 0 auto;white-space:nowrap;height:100%;gap:28px;padding-right:28px}
+.ticker-text{font-size:16px;font-weight:750;color:#f1f6fd}.ticker-dot{color:#d5a967;font-size:17px}
+.fee-bar{--accent:#f3ba57;background:#272f3b}.fee-bar .ticker-text{font-size:17px}
+.footer{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:8px;color:#b4c7da;font-size:12px;white-space:nowrap}
+.footer #data-info{overflow:hidden;text-overflow:ellipsis}
+@media(max-width:740px){main{padding:6px;gap:5px}header{padding-bottom:4px}h1{font-size:18px}.sub{font-size:9px}.cols,.notice-cols{gap:4px}.cinema h2{font-size:14px;padding:6px 4px}.labels{font-size:9px;padding:4px}.film{height:86px;padding:4px;gap:3px}.title{font-size:11px}.times{max-height:50px;gap:3px}.showtime{font-size:11px;padding:1px 2px}.notice-bar{height:36px}.ticker-text{font-size:12px}.fee-bar{height:37px}.fee-bar .ticker-text{font-size:13px}.section-title{font-size:11px}.footer{font-size:9px}}
+@media(prefers-reduced-motion:reduce){.showtime.blink{animation:none;color:#ffe067}}
 </style></head>
 <body><main>
-<header><div><div class="sub">MATSUYAMA / CINEMA SHOWTIMES</div><h1>🎬 映画 上映案内</h1></div><div class="sub" style="text-align:right">重信・エミフル・衣山<br><span id="clock">--:--</span></div></header>
-<section class="cols" id="cinemas"></section>
-<div class="footer"><span id="data-info">上映データを確認しています</span><span id="remaining">次の画面まで 30秒</span></div>
-<div class="source">上映時刻は参考情報です。変更・中止の場合があります。最終確認は各映画館の公式サイトで。</div>
+<header><div><div class="sub">MATSUYAMA CINEMA / 3 THEATERS</div><h1>🎬 映画 上映案内</h1></div><div class="sub" style="text-align:right">作品別・3館同時表示<br><span id="clock">--:--:--</span></div></header>
+<section class="cols" id="cinemas" aria-label="各館の作品別上映時刻"></section>
+<section class="notices" aria-label="映画館ごとの案内"><div class="section-title">📢 各館のお知らせ（横スクロール・独立）</div><div class="notice-cols" id="notice-cols"></div></section>
+<section class="fees" aria-label="料金案内"><div class="section-title">🎫 3館共通・料金案内（横スクロール）</div><div class="fee-bar" id="fee-bar"></div></section>
+<div class="footer"><span id="data-info">上映データを確認中</span><span id="remaining">次の画面まで 30秒</span></div>
 </main>
 <script>
-(()=>{
-"use strict";
-const venues=[{id:"shigenobu",name:"重信",color:"#84dfa5"},{id:"masaki",name:"エミフル",color:"#ffd180"},{id:"kinuyama",name:"衣山",color:"#70c7ff"}];
-const root=document.getElementById("cinemas"),cards=[];
-let cycleStart=performance.now(),snapshot=null,updatedAt=0;
-const JST=9*60*60*1000,duration=30000,scrollTime=25000;
+(()=>{"use strict";
+const venues=[
+  {id:"shigenobu",name:"重信",color:"#84dfa5",note:"重信｜上映作品・時間・イベントの最新情報は劇場公式ページをご確認ください"},
+  {id:"masaki",name:"エミフル",color:"#ffd180",note:"エミフルMASAKI｜上映作品・時間・イベントの最新情報は劇場公式ページをご確認ください"},
+  {id:"kinuyama",name:"衣山",color:"#70c7ff",note:"衣山｜上映作品・時間・イベントの最新情報は劇場公式ページをご確認ください"}
+];
+const fees=["一般料金：重信 2,000円／衣山・エミフルMASAKI 2,100円","各種割引・サービスデーあり（条件は各館でご確認ください）","IMAX・4DXなど特別上映は追加料金の場合があります"];
+const JST=32400000,DURATION=30000,LOOP_MS=25000;
 const two=n=>String(n).padStart(2,"0");
-const jstDate=ms=>{const d=new Date(ms+JST);return d.getUTCFullYear()+"-"+two(d.getUTCMonth()+1)+"-"+two(d.getUTCDate())};
-const timeMs=(date,time)=>Date.parse(date+"T"+time+":00+09:00");
-function addEntry(track,x){
-  const entry=document.createElement("div");entry.className="entry";
-  entry.dataset.start=String(timeMs(x.date,x.time));
-  const time=document.createElement("div");time.className="time";time.textContent=x.time;
-  const detail=document.createElement("div");
-  const title=document.createElement("div");title.className="title";title.textContent=x.title;
-  const format=document.createElement("div");format.className="format";
-  format.textContent=x.durationMinutes?x.durationMinutes+"分　｜　"+(x.date===jstDate(Date.now())?"本日":"翌日"):"";
-  detail.append(title,format);entry.append(time,detail);track.appendChild(entry);
+const dateJst=ms=>{const d=new Date(ms+JST);return d.getUTCFullYear()+"-"+two(d.getUTCMonth()+1)+"-"+two(d.getUTCDate())};
+const startMs=(date,time)=>Date.parse(date+"T"+time+":00+09:00");
+const cards=[],tickers=[];
+let snapshot=null,updatedAt=0,pageStart=performance.now(),animationStart=performance.now();
+function marquee(host,parts){
+  const track=document.createElement("div");track.className="ticker-track";
+  let first=null;
+  function copy(){const el=document.createElement("div");el.className="ticker-set";
+    for(const part of parts){const span=document.createElement("span");span.className="ticker-text";span.textContent=part;el.appendChild(span);
+      const dot=document.createElement("span");dot.className="ticker-dot";dot.textContent="◆";el.appendChild(dot)}
+    track.appendChild(el);return el}
+  first=copy();copy();host.appendChild(track);
+  const obj={track,first,width:0,speed:0};
+  tickers.push(obj);return obj;
 }
 for(const v of venues){
-  const box=document.createElement("article");box.className="cinema";box.style.setProperty("--accent",v.color);
+  const cinema=document.createElement("article");cinema.className="cinema";cinema.style.setProperty("--accent",v.color);
   const h=document.createElement("h2");h.textContent=v.name;
-  const labels=document.createElement("div");labels.className="labels";labels.innerHTML="<span>START</span><span>作品名</span>";
+  const labels=document.createElement("div");labels.className="labels";labels.textContent="作品名　／　今後の上映開始時刻";
   const viewport=document.createElement("div");viewport.className="viewport";
   const track=document.createElement("div");track.className="track";viewport.appendChild(track);
-  box.append(h,labels,viewport);root.appendChild(box);cards.push({v,track,viewport,entries:[]});
+  cinema.append(h,labels,viewport);document.getElementById("cinemas").appendChild(cinema);
+  cards.push({v,track,viewport,unitHeight:0,pills:[]});
+  const bar=document.createElement("div");bar.className="notice-bar";bar.style.setProperty("--accent",v.color);
+  marquee(bar,[v.note]);document.getElementById("notice-cols").appendChild(bar);
+}
+marquee(document.getElementById("fee-bar"),fees);
+function showFilm(group,into,pills){
+  const row=document.createElement("div");row.className="film";
+  const name=document.createElement("div");name.className="title";name.textContent=group.title;
+  const times=document.createElement("div");times.className="times";
+  for(const at of group.times){const item=document.createElement("span");item.className="showtime";item.textContent=at.time;
+    item.dataset.start=String(at.start);times.appendChild(item);pills.push(item)}
+  row.append(name,times);into.appendChild(row);
 }
 function render(){
-  const now=Date.now();const today=jstDate(now),tomorrow=jstDate(now+86400000);
-  const theaters=snapshot?.theaters||{};
+  const now=Date.now(),today=dateJst(now),tomorrow=dateJst(now+86400000);
   for(const c of cards){
-    c.track.replaceChildren();
-    const items=(theaters[c.v.id]?.shows||[]).filter(x=>x && (x.date===today||x.date===tomorrow) &&
-      /^\d\d:\d\d$/.test(x.time)&&typeof x.title==="string"&&x.title.length>0 && timeMs(x.date,x.time)>now)
-      .sort((a,b)=>timeMs(a.date,a.time)-timeMs(b.date,b.time));
-    // Tomorrow's first screenings show only after all of today's future shows disappear.
-    const todayItems=items.filter(x=>x.date===today);
-    const display=todayItems.length?todayItems:items.filter(x=>x.date===tomorrow);
-    display.forEach(x=>addEntry(c.track,x));
-    if(!display.length){const x=document.createElement("div");x.className="empty";
-      x.textContent=snapshot?"この先の上映情報はありません":"上映スケジュール更新待ち";c.track.appendChild(x);}
-    c.entries=Array.from(c.track.querySelectorAll(".entry"));
+    c.track.replaceChildren();c.pills=[];
+    const input=(snapshot?.theaters?.[c.v.id]?.shows||[]).filter(s=>s&&typeof s.title==="string"&&s.title.length>0&&/^\d\d:\d\d$/.test(s.time)&&
+      (s.date===today||s.date===tomorrow)&&startMs(s.date,s.time)>now);
+    const todayList=input.filter(s=>s.date===today);
+    const items=todayList.length?todayList:input.filter(s=>s.date===tomorrow);
+    const groupMap=new Map();
+    for(const s of items){const start=startMs(s.date,s.time);
+      if(!groupMap.has(s.title))groupMap.set(s.title,{title:s.title,times:[],first:start});
+      const g=groupMap.get(s.title);if(!g.times.some(x=>x.start===start))g.times.push({time:s.time,start});
+    }
+    const groups=[...groupMap.values()].sort((a,b)=>a.first-b.first);
+    const fragment=document.createDocumentFragment();
+    for(const g of groups)showFilm(g,fragment,c.pills);
+    c.track.appendChild(fragment);
+    c.unitHeight=groups.length*86;
+    // Two matching sets make the transition at one full cycle invisible.
+    if(groups.length>3){const duplicate=c.track.cloneNode(true);
+      while(duplicate.firstChild)c.track.appendChild(duplicate.firstChild)}
+    else if(!groups.length){const empty=document.createElement("div");empty.className="empty";
+      empty.textContent=snapshot?"この先の上映予定はありません":"上映情報を更新待ち";c.track.appendChild(empty)}
     c.track.style.transform="translateY(0)";
   }
-  const latest=updatedAt?new Date(updatedAt):null;
-  document.getElementById("data-info").textContent=latest?
-     "最終データ更新 "+new Intl.DateTimeFormat("ja-JP",{timeZone:"Asia/Tokyo",month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit"}).format(latest)+" ／ 各館独立スクロール"
-    :"上映データを取得できていません";
+  document.getElementById("data-info").textContent=updatedAt?
+    "上映データ "+new Intl.DateTimeFormat("ja-JP",{timeZone:"Asia/Tokyo",month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit"}).format(updatedAt)+"更新／各館の公式情報で最終確認"
+    :"上映データを確認できていません／料金は通常一般の目安";
+  animationStart=performance.now();
+}
+function measure(){
+  for(const t of tickers){t.width=t.first.getBoundingClientRect().width;
+    // A complete horizontal message rotation within roughly 25 seconds.
+    t.speed=t.width>0?t.width/25:0}
 }
 async function load(){
   try{
-    // GitHub Actions' GITHUB_TOKEN commits may not rebuild Pages. Read the latest
-    // repository JSON directly; use the Pages snapshot only as a fallback.
-    const paths=[
-      "https://raw.githubusercontent.com/ajiousama/live-wallpaper/main/transport/cinema/showtimes.json?t="+Date.now(),
-      "./showtimes.json?t="+Date.now()
-    ];
-    let payload=null;
-    for(const url of paths){
-      try{
-        const r=await fetch(url,{cache:"no-store"});
-        if(!r.ok)continue;
-        const candidate=await r.json();
-        const age=Date.now()-Date.parse(candidate.generatedAt);
-        if(candidate.theaters&&Number.isFinite(age)&&age>=-300000&&age<=18*3600000){payload=candidate;break}
-      }catch(_){}
-    }
-    if(!payload)throw Error("No fresh showtimes source");
-    const age=Date.now()-Date.parse(payload.generatedAt);
-    if(!payload.theaters||!Number.isFinite(age)||age< -300000||age>18*3600000)
-      throw Error("unavailable/stale");
-    if(!venues.every(v=>Array.isArray(payload.theaters[v.id]?.shows)))
-      throw Error("missing theater");
-    snapshot=payload;updatedAt=Date.parse(payload.generatedAt);
-  }catch(err){snapshot=null;updatedAt=0;}
-  render();
+    const urls=["https://raw.githubusercontent.com/ajiousama/live-wallpaper/main/transport/cinema/showtimes.json?t="+Date.now(),"./showtimes.json?t="+Date.now()];
+    let data=null;
+    for(const url of urls){try{const response=await fetch(url,{cache:"no-store"});if(!response.ok)continue;
+        const item=await response.json(),age=Date.now()-Date.parse(item.generatedAt);
+        if(item.theaters&&Number.isFinite(age)&&age>=-300000&&age<18*3600000){data=item;break}
+      }catch(_){}}
+    if(!data||!venues.every(v=>Array.isArray(data.theaters[v.id]?.shows)))throw Error("Cinema listing unavailable");
+    snapshot=data;updatedAt=Date.parse(data.generatedAt);
+  }catch(_){snapshot=null;updatedAt=0}
+  render();requestAnimationFrame(measure);
 }
-function tick(ts){
-  const elapsed=Math.max(0,ts-cycleStart)%duration;
-  const fraction=Math.min(elapsed/scrollTime,1);
-  const now=Date.now();
+function tick(nowPerf){
+  const phase=Math.max(0,nowPerf-animationStart);
   for(const c of cards){
-    const rowHeight=c.entries[0]?.offsetHeight||78;
-    const maxShift=Math.max(0,(c.entries.length-3)*rowHeight);
-    c.track.style.transform="translateY(-"+Math.round(maxShift*fraction)+"px)";
-    for(const e of c.entries){
-      const diff=Number(e.dataset.start)-now;
-      e.classList.toggle("blink",diff>0&&diff<=180000);
-    }
+    const scroll=c.unitHeight>c.viewport.clientHeight ? (phase%LOOP_MS)/LOOP_MS*c.unitHeight : 0;
+    c.track.style.transform="translateY(-"+scroll.toFixed(2)+"px)";
+    for(const p of c.pills){const d=Number(p.dataset.start)-Date.now();
+      p.classList.toggle("blink",d>0&&d<=180000)}
   }
-  document.getElementById("remaining").textContent="次の画面まで "+Math.ceil((duration-elapsed)/1000)+"秒";
-  document.getElementById("clock").textContent=new Intl.DateTimeFormat("ja-JP",{timeZone:"Asia/Tokyo",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false}).format(now);
+  for(const t of tickers){const shift=t.width>0?(phase/1000*t.speed)%t.width:0;
+    t.track.style.transform="translateX(-"+shift.toFixed(2)+"px)"}
+  const elapsed=Math.max(0,nowPerf-pageStart)%DURATION;
+  document.getElementById("remaining").textContent="次の画面まで "+Math.ceil((DURATION-elapsed)/1000)+"秒";
+  document.getElementById("clock").textContent=new Intl.DateTimeFormat("ja-JP",{timeZone:"Asia/Tokyo",hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:false}).format(Date.now());
   requestAnimationFrame(tick);
 }
-window.addEventListener("message",ev=>{if(ev.origin!==location.origin||ev.data?.type!=="cinema-page-active")return;cycleStart=performance.now();load()});
-setInterval(()=>{load()},5*60000);
-setInterval(()=>{render()},15000);
+window.addEventListener("message",e=>{if(e.origin!==location.origin||e.data?.type!=="cinema-page-active")return;
+  pageStart=performance.now();animationStart=pageStart;load()});
+window.addEventListener("resize",()=>requestAnimationFrame(measure));
+setInterval(load,5*60000);
+// Drop completed start times without retaining stale listings until the next feed refresh.
+setInterval(render,60000);
 load();requestAnimationFrame(tick);
 })();
 </script></body></html>
