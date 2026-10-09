@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-10-09T14:15:59.371500+00:00",
+  "generatedAt": "2026-10-09T19:32:31.990337+00:00",
   "timezone": "Asia/Tokyo",
-  "date": "2026-10-09",
+  "date": "2026-10-10",
   "source": "crank-in.net (third-party listing; verify with the theater)",
   "theaters": {
     "shigenobu": {
@@ -9,204 +9,6 @@
       "officialUrl": "https://www.cinemasunshine.co.jp/theater/shigenobu/",
       "listingUrl": "https://www.crank-in.net/theater/search/all/38/70088",
       "shows": [
-        {
-          "date": "2026-10-09",
-          "time": "09:20",
-          "title": "踊る大捜査線 N.E.W. メトロポリスを駆け抜けろ！",
-          "durationMinutes": 142
-        },
-        {
-          "date": "2026-10-09",
-          "time": "09:30",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135
-        },
-        {
-          "date": "2026-10-09",
-          "time": "09:40",
-          "title": "バイオハザード《吹替版》",
-          "durationMinutes": 94
-        },
-        {
-          "date": "2026-10-09",
-          "time": "09:45",
-          "title": "ディスクロージャー・デイ《字幕版》",
-          "durationMinutes": 145
-        },
-        {
-          "date": "2026-10-09",
-          "time": "09:50",
-          "title": "DIGGER／ディガー《字幕版》",
-          "durationMinutes": 129
-        },
-        {
-          "date": "2026-10-09",
-          "time": "10:10",
-          "title": "映画ちいかわ 人魚の島のひみつ",
-          "durationMinutes": 99
-        },
-        {
-          "date": "2026-10-09",
-          "time": "12:15",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135
-        },
-        {
-          "date": "2026-10-09",
-          "time": "12:30",
-          "title": "DIGGER／ディガー《字幕版》",
-          "durationMinutes": 129
-        },
-        {
-          "date": "2026-10-09",
-          "time": "12:30",
-          "title": "襲名",
-          "durationMinutes": 97
-        },
-        {
-          "date": "2026-10-09",
-          "time": "12:40",
-          "title": "バイオハザード《字幕版》",
-          "durationMinutes": 94
-        },
-        {
-          "date": "2026-10-09",
-          "time": "13:00",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135
-        },
-        {
-          "date": "2026-10-09",
-          "time": "13:30",
-          "title": "映画名探偵プリキュア！不思議な庭と2人の秘密",
-          "durationMinutes": 71
-        },
-        {
-          "date": "2026-10-09",
-          "time": "14:40",
-          "title": "踊る大捜査線 N.E.W. メトロポリスを駆け抜けろ！",
-          "durationMinutes": 142
-        },
-        {
-          "date": "2026-10-09",
-          "time": "14:50",
-          "title": "ディスクロージャー・デイ《字幕版》",
-          "durationMinutes": 145
-        },
-        {
-          "date": "2026-10-09",
-          "time": "15:00",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135
-        },
-        {
-          "date": "2026-10-09",
-          "time": "15:10",
-          "title": "時給三〇〇円の死神",
-          "durationMinutes": 126
-        },
-        {
-          "date": "2026-10-09",
-          "time": "15:15",
-          "title": "ハート・オブ・ビースト《字幕版》",
-          "durationMinutes": 101
-        },
-        {
-          "date": "2026-10-09",
-          "time": "15:20",
-          "title": "DIGGER／ディガー《字幕版》",
-          "durationMinutes": 129
-        },
-        {
-          "date": "2026-10-09",
-          "time": "15:50",
-          "title": "バイオハザード《吹替版》",
-          "durationMinutes": 94
-        },
-        {
-          "date": "2026-10-09",
-          "time": "17:25",
-          "title": "オデュッセイア《字幕版》",
-          "durationMinutes": 172
-        },
-        {
-          "date": "2026-10-09",
-          "time": "17:30",
-          "title": "ナギダイアリー",
-          "durationMinutes": 110
-        },
-        {
-          "date": "2026-10-09",
-          "time": "17:40",
-          "title": "シャドウワーク",
-          "durationMinutes": 129
-        },
-        {
-          "date": "2026-10-09",
-          "time": "17:45",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135
-        },
-        {
-          "date": "2026-10-09",
-          "time": "17:50",
-          "title": "バイオハザード《字幕版》",
-          "durationMinutes": 94
-        },
-        {
-          "date": "2026-10-09",
-          "time": "18:00",
-          "title": "DIGGER／ディガー《吹替版》",
-          "durationMinutes": 129
-        },
-        {
-          "date": "2026-10-09",
-          "time": "18:10",
-          "title": "映画ちいかわ 人魚の島のひみつ",
-          "durationMinutes": 99
-        },
-        {
-          "date": "2026-10-09",
-          "time": "20:00",
-          "title": "踊る大捜査線 N.E.W. メトロポリスを駆け抜けろ！",
-          "durationMinutes": 142
-        },
-        {
-          "date": "2026-10-09",
-          "time": "20:10",
-          "title": "ディスクロージャー・デイ《字幕版》",
-          "durationMinutes": 145
-        },
-        {
-          "date": "2026-10-09",
-          "time": "20:25",
-          "title": "キングダム 魂の決戦",
-          "durationMinutes": 134
-        },
-        {
-          "date": "2026-10-09",
-          "time": "20:30",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135
-        },
-        {
-          "date": "2026-10-09",
-          "time": "20:40",
-          "title": "DIGGER／ディガー《字幕版》",
-          "durationMinutes": 129
-        },
-        {
-          "date": "2026-10-09",
-          "time": "20:45",
-          "title": "時給三〇〇円の死神",
-          "durationMinutes": 126
-        },
-        {
-          "date": "2026-10-09",
-          "time": "20:50",
-          "title": "バイオハザード《吹替版》",
-          "durationMinutes": 94
-        },
         {
           "date": "2026-10-10",
           "time": "09:20",
@@ -998,6 +800,204 @@
           "time": "20:50",
           "title": "バイオハザード《吹替版》",
           "durationMinutes": 94
+        },
+        {
+          "date": "2026-10-14",
+          "time": "09:20",
+          "title": "踊る大捜査線 N.E.W. メトロポリスを駆け抜けろ！",
+          "durationMinutes": 142
+        },
+        {
+          "date": "2026-10-14",
+          "time": "09:30",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135
+        },
+        {
+          "date": "2026-10-14",
+          "time": "09:40",
+          "title": "バイオハザード《吹替版》",
+          "durationMinutes": 94
+        },
+        {
+          "date": "2026-10-14",
+          "time": "09:45",
+          "title": "ディスクロージャー・デイ《字幕版》",
+          "durationMinutes": 145
+        },
+        {
+          "date": "2026-10-14",
+          "time": "09:50",
+          "title": "DIGGER／ディガー《字幕版》",
+          "durationMinutes": 129
+        },
+        {
+          "date": "2026-10-14",
+          "time": "10:10",
+          "title": "映画ちいかわ 人魚の島のひみつ",
+          "durationMinutes": 99
+        },
+        {
+          "date": "2026-10-14",
+          "time": "12:15",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135
+        },
+        {
+          "date": "2026-10-14",
+          "time": "12:30",
+          "title": "DIGGER／ディガー《字幕版》",
+          "durationMinutes": 129
+        },
+        {
+          "date": "2026-10-14",
+          "time": "12:30",
+          "title": "襲名",
+          "durationMinutes": 97
+        },
+        {
+          "date": "2026-10-14",
+          "time": "12:40",
+          "title": "バイオハザード《字幕版》",
+          "durationMinutes": 94
+        },
+        {
+          "date": "2026-10-14",
+          "time": "13:00",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135
+        },
+        {
+          "date": "2026-10-14",
+          "time": "13:30",
+          "title": "映画名探偵プリキュア！不思議な庭と2人の秘密",
+          "durationMinutes": 71
+        },
+        {
+          "date": "2026-10-14",
+          "time": "14:40",
+          "title": "踊る大捜査線 N.E.W. メトロポリスを駆け抜けろ！",
+          "durationMinutes": 142
+        },
+        {
+          "date": "2026-10-14",
+          "time": "14:50",
+          "title": "ディスクロージャー・デイ《字幕版》",
+          "durationMinutes": 145
+        },
+        {
+          "date": "2026-10-14",
+          "time": "15:00",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135
+        },
+        {
+          "date": "2026-10-14",
+          "time": "15:10",
+          "title": "時給三〇〇円の死神",
+          "durationMinutes": 126
+        },
+        {
+          "date": "2026-10-14",
+          "time": "15:15",
+          "title": "ハート・オブ・ビースト《字幕版》",
+          "durationMinutes": 101
+        },
+        {
+          "date": "2026-10-14",
+          "time": "15:20",
+          "title": "DIGGER／ディガー《字幕版》",
+          "durationMinutes": 129
+        },
+        {
+          "date": "2026-10-14",
+          "time": "15:50",
+          "title": "バイオハザード《吹替版》",
+          "durationMinutes": 94
+        },
+        {
+          "date": "2026-10-14",
+          "time": "17:25",
+          "title": "オデュッセイア《字幕版》",
+          "durationMinutes": 172
+        },
+        {
+          "date": "2026-10-14",
+          "time": "17:30",
+          "title": "ナギダイアリー",
+          "durationMinutes": 110
+        },
+        {
+          "date": "2026-10-14",
+          "time": "17:40",
+          "title": "シャドウワーク",
+          "durationMinutes": 129
+        },
+        {
+          "date": "2026-10-14",
+          "time": "17:45",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135
+        },
+        {
+          "date": "2026-10-14",
+          "time": "17:50",
+          "title": "バイオハザード《字幕版》",
+          "durationMinutes": 94
+        },
+        {
+          "date": "2026-10-14",
+          "time": "18:00",
+          "title": "DIGGER／ディガー《吹替版》",
+          "durationMinutes": 129
+        },
+        {
+          "date": "2026-10-14",
+          "time": "18:10",
+          "title": "映画ちいかわ 人魚の島のひみつ",
+          "durationMinutes": 99
+        },
+        {
+          "date": "2026-10-14",
+          "time": "20:00",
+          "title": "踊る大捜査線 N.E.W. メトロポリスを駆け抜けろ！",
+          "durationMinutes": 142
+        },
+        {
+          "date": "2026-10-14",
+          "time": "20:10",
+          "title": "ディスクロージャー・デイ《字幕版》",
+          "durationMinutes": 145
+        },
+        {
+          "date": "2026-10-14",
+          "time": "20:25",
+          "title": "キリコのタクト～YELL～",
+          "durationMinutes": 128
+        },
+        {
+          "date": "2026-10-14",
+          "time": "20:30",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135
+        },
+        {
+          "date": "2026-10-14",
+          "time": "20:40",
+          "title": "DIGGER／ディガー《字幕版》",
+          "durationMinutes": 129
+        },
+        {
+          "date": "2026-10-14",
+          "time": "20:45",
+          "title": "時給三〇〇円の死神",
+          "durationMinutes": 126
+        },
+        {
+          "date": "2026-10-14",
+          "time": "20:50",
+          "title": "バイオハザード《吹替版》",
+          "durationMinutes": 94
         }
       ]
     },
@@ -1006,324 +1006,6 @@
       "officialUrl": "https://www.cinemasunshine.co.jp/theater/masaki/",
       "listingUrl": "https://www.crank-in.net/theater/search/all/38/70115",
       "shows": [
-        {
-          "date": "2026-10-09",
-          "time": "08:45",
-          "title": "DIGGER／ディガー《吹替版》",
-          "durationMinutes": 129
-        },
-        {
-          "date": "2026-10-09",
-          "time": "08:45",
-          "title": "ディスクロージャー・デイ《字幕版》",
-          "durationMinutes": 145
-        },
-        {
-          "date": "2026-10-09",
-          "time": "08:45",
-          "title": "映画名探偵プリキュア！不思議な庭と2人の秘密",
-          "durationMinutes": 71
-        },
-        {
-          "date": "2026-10-09",
-          "time": "08:50",
-          "title": "時給三〇〇円の死神",
-          "durationMinutes": 126
-        },
-        {
-          "date": "2026-10-09",
-          "time": "09:15",
-          "title": "踊る大捜査線 N.E.W. メトロポリスを駆け抜けろ！",
-          "durationMinutes": 142
-        },
-        {
-          "date": "2026-10-09",
-          "time": "09:25",
-          "title": "バイオハザード《字幕版》 [ScreenX]",
-          "durationMinutes": 94
-        },
-        {
-          "date": "2026-10-09",
-          "time": "09:30",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135
-        },
-        {
-          "date": "2026-10-09",
-          "time": "09:35",
-          "title": "ガールズ＆パンツァー 最終章 第5話",
-          "durationMinutes": 56
-        },
-        {
-          "date": "2026-10-09",
-          "time": "09:50",
-          "title": "映画ちいかわ 人魚の島のひみつ [4DX]",
-          "durationMinutes": 99
-        },
-        {
-          "date": "2026-10-09",
-          "time": "10:25",
-          "title": "どこよりも遠い場所にいる君へ",
-          "durationMinutes": 116
-        },
-        {
-          "date": "2026-10-09",
-          "time": "11:00",
-          "title": "ハート・オブ・ビースト《字幕版》",
-          "durationMinutes": 101
-        },
-        {
-          "date": "2026-10-09",
-          "time": "11:15",
-          "title": "ママがもうこの世界にいなくても 私の命の日記",
-          "durationMinutes": 124
-        },
-        {
-          "date": "2026-10-09",
-          "time": "11:25",
-          "title": "バイオハザード《字幕版》",
-          "durationMinutes": 94
-        },
-        {
-          "date": "2026-10-09",
-          "time": "11:35",
-          "title": "超かぐや姫！ [ScreenX]",
-          "durationMinutes": 142
-        },
-        {
-          "date": "2026-10-09",
-          "time": "11:45",
-          "title": "映画ちいかわ 人魚の島のひみつ",
-          "durationMinutes": 99
-        },
-        {
-          "date": "2026-10-09",
-          "time": "12:00",
-          "title": "ガールズ＆パンツァー 最終章 第5話 [4DX]",
-          "durationMinutes": 56
-        },
-        {
-          "date": "2026-10-09",
-          "time": "12:05",
-          "title": "踊る大捜査線 N.E.W. メトロポリスを駆け抜けろ！",
-          "durationMinutes": 142
-        },
-        {
-          "date": "2026-10-09",
-          "time": "12:20",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135
-        },
-        {
-          "date": "2026-10-09",
-          "time": "12:45",
-          "title": "最終楽章 響け！ユーフォニアム 後編",
-          "durationMinutes": 127
-        },
-        {
-          "date": "2026-10-09",
-          "time": "13:10",
-          "title": "ガールズ＆パンツァー 最終章 第5話",
-          "durationMinutes": 56
-        },
-        {
-          "date": "2026-10-09",
-          "time": "13:25",
-          "title": "バイオハザード《吹替版》 [4DX]",
-          "durationMinutes": 94
-        },
-        {
-          "date": "2026-10-09",
-          "time": "13:30",
-          "title": "DIGGER／ディガー《字幕版》",
-          "durationMinutes": 129
-        },
-        {
-          "date": "2026-10-09",
-          "time": "13:45",
-          "title": "ママがもうこの世界にいなくても 私の命の日記",
-          "durationMinutes": 124
-        },
-        {
-          "date": "2026-10-09",
-          "time": "13:55",
-          "title": "映画ちいかわ 人魚の島のひみつ",
-          "durationMinutes": 99
-        },
-        {
-          "date": "2026-10-09",
-          "time": "14:35",
-          "title": "アベンジャーズ／エンドゲーム：アンコール《吹替版》 [ScreenX]",
-          "durationMinutes": 183
-        },
-        {
-          "date": "2026-10-09",
-          "time": "14:40",
-          "title": "バイオハザード《吹替版》",
-          "durationMinutes": 94
-        },
-        {
-          "date": "2026-10-09",
-          "time": "15:00",
-          "title": "白鳥とコウモリ",
-          "durationMinutes": 145
-        },
-        {
-          "date": "2026-10-09",
-          "time": "15:05",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135
-        },
-        {
-          "date": "2026-10-09",
-          "time": "15:20",
-          "title": "どこよりも遠い場所にいる君へ",
-          "durationMinutes": 116
-        },
-        {
-          "date": "2026-10-09",
-          "time": "15:30",
-          "title": "劇場版 魔法少女まどか☆マギカ〈ワルプルギスの廻天〉 [4DX]",
-          "durationMinutes": 119
-        },
-        {
-          "date": "2026-10-09",
-          "time": "16:00",
-          "title": "ディスクロージャー・デイ《吹替版》",
-          "durationMinutes": 145
-        },
-        {
-          "date": "2026-10-09",
-          "time": "16:05",
-          "title": "DIGGER／ディガー《吹替版》",
-          "durationMinutes": 129
-        },
-        {
-          "date": "2026-10-09",
-          "time": "16:15",
-          "title": "時給三〇〇円の死神",
-          "durationMinutes": 126
-        },
-        {
-          "date": "2026-10-09",
-          "time": "17:35",
-          "title": "バイオハザード《吹替版》",
-          "durationMinutes": 94
-        },
-        {
-          "date": "2026-10-09",
-          "time": "17:45",
-          "title": "オデュッセイア《字幕版》",
-          "durationMinutes": 172
-        },
-        {
-          "date": "2026-10-09",
-          "time": "17:50",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135
-        },
-        {
-          "date": "2026-10-09",
-          "time": "17:55",
-          "title": "踊る大捜査線 N.E.W. メトロポリスを駆け抜けろ！",
-          "durationMinutes": 142
-        },
-        {
-          "date": "2026-10-09",
-          "time": "18:00",
-          "title": "ガールズ＆パンツァー 最終章 第5話 [4DX]",
-          "durationMinutes": 56
-        },
-        {
-          "date": "2026-10-09",
-          "time": "18:15",
-          "title": "バイオハザード《字幕版》 [ScreenX]",
-          "durationMinutes": 94
-        },
-        {
-          "date": "2026-10-09",
-          "time": "18:40",
-          "title": "DIGGER／ディガー《字幕版》",
-          "durationMinutes": 129
-        },
-        {
-          "date": "2026-10-09",
-          "time": "18:45",
-          "title": "ママがもうこの世界にいなくても 私の命の日記",
-          "durationMinutes": 124
-        },
-        {
-          "date": "2026-10-09",
-          "time": "19:00",
-          "title": "映画ちいかわ 人魚の島のひみつ",
-          "durationMinutes": 99
-        },
-        {
-          "date": "2026-10-09",
-          "time": "19:25",
-          "title": "映画名探偵プリキュア！不思議な庭と2人の秘密 [4DX]",
-          "durationMinutes": 71
-        },
-        {
-          "date": "2026-10-09",
-          "time": "20:05",
-          "title": "ガールズ＆パンツァー 最終章 第5話",
-          "durationMinutes": 56
-        },
-        {
-          "date": "2026-10-09",
-          "time": "20:25",
-          "title": "超かぐや姫！ [ScreenX]",
-          "durationMinutes": 142
-        },
-        {
-          "date": "2026-10-09",
-          "time": "20:35",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135
-        },
-        {
-          "date": "2026-10-09",
-          "time": "20:45",
-          "title": "バックルームズ《吹替版》",
-          "durationMinutes": 126
-        },
-        {
-          "date": "2026-10-09",
-          "time": "21:00",
-          "title": "どこよりも遠い場所にいる君へ",
-          "durationMinutes": 116
-        },
-        {
-          "date": "2026-10-09",
-          "time": "21:05",
-          "title": "ディスクロージャー・デイ《字幕版》",
-          "durationMinutes": 145
-        },
-        {
-          "date": "2026-10-09",
-          "time": "21:10",
-          "title": "バイオハザード《吹替版》 [4DX]",
-          "durationMinutes": 94
-        },
-        {
-          "date": "2026-10-09",
-          "time": "21:15",
-          "title": "ママがもうこの世界にいなくても 私の命の日記",
-          "durationMinutes": 124
-        },
-        {
-          "date": "2026-10-09",
-          "time": "21:20",
-          "title": "DIGGER／ディガー《吹替版》",
-          "durationMinutes": 129
-        },
-        {
-          "date": "2026-10-09",
-          "time": "21:30",
-          "title": "マッチング TRUE LOVE",
-          "durationMinutes": 107
-        },
         {
           "date": "2026-10-10",
           "time": "08:45",
@@ -2595,6 +2277,312 @@
           "time": "21:30",
           "title": "マッチング TRUE LOVE",
           "durationMinutes": 107
+        },
+        {
+          "date": "2026-10-14",
+          "time": "08:45",
+          "title": "DIGGER／ディガー《吹替版》",
+          "durationMinutes": 129
+        },
+        {
+          "date": "2026-10-14",
+          "time": "08:45",
+          "title": "ディスクロージャー・デイ《字幕版》",
+          "durationMinutes": 145
+        },
+        {
+          "date": "2026-10-14",
+          "time": "08:45",
+          "title": "映画名探偵プリキュア！不思議な庭と2人の秘密",
+          "durationMinutes": 71
+        },
+        {
+          "date": "2026-10-14",
+          "time": "08:50",
+          "title": "時給三〇〇円の死神",
+          "durationMinutes": 126
+        },
+        {
+          "date": "2026-10-14",
+          "time": "09:15",
+          "title": "踊る大捜査線 N.E.W. メトロポリスを駆け抜けろ！",
+          "durationMinutes": 142
+        },
+        {
+          "date": "2026-10-14",
+          "time": "09:25",
+          "title": "バイオハザード《字幕版》 [ScreenX]",
+          "durationMinutes": 94
+        },
+        {
+          "date": "2026-10-14",
+          "time": "09:30",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135
+        },
+        {
+          "date": "2026-10-14",
+          "time": "09:35",
+          "title": "ガールズ＆パンツァー 最終章 第5話",
+          "durationMinutes": 56
+        },
+        {
+          "date": "2026-10-14",
+          "time": "09:50",
+          "title": "映画ちいかわ 人魚の島のひみつ [4DX]",
+          "durationMinutes": 99
+        },
+        {
+          "date": "2026-10-14",
+          "time": "10:25",
+          "title": "どこよりも遠い場所にいる君へ",
+          "durationMinutes": 116
+        },
+        {
+          "date": "2026-10-14",
+          "time": "11:00",
+          "title": "ハート・オブ・ビースト《字幕版》",
+          "durationMinutes": 101
+        },
+        {
+          "date": "2026-10-14",
+          "time": "11:15",
+          "title": "ママがもうこの世界にいなくても 私の命の日記",
+          "durationMinutes": 124
+        },
+        {
+          "date": "2026-10-14",
+          "time": "11:25",
+          "title": "バイオハザード《字幕版》",
+          "durationMinutes": 94
+        },
+        {
+          "date": "2026-10-14",
+          "time": "11:35",
+          "title": "超かぐや姫！ [ScreenX]",
+          "durationMinutes": 142
+        },
+        {
+          "date": "2026-10-14",
+          "time": "11:45",
+          "title": "映画ちいかわ 人魚の島のひみつ",
+          "durationMinutes": 99
+        },
+        {
+          "date": "2026-10-14",
+          "time": "12:00",
+          "title": "ガールズ＆パンツァー 最終章 第5話 [4DX]",
+          "durationMinutes": 56
+        },
+        {
+          "date": "2026-10-14",
+          "time": "12:05",
+          "title": "踊る大捜査線 N.E.W. メトロポリスを駆け抜けろ！",
+          "durationMinutes": 142
+        },
+        {
+          "date": "2026-10-14",
+          "time": "12:20",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135
+        },
+        {
+          "date": "2026-10-14",
+          "time": "12:45",
+          "title": "最終楽章 響け！ユーフォニアム 後編",
+          "durationMinutes": 127
+        },
+        {
+          "date": "2026-10-14",
+          "time": "13:10",
+          "title": "ガールズ＆パンツァー 最終章 第5話",
+          "durationMinutes": 56
+        },
+        {
+          "date": "2026-10-14",
+          "time": "13:25",
+          "title": "バイオハザード《吹替版》 [4DX]",
+          "durationMinutes": 94
+        },
+        {
+          "date": "2026-10-14",
+          "time": "13:30",
+          "title": "DIGGER／ディガー《字幕版》",
+          "durationMinutes": 129
+        },
+        {
+          "date": "2026-10-14",
+          "time": "13:45",
+          "title": "ママがもうこの世界にいなくても 私の命の日記",
+          "durationMinutes": 124
+        },
+        {
+          "date": "2026-10-14",
+          "time": "13:55",
+          "title": "映画ちいかわ 人魚の島のひみつ",
+          "durationMinutes": 99
+        },
+        {
+          "date": "2026-10-14",
+          "time": "14:35",
+          "title": "アベンジャーズ／エンドゲーム：アンコール《吹替版》 [ScreenX]",
+          "durationMinutes": 183
+        },
+        {
+          "date": "2026-10-14",
+          "time": "14:40",
+          "title": "バイオハザード《吹替版》",
+          "durationMinutes": 94
+        },
+        {
+          "date": "2026-10-14",
+          "time": "15:00",
+          "title": "白鳥とコウモリ",
+          "durationMinutes": 145
+        },
+        {
+          "date": "2026-10-14",
+          "time": "15:05",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135
+        },
+        {
+          "date": "2026-10-14",
+          "time": "15:20",
+          "title": "どこよりも遠い場所にいる君へ",
+          "durationMinutes": 116
+        },
+        {
+          "date": "2026-10-14",
+          "time": "15:30",
+          "title": "劇場版 魔法少女まどか☆マギカ〈ワルプルギスの廻天〉 [4DX]",
+          "durationMinutes": 119
+        },
+        {
+          "date": "2026-10-14",
+          "time": "16:00",
+          "title": "ディスクロージャー・デイ《吹替版》",
+          "durationMinutes": 145
+        },
+        {
+          "date": "2026-10-14",
+          "time": "16:05",
+          "title": "DIGGER／ディガー《吹替版》",
+          "durationMinutes": 129
+        },
+        {
+          "date": "2026-10-14",
+          "time": "16:15",
+          "title": "時給三〇〇円の死神",
+          "durationMinutes": 126
+        },
+        {
+          "date": "2026-10-14",
+          "time": "17:35",
+          "title": "バイオハザード《吹替版》",
+          "durationMinutes": 94
+        },
+        {
+          "date": "2026-10-14",
+          "time": "17:45",
+          "title": "オデュッセイア《字幕版》",
+          "durationMinutes": 172
+        },
+        {
+          "date": "2026-10-14",
+          "time": "17:50",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135
+        },
+        {
+          "date": "2026-10-14",
+          "time": "17:55",
+          "title": "踊る大捜査線 N.E.W. メトロポリスを駆け抜けろ！",
+          "durationMinutes": 142
+        },
+        {
+          "date": "2026-10-14",
+          "time": "18:00",
+          "title": "ガールズ＆パンツァー 最終章 第5話 [4DX]",
+          "durationMinutes": 56
+        },
+        {
+          "date": "2026-10-14",
+          "time": "18:40",
+          "title": "DIGGER／ディガー《字幕版》",
+          "durationMinutes": 129
+        },
+        {
+          "date": "2026-10-14",
+          "time": "18:45",
+          "title": "ママがもうこの世界にいなくても 私の命の日記",
+          "durationMinutes": 124
+        },
+        {
+          "date": "2026-10-14",
+          "time": "19:00",
+          "title": "映画ちいかわ 人魚の島のひみつ",
+          "durationMinutes": 99
+        },
+        {
+          "date": "2026-10-14",
+          "time": "19:25",
+          "title": "映画名探偵プリキュア！不思議な庭と2人の秘密 [4DX]",
+          "durationMinutes": 71
+        },
+        {
+          "date": "2026-10-14",
+          "time": "20:05",
+          "title": "ガールズ＆パンツァー 最終章 第5話",
+          "durationMinutes": 56
+        },
+        {
+          "date": "2026-10-14",
+          "time": "20:35",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135
+        },
+        {
+          "date": "2026-10-14",
+          "time": "20:45",
+          "title": "バックルームズ《吹替版》",
+          "durationMinutes": 126
+        },
+        {
+          "date": "2026-10-14",
+          "time": "21:00",
+          "title": "どこよりも遠い場所にいる君へ",
+          "durationMinutes": 116
+        },
+        {
+          "date": "2026-10-14",
+          "time": "21:05",
+          "title": "ディスクロージャー・デイ《字幕版》",
+          "durationMinutes": 145
+        },
+        {
+          "date": "2026-10-14",
+          "time": "21:10",
+          "title": "バイオハザード《吹替版》 [4DX]",
+          "durationMinutes": 94
+        },
+        {
+          "date": "2026-10-14",
+          "time": "21:15",
+          "title": "ママがもうこの世界にいなくても 私の命の日記",
+          "durationMinutes": 124
+        },
+        {
+          "date": "2026-10-14",
+          "time": "21:20",
+          "title": "DIGGER／ディガー《吹替版》",
+          "durationMinutes": 129
+        },
+        {
+          "date": "2026-10-14",
+          "time": "21:30",
+          "title": "マッチング TRUE LOVE",
+          "durationMinutes": 107
         }
       ]
     },
@@ -2603,300 +2591,6 @@
       "officialUrl": "https://www.cinemasunshine.co.jp/theater/kinuyama/",
       "listingUrl": "https://www.crank-in.net/theater/search/all/38/70073",
       "shows": [
-        {
-          "date": "2026-10-09",
-          "time": "09:20",
-          "title": "バイオハザード《吹替版》",
-          "durationMinutes": 94
-        },
-        {
-          "date": "2026-10-09",
-          "time": "09:25",
-          "title": "映画ちいかわ 人魚の島のひみつ",
-          "durationMinutes": 99
-        },
-        {
-          "date": "2026-10-09",
-          "time": "09:30",
-          "title": "DIGGER／ディガー《字幕版》",
-          "durationMinutes": 129
-        },
-        {
-          "date": "2026-10-09",
-          "time": "09:30",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135
-        },
-        {
-          "date": "2026-10-09",
-          "time": "09:35",
-          "title": "ガールズ＆パンツァー 最終章 第5話",
-          "durationMinutes": 56
-        },
-        {
-          "date": "2026-10-09",
-          "time": "09:40",
-          "title": "キングダム 魂の決戦",
-          "durationMinutes": 134
-        },
-        {
-          "date": "2026-10-09",
-          "time": "09:40",
-          "title": "踊る大捜査線 N.E.W. メトロポリスを駆け抜けろ！",
-          "durationMinutes": 142
-        },
-        {
-          "date": "2026-10-09",
-          "time": "09:45",
-          "title": "ディスクロージャー・デイ《字幕版》 [IMAXレーザー]",
-          "durationMinutes": 145
-        },
-        {
-          "date": "2026-10-09",
-          "time": "09:45",
-          "title": "映画名探偵プリキュア！不思議な庭と2人の秘密",
-          "durationMinutes": 71
-        },
-        {
-          "date": "2026-10-09",
-          "time": "11:00",
-          "title": "バイオハザード《字幕版》",
-          "durationMinutes": 94
-        },
-        {
-          "date": "2026-10-09",
-          "time": "11:30",
-          "title": "DIGGER／ディガー《吹替版》",
-          "durationMinutes": 129
-        },
-        {
-          "date": "2026-10-09",
-          "time": "11:30",
-          "title": "我々は宇宙人",
-          "durationMinutes": 118
-        },
-        {
-          "date": "2026-10-09",
-          "time": "11:35",
-          "title": "ハート・オブ・ビースト《字幕版》",
-          "durationMinutes": 101
-        },
-        {
-          "date": "2026-10-09",
-          "time": "12:15",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135
-        },
-        {
-          "date": "2026-10-09",
-          "time": "12:20",
-          "title": "ディスクロージャー・デイ《字幕版》",
-          "durationMinutes": 145
-        },
-        {
-          "date": "2026-10-09",
-          "time": "12:30",
-          "title": "ママがもうこの世界にいなくても 私の命の日記",
-          "durationMinutes": 124
-        },
-        {
-          "date": "2026-10-09",
-          "time": "12:30",
-          "title": "白鳥とコウモリ",
-          "durationMinutes": 145
-        },
-        {
-          "date": "2026-10-09",
-          "time": "12:40",
-          "title": "DIGGER／ディガー《字幕版》 [IMAXレーザー]",
-          "durationMinutes": 129
-        },
-        {
-          "date": "2026-10-09",
-          "time": "13:05",
-          "title": "ガールズ＆パンツァー 最終章 第5話",
-          "durationMinutes": 56
-        },
-        {
-          "date": "2026-10-09",
-          "time": "13:50",
-          "title": "映画ちいかわ 人魚の島のひみつ",
-          "durationMinutes": 99
-        },
-        {
-          "date": "2026-10-09",
-          "time": "14:00",
-          "title": "バイオハザード《吹替版》",
-          "durationMinutes": 94
-        },
-        {
-          "date": "2026-10-09",
-          "time": "14:10",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135
-        },
-        {
-          "date": "2026-10-09",
-          "time": "14:30",
-          "title": "ガールズ＆パンツァー 最終章 第5話",
-          "durationMinutes": 56
-        },
-        {
-          "date": "2026-10-09",
-          "time": "15:00",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135
-        },
-        {
-          "date": "2026-10-09",
-          "time": "15:10",
-          "title": "ママがもうこの世界にいなくても 私の命の日記",
-          "durationMinutes": 124
-        },
-        {
-          "date": "2026-10-09",
-          "time": "15:15",
-          "title": "DIGGER／ディガー《字幕版》",
-          "durationMinutes": 129
-        },
-        {
-          "date": "2026-10-09",
-          "time": "15:20",
-          "title": "バイオハザード《字幕版》 [IMAXレーザー]",
-          "durationMinutes": 94
-        },
-        {
-          "date": "2026-10-09",
-          "time": "15:25",
-          "title": "踊る大捜査線 N.E.W. メトロポリスを駆け抜けろ！",
-          "durationMinutes": 142
-        },
-        {
-          "date": "2026-10-09",
-          "time": "15:55",
-          "title": "マッチング TRUE LOVE",
-          "durationMinutes": 107
-        },
-        {
-          "date": "2026-10-09",
-          "time": "16:05",
-          "title": "ガールズ＆パンツァー 最終章 第5話",
-          "durationMinutes": 56
-        },
-        {
-          "date": "2026-10-09",
-          "time": "16:05",
-          "title": "劇場版 魔法少女まどか☆マギカ〈ワルプルギスの廻天〉",
-          "durationMinutes": 119
-        },
-        {
-          "date": "2026-10-09",
-          "time": "16:55",
-          "title": "オデュッセイア《字幕版》",
-          "durationMinutes": 172
-        },
-        {
-          "date": "2026-10-09",
-          "time": "17:25",
-          "title": "DIGGER／ディガー《字幕版》 [IMAXレーザー]",
-          "durationMinutes": 129
-        },
-        {
-          "date": "2026-10-09",
-          "time": "17:35",
-          "title": "映画ちいかわ 人魚の島のひみつ",
-          "durationMinutes": 99
-        },
-        {
-          "date": "2026-10-09",
-          "time": "17:45",
-          "title": "ママがもうこの世界にいなくても 私の命の日記",
-          "durationMinutes": 124
-        },
-        {
-          "date": "2026-10-09",
-          "time": "17:45",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135
-        },
-        {
-          "date": "2026-10-09",
-          "time": "17:55",
-          "title": "我々は宇宙人",
-          "durationMinutes": 118
-        },
-        {
-          "date": "2026-10-09",
-          "time": "18:10",
-          "title": "ディスクロージャー・デイ《字幕版》",
-          "durationMinutes": 145
-        },
-        {
-          "date": "2026-10-09",
-          "time": "18:35",
-          "title": "バイオハザード《吹替版》",
-          "durationMinutes": 94
-        },
-        {
-          "date": "2026-10-09",
-          "time": "19:45",
-          "title": "ガールズ＆パンツァー 最終章 第5話",
-          "durationMinutes": 56
-        },
-        {
-          "date": "2026-10-09",
-          "time": "20:05",
-          "title": "バイオハザード《字幕版》 [IMAXレーザー]",
-          "durationMinutes": 94
-        },
-        {
-          "date": "2026-10-09",
-          "time": "20:15",
-          "title": "DIGGER／ディガー《吹替版》",
-          "durationMinutes": 129
-        },
-        {
-          "date": "2026-10-09",
-          "time": "20:20",
-          "title": "ディスクロージャー・デイ《字幕版》",
-          "durationMinutes": 145
-        },
-        {
-          "date": "2026-10-09",
-          "time": "20:20",
-          "title": "ママがもうこの世界にいなくても 私の命の日記",
-          "durationMinutes": 124
-        },
-        {
-          "date": "2026-10-09",
-          "time": "20:35",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135
-        },
-        {
-          "date": "2026-10-09",
-          "time": "20:40",
-          "title": "踊る大捜査線 N.E.W. メトロポリスを駆け抜けろ！",
-          "durationMinutes": 142
-        },
-        {
-          "date": "2026-10-09",
-          "time": "20:45",
-          "title": "最終楽章 響け！ユーフォニアム 後編",
-          "durationMinutes": 127
-        },
-        {
-          "date": "2026-10-09",
-          "time": "21:05",
-          "title": "ファーストボイス",
-          "durationMinutes": 105
-        },
-        {
-          "date": "2026-10-09",
-          "time": "21:10",
-          "title": "バイオハザード《吹替版》",
-          "durationMinutes": 94
-        },
         {
           "date": "2026-10-10",
           "time": "08:55",
@@ -4057,6 +3751,300 @@
         },
         {
           "date": "2026-10-13",
+          "time": "21:10",
+          "title": "バイオハザード《吹替版》",
+          "durationMinutes": 94
+        },
+        {
+          "date": "2026-10-14",
+          "time": "09:20",
+          "title": "オデュッセイア《字幕版》 [IMAXレーザー]",
+          "durationMinutes": 172
+        },
+        {
+          "date": "2026-10-14",
+          "time": "09:20",
+          "title": "バイオハザード《吹替版》",
+          "durationMinutes": 94
+        },
+        {
+          "date": "2026-10-14",
+          "time": "09:25",
+          "title": "映画ちいかわ 人魚の島のひみつ",
+          "durationMinutes": 99
+        },
+        {
+          "date": "2026-10-14",
+          "time": "09:30",
+          "title": "DIGGER／ディガー《字幕版》",
+          "durationMinutes": 129
+        },
+        {
+          "date": "2026-10-14",
+          "time": "09:30",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135
+        },
+        {
+          "date": "2026-10-14",
+          "time": "09:35",
+          "title": "ガールズ＆パンツァー 最終章 第5話",
+          "durationMinutes": 56
+        },
+        {
+          "date": "2026-10-14",
+          "time": "09:40",
+          "title": "踊る大捜査線 N.E.W. メトロポリスを駆け抜けろ！",
+          "durationMinutes": 142
+        },
+        {
+          "date": "2026-10-14",
+          "time": "09:45",
+          "title": "映画名探偵プリキュア！不思議な庭と2人の秘密",
+          "durationMinutes": 71
+        },
+        {
+          "date": "2026-10-14",
+          "time": "09:50",
+          "title": "ママがもうこの世界にいなくても 私の命の日記",
+          "durationMinutes": 124
+        },
+        {
+          "date": "2026-10-14",
+          "time": "11:00",
+          "title": "バイオハザード《字幕版》",
+          "durationMinutes": 94
+        },
+        {
+          "date": "2026-10-14",
+          "time": "11:30",
+          "title": "DIGGER／ディガー《吹替版》",
+          "durationMinutes": 129
+        },
+        {
+          "date": "2026-10-14",
+          "time": "11:30",
+          "title": "我々は宇宙人",
+          "durationMinutes": 118
+        },
+        {
+          "date": "2026-10-14",
+          "time": "11:35",
+          "title": "ハート・オブ・ビースト《字幕版》",
+          "durationMinutes": 101
+        },
+        {
+          "date": "2026-10-14",
+          "time": "12:15",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135
+        },
+        {
+          "date": "2026-10-14",
+          "time": "12:20",
+          "title": "ディスクロージャー・デイ《字幕版》",
+          "durationMinutes": 145
+        },
+        {
+          "date": "2026-10-14",
+          "time": "12:30",
+          "title": "ママがもうこの世界にいなくても 私の命の日記",
+          "durationMinutes": 124
+        },
+        {
+          "date": "2026-10-14",
+          "time": "12:30",
+          "title": "白鳥とコウモリ",
+          "durationMinutes": 145
+        },
+        {
+          "date": "2026-10-14",
+          "time": "12:40",
+          "title": "DIGGER／ディガー《字幕版》 [IMAXレーザー]",
+          "durationMinutes": 129
+        },
+        {
+          "date": "2026-10-14",
+          "time": "13:05",
+          "title": "ガールズ＆パンツァー 最終章 第5話",
+          "durationMinutes": 56
+        },
+        {
+          "date": "2026-10-14",
+          "time": "13:50",
+          "title": "映画ちいかわ 人魚の島のひみつ",
+          "durationMinutes": 99
+        },
+        {
+          "date": "2026-10-14",
+          "time": "14:00",
+          "title": "バイオハザード《吹替版》",
+          "durationMinutes": 94
+        },
+        {
+          "date": "2026-10-14",
+          "time": "14:10",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135
+        },
+        {
+          "date": "2026-10-14",
+          "time": "14:30",
+          "title": "ガールズ＆パンツァー 最終章 第5話",
+          "durationMinutes": 56
+        },
+        {
+          "date": "2026-10-14",
+          "time": "15:00",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135
+        },
+        {
+          "date": "2026-10-14",
+          "time": "15:10",
+          "title": "ママがもうこの世界にいなくても 私の命の日記",
+          "durationMinutes": 124
+        },
+        {
+          "date": "2026-10-14",
+          "time": "15:15",
+          "title": "DIGGER／ディガー《字幕版》",
+          "durationMinutes": 129
+        },
+        {
+          "date": "2026-10-14",
+          "time": "15:20",
+          "title": "バイオハザード《字幕版》 [IMAXレーザー]",
+          "durationMinutes": 94
+        },
+        {
+          "date": "2026-10-14",
+          "time": "15:25",
+          "title": "踊る大捜査線 N.E.W. メトロポリスを駆け抜けろ！",
+          "durationMinutes": 142
+        },
+        {
+          "date": "2026-10-14",
+          "time": "15:55",
+          "title": "マッチング TRUE LOVE",
+          "durationMinutes": 107
+        },
+        {
+          "date": "2026-10-14",
+          "time": "16:05",
+          "title": "ガールズ＆パンツァー 最終章 第5話",
+          "durationMinutes": 56
+        },
+        {
+          "date": "2026-10-14",
+          "time": "16:05",
+          "title": "劇場版 魔法少女まどか☆マギカ〈ワルプルギスの廻天〉",
+          "durationMinutes": 119
+        },
+        {
+          "date": "2026-10-14",
+          "time": "16:55",
+          "title": "オデュッセイア《字幕版》",
+          "durationMinutes": 172
+        },
+        {
+          "date": "2026-10-14",
+          "time": "17:25",
+          "title": "DIGGER／ディガー《字幕版》 [IMAXレーザー]",
+          "durationMinutes": 129
+        },
+        {
+          "date": "2026-10-14",
+          "time": "17:35",
+          "title": "映画ちいかわ 人魚の島のひみつ",
+          "durationMinutes": 99
+        },
+        {
+          "date": "2026-10-14",
+          "time": "17:45",
+          "title": "ママがもうこの世界にいなくても 私の命の日記",
+          "durationMinutes": 124
+        },
+        {
+          "date": "2026-10-14",
+          "time": "17:45",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135
+        },
+        {
+          "date": "2026-10-14",
+          "time": "17:55",
+          "title": "我々は宇宙人",
+          "durationMinutes": 118
+        },
+        {
+          "date": "2026-10-14",
+          "time": "18:10",
+          "title": "ディスクロージャー・デイ《字幕版》",
+          "durationMinutes": 145
+        },
+        {
+          "date": "2026-10-14",
+          "time": "18:35",
+          "title": "バイオハザード《吹替版》",
+          "durationMinutes": 94
+        },
+        {
+          "date": "2026-10-14",
+          "time": "19:45",
+          "title": "ガールズ＆パンツァー 最終章 第5話",
+          "durationMinutes": 56
+        },
+        {
+          "date": "2026-10-14",
+          "time": "20:05",
+          "title": "バイオハザード《字幕版》 [IMAXレーザー]",
+          "durationMinutes": 94
+        },
+        {
+          "date": "2026-10-14",
+          "time": "20:15",
+          "title": "DIGGER／ディガー《吹替版》",
+          "durationMinutes": 129
+        },
+        {
+          "date": "2026-10-14",
+          "time": "20:20",
+          "title": "ディスクロージャー・デイ《字幕版》",
+          "durationMinutes": 145
+        },
+        {
+          "date": "2026-10-14",
+          "time": "20:20",
+          "title": "ママがもうこの世界にいなくても 私の命の日記",
+          "durationMinutes": 124
+        },
+        {
+          "date": "2026-10-14",
+          "time": "20:35",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135
+        },
+        {
+          "date": "2026-10-14",
+          "time": "20:40",
+          "title": "踊る大捜査線 N.E.W. メトロポリスを駆け抜けろ！",
+          "durationMinutes": 142
+        },
+        {
+          "date": "2026-10-14",
+          "time": "20:45",
+          "title": "最終楽章 響け！ユーフォニアム 後編",
+          "durationMinutes": 127
+        },
+        {
+          "date": "2026-10-14",
+          "time": "21:05",
+          "title": "ファーストボイス",
+          "durationMinutes": 105
+        },
+        {
+          "date": "2026-10-14",
           "time": "21:10",
           "title": "バイオハザード《吹替版》",
           "durationMinutes": 94
