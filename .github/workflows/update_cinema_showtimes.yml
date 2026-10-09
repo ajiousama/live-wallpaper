@@ -4,6 +4,12 @@ on:
   schedule:
     # JST 07:15, 11:15, 15:15, 19:15, 23:15
     - cron: '15 22,2,6,10,14 * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/update_cinema_showtimes.py'
+      - '.github/workflows/update_cinema_showtimes.yml'
+      - 'transport/cinema/index.html'
   pull_request:
     paths:
       - 'scripts/update_cinema_showtimes.py'
