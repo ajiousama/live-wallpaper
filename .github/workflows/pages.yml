@@ -46,18 +46,23 @@ jobs:
         run: python -m pip install --disable-pip-version-check requests beautifulsoup4
 
       - name: Update transport cache
+        if: github.event_name != 'push'
         run: python scripts/update_transport.py
 
       - name: Update JRA winners from official results
+        if: github.event_name != 'push'
         run: python scripts/update_jra.py
 
       - name: Update weekend gamble results
+        if: github.event_name != 'push'
         run: python scripts/update_gamble.py
 
       - name: Update wallpaper health status
+        if: github.event_name != 'push'
         run: python scripts/update_data.py
 
       - name: Cache airline logos into Pages artifact
+        if: github.event_name != 'push'
         shell: bash
         run: |
           set -euo pipefail
@@ -83,6 +88,7 @@ jobs:
           get_logo "https://upload.wikimedia.org/wikipedia/commons/c/cf/Logo_EVA_Air.svg" "eva.svg"
 
       - name: Persist live result changes
+        if: github.event_name != 'push'
         # Cinema data updater commits on main concurrently; a push race must never
         # prevent the wallpaper from being published.
         continue-on-error: true
