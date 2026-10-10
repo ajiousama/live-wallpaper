@@ -3681,7 +3681,7 @@
     const usableH = window.innerHeight - (workplaceGeometry ? 32 : 16);
     const baseH = wall.offsetHeight || 724;
     const ratio = workplaceGeometry
-      ? Math.min(0.88, usableW / 1180, usableH / baseH)
+      ? Math.min(0.76, usableW / 1180, usableH / baseH)
       : Math.min(usableW / 1220, usableH / baseH);
 
     if (!workplaceGeometry) {
