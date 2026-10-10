@@ -2120,6 +2120,23 @@
     root.classList.remove('rail-end');
     const now = japanNow();
 
+    // Separate next-limited-express indicator for the currently shown direction.
+    // Timetable entries remain valid even when live positioning is unavailable.
+    if (FREEWIFI_TV) {
+      const nextLimited=rows.filter(r=>r.kind==='limited')
+        .sort((a,b)=>toMinutes(a.time)-toMinutes(b.time))[0];
+      const nextCard=document.createElement('div');
+      nextCard.className='rail-next-limited';
+      if(nextLimited){
+        const confirmed=nextLimited.railPositionConfirmed && nextLimited.livePosition;
+        const status=confirmed?'現在位置 '+nextLimited.livePosition:'時刻表予定・位置未確認';
+        nextCard.innerHTML=`<span class="rail-next-label">次の特急は？</span><span class="rail-next-service">${railServiceBadgeHtml('limited',nextLimited.service)}</span><span class="rail-next-time">${nextLimited.time}発</span><span class="rail-next-dest">${railDestLabel(nextLimited)}行</span><span class="rail-next-status">${status}</span>`;
+      } else {
+        nextCard.innerHTML='<span class="rail-next-label">次の特急は？</span><span class="rail-next-status">この方面の本日の特急は終了しました</span>';
+      }
+      root.appendChild(nextCard);
+    }
+
     // Live deadhead arrivals are real train movements too. Show them all day,
     // mixed chronologically with the ordinary/limited-service rows.
     const deadheads = matsuyamaDeadheadArrivals(now).map(x => ({
@@ -2163,7 +2180,7 @@
     }));
     const visible = [...services, ...terminalArrivals, ...deadheads, ...freights]
       .sort((a,b)=>a._sortMinutes-b._sortMinutes)
-      .slice(0, FREEWIFI_TV ? (document.documentElement.classList.contains('company-pc') ? 11 : 10) : 3);
+      .slice(0, FREEWIFI_TV ? (document.documentElement.classList.contains('company-pc') ? 10 : 9) : 3);
 
     if (!visible.length) {
       // A missing live fix must never be described as an ended service.
