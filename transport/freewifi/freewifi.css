@@ -2054,7 +2054,7 @@ body.freewifi-tv .panel-port .port-kure-unified{
 }
 
 /* Independent three-theater cinema board (full-screen, 30-second rotation). */
-body.freewifi-tv .cinema-screen{position:absolute;inset:0;z-index:40;background:#07111c}
+body.freewifi-tv .cinema-screen{position:absolute;inset:0;z-index:70;background:#07111c}
 body.freewifi-tv .cinema-screen[hidden]{display:none!important}
 body.freewifi-tv .cinema-screen.freewifi-active{display:block!important}
 body.freewifi-tv .cinema-screen iframe{display:block;width:100%;height:100%;border:0;background:#07111c}
@@ -2302,3 +2302,9 @@ html.company-pc body.freewifi-tv #wall{
   transform-origin:right center!important;
   transform:translateY(-50%) scale(var(--company-wall-scale))!important;
 }
+
+/* The cinema board is an independent full-page display. Keep the parent
+   live transport header (z-index:60) below it, while allowing disaster
+   warnings (z-index:80) and the update dialog to remain visible. */
+body.freewifi-tv .cinema-screen.freewifi-active{z-index:70!important}
+body.freewifi-tv .update-modal:not([hidden]){z-index:75!important}
