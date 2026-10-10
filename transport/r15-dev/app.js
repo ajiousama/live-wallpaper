@@ -2959,6 +2959,11 @@
           section.appendChild(empty);
         }
         root.appendChild(section);
+        if(g.key==='matsuyama') {
+          // Port connection ticker belongs between Matsuyama ports and other routes.
+          const note=$('port-note');
+          if(note) root.appendChild(note);
+        }
       });
     } else {
       root.classList.remove('freewifi-port-groups');
