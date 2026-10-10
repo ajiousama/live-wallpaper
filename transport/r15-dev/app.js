@@ -2343,8 +2343,7 @@
 
   function matsuyamaTerminatingArrivals(now) {
     const generatedAt=Date.parse(String(approachLive.generatedAtJst||''));
-    if(!jrPositionFeedFresh()) return [];
-    const raw=Array.isArray(approachLive.ichitsubo?.matsuyamaTerminatingArrivals)
+    const raw=jrPositionFeedFresh() && Array.isArray(approachLive.ichitsubo?.matsuyamaTerminatingArrivals)
       ? approachLive.ichitsubo.matsuyamaTerminatingArrivals
       : [];
     const side=currentRailDir();
