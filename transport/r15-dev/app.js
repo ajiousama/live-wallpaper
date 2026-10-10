@@ -806,12 +806,18 @@
       ['08:00','11:10','14:50','17:20'],
       ['11:37','14:37','18:17','20:47'],
       'https://www.iyotetsu.co.jp/kousoku/okayama.html');
-    // JR Shikoku Bus Kochi -> Matsuyama published timetable.
-    add('高知駅BT','jrshikoku_kochi_verified_in',
-      ['JR四国バス','JR四国バス','JR四国バス','JR四国バス'],
-      ['08:30','10:20','13:20','16:30'],
-      ['11:21','13:11','16:11','19:24'],
-      'https://www.jr-shikokubus.co.jp/news/2026/05/912d7f532c75c7e85f4b39a062178e921e88b903.pdf');
+    // 吉野川エクスプレス（徳島 -> 松山）公式時刻表
+    add('徳島駅前','tokushima_official_in',
+      ['JR四国バス','徳島バス','徳島バス','JR四国バス','伊予鉄バス','伊予鉄バス'],
+      ['08:00','09:40','12:20','15:20','17:00','18:40'],
+      ['11:28','13:08','15:48','18:48','20:28','22:08'],
+      'https://www.iyotetsu.co.jp/kousoku/tokushima.html');
+    // ホエールエクスプレス（高知 -> 松山）2026-04-01～
+    add('高知駅バスターミナル','kochi_official_in',
+      ['とさでん交通','伊予鉄バス','とさでん交通','伊予鉄バス'],
+      ['07:30','11:45','15:30','19:30'],
+      ['10:11','14:20','18:05','22:11'],
+      'https://www.iyotetsu.co.jp/kousoku/kochi.html');
     return out;
   }
   function getBoardRecords(board, now) {
