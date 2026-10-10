@@ -2366,8 +2366,12 @@
       return {...x,arrival,diff,position,delay};
     }).filter(x=>x.arrival && x.side===side && Number.isFinite(x.diff) && x.diff>=-1 && x.diff<=180 && (jrPositionUsable(x.position) || !!x.turnback));
     const scheduled=special.map(x=>({...x,diff:toMinutes(x.arrival)-now.minutes,delay:0}))
-      .filter(x=>x.diff>=-1 && x.diff<=180 && !observed.some(v=>v.arrival===x.arrival && v.side===side));
-    return [...observed,...scheduled].sort((a,b)=>a.diff-b.diff);
+      .filter(x=>x.diff>=-1 && x.diff<=180);
+    // Never let a generic live arrival at the same minute overwrite the
+    // officially named sightseeing train. The live feed has no positive
+    // identity match for that train, so do not assign its position either.
+    const otherObserved=observed.filter(v=>!scheduled.some(x=>v.arrival===x.arrival && v.side===x.side));
+    return [...otherObserved,...scheduled].sort((a,b)=>a.diff-b.diff);
   }
 
   // 2026-03-14 JR Shikoku operating-diagram links (8000-series only).
