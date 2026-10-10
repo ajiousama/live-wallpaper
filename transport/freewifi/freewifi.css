@@ -2191,7 +2191,7 @@ body.freewifi-tv #panel-port{
 }
 body.freewifi-tv #port-rows.freewifi-port-groups{
   display:grid!important;
-  grid-template-rows:minmax(0,3fr) 28px minmax(0,1fr) minmax(0,3fr) minmax(0,2fr) 28px!important;
+  grid-template-rows:minmax(0,3fr) 28px 78px minmax(0,3fr) minmax(0,2fr) 28px!important;
   min-height:0!important;
 }
 body.freewifi-tv #port-rows.freewifi-port-groups > #port-note,
@@ -2222,4 +2222,15 @@ body.freewifi-tv #port-rows.freewifi-port-groups > #port-note{
 }
 body.freewifi-tv .freewifi-port-gogoshima .freewifi-port-group-head{
   color:#e7ffe1!important;background:#203526!important;border-left-color:#76bb73!important;
+}
+
+/* Gogoshima has a header plus a full two-line ferry row; one fractional
+   track compressed it to less than the content's minimum readable height. */
+body.freewifi-tv #port-rows.freewifi-port-groups > .freewifi-port-gogoshima{
+  grid-template-rows:22px minmax(0,1fr)!important;
+  min-height:0!important;
+}
+body.freewifi-tv #port-rows.freewifi-port-groups > .freewifi-port-gogoshima > .row{
+  height:auto!important;min-height:0!important;
+  overflow:hidden!important;
 }
