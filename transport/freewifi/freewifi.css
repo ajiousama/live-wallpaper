@@ -2191,7 +2191,7 @@ body.freewifi-tv #panel-port{
 }
 body.freewifi-tv #port-rows.freewifi-port-groups{
   display:grid!important;
-  grid-template-rows:minmax(0,1fr) minmax(0,1fr) 30px minmax(0,1fr)!important;
+  grid-template-rows:minmax(0,4fr) minmax(0,3fr) 30px minmax(0,2fr)!important;
   min-height:0!important;
 }
 body.freewifi-tv #port-rows.freewifi-port-groups > #port-note{
@@ -2207,4 +2207,14 @@ body.freewifi-tv #port-rows.freewifi-port-groups > #port-note{
 }
 html.company-pc body.freewifi-tv #panel-port{
   grid-template-rows:44px 26px minmax(0,1fr)!important;
+}
+
+/* Match group heights to 4/3/2 services; never let the inline ticker overlap. */
+body.freewifi-tv #port-rows.freewifi-port-groups > .freewifi-port-group{
+  min-height:0!important;overflow:hidden!important;
+}
+body.freewifi-tv #port-rows.freewifi-port-groups > #port-note{
+  grid-row:3!important;
+  margin:0!important;
+  z-index:1;
 }
