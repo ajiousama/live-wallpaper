@@ -285,7 +285,9 @@
       '鹿児島空港公式出発案内',
       '那覇空港公式出発案内',
       '中部国際空港公式出発案内',
-      '福岡空港公式出発案内'
+      '福岡空港公式出発案内',
+      '桃園国際空港公式出発案内',
+      '金海国際空港公式出発案内'
     ]);
     const verifiedAirportDeparted=item?.originDepartureVerified===true &&
       item?.originDepartureStatus==='出発済み' &&
