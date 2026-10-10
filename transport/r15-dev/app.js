@@ -3118,13 +3118,20 @@
     paired.push(['20:48','20:50','21:05','21:26'],
       ['21:18','21:20','21:35','21:56']);
     if(weekend)paired.push(['21:28','21:30','22:00','22:21']);
-    const upcoming=paired
-      .filter(x=>toMinutes(x[0])>=mins)
-      .sort((a,b)=>toMinutes(a[0])-toMinutes(b[0]))
-      .slice(0,2);
-    if(upcoming.length){
-      return upcoming.map(x=>`🚌 伊予鉄バス・観光港連絡｜観光港 ${x[0]}発 → 高浜駅前 ${x[1]}着 → 伊予鉄電車 ${x[2]}発 → 松山市駅 ${x[3]}着（時刻表予定）`);
+    const incoming=paired.filter(x=>toMinutes(x[0])>=mins)
+      .sort((a,b)=>toMinutes(a[0])-toMinutes(b[0]))[0];
+    // Official timetable: city-station train at :00/:15/:30/:45,
+    // connecting bus from Takahama Station at :22/:37/:52/:07.
+    const towardPort=[];
+    for(let t=10*60;t<=20*60+30;t+=15){
+      const toClock=x=>String(Math.floor(x/60)).padStart(2,'0')+':'+String(x%60).padStart(2,'0');
+      towardPort.push([toClock(t),toClock(t+21),toClock(t+22),toClock(t+24)]);
     }
+    const outgoing=towardPort.find(x=>toMinutes(x[0])>=mins);
+    const items=[];
+    if(outgoing)items.push(`🚃 伊予鉄電車→伊予鉄バス｜松山市駅 ${outgoing[0]}発 → 高浜駅 ${outgoing[1]}着 → 連絡バス ${outgoing[2]}発 → 松山観光港 ${outgoing[3]}着（時刻表予定）`);
+    if(incoming)items.push(`🚌 伊予鉄バス→伊予鉄電車｜松山観光港 ${incoming[0]}発 → 高浜駅前 ${incoming[1]}着 → 電車 ${incoming[2]}発 → 松山市駅 ${incoming[3]}着（時刻表予定）`);
+    if(items.length)return items;
     if(mins<=22*60+22){
       return ['🚌 伊予鉄バス・松山観光港リムジン｜広島フェリー22:12着に接続｜観光港22:22発 → JR松山駅前22:42 → 愛媛新聞社前22:44 → 松山市駅22:50着（時刻表予定）'];
     }
