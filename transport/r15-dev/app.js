@@ -1200,7 +1200,7 @@
           const extras=[];
           for(const x of active){
             const num=String(x.trainNum||'').trim(),time=padTime(x.departure||'');
-            if(!num || !new RegExp('^[0-9]{2}:[0-9]{2} ||
+            if(!num || !(/^[0-9]{2}:[0-9]{2}$/.test(time)) ||
                 !['north','south'].includes(String(x.direction||'')) ||
                 !jrPositionUsable(x.position) || toMinutes(time)<now.minutes ||
                 known.has(num)) continue;
