@@ -500,8 +500,16 @@
     ];
   }
 
+  function railSouthRoute(record) {
+    const dest=String(record.dest||''), info=String(record.info||''),service=String(record.service||'');
+    if(record.direction!=='south' || !/伊予大洲|八幡浜|卯之町|宇和島/.test(dest)) return '';
+    if(/伊予長浜経由|愛ある伊予灘|海回り/.test(info)) return '海回り・伊予長浜経由';
+    if(/内子経由|山回り/.test(info) || /宇和海/.test(service)) return '山回り・内子経由';
+    return '';
+  }
   function railDestLabel(record) {
-    return String(record.dest || '');
+    const dest=String(record.dest || ''),route=railSouthRoute(record);
+    return route ? dest+'［'+route+'］' : dest;
   }
 
   function auxRows(board, direction, now) {
@@ -1593,6 +1601,8 @@
 
   function railRowDetailItems(record) {
     const items = [];
+    const route=railSouthRoute(record);
+    if(route) items.push('運転経路：'+route);
     if(record.railTimetableOnly) items.push('時刻表予定・現在位置未確認');
     else if(record.railPositionConfirmed && record.livePosition)
       items.push('現在位置 '+record.livePosition);
