@@ -2587,9 +2587,13 @@
     const visible=candidates.slice(0,limit);
     // A confirmed upcoming terminal arrival must not disappear solely because
     // the standard departure list was shortened to avoid clipping.
-    if(FREEWIFI_TV && !visible.some(x=>x._terminalArrival)){
-      const nextArrival=candidates.find(x=>x._terminalArrival);
-      if(nextArrival && visible.length===limit){
+    if(FREEWIFI_TV && visible.length===limit){
+      // Keep the official Iyonada Monogatari return service visible during its
+      // three-hour approach window; ordinary arrivals must not push it out.
+      const priorityArrival=candidates.find(x=>x._terminalArrival && x.data?.isOfficialScheduled);
+      const nextArrival=priorityArrival || candidates.find(x=>x._terminalArrival);
+      if(nextArrival && !visible.includes(nextArrival) &&
+          !visible.some(x=>x._terminalArrival && (!priorityArrival || x.data?.isOfficialScheduled))){
         visible[visible.length-1]=nextArrival;
         visible.sort((a,b)=>a._sortMinutes-b._sortMinutes);
       }
