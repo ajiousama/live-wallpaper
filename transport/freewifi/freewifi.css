@@ -2294,7 +2294,7 @@ body.freewifi-tv #bus-rows.freewifi-bus-grouped .freewifi-bus-group-head{
    The CSS fallback prevents an oversized unscaled board after script errors.
    app.js may adjust --company-wall-scale for smaller viewports. */
 html.company-pc body.freewifi-tv #wall{
-  --company-wall-scale:0.72;
+  --company-wall-scale:0.80;
   position:absolute!important;
   left:auto!important;
   right:16px!important;
@@ -2346,4 +2346,33 @@ body.freewifi-tv .panel-bus .bus-logo-japanese.bus-logo-willer{
 }
 html.company-pc body.freewifi-tv .panel-bus .bus-logo-japanese.bus-logo-willer{
   font-size:12px!important;
+}
+
+
+/* October workplace legibility correction: show larger operator names and
+   readable timetable-based bus movement notices, within the existing columns. */
+html.company-pc body.freewifi-tv #bus-rows.freewifi-bus-grouped .freewifi-bus-group>.row .bus-estimated-position,
+html.company-pc body.freewifi-tv #bus-rows.freewifi-bus-grouped .freewifi-bus-group>.row .bus-departure-position{
+  font-size:16px!important;
+  font-weight:900!important;
+  line-height:1.15!important;
+  white-space:nowrap!important;
+  letter-spacing:-.035em!important;
+}
+html.company-pc body.freewifi-tv #bus-rows.freewifi-bus-grouped .freewifi-bus-group>.row .bus-place-text{
+  font-size:17px!important;
+}
+html.company-pc body.freewifi-tv #bus-rows.freewifi-bus-grouped .freewifi-bus-group>.row .arrival-departure-time{
+  font-size:15px!important;
+}
+html.company-pc body.freewifi-tv .panel-bus .bus-mini-logo.bus-logo-japanese{
+  font-size:16px!important;
+  max-width:100%!important;
+  padding:0 6px!important;
+}
+html.company-pc body.freewifi-tv .panel-bus .bus-logo-japanese.bus-logo-willer{
+  font-size:12px!important;
+}
+html.company-pc body.freewifi-tv .panel-bus .bus-arrival-operator .operator-wrap{
+  max-width:100%!important;
 }
