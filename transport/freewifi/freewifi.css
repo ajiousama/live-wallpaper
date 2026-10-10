@@ -2133,3 +2133,54 @@ body.freewifi-tv #rail-rows .rail-next-local{
 body.freewifi-tv #rail-rows .rail-next-local .rail-next-label{
   color:#aaf2c7!important;
 }
+
+
+/* JR: two entirely independent fixed summary panels above the scrolling train list. */
+body.freewifi-tv #panel-rail{
+  grid-template-rows:58px 32px auto minmax(0,1fr) 42px!important;
+}
+body.freewifi-tv #panel-rail .rail-summary-panels{
+  display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+  gap:8px!important;padding:6px 10px!important;min-width:0!important;
+}
+body.freewifi-tv #panel-rail .rail-summary-panels .rail-next-limited{
+  display:flex!important;flex-direction:column!important;justify-content:center!important;
+  align-items:stretch!important;gap:4px!important;min-width:0!important;
+  height:72px!important;padding:6px 10px!important;
+  box-sizing:border-box!important;background:#142d43!important;
+  border:1px solid #3d718f!important;border-left:5px solid #f0ae49!important;
+  overflow:hidden!important;white-space:nowrap!important;
+}
+body.freewifi-tv #panel-rail .rail-summary-panels .rail-next-local{
+  background:#132f2a!important;border-left-color:#59bc90!important;
+}
+body.freewifi-tv #panel-rail .rail-summary-panels .rail-next-local .rail-next-label{
+  color:#aaf2c7!important;
+}
+body.freewifi-tv #panel-rail .rail-summary-panels .rail-next-main{
+  display:flex!important;align-items:center!important;gap:7px!important;
+  width:100%!important;min-width:0!important;
+}
+body.freewifi-tv #panel-rail .rail-summary-panels .rail-next-label{
+  color:#ffd58b!important;font-weight:1000!important;font-size:14px!important;flex:none!important;
+}
+body.freewifi-tv #panel-rail .rail-summary-panels .rail-next-time{
+  color:white!important;font-size:17px!important;font-weight:1000!important;flex:none!important;
+}
+body.freewifi-tv #panel-rail .rail-summary-panels .rail-next-dest{
+  color:white!important;font-size:14px!important;font-weight:900!important;min-width:0!important;
+  overflow:hidden!important;text-overflow:ellipsis!important;
+}
+body.freewifi-tv #panel-rail .rail-summary-panels .rail-next-details{
+  width:100%!important;min-width:0!important;height:20px!important;overflow:hidden!important;
+  color:#b5e5f5!important;font-size:12px!important;
+}
+body.freewifi-tv #panel-rail .rail-summary-panels .rail-next-details .marquee{
+  width:100%!important;height:20px!important;overflow:hidden!important;
+}
+html.company-pc body.freewifi-tv #panel-rail{
+  grid-template-rows:44px 26px auto minmax(0,1fr) 32px!important;
+}
+html.company-pc body.freewifi-tv #panel-rail .rail-summary-panels .rail-next-limited{
+  height:78px!important;
+}
