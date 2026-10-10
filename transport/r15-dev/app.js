@@ -835,23 +835,15 @@
     const out=[];
 
     if(dep){
-      // Outbound and inbound listings are independent, so both may display
-      // the same route/ship while a voyage is in progress.
-      // A sailed timetable entry stays until estimated destination arrival,
-      // including the previous day's departures crossing midnight.
-      const prev=recordsForDay('port',prevIso);
+      // The departure board shows scheduled departures only until departure.
+      // Once sailed, the service belongs to the arrival board instead.
       const appendDeparture=(r,serviceIso,offset,nextDay=false)=>{
         const departure=offset+toMinutes(r.time);
-        const destinationArrival=departure+portTravelMinutes(r);
-        if(!Number.isFinite(destinationArrival))return;
-        const underway=departure<now.minutes && now.minutes<destinationArrival;
-        const upcoming=departure>=now.minutes && departure<=now.minutes+1440;
-        if(!underway&&!upcoming)return;
+        if(!Number.isFinite(departure) ||
+           departure<now.minutes || departure>now.minutes+1440)return;
         out.push({...r,direction:'departure',minutes:departure,_serviceIso:serviceIso,
-          isNextDayStart:nextDay,sailingInProgress:underway,
-          estimatedDestinationMinute:destinationArrival});
+          isNextDayStart:nextDay,sailingInProgress:false});
       };
-      prev.forEach(r=>appendDeparture(r,prevIso,-1440));
       today.forEach(r=>appendDeparture(r,now.iso,0));
       tomorrow.forEach(r=>appendDeparture(r,nextIso,1440,true));
     }else{
