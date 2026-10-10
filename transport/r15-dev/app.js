@@ -2944,7 +2944,7 @@
       const groups=[
         {key:'kyushu',title:'九州航路',rows:rows.filter(kyushu).slice(0,4)},
         {key:'matsuyama',title:'三津浜港・松山観光港 発着',rows:rows.filter(r=>!kyushu(r)&&matsuyamaPorts(r)).slice(0,3)},
-        {key:'other',title:'その他の航路',rows:rows.filter(r=>!kyushu(r)&&!matsuyamaPorts(r)).slice(0,3)}
+        {key:'other',title:'その他の航路',rows:rows.filter(r=>!kyushu(r)&&!matsuyamaPorts(r)).slice(0,2)}
       ];
       groups.forEach(g=>{
         const section=document.createElement('section');
