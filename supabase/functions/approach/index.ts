@@ -411,6 +411,8 @@ async function getIchitsubo(now: { minutes: number }) {
       kind: "freight",
       origin: route.origin || "",
       destination: route.destination || "",
+      direction: route.cityIndex>=0 && route.matsuyamaIndex>=0
+        ? (route.cityIndex < route.matsuyamaIndex ? "north" : "south") : "",
       position: String(pos.Pos ?? ""),
       delayMinutes: delay,
       scheduledMatsuyama: route.matsuyamaTime,
