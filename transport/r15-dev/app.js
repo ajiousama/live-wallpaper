@@ -2899,7 +2899,11 @@
     restoreScroll('bus'); attachScrollMemory('bus');
   }
   function renderPort(rows) {
-    const root = $('port-rows'); root.innerHTML = '';
+    const root = $('port-rows');
+    // Preserve the persistent ticker when the ferry rows are redrawn.
+    const persistentTicker=$('port-note');
+    if(persistentTicker && root.contains(persistentTicker)) $('panel-port').appendChild(persistentTicker);
+    root.innerHTML = '';
     const dep = currentDirection() === 'departure';
 
     const makePortRow=(r)=>{
