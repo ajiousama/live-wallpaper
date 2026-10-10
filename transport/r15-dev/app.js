@@ -1701,6 +1701,7 @@
   }
 
   function ichitsuboDirection(x) {
+    if(x.direction==='north'||x.direction==='south') return x.direction;
     return /^(松山|伊予北条)$/.test(String(x.destination||''))?'north':'south';
   }
   function ichitsuboIsFinal(x,now) {
@@ -1968,7 +1969,7 @@
       const position=cleanStation(x?.position||'');
       if(!jrPositionUsable(position)) return;
       const isMatsuyamaFreight=kindOverride==='freight' && /^(3072|3073)$/.test(String(x?.trainNum||''));
-      const dir=isMatsuyamaFreight?'north':ichitsuboDirection(x);
+      const dir=ichitsuboDirection(x);
       if(dir!==side) return;
 
       const key=`${String(x?.trainNum||'')}|${position}|${dir}`;
@@ -2265,7 +2266,7 @@
         delay
       };
     // Freight train times do not prove that its current position was retrieved.
-    }).filter(x=>x.passTime && jrPositionUsable(x.position) && /^(3072|3073)$/.test(String(x.trainNum||'')) && currentRailDir()==='north');
+    }).filter(x=>x.passTime && jrPositionUsable(x.position) && /^(3072|3073)$/.test(String(x.trainNum||'')) && x.direction===currentRailDir());
   }
 
   function railServiceBadgeHtml(kind, service='') {
