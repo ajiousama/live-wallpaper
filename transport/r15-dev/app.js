@@ -369,6 +369,23 @@
         toMinutes(depTime)>=toMinutes(arrTime) && toMinutes(depTime)<=now.minutes+1;
     });
   }
+  const AIRPORT_ARRIVAL_CURFEW_MINUTES=22*60;
+
+  function isDelayedAirportArrival(item) {
+    // The official flight board must indicate a delayed arrival.
+    // Mere lateness of the current clock is not evidence of delay.
+    const explicit=Number(item?.deltaMinutes);
+    if(Number.isFinite(explicit) && explicit>0) return true;
+    const scheduled=padTime(item?.scheduled||'');
+    const revised=padTime(item?.changed||'');
+    if(/^\d{2}:\d{2}$/.test(scheduled) &&
+       /^\d{2}:\d{2}$/.test(revised) &&
+       toMinutes(revised)>toMinutes(scheduled)) return true;
+    return /(?:遅延|遅れ|到着時刻変更|到着予定時刻変更)/.test(
+      [item?.status,item?.changeText].map(x=>String(x||'')).join(' ')
+    );
+  }
+
   function liveFlightRows(now) {
     const dep=currentDirection()==='departure';
     if (boardDisplayIso('air', now) !== now.iso) return dep?null:[];
@@ -395,6 +412,11 @@
     const lastStaticMinute=staticRows.length?Math.max(...staticRows.map(r=>toMinutes(effectiveTime(r,displayCtx)))):null;
     const out=[];
     live.forEach(x=>{
+      // At Matsuyama Airport's 22:00 curfew, remove normal inbound flights
+      // from the arrival board. Only officially delayed flights can remain.
+      // The departure board is intentionally unchanged.
+      if(!dep && now.minutes>=AIRPORT_ARRIVAL_CURFEW_MINUTES &&
+         !isDelayedAirportArrival(x))return;
       // Official Matsuyama arrivals remain visible as a FORECAST even when
       // we have not yet verified departure at the origin airport.
       // Only explicitly verified evidence can assert departure or location.
@@ -2786,8 +2808,13 @@
       const now=japanNow(); const last=dep?lastAirMovement(now,true):null;
       root.classList.add('air-end');
       const mode=dep?'DEPARTURES — 出発便 —':'ARRIVALS — 到着便 —';
-      const msg=dep?'本日の出発便は終了しました':'現在表示できる到着予定便はありません';
-      const detail=dep && last ? `最終出発便：${last.place}行　${last.time}　出発済み` : (dep?'':'公式の当日到着案内を取得できた便のみ表示');
+      const msg=dep?'本日の出発便は終了しました'
+        :japanNow().minutes>=AIRPORT_ARRIVAL_CURFEW_MINUTES
+          ?'本日の到着便は終了しました'
+          :'現在表示できる到着予定便はありません';
+      const detail=dep && last ? `最終出発便：${last.place}行　${last.time}　出発済み` : (dep?'':japanNow().minutes>=AIRPORT_ARRIVAL_CURFEW_MINUTES
+        ?'22:00以降は遅延便のみ表示'
+        :'公式の当日到着案内を取得できた便のみ表示');
       root.innerHTML=`<div class="air-end-state"><div class="air-end-mode">✈ ${mode}</div><div class="air-end-message">${msg}</div>${detail?`<div class="air-end-detail">${detail}</div>`:''}</div>`;
     } else {
       const companyPc=document.documentElement.classList.contains('company-pc');
