@@ -2045,7 +2045,7 @@
     if(r){
       const kind=r.kind==='limited'?'特急 ':r.kind==='sightseeing'?'観光 ':'';
       const service=r.kind==='local'?'普通':`${kind}${r.service||''}`.trim();
-      return `折り返し ${service} ${r.dest||dest}行 となります`;
+      return `折り返し ${dep}発 ${service} ${r.dest||dest}行となります`;
     }
     // Unmatched feed data is not a verified turnback. Omit the claim.
     return '';
