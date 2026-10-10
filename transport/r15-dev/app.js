@@ -365,7 +365,7 @@
       if(!/出発済み|離陸済み|出発完了/.test(String(dep.status||''))) return false;
       const depTime=padTime(dep.actualDepartureTime||dep.actualDeparture||dep.changed||dep.scheduled||'');
       const arrTime=padTime(arrival.actualArrivalTime||arrival.actualArrival||arrival.arrivedAt||arrival.changed||arrival.scheduled||'');
-      return /^\\d{2}:\\d{2}$/.test(depTime) && /^\\d{2}:\\d{2}$/.test(arrTime) &&
+      return /^\d{2}:\d{2}$/.test(depTime) && /^\d{2}:\d{2}$/.test(arrTime) &&
         toMinutes(depTime)>=toMinutes(arrTime) && toMinutes(depTime)<=now.minutes+1;
     });
   }
@@ -3283,9 +3283,9 @@
         const departureCalls=portDepartureCalls(r);
         const lastCall=departureCalls.length?departureCalls[departureCalls.length-1]:null;
         const scheduledArrival=padTime(r.terminalArrivalTime||r.arrivalTime||(lastCall&&lastCall[1])||'');
-        const arrivalClock=/^\\d{2}:\\d{2}$/.test(scheduledArrival)
+        const arrivalClock=/^\d{2}:\d{2}$/.test(scheduledArrival)
           ? scheduledArrival : addMinutes(r.time,portTravelMinutes(r));
-        const arrivalIsEstimate=!/^\\d{2}:\\d{2}$/.test(scheduledArrival);
+        const arrivalIsEstimate=!/^\d{2}:\d{2}$/.test(scheduledArrival);
         const arrivalDay=toMinutes(arrivalClock)<toMinutes(r.time)?'翌日':'';
         const arrivalPort=String(lastCall?.[0]||r.dest||'目的港').trim();
         const arrivalGuide=`${arrivalPort} ${arrivalDay}${arrivalClock}${arrivalIsEstimate?'頃着（見込）':'着予定'}`;
@@ -3300,7 +3300,7 @@
           ? portKureUnifiedHtml(r,'arrival',`${firstBadge}${finalBadge}`)
           : `${route} ${firstBadge}${finalBadge}`;
         const departureTime=padTime(r.originDepartureTime||r.reverseTime||'');
-        const arrivalDepartureLabel=/^\\d{2}:\\d{2}$/.test(departureTime)
+        const arrivalDepartureLabel=/^\d{2}:\d{2}$/.test(departureTime)
           ? `${String(r.origin||'出発港')} ${departureTime}発` : '';
         const baseGuidance=ferryRouteGuidance(r,'arrival',japanNow());
         const routeGuidance=[arrivalDepartureLabel,baseGuidance==='—'?'':baseGuidance].filter(Boolean).join(' ｜ ')||'—';
