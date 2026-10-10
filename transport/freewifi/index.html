@@ -11,13 +11,29 @@
     const p=new URLSearchParams(location.search);
     const explicitPc=p.get('pc')==='1';
     const winPc=/Windows NT/i.test(navigator.userAgent);
-    const pcSizedScreen=(screen.width>=1280 && screen.width<=1600 && screen.height>=700 && screen.height<=1000);
-    if(explicitPc || (winPc && pcSizedScreen)){
+    // Windows wallpaper clients are always treated as workplace displays,
+    // regardless of monitor resolution or the in-app browser viewport.
+    if(explicitPc || (winPc && p.get('pc')!=='0')){
       document.documentElement.classList.add('company-pc');
     }
   </script>
   <link rel="stylesheet" href="../r15-dev/style.css?v=__BUILD_ID__" />
   <link rel="stylesheet" href="freewifi.css?v=__BUILD_ID__" />
+  <!-- Keep this essential workplace size in HTML: Lively may run with stale
+       external CSS/JS, or the application script may fail before scaling. -->
+  <style id="force-workplace-wallpaper-size">
+    html.company-pc body.freewifi-tv #wall {
+      --company-wall-scale: 0.72;
+      width: 1180px !important;
+      height: 790px !important;
+      position: absolute !important;
+      left: auto !important;
+      right: 16px !important;
+      top: 50% !important;
+      transform-origin: right center !important;
+      transform: translateY(-50%) scale(var(--company-wall-scale)) !important;
+    }
+  </style>
 </head>
 <body class="freewifi-tv">
   <main id="wall" aria-label="松山総合交通ダッシュボード">
