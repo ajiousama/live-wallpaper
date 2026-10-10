@@ -344,8 +344,14 @@
     const lastStaticMinute=staticRows.length?Math.max(...staticRows.map(r=>toMinutes(effectiveTime(r,displayCtx)))):null;
     const out=[];
     live.forEach(x=>{
-      // Arrival flights are hidden until their actual origin departure is verified.
-      if(!dep && !arrivalOriginDeparted(x,now)) return;
+      // Official Matsuyama arrivals remain visible as a FORECAST even when
+      // we have not yet verified departure at the origin airport.
+      // Only explicitly verified evidence can assert departure or location.
+      if(!dep && /欠航|運休|取消|キャンセル/.test(
+        [x.status,x.changeText,x.originDepartureStatus].map(v=>String(v||'')).join(' ')
+      )) return;
+      const departureVerified=!dep && arrivalOriginDeparted(x,now);
+      const forecastOnly=!dep && !departureVerified;
       const nums=Array.isArray(x.numbers)?x.numbers.map(String):[];
       let r=staticRows.find(s=>nums.includes(String(parseAirService(s.service).number)) && padTime(s.time)===padTime(x.scheduled));
       if (!r) r=staticRows.find(s=>nums.includes(String(parseAirService(s.service).number)));
@@ -369,7 +375,15 @@
       const delta=Number(x.deltaMinutes);
       if (Number.isFinite(delta) && delta>0 && (!liveStatus || /定刻/.test(liveStatus))) liveStatus=`遅れ +${delta}分`;
       if (Number.isFinite(delta) && delta<0 && (!liveStatus || /定刻/.test(liveStatus))) liveStatus=dep?`変更 ${Math.abs(delta)}分前`:`早着予定 ${Math.abs(delta)}分`;
-      out.push({...r,time:padTime(x.changed),liveScheduled:padTime(x.scheduled),liveChangedTime:padTime(x.changed),liveStatus,liveDelta:delta,liveRaw:x,isFinal:dep&&Number.isFinite(lastStaticMinute)&&toMinutes(effectiveTime(r,now))===lastStaticMinute,isNextDayStart:false});
+      if (forecastOnly) {
+        // An adjusted airport-board arrival time is still a forecast, never
+        // evidence of takeoff or a live aircraft location.
+        const originalStatus=String(x.status||'').trim();
+        const info=originalStatus && !/^(定刻|通常運航|通常運行)$/.test(originalStatus)
+          ? `　｜　${originalStatus}` : '';
+        liveStatus=`到着見込（出発未確認）${info}`;
+      }
+      out.push({...r,time:padTime(x.changed),liveScheduled:padTime(x.scheduled),liveChangedTime:padTime(x.changed),liveStatus,liveDelta:delta,liveRaw:x,arrivalForecastOnly:forecastOnly,isFinal:dep&&Number.isFinite(lastStaticMinute)&&toMinutes(effectiveTime(r,now))===lastStaticMinute,isNextDayStart:false});
     });
     out.sort((a,b)=>toMinutes(a.liveChangedTime)-toMinutes(b.liveChangedTime));
     // LIVE取得に成功して0件なら「本日終了」。誤った静的データへ戻さない。
@@ -2223,8 +2237,8 @@
       const now=japanNow(); const last=dep?lastAirMovement(now,true):null;
       root.classList.add('air-end');
       const mode=dep?'DEPARTURES — 出発便 —':'ARRIVALS — 到着便 —';
-      const msg=dep?'本日の出発便は終了しました':'位置情報を確認できる到着便はありません';
-      const detail=dep && last ? `最終出発便：${last.place}行　${last.time}　出発済み` : (dep?'':'ADS-Bで出発待ち・飛行中を確認した便のみ表示');
+      const msg=dep?'本日の出発便は終了しました':'現在表示できる到着予定便はありません';
+      const detail=dep && last ? `最終出発便：${last.place}行　${last.time}　出発済み` : (dep?'':'公式の当日到着案内を取得できた便のみ表示');
       root.innerHTML=`<div class="air-end-state"><div class="air-end-mode">✈ ${mode}</div><div class="air-end-message">${msg}</div>${detail?`<div class="air-end-detail">${detail}</div>`:''}</div>`;
     } else {
       const companyPc=document.documentElement.classList.contains('company-pc');
