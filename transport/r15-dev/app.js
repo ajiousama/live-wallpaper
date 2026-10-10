@@ -2460,7 +2460,7 @@
       <div class="rail-primary">
         <div class="cell rail-service ${info.kind}"><span class="kindtxt">${serviceBadge}</span></div>
         <div class="cell time">${x.arrival}</div>
-        <div class="cell main">当駅止まり${arrivalRoute?`［${arrivalRoute}］`:``}</div>
+        <div class="cell main">${x.isOfficialScheduled ? `伊予灘ものがたり ${x.specialName}｜当駅止まり` : `当駅止まり`}${arrivalRoute?`［${arrivalRoute}］`:``}</div>
       </div>
       <div class="rail-detail">${tickerHtml(details)}</div>`;
     root.appendChild(row);
