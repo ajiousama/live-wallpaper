@@ -986,11 +986,18 @@
     const runs=weekend
       ? [['01:00','05:15','直行'],['08:15','13:00','小豆島経由'],['11:20','16:05','小豆島経由']]
       : [['01:00','05:15','直行'],['08:15','13:00','小豆島経由'],['13:00','17:45','小豆島経由']];
+    // The last Kobe departure of the previous day reaches Takamatsu
+    // just after midnight of this arrival-board day.
+    const prev=shiftIso(iso,-1);
+    const prevDow=new Date(prev+'T12:00:00+09:00').getDay();
+    const prevWeekend=prevDow===0||prevDow===6;
+    runs.unshift(prevWeekend?['19:20','00:05','小豆島経由']:['19:45','00:00','直行']);
     return runs.map(([departure,arrival,via],i)=>({
       id:`jumbo-kobe-arrival-${iso}-${i}`,board:'port',kind:'ferry',
       source:'jumbo_ferry_official_arrival',service:'ジャンボフェリー',
       port:'高松東港',arrivalPort:'高松東港',direction:'arrival',
       origin:'神戸港',dest:'高松東港',time:arrival,originDepartureTime:departure,
+      ...(i===0?{originDepartureDay:'前日'}:{}),
       info:via,noSyntheticArrival:true,reference:false
     }));
   }
