@@ -279,6 +279,15 @@
     const statusConfirmed=/(?:出発済み|離陸済み|出発地から出発|出発地を出発|出発空港を出発)/.test(status);
     const actual=padTime(item?.originDepartureActual||'');
     const actualConfirmed=item?.originDepartureConfirmed===true && /^\d{2}:\d{2}$/.test(actual);
+    // ADS-B is direct position evidence, including an aircraft waiting on
+    // the origin airport's ground. This does not assert it has departed.
+    const phase=String(item?.aircraftFlightPhase||'');
+    const observation=Date.parse(String(item?.aircraftObservedAt||''));
+    const age=Date.now()-observation;
+    const positionFresh=item?.aircraftPositionConfirmed===true &&
+      /^[A-Z]{3}[0-9]+[A-Z]?$/.test(String(item?.aircraftCallsign||'')) &&
+      Number.isFinite(observation) && age>=-15000 && age<=105000;
+    if(positionFresh && /^(waiting|airborne|approaching)$/.test(phase))return true;
     if(!statusConfirmed && !actualConfirmed) return false;
     if(actualConfirmed && toMinutes(actual)>now.minutes+1) return false;
     return true;
@@ -2141,6 +2150,13 @@
       return minutesLeft>=0 && minutesLeft<=25 ? '松山空港 出発準備中（見込）' : '';
     }
     const raw=r.liveRaw||{};
+    // Direct ADS-B aircraft coordinates take priority over time-derived estimates.
+    const observation=Date.parse(String(raw.aircraftObservedAt||''));
+    if(raw.aircraftPositionConfirmed===true && Number.isFinite(observation) &&
+      Date.now()-observation>=-15000 && Date.now()-observation<=105000 &&
+      /^(waiting|airborne|approaching)$/.test(String(raw.aircraftFlightPhase||''))) {
+      return String(raw.aircraftPositionText||'');
+    }
     const origin=String(raw.originAirport||r.dest||'出発地').trim();
     const dep=padTime(raw.originDepartureActual||'');
     if(!/^\d{2}:\d{2}$/.test(dep)) return '';
@@ -2158,8 +2174,8 @@
       const now=japanNow(); const last=dep?lastAirMovement(now,true):null;
       root.classList.add('air-end');
       const mode=dep?'DEPARTURES — 出発便 —':'ARRIVALS — 到着便 —';
-      const msg=dep?'本日の出発便は終了しました':'出発が確認できた到着便はありません';
-      const detail=dep && last ? `最終出発便：${last.place}行　${last.time}　出発済み` : (dep?'':'出発地の実績が未取得の便は非表示');
+      const msg=dep?'本日の出発便は終了しました':'位置情報を確認できる到着便はありません';
+      const detail=dep && last ? `最終出発便：${last.place}行　${last.time}　出発済み` : (dep?'':'ADS-Bで出発待ち・飛行中を確認した便のみ表示');
       root.innerHTML=`<div class="air-end-state"><div class="air-end-mode">✈ ${mode}</div><div class="air-end-message">${msg}</div>${detail?`<div class="air-end-detail">${detail}</div>`:''}</div>`;
     } else {
       const companyPc=document.documentElement.classList.contains('company-pc');
@@ -2192,7 +2208,7 @@
           const originInfo=`${prefix}${actualOrigin}に${originAirport}を出発`;
           guidance = guidance && guidance!=='—' ? `${guidance}　｜　${originInfo}` : originInfo;
         } else if(originAirport && scheduledOrigin){
-          const originInfo=`${originAirport} ${scheduledOrigin}発（定刻）`;
+          const originInfo=`${originAirport} ${scheduledOrigin}発（予定時刻）`;
           guidance = guidance && guidance!=='—' ? `${guidance}　｜　${originInfo}` : originInfo;
         }
       }
