@@ -2959,6 +2959,17 @@
     ];
     const hit=defs.find(([re])=>re.test(n));
     if(!hit) return `<span class="bus-mini-logo bus-logo-generic no-auto-scroll">${n||'—'}</span>`;
+    // Keep familiar operator branding, but identify abbreviated / English-only
+    // logos in Japanese as well. Bus badges never auto-scroll.
+    const bilingualNames=new Set([
+      '伊予鉄バス','伊予鉄南予バス','西日本JRバス','徳島バス',
+      '下電バス','せとうちバス','西東京バス','WILLER EXPRESS',
+      '宇和島自動車','琴平バス','神姫バス','しまなみバス'
+    ]);
+    const nativeName=n==='WILLER EXPRESS'?'ウィラーエクスプレス':n;
+    if(bilingualNames.has(n)){
+      return `<span class="bus-mini-logo bus-logo-${hit[2]} brand-logo-custom bus-logo-bilingual no-auto-scroll" title="${n}"><span class="bus-logo-latin">${hit[1]}</span><span class="bus-logo-native">${nativeName}</span></span>`;
+    }
     return `<span class="bus-mini-logo bus-logo-${hit[2]} brand-logo-custom no-auto-scroll" title="${n}">${hit[1]}</span>`;
   }
   function busOperatorHtml(r) {
