@@ -3174,7 +3174,7 @@
     const startTime=String(r.originStartTime||'').trim();
     const parts=[];
 
-    if (start && startTime && start!==stop && !['松山室町営業所'].includes(start)) {
+    if (start && startTime && start!==stop) {
       parts.push(`始発 ${start} ${startTime}`);
     }
 
@@ -3218,32 +3218,77 @@
     return busEhimeRoute(r);
   }
 
+  // Stops and times from published operator timetables. Neither
+  // scheduled passage nor a time between stops confirms actual position.
+  const BUS_INBOUND_CHECKPOINTS={"iyo_city_osaka_arrival":{"names":["川内インター","松山インター口","余戸南インター","松山市駅"],"times":{"08:50":["13:30","13:40","13:46","14:00"],"12:00":["17:02","17:12","17:18","17:32"],"13:50":["18:49","18:59","19:05","19:20"],"14:10":["20:40","20:50","20:56","21:10"],"17:10":["21:50","22:00","22:05","22:15"],"21:00":["04:55","05:10","05:15","05:25"],"23:10":["05:46","05:56","06:01","06:15"]}},"iyotetsu_kobe_official_in":{"names":["高速舞子","川内インター","松山インター口","松山市駅"],"times":{"07:20":["07:50","11:07","11:17","11:32"],"08:15":["08:45","12:02","12:12","12:27"],"10:20":["10:50","14:07","14:17","14:32"],"14:20":["14:50","18:07","18:17","18:32"],"16:20":["16:50","20:07","20:17","20:32"],"18:20":["18:50","22:07","22:17","22:32"]}},"tokushima_official_in":{"names":["三好BS（吉野川SA）","三島川之江IC","川内インター","松山インター口","松山市駅","JR松山駅"],"times":{"08:00":["09:24","09:53","10:42","10:52","11:20","11:28"],"09:40":["11:04","11:33","12:22","12:32","13:00","13:08"],"12:20":["13:44","14:13","15:02","15:12","15:40","15:48"],"15:20":["16:44","17:13","18:02","18:12","18:40","18:48"],"17:00":["18:24","18:53","19:42","19:52","20:20","20:28"],"18:40":["20:04","20:33","21:22","21:32","22:00","22:08"]}},"takamatsu_official_in":{"names":["高速観音寺","川内インター","松山インター口","松山市駅","JR松山駅"],"times":{"07:45":["08:39","09:49","09:59","10:27","10:35"],"08:45":["09:39","10:49","10:59","11:27","11:35"],"09:45":["10:39","11:49","11:59","12:27","12:35"],"11:05":["11:59","13:09","13:19","13:47","13:55"],"12:40":["","","14:42","14:57","15:05"],"13:15":["14:09","15:19","15:29","15:57","16:05"],"14:45":["15:39","16:49","16:59","17:27","17:35"],"16:05":["16:59","18:09","18:19","18:47","18:55"],"17:05":["","","19:07","19:22","19:30"],"18:20":["19:14","20:24","20:34","21:02","21:10"],"19:20":["20:14","21:24","21:34","22:02","22:10"],"20:20":["21:14","22:24","22:34","23:02","23:10"]}}};
+  const KOBE_MUROMACHI_STARTS={"06:00":"05:40","08:10":"07:50","09:00":"08:40","10:00":"09:40","14:20":"14:00","15:20":"15:00","16:30":"16:10","17:50":"17:30"};
+  const OSAKA_YAWATAHAMA_STOPS={"06:40":[["八幡浜","06:40"],["西大洲","06:55"],["大洲本町","07:05"],["内子","07:20"],["松山室町営業所","08:15"],["松山市駅","08:30"]],"10:20":[["八幡浜","10:20"],["西大洲","10:35"],["大洲本町","10:45"],["内子","11:00"],["松山室町営業所","11:55"],["松山市駅","12:10"]]};
+  function timetableBusInterval(points,now,previousDay=false,originDepart='') {
+    const valid=points.map(p=>({name:String(p[0]),time:padTime(p[1])}))
+      .filter(x=>/^\d{2}:\d{2}$/.test(x.time));
+    if(valid.length<2)return '';
+    const orig=toMinutes(originDepart||valid[0].time);
+    const convert=t=>{
+      let v=toMinutes(t);
+      if(previousDay && v>=orig)v-=1440;
+      return v;
+    };
+    for(let i=1;i<valid.length;i++){
+      const a=valid[i-1],b=valid[i];
+      if(convert(a.time)<=now.minutes && now.minutes<convert(b.time)){
+        return '時刻表：'+a.name+'→'+b.name+' '+b.time+'予定';
+      }
+    }
+    return '';
+  }
   function busDeparturePosition(r, now) {
     const departure=padTime(r.time||'');
-    if(!/^\d{2}:\d{2}$/.test(departure) || r.isNextDayStart) return '位置未確認';
+    if(!/^\d{2}:\d{2}$/.test(departure) || r.isNextDayStart)return '位置未確認';
     const remaining=toMinutes(departure)-now.minutes;
-    // A published departure time is not evidence of an actual GPS fix
-    // or where a coach is parked before departure.
-    if(remaining<0) return '位置未確認';
-    if(remaining<=60) return `位置未確認｜発車まで約${remaining}分`;
+    if(remaining<0)return '位置未確認';
+    // The originating depot / earlier stops are published timetable data.
+    const kobe=String(r.source||'')==='iyotetsu_kobe_202609' &&
+      String(r.stop||'')==='松山市駅';
+    const startName=kobe?'松山室町営業所':String(r.originStartName||'').trim();
+    const startTime=padTime((kobe?KOBE_MUROMACHI_STARTS[departure]:r.originStartTime)||'');
+    if(startName && startName!==String(r.stop||'').trim() &&
+      /^\d{2}:\d{2}$/.test(startTime)){
+      const yawata=String(r.source||'')==='iyo_city_osaka' &&
+        String(startName).includes('八幡浜');
+      const timeline=yawata
+        ? (OSAKA_YAWATAHAMA_STOPS[startTime]||[])
+        : [[startName,startTime],[String(r.stop||'松山市駅'),departure]];
+      const segment=timetableBusInterval(timeline,now,false,startTime);
+      if(segment)return segment;
+      if(now.minutes<toMinutes(startTime))
+        return '始発 '+startName+' '+startTime+'発予定';
+    }
+    if(remaining<=60)return '位置未確認｜発車まで約'+remaining+'分';
     return '位置未確認';
   }
   function busArrivalStatus(r, now) {
-    // We currently have published arrival/departure times but NO verified
-    // coach coordinates. Do not fabricate a waypoint (e.g. Matsuyama IC)
-    // by uniformly interpolating the itinerary checkpoints.
+    // Only published waypoint TIMES may be used. No GPS or assumed SA stop.
     const arrival=padTime(r.arrivalTerminalTime||r.time||'');
     if(!/^\d{2}:\d{2}$/.test(arrival))return '位置未確認';
     const departure=padTime(r.originDepartureTime||'');
     let arr=toMinutes(arrival);
+    const previousDay=String(r.originDepartureDay||'').includes('前日');
     let dep=/^\d{2}:\d{2}$/.test(departure)?toMinutes(departure):NaN;
     if(Number.isFinite(dep)){
-      if(String(r.originDepartureDay||'').includes('前日'))dep-=1440;
+      if(previousDay)dep-=1440;
       else if(arr<dep)arr+=1440;
-      if(now.minutes<dep) return '出発前（予定）｜位置未確認';
+      if(now.minutes<dep)return '出発前（時刻表）｜位置未確認';
+    }
+    const official=BUS_INBOUND_CHECKPOINTS[String(r.source||'')];
+    const stopTimes=official&&official.times[departure];
+    if(official&&Array.isArray(stopTimes)&&stopTimes.length===official.names.length){
+      const stops=[[String(r.origin||'出発地'),departure],
+        ...official.names.map((name,i)=>[name,stopTimes[i]])];
+      const segment=timetableBusInterval(stops,now,previousDay,departure);
+      if(segment)return segment;
     }
     const remaining=arr-now.minutes;
-    if(remaining>=0 && remaining<=1440)return `位置未確認｜あと約${remaining}分`;
+    if(remaining>=0 && remaining<=1440)return '位置未確認｜あと約'+remaining+'分';
     return '位置未確認';
   }
   function renderBus(rows) {
