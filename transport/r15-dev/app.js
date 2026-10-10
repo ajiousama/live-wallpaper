@@ -2139,6 +2139,19 @@
         nextCard.innerHTML='<span class="rail-next-label">次の特急は？</span><span class="rail-next-status">この方面の本日の特急は終了しました</span>';
       }
       root.appendChild(nextCard);
+
+      // A separate ordinary-train summary, using the same existing detail ticker.
+      const nextLocal=rows.filter(r=>r.kind==='local')
+        .sort((a,b)=>toMinutes(a.time)-toMinutes(b.time))[0];
+      const localCard=document.createElement('div');
+      localCard.className='rail-next-limited rail-next-local';
+      if(nextLocal){
+        const details=railRowDetailItems(nextLocal);
+        localCard.innerHTML=`<div class="rail-next-main"><span class="rail-next-label">次の普通列車は？</span><span class="rail-next-service">${railServiceBadgeHtml('local',nextLocal.service)}</span><span class="rail-next-time">${nextLocal.time}発</span><span class="rail-next-dest">${railDestLabel(nextLocal)}行</span></div><div class="rail-next-details">${tickerHtml(details)}</div>`;
+      } else {
+        localCard.innerHTML='<span class="rail-next-label">次の普通列車は？</span><span class="rail-next-status">この方面の本日の普通列車は終了しました</span>';
+      }
+      root.appendChild(localCard);
     }
 
     // Live deadhead arrivals are real train movements too. Show them all day,
