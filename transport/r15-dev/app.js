@@ -3017,7 +3017,24 @@
       const mode = dep ? 'DEPARTURES — 出発バス —' : 'ARRIVALS — 到着バス —';
       const msg = dep ? '本日のバスは終了しました' : '確認済みの到着時刻表がありません';
       root.innerHTML = `<div class="bus-end-state"><div class="bus-end-mode">🚌 ${mode}</div><div class="bus-end-message">${msg}</div></div>`;
-    } else (FREEWIFI_TV ? rows.slice(0,10) : rows).forEach(r => {
+    } else {
+      const isRegional=r=>r.kind==='midbus' || /kumakogen|misaki|uwajima_bus|setouchi_omishima|iyotetsu_niihama/.test(String(r.source||'')) || /久万高原|三崎港口|宇和島|城辺|大三島|宮浦港|新居浜/.test(String(r.origin||r.dest||''));
+      const regional=rows.filter(isRegional);
+      const longDistance=rows.filter(r=>!isRegional(r));
+      const grouped=FREEWIFI_TV;
+      const longRoot=grouped?document.createElement('section'):root;
+      const regionalRoot=grouped?document.createElement('section'):root;
+      if(grouped) {
+        root.classList.add('freewifi-bus-grouped');
+        longRoot.className='freewifi-bus-group freewifi-bus-long';
+        regionalRoot.className='freewifi-bus-group freewifi-bus-regional';
+        for(const [group,label] of [[longRoot,'長距離・高速バス'],[regionalRoot,'中距離バス']]) {
+          const head=document.createElement('div');head.className='freewifi-bus-group-head';head.textContent=label;group.appendChild(head);
+          root.appendChild(group);
+        }
+      } else root.classList.remove('freewifi-bus-grouped');
+      const selected=grouped?[...longDistance.slice(0,6),...regional.slice(0,3)]:rows;
+      selected.forEach(r => {
       const row = document.createElement('div'); row.className = `row${r.isFinal?' is-final':''}${dep && isDepartSoon(r, japanNow()) ? ' depart-soon' : ''}`;
       const firstBadge = r.isNextDayStart ? badgeHtml('first', dep ? '始発' : '初便') : '';
       const finalBadge = r.isFinal ? badgeHtml('final','最終バス') : '';
@@ -3055,8 +3072,12 @@
           <div class="cell service bus-arrival-operator">${operator}</div>
           <div class="cell time bus-arrival-time">${terminalTime}頃予定</div>`;
       }
-      root.appendChild(row);
-    });
+      (grouped?(isRegional(r)?regionalRoot:longRoot):root).appendChild(row);
+      });
+      if(grouped)for(const [group,records] of [[longRoot,longDistance],[regionalRoot,regional]]) {
+        if(!records.length){const empty=document.createElement('div');empty.className='row placeholder';empty.textContent='該当する便はありません';group.appendChild(empty);}
+      }
+    }
     activatePanelOverflow(root);
     restoreScroll('bus'); attachScrollMemory('bus');
   }
