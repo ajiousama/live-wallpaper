@@ -2091,8 +2091,27 @@
     else details.push('位置情報未確認・到着は時刻表予定');
     if(x.delay>0) details.push(`${x.delay}分遅れ`);
     const turnback=railTurnbackLabel(x.turnback,now);
-    if(turnback) details.push(turnback);
-    else details.push('折り返し列車は現時点で特定できません');
+    if(turnback) details.push(turnback.replace(/^折り返し /,'折り返し候補（同一車両未確認） '));
+    else {
+      const departures=Array.isArray(approachLive.ichitsubo?.matsuyamaSchedule)
+        ? approachLive.ichitsubo.matsuyamaSchedule : [];
+      const arrivalMins=toMinutes(x.arrival);
+      const candidates=departures.filter(d=>{
+        if(d.direction!==x.side || d.trainClass!==x.trainClass) return false;
+        const departureMins=toMinutes(padTime(d.departure||''));
+        if(!Number.isFinite(departureMins) || !Number.isFinite(arrivalMins)) return false;
+        const delta=(departureMins-arrivalMins+1440)%1440;
+        return delta>=4 && delta<=(x.trainClass==='limited'?45:30);
+      });
+      if(candidates.length){
+        const labels=candidates.slice(0,3).map(d=>{
+          const label=railLiveTrainLabel({trainNum:d.trainNum,trainClass:d.trainClass});
+          const service=label.kind==='limited'?'特急 '+label.service:'普通';
+          return `${padTime(d.departure)}発 ${service} ${cleanStation(d.destination)}行`;
+        });
+        details.push(`折り返し候補（同一車両未確認）：${labels.join(' ／ ')}`);
+      } else details.push('折り返し先：同一車両の運用情報を確認できません');
+    }
     row.innerHTML=`
       <div class="rail-primary">
         <div class="cell rail-service ${info.kind}"><span class="kindtxt">${serviceBadge}</span></div>
