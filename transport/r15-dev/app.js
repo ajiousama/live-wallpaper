@@ -282,7 +282,10 @@
     const originAge=Date.now()-originObserved;
     const trustedOfficialSources=new Set([
       '大阪国際空港公式出発案内',
-      '鹿児島空港公式出発案内'
+      '鹿児島空港公式出発案内',
+      '那覇空港公式出発案内',
+      '中部国際空港公式出発案内',
+      '福岡空港公式出発案内'
     ]);
     const verifiedAirportDeparted=item?.originDepartureVerified===true &&
       item?.originDepartureStatus==='出発済み' &&
