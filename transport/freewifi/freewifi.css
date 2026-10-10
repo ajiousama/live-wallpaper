@@ -2187,7 +2187,7 @@ html.company-pc body.freewifi-tv #panel-rail .rail-summary-panels .rail-next-lim
 
 /* Ferry port ticker sits between Matsuyama port services and Other routes. */
 body.freewifi-tv #panel-port{
-  grid-template-rows:58px 32px minmax(0,1fr)!important;
+  grid-template-rows:58px minmax(0,1fr)!important;
 }
 body.freewifi-tv #port-rows.freewifi-port-groups{
   display:grid!important;
@@ -2206,7 +2206,7 @@ body.freewifi-tv #port-rows.freewifi-port-groups > #port-note{
   align-self:stretch!important;
 }
 html.company-pc body.freewifi-tv #panel-port{
-  grid-template-rows:44px 26px minmax(0,1fr)!important;
+  grid-template-rows:44px minmax(0,1fr)!important;
 }
 
 /* Match group heights to 4/3/2 services; never let the inline ticker overlap. */
