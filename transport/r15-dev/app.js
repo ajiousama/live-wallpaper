@@ -2028,21 +2028,27 @@
     const dep=padTime(turnback.departure||'');
     const dir=String(turnback.direction||'');
     const dest=cleanStation(turnback.destination||'');
+    // In the live feed, 00:00 and 00 can be unset placeholders.
+    // Never announce a turnback unless its departure and destination
+    // are corroborated by an actual scheduled service.
+    if(!/^([01]\\d|2[0-3]):[0-5]\\d$/.test(dep) ||
+       !['north','south'].includes(dir) ||
+       !dest || /^(?:0+|不明|未定|未取得|—|-)$/.test(dest)) return '';
     const matches=data.records.filter(r=>
       r.board==='rail' &&
       r.direction===dir &&
       padTime(r.time||'')===dep &&
+      cleanStation(r.dest||'')===dest &&
       validRecord(r,now.iso)
     );
-    const r=matches.find(x=>!dest || cleanStation(x.dest||'')===dest) || matches[0];
+    const r=matches[0];
     if(r){
       const kind=r.kind==='limited'?'特急 ':r.kind==='sightseeing'?'観光 ':'';
       const service=r.kind==='local'?'普通':`${kind}${r.service||''}`.trim();
       return `折り返し ${service} ${r.dest||dest}行 となります`;
     }
-    const info=railLiveTrainLabel({trainNum:turnback.trainNum,trainClass:''});
-    const service=info.kind==='limited'? `特急 ${info.service}` : '普通';
-    return `折り返し ${service} ${dest||''}行 となります`.replace(/\s+行/,'行');
+    // Unmatched feed data is not a verified turnback. Omit the claim.
+    return '';
   }
 
   function matsuyamaTerminatingArrivals(now) {
