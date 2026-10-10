@@ -2081,6 +2081,36 @@
     }).filter(x=>x.arrival && x.side===side && Number.isFinite(x.diff) && x.diff>=-1 && x.diff<=180 && (jrPositionUsable(x.position) || !!x.turnback));
   }
 
+  // 2026-03-14 JR Shikoku operating-diagram links (8000-series only).
+  // Only entries visibly consecutive in the published 2026 operation table;
+  // these are planned vehicle workings, not same-day rolling-stock confirmation.
+  // Source: https://unyohub.2pd.jp/railroad_shikoku/operation_table/2026-03-14/
+  const VERIFIED_SHIOKAZE_WORKINGS_2026={
+    '1M':'14M', '3M':'16M', '5M':'18M', '9M':'22M',
+    '13M':'26M', '15M':'28M', '17M':'30M'
+  };
+  function publishedTrainTurnback(x){
+    if(x.trainClass!=='limited') return '';
+    const inbound=String(x.trainNum||'').trim().toUpperCase();
+    const outbound=VERIFIED_SHIOKAZE_WORKINGS_2026[inbound];
+    if(!outbound) return '';
+    const services=Array.isArray(approachLive.ichitsubo?.matsuyamaSchedule)
+      ? approachLive.ichitsubo.matsuyamaSchedule : [];
+    const r=services.find(v=>
+      String(v.trainNum||'').trim().toUpperCase()===outbound &&
+      v.direction==='north' &&
+      /^\\d{1,2}:\\d{2}$/.test(String(v.departure||''))
+    );
+    if(!r) return '';
+    const arrive=toMinutes(x.arrival),depart=toMinutes(r.departure);
+    const gap=(depart-arrive+1440)%1440;
+    if(!Number.isFinite(gap) || gap<4 || gap>120) return '';
+    const dest=cleanStation(r.destination||'');
+    if(!dest || /^(不明|未定|未取得|—|-|0+)$/.test(dest)) return '';
+    const n=Number(outbound.replace(/M$/,''));
+    return `通常運用では折り返し ${padTime(r.departure)}発 特急しおかぜ${n}号 ${dest}行となります（当日車両変更未確認）`;
+  }
+
   function appendMatsuyamaTerminalArrivalRow(root,x,now) {
     const row=document.createElement('div');
     row.className='row rail-row terminal-arrival-row';
@@ -2090,8 +2120,10 @@
     if(jrPositionUsable(x.position)) details.push(`📍現在位置 ${x.position}`);
     else details.push('位置情報未確認・到着は時刻表予定');
     if(x.delay>0) details.push(`${x.delay}分遅れ`);
+    const published=publishedTrainTurnback(x);
     const turnback=railTurnbackLabel(x.turnback,now);
-    if(turnback) details.push(turnback.replace(/^折り返し /,'折り返し候補（同一車両未確認） '));
+    if(published) details.push(published);
+    else if(turnback) details.push(turnback.replace(/^折り返し /,'折り返し候補（同一車両未確認） '));
     else {
       const departures=Array.isArray(approachLive.ichitsubo?.matsuyamaSchedule)
         ? approachLive.ichitsubo.matsuyamaSchedule : [];
