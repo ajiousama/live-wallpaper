@@ -199,8 +199,25 @@
     return { airline: airlineMap[m[1]] || m[1], number: m[2] };
   }
 
+  // These are immutable, user-approved logo originals committed in this repo.
+  // The per-image Git blob version prevents browsers from reusing a stale image
+  // after the old external-download build. Do not rename, restyle or replace.
   const AIR_LOGO_BASE=new URL('../assets/airlines/', document.currentScript?.src || location.href).href;
-  const airLogoAsset=(name)=>AIR_LOGO_BASE+name;
+  const APPROVED_AIR_LOGO_VERSIONS=Object.freeze({
+    'ana.svg':'f094ed18d5b0',
+    'jal.png':'29be9bc653fb',
+    'ibex.png':'ea370c058a3e',
+    'jetstar.svg':'af2327e0cb3c',
+    'jeju.svg':'9bbf717d0fc0',
+    'air-busan.svg':'9d19b10577f5',
+    'asiana.svg':'b0fe336c87c0',
+    'eva.svg':'44b644a6646f'
+  });
+  const airLogoAsset=(name)=>{
+    const version=APPROVED_AIR_LOGO_VERSIONS[name];
+    if(!version) throw new Error('Unapproved airline logo: '+name);
+    return AIR_LOGO_BASE+name+'?original='+version;
+  };
 
   function airlineMiniLogo(airline) {
     const raw=String(airline||'').trim();
