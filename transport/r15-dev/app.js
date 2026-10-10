@@ -2125,11 +2125,14 @@
 
     // Separate next-limited-express indicator for the currently shown direction.
     // Timetable entries remain valid even when live positioning is unavailable.
+    const featuredRailKeys=new Set();
+    const railRowKey=r=>[r.direction,padTime(r.time),r.kind,r.service,r.dest].map(v=>String(v||'')).join('|');
     if (FREEWIFI_TV) {
       const nextLimited=rows.filter(r=>r.kind==='limited')
         .sort((a,b)=>toMinutes(a.time)-toMinutes(b.time))[0];
       const nextCard=document.getElementById('rail-next-express');
       if(nextLimited){
+        featuredRailKeys.add(railRowKey(nextLimited));
         const confirmed=nextLimited.railPositionConfirmed && nextLimited.livePosition;
         const status=confirmed?'現在位置 '+nextLimited.livePosition:'時刻表予定・位置未確認';
         const details=railRowDetailItems(nextLimited);
@@ -2144,12 +2147,13 @@
         .sort((a,b)=>toMinutes(a.time)-toMinutes(b.time))[0];
       const localCard=document.getElementById('rail-next-local');
       if(nextLocal){
+        featuredRailKeys.add(railRowKey(nextLocal));
         const details=railRowDetailItems(nextLocal);
         localCard.innerHTML=`<div class="rail-next-main"><span class="rail-next-label">次の普通列車は？</span><span class="rail-next-service">${railServiceBadgeHtml('local',nextLocal.service)}</span><span class="rail-next-time">${nextLocal.time}発</span><span class="rail-next-dest">${railDestLabel(nextLocal)}行</span></div><div class="rail-next-details">${tickerHtml(details)}</div>`;
       } else {
         localCard.innerHTML='<span class="rail-next-label">次の普通列車は？</span><span class="rail-next-status">この方面の本日の普通列車は終了しました</span>';
       }
-      root.appendChild(localCard);
+      // The featured card stays in its separate HTML container.
     }
 
     // Live deadhead arrivals are real train movements too. Show them all day,
@@ -2182,7 +2186,7 @@
       _sortMinutes: now.minutes + x.diff,
       data: x
     }));
-    const services = rows.map(r => ({
+    const services = rows.filter(r=>!featuredRailKeys.has(railRowKey(r))).map(r => ({
       _deadhead: false,
       _freight: false,
       _sortMinutes: (() => {
