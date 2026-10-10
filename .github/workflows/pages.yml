@@ -62,65 +62,38 @@ jobs:
         if: github.event_name != 'push'
         run: python scripts/update_data.py
 
-      - name: Restore and permanently pin approved airline logo originals
-        shell: bash
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          OUT="transport/assets/airlines"
-          mkdir -p "$OUT"
-          approved=(ana.svg jal.png ibex.png jetstar.svg jeju.svg air-busan.svg asiana.svg eva.svg)
-          missing=0
-          for f in "${approved[@]}"; do
-            if ! test -s "$OUT/$f"; then missing=1; fi
-          done
-          if [ "$missing" -eq 1 ]; then
-            # This Pages artifact predates the JAL timeout and contains the
-            # original eight user-approved images, not remade substitutes.
-            tmp="$(mktemp -d)"
-            trap 'rm -rf "$tmp"' EXIT
-            gh run download 38017111842 -R "$GITHUB_REPOSITORY" -n github-pages -D "$tmp"
-            test -s "$tmp/artifact.tar" || { echo '::error::Approved logo backup missing'; exit 1; }
-            tar -xf "$tmp/artifact.tar" -C "$tmp"
-            for f in "${approved[@]}"; do
-              src="$tmp/transport/assets/airlines/$f"
-              test -s "$src" || { echo "::error::Missing approved original: $f"; exit 1; }
-              cp "$src" "$OUT/$f"
-            done
-            git config user.name 'github-actions[bot]'
-            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git add -f "$OUT"
-            if ! git diff --cached --quiet; then
-              git commit -m 'assets: pin approved airline logo originals [skip ci]'
-              # Pin originals in main. Future deployments need no external
-              # logo service and must not depend on expiring Actions artifacts.
-              git push origin HEAD:main || { echo '::error::Unable to persist pinned logos'; exit 1; }
-            fi
-          fi
-          for f in "${approved[@]}"; do
-            test -s "$OUT/$f" || { echo "::error::Approved logo missing: $f"; exit 1; }
-          done
-
-      - name: Validate pinned airline logos for Pages
+      - name: Verify eight immutable approved airline logo originals
         shell: bash
         run: |
           set -euo pipefail
-          test -s transport/assets/airlines/jal.png
-          test -s transport/assets/airlines/ana.svg
-          test -s transport/assets/airlines/ibex.png
-          test -s transport/assets/airlines/jetstar.svg
-          test -s transport/assets/airlines/jeju.svg
-          test -s transport/assets/airlines/air-busan.svg
-          test -s transport/assets/airlines/asiana.svg
-          test -s transport/assets/airlines/eva.svg
-          # Protect exact original bytes; never silently use textual fallback.
+          # Do not fetch, regenerate, replace or silently restyle these logos.
+          # A missing or modified asset must FAIL deployment, never fall back
+          # to an externally hosted or text-only substitute.
           python - <<'PY'
           from pathlib import Path
-          png=Path('transport/assets/airlines/jal.png').read_bytes()
-          assert png.startswith(b'\x89PNG\r\n\x1a\n') and len(png) >= 4000, 'JAL approved PNG is invalid'
-          for name in ('ana.svg','jetstar.svg','jeju.svg','air-busan.svg','asiana.svg','eva.svg'):
-              assert b'<svg' in Path('transport/assets/airlines',name).read_bytes()[:500], name
+          import hashlib
+          import subprocess
+          expected = {
+              'ana.svg': 'f094ed18d5b06c27c1eab222013295a57579ee7d',
+              'jal.png': '29be9bc653fb2f9620166c00f27571e55f2a27cc',
+              'ibex.png': 'ea370c058a3ef94ae1f9bb97a2112d2825928e1c',
+              'jetstar.svg': 'af2327e0cb3c3019f76fe74649407d1cd8cbc66f',
+              'jeju.svg': '9bbf717d0fc0c9e6ccfb07bea8b35c1fc1c150a1',
+              'air-busan.svg': '9d19b10577f5fdac0307a64f88bd406b364ef972',
+              'asiana.svg': 'b0fe336c87c0bbf98fb61e6204472e9ef6ecf443',
+              'eva.svg': '44b644a6646f340686e27798a46472ec48678aa9',
+          }
+          for name, blob in expected.items():
+              p = Path('transport/assets/airlines') / name
+              assert p.is_file() and p.stat().st_size > 0, f'Missing approved logo: {p}'
+              actual = subprocess.check_output(['git', 'hash-object', str(p)], text=True).strip()
+              assert actual == blob, f'Approved airline logo changed: {p} ({actual})'
+              data = p.read_bytes()
+              if name.endswith('.png'):
+                  assert data.startswith(b'\\x89PNG\\r\\n\\x1a\\n'), f'Invalid PNG: {p}'
+              else:
+                  assert b'<svg' in data[:500], f'Invalid SVG: {p}'
+              print(f'LOCKED {name}: {actual} sha256={hashlib.sha256(data).hexdigest()}')
           PY
 
       - name: Persist live result changes
