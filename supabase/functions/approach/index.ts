@@ -311,6 +311,9 @@ async function getIchitsubo(now: { minutes: number }) {
   const positions = Array.isArray(pjson?.data)
     ? (pjson.data as Record<string, unknown>[]).filter((x) => x && x.TrainNum)
     : [];
+  const positionByTrain = new Map(
+    positions.map((x) => [String(x.TrainNum), x] as const)
+  );
 
   const approaching = positions.map((pos) => {
     const route = diagram.get(String(pos.TrainNum));
@@ -422,6 +425,26 @@ async function getIchitsubo(now: { minutes: number }) {
     };
   }).filter(Boolean).sort((a: any, b: any) => toMinutes(a.departure) - toMinutes(b.departure));
 
+  // Position-confirmed Matsuyama departures only. The diagram gives the
+  // schedule, but never makes a train live unless currentPositions contains
+  // a matching train number with a real position.
+  const matsuyamaActiveTrains = matsuyamaSchedule.map((scheduled) => {
+    const pos = positionByTrain.get(String(scheduled.trainNum));
+    if (!pos) return null;
+    const position = normalizeStationName(pos.Pos ?? "");
+    if (!position || /^(?:-|—|不明|未取得|取得中|確認中|データなし)$/.test(position)) return null;
+    const rawDelay = Number(pos.delay);
+    return {
+      trainNum: scheduled.trainNum,
+      direction: scheduled.direction,
+      departure: scheduled.departure,
+      destination: scheduled.destination,
+      trainClass: scheduled.trainClass,
+      position,
+      delayMinutes: Number.isFinite(rawDelay) ? rawDelay : 0,
+    };
+  }).filter(Boolean);
+
   const matsuyamaTerminatingArrivals = [...diagram.values()].map((route) => {
     const num = String(route.trainNum || "").trim();
     if (!routeTerminatesAtMatsuyama(route)) return null;
@@ -450,12 +473,18 @@ async function getIchitsubo(now: { minutes: number }) {
         }
       : null;
 
+    const livePos = positionByTrain.get(num);
+    const rawDelay = livePos?.delay;
+    const numericDelay = Number(rawDelay);
     return {
       trainNum: num,
       trainClass,
       arrival,
       side,
       origin: route.origin || "",
+      position: String(livePos?.Pos ?? ""),
+      delayMinutes: Number.isFinite(numericDelay) ? numericDelay : 0,
+      liveState: typeof rawDelay === "string" && rawDelay ? rawDelay : "",
       turnback,
     };
   }).filter(Boolean).sort((a: any, b: any) => toMinutes(a.arrival) - toMinutes(b.arrival));
@@ -468,6 +497,7 @@ async function getIchitsubo(now: { minutes: number }) {
     matsuyamaDeadheads,
     matsuyamaFreights,
     matsuyamaSchedule,
+    matsuyamaActiveTrains,
     matsuyamaTerminatingArrivals,
     alert: approaching.length > 0,
     message: (approaching[0] as any)?.message ?? "",
@@ -576,6 +606,28 @@ async function getMadonna(now: { minutes: number }) {
 
 
 const AIRPORT_LIVE_URL = "https://www.matsuyama-airport.co.jp/flight/timetable.html?arrival=1";
+const AIRPORT_ROUTE_URLS: Record<string, string> = {
+  "東京(羽田)": "https://www.matsuyama-airport.co.jp/flight/haneda/",
+  "大阪(伊丹)": "https://www.matsuyama-airport.co.jp/flight/itami/",
+  "名古屋(中部)": "https://www.matsuyama-airport.co.jp/flight/chubu/",
+  "成田": "https://www.matsuyama-airport.co.jp/flight/narita/",
+  "福岡": "https://www.matsuyama-airport.co.jp/flight/fukuoka/",
+  "沖縄(那覇)": "https://www.matsuyama-airport.co.jp/flight/okinawa/",
+  "鹿児島": "https://www.matsuyama-airport.co.jp/flight/kagoshima/",
+};
+const AIRPORT_ORIGIN_LABELS: Record<string, string> = {
+  "東京(羽田)": "羽田空港",
+  "大阪(伊丹)": "伊丹空港",
+  "名古屋(中部)": "中部国際空港",
+  "成田": "成田空港",
+  "福岡": "福岡空港",
+  "沖縄(那覇)": "那覇空港",
+  "鹿児島": "鹿児島空港",
+};
+const airportRouteScheduleCache: {
+  at: number;
+  map: Map<string, { departure: string; arrival: string; place: string }>;
+} = { at: 0, map: new Map() };
 const ORANGE_FERRY_URL = "https://www.orange-ferry.co.jp/";
 const BOYO_FERRY_URL = "https://www.boyoferry.co.jp/smp/status.html";
 const KOKU94_URL = "https://www.koku94.jp/";
@@ -644,11 +696,575 @@ function parseAirportFlights(html: string) {
   return { ok: departures.length > 0 || arrivals.length > 0, updatedAt: updated, departures, arrivals };
 }
 
+function parseAirportRouteSchedule(html: string, place: string) {
+  const text = flatText(html);
+  const out: { number: string; departure: string; arrival: string; place: string }[] = [];
+  const re = /出発時刻\s*(\d{1,2}:\d{2})\s*到着時刻\s*(\d{1,2}:\d{2}).{0,100}?便名\s*(?:[A-Z]{2,4}\s*)?(\d{1,4})/g;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(text))) {
+    out.push({
+      departure: m[1],
+      arrival: m[2],
+      number: m[3],
+      place,
+    });
+  }
+  return out;
+}
+
+async function loadAirportRouteSchedules() {
+  const now = Date.now();
+  if (airportRouteScheduleCache.map.size && now - airportRouteScheduleCache.at < 6 * 60 * 60 * 1000) {
+    return airportRouteScheduleCache.map;
+  }
+
+  const entries = Object.entries(AIRPORT_ROUTE_URLS);
+  const settled = await Promise.allSettled(
+    entries.map(async ([place, url]) => {
+      const html = await fetchTimeout(url, true, 6500) as string;
+      return parseAirportRouteSchedule(html, place);
+    })
+  );
+
+  const map = new Map<string, { departure: string; arrival: string; place: string }>();
+  settled.forEach((result, index) => {
+    if (result.status !== "fulfilled") return;
+    const [place] = entries[index];
+    for (const row of result.value) {
+      const key = `${place}|${row.number}|${row.arrival}`;
+      map.set(key, { departure: row.departure, arrival: row.arrival, place });
+    }
+  });
+
+  if (map.size) {
+    airportRouteScheduleCache.map = map;
+    airportRouteScheduleCache.at = now;
+  }
+  return airportRouteScheduleCache.map;
+}
+
+
+// A single free 250 NM ADS-B query for aircraft potentially approaching RJOM.
+// Never infer an origin departure from the published flight schedule.
+const MATSUGYAMA_ADSB_URLS = [
+  "https://api.adsb.lol/v2/point/33.8272/132.6997/250",
+  "https://api.airplanes.live/v2/point/33.8272/132.6997/250",
+];
+const matsuyamaAdsbCache: {at:number; result:any} = {at:0,result:null};
+async function loadMatsuyamaAdsbAircraft() {
+  const now=Date.now();
+  if(matsuyamaAdsbCache.result && now-matsuyamaAdsbCache.at<40000) return matsuyamaAdsbCache.result;
+  for(const [index,url] of MATSUGYAMA_ADSB_URLS.entries()) {
+    try {
+      const input:any=await fetchTimeout(url,false,5200);
+      if(!Array.isArray(input?.ac)) throw Error("ADS-B missing aircraft array");
+      const source=index===0?"ADSB.lol":"Airplanes.live";
+      const observedAt=new Date().toISOString();
+      const aircraft=input.ac.filter((a:any)=>{
+        const flight=String(a?.flight||"").trim().toUpperCase().replace(/\s+/g,"");
+        const seen=Number(a?.seen),seenPos=Number(a?.seen_pos);
+        const altitude=Number(a?.alt_baro);
+        return /^(?:JAL|ANA|IBX|JJP|JJA|ABL|EVA|JTA|RAC|FDA|ADO|SFJ)\d+[A-Z]?$/.test(flight)
+          && Number.isFinite(Number(a.lat))&&Number.isFinite(Number(a.lon))
+          && Number.isFinite(Number(a.track))&&Number.isFinite(Number(a.gs))
+          && a.alt_baro!=="ground" && Number.isFinite(altitude) && altitude>350
+          && Number(a.gs)>75 && Number.isFinite(seen)&&seen>=0&&seen<=30
+          && Number.isFinite(seenPos)&&seenPos>=0&&seenPos<=30;
+      }).map((a:any)=>({
+        flight:String(a.flight).trim().toUpperCase().replace(/\s+/g,""),
+        hex:String(a.hex||"").slice(0,12),
+        lat:Number(a.lat),lon:Number(a.lon),
+        track:Number(a.track),groundSpeedKt:Number(a.gs),
+        altitudeFt:Number(a.alt_baro),seenPosSeconds:Number(a.seen_pos)
+      })).slice(0,140);
+      if(aircraft.length===0)continue;
+      const result={ok:true,source,observedAt,aircraft};
+      matsuyamaAdsbCache.at=now;
+      matsuyamaAdsbCache.result=result;
+      return result;
+    }catch(_){/* Free ADS-B endpoint may be unreachable or rate-limited. */}
+  }
+  const result={ok:false,source:"ADS-B unavailable",observedAt:new Date().toISOString(),aircraft:[]};
+  matsuyamaAdsbCache.at=now;
+  matsuyamaAdsbCache.result=result;
+  return result;
+}
+
+
+const MATSUGYAMA_ARRIVAL_FLIGHT_SPECS = [{"number":"431","place":"東京（羽田）","callsign":"JAL431","name":"羽田空港","lat":35.5494,"lon":139.7798},{"number":"583","place":"東京（羽田）","callsign":"ANA583","name":"羽田空港","lat":35.5494,"lon":139.7798},{"number":"585","place":"東京（羽田）","callsign":"ANA585","name":"羽田空港","lat":35.5494,"lon":139.7798},{"number":"433","place":"東京（羽田）","callsign":"JAL433","name":"羽田空港","lat":35.5494,"lon":139.7798},{"number":"589","place":"東京（羽田）","callsign":"ANA589","name":"羽田空港","lat":35.5494,"lon":139.7798},{"number":"435","place":"東京（羽田）","callsign":"JAL435","name":"羽田空港","lat":35.5494,"lon":139.7798},{"number":"593","place":"東京（羽田）","callsign":"ANA593","name":"羽田空港","lat":35.5494,"lon":139.7798},{"number":"437","place":"東京（羽田）","callsign":"JAL437","name":"羽田空港","lat":35.5494,"lon":139.7798},{"number":"439","place":"東京（羽田）","callsign":"JAL439","name":"羽田空港","lat":35.5494,"lon":139.7798},{"number":"595","place":"東京（羽田）","callsign":"ANA595","name":"羽田空港","lat":35.5494,"lon":139.7798},{"number":"599","place":"東京（羽田）","callsign":"ANA599","name":"羽田空港","lat":35.5494,"lon":139.7798},{"number":"443","place":"東京（羽田）","callsign":"JAL443","name":"羽田空港","lat":35.5494,"lon":139.7798},{"number":"401","place":"東京（成田）","callsign":"JJP401","name":"成田空港","lat":35.7719,"lon":140.3929},{"number":"405","place":"東京（成田）","callsign":"JJP405","name":"成田空港","lat":35.7719,"lon":140.3929},{"number":"409","place":"東京（成田）","callsign":"JJP409","name":"成田空港","lat":35.7719,"lon":140.3929},{"number":"1633","place":"大阪（伊丹）","callsign":"ANA1633","name":"伊丹空港","lat":34.7855,"lon":135.4382},{"number":"1635","place":"大阪（伊丹）","callsign":"ANA1635","name":"伊丹空港","lat":34.7855,"lon":135.4382},{"number":"2301","place":"大阪（伊丹）","callsign":"JAL2301","name":"伊丹空港","lat":34.7855,"lon":135.4382},{"number":"1639","place":"大阪（伊丹）","callsign":"ANA1639","name":"伊丹空港","lat":34.7855,"lon":135.4382},{"number":"1641","place":"大阪（伊丹）","callsign":"ANA1641","name":"伊丹空港","lat":34.7855,"lon":135.4382},{"number":"1643","place":"大阪（伊丹）","callsign":"ANA1643","name":"伊丹空港","lat":34.7855,"lon":135.4382},{"number":"2309","place":"大阪（伊丹）","callsign":"JAL2309","name":"伊丹空港","lat":34.7855,"lon":135.4382},{"number":"1645","place":"大阪（伊丹）","callsign":"ANA1645","name":"伊丹空港","lat":34.7855,"lon":135.4382},{"number":"1647","place":"大阪（伊丹）","callsign":"ANA1647","name":"伊丹空港","lat":34.7855,"lon":135.4382},{"number":"1649","place":"大阪（伊丹）","callsign":"ANA1649","name":"伊丹空港","lat":34.7855,"lon":135.4382},{"number":"33","place":"名古屋（中部）","callsign":"IBX33","name":"中部国際空港","lat":34.8584,"lon":136.8054},{"number":"35","place":"名古屋（中部）","callsign":"IBX35","name":"中部国際空港","lat":34.8584,"lon":136.8054},{"number":"37","place":"名古屋（中部）","callsign":"IBX37","name":"中部国際空港","lat":34.8584,"lon":136.8054},{"number":"3591","place":"福岡","callsign":"JAL3591","name":"福岡空港","lat":33.5859,"lon":130.4507},{"number":"3595","place":"福岡","callsign":"JAL3595","name":"福岡空港","lat":33.5859,"lon":130.4507},{"number":"3601","place":"福岡","callsign":"JAL3601","name":"福岡空港","lat":33.5859,"lon":130.4507},{"number":"3607","place":"福岡","callsign":"JAL3607","name":"福岡空港","lat":33.5859,"lon":130.4507},{"number":"3687","place":"鹿児島","callsign":"JAL3687","name":"鹿児島空港","lat":31.8034,"lon":130.7194},{"number":"1884","place":"沖縄（那覇）","callsign":"ANA1884","name":"那覇空港","lat":26.1958,"lon":127.6459},{"number":"1701","place":"ソウル（仁川）","callsign":"JJA1701","name":"仁川国際空港","lat":37.4602,"lon":126.4407},{"number":"1771","place":"ソウル（仁川）","callsign":"JJA1771","name":"仁川国際空港","lat":37.4602,"lon":126.4407},{"number":"110","place":"台北（桃園）","callsign":"EVA110","name":"桃園国際空港","lat":25.0797,"lon":121.2342},{"number":"1703","place":"ソウル（仁川）","callsign":"JJA1703","name":"仁川国際空港","lat":37.4602,"lon":126.4407},{"number":"134","place":"釜山","callsign":"ABL134","name":"金海国際空港","lat":35.1795,"lon":128.9382}];
+function airportPlaceKey(p:unknown) {
+  return String(p||"").normalize("NFKC").replace(/[\s()（）\-・]/g,"");
+}
+function flightKm(lat1:number,lon1:number,lat2:number,lon2:number) {
+  const rad=Math.PI/180,dLat=(lat2-lat1)*rad,dLon=(lon2-lon1)*rad;
+  const a=Math.sin(dLat/2)**2+Math.cos(lat1*rad)*Math.cos(lat2*rad)*Math.sin(dLon/2)**2;
+  return 6371*2*Math.atan2(Math.sqrt(a),Math.sqrt(Math.max(0,1-a)));
+}
+function flightBearing(lat1:number,lon1:number,lat2:number,lon2:number) {
+  const a=lat1*Math.PI/180,b=lat2*Math.PI/180,dl=(lon2-lon1)*Math.PI/180;
+  return (Math.atan2(Math.sin(dl)*Math.cos(b),Math.cos(a)*Math.sin(b)-Math.sin(a)*Math.cos(b)*Math.cos(dl))*180/Math.PI+360)%360;
+}
+function compassFromAirport(bearing:number) {
+  return ["北","北東","東","南東","南","南西","西","北西"][Math.round(bearing/45)%8];
+}
+const MATSUGYAMA_LAT=33.8272,MATSUGYAMA_LON=132.6997;
+const arrivalAdsbCache:{at:number;key:string;aircraft:any[];source:string}={at:0,key:"",aircraft:[],source:""};
+async function fetchMatsuyamaArrivalsByCallsign(callsigns:string[]) {
+  const key=callsigns.slice().sort().join(",");
+  if(arrivalAdsbCache.at && arrivalAdsbCache.key===key && Date.now()-arrivalAdsbCache.at<45000)
+    return {ok:true,source:arrivalAdsbCache.source,aircraft:arrivalAdsbCache.aircraft,observedAt:new Date(arrivalAdsbCache.at).toISOString()};
+  const bases=["https://api.adsb.lol/v2/callsign/","https://api.airplanes.live/v2/callsign/"];
+  // Keep the query small and avoid per-flight API calls.
+  const path=encodeURIComponent(key).replace(/%2C/gi,",");
+  for(const base of bases){
+    try{
+      const raw:any=await fetchTimeout(base+path,false,6000);
+      if(!Array.isArray(raw?.ac))throw Error("Missing ADS-B aircraft list");
+      const unique=new Map<string,any>();
+      for(const a of raw.ac){
+        const callsign=String(a?.flight||"").trim().toUpperCase().replace(/\s+/g,"");
+        if(!callsigns.includes(callsign))continue;
+        const lat=Number(a?.lat),lon=Number(a?.lon),seen=Number(a?.seen_pos);
+        if(!Number.isFinite(lat)||!Number.isFinite(lon)||!Number.isFinite(seen)||seen<0||seen>35)continue;
+        const flight={flight:callsign,hex:String(a?.hex||""),lat,lon,seenPosSeconds:seen,
+          altBaro:a?.alt_baro,gs:Number(a?.gs),track:Number(a?.track)};
+        const previous=unique.get(callsign);
+        if(!previous||seen<previous.seenPosSeconds)unique.set(callsign,flight);
+      }
+      const aircraft=[...unique.values()];
+      if(aircraft.length===0) continue; // Try the second ADS-B network on an empty result.
+      const at=Date.now();
+      arrivalAdsbCache.at=at;arrivalAdsbCache.key=key;
+      arrivalAdsbCache.aircraft=aircraft;arrivalAdsbCache.source=base.includes("adsb.lol")?"ADSB.lol":"Airplanes.live";
+      return {ok:true,source:arrivalAdsbCache.source,aircraft,observedAt:new Date(at).toISOString()};
+    }catch(_){/* Public API can time out or reject repeated requests. */}
+  }
+  // Callsign-list lookups may be empty even while an approaching plane is
+  // visible in the regional ADS-B feed. Try the existing 250 NM area query.
+  const nearby=await loadMatsuyamaAdsbAircraft();
+  const matches=(nearby.aircraft||[]).filter((x:any)=>callsigns.includes(x.flight))
+    .map((x:any)=>({
+      flight:x.flight,hex:x.hex,lat:x.lat,lon:x.lon,
+      seenPosSeconds:x.seenPosSeconds,altBaro:x.altitudeFt,
+      gs:x.groundSpeedKt,track:x.track
+    }));
+  console.info("MATS_ADSB_REGIONAL",nearby.source,(nearby.aircraft||[]).length,matches.length);
+  if(Date.now()<Date.parse("2026-10-10T02:40:00Z")) console.info("MATS_ADSB_SAMPLE",JSON.stringify((nearby.aircraft||[]).slice(0,24).map((a:any)=>({id:a.flight,distance:Math.round(flightKm(a.lat,a.lon,MATSUGYAMA_LAT,MATSUGYAMA_LON)),direction:Math.round(a.track)}))));
+  if(matches.length>0){
+    return {ok:true,source:nearby.source+" regional",aircraft:matches,observedAt:nearby.observedAt};
+  }
+  return {ok:false,source:"ADS-B aircraft not verified",aircraft:[],observedAt:new Date().toISOString()};
+}
+async function enrichArrivalsWithAdsb(arrivals:any[]) {
+  const keys=new Map<string,{callsign:string;number:string;place:string;name:string;lat:number;lon:number}>();
+  for(const s of MATSUGYAMA_ARRIVAL_FLIGHT_SPECS){
+    keys.set(airportPlaceKey(s.place)+"|"+s.number,s);
+  }
+  const matchSpecs=arrivals.map(item=>{
+    const nums=(Array.isArray(item?.numbers)?item.numbers:[]).map(String);
+    const matches=nums.map(n=>keys.get(airportPlaceKey(item?.place)+"|"+n)).filter(Boolean);
+    // Only one distinct operator/flight can be used as an exact identity.
+    const unique=[...new Set(matches.map(m=>m!.callsign))];
+    return unique.length===1 ? matches[0] : null;
+  });
+  const callsigns=[...new Set(matchSpecs.filter(Boolean).map(s=>s!.callsign))];
+  if(!callsigns.length)return {arrivals,adsb:{ok:false,source:"No matched flight callsigns",aircraft:[]}};
+  const adsb=await fetchMatsuyamaArrivalsByCallsign(callsigns);
+  console.info('MATS_DIAG_COUNTS',callsigns.length,(adsb.aircraft||[]).length,adsb.source);
+  const seen=new Map<string,any>();
+  for(const a of adsb.aircraft||[]){
+    if(!seen.has(a.flight))seen.set(a.flight,a);
+    else { // Ambiguous aircraft for a callsign: fail closed rather than guess.
+      seen.set(a.flight,null);
+    }
+  }
+  const now=jstNow().minutes;
+  const output=arrivals.map((item,index)=>{
+    const spec=matchSpecs[index],a=spec?seen.get(spec.callsign):null;
+    if(!spec||!a)return item;
+    const arrMinute=toMinutes(item.changed||item.scheduled);
+    let before=arrMinute-now;
+    if(before< -720)before+=1440;
+    if(before>720)before-=1440;
+    if(!Number.isFinite(before)||before< -20||before>260)return item;
+    const atOrigin=flightKm(a.lat,a.lon,spec.lat,spec.lon);
+    const atMatsuyama=flightKm(a.lat,a.lon,MATSUGYAMA_LAT,MATSUGYAMA_LON);
+    const speed=Number(a.gs),alt=Number(a.altBaro);
+    const onGround=a.altBaro==="ground" ||
+      (Number.isFinite(alt)&&alt<1800&&Number.isFinite(speed)&&speed<45);
+    const sourceText=(adsb.source||"ADS-B")+" 機体位置";
+    // Waiting only when the plane is physically at its named origin airport.
+    if(atOrigin<=5 && onGround && before>=0){
+      return {...item,aircraftFlightPhase:"waiting",aircraftPositionConfirmed:true,
+        aircraftObservedAt:adsb.observedAt,aircraftCallsign:spec.callsign,
+        aircraftPositionText:spec.name+"にて出発待ち",aircraftDataSource:sourceText};
+    }
+    if(!Number.isFinite(alt)||alt<500||!Number.isFinite(speed)||speed<85||atMatsuyama>1650)return item;
+    if(!Number.isFinite(a.track))return item;
+    const bearingToMatsuyama=flightBearing(a.lat,a.lon,MATSUGYAMA_LAT,MATSUGYAMA_LON);
+    const deviation=Math.abs(((a.track-bearingToMatsuyama+540)%360)-180);
+    if(atMatsuyama>30&&deviation>85)return item;
+    const direction=compassFromAirport(flightBearing(MATSUGYAMA_LAT,MATSUGYAMA_LON,a.lat,a.lon));
+    const distance=Math.max(5,Math.round(atMatsuyama/5)*5);
+    const place=atMatsuyama<55
+      ? "松山空港へ接近中（約"+distance+"km）"
+      : "現在 松山空港の"+direction+" 約"+distance+"kmを航行中";
+    return {...item,originDepartureConfirmed:true,aircraftFlightPhase:atMatsuyama<55?"approaching":"airborne",
+      aircraftPositionConfirmed:true,aircraftObservedAt:adsb.observedAt,
+      aircraftCallsign:spec.callsign,aircraftPositionText:place,aircraftDataSource:sourceText};
+  });
+  // Only metadata from confirmed position matches; never claim real takeoff clock time.
+  return {arrivals:output,adsb:{ok:adsb.ok,source:adsb.source,observedAt:adsb.observedAt,matchedFlights:output.filter(x=>x.aircraftPositionConfirmed).length}};
+}
+
+
+const ITAMI_DEPARTURE_BOARD_URL="https://www.osaka-airport.co.jp/flight/search?direction=DEP&duration=all";
+async function getItamiDepartures() {
+  try {
+    const html=await fetchTimeout(ITAMI_DEPARTURE_BOARD_URL,true,8500) as string;
+    const text=flatText(html);
+    const today=String(jstNow().iso).slice(0,10);
+    const m=today.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if(!m||!new RegExp("本日\\s*"+Number(m[2])+"月"+Number(m[3])+"日").test(text))
+      throw Error("Itami board date not verified for "+today);
+    const results=new Map<string,any>();
+    const exp=/松山\s+(NH|JL)\s*(\d{3,4})\s*\/\s*[^]{0,75}?ターミナル:\s*(?:北|南)\s*(?:ゲート:\s*[0-9A-Z]+\s*)?(\d{1,2}:\d{2})(?:\s+(\d{1,2}:\d{2}))?(?:\s+(出発済み?|欠航|搭乗中|搭乗口誘導中|搭乗ご案内|出発準備中|搭乗手続中|遅延))?/g;
+    for(const match of text.matchAll(exp)) {
+      const carrier=match[1]==="NH"?"ANA":"JAL";
+      const key=carrier+match[2];
+      const time=match[3],actual=match[4]||"";
+      const status=String(match[5]||"").trim();
+      if(results.has(key)){results.delete(key);continue;}
+      results.set(key,{status,scheduled:time,actual:actual||null,origin:"伊丹空港"});
+    }
+    console.info("ITAMI_STATUS_DIAG",JSON.stringify({date:today,rows:results.size,
+      departed:[...results.entries()].filter(x=>/出発済/.test(x[1].status)).map(x=>x[0]),
+      sample:[...results.entries()].slice(0,7).map(x=>({id:x[0],status:x[1].status}))}));
+    return results;
+  }catch(e){
+    console.info("ITAMI_STATUS_ERROR",String(e));
+    return new Map<string,any>();
+  }
+}
+
+
+
+const KAGOSHIMA_DEPARTURES_URL="https://www.koj-ab.co.jp/flight/today-dom-departure.html";
+async function getKagoshimaDepartures() {
+  const map=new Map<string,any>();
+  try{
+    const html=await fetchTimeout(KAGOSHIMA_DEPARTURES_URL,true,7400) as string;
+    const text=flatText(html);
+    const iso=String(jstNow().iso).slice(0,10);
+    const date=(text.match(/(\d{4})\/(\d{1,2})\/(\d{1,2})\s+\d{1,2}:\d{2}\s+現在/)||[]);
+    const parsedDate=date.length?date[1]+"-"+String(Number(date[2])).padStart(2,"0")+"-"+String(Number(date[3])).padStart(2,"0"):"";
+    if(parsedDate!==iso)throw Error("Kagoshima timetable date differs from today");
+    if(!/本日のフライト（国内線出発）/.test(text))throw Error("Not domestic departures page");
+    const matches=[...text.matchAll(/(?:^|\s)(\d{3,4})\s+松山\s+(\d{1,2}:\d{2})(?:\s+(\d{1,2}:\d{2}))?\s*(出発済み?|欠航|搭乗ご案内中|搭乗手続き受付中|遅延|搭乗中)?/g)];
+    for(const m of matches){
+      const number=m[1],status=String(m[4]||"");
+      if(map.has("JAL"+number)){map.delete("JAL"+number);continue;}
+      map.set("JAL"+number,{status,scheduled:m[2],actual:null,origin:"鹿児島空港"});
+    }
+    console.info("KAGOSHIMA_STATUS_DIAG",JSON.stringify([...map.entries()].map(x=>({flight:x[0],status:x[1].status}))));
+  }catch(e){console.info("KAGOSHIMA_STATUS_ERROR",String(e))}
+  return map;
+}
+
+
+
+
+
+
+// Date-matched, exact flight-number departure evidence from airport-run feeds.
+// Never substitute a scheduled time, changed time, or other airport's route.
+const additionalOriginCache=new Map<string,{at:number,rows:Map<string,any>}>();
+async function airportSourceCache(key:string,fn:()=>Promise<Map<string,any>>) {
+  // Per-local-day cache: never reuse yesterday's flight-status evidence.
+  const dateKey=key+"|"+String(jstNow().iso).slice(0,10);
+  const hit=additionalOriginCache.get(dateKey);
+  if(hit && Date.now()-hit.at<125000)return hit.rows;
+  const rows=await fn();
+  // Cache only successful nonempty airport feeds; failures may recover quickly.
+  if(rows.size)additionalOriginCache.set(dateKey,{at:Date.now(),rows});
+  return rows;
+}
+function officialOriginPut(dest:Map<string,any>,bad:Set<string>,key:string,entry:any){
+  if(bad.has(key))return;
+  if(dest.has(key)){dest.delete(key);bad.add(key);return}
+  dest.set(key,entry);
+}
+function originDateParts(){
+  const iso=String(jstNow().iso).slice(0,10);
+  return {iso,compact:iso.replace(/-/g,"")};
+}
+function reportedActual(dateTime:unknown,compact:string){
+  const t=String(dateTime||"");
+  return t.startsWith(compact)&&/^\d{12,14}$/.test(t)?t.slice(8,10)+":"+t.slice(10,12):null;
+}
+async function getNahaDepartures(){
+  return airportSourceCache("naha",async()=>{
+    const rows=new Map<string,any>(),bad=new Set<string>();
+    try{
+      const data:any=await fetchTimeout("https://www.naha-airport.co.jp/fis/fis_national.json",false,7500);
+      const {iso,compact}=originDateParts();
+      if(String(data?.created_at||"").slice(0,10)!==iso.replace(/-/g,"/"))
+        throw Error("Naha report date mismatch");
+      if(!Array.isArray(data?.data))throw Error("Naha flights absent");
+      for(const x of data.data){
+        if(!Array.isArray(x)||String(x[10])!=="D"||String(x[4]||"").slice(0,8)!==compact)continue;
+        if(String(x[3]||"").toUpperCase().trim()!=="MATSUYAMA")continue;
+        const carrier=String(x[0]||"").replace(/^\uFEFF/,"").trim();
+        if(carrier!=="NH")continue; // ANA1884; no unverified codeshares.
+        const num=String(Number(x[1]));
+        if(!/^\d{2,5}$/.test(num))continue;
+        const status=String(x[7]||"").trim();
+        officialOriginPut(rows,bad,"ANA"+num,{
+          status,origin:"那覇空港",actual:/出発済/.test(status)?reportedActual(x[6],compact):null
+        });
+      }
+    }catch(e){console.info("NAHA_ORIGIN_ERROR",String(e))}
+    console.info("NAHA_ORIGIN_COUNT",rows.size,[...rows.entries()].map(x=>({no:x[0],status:x[1].status})));
+    return rows;
+  });
+}
+async function getCentrairDepartures(){
+  return airportSourceCache("centrair",async()=>{
+    const rows=new Map<string,any>(),bad=new Set<string>();
+    try{
+      const data:any=await fetchTimeout("https://www.centrair.jp/sys-assets/flight/search/flight_list_ja.json",false,7700);
+      const {iso,compact}=originDateParts();
+      if(!String(data?.data_update||"").startsWith(Number(iso.slice(0,4))+"年"+Number(iso.slice(5,7))+"月"+Number(iso.slice(8,10))+"日"))
+        throw Error("Centrair report date mismatch");
+      const current=Array.isArray(data?.dateList)
+        ?data.dateList.filter((d:any)=>String(d.date||"")===compact):[];
+      if(current.length!==1||!Array.isArray(current[0].list))throw Error("Centrair flights for today missing");
+      for(const item of current[0].list){
+        if(String(item?.final)!=="MYJ"||String(item?.extArrId)!=="D"||
+          String(item?.airDate)!==compact||String(item?.designator)!=="IBX")continue;
+        const match=String(item.designatorNo||"").match(/^IBX\s*(\d+)$/);
+        if(!match)continue;
+        const status=String(item.status?.infoInfo||item.infoTypeInfo||"").trim();
+        const actual=/出発済/.test(status)&&String(item.extActDate||"")===compact&&/^\d{4}$/.test(String(item.extActTime||""))
+          ?String(item.extActTime).slice(0,2)+":"+String(item.extActTime).slice(2):null;
+        officialOriginPut(rows,bad,"IBX"+match[1],{status,actual,origin:"中部国際空港"});
+      }
+    }catch(e){console.info("CENTRAIR_ORIGIN_ERROR",String(e))}
+    console.info("CENTRAIR_ORIGIN_COUNT",rows.size,[...rows.entries()].map(x=>({no:x[0],status:x[1].status})));
+    return rows;
+  });
+}
+async function getFukuokaDepartures(){
+  return airportSourceCache("fukuoka",async()=>{
+    const rows=new Map<string,any>(),bad=new Set<string>();
+    try{
+      const data:any=await fetchTimeout("https://www.fukuoka-airport.jp/api/flight_schedule/flight_schedule.json",false,8000);
+      const {iso,compact}=originDateParts();
+      if(!data||typeof data!=="object"||Array.isArray(data))throw Error("Fukuoka schedule JSON absent");
+      for(const item of Object.values(data) as any[]){
+        if(!item||String(item.flt_ymd)!==iso||String(item.deparv_div)!=="D"||
+          String(item.tofrom_cd)!=="MYJ"||String(item.airline_cd)!=="JAL")continue;
+        const num=String(Number(item.flt_num_no));
+        if(!/^\d{2,5}$/.test(num))continue;
+        const status=String(item.remarks||"").trim();
+        officialOriginPut(rows,bad,"JAL"+num,{
+          status,origin:"福岡空港",
+          actual:/出発済/.test(status)?reportedActual(item.true_ymdhm,compact):null
+        });
+      }
+    }catch(e){console.info("FUKUOKA_ORIGIN_ERROR",String(e))}
+    console.info("FUKUOKA_ORIGIN_COUNT",rows.size,[...rows.entries()].map(x=>({no:x[0],status:x[1].status})));
+    return rows;
+  });
+}
+
+
+
+
+
+
+// Taoyuan Airport official government CSV (V2). Exact 2026 local date,
+// airline BR, destination MYJ and '已飛'/'Flew' are all mandatory.
+function parseAirportCsv(src:string){
+  const rows:string[][]=[];let record:string[]=[],field="",quoted=false;
+  for(let i=0;i<src.length;i++){
+    const c=src[i];
+    if(c==='"'){
+      if(quoted && src[i+1]==='"'){field+='"';i++}else quoted=!quoted;
+    }else if(c===','&&!quoted){record.push(field);field="";}
+    else if((c==='\r'||c==='\n')&&!quoted){
+      if(c==='\r'&&src[i+1]==='\n')i++;
+      record.push(field);field="";
+      if(record.some(v=>v.trim()))rows.push(record);
+      record=[];
+    }else field+=c;
+  }
+  if(field||record.length){record.push(field);rows.push(record)}
+  return rows;
+}
+async function getTaoyuanDepartures() {
+  return airportSourceCache("taoyuan",async()=>{
+    const rows=new Map<string,any>(),bad=new Set<string>();
+    try{
+      const csv=await fetchTimeout("https://odp.taoyuan-airport.com/dataset/2025102001?format=csv",true,7400) as string;
+      const data=parseAirportCsv(csv);
+      if(!Array.isArray(data)||data.length<20||
+        String(data[0]?.[0]||"").replace(/^\uFEFF/,"")!=="航廈"||data[0]?.[1]!=="方向")
+        throw Error("Taoyuan V2 CSV header mismatch");
+      const localDay=String(jstNow().iso).slice(0,10);
+      for(const r of data.slice(1)){
+        if(r.length<18||r[1]!=="D"||r[2]!=="BR"||r[10]!=="MYJ"||
+          String(r[6]||"").slice(0,10)!==localDay)continue;
+        const num=String(Number(r[4]));
+        if(!/^\d{2,5}$/.test(num))continue;
+        const movement=String(r[16]||"").trim();
+        const movementEn=String(r[17]||"").trim();
+        const airportStatus=String(r[13]||"").trim();
+        const departed=movement==="已飛"||/^flew$/i.test(movementEn);
+        const canceled=/取消|停飛|欠航|cancel/i.test(movement+" "+movementEn+" "+airportStatus);
+        officialOriginPut(rows,bad,"EVA"+num,{
+          status:canceled?"欠航":departed?"出発済み":movement||airportStatus||"出発未確認",
+          actual:null,origin:"桃園国際空港"
+        });
+      }
+    }catch(e){console.info("TAOYUAN_ORIGIN_ERROR",String(e))}
+    console.info("TAOYUAN_ORIGIN_COUNT",rows.size,
+      [...rows.entries()].slice(0,6).map(([id,x])=>({flight:id,status:x.status})));
+    return rows;
+  });
+}
+
+
+
+async function getGimhaeDepartures(){
+  return airportSourceCache("gimhae",async()=>{
+    const rows=new Map<string,any>(),bad=new Set<string>();
+    try{
+      const date=String(jstNow().iso).slice(0,10);
+      const query=new URLSearchParams({
+        pInoutGbn:"O",pAirport:"PUS",pGbn:"I",pActDate:date,
+        pSthourMin:"00:00",pEnhourMin:"23:59",pCity:"MYJ",
+        pAirline:"",pFlight:"",p0:"web"
+      }).toString();
+      const raw:any=await fetchTimeout(
+        "https://www.airport.co.kr/gimhae/ajaxf/frPryInfoSvc/getPryInfoList.do?"+query,
+        false,7100);
+      const flights=raw?.data?.list;
+      if(!Array.isArray(flights))throw Error("Gimhae official flights unavailable");
+      const compact=date.replace(/-/g,"");
+      for(const item of flights){
+        if(String(item?.AIRPORT)!=="PUS" || String(item?.ACT_C_DATE)!==compact ||
+          String(item?.ARRIVED_ENG||"").toUpperCase()!=="MATSUYAMA"||
+          String(item?.AIR_FLN||"").trim()!=="BX134")continue;
+        const korean=String(item.RMK_KOR||"").trim();
+        const english=String(item.RMK_ENG||"").trim();
+        const canceled=/^(결항|사전결항)$/.test(korean)||/cancel/i.test(english);
+        const departed=korean==="출발"||/^departed$/i.test(english);
+        const status=canceled?"欠航":departed?"出発済み":korean||"出発未確認";
+        officialOriginPut(rows,bad,"ABL134",{status,origin:"金海国際空港",actual:null});
+      }
+    }catch(e){console.info("GIMHAE_ORIGIN_ERROR",String(e))}
+    console.info("GIMHAE_ORIGIN_COUNT",rows.size,
+      [...rows.entries()].slice(0,3).map(([no,r])=>({flight:no,status:r.status})));
+    return rows;
+  });
+}
+
 async function getAirportLive() {
+  const itamiPromise=airportSourceCache("itami",getItamiDepartures);
+
+
+
+  const kagoshimaPromise=airportSourceCache("kagoshima",getKagoshimaDepartures);
+  const nahaPromise=getNahaDepartures();
+  const centrairPromise=getCentrairDepartures();
+  const fukuokaPromise=getFukuokaDepartures();
+  // Match official arrivals to their specific ADS-B callsigns after parsing.
   const html = await fetchTimeout(AIRPORT_LIVE_URL, true, 9000) as string;
+  const parsed = parseAirportFlights(html);
+  // No reason to download a large Taiwanese feed on days with no Taoyuan arrival.
+  const taoyuanPromise=parsed.arrivals.some((r:any)=>/^(台北|台湾)/.test(airportPlaceKey(r?.place)))
+    ? getTaoyuanDepartures():Promise.resolve(new Map<string,any>());
+  const gimhaePromise=parsed.arrivals.some((r:any)=>airportPlaceKey(r?.place)===airportPlaceKey("釜山"))
+    ? getGimhaeDepartures():Promise.resolve(new Map<string,any>());
+  try {
+    const schedules = await loadAirportRouteSchedules();
+    parsed.arrivals = parsed.arrivals.map((item: any) => {
+      const place = String(item?.place || "").trim();
+      const scheduled = String(item?.scheduled || "");
+      const numbers = Array.isArray(item?.numbers) ? item.numbers.map(String) : [];
+      let match: { departure: string; arrival: string; place: string } | undefined;
+      for (const n of numbers) {
+        match = schedules.get(`${place}|${n}|${scheduled}`);
+        if (match) break;
+      }
+      if (!match) return item;
+      return {
+        ...item,
+        originAirport: AIRPORT_ORIGIN_LABELS[place] || `${place}空港`,
+        originDepartureScheduled: match.departure,
+        originDepartureSource: "松山空港公式月間時刻表",
+      };
+    });
+  } catch (_) {
+    // Live arrival board remains usable even when route timetable enrichment fails.
+  }
+
+  const linked=await enrichArrivalsWithAdsb(parsed.arrivals);
+  const itami=await itamiPromise;
+  const kagoshima=await kagoshimaPromise;
+  const naha=await nahaPromise;
+  const centrair=await centrairPromise;
+  const fukuoka=await fukuokaPromise;
+  const taoyuan=await taoyuanPromise;
+  const gimhae=await gimhaePromise;
+  const officialOriginFeeds=[
+    {place:"大阪(伊丹)",name:"伊丹空港",source:"大阪国際空港公式出発案内",map:itami,prefixes:["ANA","JAL"]},
+    {place:"鹿児島",name:"鹿児島空港",source:"鹿児島空港公式出発案内",map:kagoshima,prefixes:["JAL"]},
+    {place:"沖縄(那覇)",name:"那覇空港",source:"那覇空港公式出発案内",map:naha,prefixes:["ANA"]},
+    {place:"名古屋(中部)",name:"中部国際空港",source:"中部国際空港公式出発案内",map:centrair,prefixes:["IBX"]},
+    {place:"福岡",name:"福岡空港",source:"福岡空港公式出発案内",map:fukuoka,prefixes:["JAL"]},
+    {place:"台北(桃園)",name:"桃園国際空港",source:"桃園国際空港公式出発案内",map:taoyuan,prefixes:["EVA"],aliases:["台北","台湾(桃園)"]},
+    {place:"釜山",name:"金海国際空港",source:"金海国際空港公式出発案内",map:gimhae,prefixes:["ABL"],aliases:["プサン"]}
+  ];
+  const sourceCounts:Record<string,number>={};
+  linked.arrivals=linked.arrivals.map((item:any)=>{
+    const feed=officialOriginFeeds.find(x=>[x.place,...(x.aliases||[])].some(k=>airportPlaceKey(item?.place)===airportPlaceKey(k)));
+    if(!feed)return item;
+    const numbers=(Array.isArray(item?.numbers)?item.numbers:[]).map(String);
+    const evidence=[...new Set(numbers.flatMap(n=>feed.prefixes.map(p=>feed.map.get(p+n)).filter(Boolean)))];
+    if(evidence.length!==1)return item;
+    const e=evidence[0];
+    if(/欠航/.test(e.status))return {...item,originDepartureStatus:"欠航"};
+    if(/出発済/.test(e.status)){
+      sourceCounts[feed.name]=(sourceCounts[feed.name]||0)+1;
+      return {...item,originDepartureVerified:true,originDepartureConfirmed:true,
+        originDepartedObservedAt:new Date().toISOString(),
+        originDepartureStatus:"出発済み",originDepartureAirport:feed.name,
+        originDepartureActual:e.actual||null,
+        originDepartureSource:feed.source};
+    }
+    if(/搭乗中|搭乗口誘導中|搭乗ご案内|出発準備中|搭乗手続中/.test(e.status)){
+      return {...item,originDepartureStatus:e.status,
+        originDepartureAirport:feed.name,originDepartureSource:feed.source};
+    }
+    return item;
+  });
+  console.info("ORIGIN_MATCH_COUNTS",JSON.stringify(sourceCounts));
+  // Short-lived diagnostic: official rows vs actual ADS-B correlated rows.
+  if(Date.now()<Date.parse("2026-10-10T03:00:00Z")) {
+    console.info("MATSUYAMA_AIRPORT_DIAG",JSON.stringify({
+      parsedOk:parsed.ok,officialDepartures:parsed.departures.length,officialArrivals:parsed.arrivals.length,
+      adsbOk:linked.adsb.ok,source:linked.adsb.source,matched:linked.adsb.matchedFlights??0,
+      sample:linked.arrivals.filter((x:any)=>x.aircraftPositionConfirmed).slice(0,5)
+        .map((x:any)=>({numbers:x.numbers,place:x.place,phase:x.aircraftFlightPhase}))
+    }));
+  }
+  parsed.arrivals=linked.arrivals;
   return {
     source: "松山空港公式",
-    ...parseAirportFlights(html),
+    ...parsed,
+    adsb: linked.adsb,
   };
 }
 
