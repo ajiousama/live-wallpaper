@@ -2264,3 +2264,27 @@ body.freewifi-tv #bus-rows.freewifi-bus-grouped .freewifi-bus-group>.row{
   flex:none!important;overflow:hidden!important;
   padding-top:0!important;padding-bottom:0!important;
 }
+
+/* Legibility of 6 express + 3 regional bus services. */
+body.freewifi-tv #bus-rows.freewifi-bus-grouped .freewifi-bus-group>.row .primary-time{
+  font-size:23px!important;line-height:1.08!important;
+}
+body.freewifi-tv #bus-rows.freewifi-bus-grouped .freewifi-bus-group>.row .bus-dest-main,
+body.freewifi-tv #bus-rows.freewifi-bus-grouped .freewifi-bus-group>.row .bus-destination-line{
+  font-size:19px!important;line-height:1.15!important;font-weight:900!important;
+}
+body.freewifi-tv #bus-rows.freewifi-bus-grouped .freewifi-bus-group>.row .bus-terminal-time,
+body.freewifi-tv #bus-rows.freewifi-bus-grouped .freewifi-bus-group>.row .bus-departure-position,
+body.freewifi-tv #bus-rows.freewifi-bus-grouped .freewifi-bus-group>.row .bus-estimated-position{
+  font-size:12px!important;line-height:1.14!important;
+}
+body.freewifi-tv #bus-rows.freewifi-bus-grouped .freewifi-bus-group>.row .bus-ehime-route,
+body.freewifi-tv #bus-rows.freewifi-bus-grouped .freewifi-bus-group>.row .bus-via-line{
+  font-size:11px!important;line-height:1.12!important;
+}
+body.freewifi-tv #bus-rows.freewifi-bus-grouped .freewifi-bus-group>.row .bus-place-text{
+  font-size:13px!important;font-weight:800!important;
+}
+body.freewifi-tv #bus-rows.freewifi-bus-grouped .freewifi-bus-group-head{
+  font-size:15px!important;
+}
