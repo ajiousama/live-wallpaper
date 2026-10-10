@@ -694,6 +694,7 @@
     if(/新居浜/.test(key)) return ['新居浜','西条','小松','川内IC','松山IC',terminal];
     if(/今治|宮浦/.test(key)) return ['今治周辺','菊間','北条','堀江',terminal];
     if(/三崎|iyotetsu_misaki/.test(key)) return ['三崎港口','伊方','八幡浜','大洲','内子','中山','伊予市','松山市内（一般道）',terminal];
+    if(/久万高原|jrshikoku_kumakogen/.test(key)) return ['久万高原','三坂道路','砥部','森松','大街道','松山市内（一般道）',terminal];
     if(/宇和島|城辺/.test(key)) return ['宇和島','大洲','内子','伊予市','松山IC',terminal];
 
     const label=origin.replace(/[（(].*?[）)]/g,'').trim()||'出発地';
@@ -814,9 +815,11 @@
       const prevIso=shiftIso(now.iso,-1);
       const prevRows=recordsForDay('bus',prevIso).filter(r=>r.direction!=='arrival');
       const prevDeps=normalizeBusDepartures(prevRows).map(r=>({...r,direction:'departure',minutes:toMinutes(r.time)}));
-      const sameDay=deps.filter(r=>!r.noSyntheticArrival).map(synthBusArrival).filter(r=>!r._arrivalNextDay);
-      const overnight=prevDeps.filter(r=>!r.noSyntheticArrival).map(synthBusArrival).filter(r=>r._arrivalNextDay).map(r=>({...r,originDepartureDay:'前日'}));
-      return [...explicitArrivals, ...sameDay, ...overnight].map(r=>({...r,minutes:toMinutes(r.arrivalTerminalTime||r.time)})).sort((a,b)=>rMinutes(a)-rMinutes(b));
+      // Outbound timetables do not establish the opposite inbound service.
+      // Show arrivals only when an actual inbound schedule record exists.
+      // In particular, never manufacture high-speed-bus arrivals by adding
+      // estimated travel time to a Matsuyama departure.
+      return explicitArrivals.sort((a,b)=>rMinutes(a)-rMinutes(b));
     }
     if (board === 'port') {
       const deps = rows.map(r => ({ ...r, direction: 'departure', minutes: toMinutes(r.time) }));
