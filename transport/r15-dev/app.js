@@ -3090,10 +3090,45 @@
     if(!items.length)items.push('フェリーLIVE｜公式運航情報を取得中');
     items.push(PORT_WARNING); return items;
   }
+  // 伊予鉄バス：観光港連絡バス（2026-04-01公式時刻表、平日／土日祝）。
+  // Daytime transfers are port -> Takahama Station -> Iyotetsu Railway.
+  // Only publish paired train times shown by the official timetable.
   function portLimousineTickerItems(now=japanNow()) {
-    // Published scheduled bus connection, not live vehicle tracking.
-    if(now.minutes<=22*60+22) return ['🚌 松山観光港リムジン｜広島フェリー22:12着に接続｜観光港22:22発 → JR松山駅前22:42 → 愛媛新聞社前22:44 → 松山市駅22:50着（時刻表予定・船便により変更あり）'];
-    return ['松山観光港リムジン｜本日の22:22発は出発時刻を過ぎました'];
+    const mins=now.minutes;
+    const weekend=now.dow===0||now.dow===6;
+    const paired=[
+      ['07:06','07:08','07:10','07:31'],
+      ['07:26','07:28','07:36','07:57'],
+      ['07:49','07:51','07:59','08:20'],
+      ['08:15','08:17','08:27','08:48'],
+      ['08:52','08:54','08:58','09:19'],
+      ['09:03','09:05','09:13','09:34']
+    ];
+    // Weekday-only extra connections, omitted from weekend board.
+    if(!weekend)paired.push(
+      ['07:13','07:15','07:24','07:45'],
+      ['07:40','07:42','07:47','08:08'],
+      ['08:01','08:03','08:13','08:34'],
+      ['08:30','08:32','08:40','09:01']
+    );
+    for(let t=9*60+30;t<=20*60+30;t+=15){
+      const hhmm=x=>String(Math.floor(x/60)).padStart(2,'0')+':'+String(x%60).padStart(2,'0');
+      paired.push([hhmm(t),hhmm(t+2),hhmm(t+13),hhmm(t+34)]);
+    }
+    paired.push(['20:48','20:50','21:05','21:26'],
+      ['21:18','21:20','21:35','21:56']);
+    if(weekend)paired.push(['21:28','21:30','22:00','22:21']);
+    const upcoming=paired
+      .filter(x=>toMinutes(x[0])>=mins)
+      .sort((a,b)=>toMinutes(a[0])-toMinutes(b[0]))
+      .slice(0,2);
+    if(upcoming.length){
+      return upcoming.map(x=>`🚌 伊予鉄バス・観光港連絡｜観光港 ${x[0]}発 → 高浜駅前 ${x[1]}着 → 伊予鉄電車 ${x[2]}発 → 松山市駅 ${x[3]}着（時刻表予定）`);
+    }
+    if(mins<=22*60+22){
+      return ['🚌 伊予鉄バス・松山観光港リムジン｜広島フェリー22:12着に接続｜観光港22:22発 → JR松山駅前22:42 → 愛媛新聞社前22:44 → 松山市駅22:50着（時刻表予定）'];
+    }
+    return ['伊予鉄バス｜観光港連絡便・リムジンの本日分は終了しました'];
   }
   function parseJstClient(s) {
     const t=String(s||'').trim(); if(!t)return NaN; return Date.parse(t.replace(/\//g,'-').replace(' ','T')+(t.includes('+')?'':'+09:00'));
