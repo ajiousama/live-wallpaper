@@ -394,10 +394,18 @@
     if(!/^\d{2}:\d{2}$/.test(eta))return null;
     let etaMinutes=toMinutes(eta);
     const scheduled=padTime(item?.scheduled||'');
-    if(/^\d{2}:\d{2}$/.test(scheduled) &&
-       toMinutes(scheduled)>=18*60 && etaMinutes<6*60 &&
-       etaMinutes<toMinutes(scheduled)){
-      etaMinutes+=1440; // actual changed ETA is past midnight
+    if(/^\d{2}:\d{2}$/.test(scheduled)){
+      const schedMinutes=toMinutes(scheduled);
+      const delta=Number(item?.deltaMinutes);
+      // If the board reports delay minutes but has no distinct changed
+      // clock, its effective ETA is scheduled time + reported delay.
+      if(Number.isFinite(delta) && delta>0 &&
+         (!item?.changed || etaMinutes===schedMinutes)){
+        etaMinutes=schedMinutes+delta;
+      }else if(schedMinutes>=18*60 && etaMinutes<6*60 &&
+               etaMinutes<schedMinutes){
+        etaMinutes+=1440;
+      }
     }
     return now.minutes-etaMinutes;
   }
@@ -452,7 +460,10 @@
       if (!r) r=staticRows.find(s=>nums.includes(String(parseAirService(s.service).number)));
       if (!r) return;
       const eventTime=padTime(x.changed||x.scheduled);
-      const diff=toMinutes(eventTime)-now.minutes;
+      // Delayed flights can move to after midnight; use the same effective
+      // revised ETA for row visibility and the one-hour expiration timer.
+      const elapsedDelay=!dep?arrivalDelayElapsedMinutes(x,now):null;
+      const diff=elapsedDelay!==null?-elapsedDelay:toMinutes(eventTime)-now.minutes;
       const status=String(x.status||'');
       // Airport live pages sometimes keep stale completion labels on future rows.
       // For departures/arrivals that are already completed, drop them quickly.
