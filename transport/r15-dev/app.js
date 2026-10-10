@@ -2030,7 +2030,7 @@
     const positions=railKnownPositionTickerItems(now);
     const specials=railSpecialFinalTickerItems(now);
     const takeover=ichitsuboTakeover(now);
-    if(takeover)return [...takeover.items,...specials];
+    if(takeover)return [...takeover.items,...positions,...specials];
     const items=[];
     const deadhead=matsuyamaDeadheadArrivals(now)[0];
     if(deadhead){
@@ -2282,13 +2282,17 @@
         ...x,
         scheduled,
         passTime: scheduled ? addMinutes(scheduled,delay) : '',
+        displayTime: scheduled ? addMinutes(scheduled,delay) : '時刻確認中',
         origin: cleanStation(x.origin||''),
         destination: cleanStation(x.destination||''),
         position: cleanStation(x.position||''),
         delay
       };
     // Freight train times do not prove that its current position was retrieved.
-    }).filter(x=>x.passTime && jrPositionUsable(x.position) && /^(3072|3073)$/.test(String(x.trainNum||'')) && x.direction===currentRailDir());
+    }).filter(x=>jrPositionUsable(x.position) &&
+      /^(3072|3073)$/.test(String(x.trainNum||'')) &&
+      x.direction===currentRailDir() &&
+      (!x.passTime || toMinutes(x.passTime)>=now.minutes-10));
   }
 
   function railServiceBadgeHtml(kind, service='') {
@@ -2521,7 +2525,7 @@
     row.innerHTML=`
       <div class="rail-primary">
         <div class="cell rail-service freight"><span class="kindtxt">${railServiceBadgeHtml('freight')}</span></div>
-        <div class="cell time">${x.passTime}</div>
+        <div class="cell time">${x.displayTime||x.passTime||'時刻確認中'}</div>
         <div class="cell main">松山　通過</div>
       </div>
       <div class="rail-detail">${tickerHtml(details)}</div>`;
@@ -2583,6 +2587,7 @@
       _deadhead: false,
       _freight: true,
       _sortMinutes: (() => {
+        if(!x.passTime)return now.minutes+15; // position verified; exact time unavailable
         let d=toMinutes(x.passTime)-now.minutes;
         if(d < -720) d += 1440;
         return now.minutes + d;
@@ -2622,6 +2627,19 @@
           !visible.some(x=>x._terminalArrival && (!priorityArrival || x.data?.isOfficialScheduled))){
         visible[visible.length-1]=nextArrival;
         visible.sort((a,b)=>a._sortMinutes-b._sortMinutes);
+      }
+    }
+
+    // A train with verified freight position must not be silently hidden
+    // behind nine ordinary services on a crowded workplace display.
+    if(FREEWIFI_TV && visible.length===limit){
+      const freightLive=candidates.find(x=>x._freight && jrPositionUsable(x.data?.position));
+      if(freightLive && !visible.includes(freightLive)){
+        const replaceAt=visible.findLastIndex(x=>!x._terminalArrival || !x.data?.isOfficialScheduled);
+        if(replaceAt>=0){
+          visible[replaceAt]=freightLive;
+          visible.sort((a,b)=>a._sortMinutes-b._sortMinutes);
+        }
       }
     }
 
