@@ -337,6 +337,17 @@
     if(actualConfirmed && toMinutes(actual)>now.minutes+1) return false;
     return true;
   }
+  // Remember when an official arrival-complete state was first observed.
+  // The public airport feed often lacks an actual block-in timestamp.
+  const arrivedFlightObservedAt=new Map();
+  function arrivalCompletionTime(item,key,now) {
+    const clock=padTime(item.actualArrivalTime||item.actualArrival||item.arrivedAt||'');
+    const complete=/到着済み|ただいま到着|到着完了/.test(String(item.status||''));
+    if(!complete) { arrivedFlightObservedAt.delete(key); return null; }
+    if(/^([01]\\d|2[0-3]):[0-5]\\d$/.test(clock))return toMinutes(clock);
+    if(!arrivedFlightObservedAt.has(key))arrivedFlightObservedAt.set(key,now.minutes);
+    return arrivedFlightObservedAt.get(key);
+  }
   function liveFlightRows(now) {
     const dep=currentDirection()==='departure';
     if (boardDisplayIso('air', now) !== now.iso) return dep?null:[];
@@ -384,17 +395,30 @@
       if (dep && /出発済み/.test(status)) {
         if (diff <= 1) return;
       }
-      if (!dep && /到着済み|ただいま到着/.test(status)) {
-        if (diff <= 1) return;
+      let arrivalAge=null;
+      let arrivalCompleted=false;
+      if(!dep){
+        const key=`${now.iso}|${nums.join('/')}|${padTime(x.scheduled)}`;
+        const completion=arrivalCompletionTime(x,key,now);
+        arrivalCompleted=completion!==null;
+        if(arrivalCompleted){
+          arrivalAge=(now.minutes-completion+1440)%1440;
+          // A stale completed state must not survive a new page load all day.
+          const scheduledAge=(now.minutes-toMinutes(padTime(x.changed||x.scheduled))+1440)%1440;
+          if(arrivalAge>=20 || scheduledAge>120)return;
+        }
       }
-      if (diff < -20) return;
+      if(!arrivalCompleted && diff < -20) return;
       let liveStatus=status || (Number(x.deltaMinutes)===0?'定刻':'');
       if (dep && /出発済み/.test(liveStatus) && diff > 1) liveStatus='';
       if (!dep && /到着済み|ただいま到着/.test(liveStatus) && diff > 1) liveStatus='';
       const delta=Number(x.deltaMinutes);
       if (Number.isFinite(delta) && delta>0 && (!liveStatus || /定刻/.test(liveStatus))) liveStatus=`遅れ +${delta}分`;
       if (Number.isFinite(delta) && delta<0 && (!liveStatus || /定刻/.test(liveStatus))) liveStatus=dep?`変更 ${Math.abs(delta)}分前`:`早着予定 ${Math.abs(delta)}分`;
-      if (forecastOnly) {
+      if(arrivalCompleted){
+        liveStatus=arrivalAge>=10?'到着済み・降機中（推定）':'到着済み';
+      }
+      if (forecastOnly && !arrivalCompleted) {
         // An adjusted airport-board arrival time is still a forecast, never
         // evidence of takeoff or a live aircraft location.
         const originalStatus=String(x.status||'').trim();
