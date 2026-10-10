@@ -3129,7 +3129,7 @@
     }
     const outgoing=towardPort.find(x=>toMinutes(x[0])>=mins);
     const items=[];
-    if(outgoing)items.push(`🚃 伊予鉄電車→伊予鉄バス｜松山市駅 ${outgoing[0]}発 → 高浜駅 ${outgoing[1]}着 → 連絡バス ${outgoing[2]}発 → 松山観光港 ${outgoing[3]}着（時刻表予定）`);
+    if(outgoing)items.push(`🚃 伊予鉄電車⇒伊予鉄バス｜松山市駅${outgoing[0]}発 ⇒ 高浜${outgoing[1]}着 ⇒ 松山観光港${outgoing[3]}着（時刻表予定）`);
     if(incoming)items.push(`🚌 伊予鉄バス→伊予鉄電車｜松山観光港 ${incoming[0]}発 → 高浜駅前 ${incoming[1]}着 → 電車 ${incoming[2]}発 → 松山市駅 ${incoming[3]}着（時刻表予定）`);
     if(items.length)return items;
     if(mins<=22*60+22){
