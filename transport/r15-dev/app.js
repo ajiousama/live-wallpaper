@@ -784,18 +784,35 @@
   // Verified inbound services only: JR Shikoku Bus 2026-06-01 Kochi -> Matsuyama timetable.
   // Do not derive inbound journeys from outbound departures.
   function confirmedHighwayInboundRows(iso) {
-    const services=[
-      ['08:30','11:21'],['10:20','13:11'],['13:20','16:11'],['16:30','19:24']
-    ];
-    return services.map(([departure,arrival],i)=>({
-      id:`verified-kochi-in-${i}`,board:'bus',kind:'bus',
-      source:'jrshikoku_kochi_verified_inbound',service:'JR四国バス',
-      direction:'arrival',origin:'高知駅BT',dest:'JR松山駅',
-      time:arrival,originDepartureTime:departure,arrivalTerminal:'JR松山駅',
-      arrivalTerminalTime:arrival,noSyntheticArrival:true,
-      info:'なんごくエクスプレス・2026年6月改正時刻表',
-      timetableReference:'https://www.jr-shikokubus.co.jp/news/2026/05/912d7f532c75c7e85f4b39a062178e921e88b903.pdf'
-    }));
+    const out=[];
+    const add=(route,source,company,departs,arrives,reference)=>{
+      departs.forEach((departure,i)=>{
+        out.push({id:`verified-${source}-in-${i}`,board:'bus',kind:'bus',
+          source,service:company[i]||'高速バス',direction:'arrival',origin:route,
+          dest:'JR松山駅',time:arrives[i],originDepartureTime:departure,
+          arrivalTerminal:'JR松山駅',arrivalTerminalTime:arrives[i],
+          noSyntheticArrival:true,info:'公式時刻表・松山着',timetableReference:reference});
+      });
+    };
+    // 2026-10-01: 坊っちゃんエクスプレス（高松 -> 松山）
+    add('高松駅高速BT','takamatsu_official_in',
+      ['伊予鉄バス','JR四国バス','四国高速バス','JR四国バス','伊予鉄バス','JR四国バス','四国高速バス','四国高速バス','伊予鉄バス','JR四国バス','四国高速バス','伊予鉄バス'],
+      ['07:45','08:45','09:45','11:05','12:40','13:15','14:45','16:05','17:05','18:20','19:20','20:20'],
+      ['10:35','11:35','12:35','13:55','15:05','16:05','17:35','18:55','19:30','21:10','22:10','23:10'],
+      'https://www.jr-shikokubus.co.jp/businfo/bocchan_ex/matsuyama.html');
+    // マドンナエクスプレス（岡山 -> 松山）
+    add('岡山駅西口','okayama_official_in',
+      ['両備バス','下津井電鉄','JR四国バス','伊予鉄バス'],
+      ['08:00','11:10','14:50','17:20'],
+      ['11:37','14:37','18:17','20:47'],
+      'https://www.iyotetsu.co.jp/kousoku/okayama.html');
+    // JR Shikoku Bus Kochi -> Matsuyama published timetable.
+    add('高知駅BT','jrshikoku_kochi_verified_in',
+      ['JR四国バス','JR四国バス','JR四国バス','JR四国バス'],
+      ['08:30','10:20','13:20','16:30'],
+      ['11:21','13:11','16:11','19:24'],
+      'https://www.jr-shikokubus.co.jp/news/2026/05/912d7f532c75c7e85f4b39a062178e921e88b903.pdf');
+    return out;
   }
   function getBoardRecords(board, now) {
     const displayIso = boardDisplayIso(board, now);
