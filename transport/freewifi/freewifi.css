@@ -2076,3 +2076,30 @@ body.freewifi-tv .panel-port .port-route-guidance .port-guidance-scroll{
   overflow:hidden!important;
   text-align:center!important;
 }
+
+
+/* Dedicated next-limited-express strip; keep scheduled and observed data distinct. */
+body.freewifi-tv #rail-rows .rail-next-limited{
+  display:flex!important;align-items:center!important;gap:10px!important;
+  min-height:39px!important;flex:0 0 39px!important;min-width:0!important;
+  padding:3px 12px!important;background:#142d43!important;
+  border:1px solid #3d718f!important;border-left:5px solid #f0ae49!important;
+  overflow:hidden!important;white-space:nowrap!important;
+}
+body.freewifi-tv #rail-rows .rail-next-label{
+  font-size:15px!important;font-weight:1000!important;color:#ffd58b!important;flex:none!important;
+}
+body.freewifi-tv #rail-rows .rail-next-service{flex:none!important}
+body.freewifi-tv #rail-rows .rail-next-time{
+  font-size:18px!important;font-weight:1000!important;color:white!important;flex:none!important;
+}
+body.freewifi-tv #rail-rows .rail-next-dest{
+  font-size:16px!important;font-weight:900!important;color:white!important;flex:none!important;
+}
+body.freewifi-tv #rail-rows .rail-next-status{
+  font-size:12px!important;color:#a9dce9!important;overflow:hidden!important;
+  text-overflow:ellipsis!important;min-width:0!important;
+}
+html.company-pc body.freewifi-tv #rail-rows .rail-next-limited{
+  min-height:48px!important;flex-basis:48px!important;
+}
