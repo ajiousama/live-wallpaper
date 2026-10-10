@@ -2901,8 +2901,10 @@
   function renderPort(rows) {
     const root = $('port-rows');
     // Preserve the persistent ticker when the ferry rows are redrawn.
-    const persistentTicker=$('port-note');
-    if(persistentTicker && root.contains(persistentTicker)) $('panel-port').appendChild(persistentTicker);
+    for(const id of ['port-note','port-limousine-note']) {
+      const ticker=$(id);
+      if(ticker && root.contains(ticker)) $('panel-port').appendChild(ticker);
+    }
     root.innerHTML = '';
     const dep = currentDirection() === 'departure';
 
@@ -2967,6 +2969,8 @@
           // Port connection ticker belongs between Matsuyama ports and other routes.
           const note=$('port-note');
           if(note) root.appendChild(note);
+          const limousine=$('port-limousine-note');
+          if(limousine) root.appendChild(limousine);
         }
       });
     } else {
@@ -3024,14 +3028,12 @@
     const rows=slowLive.ferry?.items; const items=[];
     if(Array.isArray(rows)&&rows.length){rows.forEach(x=>{const st=String(x.status||'');const cls=/欠航|休航/.test(st)?'ferry-cancel':/減便|一部/.test(st)?'ferry-reduced':'ferry-normal';items.push(`<span class="${cls}">フェリーLIVE｜${x.name}｜${st}</span>`);});}
     if(!items.length)items.push('フェリーLIVE｜公式運航情報を取得中');
-    // Iyo Railway's published 2026-04-01 port limousine schedule.
-    // It is a scheduled connection, not real-time bus positioning.
-    // Do not show an already-departed bus as an upcoming service.
-    const departure=22*60+22;
-    if(now.minutes<=departure){
-      items.push('🚌 松山観光港リムジン｜広島フェリー22:12着に接続｜観光港22:22発 → JR松山駅前22:42 → 愛媛新聞社前22:44 → 松山市駅22:50着（時刻表予定・船便により変更あり）');
-    }
     items.push(PORT_WARNING); return items;
+  }
+  function portLimousineTickerItems(now=japanNow()) {
+    // Published scheduled bus connection, not live vehicle tracking.
+    if(now.minutes<=22*60+22) return ['🚌 松山観光港リムジン｜広島フェリー22:12着に接続｜観光港22:22発 → JR松山駅前22:42 → 愛媛新聞社前22:44 → 松山市駅22:50着（時刻表予定・船便により変更あり）'];
+    return ['松山観光港リムジン｜本日の22:22発は出発時刻を過ぎました'];
   }
   function parseJstClient(s) {
     const t=String(s||'').trim(); if(!t)return NaN; return Date.parse(t.replace(/\//g,'-').replace(' ','T')+(t.includes('+')?'':'+09:00'));
@@ -3288,6 +3290,7 @@
     renderAirportBottomInfo(now);
     updatePersistentTicker('bus-note','bus',busTickerItems(now));
     updatePersistentTicker('port-note','port',ferryTickerItems(now));
+    updatePersistentTicker('port-limousine-note','port-limousine',portLimousineTickerItems(now));
   }
 
   function scale() {
