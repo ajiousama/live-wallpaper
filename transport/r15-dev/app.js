@@ -826,12 +826,46 @@
     }
     return [];
   }
+  // Takahama - Gogoshima published timetable (Yura and Tomari).
+  // https://gogoshima-ferry.com/timetable_faretable/
+  function gogoshimaPortRecords(iso) {
+    const holidayClosure=/-(?:12-31|01-0[1-3])$/.test(iso);
+    const routes=[
+      {name:'由良港',ship:'フェリーミソラ',travel:13,
+       outward:['06:15','07:25','08:08','08:55','09:55','10:55','11:55','13:15','14:40','16:00','17:10','18:10','19:10','20:10'],
+       inward:['05:55','07:08','07:44','08:35','09:35','10:35','11:35','12:55','14:20','15:35','16:40','17:50','18:50','19:50']},
+      {name:'泊港',ship:'フェリーしとらす',travel:10,
+       outward:['06:45','07:17','07:52','09:25','10:25','11:25','12:25','13:55','15:25','16:40','17:40','18:40','19:40','20:25'],
+       inward:['06:25','07:00','07:35','08:55','10:05','11:05','12:10','13:35','15:00','16:10','17:20','18:20','19:20','20:10']}
+    ];
+    const out=[];
+    for(const route of routes){
+      for(const [direction,times] of [['departure',route.outward],['arrival',route.inward]]){
+        times.forEach((time,i)=>{
+          if(holidayClosure && i===times.length-1)return;
+          const isSummer=/-(?:07|08)-/.test(iso);
+          const landing=route.name;
+          out.push({id:`gogoshima-${landing}-${direction}-${i}`,
+            board:'port',kind:'ferry',source:'gogoshima_official',port:'高浜港',
+            arrivalPort:'高浜港',service:'株式会社ごごしま',shipName:route.ship,
+            dest:direction==='departure'?landing:'高浜港',
+            origin:direction==='arrival'?landing:'高浜港',
+            info:`${route.ship}・${landing}航路`,time:direction==='arrival'?addMinutes(time,route.travel):time,
+            originDepartureTime:direction==='arrival'?time:undefined,
+            direction,noSyntheticArrival:true,
+            estimatedArrival:direction==='arrival',
+            _gogoshima:true});
+        });
+      }
+    }
+    return out;
+  }
   function portRolling24Rows(now) {
     const dep=currentDirection()==='departure';
     const prevIso=shiftIso(now.iso,-1);
     const nextIso=shiftIso(now.iso,1);
-    const today=recordsForDay('port',now.iso);
-    const tomorrow=recordsForDay('port',nextIso);
+    const today=[...recordsForDay('port',now.iso),...gogoshimaPortRecords(now.iso)];
+    const tomorrow=[...recordsForDay('port',nextIso),...gogoshimaPortRecords(nextIso)];
     const out=[];
 
     if(dep){
@@ -844,11 +878,15 @@
         out.push({...r,direction:'departure',minutes:departure,_serviceIso:serviceIso,
           isNextDayStart:nextDay,sailingInProgress:false});
       };
-      today.forEach(r=>appendDeparture(r,now.iso,0));
-      tomorrow.forEach(r=>appendDeparture(r,nextIso,1440,true));
+      today.filter(r=>r.direction!=='arrival').forEach(r=>appendDeparture(r,now.iso,0));
+      tomorrow.filter(r=>r.direction!=='arrival').forEach(r=>appendDeparture(r,nextIso,1440,true));
     }else{
       const pushArrival=(src,baseIso,baseOffset)=>{
-        src.filter(r=>!r.noSyntheticArrival).map(synthPortArrival).forEach(r=>{
+        src.filter(r=>r.direction==='arrival').forEach(r=>{
+          const m=toMinutes(r.time)+baseOffset;
+          if(m>=now.minutes && m<=now.minutes+1440)out.push({...r,minutes:m,_serviceIso:baseIso});
+        });
+        src.filter(r=>r.direction!=='arrival' && !r.noSyntheticArrival).map(synthPortArrival).forEach(r=>{
           let m=toMinutes(r.time);
           if(r._arrivalNextDay) m+=1440;
           m+=baseOffset;
@@ -860,7 +898,7 @@
 
       const prev=recordsForDay('port',prevIso);
       // Previous-day sailings that cross midnight arrive on the current day.
-      prev.filter(r=>!r.noSyntheticArrival).map(synthPortArrival).filter(r=>r._arrivalNextDay).forEach(r=>{
+      prev.filter(r=>r.direction!=='arrival' && !r.noSyntheticArrival).map(synthPortArrival).filter(r=>r._arrivalNextDay).forEach(r=>{
         const m=toMinutes(r.time);
         if(m>=now.minutes && m<=now.minutes+1440){
           out.push({...r,originDepartureDay:'前日',minutes:m,_serviceIso:prevIso});
