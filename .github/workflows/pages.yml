@@ -90,7 +90,7 @@ jobs:
               assert actual == blob, f'Approved airline logo changed: {p} ({actual})'
               data = p.read_bytes()
               if name.endswith('.png'):
-                  assert data.startswith(b'\\x89PNG\\r\\n\\x1a\\n'), f'Invalid PNG: {p}'
+                  assert data.startswith(bytes.fromhex('89504e470d0a1a0a')), f'Invalid PNG: {p}'
               else:
                   assert b'<svg' in data[:500], f'Invalid SVG: {p}'
               print(f'LOCKED {name}: {actual} sha256={hashlib.sha256(data).hexdigest()}')
