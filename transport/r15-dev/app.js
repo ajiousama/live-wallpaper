@@ -2371,7 +2371,16 @@
     row.className='row rail-row terminal-arrival-row';
     const info=railLiveTrainLabel(x);
     const serviceBadge=railServiceBadgeHtml(info.kind,info.kind==='limited'?info.service:'');
+    // Inbound trains from the Uwajima direction: distinguish the coastal and inland routes.
+    const arrivalRoute=(()=>{
+      if(x.side!=='south') return '';
+      const infoText=[x.route,x.via,x.info,x.origin,x.position].map(v=>String(v||'')).join(' ');
+      if(/伊予長浜|海回り|愛ある伊予灘/.test(infoText)) return '海回り・伊予長浜経由';
+      if(/内子|山回り/.test(infoText) || /宇和海/.test(String(info.service||''))) return '山回り・内子経由';
+      return '';
+    })();
     const details=['この列車は松山止まりです'];
+    if(arrivalRoute) details.push('運転経路：'+arrivalRoute);
     if(jrPositionUsable(x.position)) details.push(`📍現在位置 ${x.position}`);
     else details.push('位置情報未確認・到着は時刻表予定');
     if(x.delay>0) details.push(`${x.delay}分遅れ`);
@@ -2403,7 +2412,7 @@
       <div class="rail-primary">
         <div class="cell rail-service ${info.kind}"><span class="kindtxt">${serviceBadge}</span></div>
         <div class="cell time">${x.arrival}</div>
-        <div class="cell main">当駅止まり</div>
+        <div class="cell main">当駅止まり${arrivalRoute?`［${arrivalRoute}］`:``}</div>
       </div>
       <div class="rail-detail">${tickerHtml(details)}</div>`;
     root.appendChild(row);
