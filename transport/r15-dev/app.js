@@ -2041,7 +2041,20 @@
       cleanStation(r.dest||'')===dest &&
       validRecord(r,now.iso)
     );
+    const liveSchedule=Array.isArray(approachLive.ichitsubo?.matsuyamaSchedule)
+      ? approachLive.ichitsubo.matsuyamaSchedule : [];
+    const diagramMatch=liveSchedule.find(r=>
+      String(r.trainNum||'')===String(turnback.trainNum||'') &&
+      padTime(r.departure||'')===dep &&
+      String(r.direction||'')===dir &&
+      cleanStation(r.destination||'')===dest
+    );
     const r=matches[0];
+    if(!r && diagramMatch){
+      const trainLabel=railLiveTrainLabel({trainNum:diagramMatch.trainNum,trainClass:diagramMatch.trainClass});
+      const service=trainLabel.kind==='limited'?'特急 '+trainLabel.service:'普通';
+      return `折り返し ${dep}発 ${service} ${dest}行となります（運行図表照合）`;
+    }
     if(r){
       const kind=r.kind==='limited'?'特急 ':r.kind==='sightseeing'?'観光 ':'';
       const service=r.kind==='local'?'普通':`${kind}${r.service||''}`.trim();
@@ -2079,6 +2092,7 @@
     if(x.delay>0) details.push(`${x.delay}分遅れ`);
     const turnback=railTurnbackLabel(x.turnback,now);
     if(turnback) details.push(turnback);
+    else details.push('折り返し列車は現時点で特定できません');
     row.innerHTML=`
       <div class="rail-primary">
         <div class="cell rail-service ${info.kind}"><span class="kindtxt">${serviceBadge}</span></div>
