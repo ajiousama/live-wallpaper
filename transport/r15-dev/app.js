@@ -275,7 +275,7 @@
   function arrivalOriginDeparted(item,now) {
     // Arrival times and changed times are schedules, not evidence of departure.
     const status=String(item?.status||'').trim();
-    if(/欠航|運休|取消|キャンセル|出発前|搭乗中|搭乗手続|遅延|出発待/.test(status)) return false;
+    if(/欠航|運休|取消|キャンセル|出発前|搭乗中|搭乗手続|出発待/.test(status)) return false;
     const statusConfirmed=/(?:出発済み|離陸済み|出発地から出発|出発地を出発|出発空港を出発)/.test(status);
     const actual=padTime(item?.originDepartureActual||'');
     const actualConfirmed=item?.originDepartureConfirmed===true && /^\d{2}:\d{2}$/.test(actual);
