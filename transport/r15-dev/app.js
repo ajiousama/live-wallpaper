@@ -2089,17 +2089,27 @@
     '1M':'14M', '3M':'16M', '5M':'18M', '9M':'22M',
     '13M':'26M', '15M':'28M', '17M':'30M'
   };
+  // Consecutive Uwakai workings at Matsuyama from the published 2026 operating table.
+  // Depot transfers, divides/joins and ambiguous multiple-unit formations are omitted.
+  const VERIFIED_UWAKAI_WORKINGS_2026={
+    '1054D':'1055D', '1058D':'1059D', '1060D':'1061D',
+    '1062D':'1063D', '1064D':'1065D', '1066D':'1067D',
+    '1070D':'1071D', '1072D':'1073D', '1076D':'1077D',
+    '1080D':'1081D'
+  };
   function publishedTrainTurnback(x){
     if(x.trainClass!=='limited') return '';
     const inbound=String(x.trainNum||'').trim().toUpperCase();
-    const outbound=VERIFIED_SHIOKAZE_WORKINGS_2026[inbound];
+    const shiokaze=VERIFIED_SHIOKAZE_WORKINGS_2026[inbound];
+    const uwakai=VERIFIED_UWAKAI_WORKINGS_2026[inbound];
+    const outbound=shiokaze||uwakai;
     if(!outbound) return '';
     const services=Array.isArray(approachLive.ichitsubo?.matsuyamaSchedule)
       ? approachLive.ichitsubo.matsuyamaSchedule : [];
     const r=services.find(v=>
       String(v.trainNum||'').trim().toUpperCase()===outbound &&
-      v.direction==='north' &&
-      /^\\d{1,2}:\\d{2}$/.test(String(v.departure||''))
+      v.direction===(shiokaze?'north':'south') &&
+      /^\d{1,2}:\d{2}$/.test(String(v.departure||''))
     );
     if(!r) return '';
     const arrive=toMinutes(x.arrival),depart=toMinutes(r.departure);
@@ -2107,8 +2117,9 @@
     if(!Number.isFinite(gap) || gap<4 || gap>120) return '';
     const dest=cleanStation(r.destination||'');
     if(!dest || /^(不明|未定|未取得|—|-|0+)$/.test(dest)) return '';
-    const n=Number(outbound.replace(/M$/,''));
-    return `通常運用では折り返し ${padTime(r.departure)}発 特急しおかぜ${n}号 ${dest}行となります（当日車両変更未確認）`;
+    const n=shiokaze?Number(outbound.replace(/M$/,'')):Number(outbound.replace(/D$/,''))-1050;
+    const name=shiokaze?'しおかぜ':'宇和海';
+    return `通常運用では折り返し ${padTime(r.departure)}発 特急${name}${n}号 ${dest}行となります（当日車両変更未確認）`;
   }
 
   function appendMatsuyamaTerminalArrivalRow(root,x,now) {
