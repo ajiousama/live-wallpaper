@@ -781,6 +781,22 @@
     return [via,position].filter(Boolean).join(' ｜ ') || '—';
   }
 
+  // Verified inbound services only: JR Shikoku Bus 2026-06-01 Kochi -> Matsuyama timetable.
+  // Do not derive inbound journeys from outbound departures.
+  function confirmedHighwayInboundRows(iso) {
+    const services=[
+      ['08:30','11:21'],['10:20','13:11'],['13:20','16:11'],['16:30','19:24']
+    ];
+    return services.map(([departure,arrival],i)=>({
+      id:`verified-kochi-in-${i}`,board:'bus',kind:'bus',
+      source:'jrshikoku_kochi_verified_inbound',service:'JR四国バス',
+      direction:'arrival',origin:'高知駅BT',dest:'JR松山駅',
+      time:arrival,originDepartureTime:departure,arrivalTerminal:'JR松山駅',
+      arrivalTerminalTime:arrival,noSyntheticArrival:true,
+      info:'なんごくエクスプレス・2026年6月改正時刻表',
+      timetableReference:'https://www.jr-shikokubus.co.jp/news/2026/05/912d7f532c75c7e85f4b39a062178e921e88b903.pdf'
+    }));
+  }
   function getBoardRecords(board, now) {
     const displayIso = boardDisplayIso(board, now);
     const rows = recordsForDay(board, (board === 'rail' || board === 'air') ? displayIso : now.iso);
@@ -795,7 +811,7 @@
         .sort((a, b) => rMinutes(a) - rMinutes(b));
     }
     if (board === 'bus') {
-      const explicitArrivals = rows.filter(r => r.direction === 'arrival').map(r => {
+      const explicitArrivals = [...rows.filter(r => r.direction === 'arrival'), ...confirmedHighwayInboundRows(now.iso)].map(r => {
         const terminal = String(r.arrivalTerminal || r.stop || '松山市駅').trim() || '松山市駅';
         const terminalTime = padTime(r.arrivalTerminalTime || r.time || '');
         return {
@@ -2943,7 +2959,7 @@
     if (!rows.length) {
       root.classList.add('bus-end');
       const mode = dep ? 'DEPARTURES — 出発バス —' : 'ARRIVALS — 到着バス —';
-      const msg = dep ? '本日のバスは終了しました' : '本日の到着バスは終了しました';
+      const msg = dep ? '本日のバスは終了しました' : '確認済みの到着時刻表がありません';
       root.innerHTML = `<div class="bus-end-state"><div class="bus-end-mode">🚌 ${mode}</div><div class="bus-end-message">${msg}</div></div>`;
     } else (FREEWIFI_TV ? rows.slice(0,10) : rows).forEach(r => {
       const row = document.createElement('div'); row.className = `row${r.isFinal?' is-final':''}${dep && isDepartSoon(r, japanNow()) ? ' depart-soon' : ''}`;
