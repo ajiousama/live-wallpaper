@@ -348,6 +348,27 @@
     if(!arrivedFlightObservedAt.has(key))arrivedFlightObservedAt.set(key,now.minutes);
     return arrivedFlightObservedAt.get(key);
   }
+  function completedTurnaroundDeparted(arrival, departures, now) {
+    // Do not infer the same physical aircraft from airline, time or route.
+    // Require an explicit turnaround flight number or the same aircraft ID.
+    if(!Array.isArray(departures)) return false;
+    const arrId=String(arrival.aircraftHex||arrival.aircraftRegistration||'').trim().toUpperCase();
+    const explicit=Array.isArray(arrival.turnaroundDepartureNumbers)
+      ? arrival.turnaroundDepartureNumbers.map(String)
+      : [arrival.turnaroundDepartureNumber].filter(Boolean).map(String);
+    return departures.some(dep=>{
+      const depId=String(dep.aircraftHex||dep.aircraftRegistration||'').trim().toUpperCase();
+      const matchedByAircraft=arrId && depId && arrId===depId;
+      const matchedByFlight=explicit.length && Array.isArray(dep.numbers) &&
+        explicit.some(n=>dep.numbers.map(String).includes(n));
+      if(!matchedByAircraft && !matchedByFlight) return false;
+      if(!/出発済み|離陸済み|出発完了/.test(String(dep.status||''))) return false;
+      const depTime=padTime(dep.actualDepartureTime||dep.actualDeparture||dep.changed||dep.scheduled||'');
+      const arrTime=padTime(arrival.actualArrivalTime||arrival.actualArrival||arrival.arrivedAt||arrival.changed||arrival.scheduled||'');
+      return /^\\d{2}:\\d{2}$/.test(depTime) && /^\\d{2}:\\d{2}$/.test(arrTime) &&
+        toMinutes(depTime)>=toMinutes(arrTime) && toMinutes(depTime)<=now.minutes+1;
+    });
+  }
   function liveFlightRows(now) {
     const dep=currentDirection()==='departure';
     if (boardDisplayIso('air', now) !== now.iso) return dep?null:[];
@@ -401,6 +422,7 @@
         const key=`${now.iso}|${nums.join('/')}|${padTime(x.scheduled)}`;
         const completion=arrivalCompletionTime(x,key,now);
         arrivalCompleted=completion!==null;
+        if(arrivalCompleted && completedTurnaroundDeparted(x,slowLive.airport?.departures,now)) return;
         if(arrivalCompleted){
           arrivalAge=(now.minutes-completion+1440)%1440;
           // A stale completed state must not survive a new page load all day.
