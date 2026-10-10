@@ -1225,6 +1225,12 @@
   }
 
   function portRouteParts(record, direction = 'departure') {
+    // Explicit Takahama inbound calls already contain their actual origin.
+    // Do not reverse a destination of Takahama back into "Takahama → Takahama".
+    if(direction==='arrival' && (record.source==='gogoshima_official' || record.source==='nakajima_takahama_call')) {
+      const origin=String(record.origin||'').trim();
+      return [origin && origin!=='高浜港' ? origin : '出発港未確認','高浜港'];
+    }
     const svc = String(record.service || '');
     const text = `${record.dest || ''} ${record.info || ''}`;
     const start = record.port || '出発港';
