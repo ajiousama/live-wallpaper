@@ -3164,9 +3164,19 @@
       const service = `<div class="service-wrap ferry-service-wrap">${operatorHtml}<span class="code">${op.type}</span></div>`;
       if (dep) {
         const routeGuidance=ferryRouteGuidance(r,'departure',japanNow());
+        const departureCalls=portDepartureCalls(r);
+        const lastCall=departureCalls.length?departureCalls[departureCalls.length-1]:null;
+        const scheduledArrival=padTime(r.terminalArrivalTime||r.arrivalTime||(lastCall&&lastCall[1])||'');
+        const arrivalClock=/^\\d{2}:\\d{2}$/.test(scheduledArrival)
+          ? scheduledArrival : addMinutes(r.time,portTravelMinutes(r));
+        const arrivalIsEstimate=!/^\\d{2}:\\d{2}$/.test(scheduledArrival);
+        const arrivalDay=toMinutes(arrivalClock)<toMinutes(r.time)?'翌日':'';
+        const arrivalPort=String(lastCall?.[0]||r.dest||'目的港').trim();
+        const arrivalGuide=`${arrivalPort} ${arrivalDay}${arrivalClock}${arrivalIsEstimate?'頃着（見込）':'着予定'}`;
+        const departureGuidance=[routeGuidance==='—'?'':routeGuidance,arrivalGuide].filter(Boolean).join(' ｜ ');
         row.innerHTML = `
           <div class="cell main port-route port-route-main">${portDepartureDestinationHtml(r,`${firstBadge}${finalBadge}`)}</div>
-          <div class="cell sub port-route-guidance">${overflowScrollHtml(routeGuidance,'port-guidance-scroll')}</div>
+          <div class="cell sub port-route-guidance">${overflowScrollHtml(departureGuidance,'port-guidance-scroll')}</div>
           <div class="cell service">${service}</div>
           <div class="cell time port-departure-time">${r.time}発</div>`;
       } else {
