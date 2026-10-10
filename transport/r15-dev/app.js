@@ -272,11 +272,22 @@
   function padTime(t) {
     const m=String(t||'').match(/^(\d{1,2}):(\d{2})$/); return m ? `${String(Number(m[1])).padStart(2,'0')}:${m[2]}` : String(t||'');
   }
+  function arrivalOriginDeparted(item,now) {
+    // Arrival times and changed times are schedules, not evidence of departure.
+    const status=String(item?.status||'').trim();
+    if(/欠航|運休|取消|キャンセル|出発前|搭乗中|搭乗手続|遅延|出発待/.test(status)) return false;
+    const statusConfirmed=/(?:出発済み|離陸済み|出発地から出発|出発地を出発|出発空港を出発)/.test(status);
+    const actual=padTime(item?.originDepartureActual||'');
+    const actualConfirmed=item?.originDepartureConfirmed===true && /^\d{2}:\d{2}$/.test(actual);
+    if(!statusConfirmed && !actualConfirmed) return false;
+    if(actualConfirmed && toMinutes(actual)>now.minutes+1) return false;
+    return true;
+  }
   function liveFlightRows(now) {
     const dep=currentDirection()==='departure';
-    if (boardDisplayIso('air', now) !== now.iso) return null;
+    if (boardDisplayIso('air', now) !== now.iso) return dep?null:[];
     const live=dep ? slowLive.airport?.departures : slowLive.airport?.arrivals;
-    if (!slowLive.airport?.ok || !Array.isArray(live)) return null;
+    if (!slowLive.airport?.ok || !Array.isArray(live)) return dep?null:[];
 
     // LIVE側の日付が今日と一致しない時だけ静的時刻表へ戻す。
     // 「時刻だけ」で前日便を翌日扱いしないことが重要。
@@ -284,7 +295,7 @@
     const dm=upd.match(/(\d{4})年(\d{1,2})月(\d{1,2})日/);
     if (dm) {
       const liveIso=`${dm[1]}-${String(Number(dm[2])).padStart(2,'0')}-${String(Number(dm[3])).padStart(2,'0')}`;
-      if (liveIso!==now.iso) return null;
+      if (liveIso!==now.iso) return dep?null:[];
     }
 
     const displayIso = boardDisplayIso('air', now);
@@ -295,6 +306,8 @@
     const lastStaticMinute=staticRows.length?Math.max(...staticRows.map(r=>toMinutes(effectiveTime(r,displayCtx)))):null;
     const out=[];
     live.forEach(x=>{
+      // Arrival flights are hidden until their actual origin departure is verified.
+      if(!dep && !arrivalOriginDeparted(x,now)) return;
       const nums=Array.isArray(x.numbers)?x.numbers.map(String):[];
       let r=staticRows.find(s=>nums.includes(String(parseAirService(s.service).number)) && padTime(s.time)===padTime(x.scheduled));
       if (!r) r=staticRows.find(s=>nums.includes(String(parseAirService(s.service).number)));
@@ -2129,7 +2142,7 @@
     }
     const raw=r.liveRaw||{};
     const origin=String(raw.originAirport||r.dest||'出発地').trim();
-    const dep=padTime(raw.originDepartureActual||raw.originDepartureChanged||raw.originDepartureScheduled||'');
+    const dep=padTime(raw.originDepartureActual||'');
     if(!/^\d{2}:\d{2}$/.test(dep)) return '';
     const progress=estimatedJourneyProgress(dep,arrivalOrDeparture,now,'');
     if(progress===null || /到着済み|ただいま到着/.test(status)) return '';
@@ -2142,11 +2155,11 @@
     const root=$('air-rows'); root.innerHTML=''; const dep=currentDirection()==='departure';
     root.classList.remove('air-end');
     if(!rows.length){
-      const now=japanNow(); const last=lastAirMovement(now,dep);
+      const now=japanNow(); const last=dep?lastAirMovement(now,true):null;
       root.classList.add('air-end');
       const mode=dep?'DEPARTURES — 出発便 —':'ARRIVALS — 到着便 —';
-      const msg=dep?'本日の出発便は終了しました':'本日の到着便は終了しました';
-      const detail=last ? (dep?`最終出発便：${last.place}行　${last.time}　出発済み`:`最終到着便：${last.place}発　${last.time}　到着済み`) : '';
+      const msg=dep?'本日の出発便は終了しました':'出発が確認できた到着便はありません';
+      const detail=dep && last ? `最終出発便：${last.place}行　${last.time}　出発済み` : (dep?'':'出発地の実績が未取得の便は非表示');
       root.innerHTML=`<div class="air-end-state"><div class="air-end-mode">✈ ${mode}</div><div class="air-end-message">${msg}</div>${detail?`<div class="air-end-detail">${detail}</div>`:''}</div>`;
     } else {
       const companyPc=document.documentElement.classList.contains('company-pc');
@@ -2173,7 +2186,7 @@
         const raw=r.liveRaw||{};
         const originAirport=String(raw.originAirport||'').trim();
         const scheduledOrigin=padTime(raw.originDepartureScheduled||'');
-        const actualOrigin=padTime(raw.originDepartureActual||raw.originDepartureChanged||'');
+        const actualOrigin=padTime(raw.originDepartureConfirmed ? raw.originDepartureActual : '');
         if(originAirport && actualOrigin){
           const prefix=scheduledOrigin && actualOrigin===scheduledOrigin ? '定刻通り ' : '';
           const originInfo=`${prefix}${actualOrigin}に${originAirport}を出発`;
