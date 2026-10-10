@@ -2124,3 +2124,12 @@ body.freewifi-tv #rail-rows .rail-next-details .marquee{
 html.company-pc body.freewifi-tv #rail-rows .rail-next-limited{
   min-height:64px!important;flex-basis:64px!important;
 }
+
+/* Separate ordinary-train summary, with the same two-line ticker format as express. */
+body.freewifi-tv #rail-rows .rail-next-local{
+  border-left-color:#59bc90!important;
+  background:#132f2a!important;
+}
+body.freewifi-tv #rail-rows .rail-next-local .rail-next-label{
+  color:#aaf2c7!important;
+}
