@@ -405,7 +405,7 @@ async function getIchitsubo(now: { minutes: number }) {
     if (!route || (route.matsuyamaIndex<0 && route.cityIndex<0)) return null;
     const position=normalizeStationName(pos.Pos ?? "");
     if(!position || /^(?:-|—|不明|未取得|取得中|確認中|データなし|位置情報なし)$/.test(position)) return null;
-    const scheduled=/^\\d{1,2}:\\d{2}$/.test(route.matsuyamaTime)
+    const scheduled=/^\d{1,2}:\d{2}$/.test(route.matsuyamaTime)
       ? route.matsuyamaTime : "";
     const delay=Number(pos.delay)||0;
     const diff=scheduled ? toMinutes(scheduled)+delay-now.minutes : null;
