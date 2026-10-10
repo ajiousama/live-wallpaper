@@ -2199,7 +2199,7 @@
     }));
     const visible = [...services, ...terminalArrivals, ...deadheads, ...freights]
       .sort((a,b)=>a._sortMinutes-b._sortMinutes)
-      .slice(0, FREEWIFI_TV ? (document.documentElement.classList.contains('company-pc') ? 10 : 9) : 3);
+      .slice(0, FREEWIFI_TV ? (document.documentElement.classList.contains('company-pc') ? 9 : 8) : 3);
 
     if (!visible.length) {
       // A missing live fix must never be described as an ended service.
