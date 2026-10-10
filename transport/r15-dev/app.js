@@ -944,8 +944,20 @@
       });
     }
 
+    // Keep the full published JR timetable visible. Only live-confirmed
+    // services may claim a train's actual position; the others say "時刻表".
     const list=board==='rail'
-      ? liveRailPassengerRows(getBoardRecords(board,now),now)
+      ? (() => {
+          const scheduled=getBoardRecords(board,now);
+          const verified=liveRailPassengerRows(scheduled,now);
+          return scheduled.map(r=>{
+            const live=verified.find(x=>x.direction===r.direction &&
+              padTime(x.time)===padTime(r.time) && x.kind===r.kind &&
+              x.service===r.service && x.dest===r.dest);
+            return live ? {...live,railPositionConfirmed:true}
+              : {...r,railTimetableOnly:true};
+          });
+        })()
       : getBoardRecords(board,now);
 
     // Unified definition:
@@ -1366,6 +1378,9 @@
 
   function railRowDetailItems(record) {
     const items = [];
+    if(record.railTimetableOnly) items.push('時刻表予定・現在位置未確認');
+    else if(record.railPositionConfirmed && record.livePosition)
+      items.push('現在位置 '+record.livePosition);
     const stops = railStops(record).filter(Boolean);
     const timedStops = railTimedStops(record).filter(Boolean);
     const terminalArrival = railTerminalArrivalText(record);
