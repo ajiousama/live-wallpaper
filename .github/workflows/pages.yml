@@ -61,32 +61,66 @@ jobs:
         if: github.event_name != 'push'
         run: python scripts/update_data.py
 
-      - name: Cache airline logos into Pages artifact
-        # Preserve the approved artwork in EVERY published build, including
-        # source pushes. Do not replace or restyle airline logos without approval.
+      - name: Restore and permanently pin approved airline logo originals
         shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           OUT="transport/assets/airlines"
           mkdir -p "$OUT"
-          get_logo() {
-            local url="$1"
-            local out="$2"
-            if ! curl -fL --retry 1 --retry-delay 1 --connect-timeout 6 --max-time 12 \
-              -A "Mozilla/5.0 GitHub-Actions live-wallpaper" \
-              "$url" -o "$OUT/$out" || ! test -s "$OUT/$out"; then
-              echo "::warning::Airline logo unavailable: $out — continuing Pages deployment"
-              rm -f "$OUT/$out"
+          approved=(ana.svg jal.png ibex.png jetstar.svg jeju.svg air-busan.svg asiana.svg eva.svg)
+          missing=0
+          for f in "${approved[@]}"; do
+            if ! test -s "$OUT/$f"; then missing=1; fi
+          done
+          if [ "$missing" -eq 1 ]; then
+            # This Pages artifact predates the JAL timeout and contains the
+            # original eight user-approved images, not remade substitutes.
+            tmp="$(mktemp -d)"
+            trap 'rm -rf "$tmp"' EXIT
+            gh run download 38017111842 -R "$GITHUB_REPOSITORY" -n github-pages -D "$tmp"
+            test -s "$tmp/artifact.tar" || { echo '::error::Approved logo backup missing'; exit 1; }
+            tar -xf "$tmp/artifact.tar" -C "$tmp"
+            for f in "${approved[@]}"; do
+              src="$tmp/transport/assets/airlines/$f"
+              test -s "$src" || { echo "::error::Missing approved original: $f"; exit 1; }
+              cp "$src" "$OUT/$f"
+            done
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add -f "$OUT"
+            if ! git diff --cached --quiet; then
+              git commit -m 'assets: pin approved airline logo originals [skip ci]'
+              # Pin originals in main. Future deployments need no external
+              # logo service and must not depend on expiring Actions artifacts.
+              git push origin HEAD:main || { echo '::error::Unable to persist pinned logos'; exit 1; }
             fi
-          }
-          get_logo "https://upload.wikimedia.org/wikipedia/commons/8/8d/All_Nippon_Airways_Logo.svg" "ana.svg"
-          get_logo "https://www.matsuyama-airport.co.jp/img/logo/JAL.png" "jal.png"
-          get_logo "https://newscast.jp/attachments/GGxKzaX071Sa4bUQShUJ.png" "ibex.png"
-          get_logo "https://upload.wikimedia.org/wikipedia/commons/8/8f/Jetstar_logo.svg" "jetstar.svg"
-          get_logo "https://upload.wikimedia.org/wikipedia/commons/f/f2/Jeju_Air_Logo.svg" "jeju.svg"
-          get_logo "https://upload.wikimedia.org/wikipedia/commons/0/01/Air_Busan_logo.svg" "air-busan.svg"
-          get_logo "https://upload.wikimedia.org/wikipedia/commons/7/74/Asiana_Airlines.svg" "asiana.svg"
-          get_logo "https://upload.wikimedia.org/wikipedia/commons/c/cf/Logo_EVA_Air.svg" "eva.svg"
+          fi
+          for f in "${approved[@]}"; do
+            test -s "$OUT/$f" || { echo "::error::Approved logo missing: $f"; exit 1; }
+          done
+
+      - name: Validate pinned airline logos for Pages
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s transport/assets/airlines/jal.png
+          test -s transport/assets/airlines/ana.svg
+          test -s transport/assets/airlines/ibex.png
+          test -s transport/assets/airlines/jetstar.svg
+          test -s transport/assets/airlines/jeju.svg
+          test -s transport/assets/airlines/air-busan.svg
+          test -s transport/assets/airlines/asiana.svg
+          test -s transport/assets/airlines/eva.svg
+          # Protect exact original bytes; never silently use textual fallback.
+          python - <<'PY'
+          from pathlib import Path
+          png=Path('transport/assets/airlines/jal.png').read_bytes()
+          assert png.startswith(b'\x89PNG\r\n\x1a\n') and len(png) >= 4000, 'JAL approved PNG is invalid'
+          for name in ('ana.svg','jetstar.svg','jeju.svg','air-busan.svg','asiana.svg','eva.svg'):
+              assert b'<svg' in Path('transport/assets/airlines',name).read_bytes()[:500], name
+          PY
 
       - name: Persist live result changes
         if: github.event_name != 'push'
