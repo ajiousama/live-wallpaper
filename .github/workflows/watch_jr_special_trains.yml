@@ -17,7 +17,8 @@ jobs:
       - run: python scripts/watch_jr_special_trains.py
       - name: Persist updated candidate list
         run: |
-          if git diff --quiet -- data/jr_special_train_watch.json && [ -f data/jr_special_train_watch.json ]; then exit 0; fi
+          git add -N data/jr_special_train_watch.json
+          if git diff --quiet -- data/jr_special_train_watch.json; then exit 0; fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/jr_special_train_watch.json
