@@ -2234,3 +2234,33 @@ body.freewifi-tv #port-rows.freewifi-port-groups > .freewifi-port-gogoshima > .r
   height:auto!important;min-height:0!important;
   overflow:hidden!important;
 }
+
+/* Bus split: compact long-distance board and three visible regional slots. */
+body.freewifi-tv #bus-rows.freewifi-bus-grouped{
+  display:grid!important;
+  grid-template-rows:minmax(0,2fr) minmax(0,1fr)!important;
+  gap:5px!important;min-height:0!important;overflow:hidden!important;
+}
+body.freewifi-tv #bus-rows.freewifi-bus-grouped>.freewifi-bus-group{
+  display:grid!important;
+  grid-template-rows:20px repeat(6,minmax(0,1fr))!important;
+  gap:2px!important;min-height:0!important;overflow:hidden!important;
+}
+body.freewifi-tv #bus-rows.freewifi-bus-grouped>.freewifi-bus-regional{
+  grid-template-rows:20px repeat(3,minmax(0,1fr))!important;
+}
+body.freewifi-tv .freewifi-bus-group-head{
+  padding:1px 10px!important;
+  font-size:13px!important;font-weight:900!important;
+  background:#253146!important;color:#d5eaff!important;
+  border-left:4px solid #82b7eb!important;
+}
+body.freewifi-tv .freewifi-bus-regional .freewifi-bus-group-head{
+  background:#23362c!important;color:#c6f2d5!important;
+  border-left-color:#76c68c!important;
+}
+body.freewifi-tv #bus-rows.freewifi-bus-grouped .freewifi-bus-group>.row{
+  min-height:0!important;height:100%!important;max-height:100%!important;
+  flex:none!important;overflow:hidden!important;
+  padding-top:0!important;padding-bottom:0!important;
+}
