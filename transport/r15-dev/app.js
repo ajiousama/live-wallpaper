@@ -275,7 +275,16 @@
   function arrivalOriginDeparted(item,now) {
     // Arrival times and changed times are schedules, not evidence of departure.
     const status=String(item?.status||'').trim();
-    if(/欠航|運休|取消|キャンセル/.test(status)) return false;
+    if(/欠航|運休|取消|キャンセル/.test(status) || /欠航/.test(String(item?.originDepartureStatus||''))) return false;
+    // Ground-truth departure status from the origin airport's official board.
+    // Accept only a fresh, date-matched independent report.
+    const originObserved=Date.parse(String(item?.originDepartedObservedAt||''));
+    const originAge=Date.now()-originObserved;
+    const verifiedAirportDeparted=item?.originDepartureVerified===true &&
+      item?.originDepartureStatus==='出発済み' &&
+      item?.originDepartureSource==='大阪国際空港公式出発案内' &&
+      Number.isFinite(originObserved) && originAge>=-15000 && originAge<=150000;
+    if(verifiedAirportDeparted)return true;
     const statusConfirmed=/(?:出発済み|離陸済み|出発地から出発|出発地を出発|出発空港を出発)/.test(status);
     const actual=padTime(item?.originDepartureActual||'');
     const actualConfirmed=item?.originDepartureConfirmed===true && /^\d{2}:\d{2}$/.test(actual);
@@ -298,6 +307,9 @@
     if (boardDisplayIso('air', now) !== now.iso) return dep?null:[];
     const live=dep ? slowLive.airport?.departures : slowLive.airport?.arrivals;
     if (!slowLive.airport?.ok || !Array.isArray(live)) return dep?null:[];
+    // A stale successful fetch must never keep a historical inbound flight visible.
+    const fetchAge=Date.now()-Date.parse(String(slowLive.generatedAtJst||''));
+    if(!dep && (!slowLive.ok || !Number.isFinite(fetchAge) || fetchAge<-15000 || fetchAge>150000))return [];
 
     // LIVE側の日付が今日と一致しない時だけ静的時刻表へ戻す。
     // 「時刻だけ」で前日便を翌日扱いしないことが重要。
@@ -2176,6 +2188,8 @@
       /^(waiting|airborne|approaching)$/.test(String(raw.aircraftFlightPhase||''))) {
       return String(raw.aircraftPositionText||'');
     }
+    // No coordinate fix means no claim about the aircraft's current location.
+    if(raw.originDepartureVerified===true)return '';
     const origin=String(raw.originAirport||r.dest||'出発地').trim();
     const dep=padTime(raw.originDepartureActual||'');
     if(!/^\d{2}:\d{2}$/.test(dep)) return '';
@@ -2219,12 +2233,15 @@
 
       if(!dep){
         const raw=r.liveRaw||{};
-        const originAirport=String(raw.originAirport||'').trim();
+        const originAirport=String(raw.originDepartureAirport||raw.originAirport||'').trim();
         const scheduledOrigin=padTime(raw.originDepartureScheduled||'');
-        const actualOrigin=padTime(raw.originDepartureConfirmed ? raw.originDepartureActual : '');
+        const actualOrigin=padTime(raw.originDepartureVerified || raw.originDepartureConfirmed ? raw.originDepartureActual : '');
         if(originAirport && actualOrigin){
           const prefix=scheduledOrigin && actualOrigin===scheduledOrigin ? '定刻通り ' : '';
           const originInfo=`${prefix}${actualOrigin}に${originAirport}を出発`;
+          guidance = guidance && guidance!=='—' ? `${guidance}　｜　${originInfo}` : originInfo;
+        } else if(raw.originDepartureVerified===true && raw.originDepartureStatus==='出発済み'){
+          const originInfo=`${originAirport||'出発空港'}から出発済み（公式確認）`;
           guidance = guidance && guidance!=='—' ? `${guidance}　｜　${originInfo}` : originInfo;
         } else if(originAirport && scheduledOrigin){
           const originInfo=`${originAirport} ${scheduledOrigin}発（予定時刻）`;
