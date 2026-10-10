@@ -2128,8 +2128,7 @@
     if (FREEWIFI_TV) {
       const nextLimited=rows.filter(r=>r.kind==='limited')
         .sort((a,b)=>toMinutes(a.time)-toMinutes(b.time))[0];
-      const nextCard=document.createElement('div');
-      nextCard.className='rail-next-limited';
+      const nextCard=document.getElementById('rail-next-express');
       if(nextLimited){
         const confirmed=nextLimited.railPositionConfirmed && nextLimited.livePosition;
         const status=confirmed?'現在位置 '+nextLimited.livePosition:'時刻表予定・位置未確認';
@@ -2138,13 +2137,12 @@
       } else {
         nextCard.innerHTML='<span class="rail-next-label">次の特急は？</span><span class="rail-next-status">この方面の本日の特急は終了しました</span>';
       }
-      root.appendChild(nextCard);
+      // Details remain confined to their independent panel.
 
       // A separate ordinary-train summary, using the same existing detail ticker.
       const nextLocal=rows.filter(r=>r.kind==='local')
         .sort((a,b)=>toMinutes(a.time)-toMinutes(b.time))[0];
-      const localCard=document.createElement('div');
-      localCard.className='rail-next-limited rail-next-local';
+      const localCard=document.getElementById('rail-next-local');
       if(nextLocal){
         const details=railRowDetailItems(nextLocal);
         localCard.innerHTML=`<div class="rail-next-main"><span class="rail-next-label">次の普通列車は？</span><span class="rail-next-service">${railServiceBadgeHtml('local',nextLocal.service)}</span><span class="rail-next-time">${nextLocal.time}発</span><span class="rail-next-dest">${railDestLabel(nextLocal)}行</span></div><div class="rail-next-details">${tickerHtml(details)}</div>`;
