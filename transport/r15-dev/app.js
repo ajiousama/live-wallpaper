@@ -280,11 +280,19 @@
     // Accept only a fresh, date-matched independent report.
     const originObserved=Date.parse(String(item?.originDepartedObservedAt||''));
     const originAge=Date.now()-originObserved;
+    const trustedOfficialSources=new Set([
+      '大阪国際空港公式出発案内',
+      '鹿児島空港公式出発案内'
+    ]);
     const verifiedAirportDeparted=item?.originDepartureVerified===true &&
       item?.originDepartureStatus==='出発済み' &&
-      item?.originDepartureSource==='大阪国際空港公式出発案内' &&
+      trustedOfficialSources.has(String(item?.originDepartureSource||'')) &&
       Number.isFinite(originObserved) && originAge>=-15000 && originAge<=150000;
     if(verifiedAirportDeparted)return true;
+    // Matsuyama Airport's own confirmed approach/landing statuses also
+    // prove that the flight has already departed its origin.
+    // '定刻', '遅れ' and future arrival times do not.
+    if(/まもなく到着|ただいま到着|着陸済み|到着済み/.test(status))return true;
     const statusConfirmed=/(?:出発済み|離陸済み|出発地から出発|出発地を出発|出発空港を出発)/.test(status);
     const actual=padTime(item?.originDepartureActual||'');
     const actualConfirmed=item?.originDepartureConfirmed===true && /^\d{2}:\d{2}$/.test(actual);
