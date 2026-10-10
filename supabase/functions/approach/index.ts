@@ -267,6 +267,18 @@ function displayName(pos: Record<string, unknown>, route: Route) {
   return `列車 ${String(pos.TrainNum ?? route.trainNum).trim()}`;
 }
 
+function ichitsuboRouteDirection(route: Route) {
+  // Infer the actual movement across Ichitsubo from today's diagram,
+  // not the service's terminal (freight services may terminate at a depot).
+  const i=route.cityIndex;
+  if(i<0) return "";
+  const before=route.points.slice(0,i).reverse().map(p=>normalizeStationName(p.station)).find(v=>v && v!=="市坪")||"";
+  const after=route.points.slice(i+1).map(p=>normalizeStationName(p.station)).find(v=>v && v!=="市坪")||"";
+  if(before==="松山" || after==="北伊予" || after==="南伊予") return "south";
+  if(after==="松山" || before==="北伊予" || before==="南伊予") return "north";
+  return "";
+}
+
 function approachingIchitsubo(pos: Record<string, unknown>, route: Route, nowMinutes: number) {
   if (route.cityIndex < 0) return false;
   const clean = String(pos.Pos ?? "")
@@ -346,6 +358,7 @@ async function getIchitsubo(now: { minutes: number }) {
       trainNum: String(pos.TrainNum),
       kind: deadhead ? "deadhead" : freight ? "freight" : route.passOnly ? "pass" : "stop",
       destination: route.destination,
+      direction: ichitsuboRouteDirection(route),
       position: String(pos.Pos ?? ""),
       delayMinutes: delay,
       minutesToIchitsubo: Number.isFinite(diff) ? diff : null,
