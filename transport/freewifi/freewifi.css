@@ -2288,3 +2288,17 @@ body.freewifi-tv #bus-rows.freewifi-bus-grouped .freewifi-bus-group>.row .bus-pl
 body.freewifi-tv #bus-rows.freewifi-bus-grouped .freewifi-bus-group-head{
   font-size:15px!important;
 }
+
+
+/* Workplace PC geometry: apply even before/without the dashboard JavaScript.
+   The CSS fallback prevents an oversized unscaled board after script errors.
+   app.js may adjust --company-wall-scale for smaller viewports. */
+html.company-pc body.freewifi-tv #wall{
+  --company-wall-scale:0.72;
+  position:absolute!important;
+  left:auto!important;
+  right:16px!important;
+  top:50%!important;
+  transform-origin:right center!important;
+  transform:translateY(-50%) scale(var(--company-wall-scale))!important;
+}
