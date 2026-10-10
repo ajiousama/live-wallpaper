@@ -818,6 +818,39 @@
       ['07:30','11:45','15:30','19:30'],
       ['10:11','14:20','18:05','22:11'],
       'https://www.iyotetsu.co.jp/kousoku/kochi.html');
+    // 神戸三宮発・ハーバーライナー：運休中の便は含めない。
+    const dow=new Date(iso+'T12:00:00+09:00').getDay();
+    const weekend=dow===0||dow===6;
+    const kobe=[
+      ['07:20','11:32','神姫バス',true],
+      ['08:15','12:27','神姫バス',false],
+      ['10:20','14:32','神姫バス',false],
+      ['14:20','18:32','伊予鉄バス',true],
+      ['16:20','20:32','伊予鉄バス',false],
+      ['18:20','22:32','伊予鉄バス',false]
+    ];
+    kobe.filter(x=>!x[3]||weekend).forEach(([departure,arrival,operator],i)=>{
+      out.push({id:`verified-kobe-in-${i}`,board:'bus',kind:'bus',
+        source:'iyotetsu_kobe_official_in',service:operator,direction:'arrival',
+        origin:'神戸三宮',dest:'松山市駅',time:arrival,
+        originDepartureTime:departure,arrivalTerminal:'松山市駅',
+        arrivalTerminalTime:arrival,noSyntheticArrival:true,
+        info:'ハーバーライナー・公式時刻表',
+        timetableReference:'https://www.iyotetsu.co.jp/kousoku/kobe.html'});
+    });
+    // 名古屋・福岡は出発日の翌朝に松山へ到着する夜行便。
+    const nightly=[
+      ['名古屋駅（新幹線口）','nagoya_official_in','伊予鉄バス／名鉄バス／JRバス','23:10','09:03','JR松山駅','https://www.iyotetsu.co.jp/kousoku/nagoya.html'],
+      ['西鉄天神高速BT','fukuoka_official_in','伊予鉄南予バス／瀬戸内運輸','21:10','07:25','松山市駅','https://www.iyotetsu.co.jp/kousoku/fukuoka.html']
+    ];
+    nightly.forEach(([origin,source,service,departure,arrival,terminal,reference])=>{
+      out.push({id:`verified-${source}-${iso}`,board:'bus',kind:'bus',
+        source,service,direction:'arrival',origin,dest:terminal,
+        time:arrival,originDepartureTime:departure,originDepartureDay:'前日',
+        arrivalTerminal:terminal,arrivalTerminalTime:arrival,
+        noSyntheticArrival:true,info:'夜行・前日出発／公式時刻表',
+        timetableReference:reference});
+    });
     return out;
   }
   function getBoardRecords(board, now) {
