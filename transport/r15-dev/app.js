@@ -2038,7 +2038,10 @@
     }
     const freight=matsuyamaFreightPasses(now)[0];
     if(freight){
-      items.push(`JR松山駅｜${railTickerServiceHtml('freight')} ${freight.passTime} 通過予定｜現在位置 ${freight.position}`);
+      items.push(freight.timetableOnly
+        ? `JR松山駅｜${railTickerServiceHtml('freight')} ${freight.trainNum}レ｜${freight.passTime||'時刻未確認'} 通過予定（当日ダイヤ・運行未確認）${freight.scheduledIchitsubo?'｜市坪 '+freight.scheduledIchitsubo+' 通過予定':''}`
+        : `JR松山駅｜${railTickerServiceHtml('freight')} ${freight.trainNum}レ ${freight.passTime||'時刻確認中'} 通過予定｜現在位置 ${freight.position}`);
+
     }
     const verified=[...positions,...items,...specials];
     return verified.length?verified:['JR列車位置情報を確認中'];
@@ -2270,29 +2273,61 @@
   }
 
   function matsuyamaFreightPasses(now) {
-    const generatedAt=Date.parse(String(approachLive.generatedAtJst||''));
-    if(!jrPositionFeedFresh()) return [];
-    const raw=Array.isArray(approachLive.ichitsubo?.matsuyamaFreights)
-      ? approachLive.ichitsubo.matsuyamaFreights
-      : [];
-    return raw.map(x=>{
-      const scheduled=padTime(x.scheduledMatsuyama||'');
+    // The day's operating diagram is enough to show "scheduled passage".
+    // Live position is optional FOR FREIGHT ONLY, never invent a passage time.
+    const ts=Date.parse(String(approachLive.generatedAtJst||''));
+    const age=Date.now()-ts;
+    if(!approachLive.ok || approachLive.ichitsubo?.ok!==true ||
+      !Number.isFinite(age) || age < -15000 || age > 60000 ||
+      String(approachLive.generatedAtJst||'').slice(0,10)!==now.iso) return [];
+
+    const scheduled=Array.isArray(approachLive.ichitsubo?.matsuyamaFreightSchedules)
+      ? approachLive.ichitsubo.matsuyamaFreightSchedules : [];
+    const confirmed=Array.isArray(approachLive.ichitsubo?.matsuyamaFreights)
+      ? approachLive.ichitsubo.matsuyamaFreights : [];
+    const byTrain=new Map();
+    const directionFor=x=>String(x.trainNum)==='3072'?'north':'south';
+
+    scheduled.forEach(x=>{
+      const num=String(x.trainNum||'').trim();
+      if(!/^(3072|3073)$/.test(num) || directionFor(x)!==currentRailDir())return;
+      const stationTime=padTime(x.scheduledMatsuyama||'');
+      const cityTime=padTime(x.scheduledIchitsubo||'');
+      if(!/^\d{2}:\d{2}$/.test(stationTime) &&
+        !/^\d{2}:\d{2}$/.test(cityTime)) return;
+      // A train from this morning must not be presented as tonight's service.
+      const upcoming=stationTime||cityTime;
+      if(toMinutes(upcoming)<now.minutes-2)return;
+      byTrain.set(num,{
+        ...x,trainNum:num,kind:'freight',direction:directionFor(x),
+        scheduled:stationTime,passTime:stationTime,
+        displayTime:stationTime||'時刻確認中',
+        scheduledIchitsubo:cityTime,
+        origin:cleanStation(x.origin||''),
+        destination:cleanStation(x.destination||''),
+        position:'',delay:0,timetableOnly:true,
+      });
+    });
+
+    confirmed.forEach(x=>{
+      const num=String(x.trainNum||'').trim();
+      if(!/^(3072|3073)$/.test(num) || directionFor(x)!==currentRailDir() ||
+        !jrPositionFeedFresh() || !jrPositionUsable(x.position))return;
+      const previous=byTrain.get(num);
+      const scheduled=padTime(x.scheduledMatsuyama||previous?.scheduled||'');
       const delay=Number(x.delayMinutes)||0;
-      return {
-        ...x,
-        scheduled,
-        passTime: scheduled ? addMinutes(scheduled,delay) : '',
-        displayTime: scheduled ? addMinutes(scheduled,delay) : '時刻確認中',
-        origin: cleanStation(x.origin||''),
-        destination: cleanStation(x.destination||''),
-        position: cleanStation(x.position||''),
-        delay
-      };
-    // Freight train times do not prove that its current position was retrieved.
-    }).filter(x=>jrPositionUsable(x.position) &&
-      /^(3072|3073)$/.test(String(x.trainNum||'')) &&
-      x.direction===currentRailDir() &&
-      (!x.passTime || toMinutes(x.passTime)>=now.minutes-10));
+      const passTime=scheduled ? addMinutes(scheduled,delay) : '';
+      if(passTime && toMinutes(passTime)<now.minutes-10) return;
+      byTrain.set(num,{
+        ...previous,...x,trainNum:num,kind:'freight',direction:directionFor(x),
+        scheduled,passTime,displayTime:passTime||'時刻確認中',
+        scheduledIchitsubo:padTime(previous?.scheduledIchitsubo||''),
+        origin:cleanStation(x.origin||previous?.origin||''),
+        destination:cleanStation(x.destination||previous?.destination||''),
+        position:cleanStation(x.position),delay,timetableOnly:false,
+      });
+    });
+    return [...byTrain.values()];
   }
 
   function railServiceBadgeHtml(kind, service='') {
@@ -2519,14 +2554,16 @@
     const routeText=x.origin&&x.destination
       ? `${x.origin} → ${x.destination}`
       : (x.destination ? `${x.destination}方面` : '貨物列車');
-    const details=[`貨物列車 ${routeText}`];
-    if(x.position) details.push(`現在位置 ${x.position}`);
+    const details=[`貨物列車 ${x.trainNum||''}レ｜${routeText}`];
+    if(x.timetableOnly) details.push('時刻表上の通過予定・位置未取得・運行未確認');
+    else if(x.position) details.push(`現在位置 ${x.position}`);
+    if(x.scheduledIchitsubo) details.push(`市坪駅 ${x.scheduledIchitsubo} 通過予定（当日ダイヤ）`);
     if(x.delay>0) details.push(`${x.delay}分遅れ`);
     row.innerHTML=`
       <div class="rail-primary">
-        <div class="cell rail-service freight"><span class="kindtxt">${railServiceBadgeHtml('freight')}</span></div>
+        <div class="cell rail-service freight"><span class="kindtxt">${railServiceBadgeHtml('freight')}<span class="rail-name-badge">${x.trainNum||''}レ</span></span></div>
         <div class="cell time">${x.displayTime||x.passTime||'時刻確認中'}</div>
-        <div class="cell main">松山　通過</div>
+        <div class="cell main">松山　${x.timetableOnly?'通過予定':'通過'}</div>
       </div>
       <div class="rail-detail">${tickerHtml(details)}</div>`;
     root.appendChild(row);
