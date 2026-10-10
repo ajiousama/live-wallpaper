@@ -2981,10 +2981,12 @@
       root.classList.add('freewifi-port-groups');
       const kyushu=(r)=>/^(uwajima_beppu|uwajima_usuki|koku94)$/.test(String(r.source||'')) || /別府|臼杵|佐賀関/.test(String(r.dest||r.origin||''));
       const matsuyamaPorts=(r)=>/三津浜港|松山観光港/.test(String(r.port||r.arrivalPort||''));
+      const gogoshima=r=>r.source==='gogoshima_official';
       const groups=[
-        {key:'kyushu',title:'九州航路',rows:rows.filter(kyushu).slice(0,4)},
         {key:'matsuyama',title:'三津浜港・松山観光港 発着',rows:rows.filter(r=>!kyushu(r)&&matsuyamaPorts(r)).slice(0,3)},
-        {key:'other',title:'その他の航路',rows:rows.filter(r=>!kyushu(r)&&!matsuyamaPorts(r)).slice(0,2)}
+        {key:'gogoshima',title:'高浜港・興居島（由良・泊）',rows:rows.filter(gogoshima).slice(0,1)},
+        {key:'kyushu',title:'九州航路',rows:rows.filter(kyushu).slice(0,3)},
+        {key:'other',title:'その他の航路',rows:rows.filter(r=>!kyushu(r)&&!matsuyamaPorts(r)&&!gogoshima(r)).slice(0,2)}
       ];
       groups.forEach(g=>{
         const section=document.createElement('section');
@@ -3004,11 +3006,12 @@
         }
         root.appendChild(section);
         if(g.key==='matsuyama') {
-          // Port connection ticker belongs between Matsuyama ports and other routes.
-          const note=$('port-note');
-          if(note) root.appendChild(note);
           const limousine=$('port-limousine-note');
           if(limousine) root.appendChild(limousine);
+        }
+        if(g.key==='other') {
+          const note=$('port-note');
+          if(note) root.appendChild(note);
         }
       });
     } else {
