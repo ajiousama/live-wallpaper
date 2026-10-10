@@ -1183,13 +1183,46 @@
       ? (() => {
           const scheduled=getBoardRecords(board,now);
           const verified=liveRailPassengerRows(scheduled,now);
-          return scheduled.map(r=>{
+          const base=scheduled.map(r=>{
             const live=verified.find(x=>x.direction===r.direction &&
               padTime(x.time)===padTime(r.time) && x.kind===r.kind &&
               x.service===r.service && x.dest===r.dest);
             return live ? {...live,railPositionConfirmed:true}
               : {...r,railTimetableOnly:true};
           });
+          // Display an additional, actually observed service even when the
+          // monthly published timetable does not contain it. The diagram alone
+          // never establishes that a train is running.
+          if(!jrPositionFeedFresh() || boardDisplayIso('rail',now)!==now.iso) return base;
+          const active=Array.isArray(approachLive.ichitsubo?.matsuyamaActiveTrains)
+            ? approachLive.ichitsubo.matsuyamaActiveTrains : [];
+          const known=new Set(verified.map(v=>String(v.liveTrainNum||'')));
+          const extras=[];
+          for(const x of active){
+            const num=String(x.trainNum||'').trim(),time=padTime(x.departure||'');
+            if(!num || !/^\\d{2}:\\d{2}$/.test(time) ||
+                !['north','south'].includes(String(x.direction||'')) ||
+                !jrPositionUsable(x.position) || toMinutes(time)<now.minutes ||
+                known.has(num)) continue;
+            const duplicate=base.some(r=>r.direction===x.direction && padTime(r.time)===time &&
+              ((r.kind==='limited')===(x.trainClass==='limited')));
+            if(duplicate) continue; // no ambiguous extra identity on the board
+            known.add(num);
+            const named=railLiveTrainLabel(x);
+            const limited=x.trainClass==='limited' && named.kind==='limited';
+            extras.push({
+              board:'rail',direction:x.direction,time,kind:limited?'limited':'local',
+              service:limited?named.service:'当日運行列車',
+              dest:cleanStation(x.destination||'')||'行先確認中',
+              info:'非公式列車運行情報・当日位置確認／列車番号 '+num,
+              id:'live-extra-'+num,source:'jr_unofficial_live',
+              liveTrainNum:num,livePosition:cleanStation(x.position),
+              liveDelayMinutes:Number(x.delayMinutes)||0,railPositionConfirmed:true,
+              isExtraRunning:true
+            });
+          }
+          return [...base,...extras];
+
         })()
       : getBoardRecords(board,now);
 
