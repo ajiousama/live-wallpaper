@@ -148,6 +148,45 @@
     const ctx=dayContext(iso);
     return data.records.filter(r=>r.board===board && validRecord(r,iso)).map(r=>({...r,time:effectiveTime(r,ctx)}));
   }
+  // Position data is authoritative; a diagram or timetable by itself is not.
+  function jrPositionUsable(pos) {
+    const p=cleanStation(pos);
+    return !!p && !/^(?:-|—|不明|未取得|取得中|確認中|データなし|位置情報なし)$/.test(p);
+  }
+  function jrPositionFeedFresh() {
+    const ts=Date.parse(String(approachLive.generatedAtJst||''));
+    const age=Date.now()-ts;
+    return approachLive.ok && approachLive.ichitsubo?.ok === true &&
+      Number.isFinite(ts) && age>=-15000 && age<=45000;
+  }
+  function liveRailPassengerRows(rows,now) {
+    if(!jrPositionFeedFresh() || boardDisplayIso('rail',now)!==now.iso) return [];
+    const active=Array.isArray(approachLive.ichitsubo?.matsuyamaActiveTrains)
+      ? approachLive.ichitsubo.matsuyamaActiveTrains.filter(x=>
+          x && String(x.trainNum||'').trim() && jrPositionUsable(x.position))
+      : [];
+    const taken=new Set();
+    return rows.flatMap(r=>{
+      const matched=active.filter(x=>{
+        if(String(x.direction||'')!==String(r.direction||''))return false;
+        if(padTime(x.departure||'')!==padTime(r.time||''))return false;
+        const limited=String(x.trainClass||'')==='limited';
+        if((r.kind==='limited')!==limited)return false;
+        if(limited){
+          const label=railLiveTrainLabel(x);
+          if(label.kind!=='limited'||label.service!==r.service)return false;
+        }
+        return true;
+      });
+      // If multiple live trains share a time/class, do not guess their identity.
+      if(matched.length!==1)return [];
+      const train=matched[0],number=String(train.trainNum);
+      if(taken.has(number))return [];
+      taken.add(number);
+      return [{...r,liveTrainNum:number,livePosition:cleanStation(train.position),
+        liveDelayMinutes:Number(train.delayMinutes)||0}];
+    });
+  }
   function currentDirection() { return state.modeIndex % 2 === 0 ? 'departure' : 'arrival'; }
   function currentRailDir() { return state.modeIndex % 2 === 0 ? 'south' : 'north'; }
 
@@ -803,7 +842,9 @@
       });
     }
 
-    const list = getBoardRecords(board, now);
+    const list=board==='rail'
+      ? liveRailPassengerRows(getBoardRecords(board,now),now)
+      : getBoardRecords(board,now);
 
     // Unified definition:
     // FINAL = the last service that DEPARTS from that place on that day.
@@ -1272,9 +1313,10 @@
   }
   function ichitsuboTakeover(now) {
     const generatedAt=Date.parse(String(approachLive.generatedAtJst||''));
-    if (Number.isFinite(generatedAt) && Date.now()-generatedAt>45000) return null;
+    if(!jrPositionFeedFresh()) return null;
     const rawList=Array.isArray(approachLive.ichitsubo?.approaching)?approachLive.ichitsubo.approaching:[];
     const list=rawList.filter(x=>{
+      if(!jrPositionUsable(x?.position))return false;
       const mins=Number(x.minutesToIchitsubo);
       if (Number.isFinite(mins) && mins<0) return false;
       const scheduled=padTime(x.scheduledIchitsubo||'');
@@ -1520,14 +1562,14 @@
 
   function railKnownPositionTickerItems(now) {
     const generatedAt=Date.parse(String(approachLive.generatedAtJst||''));
-    if(!approachLive.ok || (Number.isFinite(generatedAt) && Date.now()-generatedAt>45000)) return [];
+    if(!jrPositionFeedFresh()) return [];
 
     const side=currentRailDir();
     const seen=new Set();
     const out=[];
     const push=(x, kindOverride='')=>{
       const position=cleanStation(x?.position||'');
-      if(!position) return;
+      if(!jrPositionUsable(position)) return;
       const dir=ichitsuboDirection(x);
       if(dir!==side) return;
 
@@ -1563,29 +1605,23 @@
   }
 
   function railTickerItems(now) {
+    // The lower JR ticker is position-based only; no static "next train".
     const positions=railKnownPositionTickerItems(now);
     const specials=railSpecialFinalTickerItems(now);
-    const takeover=ichitsuboTakeover(now); if(takeover) return [...takeover.items,...specials];
-    const north=auxUpcoming('ichitsubo','north',now,1)[0]||null;
-    const south=auxUpcoming('ichitsubo','south',now,1)[0]||null;
+    const takeover=ichitsuboTakeover(now);
+    if(takeover)return [...takeover.items,...specials];
     const items=[];
-    if(north){const badges=`${north.isNextDayStart?badgeHtml('first'):''}${north.isFinal?badgeHtml('final','最終'):''}`;items.push(`JR市坪駅 松山方面　次列車 ${north.time}　${railTickerServiceHtml('local')} ${railDestLabel(north)}行 ${badges}`);} else items.push('JR市坪駅 松山方面｜運行終了');
-    if(south){const badges=`${south.isNextDayStart?badgeHtml('first'):''}${south.isFinal?badgeHtml('final','最終'):''}`;items.push(`JR市坪駅 宇和島方面　次列車 ${south.time}　${railTickerServiceHtml('local')} ${railDestLabel(south)}行 ${badges}`);} else items.push('JR市坪駅 宇和島方面｜運行終了');
     const deadhead=matsuyamaDeadheadArrivals(now)[0];
     if(deadhead){
-      const origin=deadhead.origin||'回送区間';
-      const pos=deadhead.position?`｜現在位置 ${deadhead.position}`:'';
-      items.push(`JR松山駅｜${railTickerServiceHtml('deadhead')} ${deadhead.arrival} 到着予定｜${origin}発${pos}`);
+      items.push(`JR松山駅｜${railTickerServiceHtml('deadhead')} ${deadhead.arrival} 到着予定｜現在位置 ${deadhead.position}`);
     }
     const freight=matsuyamaFreightPasses(now)[0];
     if(freight){
-      const route=freight.origin&&freight.destination?`${freight.origin} → ${freight.destination}`:(freight.destination||'貨物列車');
-      const pos=freight.position?`｜現在位置 ${freight.position}`:'';
-      items.push(`JR松山駅｜${railTickerServiceHtml('freight')} ${freight.passTime} 通過予定｜${route}${pos}`);
+      items.push(`JR松山駅｜${railTickerServiceHtml('freight')} ${freight.passTime} 通過予定｜現在位置 ${freight.position}`);
     }
-    return [...positions,...items,...specials];
+    const verified=[...positions,...items,...specials];
+    return verified.length?verified:['JR列車位置情報を確認中'];
   }
-
 
   function airportBusTakeover(now) {
     const weekend=now.dow===0||now.dow===6;
@@ -1792,7 +1828,7 @@
   }
   function matsuyamaDeadheadArrivals(now) {
     const generatedAt=Date.parse(String(approachLive.generatedAtJst||''));
-    if(!approachLive.ok || (Number.isFinite(generatedAt) && Date.now()-generatedAt>45000)) return [];
+    if(!jrPositionFeedFresh()) return [];
     const raw=Array.isArray(approachLive.ichitsubo?.matsuyamaDeadheads)
       ? approachLive.ichitsubo.matsuyamaDeadheads
       : [];
@@ -1809,12 +1845,12 @@
       };
     // Do not put scheduled-only deadheads on the Matsuyama timetable.
     // A deadhead is shown only while JR live data provides a current position.
-    }).filter(x=>x.arrival && x.position);
+    }).filter(x=>x.arrival && jrPositionUsable(x.position));
   }
 
   function matsuyamaFreightPasses(now) {
     const generatedAt=Date.parse(String(approachLive.generatedAtJst||''));
-    if(!approachLive.ok || (Number.isFinite(generatedAt) && Date.now()-generatedAt>45000)) return [];
+    if(!jrPositionFeedFresh()) return [];
     const raw=Array.isArray(approachLive.ichitsubo?.matsuyamaFreights)
       ? approachLive.ichitsubo.matsuyamaFreights
       : [];
@@ -1830,7 +1866,8 @@
         position: cleanStation(x.position||''),
         delay
       };
-    }).filter(x=>x.passTime);
+    // Freight train times do not prove that its current position was retrieved.
+    }).filter(x=>x.passTime && jrPositionUsable(x.position));
   }
 
   function railServiceBadgeHtml(kind, service='') {
@@ -1890,7 +1927,7 @@
 
   function matsuyamaTerminatingArrivals(now) {
     const generatedAt=Date.parse(String(approachLive.generatedAtJst||''));
-    if(!approachLive.ok || (Number.isFinite(generatedAt) && Date.now()-generatedAt>45000)) return [];
+    if(!jrPositionFeedFresh()) return [];
     const raw=Array.isArray(approachLive.ichitsubo?.matsuyamaTerminatingArrivals)
       ? approachLive.ichitsubo.matsuyamaTerminatingArrivals
       : [];
@@ -1902,7 +1939,7 @@
       const position=cleanStation(x.position||'');
       const delay=Number(x.delayMinutes)||0;
       return {...x,arrival,diff,position,delay};
-    }).filter(x=>x.arrival && x.position && x.side===side && Number.isFinite(x.diff) && x.diff>=-1 && x.diff<=180);
+    }).filter(x=>x.arrival && jrPositionUsable(x.position) && x.side===side && Number.isFinite(x.diff) && x.diff>=-1 && x.diff<=180);
   }
 
   function appendMatsuyamaTerminalArrivalRow(root,x,now) {
@@ -2012,12 +2049,10 @@
       .slice(0, FREEWIFI_TV ? (document.documentElement.classList.contains('company-pc') ? 11 : 10) : 3);
 
     if (!visible.length) {
-      const last = lastRailMovement(now);
-      const mode = currentRailDir() === 'north' ? 'NORTHBOUND — 今治方面 —' : 'SOUTHBOUND — 宇和島方面 —';
-      const serviceLabel = last ? (last.kind === 'local' ? '普通' : (last.kind === 'sightseeing' ? `観光 ${last.service}` : `特急 ${last.service}`)) : '—';
-      const detail = last && last.direction===currentRailDir() ? `最終：${last.time}　${serviceLabel}　${last.dest}行　発車済み` : '';
+      // A missing live fix must never be described as an ended service.
+      const mode=currentRailDir()==='north'?'NORTHBOUND — 今治方面 —':'SOUTHBOUND — 宇和島方面 —';
       root.classList.add('rail-end');
-      root.innerHTML = `<div class="rail-end-state"><div class="rail-end-mode">🚆 ${mode}</div><div class="rail-end-message">本日の列車は終了しました</div>${detail ? `<div class="rail-end-detail">${detail}</div>` : ''}</div>`;
+      root.innerHTML=`<div class="rail-end-state"><div class="rail-end-mode">🚆 ${mode}</div><div class="rail-end-message">位置情報を確認できる列車はありません</div><div class="rail-end-detail">時刻表だけの列車は非表示</div></div>`;
     } else {
       visible.forEach(item => {
         if(item._deadhead){
@@ -3040,7 +3075,14 @@
 
   // FINAL polling: fast approach 15s / disaster 10s / slower service status 60s.
   Promise.all([loadApproach(),loadSlowLive(),loadDisasterLive()]).then(()=>renderAll());
-  setInterval(()=>{loadApproach().then(()=>{cachedNotes.rail=railTickerItems(japanNow());cachedNotes.bus=busTickerItems(japanNow());updateNotes();});},15000);
+  setInterval(()=>{loadApproach().then(()=>{
+    // Refresh visible JR rows on every success/failure, not just the ticker.
+    const now=japanNow();
+    renderRail(nextRows('rail',now));
+    cachedNotes.rail=railTickerItems(now);
+    cachedNotes.bus=busTickerItems(now);
+    updateNotes();
+  });},15000);
   setInterval(()=>{loadSlowLive().then(()=>renderAll());},60000);
   setInterval(()=>{loadDisasterLive().then(()=>renderDisaster(japanNow()));},10000);
   renderAll(); setupMonthlyUpdatePrompt();
