@@ -3220,12 +3220,31 @@
 
   function busDeparturePosition(r, now) {
     const departure=padTime(r.time||'');
-    if(!/^\d{2}:\d{2}$/.test(departure) || r.isNextDayStart) return '';
+    if(!/^\d{2}:\d{2}$/.test(departure) || r.isNextDayStart) return '位置未確認';
     const remaining=toMinutes(departure)-now.minutes;
-    // A timetable alone cannot establish where a bus is hours before its departure.
-    if(remaining<0 || remaining>20) return '';
-    const place=String(r.originName||r.stop||'松山市駅').trim()||'松山市駅';
-    return `${place}付近（見込）`;
+    // A published departure time is not evidence of an actual GPS fix
+    // or where a coach is parked before departure.
+    if(remaining<0) return '位置未確認';
+    if(remaining<=60) return `位置未確認｜発車まで約${remaining}分`;
+    return '位置未確認';
+  }
+  function busArrivalStatus(r, now) {
+    // We currently have published arrival/departure times but NO verified
+    // coach coordinates. Do not fabricate a waypoint (e.g. Matsuyama IC)
+    // by uniformly interpolating the itinerary checkpoints.
+    const arrival=padTime(r.arrivalTerminalTime||r.time||'');
+    if(!/^\d{2}:\d{2}$/.test(arrival))return '位置未確認';
+    const departure=padTime(r.originDepartureTime||'');
+    let arr=toMinutes(arrival);
+    let dep=/^\d{2}:\d{2}$/.test(departure)?toMinutes(departure):NaN;
+    if(Number.isFinite(dep)){
+      if(String(r.originDepartureDay||'').includes('前日'))dep-=1440;
+      else if(arr<dep)arr+=1440;
+      if(now.minutes<dep) return '出発前（予定）｜位置未確認';
+    }
+    const remaining=arr-now.minutes;
+    if(remaining>=0 && remaining<=1440)return `位置未確認｜あと約${remaining}分`;
+    return '位置未確認';
   }
   function renderBus(rows) {
     const root = $('bus-rows'); root.innerHTML = '';
@@ -3276,14 +3295,14 @@
         const terminal = String(r.arrivalTerminal || r.stop || '松山市駅').trim() || '松山市駅';
         const terminalTime = padTime(r.arrivalTerminalTime || r.time || '') || '—';
         const operator = busOperatorHtml(r);
-        const estimatedPosition = busEstimatedPosition(r,japanNow());
+        const estimatedPosition = busArrivalStatus(r,japanNow());
         row.innerHTML = `
           <div class="cell main arrival-origin">
             <span class="arrival-place">${overflowScrollHtml(origin,'bus-origin-scroll')} ${firstBadge}${finalBadge}</span>
             <span class="arrival-departure-time">${depDay}${r.originDepartureTime || '—'}出発</span>
           </div>
           <div class="cell sub bus-estimated-position-cell">
-            ${estimatedPosition ? `<span class="bus-estimated-position">現在 ${estimatedPosition}付近走行中（見込）</span>` : '<span class="bus-estimated-position bus-estimated-position-empty">位置見込なし</span>'}
+            <span class="bus-estimated-position">${estimatedPosition}</span>
           </div>
           <div class="cell sub arrival-terminal-wrap">
             <span class="arrival-terminal">${overflowScrollHtml(terminal,'bus-terminal-scroll')}</span>
@@ -3429,8 +3448,8 @@
           ? '<span>時刻</span><span>行先</span><span>航空会社</span><span>便名</span><span>区分</span>'
           : '<span>出発地</span><span>航空会社</span><span>便名</span><span>区分</span><span>到着時刻</span>');
     busHead.innerHTML = dep
-      ? '<span>時刻 / 終着</span><span>行先 / 経由地</span><span>現在位置（見込）</span><span>乗車場所</span><span>運行会社</span>'
-      : '<span>出発地</span><span>現在位置（見込）</span><span>到着場所</span><span>運行会社</span><span>到着時刻</span>';
+      ? '<span>時刻 / 終着</span><span>行先 / 経由地</span><span>運行状況（予定）</span><span>乗車場所</span><span>運行会社</span>'
+      : '<span>出発地</span><span>運行状況（予定）</span><span>到着場所</span><span>運行会社</span><span>到着時刻</span>';
     portHead.innerHTML = dep
       ? '<span>時刻 / 到着</span><span>出発港 → 行先 / 寄港</span><span>運航会社 / 船種</span>'
       : '<span>出発港 → 到着港</span><span>運航会社 / 船種</span><span>到着時刻</span>';
@@ -3777,7 +3796,7 @@
     const usableH = window.innerHeight - (workplaceGeometry ? 32 : 16);
     const baseH = wall.offsetHeight || 724;
     const ratio = workplaceGeometry
-      ? Math.min(0.72, usableW / 1180, usableH / baseH)
+      ? Math.min(0.82, usableW / 1180, usableH / baseH)
       : Math.min(usableW / 1220, usableH / baseH);
     if(companyPc) wall.style.setProperty('--company-wall-scale', String(ratio));
 
