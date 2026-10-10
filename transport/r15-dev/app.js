@@ -978,12 +978,28 @@
         }));
     });
   }
+  // Actual inbound Jumbo Ferry sailings from Kobe to Takamatsu.
+  // Timetable: https://ferry.co.jp/home/kobe-takamatsu/
+  function jumboInboundPortRows(iso) {
+    const dow=new Date(iso+'T12:00:00+09:00').getDay();
+    const weekend=dow===0||dow===6;
+    const runs=weekend
+      ? [['01:00','05:15','直行'],['08:15','13:00','小豆島経由'],['11:20','16:05','小豆島経由']]
+      : [['01:00','05:15','直行'],['08:15','13:00','小豆島経由'],['13:00','17:45','小豆島経由']];
+    return runs.map(([departure,arrival,via],i)=>({
+      id:`jumbo-kobe-arrival-${iso}-${i}`,board:'port',kind:'ferry',
+      source:'jumbo_ferry_official_arrival',service:'ジャンボフェリー',
+      port:'高松東港',arrivalPort:'高松東港',direction:'arrival',
+      origin:'神戸港',dest:'高松東港',time:arrival,originDepartureTime:departure,
+      info:via,noSyntheticArrival:true,reference:false
+    }));
+  }
   function portRolling24Rows(now) {
     const dep=currentDirection()==='departure';
     const prevIso=shiftIso(now.iso,-1);
     const nextIso=shiftIso(now.iso,1);
-    const today=[...recordsForDay('port',now.iso),...gogoshimaPortRecords(now.iso),...nakajimaTakahamaCalls(now.iso)];
-    const tomorrow=[...recordsForDay('port',nextIso),...gogoshimaPortRecords(nextIso),...nakajimaTakahamaCalls(nextIso)];
+    const today=[...recordsForDay('port',now.iso),...gogoshimaPortRecords(now.iso),...nakajimaTakahamaCalls(now.iso),...jumboInboundPortRows(now.iso)];
+    const tomorrow=[...recordsForDay('port',nextIso),...gogoshimaPortRecords(nextIso),...nakajimaTakahamaCalls(nextIso),...jumboInboundPortRows(nextIso)];
     const out=[];
 
     if(dep){
@@ -1004,7 +1020,7 @@
           const m=toMinutes(r.time)+baseOffset;
           if(m>=now.minutes && m<=now.minutes+1440)out.push({...r,minutes:m,_serviceIso:baseIso});
         });
-        src.filter(r=>r.direction!=='arrival' && !r.noSyntheticArrival).map(synthPortArrival).forEach(r=>{
+        src.filter(r=>r.direction!=='arrival' && !r.noSyntheticArrival && r.source!=='jumbo_ferry_reference').map(synthPortArrival).forEach(r=>{
           let m=toMinutes(r.time);
           if(r._arrivalNextDay) m+=1440;
           m+=baseOffset;
@@ -1016,7 +1032,7 @@
 
       const prev=recordsForDay('port',prevIso);
       // Previous-day sailings that cross midnight arrive on the current day.
-      prev.filter(r=>r.direction!=='arrival' && !r.noSyntheticArrival).map(synthPortArrival).filter(r=>r._arrivalNextDay).forEach(r=>{
+      prev.filter(r=>r.direction!=='arrival' && !r.noSyntheticArrival && r.source!=='jumbo_ferry_reference').map(synthPortArrival).filter(r=>r._arrivalNextDay).forEach(r=>{
         const m=toMinutes(r.time);
         if(m>=now.minutes && m<=now.minutes+1440){
           out.push({...r,originDepartureDay:'前日',minutes:m,_serviceIso:prevIso});
