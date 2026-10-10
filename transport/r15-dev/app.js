@@ -3928,7 +3928,19 @@
   checkDeployment();
   setInterval(checkDeployment,DEPLOY_CHECK_MS);
   updateModeCountdown();
-  setInterval(()=>{const now=japanNow();$('date-label').textContent=now.date;$('clock-label').innerHTML=`${now.time}<span>:${now.sec}</span>`;renderDisaster(now);renderTopLiveAlert(now);cachedNotes.rail=railTickerItems(now);cachedNotes.air=airportAccessTickerItems(now);cachedNotes.bus=busTickerItems(now);updateNotes();updateModeCountdown();},1000);
+  // Re-evaluate the arrival board right at 22:00, rather than waiting
+  // for the next slow airport fetch or normal mode rotation.
+  let lastArrivalCurfewWindow=japanNow().minutes>=AIRPORT_ARRIVAL_CURFEW_MINUTES;
+  setInterval(()=>{const now=japanNow();$('date-label').textContent=now.date;$('clock-label').innerHTML=`${now.time}<span>:${now.sec}</span>`;renderDisaster(now);renderTopLiveAlert(now);
+    const curfewWindow=now.minutes>=AIRPORT_ARRIVAL_CURFEW_MINUTES;
+    if(curfewWindow!==lastArrivalCurfewWindow){
+      lastArrivalCurfewWindow=curfewWindow;
+      if(currentDirection()==='arrival'){
+        renderAir(liveFlightRows(now)||nextRows('air',now));
+        renderAirportBottomInfo(now);
+      }
+    }
+    cachedNotes.rail=railTickerItems(now);cachedNotes.air=airportAccessTickerItems(now);cachedNotes.bus=busTickerItems(now);updateNotes();updateModeCountdown();},1000);
   if (!FREEWIFI_TV) {
     setInterval(()=>{
       ['rail','air','bus','port'].forEach(rememberScroll);
