@@ -2348,7 +2348,15 @@
       ? approachLive.ichitsubo.matsuyamaTerminatingArrivals
       : [];
     const side=currentRailDir();
-    return raw.map(x=>{
+    const special=data.records.filter(r=>r.board==='rail_special_arrival' &&
+      validRecord(r,now.iso) && r.direction===side).map(r=>({
+        trainNum:'',trainClass:'sightseeing',serviceName:r.service,
+        specialName:String(r.info||'').split('・')[0],
+        side,origin:r.origin,route:r.info,arrival:padTime(r.time),
+        position:'',delayMinutes:0,source:'official_timetable',
+        isOfficialScheduled:true
+      }));
+    const observed=raw.map(x=>{
       const arrival=padTime(x.arrival||'');
       let diff=arrival?toMinutes(arrival)-now.minutes:NaN;
       if(Number.isFinite(diff) && diff < -720) diff += 1440;
@@ -2356,6 +2364,9 @@
       const delay=Number(x.delayMinutes)||0;
       return {...x,arrival,diff,position,delay};
     }).filter(x=>x.arrival && x.side===side && Number.isFinite(x.diff) && x.diff>=-1 && x.diff<=180 && (jrPositionUsable(x.position) || !!x.turnback));
+    const scheduled=special.map(x=>({...x,diff:toMinutes(x.arrival)-now.minutes,delay:0}))
+      .filter(x=>x.diff>=-1 && x.diff<=180 && !observed.some(v=>v.arrival===x.arrival && v.side===side));
+    return [...observed,...scheduled].sort((a,b)=>a.diff-b.diff);
   }
 
   // 2026-03-14 JR Shikoku operating-diagram links (8000-series only).
@@ -2403,7 +2414,9 @@
     const row=document.createElement('div');
     row.className='row rail-row terminal-arrival-row';
     const info=railLiveTrainLabel(x);
-    const serviceBadge=railServiceBadgeHtml(info.kind,info.kind==='limited'?info.service:'');
+    const serviceBadge=x.isOfficialScheduled
+      ? '<span class="rail-kind-badge rail-kind-tourist">伊予灘ものがたり</span>'
+      : railServiceBadgeHtml(info.kind,info.kind==='limited'?info.service:'');
     // Inbound trains from the Uwajima direction: distinguish the coastal and inland routes.
     const arrivalRoute=(()=>{
       if(x.side!=='south') return '';
@@ -2413,15 +2426,16 @@
       return '';
     })();
     const details=['この列車は松山止まりです'];
+    if(x.specialName) details.push(x.specialName+'｜'+x.origin+'発・松山着');
     if(arrivalRoute) details.push('運転経路：'+arrivalRoute);
     if(jrPositionUsable(x.position)) details.push(`📍現在位置 ${x.position}`);
     else details.push('位置情報未確認・到着は時刻表予定');
     if(x.delay>0) details.push(`${x.delay}分遅れ`);
-    const published=publishedTrainTurnback(x);
+    const published=x.isOfficialScheduled?'':publishedTrainTurnback(x);
     const turnback=railTurnbackLabel(x.turnback,now);
     if(published) details.push(published);
     else if(turnback) details.push(turnback.replace(/^折り返し /,'折り返し候補（同一車両未確認） '));
-    else {
+    else if(!x.isOfficialScheduled) {
       const departures=Array.isArray(approachLive.ichitsubo?.matsuyamaSchedule)
         ? approachLive.ichitsubo.matsuyamaSchedule : [];
       const arrivalMins=toMinutes(x.arrival);
