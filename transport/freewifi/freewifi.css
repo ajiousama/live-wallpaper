@@ -2310,50 +2310,40 @@ body.freewifi-tv .cinema-screen.freewifi-active{z-index:70!important}
 body.freewifi-tv .update-modal:not([hidden]){z-index:75!important}
 
 
-/* Keep the visual operator identity, but always make shortened / Latin-only
-   bus marks understandable: tiny brand line + fixed Japanese company name.
-   The caption never scrolls or becomes an ellipsis. */
-body.freewifi-tv .panel-bus .bus-mini-logo.bus-logo-bilingual{
+
+/* Operator names are one-line Japanese text only. Keep operator colours,
+   fixed positioning and enough width for longer company names. */
+body.freewifi-tv .panel-bus .bus-mini-logo.bus-logo-japanese{
   display:inline-flex!important;
-  flex-direction:column!important;
   align-items:center!important;
   justify-content:center!important;
-  gap:1px!important;
-  padding:2px 5px!important;
-  line-height:1!important;
   white-space:nowrap!important;
+  flex-direction:row!important;
+  gap:0!important;
+  padding:0 8px!important;
+  font-weight:1000!important;
+  font-size:13px!important;
+  min-width:95px!important;
+  max-width:205px!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+  animation:none!important;
+}
+body.freewifi-tv .panel-bus .bus-logo-japanese .brand-word{
+  display:inline-block!important;
+  white-space:nowrap!important;
+  font-size:inherit!important;
+  letter-spacing:-.035em!important;
+  animation:none!important;
+}
+html.company-pc body.freewifi-tv .panel-bus .bus-mini-logo.bus-logo-japanese{
+  font-size:14px!important;
   min-width:112px!important;
   max-width:205px!important;
 }
-body.freewifi-tv .panel-bus .bus-logo-bilingual .bus-logo-latin{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:3px;
-  flex:0 0 auto;
-  max-width:100%;
-  font-size:.68em;
-  line-height:1;
-  white-space:nowrap;
+body.freewifi-tv .panel-bus .bus-logo-japanese.bus-logo-willer{
+  font-size:11px!important;
 }
-body.freewifi-tv .panel-bus .bus-logo-bilingual .bus-logo-native{
-  display:block;
-  flex:0 0 auto;
-  max-width:100%;
-  font-size:.91em;
-  font-weight:1000;
-  line-height:1.02;
-  letter-spacing:-.03em;
-  white-space:nowrap;
-}
-body.freewifi-tv .panel-bus .bus-logo-bilingual .brand-mark-circle{
-  width:7px;
-  height:7px;
-  border-width:2px;
-}
-html.company-pc body.freewifi-tv .panel-bus .bus-logo-bilingual .bus-logo-latin{
-  font-size:9px!important;
-}
-html.company-pc body.freewifi-tv .panel-bus .bus-logo-bilingual .bus-logo-native{
-  font-size:13px!important;
+html.company-pc body.freewifi-tv .panel-bus .bus-logo-japanese.bus-logo-willer{
+  font-size:12px!important;
 }
