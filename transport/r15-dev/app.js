@@ -2559,6 +2559,8 @@
       if (el.classList.contains('overflow-scroll')) return;
       if (el.querySelector(':scope > .overflow-scroll')) return;
       if (el.classList.contains('port-route') && el.querySelector('.port-dest-wrap')) return;
+      // Ferry destinations and via-port labels are short: keep the whole left column stationary.
+      if (el.closest('.panel-port .port-route-main')) return;
       if (el.classList.contains('air-status') && el.querySelector('.overflow-scroll')) return;
       if (el.classList.contains('no-auto-scroll')) return;
       if (el.closest('.bus-mini-logo')) return;
@@ -2778,7 +2780,7 @@
         const routeGuidance=ferryRouteGuidance(r,'departure',japanNow());
         row.innerHTML = `
           <div class="cell main port-route port-route-main">${portDepartureDestinationHtml(r,`${firstBadge}${finalBadge}`)}</div>
-          <div class="cell sub port-route-guidance">${routeGuidance}</div>
+          <div class="cell sub port-route-guidance">${overflowScrollHtml(routeGuidance,'port-guidance-scroll')}</div>
           <div class="cell service">${service}</div>
           <div class="cell time port-departure-time">${r.time}発</div>`;
       } else {
@@ -2788,7 +2790,7 @@
         const routeGuidance=ferryRouteGuidance(r,'arrival',japanNow());
         row.innerHTML = `
           <div class="cell main port-route port-route-main"><span class="port-arrival-route-line">${arrivalRoute}</span></div>
-          <div class="cell sub port-route-guidance">${routeGuidance}</div>
+          <div class="cell sub port-route-guidance">${overflowScrollHtml(routeGuidance,'port-guidance-scroll')}</div>
           <div class="cell service">${service}</div>
           <div class="cell time port-arrival-time">${r.time}頃予定</div>`;
       }
