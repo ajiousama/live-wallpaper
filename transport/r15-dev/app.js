@@ -1384,6 +1384,7 @@
   function portRouteParts(record, direction = 'departure') {
     // Explicit Takahama inbound calls already contain their actual origin.
     // Do not reverse a destination of Takahama back into "Takahama → Takahama".
+    if(direction==='arrival' && record.source==='koku94_verified_arrival') return ['佐賀関港','三崎港'];
     if(direction==='arrival' && record.source==='imabari_geiyo_official_arrival') return ['土生港（因島）','今治港'];
     if(direction==='arrival' && record.source==='jumbo_ferry_official_arrival') return ['神戸港', ...(String(record.info||'').includes('小豆島')?['小豆島（坂手）']:[]), '高松東港'];
     if(direction==='arrival' && (record.source==='gogoshima_official' || record.source==='nakajima_takahama_call')) {
@@ -3172,7 +3173,11 @@
         const arrivalRoute = isHiroshimaKureVia(r)
           ? portKureUnifiedHtml(r,'arrival',`${firstBadge}${finalBadge}`)
           : `${route} ${firstBadge}${finalBadge}`;
-        const routeGuidance=ferryRouteGuidance(r,'arrival',japanNow());
+        const departureTime=padTime(r.originDepartureTime||r.reverseTime||'');
+        const arrivalDepartureLabel=/^\\d{2}:\\d{2}$/.test(departureTime)
+          ? `${String(r.origin||'出発港')} ${departureTime}発` : '';
+        const baseGuidance=ferryRouteGuidance(r,'arrival',japanNow());
+        const routeGuidance=[arrivalDepartureLabel,baseGuidance==='—'?'':baseGuidance].filter(Boolean).join(' ｜ ')||'—';
         row.innerHTML = `
           <div class="cell main port-route port-route-main"><span class="port-arrival-route-line">${arrivalRoute}</span></div>
           <div class="cell sub port-route-guidance">${overflowScrollHtml(routeGuidance,'port-guidance-scroll')}</div>
