@@ -2376,3 +2376,24 @@ html.company-pc body.freewifi-tv .panel-bus .bus-logo-japanese.bus-logo-willer{
 html.company-pc body.freewifi-tv .panel-bus .bus-arrival-operator .operator-wrap{
   max-width:100%!important;
 }
+
+
+/* 2026-10-10: highway-bus timed checkpoint readability
+   A long scheduled interval (including an SA name) must wrap instead of
+   silently cutting off the next stop, while leaving the operator badge fixed. */
+body.freewifi-tv #bus-rows.freewifi-bus-grouped .freewifi-bus-group>.row .bus-estimated-position,
+body.freewifi-tv #bus-rows.freewifi-bus-grouped .freewifi-bus-group>.row .bus-departure-position,
+html.company-pc body.freewifi-tv #bus-rows.freewifi-bus-grouped .freewifi-bus-group>.row .bus-estimated-position,
+html.company-pc body.freewifi-tv #bus-rows.freewifi-bus-grouped .freewifi-bus-group>.row .bus-departure-position{
+  display:-webkit-box!important;
+  -webkit-box-orient:vertical!important;
+  -webkit-line-clamp:3!important;
+  white-space:normal!important;
+  overflow-wrap:anywhere!important;
+  overflow:hidden!important;
+  text-overflow:clip!important;
+  font-size:15px!important;
+  font-weight:850!important;
+  line-height:1.13!important;
+  letter-spacing:-.03em!important;
+}
