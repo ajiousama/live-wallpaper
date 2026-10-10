@@ -2130,7 +2130,8 @@
       if(nextLimited){
         const confirmed=nextLimited.railPositionConfirmed && nextLimited.livePosition;
         const status=confirmed?'現在位置 '+nextLimited.livePosition:'時刻表予定・位置未確認';
-        nextCard.innerHTML=`<span class="rail-next-label">次の特急は？</span><span class="rail-next-service">${railServiceBadgeHtml('limited',nextLimited.service)}</span><span class="rail-next-time">${nextLimited.time}発</span><span class="rail-next-dest">${railDestLabel(nextLimited)}行</span><span class="rail-next-status">${status}</span>`;
+        const details=railRowDetailItems(nextLimited);
+        nextCard.innerHTML=`<div class="rail-next-main"><span class="rail-next-label">次の特急は？</span><span class="rail-next-service">${railServiceBadgeHtml('limited',nextLimited.service)}</span><span class="rail-next-time">${nextLimited.time}発</span><span class="rail-next-dest">${railDestLabel(nextLimited)}行</span></div><div class="rail-next-details">${tickerHtml(details.length?details:[status])}</div>`;
       } else {
         nextCard.innerHTML='<span class="rail-next-label">次の特急は？</span><span class="rail-next-status">この方面の本日の特急は終了しました</span>';
       }
