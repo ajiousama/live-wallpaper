@@ -1398,7 +1398,10 @@
       } else if (/岡山/.test(String(record.dest || ''))) {
         items.push('岡山で山陽新幹線に乗換');
       }
-      if (/岡山・高松/.test(String(record.dest || ''))) items.push('宇多津で岡山方面・高松方面に分割');
+      if (record.direction==='north' && /しおかぜ/.test(service)) {
+        if (coupled) items.push('高松方面：通常はいしづちに乗ったまま（乗換不要）｜分離運転日は宇多津で乗換・当日の変更は未確認');
+        else items.push('高松方面：併結情報未確認・宇多津での乗換案内を確認');
+      } else if (/岡山・高松/.test(String(record.dest || ''))) items.push('宇多津で岡山方面・高松方面に分割');
       if (service === '宇和海27号' && time === '19:30') {
         items.push('予土線 最終連絡：宇和島21:06着 → 予土線21:11発');
       }
