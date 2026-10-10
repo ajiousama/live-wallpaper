@@ -971,7 +971,25 @@
   // Calling times are used as high-port arrival estimates; they do not
   // independently establish a separate departure minute.
   function nakajimaTakahamaCalls(iso) {
-    return recordsForDay('port',iso).flatMap(r=>{
+    // Prefecture-published High-Port boarding times: East/West ferry and fast boats.
+    // Use the published High-Port time, not the departure at Mitsuhama.
+    const highPortDepartures=[
+      ['07:10','大浦港','中島汽船フェリー（東線）'],
+      ['13:15','大浦港','中島汽船フェリー（東線）'],
+      ['16:05','大浦港','中島汽船フェリー（東線）'],
+      ['16:55','西中港','中島汽船フェリー（西線）'],
+      ['07:40','神浦港','中島汽船高速船（西線）'],
+      ['11:40','神浦港','中島汽船高速船（西線）'],
+      ['15:15','神浦港','中島汽船高速船（西線）'],
+      ['17:25','大浦港','中島汽船高速船（東線）'],
+      ['19:25','大浦港','中島汽船高速船（東線）']
+    ].map(([time,dest,service],i)=>({
+      id:'nakajima-takahama-dep-'+i,board:'port',kind:'ferry',
+      source:'nakajima_takahama_departure',port:'高浜港',direction:'departure',
+      time,dest,service,info:'高浜港発・中島方面',
+      noSyntheticArrival:true
+    }));
+    const highPortArrivals=recordsForDay('port',iso).flatMap(r=>{
       if(!/nakajima/.test(String(r.source||''))) return [];
       const calls=Array.isArray(r.calls)?r.calls:[];
       return calls.filter(call=>Array.isArray(call) &&
@@ -985,6 +1003,7 @@
           _nakajimaTakahama:true
         }));
     });
+    return [...highPortDepartures,...highPortArrivals];
   }
   // Actual inbound Jumbo Ferry sailings from Kobe to Takamatsu.
   // Timetable: https://ferry.co.jp/home/kobe-takamatsu/
@@ -3211,7 +3230,7 @@
       root.classList.add('freewifi-port-groups');
       const kyushu=(r)=>/^(uwajima_beppu|uwajima_usuki|koku94|koku94_verified_arrival)$/.test(String(r.source||'')) || /別府|臼杵|佐賀関|三崎港/.test([r.dest,r.origin,r.port,r.arrivalPort].map(v=>String(v||'')).join(' '));
       const matsuyamaPorts=(r)=>/三津浜港|松山観光港/.test(String(r.port||r.arrivalPort||''));
-      const gogoshima=r=>r.source==='gogoshima_official' || r.source==='nakajima_takahama_call';
+      const gogoshima=r=>r.source==='gogoshima_official' || r.source==='nakajima_takahama_call' || r.source==='nakajima_takahama_departure';
       const groups=[
         {key:'matsuyama',title:'三津浜港・松山観光港 発着',rows:rows.filter(r=>!kyushu(r)&&matsuyamaPorts(r)).slice(0,3)},
         {key:'gogoshima',title:'高浜港・興居島・中島航路',rows:rows.filter(gogoshima).slice(0,1)},
