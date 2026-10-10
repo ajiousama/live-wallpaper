@@ -660,6 +660,13 @@
   }
 
   function ferryDeparturePosition(record, now) {
+    // Keep an outbound sailing on the departures board after its timetable
+    // departure until its estimated destination arrival. Not an AIS fix.
+    if(record.sailingInProgress){
+      const left=Number(record.estimatedDestinationMinute)-now.minutes;
+      const eta=addMinutes(record.time,portTravelMinutes(record));
+      return `出航時刻経過｜${String(record.dest||'目的港')}へ航行中（見込）｜${eta}頃到着予定${left>0?`・あと約${Math.ceil(left)}分`:''}`;
+    }
     const port=String(record.port||'出発港').trim()||'出発港';
     const departure=padTime(record.time||'');
     if(!/^\d{2}:\d{2}$/.test(departure)) return '';
@@ -767,14 +774,25 @@
     const out=[];
 
     if(dep){
-      today.forEach(r=>{
-        const m=toMinutes(r.time);
-        if(m>=now.minutes) out.push({...r,direction:'departure',minutes:m,_serviceIso:now.iso});
-      });
-      tomorrow.forEach(r=>{
-        const m=1440+toMinutes(r.time);
-        if(m<=now.minutes+1440) out.push({...r,direction:'departure',minutes:m,_serviceIso:nextIso,isNextDayStart:true});
-      });
+      // Outbound and inbound listings are independent, so both may display
+      // the same route/ship while a voyage is in progress.
+      // A sailed timetable entry stays until estimated destination arrival,
+      // including the previous day's departures crossing midnight.
+      const prev=recordsForDay('port',prevIso);
+      const appendDeparture=(r,serviceIso,offset,nextDay=false)=>{
+        const departure=offset+toMinutes(r.time);
+        const destinationArrival=departure+portTravelMinutes(r);
+        if(!Number.isFinite(destinationArrival))return;
+        const underway=departure<now.minutes && now.minutes<destinationArrival;
+        const upcoming=departure>=now.minutes && departure<=now.minutes+1440;
+        if(!underway&&!upcoming)return;
+        out.push({...r,direction:'departure',minutes:departure,_serviceIso:serviceIso,
+          isNextDayStart:nextDay,sailingInProgress:underway,
+          estimatedDestinationMinute:destinationArrival});
+      };
+      prev.forEach(r=>appendDeparture(r,prevIso,-1440));
+      today.forEach(r=>appendDeparture(r,now.iso,0));
+      tomorrow.forEach(r=>appendDeparture(r,nextIso,1440,true));
     }else{
       const pushArrival=(src,baseIso,baseOffset)=>{
         src.filter(r=>!r.noSyntheticArrival).map(synthPortArrival).forEach(r=>{
