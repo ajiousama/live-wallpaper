@@ -2186,7 +2186,7 @@
       // A missing live fix must never be described as an ended service.
       const mode=currentRailDir()==='north'?'NORTHBOUND — 今治方面 —':'SOUTHBOUND — 宇和島方面 —';
       root.classList.add('rail-end');
-      root.innerHTML=`<div class="rail-end-state"><div class="rail-end-mode">🚆 ${mode}</div><div class="rail-end-message">位置情報を確認できる列車はありません</div><div class="rail-end-detail">時刻表だけの列車は非表示</div></div>`;
+      root.insertAdjacentHTML('beforeend',`<div class="rail-end-state"><div class="rail-end-mode">🚆 ${mode}</div><div class="rail-end-message">現在表示できる列車はありません</div></div>`);
     } else {
       visible.forEach(item => {
         if(item._deadhead){
