@@ -1001,12 +1001,29 @@
       info:via,noSyntheticArrival:true,reference:false
     }));
   }
+  // Saga-no-seki -> Misaki: independently published inbound sailings.
+  // Never reverse the Misaki outbound timetable to manufacture arrivals.
+  function koku94InboundPortRows(iso) {
+    const special=['2026-10-10','2026-10-12','2026-11-21','2026-11-23'].includes(iso);
+    const deps=[];
+    for(let hour=7;hour<=23;hour++)deps.push(hour*60);
+    if(special)deps.push(12*60);
+    return [...new Set(deps)].sort((a,b)=>a-b).map((m,i)=>{
+      const stamp=x=>String(Math.floor(x/60)%24).padStart(2,'0')+':'+String(x%60).padStart(2,'0');
+      return {id:`koku94-in-${iso}-${i}`,board:'port',kind:'ferry',
+        source:'koku94_verified_arrival',service:'国道九四フェリー',
+        port:'三崎港',arrivalPort:'三崎港',direction:'arrival',
+        origin:'佐賀関港',dest:'三崎港',time:stamp(m+70),
+        originDepartureTime:stamp(m),noSyntheticArrival:true,
+        info:'佐賀関発の公式到着時刻'};
+    });
+  }
   function portRolling24Rows(now) {
     const dep=currentDirection()==='departure';
     const prevIso=shiftIso(now.iso,-1);
     const nextIso=shiftIso(now.iso,1);
-    const today=[...recordsForDay('port',now.iso),...gogoshimaPortRecords(now.iso),...nakajimaTakahamaCalls(now.iso),...jumboInboundPortRows(now.iso)];
-    const tomorrow=[...recordsForDay('port',nextIso),...gogoshimaPortRecords(nextIso),...nakajimaTakahamaCalls(nextIso),...jumboInboundPortRows(nextIso)];
+    const today=[...recordsForDay('port',now.iso),...gogoshimaPortRecords(now.iso),...nakajimaTakahamaCalls(now.iso),...jumboInboundPortRows(now.iso),...koku94InboundPortRows(now.iso)];
+    const tomorrow=[...recordsForDay('port',nextIso),...gogoshimaPortRecords(nextIso),...nakajimaTakahamaCalls(nextIso),...jumboInboundPortRows(nextIso),...koku94InboundPortRows(nextIso)];
     const out=[];
 
     if(dep){
@@ -1027,7 +1044,7 @@
           const m=toMinutes(r.time)+baseOffset;
           if(m>=now.minutes && m<=now.minutes+1440)out.push({...r,minutes:m,_serviceIso:baseIso});
         });
-        src.filter(r=>r.direction!=='arrival' && !r.noSyntheticArrival && r.source!=='jumbo_ferry_reference').map(synthPortArrival).forEach(r=>{
+        src.filter(r=>r.direction!=='arrival' && !r.noSyntheticArrival && r.source!=='jumbo_ferry_reference' && r.source!=='koku94').map(synthPortArrival).forEach(r=>{
           let m=toMinutes(r.time);
           if(r._arrivalNextDay) m+=1440;
           m+=baseOffset;
@@ -1039,7 +1056,7 @@
 
       const prev=recordsForDay('port',prevIso);
       // Previous-day sailings that cross midnight arrive on the current day.
-      prev.filter(r=>r.direction!=='arrival' && !r.noSyntheticArrival && r.source!=='jumbo_ferry_reference').map(synthPortArrival).filter(r=>r._arrivalNextDay).forEach(r=>{
+      prev.filter(r=>r.direction!=='arrival' && !r.noSyntheticArrival && r.source!=='jumbo_ferry_reference' && r.source!=='koku94').map(synthPortArrival).filter(r=>r._arrivalNextDay).forEach(r=>{
         const m=toMinutes(r.time);
         if(m>=now.minutes && m<=now.minutes+1440){
           out.push({...r,originDepartureDay:'前日',minutes:m,_serviceIso:prevIso});
@@ -3141,7 +3158,7 @@
           <div class="cell main port-route port-route-main"><span class="port-arrival-route-line">${arrivalRoute}</span></div>
           <div class="cell sub port-route-guidance">${overflowScrollHtml(routeGuidance,'port-guidance-scroll')}</div>
           <div class="cell service">${service}</div>
-          <div class="cell time port-arrival-time">${r.time}頃予定</div>`;
+          <div class="cell time port-arrival-time">${r.isNextDayStart || (r._serviceIso && r._serviceIso!==japanNow().iso) ? '翌日 ' : ''}${r.time}頃予定</div>`;
       }
       return row;
     };
