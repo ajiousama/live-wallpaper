@@ -2204,9 +2204,19 @@
       })(),
       data: r
     }));
-    const visible = [...services, ...terminalArrivals, ...deadheads, ...freights]
-      .sort((a,b)=>a._sortMinutes-b._sortMinutes)
-      .slice(0, FREEWIFI_TV ? (document.documentElement.classList.contains('company-pc') ? 9 : 8) : 3);
+    const limit=FREEWIFI_TV ? (document.documentElement.classList.contains('company-pc') ? 9 : 8) : 3;
+    const candidates=[...services, ...terminalArrivals, ...deadheads, ...freights]
+      .sort((a,b)=>a._sortMinutes-b._sortMinutes);
+    const visible=candidates.slice(0,limit);
+    // A confirmed upcoming terminal arrival must not disappear solely because
+    // the standard departure list was shortened to avoid clipping.
+    if(FREEWIFI_TV && !visible.some(x=>x._terminalArrival)){
+      const nextArrival=candidates.find(x=>x._terminalArrival);
+      if(nextArrival && visible.length===limit){
+        visible[visible.length-1]=nextArrival;
+        visible.sort((a,b)=>a._sortMinutes-b._sortMinutes);
+      }
+    }
 
     if (!visible.length) {
       // A missing live fix must never be described as an ended service.
