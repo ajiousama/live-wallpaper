@@ -395,30 +395,31 @@ async function getIchitsubo(now: { minutes: number }) {
     };
   }).filter(Boolean).sort((a: any, b: any) => (a.minutesToMatsuyama ?? 999) - (b.minutesToMatsuyama ?? 999));
 
+  // Freight 3072/3073 terminate at Matsuyama Freight Station, not JR Matsuyama.
+  // Keep confirmed positions even when the through-time of Matsuyama is absent
+  // from the daily diagram. A missing time is NOT a license to invent one.
   const matsuyamaFreights = positions.map((pos) => {
-    const route = diagram.get(String(pos.TrainNum));
-    if (!route || !isFreight(pos, route) || route.matsuyamaIndex < 0) return null;
-    if (!/^\d{1,2}:\d{2}$/.test(route.matsuyamaTime)) return null;
-
-    const delay = Number(pos.delay ?? 0) || 0;
-    let diff = toMinutes(route.matsuyamaTime) + delay - now.minutes;
-    if (diff < -720) diff += 1440;
-    if (diff > 720) diff -= 1440;
-    if (!Number.isFinite(diff) || diff < -2 || diff > 240) return null;
-
+    const num=String(pos.TrainNum||"").trim();
+    if (!/^(3072|3073)$/.test(num)) return null;
+    const route=diagram.get(num);
+    if (!route || (route.matsuyamaIndex<0 && route.cityIndex<0)) return null;
+    const position=normalizeStationName(pos.Pos ?? "");
+    if(!position || /^(?:-|—|不明|未取得|取得中|確認中|データなし|位置情報なし)$/.test(position)) return null;
+    const scheduled=/^\\d{1,2}:\\d{2}$/.test(route.matsuyamaTime)
+      ? route.matsuyamaTime : "";
+    const delay=Number(pos.delay)||0;
+    const diff=scheduled ? toMinutes(scheduled)+delay-now.minutes : null;
     return {
-      trainNum: String(pos.TrainNum),
-      kind: "freight",
-      origin: route.origin || "",
-      destination: route.destination || "",
-      direction: route.cityIndex>=0 && route.matsuyamaIndex>=0
-        ? (route.cityIndex < route.matsuyamaIndex ? "north" : "south") : "",
-      position: String(pos.Pos ?? ""),
-      delayMinutes: delay,
-      scheduledMatsuyama: route.matsuyamaTime,
-      minutesToMatsuyama: diff,
+      trainNum:num,kind:"freight",origin:route.origin||"",
+      destination:route.destination||"",
+      direction:num==="3072"?"north":"south",
+      position,delayMinutes:delay,
+      scheduledMatsuyama:scheduled,
+      minutesToMatsuyama:Number.isFinite(diff)?diff:null,
+      timeSource:scheduled?"today_diagram":"unavailable",
     };
-  }).filter(Boolean).sort((a: any, b: any) => (a.minutesToMatsuyama ?? 999) - (b.minutesToMatsuyama ?? 999));
+  }).filter(Boolean).sort((a:any,b:any)=>
+    (a.minutesToMatsuyama ?? 9999)-(b.minutesToMatsuyama ?? 9999));
 
   const matsuyamaSchedule = [...diagram.values()].map((route) => {
     if (route.matsuyamaDepartureIndex < 0 || !/^\d{1,2}:\d{2}$/.test(route.matsuyamaDepartureTime)) return null;
