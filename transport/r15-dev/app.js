@@ -386,6 +386,25 @@
     );
   }
 
+  function arrivalDelayElapsedMinutes(item, now) {
+    // Delay age is counted from the latest reported arrival ETA, not from
+    // the original schedule. A future delayed arrival remains active.
+    if(!isDelayedAirportArrival(item))return null;
+    const eta=padTime(item?.changed||item?.scheduled||'');
+    if(!/^\d{2}:\d{2}$/.test(eta))return null;
+    let etaMinutes=toMinutes(eta);
+    const scheduled=padTime(item?.scheduled||'');
+    if(/^\d{2}:\d{2}$/.test(scheduled) &&
+       toMinutes(scheduled)>=18*60 && etaMinutes<6*60 &&
+       etaMinutes<toMinutes(scheduled)){
+      etaMinutes+=1440; // actual changed ETA is past midnight
+    }
+    return now.minutes-etaMinutes;
+  }
+  function delayedArrivalNoticeExpired(item, now) {
+    const elapsed=arrivalDelayElapsedMinutes(item,now);
+    return elapsed!==null && elapsed>=60;
+  }
   function liveFlightRows(now) {
     const dep=currentDirection()==='departure';
     if (boardDisplayIso('air', now) !== now.iso) return dep?null:[];
@@ -417,6 +436,9 @@
       // The departure board is intentionally unchanged.
       if(!dep && now.minutes>=AIRPORT_ARRIVAL_CURFEW_MINUTES &&
          !isDelayedAirportArrival(x))return;
+      // A delayed arrival ceases to be an active problem once its revised
+      // expected arrival time is one hour in the past.
+      if(!dep && delayedArrivalNoticeExpired(x,now))return;
       // Official Matsuyama arrivals remain visible as a FORECAST even when
       // we have not yet verified departure at the origin airport.
       // Only explicitly verified evidence can assert departure or location.
@@ -452,7 +474,7 @@
           if(arrivalAge>=20 || scheduledAge>120)return;
         }
       }
-      if(!arrivalCompleted && diff < -20) return;
+      if(!arrivalCompleted && diff < (!dep && isDelayedAirportArrival(x) ? -60 : -20)) return;
       let liveStatus=status || (Number(x.deltaMinutes)===0?'定刻':'');
       if (dep && /出発済み/.test(liveStatus) && diff > 1) liveStatus='';
       if (!dep && /到着済み|ただいま到着/.test(liveStatus) && diff > 1) liveStatus='';
@@ -2103,6 +2125,7 @@
     const addDelayed=(rows,direction)=>{
       if(!Array.isArray(rows)) return;
       rows.forEach(x=>{
+        if(direction==='arrival' && delayedArrivalNoticeExpired(x,now))return;
         const delta=Number(x?.deltaMinutes);
         const status=String(x?.status||'');
         if(!(Number.isFinite(delta) && delta>0) && !/遅延|遅れ/.test(status)) return;
@@ -2149,6 +2172,7 @@
       : (Array.isArray(airport.departures)?airport.departures:[]);
     const items=[];
     rows.forEach(x=>{
+      if(arrival && delayedArrivalNoticeExpired(x,now))return;
       const status=String(x?.status||'').trim();
       const delta=Number(x?.deltaMinutes);
       const isCancel=!arrival && /欠航|運休/.test(status);
@@ -3931,9 +3955,12 @@
   // Re-evaluate the arrival board right at 22:00, rather than waiting
   // for the next slow airport fetch or normal mode rotation.
   let lastArrivalCurfewWindow=japanNow().minutes>=AIRPORT_ARRIVAL_CURFEW_MINUTES;
+  let lastAirportArrivalMinute=japanNow().minutes;
   setInterval(()=>{const now=japanNow();$('date-label').textContent=now.date;$('clock-label').innerHTML=`${now.time}<span>:${now.sec}</span>`;renderDisaster(now);renderTopLiveAlert(now);
     const curfewWindow=now.minutes>=AIRPORT_ARRIVAL_CURFEW_MINUTES;
-    if(curfewWindow!==lastArrivalCurfewWindow){
+    const arrivalMinuteChanged=now.minutes!==lastAirportArrivalMinute;
+    lastAirportArrivalMinute=now.minutes;
+    if(curfewWindow!==lastArrivalCurfewWindow || arrivalMinuteChanged){
       lastArrivalCurfewWindow=curfewWindow;
       if(currentDirection()==='arrival'){
         renderAir(liveFlightRows(now)||nextRows('air',now));
