@@ -2191,15 +2191,16 @@ body.freewifi-tv #panel-port{
 }
 body.freewifi-tv #port-rows.freewifi-port-groups{
   display:grid!important;
-  grid-template-rows:minmax(0,4fr) minmax(0,3fr) 30px minmax(0,2fr)!important;
+  grid-template-rows:minmax(0,4fr) minmax(0,3fr) 28px 28px minmax(0,2fr)!important;
   min-height:0!important;
 }
-body.freewifi-tv #port-rows.freewifi-port-groups > #port-note{
+body.freewifi-tv #port-rows.freewifi-port-groups > #port-note,
+body.freewifi-tv #port-rows.freewifi-port-groups > #port-limousine-note{
   display:block!important;
   position:relative!important;
   min-width:0!important;
   min-height:0!important;
-  height:30px!important;
+  height:28px!important;
   overflow:hidden!important;
   padding:3px 10px!important;
   box-sizing:border-box!important;
@@ -2213,8 +2214,10 @@ html.company-pc body.freewifi-tv #panel-port{
 body.freewifi-tv #port-rows.freewifi-port-groups > .freewifi-port-group{
   min-height:0!important;overflow:hidden!important;
 }
-body.freewifi-tv #port-rows.freewifi-port-groups > #port-note{
+body.freewifi-tv #port-rows.freewifi-port-groups > #port-note,
+body.freewifi-tv #port-rows.freewifi-port-groups > #port-limousine-note{
   grid-row:3!important;
   margin:0!important;
   z-index:1;
 }
+body.freewifi-tv #port-rows.freewifi-port-groups > #port-limousine-note{grid-row:4!important;}
