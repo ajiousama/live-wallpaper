@@ -1390,7 +1390,7 @@
       if (terminalArrival) items.push(`終点着 ${terminalArrival}`);
       const info = String(record.info || '');
       const coupled = info.match(/(いしづち\d+号)/);
-      if (coupled) items.push(`${coupled[1]}を併結`);
+      if (coupled) items.push(`${coupled[1]}を併結予定（当日の分離運転は未確認）`);
       const service = String(record.service || '');
       const time = padTime(record.time || '');
       if (service === 'しおかぜ30号' && time === '18:39') {
