@@ -2919,58 +2919,34 @@
   }
 
   function busMiniLogo(name) {
-    const n=String(name||'').trim();
-
-    // Exact artwork confirmed from the operators' official websites.
-    if(n==='両備バス') return operatorLogoImage(
-      'bus','bus-logo-ryobi','両備バス',
-      'https://www.ryobi-holdings.jp/bus/master/wp-content/themes/ryobi-bus/images/logo.png',
-      '両備バス'
-    );
-    if(n==='中国バス') return operatorLogoImage(
-      'bus','bus-logo-chugoku bus-logo-official-dark','中国バス',
-      'https://www.chugokubus.jp/wp-content/themes/chugokubus/_assets/_mi/img/footerLogo.png',
-      '中国バス'
-    );
-
-    // Branded fallbacks for operators whose official web artwork cannot be safely
-    // hot-linked. These keep the real corporate colours/wordmark direction rather
-    // than falling back to plain text.
-    const defs=[
-      [/^伊予鉄バス$/, '<span class="brand-word iyotetsu-word">IYOTETSU</span>', 'iyo'],
-      [/^伊予鉄南予バス$/, '<span class="brand-word iyotetsu-word">IYOTETSU</span><span class="brand-sub">南予</span>', 'nanyo'],
-      [/^JR四国バス$/, '<span class="brand-jr">JR</span><span class="brand-word">四国バス</span>', 'jrshikoku'],
-      [/^西日本JRバス$/, '<span class="brand-jr">JR</span><span class="brand-word">西日本</span>', 'jrwest'],
-      [/^JR東海バス$/, '<span class="brand-jr">JR</span><span class="brand-word">東海バス</span>', 'jrtokai'],
-      [/^四国高速バス$/, '<span class="brand-mark-circle"></span><span class="brand-word">四国高速バス</span>', 'shikoku'],
-      [/^徳島バス$/, '<span class="brand-word tokubus-word">TOKUBUS</span>', 'tokushima'],
-      [/^下電バス$/, '<span class="brand-word">SHIMODEN</span><span class="brand-sub">BUS</span>', 'shimoden'],
-      [/^とさでん交通$/, '<span class="brand-word">とさでん</span><span class="brand-sub">交通</span>', 'tosaden'],
-      [/^阪急観光バス$/, '<span class="brand-hankyu-mark">H</span><span class="brand-word">阪急観光バス</span>', 'hankyu'],
-      [/^名鉄バス$/, '<span class="brand-meitetsu-mark">M</span><span class="brand-word">名鉄バス</span>', 'meitetsu'],
-      [/^せとうちバス$/, '<span class="brand-word">せとうち</span><span class="brand-sub">BUS</span>', 'setouchi'],
-      [/^西東京バス$/, '<span class="brand-word">NISHITOKYO</span><span class="brand-sub">BUS</span>', 'nishitokyo'],
-      [/^WILLER EXPRESS$/, '<span class="brand-word willer-word">WILLER</span><span class="willer-express-word">EXPRESS</span>', 'willer'],
-      [/^宇和島自動車$/, '<span class="brand-word">宇和島</span><span class="brand-sub">BUS</span>', 'uwajima'],
-      [/^本四バス$/, '<span class="brand-word">本四バス</span>', 'honshi'],
-      [/^琴平バス$/, '<span class="brand-word kotobus-word">KOTOBUS</span>', 'kotobus'],
-      [/^神姫バス$/, '<span class="brand-word shinki-word">SHINKI BUS</span>', 'shinki'],
-      [/^しまなみバス$/, '<span class="brand-word">しまなみ</span><span class="brand-sub">BUS</span>', 'shimanami']
-    ];
-    const hit=defs.find(([re])=>re.test(n));
-    if(!hit) return `<span class="bus-mini-logo bus-logo-generic no-auto-scroll">${n||'—'}</span>`;
-    // Keep familiar operator branding, but identify abbreviated / English-only
-    // logos in Japanese as well. Bus badges never auto-scroll.
-    const bilingualNames=new Set([
-      '伊予鉄バス','伊予鉄南予バス','西日本JRバス','徳島バス',
-      '下電バス','せとうちバス','西東京バス','WILLER EXPRESS',
-      '宇和島自動車','琴平バス','神姫バス','しまなみバス'
-    ]);
-    const nativeName=n==='WILLER EXPRESS'?'ウィラーエクスプレス':n;
-    if(bilingualNames.has(n)){
-      return `<span class="bus-mini-logo bus-logo-${hit[2]} brand-logo-custom bus-logo-bilingual no-auto-scroll" title="${n}"><span class="bus-logo-latin">${hit[1]}</span><span class="bus-logo-native">${nativeName}</span></span>`;
-    }
-    return `<span class="bus-mini-logo bus-logo-${hit[2]} brand-logo-custom no-auto-scroll" title="${n}">${hit[1]}</span>`;
+    // Bus operator badges use Japanese company names only: no English
+    // wordmarks, Romanized taglines or separate Latin headings.
+    // Keep each company's existing visual colour through the logo class.
+    const raw=String(name||'').trim();
+    const names={
+      'WILLER EXPRESS':'ウィラーエクスプレス',
+      'KOTOBUS':'琴平バス',
+      'SHINKI BUS':'神姫バス',
+      'TOKUBUS':'徳島バス',
+      'SHIMODEN':'下電バス',
+      'IYOTETSU':'伊予鉄バス'
+    };
+    const n=names[raw]||raw||'—';
+    const styles={
+      '伊予鉄バス':'iyo','伊予鉄南予バス':'nanyo',
+      'JR四国バス':'jrshikoku','西日本JRバス':'jrwest',
+      'JR東海バス':'jrtokai','四国高速バス':'shikoku',
+      '徳島バス':'tokushima','下電バス':'shimoden',
+      'とさでん交通':'tosaden','阪急観光バス':'hankyu',
+      '名鉄バス':'meitetsu','せとうちバス':'setouchi',
+      '西東京バス':'nishitokyo','ウィラーエクスプレス':'willer',
+      '宇和島自動車':'uwajima','本四バス':'honshi',
+      '琴平バス':'kotobus','神姫バス':'shinki',
+      'しまなみバス':'shimanami','両備バス':'ryobi',
+      '中国バス':'chugoku'
+    };
+    const theme=styles[n]||'generic';
+    return `<span class="bus-mini-logo bus-logo-${theme} brand-logo-custom bus-logo-japanese no-auto-scroll" title="${n}"><span class="brand-word">${n}</span></span>`;
   }
   function busOperatorHtml(r) {
     const parts=busOperatorParts(r);
