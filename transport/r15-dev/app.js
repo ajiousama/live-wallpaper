@@ -3011,10 +3011,17 @@
     if(key==='air') return '';
     return '';
   }
-  function ferryTickerItems() {
+  function ferryTickerItems(now=japanNow()) {
     const rows=slowLive.ferry?.items; const items=[];
     if(Array.isArray(rows)&&rows.length){rows.forEach(x=>{const st=String(x.status||'');const cls=/欠航|休航/.test(st)?'ferry-cancel':/減便|一部/.test(st)?'ferry-reduced':'ferry-normal';items.push(`<span class="${cls}">フェリーLIVE｜${x.name}｜${st}</span>`);});}
     if(!items.length)items.push('フェリーLIVE｜公式運航情報を取得中');
+    // Iyo Railway's published 2026-04-01 port limousine schedule.
+    // It is a scheduled connection, not real-time bus positioning.
+    // Do not show an already-departed bus as an upcoming service.
+    const departure=22*60+22;
+    if(now.minutes<=departure){
+      items.push('🚌 松山観光港リムジン｜広島フェリー22:12着に接続｜観光港22:22発 → JR松山駅前22:42 → 愛媛新聞社前22:44 → 松山市駅22:50着（時刻表予定・船便により変更あり）');
+    }
     items.push(PORT_WARNING); return items;
   }
   function parseJstClient(s) {
@@ -3256,7 +3263,7 @@
       rail: railTickerItems(now),
       air: airportAccessTickerItems(now),
       bus: busTickerItems(now),
-      port: ferryTickerItems()
+      port: ferryTickerItems(now)
     };
     updateNotes();
   }
@@ -3271,7 +3278,7 @@
     updatePersistentTicker('rail-note','rail',railTickerItems(now));
     renderAirportBottomInfo(now);
     updatePersistentTicker('bus-note','bus',busTickerItems(now));
-    updatePersistentTicker('port-note','port',ferryTickerItems());
+    updatePersistentTicker('port-note','port',ferryTickerItems(now));
   }
 
   function scale() {
