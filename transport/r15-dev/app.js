@@ -2065,7 +2065,7 @@
       const position=cleanStation(x.position||'');
       const delay=Number(x.delayMinutes)||0;
       return {...x,arrival,diff,position,delay};
-    }).filter(x=>x.arrival && jrPositionUsable(x.position) && x.side===side && Number.isFinite(x.diff) && x.diff>=-1 && x.diff<=180);
+    }).filter(x=>x.arrival && x.side===side && Number.isFinite(x.diff) && x.diff>=-1 && x.diff<=180 && (jrPositionUsable(x.position) || !!x.turnback));
   }
 
   function appendMatsuyamaTerminalArrivalRow(root,x,now) {
@@ -2074,7 +2074,8 @@
     const info=railLiveTrainLabel(x);
     const serviceBadge=railServiceBadgeHtml(info.kind,info.kind==='limited'?info.service:'');
     const details=['この列車は松山止まりです'];
-    if(x.position) details.push(`📍現在位置 ${x.position}`);
+    if(jrPositionUsable(x.position)) details.push(`📍現在位置 ${x.position}`);
+    else details.push('位置情報未確認・到着は時刻表予定');
     if(x.delay>0) details.push(`${x.delay}分遅れ`);
     const turnback=railTurnbackLabel(x.turnback,now);
     if(turnback) details.push(turnback);
