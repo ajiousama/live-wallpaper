@@ -1967,7 +1967,8 @@
     const push=(x, kindOverride='')=>{
       const position=cleanStation(x?.position||'');
       if(!jrPositionUsable(position)) return;
-      const dir=ichitsuboDirection(x);
+      const isMatsuyamaFreight=kindOverride==='freight' && /^(3072|3073)$/.test(String(x?.trainNum||''));
+      const dir=isMatsuyamaFreight?'north':ichitsuboDirection(x);
       if(dir!==side) return;
 
       const key=`${String(x?.trainNum||'')}|${position}|${dir}`;
@@ -2264,7 +2265,7 @@
         delay
       };
     // Freight train times do not prove that its current position was retrieved.
-    }).filter(x=>x.passTime && jrPositionUsable(x.position));
+    }).filter(x=>x.passTime && jrPositionUsable(x.position) && /^(3072|3073)$/.test(String(x.trainNum||'')) && currentRailDir()==='north');
   }
 
   function railServiceBadgeHtml(kind, service='') {
