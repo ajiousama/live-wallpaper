@@ -314,12 +314,16 @@ function approachingIchitsubo(pos: Record<string, unknown>, route: Route, nowMin
 }
 
 async function getIchitsubo(now: { minutes: number }) {
-  const [diagram, positionsJson] = await Promise.all([
+  // Daily diagram remains usable for *scheduled* freight notices even
+  // when the separate live-position endpoint has no data or times out.
+  const [diagram, positionResult] = await Promise.all([
     loadDiagram(),
-    fetchTimeout(JR_POSITIONS_URL),
+    fetchTimeout(JR_POSITIONS_URL)
+      .then((data) => ({ ok:true, data }))
+      .catch(() => ({ ok:false, data:null })),
   ]);
 
-  const pjson = positionsJson as Record<string, unknown>;
+  const pjson = (positionResult.data ?? {}) as Record<string, unknown>;
   const positions = Array.isArray(pjson?.data)
     ? (pjson.data as Record<string, unknown>[]).filter((x) => x && x.TrainNum)
     : [];
@@ -398,6 +402,27 @@ async function getIchitsubo(now: { minutes: number }) {
   // Freight 3072/3073 terminate at Matsuyama Freight Station, not JR Matsuyama.
   // Keep confirmed positions even when the through-time of Matsuyama is absent
   // from the daily diagram. A missing time is NOT a license to invent one.
+  // Timetable-only source: today's own operating diagram, not positions.
+  // Do not substitute the Matsuyama Freight terminal time for a passage time.
+  const matsuyamaFreightSchedules = ["3072","3073"].map((num) => {
+    const route=diagram.get(num);
+    if(!route) return null;
+    const matsuyamaPoint=route.points.find(p=>
+      normalizeStationName(p.station)==="松山" &&
+      /^\d{1,2}:\d{2}$/.test(p.time) &&
+      /通|着|発/.test(p.event));
+    const scheduledMatsuyama=matsuyamaPoint?.time || "";
+    const scheduledIchitsubo=/^\d{1,2}:\d{2}$/.test(route.cityTime)
+      ? route.cityTime : "";
+    if(!scheduledMatsuyama && !scheduledIchitsubo) return null;
+    return {
+      trainNum:num,kind:"freight",direction:num==="3072"?"north":"south",
+      origin:route.origin||"",destination:route.destination||"",
+      scheduledMatsuyama,scheduledIchitsubo,
+      timeSource:"today_diagram",positionConfirmed:false,
+    };
+  }).filter(Boolean);
+
   const matsuyamaFreights = positions.map((pos) => {
     const num=String(pos.TrainNum||"").trim();
     if (!/^(3072|3073)$/.test(num)) return null;
@@ -512,6 +537,8 @@ async function getIchitsubo(now: { minutes: number }) {
     approaching,
     matsuyamaDeadheads,
     matsuyamaFreights,
+    matsuyamaFreightSchedules,
+    positionFeedOk: positionResult.ok,
     matsuyamaSchedule,
     matsuyamaActiveTrains,
     matsuyamaTerminatingArrivals,
