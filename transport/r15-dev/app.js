@@ -1018,12 +1018,30 @@
         info:'佐賀関発の公式到着時刻'};
     });
   }
+  // Geiyo Kisen published Hab u -> Imabari inbound timetable,
+  // 2024-04-01 revision: weekdays and weekends have different morning services.
+  function geiyoInboundPortRows(iso) {
+    const date=new Date(iso+'T12:00:00+09:00');
+    const weekend=date.getDay()===0||date.getDay()===6 ||
+      /-(?:08-(?:1[2-6])|12-(?:29|30|31)|01-0[1-4])$/.test(iso);
+    const runs=weekend
+      ? [['07:45','09:05'],['12:20','13:40'],['16:00','17:15'],['18:40','19:55']]
+      : [['06:22','07:38'],['12:20','13:40'],['16:00','17:15'],['18:40','19:55']];
+    return runs.map(([departure,arrival],i)=>({
+      id:`geiyo-habu-imabari-${iso}-${i}`,board:'port',kind:'ferry',
+      source:'imabari_geiyo_official_arrival',service:'芸予汽船 高速船',
+      port:'今治港',arrivalPort:'今治港',direction:'arrival',
+      origin:'土生港（因島）',dest:'今治港',time:arrival,
+      originDepartureTime:departure,noSyntheticArrival:true,
+      info:'土生・生名・弓削・佐島・岩城・木浦・友浦経由'
+    }));
+  }
   function portRolling24Rows(now) {
     const dep=currentDirection()==='departure';
     const prevIso=shiftIso(now.iso,-1);
     const nextIso=shiftIso(now.iso,1);
-    const today=[...recordsForDay('port',now.iso),...gogoshimaPortRecords(now.iso),...nakajimaTakahamaCalls(now.iso),...jumboInboundPortRows(now.iso),...koku94InboundPortRows(now.iso)];
-    const tomorrow=[...recordsForDay('port',nextIso),...gogoshimaPortRecords(nextIso),...nakajimaTakahamaCalls(nextIso),...jumboInboundPortRows(nextIso),...koku94InboundPortRows(nextIso)];
+    const today=[...recordsForDay('port',now.iso),...gogoshimaPortRecords(now.iso),...nakajimaTakahamaCalls(now.iso),...jumboInboundPortRows(now.iso),...koku94InboundPortRows(now.iso),...geiyoInboundPortRows(now.iso)];
+    const tomorrow=[...recordsForDay('port',nextIso),...gogoshimaPortRecords(nextIso),...nakajimaTakahamaCalls(nextIso),...jumboInboundPortRows(nextIso),...koku94InboundPortRows(nextIso),...geiyoInboundPortRows(nextIso)];
     const out=[];
 
     if(dep){
@@ -1044,7 +1062,7 @@
           const m=toMinutes(r.time)+baseOffset;
           if(m>=now.minutes && m<=now.minutes+1440)out.push({...r,minutes:m,_serviceIso:baseIso});
         });
-        src.filter(r=>r.direction!=='arrival' && !r.noSyntheticArrival && r.source!=='jumbo_ferry_reference' && r.source!=='koku94').map(synthPortArrival).forEach(r=>{
+        src.filter(r=>r.direction!=='arrival' && !r.noSyntheticArrival && r.source!=='jumbo_ferry_reference' && r.source!=='koku94' && r.source!=='imabari_geiyo' && r.source!=='orange_niihama').map(synthPortArrival).forEach(r=>{
           let m=toMinutes(r.time);
           if(r._arrivalNextDay) m+=1440;
           m+=baseOffset;
@@ -1056,7 +1074,7 @@
 
       const prev=recordsForDay('port',prevIso);
       // Previous-day sailings that cross midnight arrive on the current day.
-      prev.filter(r=>r.direction!=='arrival' && !r.noSyntheticArrival && r.source!=='jumbo_ferry_reference' && r.source!=='koku94').map(synthPortArrival).filter(r=>r._arrivalNextDay).forEach(r=>{
+      prev.filter(r=>r.direction!=='arrival' && !r.noSyntheticArrival && r.source!=='jumbo_ferry_reference' && r.source!=='koku94' && r.source!=='imabari_geiyo' && r.source!=='orange_niihama').map(synthPortArrival).filter(r=>r._arrivalNextDay).forEach(r=>{
         const m=toMinutes(r.time);
         if(m>=now.minutes && m<=now.minutes+1440){
           out.push({...r,originDepartureDay:'前日',minutes:m,_serviceIso:prevIso});
@@ -1366,6 +1384,7 @@
   function portRouteParts(record, direction = 'departure') {
     // Explicit Takahama inbound calls already contain their actual origin.
     // Do not reverse a destination of Takahama back into "Takahama → Takahama".
+    if(direction==='arrival' && record.source==='imabari_geiyo_official_arrival') return ['土生港（因島）','今治港'];
     if(direction==='arrival' && record.source==='jumbo_ferry_official_arrival') return ['神戸港', ...(String(record.info||'').includes('小豆島')?['小豆島（坂手）']:[]), '高松東港'];
     if(direction==='arrival' && (record.source==='gogoshima_official' || record.source==='nakajima_takahama_call')) {
       const origin=String(record.origin||'').trim();
@@ -3165,7 +3184,7 @@
 
     if (FREEWIFI_TV) {
       root.classList.add('freewifi-port-groups');
-      const kyushu=(r)=>/^(uwajima_beppu|uwajima_usuki|koku94)$/.test(String(r.source||'')) || /別府|臼杵|佐賀関/.test(String(r.dest||r.origin||''));
+      const kyushu=(r)=>/^(uwajima_beppu|uwajima_usuki|koku94|koku94_verified_arrival)$/.test(String(r.source||'')) || /別府|臼杵|佐賀関|三崎港/.test([r.dest,r.origin,r.port,r.arrivalPort].map(v=>String(v||'')).join(' '));
       const matsuyamaPorts=(r)=>/三津浜港|松山観光港/.test(String(r.port||r.arrivalPort||''));
       const gogoshima=r=>r.source==='gogoshima_official' || r.source==='nakajima_takahama_call';
       const groups=[
