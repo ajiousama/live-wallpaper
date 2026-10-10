@@ -2103,3 +2103,24 @@ body.freewifi-tv #rail-rows .rail-next-status{
 html.company-pc body.freewifi-tv #rail-rows .rail-next-limited{
   min-height:48px!important;flex-basis:48px!important;
 }
+
+/* The next-limited panel reuses the original JR detail ticker, not abbreviated text. */
+body.freewifi-tv #rail-rows .rail-next-limited{
+  display:flex!important;flex-direction:column!important;align-items:stretch!important;
+  justify-content:center!important;gap:2px!important;
+  min-height:58px!important;flex:0 0 58px!important;
+  padding:5px 12px!important;box-sizing:border-box!important;
+}
+body.freewifi-tv #rail-rows .rail-next-main{
+  display:flex;align-items:center;gap:10px;min-width:0;width:100%;
+}
+body.freewifi-tv #rail-rows .rail-next-details{
+  display:block;min-width:0;width:100%;height:19px;overflow:hidden;
+  color:#b5e5f5;font-size:12px;font-weight:700;
+}
+body.freewifi-tv #rail-rows .rail-next-details .marquee{
+  width:100%;height:19px;overflow:hidden;white-space:nowrap;
+}
+html.company-pc body.freewifi-tv #rail-rows .rail-next-limited{
+  min-height:64px!important;flex-basis:64px!important;
+}
