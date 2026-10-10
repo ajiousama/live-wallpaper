@@ -693,7 +693,7 @@
     if(/福岡/.test(key)) return ['福岡','北九州','山口','広島周辺','しまなみ海道','今治','北条','堀江',terminal];
     if(/新居浜/.test(key)) return ['新居浜','西条','小松','川内IC','松山IC',terminal];
     if(/今治|宮浦/.test(key)) return ['今治周辺','菊間','北条','堀江',terminal];
-    if(/三崎/.test(key)) return ['三崎','八幡浜','大洲','内子','伊予市','松山IC',terminal];
+    if(/三崎|iyotetsu_misaki/.test(key)) return ['三崎港口','伊方','八幡浜','大洲','内子','中山','伊予市','松山市内（一般道）',terminal];
     if(/宇和島|城辺/.test(key)) return ['宇和島','大洲','内子','伊予市','松山IC',terminal];
 
     const label=origin.replace(/[（(].*?[）)]/g,'').trim()||'出発地';
