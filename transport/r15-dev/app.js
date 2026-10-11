@@ -2632,7 +2632,8 @@
     if(kind==='deadhead') return '<span class="rail-kind-badge rail-kind-deadhead">回送</span>';
     if(kind==='freight') return '<span class="rail-kind-badge rail-kind-freight">貨物</span>';
     if(kind==='test') return '<span class="rail-kind-badge rail-kind-test">試運転</span>';
-    if(kind==='extra') return '<span class="rail-kind-badge rail-kind-extra">臨時*</span>';
+    if(kind==='extra') return '<span class="rail-kind-badge rail-kind-extra">臨時</span>';
+    if(kind==='unknown') return '<span class="rail-kind-badge rail-kind-extra">種別未確認</span>';
     return '<span class="rail-kind-badge rail-kind-local">普通</span>';
   }
 
@@ -2866,7 +2867,7 @@
   function appendObservedSpecialTrainRow(root, x) {
     const row=document.createElement('div');
     row.className='row rail-row special-movement-row';
-    const kind=['test','deadhead','freight','extra'].includes(x.kind)?x.kind:'extra';
+    const kind=['test','deadhead','freight','extra','unknown'].includes(x.kind)?x.kind:'unknown';
     const event=railStationedStatus(x,japanNow()) || ({
       pass:'松山 通過予定', arrival:'松山 到着予定',
       departure:'松山 発車予定',arrival_departure:'松山 発着予定'
