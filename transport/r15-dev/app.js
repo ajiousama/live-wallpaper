@@ -2849,12 +2849,12 @@
   // for a train already there. Actual layover vs turnback is unverified.
   function railStationedStatus(x, now) {
     const here=cleanStation(x?.position||'');
-    if(!/^(?:松山|松山駅|松山基地)$/.test(here))return '';
-    // Respect explicit nonofficial shunting labels, e.g. 回561M
-    // 「松山駅構内入換」. This is neither storage nor an inbound arrival.
+    // The source confirms location with a yard-shunt label. The live position
+    // can be e.g. 松山駅構内 as well as simply 松山.
     if(x?.stationEvent==='shunting' &&
-      String(x?.operationLabel||'')==='松山駅構内入換')
+      String(x?.operationLabel||'')==='松山駅構内入換' && /松山/.test(here))
       return '松山駅構内入換（非公式データ）';
+    if(!/^(?:松山|松山駅|松山基地)$/.test(here))return '';
     const time=padTime(x?.stationTime||'');
     const depScheduled=x?.stationEvent==='departure' &&
       /^[0-9]{2}:[0-9]{2}$/.test(time) &&
