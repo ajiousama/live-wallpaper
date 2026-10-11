@@ -1155,8 +1155,11 @@
             origin:direction==='arrival'?landing:'高浜港',
             info:`${route.ship}・${landing}航路`,time:direction==='arrival'?addMinutes(time,route.travel):time,
             originDepartureTime:direction==='arrival'?time:undefined,
+            // Operator's published approximate sailing times: Yura ~13 min,
+            // Tomari ~10 min. Otherwise portTravelMinutes() defaults to 120.
+            travelMinutes:route.travel,
             direction,noSyntheticArrival:true,
-            estimatedArrival:direction==='arrival',
+            estimatedArrival:true,
             _gogoshima:true});
         });
       }
@@ -3619,7 +3622,7 @@
         const scheduledArrival=padTime(r.terminalArrivalTime||r.arrivalTime||(lastCall&&lastCall[1])||'');
         const arrivalClock=/^\d{2}:\d{2}$/.test(scheduledArrival)
           ? scheduledArrival : addMinutes(r.time,portTravelMinutes(r));
-        const arrivalIsEstimate=!/^\d{2}:\d{2}$/.test(scheduledArrival);
+        const arrivalIsEstimate=r.source==='gogoshima_official' || !/^\d{2}:\d{2}$/.test(scheduledArrival);
         const arrivalDay=toMinutes(arrivalClock)<toMinutes(r.time)?'翌日':'';
         const arrivalPort=String(lastCall?.[0]||r.dest||'目的港').trim();
         const arrivalGuide=`${arrivalPort} ${arrivalDay}${arrivalClock}${arrivalIsEstimate?'頃着（見込）':'着予定'}`;
