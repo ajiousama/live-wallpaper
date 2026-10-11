@@ -1,4 +1,16 @@
 (() => {
+  // Compatibility path for the original Matsuyama_Transport_R15 Lively
+  // wallpaper. If a cached legacy R15 HTML loads this newer app.js, exit
+  // that old 4-screen UI and open the maintained workplace display directly.
+  if (/\/transport\/r15-dev\/(?:index\.html|departures\.html)?$/.test(location.pathname)
+      && !document.body.classList.contains('freewifi-tv')) {
+    const target=new URL('../freewifi/',location.href);
+    target.searchParams.set('pc','1');
+    target.searchParams.set('lively','1');
+    target.searchParams.set('_legacy_refresh',String(Date.now()));
+    location.replace(target.href);
+    return;
+  }
   const data = window.MATSUYAMA_DATA;
   const $ = (id) => document.getElementById(id);
   const FREEWIFI_TV = document.body.classList.contains('freewifi-tv');
