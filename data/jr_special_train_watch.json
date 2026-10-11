@@ -1,0 +1,2024 @@
+{
+  "checked_at_utc": "2026-10-11T00:15:29.442214+00:00",
+  "source_urls": {
+    "jr_shikoku_press": "https://www.jr-shikoku.co.jp/03_news/press/info/",
+    "jr_shikoku_home": "https://www.jr-shikoku.co.jp/",
+    "iyonada_calendar": "https://iyonadamonogatari.com/timetable/"
+  },
+  "announcements": [
+    {
+      "source": "jr_shikoku_home",
+      "title": "臨時列車などの お知らせ",
+      "url": "https://www.jr-shikoku.co.jp/#news-box"
+    },
+    {
+      "source": "jr_shikoku_home",
+      "title": "観光列車の 空席情報",
+      "url": "https://www.jr-shikoku.co.jp/01_trainbus/event_train/seat_info/"
+    },
+    {
+      "source": "jr_shikoku_home",
+      "title": "伊予灘ものがたり",
+      "url": "https://www.jr-shikoku.co.jp/01_trainbus/event_train/seat_info/iyonadamonogatari"
+    },
+    {
+      "source": "jr_shikoku_home",
+      "title": "伊予灘ものがたり （フィオーレスイート）",
+      "url": "https://www.jr-shikoku.co.jp/01_trainbus/event_train/seat_info/iyonadasuite"
+    },
+    {
+      "source": "jr_shikoku_home",
+      "title": "「RE：MEDIA FESTIVAL2026」ご来場に便利な臨時列車を運転します",
+      "url": "https://www.jr-shikoku.co.jp/03_news/pdf/20261005_20261018_re_mediafes2026.pdf"
+    },
+    {
+      "source": "jr_shikoku_home",
+      "title": "「第５回にし阿波の花火」観覧に便利な臨時列車を運転します",
+      "url": "https://www.jr-shikoku.co.jp/03_news/pdf/20261009_20261114_awahanabi_fireworks.pdf"
+    },
+    {
+      "source": "jr_shikoku_home",
+      "title": "「サイクルトレイン愛ある伊予灘号」の運行について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/10/07/20261007%2004.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "臨時列車などの お知らせ",
+      "url": "https://www.jr-shikoku.co.jp/#news-box"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車の 空席情報",
+      "url": "https://www.jr-shikoku.co.jp/01_trainbus/event_train/seat_info/"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "冬の臨時列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2021%2010%2015%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "２０２２年春デビュー！新たな「伊予灘ものがたり」について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2021%2010%2018.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「伊予灘ものがたり」ご乗車１４万人達成イベントの実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2021%2010%2027%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "冬期間臨時列車の追加運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2021%2011%2019.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「伊予灘ものがたり」ラストラン記念式典等の実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2021%2012%2017%2005.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「四国まんなか千年ものがたり」のグリーン料金の見直しについて",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2021%2012%2017%2006.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "最初で最後、瀬戸大橋を渡ってやってくる「伊予灘ものがたり」特別展示",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2021%2012%2023.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「伊予灘ものがたり」特別展示　関連イベントのお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2001%2006%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "春の臨時列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2001%2021%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車の2022年度上半期の運転日について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2001%2025%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車の2022年度のトピックスについて",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2001%2025%2004.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "2代目「伊予灘ものがたり」グリーン個室の愛称名決定と特別ツアーの発売等について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2002%2018%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "サイクルトレイン「えひめ・しまなみリンリントレイン」（混乗試験）の実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2003%2002%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "2代目「伊予灘ものがたり」のWeb車両展示会の開催について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2003%2007%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「志国土佐 時代の夜明けのものがたり」春の特別イベントを実施します！",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2003%2007%2004.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「四国まんなか千年ものがたり」春の特別企画列車を運行します！",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2003%2007%2005%20.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "高松駅で観光列車「四国まんなか千年ものがたり」を展示します",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2003%2007%2006.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「徳島ヴォルティス」ホームゲーム観戦に臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2003%2016%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "２代目「伊予灘ものがたり」沿線地域試乗会の実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2003%2016%2004.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "２代目「伊予灘ものがたり」運行開始記念出発式典の開催について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2003%2024%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「徳島ヴォルティス」ホームゲーム観戦に臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2004%2005.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "春の臨時列車 追加運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2004%2008.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「徳島ヴォルティス」ホームゲーム観戦に臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2005%2010%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "夏の臨時列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2005%2020%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車の2022年度下半期の運転日について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2005%2020%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "列車にのって「森の国の夏祭り」にでかけよう！～花火大会にあわせて臨時列車の運転を行います～",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2006%2010%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "サイクルトレイン「えひめ・しまなみリンリントレイン」（混乗試験）の実施期間延長について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2006%2015%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "松山市・ＪＲ四国連携協定事業　特急列車内に観光に関する情報を発信するステッカーを掲出します",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2006%2024%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「四国まんなか千年ものがたり」ひまわり紀行を運行します！",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2006%2027%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "夏の臨時列車 追加運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2006%2029%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "2代目「伊予灘ものがたり」ご乗車1万人達成および「伊予灘ものがたり」運行開始8周年を迎えます",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2007%2008.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「志国土佐 時代（トキ）の夜明けのものがたり」がご乗車2万人を達成します",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2007%2013.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「坊っちゃんスタジアム」プロ野球オールスターゲーム観戦に臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2007%2020.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「徳島ヴォルティス」ホームゲーム観戦に臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2008%2008.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "夏の臨時列車　追加運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2008%2012.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "秋の臨時列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2008%2019%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「サイクルトレイン愛ある伊予灘号」の運行について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2008%2025%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「徳島ヴォルティス」ホームゲーム観戦に臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2008%2026%2005.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「志国土佐 時代（トキ）の夜明けのものがたり」土佐くろしお鉄道「ごめん・なはり線」2022年度10月～12月の運転について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2008%2030%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「徳島ヴォルティス」ホームゲーム観戦に臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2010%2007%2007.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "冬の臨時列車　運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2010%2021%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「伊予灘ものがたり」運転内容の一部変更について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2011%2014%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「伊予灘ものがたり」車内で「紅まどんな」をプレゼント！",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2011%2025%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "～観光列車「四国まんなか千年ものがたり」アテンダント特別企画～「ＴＡＩＪＵでランチ」を実施します！",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2012%2005.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「四国まんなか千年ものがたり」アテンダントがいちご栽培農家を訪問します",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2012%2007.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「伊予灘ものがたり」での「さくらひめ」を活用した取り組みについて",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2001%2006%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「坊っちゃんスタジアム」野球伝来１５０年記念イベント観戦に臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2001%2019.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "春の臨時列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2001%2020.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "四国酒まつりへの便利な臨時列車運転等について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2001%2023.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "春の臨時列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2002%2017%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "サイクルトレイン「えひめ・しまなみリンリントレイン」（混乗試験）の実施期間延長について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2002%2021%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "予土線サイクルトレイン（混乗試験）の実施期間延長について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2002%2021%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "ＪＲ四国観光列車　2023年春季特別列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2002%2028.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「四国まんなか千年ものがたり」8万人達成イベントの実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2003%2017%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「伊予灘ものがたり　櫻編」の運転について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2003%2017%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車２代目「伊予灘ものがたり」１周年記念イベントの実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2003%2020%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「四国まんなか千年ものがたり」６周年記念イベントの実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2003%2024%2004.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「志国土佐 時代（トキ）の夜明けのものがたり」2023年度上期「土佐くろしお鉄道ごめん・なはり線」での運転にあわせたイベントの実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2003%2029%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「徳島ヴォルティス」ホームゲーム観戦に臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2004%2003%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「坊っちゃんスタジアム」プロ野球公式戦「ヤクルト×中日」観戦に臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2004%2007%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「サイクルトレイン愛ある伊予灘号」の運行について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2004%2024.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「徳島ヴォルティス」ホームゲーム観戦に臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2005%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "２代目「伊予灘ものがたり」ご乗車３万人達成イベントの実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2005%2019%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "夏の臨時列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2005%2019%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「徳島ヴォルティス」ホームゲーム観戦に臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2006%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「伊予灘ものがたり」運転内容の一部変更と運転日追加について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2006%2013%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「徳島ヴォルティス」ホームゲーム観戦に臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2006%2016%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "夏の臨時列車 追加運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2006%2016%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「志国土佐　時代（トキ）の夜明けのものがたり」３周年記念及び３万人達成イベント等の実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2006%2021%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「四国まんなか千年ものがたり」ひまわり紀行を運行します！",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2006%2021%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車の2023年度下半期の運転日及びご利用料金の改定について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2006%2028%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "列車にのって「森の国の夏祭り」にでかけよう！～「花火」にあわせて臨時列車の運転を行います～",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2007%2004.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「伊予灘ものがたり」運行９周年記念イベントの実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2007%2014%2005.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「徳島ヴォルティス」ホームゲーム観戦に臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2007%2020%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "秋の臨時列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2008%2024.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「徳島ヴォルティス」ホームゲーム観戦に臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2008%2025%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「志国土佐 時代（トキ）の夜明けのものがたり」2023年10月からの事前予約制お食事の一部変更と土佐くろしお鉄道「ごめん・なはり線」秋季運転概要について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2008%2029%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「徳島ヴォルティス」ホームゲーム観戦に臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2009%2008%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "秋の臨時列車 追加運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2009%2008%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「サイクルトレイン愛ある伊予灘号」の運行について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2009%2011.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "２代目「伊予灘ものがたり」ご乗車４万人達成イベントの実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2010%2006%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「第２回にし阿波の花火大会」開催に伴う臨時列車運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2010%2011%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "冬の臨時列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2010%2020%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「四国まんなか千年ものがたり」9万人達成イベントの実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2011%2013%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「志国土佐 時代(ﾄｷ)の夜明けのものがたり」運転内容の一部変更と運転日追加について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2012%2008.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「志国土佐 時代（ﾄｷ)の夜明けのものがたり」運転時刻の変更について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2012%2015%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "冬の臨時列車 追加運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2001%2011.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「伊予灘ものがたり」での「さくらひめ」を活用した取り組みについて",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2001%2012%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "春の臨時列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2001%2019%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "四国酒まつりへの便利な臨時列車運転について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2001%2023%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車の2024年度上半期の運転日について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2001%2030%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「伊予灘ものがたり　菜の花編」の運転について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2002%2016%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "予土線サイクルトレイン（混乗試験）の実施期間延長について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2002%2019%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "サイクルトレイン「えひめ・しまなみリンリントレイン」（混乗試験）の実施期間延長について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2002%2019%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "ＪＲ四国観光列車　春からのご利用案内",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2002%2022%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "２代目「伊予灘ものがたり」ご乗車５万人達成イベントの実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2003%2008%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "２代目「伊予灘ものがたり」２周年イベントの実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2003%2022%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「四国まんなか千年ものがたり」７周年記念イベントの実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2003%2022%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「志国土佐　時代（トキ）の夜明けのものがたり」がご乗車４万人を達成します",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2006%2007.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「徳島ヴォルティス」ホームゲーム観戦に便利な臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2006%2014%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「四国まんなか千年ものがたり」ひまわり紀行を運行します！",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2006%2019%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「志国土佐 時代(ﾄｷ)の夜明けのものがたり」が４周年を迎えます",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2006%2019%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "ＪＲ四国初の本格的観光列車「伊予灘ものがたり」運行開始10周年！　３つのものがたり列車が届ける特別企画のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2006%2021%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「徳島ヴォルティス」ホームゲーム観戦に便利な臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2006%2028%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "列車にのって「森の国の夏祭り」にでかけよう！　～「花火」にあわせて臨時列車の運転を行います～",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2007%2005%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「徳島ヴォルティス」ホームゲーム観戦に便利な臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2007%2031%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「四国まんなか千年ものがたり」１０万人達成に伴う記念缶バッジの配布について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2008%2001%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "松山駅付近高架線切替の切替工事に伴う代行輸送について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2008%2002%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "２代目「伊予灘ものがたり」ご乗車６万人達成イベントの実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2008%2006%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「ＭＯＮＳＴＥＲ　ｂａＳＨ２０２４」開催に伴う臨時列車運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2008%2006%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「志国土佐 時代(ﾄｷ)の夜明けのものがたり」土佐くろしお鉄道「ごめん・なはり線」事前予約制お食事のリニューアルと2024年10月からの秋季特別運転概要について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2008%2030.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「徳島ヴォルティス」ホームゲーム観戦に便利な臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2009%2006%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「サイクルトレイン愛ある伊予灘号」の運行について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2010%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「第３回にし阿波の花火大会」及び音楽フェス[MONTAKA２０２４」開催に伴う臨時列車運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2010%2008.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "冬の臨時列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2010%2018%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「志国土佐　時代（トキ）の夜明けのものがたり」アテンダント特別企画　「こじゃんと夜明けのものがたり」発売について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2791dc735cd2482b0ba18c4d020591252730c189.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「四国まんなか千年ものがたり」5周年記念イベントの実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2fcdaff1cd8bd8bf78546c3b3eabeb89e4aa5a05.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車の2023年度上半期の運転日について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/3003a0d96d0c685f135575143b08218ef4015258.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "牟岐線サイクルトレイン（混乗試験）の実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/3576885e8122f15f6a90ce826582bd24c6bddce1.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「坊っちゃんスタジアム」プロ野球公式戦「ヤクルト×広島」観戦に臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/3d03fb81ec1f5a7fb6a14edeb3575a5149572ec9.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車の2024年度下半期の運転日について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/5955d72e7c400c7ad4774a8ff634d2f0da0b4a08.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「伊予灘ものがたり　南予きずな旅」記念式典の開催について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/72205595b726712008b334a574773f5e60202532.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「ＭＯＮＳＴＥＲ　ｂａＳＨ２０２３」開催に伴う臨時列車運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/9a92ecc857c11d07401e4cb2343c6e7fb105e526.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "JALとJR四国、観光列車「伊予灘ものがたり」を活用した愛媛県・大洲市での「新しい旅のカタチ」を提供　～地域事業者・自治体と連携し、地域活性化に取り組みます～",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/ace218009ecd01252aa33970530a08ad3fc3f159.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車の2025年度上半期運転日および運転時刻変更について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/02/14/2025%2001%2017%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "春の臨時列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/02/14/2025%2001%2017%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「志国土佐　時代（トキ）の夜明けのものがたり」特別企画　土佐のおきゃくのものがたり　2025の発売について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/02/14/2025%2001%2024%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "春の臨時列車 追加運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/02/14/2025%2001%2024%2004.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "四国酒まつりへの便利な臨時列車運転について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/02/14/2025%2001%2025%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "香川県立アリーナでの「サザンオールスターズLIVE TOUR 2025『THANK YOU SO MUCH!!』」開催に伴う臨時列車運転等について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/02/14/2025%2001%2031.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "予讃線「日中時間帯集中工事」の実施に伴う列車の運休について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/03/07/2024%2012%2006.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "春のＪＲ四国観光列車のご案内",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/03/07/2025%2002%2020%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「伊予灘ものがたり　菜の花編」の運転について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/03/07/2025%2002%2021%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "予土線サイクルトレイン（混乗試験）の実施期間延長について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/03/07/2025%2002%2027%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "サイクルトレイン「えひめ・しまなみリンリントレイン」（混乗試験）の実施期間延長について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/03/07/2025%2002%2027%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "あなぶきアリーナ香川での「RIZIN.50香川大会」開催に伴う臨時列車運転等について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/03/07/2025%2002%2028%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "あなぶきアリーナ香川での「WEST. LIVE TOUR 2025 A.H.O. -Audio Hang Out-」 開催に伴う臨時列車運転等について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/03/07/2025%2002%2028%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「志国土佐 時代の夜明けのものがたり」今話題のひがしこうち！土佐くろしお鉄道「ごめん・なはり線」で今期も運転します！",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/03/07/2025%2003%2006%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "あなぶきアリーナ香川での「TOMORROW X TOGETHER WORLD TOUR  ＜ACT : PROMISE＞ - EP. 2 - IN JAPAN」開催に伴う臨時列車運転について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/03/14/2025%2003%2014%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "あなぶきアリーナ香川での「 MAN WITH A \"15th\" MISSION \"PLAY WHAT U WANT TOUR 2025\" 」開催に伴う臨時列車運転について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/03/21/2025%2003%2021%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「四国まんなか千年ものがたり」８周年記念イベントの実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/03/21/2025%2003%2021%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "２代目「伊予灘ものがたり」３周年イベントの実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/03/25/2025%2003%2026%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「坊っちゃんスタジアム」プロ野球公式戦「ヤクルト×阪神」観戦に臨時列車を運転します",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/04/01/2025%2003%2031%2006.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「徳島ヴォルティス」ホームゲーム観戦に便利な臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/06/02/2025%2006%2002%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「四国まんなか千年ものがたり」ひまわり紀行を運行します！",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/06/16/2025%2006%2016%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「志国土佐 時代（ﾄｷ）の夜明けのものがたり」５周年記念イベントの実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/06/24/2025%2006%2024.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「徳島ヴォルティス」ホームゲーム観戦に便利な臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/06/25/2025%2006%2023%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車の2025年度下半期運転日および事前予約制食事の内容・価格の一部変更について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/06/25/2025%2006%2025%2004.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "２代目「伊予灘ものがたり」ご乗車8万人達成プレゼント等の実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/06/30/2025%2006%2020.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "ＪＲ四国「伊予灘ものがたり」と東武鉄道「スペーシア Ｘ」が初コラボします！　～それぞれの列車で、他方で愛されている限定ビールの発売や、東武日光駅でイベントを開催～",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/07/08/2025%2007%2008%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "列車にのって「森の国の夏祭り」にでかけよう！　～「花火」にあわせて臨時列車の運転を行います～",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/07/08/2025%2007%2008%2004.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "夏の臨時列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/07/08/7edb11e4b970cdc9503ff45472be072d5ad25679.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「伊予灘ものがたり」運行１１周年記念プレゼント等の実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/07/11/2025%2007%2011.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「第６６回須崎まつり海上花火大会」に伴う臨時列車運転について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/07/25/2025%2007%2025%2005.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「ＭＯＮＳＴＥＲ ｂａＳＨ ２０２５」開催に伴う臨時列車運転について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/08/08/2025%2008%2008%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「志国土佐 時代（トキ）の夜明けのものがたり」がご乗車５万人を達成します",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/08/13/2025%2008%2013.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "秋の臨時列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/08/22/2025%2008%2022%2004.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「志国土佐 時代の夜明けのものがたり」が 「e5489」で予約できるようになります！",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/08/27/2025%2008%2027.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「サイクルトレイン愛ある伊予灘号」の運行について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/09/19/2025%2009%2019%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「第４回にし阿波の花火大会」及び音楽フェス「MONTAKA２０２５」 開催に伴う臨時列車運転について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/10/17/2025%2010%2017%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "冬の臨時列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/10/17/2025%2010%2017%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "２代目「伊予灘ものがたり」ご乗車９万人達成について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/10/27/2025%2010%2027.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "春の臨時列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/01/16/2026%2001%2016.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車の2026年度上半期運転日および事前予約制食事の価格の改定について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/01/22/2026%2001%2022%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「伊予灘ものがたり　菜の花編」の運行について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/02/13/2026%2002%2013%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "ＪＲ四国 春の観光列車のご案内",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/02/18/2026%2002%2018%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「伊予灘ものがたり」の座席レイアウト一部変更について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/02/18/2026%2002%2018%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "サイクルトレイン「えひめ・しまなみリンリントレイン」（混乗試験）の実施期間延長について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/02/20/2026%2002%2020%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "予土線サイクルトレイン（混乗試験）の実施期間延長について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/02/20/2026%2002%2020%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "列車を降りても、あなたの\"ものがたり\"は続く「伊予灘ものがたり」と「ＪＲ松山駅だんだん通り」初のコラボキャンペーンを実施します",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/02/27/2026%2002%2027.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "宇和海サイクルトレイン（混乗試験）の開始について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/03/19/2026%2003%2019%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「四国まんなか千年ものがたり」９周年記念プレゼントの配布について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/03/19/2026%2003%2019%2007.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "２代目「伊予灘ものがたり」運行４周年について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/03/26/2026%2003%2026%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「伊予灘ものがたり」 「ダブルご乗車人数達成記念イベント」の実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/04/30/20260430%2004.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "２代目「伊予灘ものがたり」ご乗車１０万人達成について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/05/07/20260508%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「四国まんなか千年ものがたり」ひまわり紀行を運行します！",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/05/22/20260522%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「伊予灘ものがたり」 「ダブルご乗車人数達成記念イベント」（追加）について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/06/11/20260529%2002%20%20.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車の2026年度下半期の運転日及びご利用料金の改定について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/06/17/20260617%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「志国土佐 時代(トキ)の夜明けのものがたり」 運行6周年記念イベントの実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/06/18/20260619%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「伊予灘ものがたり」ご乗車２５万人達成について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/07/03/20260703%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "列車にのって「森の国の夏祭り」にでかけよう！　～「花火」にあわせて臨時列車の運転を行います～",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/07/07/20260707.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "夏の臨時列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/07/15/20260515%20.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「伊予灘ものがたり」運行１２周年記念プレゼント配布等の実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/07/17/20260717%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "【社長会見】「予讃線８０００系アンパンマン列車」リニューアルについて",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/07/28/20260728%20%2004.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "秋の臨時列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/08/21/20260821%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「予讃線８０００系アンパンマン列車」リニューアル列車の 運転開始日決定！あわせてツアー商品を発売します。",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/09/18/20260918%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「志国土佐 時代の夜明けのものがたり」のご乗車６万人達成記念企画を実施します",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/09/18/20260918%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "２代目「伊予灘ものがたり」ご乗車１１万人達成について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/10/07/20261005%2003%20%20.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「『愛』あるブランド産品」「完熟石畳栗」を使用したスイーツの 観光列車「伊予灘ものがたり」車内での期間限定発売について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/10/07/20261007%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「サイクルトレイン愛ある伊予灘号」の運行について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/10/07/20261007%2004.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "秋の臨時列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/b0098b93f9135d5ad20efd86480f75f7651a6bbd.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "夏の臨時列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/ec892776475f77919205413ed13987427003fc89.pdf"
+    }
+  ],
+  "new_announcements": [
+    {
+      "source": "jr_shikoku_home",
+      "title": "臨時列車などの お知らせ",
+      "url": "https://www.jr-shikoku.co.jp/#news-box"
+    },
+    {
+      "source": "jr_shikoku_home",
+      "title": "観光列車の 空席情報",
+      "url": "https://www.jr-shikoku.co.jp/01_trainbus/event_train/seat_info/"
+    },
+    {
+      "source": "jr_shikoku_home",
+      "title": "伊予灘ものがたり",
+      "url": "https://www.jr-shikoku.co.jp/01_trainbus/event_train/seat_info/iyonadamonogatari"
+    },
+    {
+      "source": "jr_shikoku_home",
+      "title": "伊予灘ものがたり （フィオーレスイート）",
+      "url": "https://www.jr-shikoku.co.jp/01_trainbus/event_train/seat_info/iyonadasuite"
+    },
+    {
+      "source": "jr_shikoku_home",
+      "title": "「RE：MEDIA FESTIVAL2026」ご来場に便利な臨時列車を運転します",
+      "url": "https://www.jr-shikoku.co.jp/03_news/pdf/20261005_20261018_re_mediafes2026.pdf"
+    },
+    {
+      "source": "jr_shikoku_home",
+      "title": "「第５回にし阿波の花火」観覧に便利な臨時列車を運転します",
+      "url": "https://www.jr-shikoku.co.jp/03_news/pdf/20261009_20261114_awahanabi_fireworks.pdf"
+    },
+    {
+      "source": "jr_shikoku_home",
+      "title": "「サイクルトレイン愛ある伊予灘号」の運行について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/10/07/20261007%2004.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "臨時列車などの お知らせ",
+      "url": "https://www.jr-shikoku.co.jp/#news-box"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車の 空席情報",
+      "url": "https://www.jr-shikoku.co.jp/01_trainbus/event_train/seat_info/"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "冬の臨時列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2021%2010%2015%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "２０２２年春デビュー！新たな「伊予灘ものがたり」について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2021%2010%2018.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「伊予灘ものがたり」ご乗車１４万人達成イベントの実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2021%2010%2027%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "冬期間臨時列車の追加運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2021%2011%2019.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「伊予灘ものがたり」ラストラン記念式典等の実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2021%2012%2017%2005.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「四国まんなか千年ものがたり」のグリーン料金の見直しについて",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2021%2012%2017%2006.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "最初で最後、瀬戸大橋を渡ってやってくる「伊予灘ものがたり」特別展示",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2021%2012%2023.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「伊予灘ものがたり」特別展示　関連イベントのお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2001%2006%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "春の臨時列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2001%2021%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車の2022年度上半期の運転日について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2001%2025%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車の2022年度のトピックスについて",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2001%2025%2004.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "2代目「伊予灘ものがたり」グリーン個室の愛称名決定と特別ツアーの発売等について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2002%2018%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "サイクルトレイン「えひめ・しまなみリンリントレイン」（混乗試験）の実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2003%2002%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "2代目「伊予灘ものがたり」のWeb車両展示会の開催について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2003%2007%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「志国土佐 時代の夜明けのものがたり」春の特別イベントを実施します！",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2003%2007%2004.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「四国まんなか千年ものがたり」春の特別企画列車を運行します！",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2003%2007%2005%20.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "高松駅で観光列車「四国まんなか千年ものがたり」を展示します",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2003%2007%2006.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「徳島ヴォルティス」ホームゲーム観戦に臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2003%2016%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "２代目「伊予灘ものがたり」沿線地域試乗会の実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2003%2016%2004.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "２代目「伊予灘ものがたり」運行開始記念出発式典の開催について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2003%2024%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「徳島ヴォルティス」ホームゲーム観戦に臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2004%2005.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "春の臨時列車 追加運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2004%2008.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「徳島ヴォルティス」ホームゲーム観戦に臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2005%2010%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "夏の臨時列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2005%2020%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車の2022年度下半期の運転日について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2005%2020%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "列車にのって「森の国の夏祭り」にでかけよう！～花火大会にあわせて臨時列車の運転を行います～",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2006%2010%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "サイクルトレイン「えひめ・しまなみリンリントレイン」（混乗試験）の実施期間延長について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2006%2015%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "松山市・ＪＲ四国連携協定事業　特急列車内に観光に関する情報を発信するステッカーを掲出します",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2006%2024%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「四国まんなか千年ものがたり」ひまわり紀行を運行します！",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2006%2027%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "夏の臨時列車 追加運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2006%2029%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "2代目「伊予灘ものがたり」ご乗車1万人達成および「伊予灘ものがたり」運行開始8周年を迎えます",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2007%2008.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「志国土佐 時代（トキ）の夜明けのものがたり」がご乗車2万人を達成します",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2007%2013.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「坊っちゃんスタジアム」プロ野球オールスターゲーム観戦に臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2007%2020.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「徳島ヴォルティス」ホームゲーム観戦に臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2008%2008.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "夏の臨時列車　追加運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2008%2012.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "秋の臨時列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2008%2019%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「サイクルトレイン愛ある伊予灘号」の運行について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2008%2025%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「徳島ヴォルティス」ホームゲーム観戦に臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2008%2026%2005.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「志国土佐 時代（トキ）の夜明けのものがたり」土佐くろしお鉄道「ごめん・なはり線」2022年度10月～12月の運転について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2008%2030%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「徳島ヴォルティス」ホームゲーム観戦に臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2010%2007%2007.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "冬の臨時列車　運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2010%2021%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「伊予灘ものがたり」運転内容の一部変更について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2011%2014%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「伊予灘ものがたり」車内で「紅まどんな」をプレゼント！",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2011%2025%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "～観光列車「四国まんなか千年ものがたり」アテンダント特別企画～「ＴＡＩＪＵでランチ」を実施します！",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2012%2005.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「四国まんなか千年ものがたり」アテンダントがいちご栽培農家を訪問します",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2022%2012%2007.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「伊予灘ものがたり」での「さくらひめ」を活用した取り組みについて",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2001%2006%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「坊っちゃんスタジアム」野球伝来１５０年記念イベント観戦に臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2001%2019.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "春の臨時列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2001%2020.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "四国酒まつりへの便利な臨時列車運転等について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2001%2023.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "春の臨時列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2002%2017%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "サイクルトレイン「えひめ・しまなみリンリントレイン」（混乗試験）の実施期間延長について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2002%2021%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "予土線サイクルトレイン（混乗試験）の実施期間延長について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2002%2021%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "ＪＲ四国観光列車　2023年春季特別列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2002%2028.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「四国まんなか千年ものがたり」8万人達成イベントの実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2003%2017%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「伊予灘ものがたり　櫻編」の運転について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2003%2017%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車２代目「伊予灘ものがたり」１周年記念イベントの実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2003%2020%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「四国まんなか千年ものがたり」６周年記念イベントの実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2003%2024%2004.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「志国土佐 時代（トキ）の夜明けのものがたり」2023年度上期「土佐くろしお鉄道ごめん・なはり線」での運転にあわせたイベントの実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2003%2029%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「徳島ヴォルティス」ホームゲーム観戦に臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2004%2003%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「坊っちゃんスタジアム」プロ野球公式戦「ヤクルト×中日」観戦に臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2004%2007%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「サイクルトレイン愛ある伊予灘号」の運行について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2004%2024.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「徳島ヴォルティス」ホームゲーム観戦に臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2005%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "２代目「伊予灘ものがたり」ご乗車３万人達成イベントの実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2005%2019%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "夏の臨時列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2005%2019%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「徳島ヴォルティス」ホームゲーム観戦に臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2006%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「伊予灘ものがたり」運転内容の一部変更と運転日追加について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2006%2013%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「徳島ヴォルティス」ホームゲーム観戦に臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2006%2016%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "夏の臨時列車 追加運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2006%2016%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「志国土佐　時代（トキ）の夜明けのものがたり」３周年記念及び３万人達成イベント等の実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2006%2021%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「四国まんなか千年ものがたり」ひまわり紀行を運行します！",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2006%2021%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車の2023年度下半期の運転日及びご利用料金の改定について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2006%2028%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "列車にのって「森の国の夏祭り」にでかけよう！～「花火」にあわせて臨時列車の運転を行います～",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2007%2004.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「伊予灘ものがたり」運行９周年記念イベントの実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2007%2014%2005.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「徳島ヴォルティス」ホームゲーム観戦に臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2007%2020%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "秋の臨時列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2008%2024.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「徳島ヴォルティス」ホームゲーム観戦に臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2008%2025%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「志国土佐 時代（トキ）の夜明けのものがたり」2023年10月からの事前予約制お食事の一部変更と土佐くろしお鉄道「ごめん・なはり線」秋季運転概要について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2008%2029%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「徳島ヴォルティス」ホームゲーム観戦に臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2009%2008%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "秋の臨時列車 追加運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2009%2008%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「サイクルトレイン愛ある伊予灘号」の運行について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2009%2011.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "２代目「伊予灘ものがたり」ご乗車４万人達成イベントの実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2010%2006%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「第２回にし阿波の花火大会」開催に伴う臨時列車運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2010%2011%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "冬の臨時列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2010%2020%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「四国まんなか千年ものがたり」9万人達成イベントの実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2011%2013%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「志国土佐 時代(ﾄｷ)の夜明けのものがたり」運転内容の一部変更と運転日追加について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2012%2008.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「志国土佐 時代（ﾄｷ)の夜明けのものがたり」運転時刻の変更について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2023%2012%2015%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "冬の臨時列車 追加運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2001%2011.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「伊予灘ものがたり」での「さくらひめ」を活用した取り組みについて",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2001%2012%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "春の臨時列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2001%2019%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "四国酒まつりへの便利な臨時列車運転について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2001%2023%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車の2024年度上半期の運転日について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2001%2030%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「伊予灘ものがたり　菜の花編」の運転について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2002%2016%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "予土線サイクルトレイン（混乗試験）の実施期間延長について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2002%2019%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "サイクルトレイン「えひめ・しまなみリンリントレイン」（混乗試験）の実施期間延長について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2002%2019%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "ＪＲ四国観光列車　春からのご利用案内",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2002%2022%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "２代目「伊予灘ものがたり」ご乗車５万人達成イベントの実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2003%2008%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "２代目「伊予灘ものがたり」２周年イベントの実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2003%2022%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「四国まんなか千年ものがたり」７周年記念イベントの実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2003%2022%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「志国土佐　時代（トキ）の夜明けのものがたり」がご乗車４万人を達成します",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2006%2007.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「徳島ヴォルティス」ホームゲーム観戦に便利な臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2006%2014%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「四国まんなか千年ものがたり」ひまわり紀行を運行します！",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2006%2019%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「志国土佐 時代(ﾄｷ)の夜明けのものがたり」が４周年を迎えます",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2006%2019%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "ＪＲ四国初の本格的観光列車「伊予灘ものがたり」運行開始10周年！　３つのものがたり列車が届ける特別企画のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2006%2021%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「徳島ヴォルティス」ホームゲーム観戦に便利な臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2006%2028%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "列車にのって「森の国の夏祭り」にでかけよう！　～「花火」にあわせて臨時列車の運転を行います～",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2007%2005%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「徳島ヴォルティス」ホームゲーム観戦に便利な臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2007%2031%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「四国まんなか千年ものがたり」１０万人達成に伴う記念缶バッジの配布について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2008%2001%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "松山駅付近高架線切替の切替工事に伴う代行輸送について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2008%2002%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "２代目「伊予灘ものがたり」ご乗車６万人達成イベントの実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2008%2006%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「ＭＯＮＳＴＥＲ　ｂａＳＨ２０２４」開催に伴う臨時列車運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2008%2006%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「志国土佐 時代(ﾄｷ)の夜明けのものがたり」土佐くろしお鉄道「ごめん・なはり線」事前予約制お食事のリニューアルと2024年10月からの秋季特別運転概要について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2008%2030.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「徳島ヴォルティス」ホームゲーム観戦に便利な臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2009%2006%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「サイクルトレイン愛ある伊予灘号」の運行について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2010%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「第３回にし阿波の花火大会」及び音楽フェス[MONTAKA２０２４」開催に伴う臨時列車運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2010%2008.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "冬の臨時列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2024%2010%2018%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「志国土佐　時代（トキ）の夜明けのものがたり」アテンダント特別企画　「こじゃんと夜明けのものがたり」発売について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2791dc735cd2482b0ba18c4d020591252730c189.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「四国まんなか千年ものがたり」5周年記念イベントの実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/2fcdaff1cd8bd8bf78546c3b3eabeb89e4aa5a05.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車の2023年度上半期の運転日について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/3003a0d96d0c685f135575143b08218ef4015258.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "牟岐線サイクルトレイン（混乗試験）の実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/3576885e8122f15f6a90ce826582bd24c6bddce1.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「坊っちゃんスタジアム」プロ野球公式戦「ヤクルト×広島」観戦に臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/3d03fb81ec1f5a7fb6a14edeb3575a5149572ec9.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車の2024年度下半期の運転日について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/5955d72e7c400c7ad4774a8ff634d2f0da0b4a08.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「伊予灘ものがたり　南予きずな旅」記念式典の開催について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/72205595b726712008b334a574773f5e60202532.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「ＭＯＮＳＴＥＲ　ｂａＳＨ２０２３」開催に伴う臨時列車運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/9a92ecc857c11d07401e4cb2343c6e7fb105e526.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "JALとJR四国、観光列車「伊予灘ものがたり」を活用した愛媛県・大洲市での「新しい旅のカタチ」を提供　～地域事業者・自治体と連携し、地域活性化に取り組みます～",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/ace218009ecd01252aa33970530a08ad3fc3f159.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車の2025年度上半期運転日および運転時刻変更について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/02/14/2025%2001%2017%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "春の臨時列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/02/14/2025%2001%2017%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「志国土佐　時代（トキ）の夜明けのものがたり」特別企画　土佐のおきゃくのものがたり　2025の発売について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/02/14/2025%2001%2024%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "春の臨時列車 追加運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/02/14/2025%2001%2024%2004.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "四国酒まつりへの便利な臨時列車運転について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/02/14/2025%2001%2025%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "香川県立アリーナでの「サザンオールスターズLIVE TOUR 2025『THANK YOU SO MUCH!!』」開催に伴う臨時列車運転等について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/02/14/2025%2001%2031.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "予讃線「日中時間帯集中工事」の実施に伴う列車の運休について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/03/07/2024%2012%2006.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "春のＪＲ四国観光列車のご案内",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/03/07/2025%2002%2020%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「伊予灘ものがたり　菜の花編」の運転について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/03/07/2025%2002%2021%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "予土線サイクルトレイン（混乗試験）の実施期間延長について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/03/07/2025%2002%2027%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "サイクルトレイン「えひめ・しまなみリンリントレイン」（混乗試験）の実施期間延長について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/03/07/2025%2002%2027%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "あなぶきアリーナ香川での「RIZIN.50香川大会」開催に伴う臨時列車運転等について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/03/07/2025%2002%2028%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "あなぶきアリーナ香川での「WEST. LIVE TOUR 2025 A.H.O. -Audio Hang Out-」 開催に伴う臨時列車運転等について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/03/07/2025%2002%2028%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「志国土佐 時代の夜明けのものがたり」今話題のひがしこうち！土佐くろしお鉄道「ごめん・なはり線」で今期も運転します！",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/03/07/2025%2003%2006%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "あなぶきアリーナ香川での「TOMORROW X TOGETHER WORLD TOUR  ＜ACT : PROMISE＞ - EP. 2 - IN JAPAN」開催に伴う臨時列車運転について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/03/14/2025%2003%2014%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "あなぶきアリーナ香川での「 MAN WITH A \"15th\" MISSION \"PLAY WHAT U WANT TOUR 2025\" 」開催に伴う臨時列車運転について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/03/21/2025%2003%2021%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「四国まんなか千年ものがたり」８周年記念イベントの実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/03/21/2025%2003%2021%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "２代目「伊予灘ものがたり」３周年イベントの実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/03/25/2025%2003%2026%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「坊っちゃんスタジアム」プロ野球公式戦「ヤクルト×阪神」観戦に臨時列車を運転します",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/04/01/2025%2003%2031%2006.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「徳島ヴォルティス」ホームゲーム観戦に便利な臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/06/02/2025%2006%2002%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「四国まんなか千年ものがたり」ひまわり紀行を運行します！",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/06/16/2025%2006%2016%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「志国土佐 時代（ﾄｷ）の夜明けのものがたり」５周年記念イベントの実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/06/24/2025%2006%2024.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「徳島ヴォルティス」ホームゲーム観戦に便利な臨時列車を運転",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/06/25/2025%2006%2023%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車の2025年度下半期運転日および事前予約制食事の内容・価格の一部変更について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/06/25/2025%2006%2025%2004.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "２代目「伊予灘ものがたり」ご乗車8万人達成プレゼント等の実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/06/30/2025%2006%2020.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "ＪＲ四国「伊予灘ものがたり」と東武鉄道「スペーシア Ｘ」が初コラボします！　～それぞれの列車で、他方で愛されている限定ビールの発売や、東武日光駅でイベントを開催～",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/07/08/2025%2007%2008%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "列車にのって「森の国の夏祭り」にでかけよう！　～「花火」にあわせて臨時列車の運転を行います～",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/07/08/2025%2007%2008%2004.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "夏の臨時列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/07/08/7edb11e4b970cdc9503ff45472be072d5ad25679.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「伊予灘ものがたり」運行１１周年記念プレゼント等の実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/07/11/2025%2007%2011.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「第６６回須崎まつり海上花火大会」に伴う臨時列車運転について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/07/25/2025%2007%2025%2005.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「ＭＯＮＳＴＥＲ ｂａＳＨ ２０２５」開催に伴う臨時列車運転について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/08/08/2025%2008%2008%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「志国土佐 時代（トキ）の夜明けのものがたり」がご乗車５万人を達成します",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/08/13/2025%2008%2013.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "秋の臨時列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/08/22/2025%2008%2022%2004.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「志国土佐 時代の夜明けのものがたり」が 「e5489」で予約できるようになります！",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/08/27/2025%2008%2027.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「サイクルトレイン愛ある伊予灘号」の運行について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/09/19/2025%2009%2019%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「第４回にし阿波の花火大会」及び音楽フェス「MONTAKA２０２５」 開催に伴う臨時列車運転について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/10/17/2025%2010%2017%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "冬の臨時列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/10/17/2025%2010%2017%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "２代目「伊予灘ものがたり」ご乗車９万人達成について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2025/10/27/2025%2010%2027.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "春の臨時列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/01/16/2026%2001%2016.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車の2026年度上半期運転日および事前予約制食事の価格の改定について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/01/22/2026%2001%2022%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「伊予灘ものがたり　菜の花編」の運行について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/02/13/2026%2002%2013%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "ＪＲ四国 春の観光列車のご案内",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/02/18/2026%2002%2018%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「伊予灘ものがたり」の座席レイアウト一部変更について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/02/18/2026%2002%2018%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "サイクルトレイン「えひめ・しまなみリンリントレイン」（混乗試験）の実施期間延長について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/02/20/2026%2002%2020%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "予土線サイクルトレイン（混乗試験）の実施期間延長について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/02/20/2026%2002%2020%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "列車を降りても、あなたの\"ものがたり\"は続く「伊予灘ものがたり」と「ＪＲ松山駅だんだん通り」初のコラボキャンペーンを実施します",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/02/27/2026%2002%2027.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "宇和海サイクルトレイン（混乗試験）の開始について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/03/19/2026%2003%2019%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「四国まんなか千年ものがたり」９周年記念プレゼントの配布について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/03/19/2026%2003%2019%2007.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "２代目「伊予灘ものがたり」運行４周年について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/03/26/2026%2003%2026%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「伊予灘ものがたり」 「ダブルご乗車人数達成記念イベント」の実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/04/30/20260430%2004.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "２代目「伊予灘ものがたり」ご乗車１０万人達成について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/05/07/20260508%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「四国まんなか千年ものがたり」ひまわり紀行を運行します！",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/05/22/20260522%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「伊予灘ものがたり」 「ダブルご乗車人数達成記念イベント」（追加）について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/06/11/20260529%2002%20%20.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車の2026年度下半期の運転日及びご利用料金の改定について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/06/17/20260617%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「志国土佐 時代(トキ)の夜明けのものがたり」 運行6周年記念イベントの実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/06/18/20260619%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「伊予灘ものがたり」ご乗車２５万人達成について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/07/03/20260703%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "列車にのって「森の国の夏祭り」にでかけよう！　～「花火」にあわせて臨時列車の運転を行います～",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/07/07/20260707.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "夏の臨時列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/07/15/20260515%20.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「伊予灘ものがたり」運行１２周年記念プレゼント配布等の実施について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/07/17/20260717%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "【社長会見】「予讃線８０００系アンパンマン列車」リニューアルについて",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/07/28/20260728%20%2004.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "秋の臨時列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/08/21/20260821%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「予讃線８０００系アンパンマン列車」リニューアル列車の 運転開始日決定！あわせてツアー商品を発売します。",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/09/18/20260918%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「志国土佐 時代の夜明けのものがたり」のご乗車６万人達成記念企画を実施します",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/09/18/20260918%2003.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "２代目「伊予灘ものがたり」ご乗車１１万人達成について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/10/07/20261005%2003%20%20.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「『愛』あるブランド産品」「完熟石畳栗」を使用したスイーツの 観光列車「伊予灘ものがたり」車内での期間限定発売について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/10/07/20261007%2002.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "「サイクルトレイン愛ある伊予灘号」の運行について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/10/07/20261007%2004.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "秋の臨時列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/b0098b93f9135d5ad20efd86480f75f7651a6bbd.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "夏の臨時列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/ec892776475f77919205413ed13987427003fc89.pdf"
+    }
+  ],
+  "fetch_errors": [],
+  "note": "候補発見のみ。松山駅の発着時刻・運転日・経路を確認できるまで列車としては表示しない。"
+}
