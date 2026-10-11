@@ -3500,20 +3500,34 @@
   // Keep a separate scroll position for inbound/outbound bus departures.
   // The service list is redrawn after each live-data refresh.
   const busGroupOffsets={departure:{long:0,regional:0},arrival:{long:0,regional:0}};
+  const busManualUntil={departure:{long:0,regional:0},arrival:{long:0,regional:0}};
   let busGroupDay='';
   function renderBus(rows) {
     const now=japanNow();
+    const root = $('bus-rows');
+    const dir=currentDirection();
     if(busGroupDay!==now.iso){
       busGroupDay=now.iso;
-      for(const dir of ['departure','arrival'])for(const kind of ['long','regional'])busGroupOffsets[dir][kind]=0;
+      for(const direction of ['departure','arrival']){
+        for(const kind of ['long','regional']){
+          busGroupOffsets[direction][kind]=0;
+          busManualUntil[direction][kind]=0;
+        }
+      }
+    }else{
+      // Frequent refreshes must not snap an auto-scrolling list back to zero.
+      for(const kind of ['long','regional']){
+        const previous=root.querySelector('.freewifi-bus-'+kind);
+        if(previous)busGroupOffsets[dir][kind]=previous.scrollTop;
+      }
     }
-    const root = $('bus-rows'); root.innerHTML = '';
-    const dep = currentDirection() === 'departure';
+    root.innerHTML = '';
+    const dep = dir === 'departure';
     root.classList.remove('bus-end');
     if (!rows.length) {
       root.classList.add('bus-end');
       const mode = dep ? 'DEPARTURES — 出発バス —' : 'ARRIVALS — 到着バス —';
-      const msg = dep ? '本日のバスは終了しました' : '確認済みの到着時刻表がありません';
+      const msg = dep ? '今後2時間以内の出発便はありません' : '今後2時間以内の到着便はありません';
       root.innerHTML = `<div class="bus-end-state"><div class="bus-end-mode">🚌 ${mode}</div><div class="bus-end-message">${msg}</div></div>`;
     } else {
       const isRegional=r=>r.kind==='midbus' || /kumakogen|misaki|uwajima_bus|setouchi_omishima|iyotetsu_niihama/.test(String(r.source||'')) || /久万高原|三崎港口|宇和島|城辺|大三島|宮浦港|新居浜/.test(String(r.origin||r.dest||''));
@@ -3537,7 +3551,7 @@
       const selected=rows.slice().sort((a,b)=>rMinutes(a)-rMinutes(b));
       selected.forEach(r => {
       const row = document.createElement('div'); row.className = `row${r.isFinal?' is-final':''}${dep && isDepartSoon(r, japanNow()) ? ' depart-soon' : ''}`;
-      const firstBadge = r.isNextDayStart ? badgeHtml('first', dep ? '始発' : '初便') : '';
+      const firstBadge = r.isNextDayStart ? badgeHtml('first','翌日') : '';
       const finalBadge = r.isFinal ? badgeHtml('final','最終バス') : '';
       if (dep) {
         const rightTop = busBoardingPlaceHtml(r);
@@ -3582,20 +3596,24 @@
         const dir=dep?'departure':'arrival';
         for(const [kind,group] of [['long',longRoot],['regional',regionalRoot]]){
           group.scrollTop=busGroupOffsets[dir][kind];
+          group.dataset.manualUntil=String(busManualUntil[dir][kind]);
           group.addEventListener('scroll',()=>{
             busGroupOffsets[dir][kind]=group.scrollTop;
           },{passive:true});
-          // A person moving the wheel gets priority over the automatic ticker.
-          group.addEventListener('wheel',()=>{group.dataset.manualUntil=String(Date.now()+12000);},{passive:true});
+          // Manual wheel movement pauses automation, even across redraws.
+          group.addEventListener('wheel',()=>{
+            busManualUntil[dir][kind]=Date.now()+12000;
+            group.dataset.manualUntil=String(busManualUntil[dir][kind]);
+          },{passive:true});
         }
       }
     }
     activatePanelOverflow(root);
     restoreScroll('bus'); attachScrollMemory('bus');
   }
-  // Advance surplus bus services automatically when the bus screen is active.
-  // Nothing is thrown away to force one row per route; reading order remains
-  // chronological, and a manual wheel scroll takes temporary precedence.
+  // Scroll only while the bus page is actually visible.
+  // Each 3-second step advances roughly one bus, then loops from the top.
+  // Rebuilds happen on API refresh; busGroupOffsets keeps the user's place.
   setInterval(()=>{
     if(!FREEWIFI_TV || !$('panel-bus')?.classList.contains('freewifi-active'))return;
     const groups=$('bus-rows')?.querySelectorAll('.freewifi-bus-group');
@@ -3604,11 +3622,12 @@
       if(Date.now()<Number(group.dataset.manualUntil||0))return;
       if(group.scrollHeight<=group.clientHeight+8)return;
       const row=group.querySelector('.row');
-      const step=Math.max(36,(row?.getBoundingClientRect().height||44)*2);
-      if(group.scrollTop+group.clientHeight>=group.scrollHeight-6)group.scrollTop=0;
-      else group.scrollTop=Math.min(group.scrollHeight-group.clientHeight,group.scrollTop+step);
+      const step=Math.max(36,row?.getBoundingClientRect().height||48);
+      const target=group.scrollTop+group.clientHeight>=group.scrollHeight-6
+        ? 0 : Math.min(group.scrollHeight-group.clientHeight,group.scrollTop+step);
+      group.scrollTo({top:target,behavior:'smooth'});
     });
-  },5000);
+  },3000);
   function renderPort(rows) {
     const root = $('port-rows');
     // Preserve the persistent ticker when the ferry rows are redrawn.
@@ -4046,7 +4065,25 @@
     applyModes();
     const railRows = nextRows('rail', now);
     const airRows = liveFlightRows(now) || nextRows('air', now);
-    const busRows = nextRows('bus', now);
+    const BUS_LOOKAHEAD_MINUTES=120;
+    const limit=now.minutes+BUS_LOOKAHEAD_MINUTES;
+    const busRows=nextRows('bus',now).filter(r=>{
+      const m=rMinutes(r);
+      return Number.isFinite(m) && m>=now.minutes && m<=limit;
+    });
+    // The window crosses midnight: include only the first two hours' worth
+    // of next-day verified services. Never display all of tomorrow's timetable.
+    if(limit>=1440){
+      const tomorrowIso=shiftIso(now.iso,1);
+      const tomorrow=getBoardRecords('bus',{...now,iso:tomorrowIso,dow:dayContext(tomorrowIso).dow});
+      tomorrow.forEach(r=>{
+        const m=rMinutes(r)+1440;
+        if(Number.isFinite(m) && m<=limit){
+          busRows.push({...r,minutes:m,isNextDayStart:true,_serviceIso:tomorrowIso});
+        }
+      });
+      busRows.sort((a,b)=>rMinutes(a)-rMinutes(b));
+    }
     const portRows = nextRows('port', now);
     renderRail(railRows); renderAir(airRows); renderBus(busRows); renderPort(portRows);
     cachedNotes = {
