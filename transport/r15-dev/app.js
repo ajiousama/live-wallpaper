@@ -3503,10 +3503,10 @@
   const busManualUntil={departure:{long:0,regional:0},arrival:{long:0,regional:0}};
   let busGroupDay='';
   let busGroupRenderedDirection=null;
-  // Reserve only the height actually needed by the regional arrivals.
-  // Any unused space belongs to express/highway arrivals; both lists
-  // retain automatic scrolling if the next two hours are crowded.
-  function regionalArrivalGroupHeight(available, expressCount, regionalCount) {
+  // Reserve only the rows needed by the regional bus group (departures
+  // AND arrivals); give all remaining height to express/highway services.
+  // Both groups retain independent scrolling if the 2h window is crowded.
+  function regionalBusGroupHeight(available, expressCount, regionalCount) {
     const total=Number(available)>160 ? Number(available) : 480;
     const wanted=count=>30+Math.max(1,count)*50; // 24px heading + 48px/row + gaps
     const minimum=80; // heading and at least one readable/empty bus row
@@ -3547,13 +3547,13 @@
       const regional=rows.filter(isRegional);
       const longDistance=rows.filter(r=>!isRegional(r));
       const grouped=FREEWIFI_TV;
-      const adaptiveArrival=grouped && !dep &&
+      const adaptiveBusLayout=grouped &&
         document.documentElement.classList.contains('company-pc');
-      if(adaptiveArrival){
-        root.style.setProperty('--company-arrival-regional-height',
-          Math.round(regionalArrivalGroupHeight(root.clientHeight,longDistance.length,regional.length))+'px');
+      if(adaptiveBusLayout){
+        root.style.setProperty('--company-bus-regional-height',
+          Math.round(regionalBusGroupHeight(root.clientHeight,longDistance.length,regional.length))+'px');
       }else{
-        root.style.removeProperty('--company-arrival-regional-height');
+        root.style.removeProperty('--company-bus-regional-height');
       }
       const longRoot=grouped?document.createElement('section'):root;
       const regionalRoot=grouped?document.createElement('section'):root;
