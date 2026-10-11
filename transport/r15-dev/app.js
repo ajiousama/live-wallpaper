@@ -1030,16 +1030,24 @@
       'https://www.uwajima-bus.co.jp/matsuyama'));
     // 新居浜駅 -> JR松山駅前. The two early arrivals 08:25 are alternate
     // operating-day slots at the same time; show them as one display event.
-    const niihamaDep=['06:00','07:30','09:00','10:30','12:30','14:00','16:00'];
+    const niihamaWeekend=[0,6].includes(new Date(iso+'T12:00:00+09:00').getDay());
+    const niihamaDep=[niihamaWeekend?'06:10':'06:00','07:30','09:00','10:30','12:30','14:00','16:00'];
     const niihamaArr=['08:25','09:45','11:15','12:45','14:45','16:15','18:15'];
     niihamaDep.forEach((t,i)=>add('setouchi_niihama_official_in',
       i===4?'伊予鉄バス':'せとうちバス','新居浜駅','JR松山駅',
       t,niihamaArr[i],'https://www.setouchibus.co.jp/rosen/niihama.html'));
-    // 今治桟橋 -> 松山市駅, verified through-running 特急 only.
-    const imabariDep=['06:38','07:30','08:53','12:33','14:33','16:02'];
-    const imabariArr=['07:57','08:49','10:12','13:52','15:52','17:21'];
-    imabariDep.forEach((t,i)=>add('setouchi_omishima_official_in',
-      'せとうちバス','今治桟橋','松山市駅',t,imabariArr[i],
+    // 2026-04-01 current official through-running 特急. Some services
+    // originate at 宮浦港 and run through 今治桟橋; do not mislabel origins.
+    const imabariTrips=[
+      ['今治桟橋','06:45','07:57'],
+      ['宮浦港','06:28','08:49'],
+      ['今治桟橋','09:00','10:12'],
+      ['今治桟橋','12:40','13:52'],
+      ['今治桟橋','14:40','15:52'],
+      ['宮浦港','15:00','17:21']
+    ];
+    imabariTrips.forEach(([origin,dep,arr])=>add('setouchi_omishima_official_in',
+      'せとうちバス',origin,'松山市駅',dep,arr,
       'https://www.setouchibus.co.jp/rosen/omishima.html'));
     // 三崎港口 -> 松山市駅: the through service departing 06:42.
     // The later 15:30 service ends at 八幡浜; do not invent a Matsuyama arrival.
