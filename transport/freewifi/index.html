@@ -17,6 +17,41 @@
       document.documentElement.classList.add('company-pc');
     }
   </script>
+  <!-- Independent workplace update watchdog. It runs even if app.js has
+       crashed or Lively keeps an older external script in memory. -->
+  <script>
+    (function(){
+      if(!document.documentElement.classList.contains('company-pc'))return;
+      const current=String(document.documentElement.dataset.build||'').trim();
+      let pending=false;
+      let lastAttempt=0;
+      async function ensureLatestCompanyPc(){
+        if(pending)return;
+        try{
+          const response=await fetch('../../deploy-version.json?_pc_refresh='+Date.now(),{
+            cache:'no-store',headers:{'Cache-Control':'no-cache'}
+          });
+          if(!response.ok)return;
+          const json=await response.json();
+          const latest=String(json.build||'').trim();
+          if(!latest||latest===current||latest==='__BUILD_ID__')return;
+          // A WebView may cache the old document despite redirects. Retry
+          // slowly with a different URL rather than looping uncontrollably.
+          if(Date.now()-lastAttempt<60000)return;
+          lastAttempt=Date.now();
+          pending=true;
+          const url=new URL(location.href);
+          url.searchParams.set('pc','1');
+          url.searchParams.set('v',latest);
+          url.searchParams.set('_pc_reload',String(Date.now()));
+          location.replace(url.href);
+        }catch(e){ pending=false; }
+      }
+      setTimeout(ensureLatestCompanyPc,1500);
+      setInterval(ensureLatestCompanyPc,15000);
+      window.addEventListener('pageshow',ensureLatestCompanyPc);
+    })();
+  </script>
   <link rel="stylesheet" href="../r15-dev/style.css?v=__BUILD_ID__" />
   <link rel="stylesheet" href="freewifi.css?v=__BUILD_ID__" />
   <!-- Keep this essential workplace size in HTML: Lively may run with stale
@@ -64,6 +99,7 @@
         <div class="date" id="date-label">0000.00.00 月</div>
         <div class="clock" id="clock-label">00:00<span>:00</span></div>
         <div class="tz">JAPAN STANDARD TIME</div>
+        <div class="company-pc-version" aria-label="公開版">表示版 __BUILD_ID__</div>
       </div>
     </header>
 
