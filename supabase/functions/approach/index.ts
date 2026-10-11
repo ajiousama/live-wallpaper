@@ -258,6 +258,81 @@ function isFreight(pos: Record<string, unknown>, route: Route) {
   return /^(?:3072|3073)$/.test(num);
 }
 
+
+// Special movements must originate from the live position feed, not solely
+// from a timetable. In particular, test runs can be absent from today's diagram.
+function liveSpecialKind(pos: Record<string, unknown>, route: Route | null) {
+  const num = String(pos.TrainNum ?? route?.trainNum ?? "").trim();
+  const type = String(pos.Type ?? pos.type ?? pos.TrainType ?? "").trim();
+  if (/試運転|試験運転|検測|試験列車|試送|(^|[^a-z])(?:test|trial|inspection)(?:[^a-z]|$)/i.test(type) ||
+      /^試(?:運転)?[0-9]/.test(num)) return "test";
+  if (/回送|deadhead|out.of.service/i.test(type) ||
+      /^[0-9]{1,4}[AER]$/i.test(num) || /^回[0-9]/.test(num)) return "deadhead";
+  if (/貨物|freight/i.test(type) || /^(3072|3073)$/.test(num)) return "freight";
+  // The 9xxx series is not automatically a test run. Label its kind unconfirmed.
+  if (/^9[0-9]{3,4}[A-Z]$/i.test(num) || /臨時|extra|special/i.test(type)) return "extra";
+  return "";
+}
+
+function matsuyamaCorridorAt(position: string) {
+  const value = String(position ?? "").replace(/駅/g, "");
+  const north = /三津浜|伊予和気|堀江|光洋台|粟井|柳原|伊予北条|大浦|浅海|菊間|伊予亀岡|大西|波方|波止浜|今治/.test(value);
+  const south = /市坪|北伊予|南伊予|伊予横田|鳥ノ木|伊予市|向井原|伊予大平|伊予中山|伊予立川|内子|五十崎|喜多山|伊予大洲|伊予長浜/.test(value);
+  return north && south ? "both" : north ? "north" : south ? "south" : /松山/.test(value) ? "both" : "";
+}
+
+function liveSpecialDestination(pos: Record<string, unknown>, route: Route | null) {
+  for (const key of ["Destination", "destination", "Dest", "To", "to", "EndStation"]) {
+    const value = String(pos[key] ?? "").trim();
+    if (value && !/^(?:不明|未取得|—|-)$/.test(value)) return normalizeStationName(value);
+  }
+  const type = String(pos.Type ?? pos.type ?? "");
+  const match = type.match(/^(?:test|trial|試運転|試験運転|回送|臨時)[:：](.+)$/i);
+  if (match) return normalizeStationName(match[1]);
+  return route?.destination ?? "";
+}
+
+function collectMatsuyamaSpecialTrains(positions: Record<string, unknown>[], diagram: Map<string, Route>) {
+  const seen = new Set<string>();
+  return positions.map((pos) => {
+    const num = String(pos.TrainNum ?? "").trim();
+    const route = diagram.get(num) ?? diagram.get(num.replace(/^(?:試運転|試|回送|回)/, "")) ?? null;
+    const kind = liveSpecialKind(pos, route);
+    const position = normalizeStationName(pos.Pos ?? "");
+    if (!num || !kind || !position ||
+        /^(?:-|—|不明|未取得|取得中|確認中|データなし|位置情報なし)$/.test(position)) return null;
+    const corridor = matsuyamaCorridorAt(position);
+    const crossesMatsuyama = !!route?.points.some((point) => normalizeStationName(point.station) === "松山");
+    // A train elsewhere in Shikoku is not evidence of a Matsuyama movement.
+    if (!corridor && !crossesMatsuyama) return null;
+    const key = num + "|" + position;
+    if (seen.has(key)) return null;
+    seen.add(key);
+    const stationPoints = route?.points.filter((point) =>
+      normalizeStationName(point.station) === "松山" && /着|発|通/.test(point.event)) ?? [];
+    const pass = stationPoints.find((point) => /通/.test(point.event));
+    const arrival = stationPoints.find((point) => /着/.test(point.event));
+    const departure = stationPoints.find((point) => /発/.test(point.event));
+    const stationEvent = pass ? "pass" : arrival && departure ? "arrival_departure" :
+      arrival ? "arrival" : departure ? "departure" : "unconfirmed";
+    const stationTime = stationEvent === "pass" ? pass?.time :
+      stationEvent === "departure" ? departure?.time : arrival?.time;
+    const time = /^\d{1,2}:\d{2}$/.test(String(stationTime ?? "")) ? String(stationTime) : "";
+    const delay = Number(pos.delay);
+    return {
+      trainNum: num, kind, position, corridor: corridor || "unknown",
+      destination: liveSpecialDestination(pos, route),
+      origin: route?.origin ?? "",
+      stationEvent, stationTime: time,
+      stationConfirmed: stationPoints.length > 0,
+      delayMinutes: Number.isFinite(delay) ? delay : 0,
+      timeSource: time ? "today_diagram" : "unavailable",
+      // If the train has no entry in the operating diagram, its event and
+      // exact Matsuyama station time must remain explicitly unconfirmed.
+    };
+  }).filter(Boolean);
+}
+
 function displayName(pos: Record<string, unknown>, route: Route) {
   if (isDeadhead(pos, route)) return "回送列車";
   if (isFreight(pos, route)) return "貨物列車";
@@ -530,6 +605,8 @@ async function getIchitsubo(now: { minutes: number }) {
     };
   }).filter(Boolean).sort((a: any, b: any) => toMinutes(a.arrival) - toMinutes(b.arrival));
 
+  const matsuyamaSpecialTrains = collectMatsuyamaSpecialTrains(positions, diagram);
+
   return {
     ok: true,
     source: "JR四国非公式アプリ系公開データ",
@@ -538,6 +615,7 @@ async function getIchitsubo(now: { minutes: number }) {
     matsuyamaDeadheads,
     matsuyamaFreights,
     matsuyamaFreightSchedules,
+    matsuyamaSpecialTrains,
     positionFeedOk: positionResult.ok,
     matsuyamaSchedule,
     matsuyamaActiveTrains,
