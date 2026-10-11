@@ -2511,3 +2511,11 @@ html.company-pc body.freewifi-tv #bus-rows.freewifi-bus-grouped .freewifi-bus-gr
   font-size:12px!important;
   line-height:1.1!important;
 }
+
+/* Workplace bus ARRIVALS: shift one 48px line from regional to highway. */
+html.company-pc body.freewifi-tv #panel-bus.arr-mode #bus-rows.freewifi-bus-grouped {
+  /* Arrival-only: upper express/highway ~60%, lower regional ~40%.
+     With a ~480px list this transfers roughly one 48px JR-sized row.
+     Both groups retain independent automatic scrolling if more rows exist. */
+  grid-template-rows:minmax(0,6fr) minmax(0,4fr)!important;
+}
