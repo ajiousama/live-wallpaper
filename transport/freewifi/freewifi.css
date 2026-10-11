@@ -2437,7 +2437,7 @@ body.freewifi-tv #bus-rows.freewifi-bus-grouped > .freewifi-bus-group > .freewif
 /* 2026-10-11 arrival-board repair:
    Earlier repeat(N,minmax(0,1fr)) squeezed the first four long-distance
    buses to a few pixels each once all upcoming rows were retained.
-   Match the workplace JR board's 48px service row height. */
+   Use a compact 62px readable height per service and scroll the overflow. */
 body.freewifi-tv #bus-rows.freewifi-bus-grouped {
   grid-template-rows:minmax(0,1fr) minmax(0,1fr)!important;
 }
@@ -2445,7 +2445,7 @@ body.freewifi-tv #bus-rows.freewifi-bus-grouped > .freewifi-bus-group,
 body.freewifi-tv #bus-rows.freewifi-bus-grouped > .freewifi-bus-regional,
 html.company-pc body.freewifi-tv #bus-rows.freewifi-bus-grouped > .freewifi-bus-group {
   grid-template-rows:24px!important;
-  grid-auto-rows:48px!important;
+  grid-auto-rows:62px!important;
   grid-auto-flow:row!important;
   overflow-y:auto!important;
   overflow-x:hidden!important;
@@ -2453,9 +2453,9 @@ html.company-pc body.freewifi-tv #bus-rows.freewifi-bus-grouped > .freewifi-bus-
   min-height:0!important;
 }
 body.freewifi-tv #bus-rows.freewifi-bus-grouped > .freewifi-bus-group > .row {
-  min-height:48px!important;
-  height:48px!important;
-  max-height:48px!important;
+  min-height:62px!important;
+  height:62px!important;
+  max-height:62px!important;
   box-sizing:border-box!important;
 }
 body.freewifi-tv #bus-rows.freewifi-bus-grouped > .freewifi-bus-group > .freewifi-bus-group-head {
@@ -2465,51 +2465,6 @@ body.freewifi-tv #bus-rows.freewifi-bus-grouped > .freewifi-bus-group > .freewif
   position:sticky!important;
   top:0!important;
   z-index:8!important;
-}
-
-/* Workplace bus density: one 48px service row, matching JR.
-   Reduce oversized labels so the smaller rows remain readable. */
-html.company-pc body.freewifi-tv #bus-rows.freewifi-bus-grouped > .freewifi-bus-group > .row {
-  padding-top:1px!important;
-  padding-bottom:1px!important;
-  align-items:center!important;
-}
-html.company-pc body.freewifi-tv #bus-rows.freewifi-bus-grouped .freewifi-bus-group > .row .primary-time,
-html.company-pc body.freewifi-tv #bus-rows.freewifi-bus-grouped .freewifi-bus-group > .row .bus-arrival-time {
-  font-size:18px!important;
-  line-height:1.05!important;
-}
-html.company-pc body.freewifi-tv #bus-rows.freewifi-bus-grouped .freewifi-bus-group > .row .bus-dest-main,
-html.company-pc body.freewifi-tv #bus-rows.freewifi-bus-grouped .freewifi-bus-group > .row .bus-destination-line,
-html.company-pc body.freewifi-tv #bus-rows.freewifi-bus-grouped .freewifi-bus-group > .row .arrival-place {
-  font-size:16px!important;
-  line-height:1.08!important;
-}
-html.company-pc body.freewifi-tv #bus-rows.freewifi-bus-grouped .freewifi-bus-group > .row .bus-terminal-time,
-html.company-pc body.freewifi-tv #bus-rows.freewifi-bus-grouped .freewifi-bus-group > .row .arrival-departure-time {
-  font-size:11px!important;
-  line-height:1.1!important;
-}
-html.company-pc body.freewifi-tv #bus-rows.freewifi-bus-grouped .freewifi-bus-group > .row .bus-estimated-position,
-html.company-pc body.freewifi-tv #bus-rows.freewifi-bus-grouped .freewifi-bus-group > .row .bus-departure-position {
-  font-size:12px!important;
-  font-weight:800!important;
-  line-height:1.1!important;
-  -webkit-line-clamp:3!important;
-}
-html.company-pc body.freewifi-tv #bus-rows.freewifi-bus-grouped .freewifi-bus-group > .row .bus-place-text,
-html.company-pc body.freewifi-tv #bus-rows.freewifi-bus-grouped .freewifi-bus-group > .row .arrival-terminal {
-  font-size:13px!important;
-}
-html.company-pc body.freewifi-tv #bus-rows.freewifi-bus-grouped .freewifi-bus-group > .row .bus-mini-logo.bus-logo-japanese {
-  font-size:12px!important;
-  min-width:0!important;
-  height:19px!important;
-}
-html.company-pc body.freewifi-tv #bus-rows.freewifi-bus-grouped .freewifi-bus-group > .row .service-wrap .name,
-html.company-pc body.freewifi-tv #bus-rows.freewifi-bus-grouped .freewifi-bus-group > .row .service-wrap .code {
-  font-size:12px!important;
-  line-height:1.1!important;
 }
 
 /* Workplace bus DEPARTURES and ARRIVALS: the number of upcoming regional
