@@ -898,13 +898,47 @@
     return progress===null ? '' : estimatedWaypoint(ferryEstimatedRoutePoints(record),progress);
   }
 
+  // Timetable interpolation, not AIS: show a PROVISIONAL last waypoint/time.
+  // Checkpoints are modelled with equal fractions of the advertised voyage.
+  function ferryEstimatedLastPass(record, now) {
+    const departure=padTime(record.originDepartureTime||record.reverseTime||'');
+    const arrival=padTime(record.time||record.arrivalTime||'');
+    if(!/^[0-9]{2}:[0-9]{2}$/.test(departure)||!/^[0-9]{2}:[0-9]{2}$/.test(arrival))return '';
+    const departureDay=String(record.originDepartureDay||'');
+    let clock=now;
+    // When tomorrow's early arrival belongs to today's late departure,
+    // reinterpret tonight on the following-day arrival time axis.
+    if(departureDay.includes('前日') && record._serviceIso &&
+       record._serviceIso!==now.iso && toMinutes(departure)>toMinutes(arrival) &&
+       now.minutes>=toMinutes(departure)) {
+      clock={...now,minutes:now.minutes-1440};
+    }
+    const progress=estimatedJourneyProgress(departure,arrival,clock,departureDay);
+    if(progress===null)return '';
+    const waypoints=ferryEstimatedRoutePoints(record);
+    if(!Array.isArray(waypoints)||waypoints.length<2)return '';
+    const segments=waypoints.length-1;
+    const last=Math.max(0,Math.min(segments,Math.floor(progress*segments+1e-8)));
+    const duration=(toMinutes(arrival)-toMinutes(departure)+1440)%1440;
+    if(!duration)return '';
+    const checkpoint=addMinutes(departure,Math.floor(duration*last/segments));
+    return `最終通過見込：${waypoints[last]} ${checkpoint}（仮）`;
+  }
+
   function ferryDeparturePosition(record, now) {
     // Keep an outbound sailing on the departures board after its timetable
     // departure until its estimated destination arrival. Not an AIS fix.
     if(record.sailingInProgress){
       const left=Number(record.estimatedDestinationMinute)-now.minutes;
       const eta=addMinutes(record.time,portTravelMinutes(record));
-      return `出航時刻経過｜${String(record.dest||'目的港')}へ航行中（見込）｜${eta}頃到着予定${left>0?`・あと約${Math.ceil(left)}分`:''}`;
+      const waypoint=ferryEstimatedLastPass({
+        ...record,origin:String(record.port||'出発港'),
+        originDepartureTime:record.time,originDepartureDay:'',
+        arrivalPort:portDestinationName(record.dest),time:eta,arrivalTime:eta
+      },now);
+      return [waypoint||'出航時刻経過（推定）',
+        `${String(record.dest||'目的港')}へ航行中（推定）`,
+        `${eta}頃到着予定${left>0?`・あと約${Math.ceil(left)}分`:''}`].join(' ｜ ');
     }
     const port=String(record.port||'出発港').trim()||'出発港';
     const departure=padTime(record.time||'');
@@ -922,17 +956,7 @@
       : portViaLabel(record);
     const position=direction==='departure'
       ? ferryDeparturePosition(record,now)
-      : (()=>{
-          const departure=padTime(record.originDepartureTime||record.reverseTime||'');
-          const arrival=padTime(record.time||record.arrivalTime||'');
-          const progress=estimatedJourneyProgress(departure,arrival,now,String(record.originDepartureDay||''));
-          if(progress===null) return ''; // Do not claim the ship is underway before departure.
-          const p=ferryEstimatedPosition(record,now);
-          if(!p) return '';
-          if(progress<=0.02) return `現在 ${p}（出航直後・見込）`;
-          if(progress>=0.98) return `現在 ${p}（到着間近・見込）`;
-          return `現在 ${p}付近航行中（見込）`;
-        })();
+      : ferryEstimatedLastPass(record,now);
     return [via,position].filter(Boolean).join(' ｜ ') || '—';
   }
 
