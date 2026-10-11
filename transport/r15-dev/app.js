@@ -2029,6 +2029,7 @@
       const serviceLogo=railApproachBadgeHtml(x);
       if (kind==='deadhead') { text=`${serviceLogo} まもなく市坪駅を${dir}へ回送列車が通過します。`; mode='pass'; }
       else if (kind==='freight') { text=`${serviceLogo} まもなく市坪駅を${dir}へ貨物列車が通過します。`; mode='pass'; }
+      else if (kind==='unknown') { text=`${serviceLogo} 種別未確認の列車が市坪駅付近を走行中です。`; mode='pass'; }
       else if (kind==='pass') { text=`${serviceLogo} まもなく市坪駅を${dir}へ列車が通過します。`; mode='pass'; }
       else {
         const finalTrain=ichitsuboIsFinal(x,now); const prefix=finalTrain?'最終列車 ':'';
@@ -2197,6 +2198,7 @@
     const kind=String(x?.kind||'');
     if(kind==='deadhead') return railTickerServiceHtml('deadhead');
     if(kind==='freight') return railTickerServiceHtml('freight');
+    if(kind==='unknown') return railTickerServiceHtml('unknown');
     if(kind==='stop' || kind==='pass'){
       const info=railLiveTrainLabel(x);
       if(info.kind==='limited') return railTickerServiceHtml('limited',info.service);
