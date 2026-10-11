@@ -2397,3 +2397,19 @@ html.company-pc body.freewifi-tv #bus-rows.freewifi-bus-grouped .freewifi-bus-gr
   line-height:1.13!important;
   letter-spacing:-.03em!important;
 }
+
+
+/* Workplace build stamp: helps distinguish a fresh GitHub Pages page from
+   the static old document cached in Lively's embedded browser. */
+body.freewifi-tv .company-pc-version{display:none}
+html.company-pc body.freewifi-tv .company-pc-version{
+  display:block;
+  color:#93b2c7;
+  font-size:11px;
+  font-weight:800;
+  line-height:1.15;
+  letter-spacing:.02em;
+  white-space:nowrap;
+  text-align:right;
+  margin-top:3px;
+}
