@@ -3546,34 +3546,81 @@
     return '位置未確認';
   }
   function busArrivalStatus(r, now) {
-    // Only published waypoint TIMES may be used. No GPS or assumed SA stop.
+    // Bus GPS is not provided. These are scheduled/provisional last-waypoint
+    // estimates, NOT records of vehicles having actually passed a stop.
+    // Prefer published route stop TIMES; interpolate only if none are available.
     const arrival=padTime(r.arrivalTerminalTime||r.time||'');
-    if(!/^\d{2}:\d{2}$/.test(arrival))return '位置未確認';
-    const departure=padTime(r.originDepartureTime||'');
-    let arr=toMinutes(arrival);
-    const previousDay=String(r.originDepartureDay||'').includes('前日');
-    let dep=/^\d{2}:\d{2}$/.test(departure)?toMinutes(departure):NaN;
-    if(Number.isFinite(dep)){
-      if(previousDay)dep-=1440;
-      else if(arr<dep)arr+=1440;
-      if(now.minutes<dep)return '出発前（時刻表）｜位置未確認';
-    }
-    const official=BUS_INBOUND_CHECKPOINTS[String(r.source||'')];
-    const stopTimes=official&&official.times[departure];
+    if(!/^[0-9]{2}:[0-9]{2}$/.test(arrival))return '位置未確認';
+    const arrivalMinutes=toMinutes(arrival);
+    const announcedDeparture=padTime(r.originDepartureTime||'');
+    const hasPublishedDeparture=/^[0-9]{2}:[0-9]{2}$/.test(announcedDeparture);
+    // If the first departure is missing, use a *provisional* route duration.
+    const routeName=String(r.origin||r.dest||'');
+    const guessedDuration=busTravelMinutes(routeName);
+    const departure=hasPublishedDeparture
+      ? announcedDeparture : addMinutes(arrival,-guessedDuration);
+    const departureClock=toMinutes(departure);
+    const previousDay=String(r.originDepartureDay||'').includes('前日')
+      || departureClock>arrivalMinutes;
+    const departureMinutes=hasPublishedDeparture
+      ? departureClock-(previousDay?1440:0)
+      : arrivalMinutes-guessedDuration;
+
+    // The two-hour window can include TOMORROW's arrivals before midnight.
+    // Work on the arrival date's clock, even while viewing the previous day.
+    const serviceDate=String(r._serviceIso||now.iso||'');
+    const currentDate=String(now.iso||'');
+    const clock=serviceDate>currentDate ? now.minutes-1440
+      : serviceDate<currentDate ? now.minutes+1440 : now.minutes;
+    if(clock<departureMinutes)return '出発前（時刻表）｜位置未確認';
+    if(clock>arrivalMinutes)return '到着時刻経過（位置未確認）';
+    if(arrivalMinutes<=departureMinutes)return '位置未確認';
+
+    const stamp=m=>addMinutes('00:00',m);
+    const makeEstimate=(where,minute)=>{
+      const location=String(where||'').trim();
+      return location ? `最終通過見込：${location} ${stamp(minute)}（仮）` : '';
+    };
+    const official=hasPublishedDeparture
+      ? BUS_INBOUND_CHECKPOINTS[String(r.source||'')] : null;
+    const stopTimes=official&&official.times[announcedDeparture];
     if(official&&Array.isArray(stopTimes)&&stopTimes.length===official.names.length){
-      // 2026 Oct 19-30 weekdays (nightly roadworks): Tokushima 18:40
-      // temporarily skips the Miyoshi BS / Yoshinogawa SA checkpoint.
-      const dow=now.iso?new Date(now.iso+'T12:00:00+09:00').getDay():-1;
+      // Roadworks: do not imply the temporarily skipped Miyoshi checkpoint.
+      const dow=serviceDate?new Date(serviceDate+'T12:00:00+09:00').getDay():-1;
       const closed=String(r.source||'')==='tokushima_official_in' &&
-        departure==='18:40' && String(now.iso||'')>='2026-10-19' &&
-        String(now.iso||'')<='2026-10-30' && dow!==0 && dow!==6;
-      const stops=[[String(r.origin||'出発地'),departure],
-        ...official.names.map((name,i)=>[name,closed&&i===0?'':stopTimes[i]])];
-      const segment=timetableBusInterval(stops,now,previousDay,departure);
-      if(segment)return segment;
+        announcedDeparture==='18:40' && serviceDate>='2026-10-19' &&
+        serviceDate<='2026-10-30' && dow!==0 && dow!==6;
+      const stops=[[String(r.origin||'出発地'),departureMinutes]];
+      stopTimes.forEach((t,i)=>{
+        const formatted=padTime(t||'');
+        if(closed&&i===0)return;
+        if(!/^[0-9]{2}:[0-9]{2}$/.test(formatted))return;
+        let minute=toMinutes(formatted);
+        if(previousDay && minute>=departureClock)minute-=1440;
+        if(minute>=departureMinutes && minute<=arrivalMinutes){
+          stops.push([official.names[i],minute]);
+        }
+      });
+      const passed=stops.filter(([name,minute])=>name && minute<=clock)
+        .sort((a,b)=>a[1]-b[1]);
+      if(passed.length){
+        const latest=passed[passed.length-1];
+        return makeEstimate(latest[0],latest[1]);
+      }
     }
-    const remaining=arr-now.minutes;
-    if(remaining>=0 && remaining<=1440)return '位置未確認｜あと約'+remaining+'分';
+
+    // No stop-by-stop timetable: estimate a waypoint and its time by
+    // dividing the scheduled (or explicitly provisional) running time.
+    const waypoints=busEstimatedRoutePoints(r);
+    if(Array.isArray(waypoints)&&waypoints.length>1){
+      const segments=waypoints.length-1;
+      const progress=(clock-departureMinutes)/(arrivalMinutes-departureMinutes);
+      const index=Math.min(segments,Math.max(0,Math.floor(progress*segments+1e-8)));
+      const checkpoint=departureMinutes+
+        Math.floor((arrivalMinutes-departureMinutes)*index/segments);
+      const estimate=makeEstimate(waypoints[index],checkpoint);
+      if(estimate)return estimate;
+    }
     return '位置未確認';
   }
   // Keep a separate scroll position for inbound/outbound bus departures.
