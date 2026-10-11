@@ -3500,6 +3500,16 @@
   // Stops and times from published operator timetables. Neither
   // scheduled passage nor a time between stops confirms actual position.
   const BUS_INBOUND_CHECKPOINTS={"iyo_city_osaka_arrival":{"names":["川内インター","松山インター口","余戸南インター","松山市駅"],"times":{"08:50":["13:30","13:40","13:46","14:00"],"12:00":["17:02","17:12","17:18","17:32"],"13:50":["18:49","18:59","19:05","19:20"],"14:10":["20:40","20:50","20:56","21:10"],"17:10":["21:50","22:00","22:05","22:15"],"21:00":["04:55","05:10","05:15","05:25"],"23:10":["05:46","05:56","06:01","06:15"]}},"iyotetsu_kobe_official_in":{"names":["高速舞子","川内インター","松山インター口","松山市駅"],"times":{"07:20":["07:50","11:07","11:17","11:32"],"08:15":["08:45","12:02","12:12","12:27"],"10:20":["10:50","14:07","14:17","14:32"],"14:20":["14:50","18:07","18:17","18:32"],"16:20":["16:50","20:07","20:17","20:32"],"18:20":["18:50","22:07","22:17","22:32"]}},"tokushima_official_in":{"names":["三好BS（吉野川SA）","三島川之江IC","川内インター","松山インター口","大街道","松山市駅","JR松山駅"],"times":{"08:00":["09:24","09:53","10:42","10:52","11:12","11:20","11:28"],"09:40":["11:04","11:33","12:22","12:32","12:52","13:00","13:08"],"12:20":["13:44","14:13","15:02","15:12","15:32","15:40","15:48"],"15:20":["16:44","17:13","18:02","18:12","18:32","18:40","18:48"],"17:00":["18:24","18:53","19:42","19:52","20:12","20:20","20:28"],"18:40":["20:04","20:33","21:22","21:32","21:52","22:00","22:08"]}},"takamatsu_official_in":{"names":["高速観音寺","川内インター","松山インター口","松山市駅","JR松山駅"],"times":{"07:45":["08:39","09:49","09:59","10:27","10:35"],"08:45":["09:39","10:49","10:59","11:27","11:35"],"09:45":["10:39","11:49","11:59","12:27","12:35"],"11:05":["11:59","13:09","13:19","13:47","13:55"],"12:40":["","","14:42","14:57","15:05"],"13:15":["14:09","15:19","15:29","15:57","16:05"],"14:45":["15:39","16:49","16:59","17:27","17:35"],"16:05":["16:59","18:09","18:19","18:47","18:55"],"17:05":["","","19:07","19:22","19:30"],"18:20":["19:14","20:24","20:34","21:02","21:10"],"19:20":["20:14","21:24","21:34","22:02","22:10"],"20:20":["21:14","22:24","22:34","23:02","23:10"]}}};
+  // Official Matsuyama Express / Keihanshin Dream inbound timetable.
+  // Stops not called at by a particular service are intentionally blank.
+  // Source: https://www.jr-shikokubus.co.jp/businfo/matsuyama_ex/osaka.html
+  // These are scheduled stop/departure times, not live vehicle sightings.
+  BUS_INBOUND_CHECKPOINTS.jr_kansai_official_in={
+    names:['JR大阪駅','JRなんば駅','三宮バスターミナル','高速観音寺',
+      '三島川之江インター','川内インター','松山インター口','天山橋',
+      '大街道','JR松山駅'],
+    times:{"06:30":["","06:45","07:35","","11:01","11:54","12:06","12:10","12:23","12:31"],"08:00":["","08:15","09:05","","12:31","13:24","13:36","13:40","13:53","14:01"],"10:10":["","10:25","11:14","","14:40","15:29","15:39","15:45","15:59","16:08"],"11:40":["","11:55","12:44","","16:10","16:59","17:09","17:15","17:29","17:38"],"13:20":["","13:35","14:24","","17:57","18:50","19:02","19:06","19:19","19:27"],"12:50":["14:20","14:35","15:24","18:15","18:40","19:29","19:39","19:45","19:59","20:08"],"15:20":["","15:35","16:24","","19:50","20:43","20:55","20:59","21:12","21:20"],"16:25":["","16:40","17:29","","21:04","21:54","22:04","22:10","22:24","22:33"],"17:55":["","18:10","18:59","","22:30","23:23","23:35","23:39","23:52","00:00"],"21:20":["22:40","22:55","23:44","","","05:05","05:15","05:19","05:32","05:40"]}
+  };
   const KOBE_MUROMACHI_STARTS={"06:00":"05:40","08:10":"07:50","09:00":"08:40","10:00":"09:40","14:20":"14:00","15:20":"15:00","16:30":"16:10","17:50":"17:30"};
   const OSAKA_YAWATAHAMA_STOPS={"06:40":[["八幡浜","06:40"],["西大洲","06:55"],["大洲本町","07:05"],["内子","07:20"],["松山室町営業所","08:15"],["松山市駅","08:30"]],"10:20":[["八幡浜","10:20"],["西大洲","10:35"],["大洲本町","10:45"],["内子","11:00"],["松山室町営業所","11:55"],["松山市駅","12:10"]]};
   function timetableBusInterval(points,now,previousDay=false,originDepart='') {
@@ -3590,7 +3600,9 @@
       const closed=String(r.source||'')==='tokushima_official_in' &&
         announcedDeparture==='18:40' && serviceDate>='2026-10-19' &&
         serviceDate<='2026-10-30' && dow!==0 && dow!==6;
-      const stops=[[String(r.origin||'出発地'),departureMinutes]];
+      // The origin is NOT a passed checkpoint. A bus starting from Kyoto
+      // cannot report Kyoto as its last passed stop solely because it left.
+      const stops=[];
       stopTimes.forEach((t,i)=>{
         const formatted=padTime(t||'');
         if(closed&&i===0)return;
@@ -3607,6 +3619,9 @@
         const latest=passed[passed.length-1];
         return makeEstimate(latest[0],latest[1]);
       }
+      // Known official route, but it has not reached its first documented stop.
+      // No GPS fix exists: do not invent a passed checkpoint.
+      return `始発 ${String(r.origin||'出発地')} ${departure}発（時刻表）｜通過地点未確認`;
     }
 
     // No stop-by-stop timetable: estimate a waypoint and its time by
@@ -3618,8 +3633,13 @@
       const index=Math.min(segments,Math.max(0,Math.floor(progress*segments+1e-8)));
       const checkpoint=departureMinutes+
         Math.floor((arrivalMinutes-departureMinutes)*index/segments);
-      const estimate=makeEstimate(waypoints[index],checkpoint);
-      if(estimate)return estimate;
+      // Index 0 is always a city/origin label, not a location passed later.
+      if(index===0){
+        return `始発 ${String(r.origin||'出発地')} ${departure}発（時刻表）｜通過地点未確認`;
+      }
+      // Not a recorded passage; both waypoint AND time are crude estimates.
+      if(index<segments && String(waypoints[index]||'').trim())
+        return `経路推定：${waypoints[index]}付近 ${stamp(checkpoint)}頃（仮）`;
     }
     return '位置未確認';
   }
