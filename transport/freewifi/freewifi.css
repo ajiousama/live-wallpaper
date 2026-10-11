@@ -2437,7 +2437,7 @@ body.freewifi-tv #bus-rows.freewifi-bus-grouped > .freewifi-bus-group > .freewif
 /* 2026-10-11 arrival-board repair:
    Earlier repeat(N,minmax(0,1fr)) squeezed the first four long-distance
    buses to a few pixels each once all upcoming rows were retained.
-   Use a fixed readable height per service and scroll the overflow. */
+   Use a compact 62px readable height per service and scroll the overflow. */
 body.freewifi-tv #bus-rows.freewifi-bus-grouped {
   grid-template-rows:minmax(0,1fr) minmax(0,1fr)!important;
 }
@@ -2445,7 +2445,7 @@ body.freewifi-tv #bus-rows.freewifi-bus-grouped > .freewifi-bus-group,
 body.freewifi-tv #bus-rows.freewifi-bus-grouped > .freewifi-bus-regional,
 html.company-pc body.freewifi-tv #bus-rows.freewifi-bus-grouped > .freewifi-bus-group {
   grid-template-rows:24px!important;
-  grid-auto-rows:78px!important;
+  grid-auto-rows:62px!important;
   grid-auto-flow:row!important;
   overflow-y:auto!important;
   overflow-x:hidden!important;
@@ -2453,9 +2453,9 @@ html.company-pc body.freewifi-tv #bus-rows.freewifi-bus-grouped > .freewifi-bus-
   min-height:0!important;
 }
 body.freewifi-tv #bus-rows.freewifi-bus-grouped > .freewifi-bus-group > .row {
-  min-height:78px!important;
-  height:78px!important;
-  max-height:78px!important;
+  min-height:62px!important;
+  height:62px!important;
+  max-height:62px!important;
   box-sizing:border-box!important;
 }
 body.freewifi-tv #bus-rows.freewifi-bus-grouped > .freewifi-bus-group > .freewifi-bus-group-head {
