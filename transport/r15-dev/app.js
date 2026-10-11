@@ -3503,6 +3503,16 @@
   const busManualUntil={departure:{long:0,regional:0},arrival:{long:0,regional:0}};
   let busGroupDay='';
   let busGroupRenderedDirection=null;
+  // Reserve only the height actually needed by the regional arrivals.
+  // Any unused space belongs to express/highway arrivals; both lists
+  // retain automatic scrolling if the next two hours are crowded.
+  function regionalArrivalGroupHeight(available, expressCount, regionalCount) {
+    const total=Number(available)>160 ? Number(available) : 480;
+    const wanted=count=>30+Math.max(1,count)*50; // 24px heading + 48px/row + gaps
+    const minimum=80; // heading and at least one readable/empty bus row
+    const expressReserve=Math.min(wanted(expressCount),Math.max(minimum,Math.floor((total-5)*0.55)));
+    return Math.max(minimum,Math.min(wanted(regionalCount),total-expressReserve-5));
+  }
   function renderBus(rows) {
     const now=japanNow();
     const root = $('bus-rows');
@@ -3537,6 +3547,14 @@
       const regional=rows.filter(isRegional);
       const longDistance=rows.filter(r=>!isRegional(r));
       const grouped=FREEWIFI_TV;
+      const adaptiveArrival=grouped && !dep &&
+        document.documentElement.classList.contains('company-pc');
+      if(adaptiveArrival){
+        root.style.setProperty('--company-arrival-regional-height',
+          Math.round(regionalArrivalGroupHeight(root.clientHeight,longDistance.length,regional.length))+'px');
+      }else{
+        root.style.removeProperty('--company-arrival-regional-height');
+      }
       const longRoot=grouped?document.createElement('section'):root;
       const regionalRoot=grouped?document.createElement('section'):root;
       if(grouped) {
