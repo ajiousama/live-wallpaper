@@ -4079,16 +4079,27 @@
   }
   function busDeparturePosition(r, now) {
     const departure=padTime(r.time||'');
-    if(!/^\d{2}:\d{2}$/.test(departure) || r.isNextDayStart)return '位置未確認';
+    if(!/^[0-9]{2}:[0-9]{2}$/.test(departure) || r.isNextDayStart)
+      return '翌日出発予定（位置未確認）';
     const remaining=toMinutes(departure)-now.minutes;
-    if(remaining<0)return '位置未確認';
-    // The originating depot / earlier stops are published timetable data.
+    if(remaining<0)return '発車時刻経過（位置未確認）';
+    const boarding=String(r.stop||r.originName||r.originStartName||'乗車場所')
+      .replace(/発$/,'').trim()||'乗車場所';
+
+    // Five minutes before departure the bus is *expected* at the boarding
+    // stop. No position data: never describe this as an observed arrival.
+    if(remaining<=5) {
+      return `${boarding}で待機中（仮・発車${remaining}分前）`;
+    }
+
+    // Prefer known prior stops/depot DEPARTURE schedules when present.
+    // Their positions are timetable-based and not confirmed by GPS.
     const kobe=String(r.source||'')==='iyotetsu_kobe_202609' &&
       String(r.stop||'')==='松山市駅';
     const startName=kobe?'松山室町営業所':String(r.originStartName||'').trim();
     const startTime=padTime((kobe?KOBE_MUROMACHI_STARTS[departure]:r.originStartTime)||'');
     if(startName && startName!==String(r.stop||'').trim() &&
-      /^\d{2}:\d{2}$/.test(startTime)){
+      /^[0-9]{2}:[0-9]{2}$/.test(startTime)){
       const yawata=String(r.source||'')==='iyo_city_osaka' &&
         String(startName).includes('八幡浜');
       const timeline=yawata
@@ -4096,11 +4107,17 @@
         : [[startName,startTime],[String(r.stop||'松山市駅'),departure]];
       const segment=timetableBusInterval(timeline,now,false,startTime);
       if(segment)return segment;
-      if(now.minutes<toMinutes(startTime))
-        return '始発 '+startName+' '+startTime+'発予定';
+      if(now.minutes<toMinutes(startTime)) {
+        return /営業所|車庫/.test(startName)
+          ? `${startName}で出発準備中（仮）`
+          : `${startName} ${startTime}発予定（時刻表・位置未確認）`;
+      }
     }
-    if(remaining<=60)return '位置未確認｜発車まで約'+remaining+'分';
-    return '位置未確認';
+
+    // No vehicle-location feed or known depot: don't invent a specific
+    // operator garage. Use provisional operational phases, not live status.
+    if(remaining<=15)return `${boarding}へ向かう・乗車準備中（仮）`;
+    return '営業所・車庫等で出発準備中（推定）';
   }
   function busArrivalStatus(r, now) {
     // Bus GPS is not provided. These are scheduled/provisional last-waypoint
