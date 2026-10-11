@@ -2413,3 +2413,18 @@ html.company-pc body.freewifi-tv .company-pc-version{
   text-align:right;
   margin-top:3px;
 }
+
+/* 2026-10-11: Never discard later medium-distance/highway services.
+   The four/five-row grids are viewports, not record-count limits.
+   Each group can scroll independently through chronological departures. */
+html.company-pc body.freewifi-tv #bus-rows.freewifi-bus-grouped > .freewifi-bus-group,
+body.freewifi-tv #bus-rows.freewifi-bus-grouped > .freewifi-bus-group {
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  overscroll-behavior:contain;
+  scroll-behavior:smooth;
+  align-content:start!important;
+  grid-auto-rows:minmax(43px, 53px)!important;
+  scrollbar-width:thin!important;
+  scrollbar-color:rgba(157,190,220,.65) transparent;
+}
