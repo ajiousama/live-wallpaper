@@ -2574,7 +2574,7 @@
 
     scheduled.forEach(x=>{
       const num=String(x.trainNum||'').trim();
-      if(!/^(3072|3073)$/.test(num) || directionFor(x)!==currentRailDir())return;
+      if(!/^(3072|3073)$/.test(num))return;
       const stationTime=padTime(x.scheduledMatsuyama||'');
       const cityTime=padTime(x.scheduledIchitsubo||'');
       if(!/^\d{2}:\d{2}$/.test(stationTime) &&
@@ -2595,7 +2595,7 @@
 
     confirmed.forEach(x=>{
       const num=String(x.trainNum||'').trim();
-      if(!/^(3072|3073)$/.test(num) || directionFor(x)!==currentRailDir() ||
+      if(!/^(3072|3073)$/.test(num) ||
         !jrPositionFeedFresh() || !jrPositionUsable(x.position))return;
       const previous=byTrain.get(num);
       const scheduled=padTime(x.scheduledMatsuyama||previous?.scheduled||'');
@@ -2888,7 +2888,7 @@
     const routeText=x.origin&&x.destination
       ? `${x.origin} → ${x.destination}`
       : (x.destination ? `${x.destination}方面` : '貨物列車');
-    const details=[`貨物列車 ${x.trainNum||''}レ｜${routeText}`];
+    const details=[`貨物列車 ${x.trainNum||''}レ｜${routeText}｜${x.direction==='north'?'今治方面':'宇和島方面'}`];
     if(x.timetableOnly) details.push('時刻表上の通過予定・位置未取得・運行未確認');
     else if(x.position) details.push(`現在位置 ${x.position}`);
     if(x.scheduledIchitsubo) details.push(`市坪駅 ${x.scheduledIchitsubo} 通過予定（当日ダイヤ）`);
@@ -2901,6 +2901,24 @@
       </div>
       <div class="rail-detail">${tickerHtml(details)}</div>`;
     root.appendChild(row);
+  }
+
+  function selectPriorityRailRows(candidates,limit) {
+    const chronological=[...candidates].sort((a,b)=>a._sortMinutes-b._sortMinutes);
+    const high=x=>x._freight||x._deadhead;
+    const priorityOrder=[
+      chronological.filter(high),
+      chronological.filter(x=>!high(x)&&x._special),
+      chronological.filter(x=>!high(x)&&!x._special&&x._terminalArrival&&x.data?.isOfficialScheduled),
+      chronological.filter(x=>!high(x)&&!x._special&&x._terminalArrival&&!x.data?.isOfficialScheduled),
+      chronological.filter(x=>!high(x)&&!x._special&&!x._terminalArrival)
+    ];
+    const picked=[];
+    for(const group of priorityOrder)for(const x of group){
+      if(picked.length>=limit)break;
+      if(!picked.includes(x))picked.push(x);
+    }
+    return picked.sort((a,b)=>a._sortMinutes-b._sortMinutes);
   }
 
   function renderRail(rows) {
@@ -2991,48 +3009,15 @@
     const limit=FREEWIFI_TV ? (document.documentElement.classList.contains('company-pc') ? 9 : 8) : 3;
     const candidates=[...services, ...terminalArrivals, ...deadheads, ...freights, ...observedSpecials]
       .sort((a,b)=>a._sortMinutes-b._sortMinutes);
-    const visible=candidates.slice(0,limit);
-    // A confirmed upcoming terminal arrival must not disappear solely because
-    // the standard departure list was shortened to avoid clipping.
-    if(FREEWIFI_TV && visible.length===limit){
-      // Keep the official Iyonada Monogatari return service visible during its
-      // three-hour approach window; ordinary arrivals must not push it out.
-      const priorityArrival=candidates.find(x=>x._terminalArrival && x.data?.isOfficialScheduled);
-      const nextArrival=priorityArrival || candidates.find(x=>x._terminalArrival);
-      if(nextArrival && !visible.includes(nextArrival) &&
-          !visible.some(x=>x._terminalArrival && (!priorityArrival || x.data?.isOfficialScheduled))){
-        visible[visible.length-1]=nextArrival;
-        visible.sort((a,b)=>a._sortMinutes-b._sortMinutes);
-      }
-    }
-
-    // A train with verified freight position must not be silently hidden
-    // behind nine ordinary services on a crowded workplace display.
-    if(FREEWIFI_TV && visible.length===limit){
-      const freightLive=candidates.find(x=>x._freight && jrPositionUsable(x.data?.position));
-      if(freightLive && !visible.includes(freightLive)){
-        const replaceAt=visible.findLastIndex(x=>!x._terminalArrival || !x.data?.isOfficialScheduled);
-        if(replaceAt>=0){
-          visible[replaceAt]=freightLive;
-          visible.sort((a,b)=>a._sortMinutes-b._sortMinutes);
-        }
-      }
-    }
-
-    // Keep a verified special movement on the workplace board even when all
-    // the normal departure slots are full. Preserve official named arrivals.
-    if(FREEWIFI_TV && visible.length===limit){
-      const special=candidates.find(x=>x._special);
-      if(special && !visible.includes(special)){
-        const replaceAt=visible.findLastIndex(x=>!x._special &&
-          !(x._terminalArrival && x.data?.isOfficialScheduled) &&
-          !(x._freight && jrPositionUsable(x.data?.position)));
-        if(replaceAt>=0){
-          visible[replaceAt]=special;
-          visible.sort((a,b)=>a._sortMinutes-b._sortMinutes);
-        }
-      }
-    }
+    // The workplace JR display must ALWAYS reserve slots first for freight
+    // (including explicitly labelled timetable-only freight) and verified
+    // deadhead arrivals. A one-off replacement of only the first live freight
+    // left other freight/deadheads hidden behind passenger trains.
+    // Next: actual special movements, terminal arrivals, then regular trains.
+    // Sort chronologically AFTER picking the priority services.
+    const visible=FREEWIFI_TV
+      ? selectPriorityRailRows(candidates,limit)
+      : candidates.slice(0,limit);
 
     if (!visible.length) {
       // A missing live fix must never be described as an ended service.
