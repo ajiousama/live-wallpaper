@@ -136,4 +136,22 @@
   window.addEventListener('pageshow',()=>{
     if(Date.now() > nextPageAt + 1250) showPage(pageIndex + 1);
   });
+
+  // Optional Lively ZIP shell heartbeat. A local wrapper can reload only a
+  // genuinely stalled embedded page without relying on WebView navigation.
+  if(companyPc && window.parent !== window){
+    const pulse=()=>{
+      try{
+        window.parent.postMessage({
+          source:'matsuyama-lively-workplace',
+          type:'page-heartbeat',
+          index:pageIndex,
+          deadline:nextPageAt,
+          timestamp:Date.now()
+        },'*');
+      }catch(e){}
+    };
+    pulse();
+    setInterval(pulse,5000);
+  }
 })();
