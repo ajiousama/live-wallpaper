@@ -2554,8 +2554,10 @@
     // Do not put scheduled-only deadheads on the Matsuyama timetable.
     // A deadhead is shown only while JR live data provides a current position.
     }).filter(x=>x.arrival && jrPositionUsable(x.position) &&
-      // The position feed is for today's movements; don't make an already
-      // finished morning arrival look like a service at midnight tomorrow.
+      // If the live feed already places the train AT Matsuyama, it is NOT
+      // still inbound to Matsuyama. Do not show a phantom arrival.
+      !/^(?:松山|松山駅)$/.test(x.position) &&
+      // Do not roll a completed morning arrival over to tomorrow.
       toMinutes(x.arrival)>=now.minutes-2);
   }
 
@@ -2842,14 +2844,28 @@
       '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
     })[c]);
   }
+  // A '松山' live position proves location only, not a moving train or
+  // established depot storage. Avoid claiming a future Matsuyama arrival
+  // for a train already there. Actual layover vs turnback is unverified.
+  function railStationedStatus(x, now) {
+    const here=cleanStation(x?.position||'');
+    if(!/^(?:松山|松山駅|松山基地)$/.test(here))return '';
+    const time=padTime(x?.stationTime||'');
+    const depScheduled=x?.stationEvent==='departure' &&
+      /^[0-9]{2}:[0-9]{2}$/.test(time) &&
+      toMinutes(time)>=now.minutes;
+    if(depScheduled)return here+'で発車待ち（位置情報・時刻表）';
+    return here+'に在線（留置・折り返し未確認）';
+  }
+
   function appendObservedSpecialTrainRow(root, x) {
     const row=document.createElement('div');
     row.className='row rail-row special-movement-row';
     const kind=['test','deadhead','freight','extra'].includes(x.kind)?x.kind:'extra';
-    const event={
+    const event=railStationedStatus(x,japanNow()) || ({
       pass:'松山 通過予定', arrival:'松山 到着予定',
       departure:'松山 発車予定',arrival_departure:'松山 発着予定'
-    }[x.stationEvent] || '松山駅発着未確認';
+    }[x.stationEvent] || '松山駅発着未確認');
     const time=/^([01]?\d|2[0-3]):[0-5]\d$/.test(String(x.stationTime||''))
       ? x.stationTime : '時刻未確認';
     const details=[
@@ -2858,6 +2874,7 @@
       x.destination?'行先 '+railSpecialText(x.destination):'行先未確認',
       x.stationConfirmed?'松山駅の情報は当日ダイヤ照合':'松山駅の停車・通過は未確認'
     ];
+    if(railStationedStatus(x,japanNow()))details.push('現在地は確認済み／留置・折返しの実態は未確認');
     if(x.delayMinutes>0)details.push(railSpecialText(x.delayMinutes)+'分遅れ');
     row.innerHTML='<div class="rail-primary">'+
       '<div class="cell rail-service '+kind+'"><span class="kindtxt">'+
