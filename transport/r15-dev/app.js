@@ -1287,22 +1287,31 @@
       info:via,noSyntheticArrival:true,reference:false
     }));
   }
-  // Saga-no-seki -> Misaki: independently published inbound sailings.
-  // Never reverse the Misaki outbound timetable to manufacture arrivals.
+  // Saga-no-seki -> Misaki, 70 minutes: official scheduled arrivals.
+  // 12:00 from Saga-no-seki is EXTRA only on the announced dates.
+  // The 23:00 departure reaches Misaki at 00:10 on the FOLLOWING date,
+  // so today's 00:10 arrival belongs to yesterday's 23:00 departure.
   function koku94InboundPortRows(iso) {
-    const special=['2026-10-10','2026-10-12','2026-11-21','2026-11-23'].includes(iso);
-    const deps=[];
-    for(let hour=7;hour<=23;hour++)deps.push(hour*60);
-    if(special)deps.push(12*60);
-    return [...new Set(deps)].sort((a,b)=>a-b).map((m,i)=>{
-      const stamp=x=>String(Math.floor(x/60)%24).padStart(2,'0')+':'+String(x%60).padStart(2,'0');
-      return {id:`koku94-in-${iso}-${i}`,board:'port',kind:'ferry',
-        source:'koku94_verified_arrival',service:'国道九四フェリー',
-        port:'三崎港',arrivalPort:'三崎港',direction:'arrival',
-        origin:'佐賀関港',dest:'三崎港',time:stamp(m+70),
-        originDepartureTime:stamp(m),noSyntheticArrival:true,
-        info:'佐賀関発の公式到着時刻'};
+    const extraDates=['2026-09-19','2026-09-20','2026-09-21','2026-09-22','2026-09-23',
+      '2026-10-10','2026-10-12','2026-11-21','2026-11-23'];
+    const extra=extraDates.includes(iso);
+    const stamp=x=>String(Math.floor(x/60)%24).padStart(2,'0')+':'+String(x%60).padStart(2,'0');
+    const make=(id,departure,arrival,previousDay=false)=>({
+      id:`koku94-in-${iso}-${id}`,board:'port',kind:'ferry',
+      source:'koku94_verified_arrival',service:'国道九四フェリー',
+      port:'三崎港',arrivalPort:'三崎港',direction:'arrival',
+      origin:'佐賀関港',dest:'三崎港',time:arrival,
+      originDepartureTime:departure,
+      ...(previousDay?{originDepartureDay:'前日'}:{}),
+      noSyntheticArrival:true,info:'佐賀関発の公式到着時刻'
     });
+    const today=[make('previous-night','23:00','00:10',true)];
+    for(let hour=7;hour<=22;hour++){
+      if(hour===12&&!extra)continue;
+      const departure=hour*60;
+      today.push(make(String(hour),stamp(departure),stamp(departure+70)));
+    }
+    return today;
   }
   // Geiyo Kisen published Hab u -> Imabari inbound timetable,
   // 2024-04-01 revision: weekdays and weekends have different morning services.
