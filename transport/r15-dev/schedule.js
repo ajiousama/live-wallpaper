@@ -4511,17 +4511,6 @@ window.MATSUYAMA_DATA = {
     },
     {
       "board": "bus",
-      "time": "07:40",
-      "service": "しまなみバス",
-      "dest": "新尾道・福山",
-      "info": "しまなみ海道経由",
-      "kind": "bus",
-      "source": "kirara_202609",
-      "id": "bus-kirara-00",
-      "stop": "松山市駅"
-    },
-    {
-      "board": "bus",
       "time": "10:20",
       "service": "伊予鉄バス",
       "dest": "新尾道・福山",
@@ -4529,18 +4518,10 @@ window.MATSUYAMA_DATA = {
       "kind": "bus",
       "source": "kirara_202609",
       "id": "bus-kirara-01",
-      "stop": "松山市駅"
-    },
-    {
-      "board": "bus",
-      "time": "14:10",
-      "service": "中国バス",
-      "dest": "新尾道・福山",
-      "info": "しまなみ海道経由",
-      "kind": "bus",
-      "source": "kirara_202609",
-      "id": "bus-kirara-02",
-      "stop": "松山市駅"
+      "stop": "松山市駅",
+      "exclude": [
+        "2026-10-25"
+      ]
     },
     {
       "board": "bus",
@@ -4551,7 +4532,10 @@ window.MATSUYAMA_DATA = {
       "kind": "bus",
       "source": "kirara_202609",
       "id": "bus-kirara-03",
-      "stop": "松山市駅"
+      "stop": "松山市駅",
+      "exclude": [
+        "2026-10-25"
+      ]
     },
     {
       "board": "bus",
