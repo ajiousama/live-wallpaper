@@ -260,32 +260,48 @@
   <script src="../r15-dev/app.js?v=__BUILD_ID__"></script>
   <script src="freewifi.js?v=__BUILD_ID__"></script>
   <script>
-    // Lively watchdog: independently recover the nine-page rotation when
-    // the external switcher fails to initialize or stops advancing.
+    // Workplace independent watchdog. The rotation script publishes its
+    // actual page deadline: JR/air/bus/ferry = 15 seconds, cinema = 30 seconds.
+    // This watchdog must not skip the cinema page halfway through.
     (function(){
       if(!document.documentElement.classList.contains('company-pc'))return;
-      var last='',unchanged=0;
+      let missing=0,previousDue=0,stalledClicks=0,lastReload=0;
+      function hardRecover(){
+        if(Date.now()-lastReload<30000)return;
+        lastReload=Date.now();
+        const u=new URL(location.href);
+        u.searchParams.set('pc','1');
+        u.searchParams.set('lively','1');
+        u.searchParams.set('_recover',String(Date.now()));
+        location.replace(u.href);
+      }
       setInterval(function(){
-        var el=document.getElementById('freewifi-page-status');
-        if(!el)return;
-        var label=String(el.textContent||'');
-        var match=label.match(/^(\d{2})\s*\/\s*(\d{2})/);
-        if(!match || Number(match[2])!==9){
-          unchanged++;
-        }else{
-          if(match[1]!==last){last=match[1];unchanged=0;return;}
-          unchanged++;
+        const due=Number(document.documentElement.dataset.companyPageDue||0);
+        const index=document.documentElement.dataset.companyPageIndex;
+        const next=document.getElementById('web-page-next');
+        if(!Number.isFinite(due)||due<=0||index===undefined){
+          missing++;
+          if(missing>=5)hardRecover();
+          return;
         }
-        if(unchanged>=4){
-          unchanged=0;
-          var next=document.getElementById('web-page-next');
-          if(next)next.click();
-          if(!match || Number(match[2])!==9){
-            var u=new URL(location.href);
-            u.searchParams.set('pc','1');
-            u.searchParams.set('_recover',String(Date.now()));
-            location.replace(u.href);
-          }
+        missing=0;
+        if(Date.now()<=due+7500){
+          previousDue=due;
+          stalledClicks=0;
+          return;
+        }
+        // First recovery uses the normal "next" button. If neither this
+        // nor the timer advanced the page, the old WebView is reloaded.
+        if(previousDue===due){
+          stalledClicks++;
+        }else{
+          stalledClicks=1;
+        }
+        previousDue=due;
+        if(stalledClicks>=2||!next){
+          hardRecover();
+        }else{
+          next.click();
         }
       },5000);
     })();
