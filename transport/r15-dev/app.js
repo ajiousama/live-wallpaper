@@ -3522,32 +3522,10 @@
           root.appendChild(group);
         }
       } else root.classList.remove('freewifi-bus-grouped');
-      // Five regional corridors: 久万高原、宇和島、新居浜、今治・大三島、三崎.
-      // Give each corridor one row before repeating any route. This avoids
-      // flooding the workplace screen with high-frequency 久万高原 services.
-      const regionalCorridor=r=>{
-        const src=String(r.source||'');
-        const place=String(r.origin||r.dest||'');
-        if(/kumakogen|久万高原/.test(src+' '+place))return 'kuma';
-        if(/niihama|新居浜/.test(src+' '+place))return 'niihama';
-        if(/omishima|今治|宮浦|大三島/.test(src+' '+place))return 'imabari';
-        if(/uwajima|宇和島|城辺/.test(src+' '+place))return 'uwajima';
-        if(/misaki|三崎/.test(src+' '+place))return 'misaki';
-        return src+'|'+place;
-      };
-      const diversifyRegional=(entries,limit)=>{
-        const selected=[],used=new Set();
-        for(const row of entries){
-          const corridor=regionalCorridor(row);
-          if(used.has(corridor))continue;
-          used.add(corridor);selected.push(row);
-          if(selected.length>=limit)break;
-        }
-        // Never backfill empty regional slots with multiple trips from one
-        // corridor: absent routes must be truly absent, not concealed by Kuma.
-        return selected.sort((a,b)=>rMinutes(a)-rMinutes(b));
-      };
-      const selected=grouped?[...longDistance.slice(0,4),...diversifyRegional(regional,5)]:rows;
+      // These are upcoming *services*, not one mandatory slot per route.
+      // Preserve every confirmed bus, ordered by its actual departure or
+      // arrival time. Later services are reachable by scrolling each group.
+      const selected=rows.slice().sort((a,b)=>rMinutes(a)-rMinutes(b));
       selected.forEach(r => {
       const row = document.createElement('div'); row.className = `row${r.isFinal?' is-final':''}${dep && isDepartSoon(r, japanNow()) ? ' depart-soon' : ''}`;
       const firstBadge = r.isNextDayStart ? badgeHtml('first', dep ? '始発' : '初便') : '';
