@@ -2553,7 +2553,10 @@
       };
     // Do not put scheduled-only deadheads on the Matsuyama timetable.
     // A deadhead is shown only while JR live data provides a current position.
-    }).filter(x=>x.arrival && jrPositionUsable(x.position));
+    }).filter(x=>x.arrival && jrPositionUsable(x.position) &&
+      // The position feed is for today's movements; don't make an already
+      // finished morning arrival look like a service at midnight tomorrow.
+      toMinutes(x.arrival)>=now.minutes-2);
   }
 
   function matsuyamaFreightPasses(now) {
@@ -2601,7 +2604,7 @@
       const scheduled=padTime(x.scheduledMatsuyama||previous?.scheduled||'');
       const delay=Number(x.delayMinutes)||0;
       const passTime=scheduled ? addMinutes(scheduled,delay) : '';
-      if(passTime && toMinutes(passTime)<now.minutes-10) return;
+      if(passTime && toMinutes(passTime)<now.minutes-2) return;
       byTrain.set(num,{
         ...previous,...x,trainNum:num,kind:'freight',direction:directionFor(x),
         scheduled,passTime,displayTime:passTime||'時刻確認中',
@@ -2903,24 +2906,6 @@
     root.appendChild(row);
   }
 
-  function selectPriorityRailRows(candidates,limit) {
-    const chronological=[...candidates].sort((a,b)=>a._sortMinutes-b._sortMinutes);
-    const high=x=>x._freight||x._deadhead;
-    const priorityOrder=[
-      chronological.filter(high),
-      chronological.filter(x=>!high(x)&&x._special),
-      chronological.filter(x=>!high(x)&&!x._special&&x._terminalArrival&&x.data?.isOfficialScheduled),
-      chronological.filter(x=>!high(x)&&!x._special&&x._terminalArrival&&!x.data?.isOfficialScheduled),
-      chronological.filter(x=>!high(x)&&!x._special&&!x._terminalArrival)
-    ];
-    const picked=[];
-    for(const group of priorityOrder)for(const x of group){
-      if(picked.length>=limit)break;
-      if(!picked.includes(x))picked.push(x);
-    }
-    return picked.sort((a,b)=>a._sortMinutes-b._sortMinutes);
-  }
-
   function renderRail(rows) {
     const root = $('rail-rows'); root.innerHTML = '';
     root.classList.remove('rail-end');
@@ -2965,29 +2950,27 @@
       _deadhead: true,
       _freight: false,
       _terminalArrival: false,
-      _sortMinutes: (() => {
-        let d=toMinutes(x.arrival)-now.minutes;
-        if(d < -720) d += 1440;
-        return now.minutes + d;
-      })(),
+      // Actual Matsuyama arrival time today, not a rolled-over next day.
+      _sortMinutes:toMinutes(x.arrival),
       data: x
     }));
     const freights = matsuyamaFreightPasses(now).map(x => ({
       _deadhead: false,
       _freight: true,
-      _sortMinutes: (() => {
-        if(!x.passTime)return now.minutes+15; // position verified; exact time unavailable
-        let d=toMinutes(x.passTime)-now.minutes;
-        if(d < -720) d += 1440;
-        return now.minutes + d;
-      })(),
+      // No fabricated +15min position. When freight passage time is
+      // unknown, mark it unscheduled and put it after timestamped trains.
+      _sortMinutes:/^[0-9]{2}:[0-9]{2}$/.test(String(x.passTime||''))
+        ? toMinutes(x.passTime) : Number.POSITIVE_INFINITY,
       data: x
     }));
     const observedSpecials=matsuyamaObservedSpecialRows(now).map(x=>({
-      _special: true,
-      _sortMinutes: now.minutes+2,
+      _special:true,
+      // Actual schedule if known, never pretend "now + 2" is the train time.
+      _sortMinutes:/^[0-9]{1,2}:[0-9]{2}$/.test(String(x.stationTime||''))
+        ? toMinutes(padTime(x.stationTime))
+        : Number.POSITIVE_INFINITY,
       data:x
-    }));
+    })).filter(x=>x._sortMinutes>=now.minutes-2);
     const terminalArrivals = matsuyamaTerminatingArrivals(now).map(x => ({
       _deadhead: false,
       _freight: false,
@@ -3009,15 +2992,10 @@
     const limit=FREEWIFI_TV ? (document.documentElement.classList.contains('company-pc') ? 9 : 8) : 3;
     const candidates=[...services, ...terminalArrivals, ...deadheads, ...freights, ...observedSpecials]
       .sort((a,b)=>a._sortMinutes-b._sortMinutes);
-    // The workplace JR display must ALWAYS reserve slots first for freight
-    // (including explicitly labelled timetable-only freight) and verified
-    // deadhead arrivals. A one-off replacement of only the first live freight
-    // left other freight/deadheads hidden behind passenger trains.
-    // Next: actual special movements, terminal arrivals, then regular trains.
-    // Sort chronologically AFTER picking the priority services.
-    const visible=FREEWIFI_TV
-      ? selectPriorityRailRows(candidates,limit)
-      : candidates.slice(0,limit);
+    // JR departures, arrivals, freight and deadheads use ONE timeline.
+    // Never reserve priority slots by train category: earlier times always
+    // come before later times, including specials/terminal arrivals.
+    const visible=candidates.slice(0,limit);
 
     if (!visible.length) {
       // A missing live fix must never be described as an ended service.
