@@ -51,6 +51,14 @@
     pageIndex = (index + pages.length) % pages.length;
     const page = pages[pageIndex];
 
+    // The large hero title must follow the ACTUAL visible board, not the
+    // initial HTML placeholder. JR north/south are both departures.
+    const heroDirection = document.querySelector('.transport-hero-title h1 span');
+    if(heroDirection && !page.cinema && !page.gamble){
+      const inbound = page.id !== 'panel-rail' && page.mode === 1;
+      heroDirection.textContent = inbound ? 'ARRIVALS' : 'DEPARTURES';
+    }
+
     TRANSPORT_IDS.forEach(id=>{
       const el = document.getElementById(id);
       if(el) el.classList.toggle('freewifi-active', !page.gamble && id === page.id);
