@@ -1668,6 +1668,26 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
   color:#ffd56e;
   border:1px solid #a58a3e;
 }
+/* Explicit colors for observed, non-passenger movements. */
+.rail-kind-test{
+  background:#3259a4;
+  color:#fff;
+  border:1px solid #9eb8ee;
+}
+.rail-kind-extra{
+  background:#725193;
+  color:#fff;
+  border:1px solid #bb9fd4;
+}
+#rail-rows .special-movement-row .cell.main{
+  font-weight:800;
+}
+#rail-rows .special-movement-row .rail-name-badge{
+  background:#f3f5fc;
+  border-color:#afbad9;
+  color:#22375c;
+  min-width:58px;
+}
 .rail-kind-tourist{
   background:#7a4f9d;
   color:#fff;
