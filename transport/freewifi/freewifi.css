@@ -2473,3 +2473,19 @@ body.freewifi-tv #bus-rows.freewifi-bus-grouped > .freewifi-bus-group > .freewif
 html.company-pc body.freewifi-tv #panel-bus #bus-rows.freewifi-bus-grouped {
   grid-template-rows:minmax(0,1fr) minmax(0,var(--company-bus-regional-height,40%))!important;
 }
+
+/* 2026-10-11 user preference: stationary bus board.
+   JS selects the earliest 2-hour-window trips that fit on-screen.
+   The two sections must never scroll independently (wheel or automatic).
+   Keep the existing 62px bus row size and content-based height allocation. */
+body.freewifi-tv #bus-rows.freewifi-bus-grouped > .freewifi-bus-group,
+html.company-pc body.freewifi-tv #bus-rows.freewifi-bus-grouped > .freewifi-bus-group {
+  overflow-y:hidden!important;
+  overflow-x:hidden!important;
+  overscroll-behavior:none!important;
+  scroll-behavior:auto!important;
+  scrollbar-width:none!important;
+}
+body.freewifi-tv #bus-rows.freewifi-bus-grouped > .freewifi-bus-group::-webkit-scrollbar {
+  display:none!important;
+}
