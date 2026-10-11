@@ -4738,36 +4738,22 @@
     applyModes();
     const railRows = nextRows('rail', now);
     const airRows = liveFlightRows(now) || nextRows('air', now);
-    // Rolling 2-hour bus horizon stays the default. When departures are
-    // sparse, show the next scheduled departures (tonight or tomorrow) until
-    // four rows are available, no further than 12 hours. Arrivals stay 2h.
+    // Bus departures and arrivals are TODAY ONLY. When departures are sparse,
+    // fill from later tonight (up to four rows), but NEVER include tomorrow's
+    // first buses just to fill an empty screen. Day changes at local midnight.
+    // Arrivals retain the rolling 2-hour window, clipped to today's 23:59.
     const BUS_LOOKAHEAD_MINUTES=120;
     const BUS_MIN_DEPARTURES=4;
     const BUS_SPARSE_EXTENSION_MINUTES=720;
     const showingBusDepartures=currentDirection()==='departure';
-    const busLimit=now.minutes+BUS_LOOKAHEAD_MINUTES;
-    const busFutureLimit=now.minutes+(showingBusDepartures
-      ? BUS_SPARSE_EXTENSION_MINUTES : BUS_LOOKAHEAD_MINUTES);
-    const todayBus=nextRows('bus',now)
-      .filter(r=>Number.isFinite(rMinutes(r)) && rMinutes(r)>=now.minutes &&
-        rMinutes(r)<=busFutureLimit);
-    const tomorrowBus=[];
-    if(busFutureLimit>=1440){
-      const tomorrowIso=shiftIso(now.iso,1);
-      const future=getBoardRecords('bus',{
-        ...now,iso:tomorrowIso,dow:dayContext(tomorrowIso).dow
-      });
-      future.forEach(r=>{
-        const m=rMinutes(r)+1440;
-        if(Number.isFinite(m) && m>=now.minutes && m<=busFutureLimit){
-          tomorrowBus.push({...r,minutes:m,isNextDayStart:true,_serviceIso:tomorrowIso});
-        }
-      });
-    }
-    const futureBus=[...todayBus,...tomorrowBus]
-      .sort((a,b)=>rMinutes(a)-rMinutes(b));
+    const busLimit=Math.min(1439,now.minutes+BUS_LOOKAHEAD_MINUTES);
+    const busFutureLimit=Math.min(1439,now.minutes+(showingBusDepartures
+      ? BUS_SPARSE_EXTENSION_MINUTES : BUS_LOOKAHEAD_MINUTES));
+    const futureBus=nextRows('bus',now).filter(r=>{
+      const m=rMinutes(r);
+      return Number.isFinite(m) && m>=now.minutes && m<=busFutureLimit;
+    }).sort((a,b)=>rMinutes(a)-rMinutes(b));
     const primaryBus=futureBus.filter(r=>rMinutes(r)<=busLimit);
-    // Fill the gap with nearest upcoming services, not an arbitrary 12h list.
     const busRows=showingBusDepartures && primaryBus.length<BUS_MIN_DEPARTURES
       ? futureBus.slice(0,BUS_MIN_DEPARTURES) : primaryBus;
     const portRows = nextRows('port', now);
