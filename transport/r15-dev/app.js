@@ -3532,7 +3532,9 @@
       const msg = dep ? '今後2時間以内の出発便はありません' : '今後2時間以内の到着便はありません';
       root.innerHTML = `<div class="bus-end-state"><div class="bus-end-mode">🚌 ${mode}</div><div class="bus-end-message">${msg}</div></div>`;
     } else {
-      const isRegional=r=>r.kind==='midbus' || /kumakogen|misaki|uwajima_bus|setouchi_omishima|iyotetsu_niihama/.test(String(r.source||'')) || /久万高原|三崎港口|宇和島|城辺|大三島|宮浦港|新居浜/.test(String(r.origin||r.dest||''));
+      // Ferry-shuttle buses bound for/from Toyo Port are REGIONAL buses.
+      // They are bus services (not the ferry itself), on both directions.
+      const isRegional=r=>r.kind==='midbus' || (r.kind==='ferrybus' && /東予港|orange_ferry_shuttle/.test(String(r.dest||'')+' '+String(r.origin||'')+' '+String(r.source||''))) || /kumakogen|misaki|uwajima_bus|setouchi_omishima|iyotetsu_niihama|orange_ferry_shuttle/.test(String(r.source||'')) || /久万高原|三崎港口|宇和島|城辺|大三島|宮浦港|新居浜|東予港/.test(String(r.origin||r.dest||''));
       const regional=rows.filter(isRegional);
       const longDistance=rows.filter(r=>!isRegional(r));
       const grouped=FREEWIFI_TV;
