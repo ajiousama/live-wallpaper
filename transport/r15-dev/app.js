@@ -1026,7 +1026,7 @@
     const uwajimaDep=['06:20','07:00','07:30','08:30','10:00','11:00','12:30','14:00','16:00','18:20'];
     const uwajimaArr=['08:14','09:09','09:39','10:24','11:54','13:09','14:24','16:09','18:09','20:14'];
     uwajimaDep.forEach((t,i)=>add('uwajima_bus_official_in','宇和島自動車',
-      [2,3,4].includes(i)?'城辺・宇和島':'宇和島','松山市駅',t,uwajimaArr[i],
+      '宇和島','松山市駅',t,uwajimaArr[i],
       'https://www.uwajima-bus.co.jp/matsuyama'));
     // 新居浜駅 -> JR松山駅前. The two early arrivals 08:25 are alternate
     // operating-day slots at the same time; show them as one display event.
@@ -1041,6 +1041,11 @@
     imabariDep.forEach((t,i)=>add('setouchi_omishima_official_in',
       'せとうちバス','今治桟橋','松山市駅',t,imabariArr[i],
       'https://www.setouchibus.co.jp/rosen/omishima.html'));
+    // 三崎港口 -> 松山市駅: the through service departing 06:42.
+    // The later 15:30 service ends at 八幡浜; do not invent a Matsuyama arrival.
+    add('iyotetsu_misaki_official_in','伊予鉄南予バス','三崎港口',
+      '松山市駅','06:42','09:46',
+      'https://www.iyotetsu.co.jp/rosen/bus/time202604/all.pdf');
     return rows;
   }
 
