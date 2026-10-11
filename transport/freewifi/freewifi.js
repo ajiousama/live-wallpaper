@@ -75,7 +75,13 @@
     if(!page.gamble && !page.cinema){
       const controller = ui();
       if(controller && typeof controller.setMode === 'function'){
-        controller.setMode(page.mode, page.duration);
+        // The transport renderer may fail on one record. Never allow that
+        // exception to cancel the workplace wallpaper's page rotation.
+        try {
+          controller.setMode(page.mode, page.duration);
+        } catch (error) {
+          console.warn('Transport renderer failed; rotation continues', error);
+        }
       }
     }
 
@@ -92,6 +98,11 @@
     }
 
     nextPageAt = Date.now() + page.duration;
+    // Expose a separate heartbeat for the inline watchdog: cinema lasts 30s,
+    // so do not use a fixed 20-second "stuck" threshold.
+    document.documentElement.dataset.companyPageIndex = String(pageIndex);
+    document.documentElement.dataset.companyPageDue = String(nextPageAt);
+    document.documentElement.dataset.companyPageChanged = String(Date.now());
     updatePageCountdown();
     scheduleNextPage();
   }
@@ -116,4 +127,13 @@
 
   showPage(0);
   setInterval(updatePageCountdown, 1000);
+  // Lively's WebView may throttle or drop a long setTimeout after sleeping.
+  // This independent clock check restores page switching, even when the
+  // queued timeout was lost. A hidden/resumed WebView advances one page.
+  setInterval(()=>{
+    if(Date.now() > nextPageAt + 1250) showPage(pageIndex + 1);
+  }, 1000);
+  window.addEventListener('pageshow',()=>{
+    if(Date.now() > nextPageAt + 1250) showPage(pageIndex + 1);
+  });
 })();
