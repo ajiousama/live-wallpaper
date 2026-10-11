@@ -444,9 +444,11 @@ async function getIchitsubo(now: { minutes: number }) {
       if (diff > 720) diff -= 1440;
     }
 
-    const deadhead = isDeadhead(pos, route);
-    const freight = isFreight(pos, route);
-    const passing = deadhead || freight || route.passOnly;
+    const specialKind = liveSpecialKind(pos, route);
+    const deadhead = specialKind === "deadhead";
+    const freight = specialKind === "freight";
+    const unclassified = specialKind === "unknown";
+    const passing = deadhead || freight || unclassified || route.passOnly;
     const threshold = deadhead || freight ? 2 : passing ? 1 : 4;
 
     if (Number.isFinite(diff) && !(diff >= 0 && diff <= threshold)) return null;
@@ -454,6 +456,7 @@ async function getIchitsubo(now: { minutes: number }) {
     let message = "";
     if (deadhead) message = "まもなく　市坪駅を　回送列車が通過します";
     else if (freight) message = "まもなく　市坪駅を　貨物列車が通過します";
+    else if (unclassified) message = "まもなく　市坪駅付近を　種別未確認の列車が通ります";
     else if (route.passOnly) message = `まもなく　市坪駅を　${displayName(pos, route)}が通過します`;
     else message = `まもなく　市坪駅に　${route.destination}行がまいります`;
 
@@ -461,7 +464,7 @@ async function getIchitsubo(now: { minutes: number }) {
       alert: true,
       message,
       trainNum: String(pos.TrainNum),
-      kind: deadhead ? "deadhead" : freight ? "freight" : route.passOnly ? "pass" : "stop",
+      kind: deadhead ? "deadhead" : freight ? "freight" : unclassified ? "unknown" : route.passOnly ? "pass" : "stop",
       destination: route.destination,
       direction: ichitsuboRouteDirection(route),
       position: String(pos.Pos ?? ""),
@@ -550,7 +553,15 @@ async function getIchitsubo(now: { minutes: number }) {
   const matsuyamaSchedule = [...diagram.values()].map((route) => {
     if (route.matsuyamaDepartureIndex < 0 || !/^\d{1,2}:\d{2}$/.test(route.matsuyamaDepartureTime)) return null;
     const num = String(route.trainNum || "").trim();
-    if (/^[0-9]{1,4}[AER]$/i.test(num) || /^(?:3072|3073)$/.test(num)) return null;
+    if (/^[0-9]{1,4}[AE]$/i.test(num) || /^(?:3072|3073)$/.test(num)) return null;
+    // A train ending in R is a passenger departure only if the live feed
+    // explicitly identifies it as such; otherwise it is shown as a separately
+    // observed, type-unconfirmed movement.
+    if (/^[0-9]{1,4}R$/i.test(num)) {
+      const observed = positionByTrain.get(num);
+      if (!observed || !/^(?:普通|各停|各駅停車|local|regional|rapid)(?:$|[:：])/i
+        .test(String(observed.Type ?? observed.type ?? observed.TrainType ?? "").trim())) return null;
+    }
     const direction = matsuyamaRouteDirection(route);
     if (!direction) return null;
 
@@ -590,7 +601,12 @@ async function getIchitsubo(now: { minutes: number }) {
   const matsuyamaTerminatingArrivals = [...diagram.values()].map((route) => {
     const num = String(route.trainNum || "").trim();
     if (!routeTerminatesAtMatsuyama(route)) return null;
-    if (/^[0-9]{1,4}[AER]$/i.test(num) || /^(?:3072|3073)$/.test(num)) return null;
+    if (/^[0-9]{1,4}[AE]$/i.test(num) || /^(?:3072|3073)$/.test(num)) return null;
+    if (/^[0-9]{1,4}R$/i.test(num)) {
+      const observed = positionByTrain.get(num);
+      if (!observed || !/^(?:普通|各停|各駅停車|local|regional|rapid)(?:$|[:：])/i
+        .test(String(observed.Type ?? observed.type ?? observed.TrainType ?? "").trim())) return null;
+    }
     const side = matsuyamaInboundSide(route);
     if (!side) return null;
 
