@@ -9,10 +9,17 @@
 <title>松山交通総合発着案内 R15</title>
 <script>
 (function(){
-  var target='../freewifi/';
-  var u=new URL(target,location.href);
-  new URLSearchParams(location.search).forEach(function(v,k){u.searchParams.set(k,v);});
+  // This path is the actual entry point of Matsuyama_Transport_R15
+  // Lively_Direct.zip. Force it onto the maintained workplace transport UI.
+  var u=new URL('../freewifi/',location.href);
+  var q=new URLSearchParams(location.search);
+  q.forEach(function(v,k){
+    if(!/^(_reload|_pc_reload|_pc_boot|boot)$/i.test(k))u.searchParams.set(k,v);
+  });
   u.searchParams.set('pc','1');
+  u.searchParams.set('lively','1');
+  u.searchParams.set('v',document.documentElement.getAttribute('data-build')||'__BUILD_ID__');
+  u.searchParams.set('_lively_entry',String(Date.now()));
   u.hash=location.hash||'';
   location.replace(u.href);
 })();
