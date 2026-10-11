@@ -1041,11 +1041,11 @@
     // 2026-04-01 current official through-running 特急. Some services
     // originate at 宮浦港 and run through 今治桟橋; do not mislabel origins.
     const imabariTrips=[
-      ['今治桟橋','06:45','07:57'],
+      ['今治桟橋','06:38','07:57'],
       ['宮浦港','06:28','08:49'],
-      ['今治桟橋','09:00','10:12'],
-      ['今治桟橋','12:40','13:52'],
-      ['今治桟橋','14:40','15:52'],
+      ['今治桟橋','08:53','10:12'],
+      ['今治桟橋','12:33','13:52'],
+      ['今治桟橋','14:33','15:52'],
       ['宮浦港','15:00','17:21']
     ];
     imabariTrips.forEach(([origin,dep,arr])=>add('setouchi_omishima_official_in',
@@ -3522,9 +3522,9 @@
           root.appendChild(group);
         }
       } else root.classList.remove('freewifi-bus-grouped');
-      // Reserve four of nine visible rows for distinct regional corridors.
-      // Otherwise a high-frequency single line (久万高原, for example)
-      // pushes every other medium-distance route off the arrival board.
+      // Five regional corridors: 久万高原、宇和島、新居浜、今治・大三島、三崎.
+      // Give each corridor one row before repeating any route. This avoids
+      // flooding the workplace screen with high-frequency 久万高原 services.
       const regionalCorridor=r=>{
         const src=String(r.source||'');
         const place=String(r.origin||r.dest||'');
@@ -3543,16 +3543,11 @@
           used.add(corridor);selected.push(row);
           if(selected.length>=limit)break;
         }
-        if(selected.length<limit){
-          for(const row of entries){
-            if(selected.includes(row))continue;
-            selected.push(row);
-            if(selected.length>=limit)break;
-          }
-        }
+        // Never backfill empty regional slots with multiple trips from one
+        // corridor: absent routes must be truly absent, not concealed by Kuma.
         return selected.sort((a,b)=>rMinutes(a)-rMinutes(b));
       };
-      const selected=grouped?[...longDistance.slice(0,5),...diversifyRegional(regional,4)]:rows;
+      const selected=grouped?[...longDistance.slice(0,4),...diversifyRegional(regional,5)]:rows;
       selected.forEach(r => {
       const row = document.createElement('div'); row.className = `row${r.isFinal?' is-final':''}${dep && isDepartSoon(r, japanNow()) ? ' depart-soon' : ''}`;
       const firstBadge = r.isNextDayStart ? badgeHtml('first', dep ? '始発' : '初便') : '';
