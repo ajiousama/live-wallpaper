@@ -2422,9 +2422,14 @@ body.freewifi-tv #bus-rows.freewifi-bus-grouped > .freewifi-bus-group {
   overflow-y:auto!important;
   overflow-x:hidden!important;
   overscroll-behavior:contain;
-  scroll-behavior:smooth;
+  scroll-behavior:auto!important; /* restore on refresh without animating backwards */
   align-content:start!important;
   grid-auto-rows:minmax(43px, 53px)!important;
   scrollbar-width:thin!important;
   scrollbar-color:rgba(157,190,220,.65) transparent;
+}
+body.freewifi-tv #bus-rows.freewifi-bus-grouped > .freewifi-bus-group > .freewifi-bus-group-head {
+  position:sticky!important;
+  top:0!important;
+  z-index:4!important;
 }
