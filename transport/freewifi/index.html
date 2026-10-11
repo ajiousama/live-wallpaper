@@ -40,6 +40,8 @@
           if(Date.now()-lastAttempt<60000)return;
           lastAttempt=Date.now();
           pending=true;
+          // If Lively suppresses navigation, keep polling on the next cycle.
+          setTimeout(()=>{pending=false;},10000);
           const url=new URL(location.href);
           url.searchParams.set('pc','1');
           url.searchParams.set('v',latest);
