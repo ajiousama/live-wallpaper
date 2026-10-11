@@ -259,5 +259,36 @@
   <script src="../r15-dev/schedule.js?v=__BUILD_ID__"></script>
   <script src="../r15-dev/app.js?v=__BUILD_ID__"></script>
   <script src="freewifi.js?v=__BUILD_ID__"></script>
+  <script>
+    // Lively watchdog: independently recover the nine-page rotation when
+    // the external switcher fails to initialize or stops advancing.
+    (function(){
+      if(!document.documentElement.classList.contains('company-pc'))return;
+      var last='',unchanged=0;
+      setInterval(function(){
+        var el=document.getElementById('freewifi-page-status');
+        if(!el)return;
+        var label=String(el.textContent||'');
+        var match=label.match(/^(\d{2})\s*\/\s*(\d{2})/);
+        if(!match || Number(match[2])!==9){
+          unchanged++;
+        }else{
+          if(match[1]!==last){last=match[1];unchanged=0;return;}
+          unchanged++;
+        }
+        if(unchanged>=4){
+          unchanged=0;
+          var next=document.getElementById('web-page-next');
+          if(next)next.click();
+          if(!match || Number(match[2])!==9){
+            var u=new URL(location.href);
+            u.searchParams.set('pc','1');
+            u.searchParams.set('_recover',String(Date.now()));
+            location.replace(u.href);
+          }
+        }
+      },5000);
+    })();
+  </script>
 </body>
 </html>
