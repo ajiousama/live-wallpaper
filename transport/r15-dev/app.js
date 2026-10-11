@@ -173,9 +173,10 @@
   }
   function liveRailPassengerRows(rows,now) {
     if(!jrPositionFeedFresh() || boardDisplayIso('rail',now)!==now.iso) return [];
+    const specialNums=new Set((approachLive.ichitsubo?.matsuyamaSpecialTrains||[]).map(x=>String(x.trainNum||'')));
     const active=Array.isArray(approachLive.ichitsubo?.matsuyamaActiveTrains)
       ? approachLive.ichitsubo.matsuyamaActiveTrains.filter(x=>
-          x && String(x.trainNum||'').trim() && jrPositionUsable(x.position))
+          x && String(x.trainNum||'').trim() && !specialNums.has(String(x.trainNum||'')) && jrPositionUsable(x.position))
       : [];
     const taken=new Set();
     return rows.flatMap(r=>{
@@ -1489,10 +1490,11 @@
           const active=Array.isArray(approachLive.ichitsubo?.matsuyamaActiveTrains)
             ? approachLive.ichitsubo.matsuyamaActiveTrains : [];
           const known=new Set(verified.map(v=>String(v.liveTrainNum||'')));
+          const specialNums=new Set((approachLive.ichitsubo?.matsuyamaSpecialTrains||[]).map(x=>String(x.trainNum||'')));
           const extras=[];
           for(const x of active){
             const num=String(x.trainNum||'').trim(),time=padTime(x.departure||'');
-            if(!num || !(/^[0-9]{2}:[0-9]{2}$/.test(time)) ||
+            if(!num || specialNums.has(num) || !(/^[0-9]{2}:[0-9]{2}$/.test(time)) ||
                 !['north','south'].includes(String(x.direction||'')) ||
                 !jrPositionUsable(x.position) || toMinutes(time)<now.minutes ||
                 known.has(num)) continue;
@@ -2277,6 +2279,14 @@
       out.push(`<span class="rail-position-live">📍 現在位置 ${position}｜${badge}${destText}${delayText}</span>`);
     };
 
+    for(const x of matsuyamaObservedSpecialRows(now)){
+      const badge=railServiceBadgeHtml(x.kind);
+      const destination=x.destination?'｜'+railSpecialText(x.destination)+'方面':'';
+      const event=x.stationConfirmed?'｜松山駅 当日ダイヤ照合':'｜松山駅発着未確認';
+      out.push('<span class="rail-position-live">📍'+badge+' '+railSpecialText(x.trainNum)+
+        '｜現在位置 '+railSpecialText(x.position)+destination+event+'</span>');
+    }
+
     const approaching=Array.isArray(approachLive.ichitsubo?.approaching)
       ? approachLive.ichitsubo.approaching
       : [];
@@ -2616,6 +2626,8 @@
     }
     if(kind==='deadhead') return '<span class="rail-kind-badge rail-kind-deadhead">回送</span>';
     if(kind==='freight') return '<span class="rail-kind-badge rail-kind-freight">貨物</span>';
+    if(kind==='test') return '<span class="rail-kind-badge rail-kind-test">試運転</span>';
+    if(kind==='extra') return '<span class="rail-kind-badge rail-kind-extra">臨時*</span>';
     return '<span class="rail-kind-badge rail-kind-local">普通</span>';
   }
 
@@ -2805,6 +2817,54 @@
     root.appendChild(row);
   }
 
+
+  // Real-time exceptional movements, including unlisted test runs, are NOT
+  // passenger departures. Never turn a position into a made-up station time.
+  function matsuyamaObservedSpecialRows(now) {
+    if (!jrPositionFeedFresh()) return [];
+    const all=Array.isArray(approachLive.ichitsubo?.matsuyamaSpecialTrains)
+      ? approachLive.ichitsubo.matsuyamaSpecialTrains : [];
+    const alreadyShown=new Set([
+      ...matsuyamaDeadheadArrivals(now).map(x=>String(x.trainNum||'')),
+      ...matsuyamaFreightPasses(now).filter(x=>jrPositionUsable(x.position))
+        .map(x=>String(x.trainNum||''))
+    ]);
+    const side=currentRailDir();
+    return all.filter(x=>x && jrPositionUsable(x.position) &&
+      !alreadyShown.has(String(x.trainNum||'')) &&
+      (x.corridor===side || x.corridor==='both' || x.corridor==='unknown'));
+  }
+  function railSpecialText(value) {
+    return String(value??'').replace(/[&<>"']/g, c=>({
+      '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+    })[c]);
+  }
+  function appendObservedSpecialTrainRow(root, x) {
+    const row=document.createElement('div');
+    row.className='row rail-row special-movement-row';
+    const kind=['test','deadhead','freight','extra'].includes(x.kind)?x.kind:'extra';
+    const event={
+      pass:'松山 通過予定', arrival:'松山 到着予定',
+      departure:'松山 発車予定',arrival_departure:'松山 発着予定'
+    }[x.stationEvent] || '松山駅発着未確認';
+    const time=/^([01]?\d|2[0-3]):[0-5]\d$/.test(String(x.stationTime||''))
+      ? x.stationTime : '時刻未確認';
+    const details=[
+      '列車番号 '+railSpecialText(x.trainNum),
+      '📍現在位置 '+railSpecialText(x.position),
+      x.destination?'行先 '+railSpecialText(x.destination):'行先未確認',
+      x.stationConfirmed?'松山駅の情報は当日ダイヤ照合':'松山駅の停車・通過は未確認'
+    ];
+    if(x.delayMinutes>0)details.push(railSpecialText(x.delayMinutes)+'分遅れ');
+    row.innerHTML='<div class="rail-primary">'+
+      '<div class="cell rail-service '+kind+'"><span class="kindtxt">'+
+      railServiceBadgeHtml(kind)+'<span class="rail-name-badge">'+railSpecialText(x.trainNum)+'</span></span></div>'+
+      '<div class="cell time">'+railSpecialText(time)+'</div>'+
+      '<div class="cell main">'+event+'</div></div>'+
+      '<div class="rail-detail">'+tickerHtml(details)+'</div>';
+    root.appendChild(row);
+  }
+
   function appendMatsuyamaDeadheadRow(root, x) {
     const row=document.createElement('div');
     row.className='row rail-row deadhead-row';
@@ -2905,6 +2965,11 @@
       })(),
       data: x
     }));
+    const observedSpecials=matsuyamaObservedSpecialRows(now).map(x=>({
+      _special: true,
+      _sortMinutes: now.minutes+2,
+      data:x
+    }));
     const terminalArrivals = matsuyamaTerminatingArrivals(now).map(x => ({
       _deadhead: false,
       _freight: false,
@@ -2924,7 +2989,7 @@
       data: r
     }));
     const limit=FREEWIFI_TV ? (document.documentElement.classList.contains('company-pc') ? 9 : 8) : 3;
-    const candidates=[...services, ...terminalArrivals, ...deadheads, ...freights]
+    const candidates=[...services, ...terminalArrivals, ...deadheads, ...freights, ...observedSpecials]
       .sort((a,b)=>a._sortMinutes-b._sortMinutes);
     const visible=candidates.slice(0,limit);
     // A confirmed upcoming terminal arrival must not disappear solely because
@@ -2954,6 +3019,21 @@
       }
     }
 
+    // Keep a verified special movement on the workplace board even when all
+    // the normal departure slots are full. Preserve official named arrivals.
+    if(FREEWIFI_TV && visible.length===limit){
+      const special=candidates.find(x=>x._special);
+      if(special && !visible.includes(special)){
+        const replaceAt=visible.findLastIndex(x=>!x._special &&
+          !(x._terminalArrival && x.data?.isOfficialScheduled) &&
+          !(x._freight && jrPositionUsable(x.data?.position)));
+        if(replaceAt>=0){
+          visible[replaceAt]=special;
+          visible.sort((a,b)=>a._sortMinutes-b._sortMinutes);
+        }
+      }
+    }
+
     if (!visible.length) {
       // A missing live fix must never be described as an ended service.
       const mode=currentRailDir()==='north'?'NORTHBOUND — 今治方面 —':'SOUTHBOUND — 宇和島方面 —';
@@ -2961,6 +3041,10 @@
       root.insertAdjacentHTML('beforeend',`<div class="rail-end-state"><div class="rail-end-mode">🚆 ${mode}</div><div class="rail-end-message">現在表示できる列車はありません</div></div>`);
     } else {
       visible.forEach(item => {
+        if(item._special){
+          appendObservedSpecialTrainRow(root,item.data);
+          return;
+        }
         if(item._deadhead){
           appendMatsuyamaDeadheadRow(root,item.data);
           return;
