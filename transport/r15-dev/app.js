@@ -3502,6 +3502,7 @@
   const busGroupOffsets={departure:{long:0,regional:0},arrival:{long:0,regional:0}};
   const busManualUntil={departure:{long:0,regional:0},arrival:{long:0,regional:0}};
   let busGroupDay='';
+  let busGroupRenderedDirection=null;
   function renderBus(rows) {
     const now=japanNow();
     const root = $('bus-rows');
@@ -3514,14 +3515,16 @@
           busManualUntil[direction][kind]=0;
         }
       }
-    }else{
-      // Frequent refreshes must not snap an auto-scrolling list back to zero.
+    }else if(busGroupRenderedDirection){
+      // A redraw may occur immediately after switching departure/arrival.
+      // Save the *previous* screen's scroll, not the new direction's slot.
       for(const kind of ['long','regional']){
         const previous=root.querySelector('.freewifi-bus-'+kind);
-        if(previous)busGroupOffsets[dir][kind]=previous.scrollTop;
+        if(previous)busGroupOffsets[busGroupRenderedDirection][kind]=previous.scrollTop;
       }
     }
     root.innerHTML = '';
+    busGroupRenderedDirection=dir;
     const dep = dir === 'departure';
     root.classList.remove('bus-end');
     if (!rows.length) {
