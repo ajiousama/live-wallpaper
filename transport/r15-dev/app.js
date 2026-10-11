@@ -3499,43 +3499,30 @@
   }
   // Keep a separate scroll position for inbound/outbound bus departures.
   // The service list is redrawn after each live-data refresh.
-  const busGroupOffsets={departure:{long:0,regional:0},arrival:{long:0,regional:0}};
-  const busManualUntil={departure:{long:0,regional:0},arrival:{long:0,regional:0}};
-  let busGroupDay='';
-  let busGroupRenderedDirection=null;
-  // Reserve only the rows needed by the regional bus group (departures
-  // AND arrivals); give all remaining height to express/highway services.
-  // Both groups retain independent scrolling if the 2h window is crowded.
-  function regionalBusGroupHeight(available, expressCount, regionalCount) {
+  // Keep only the services that fit on the fixed-size workplace board.
+  // No automatic or manual scrolling is needed; every page refresh moves
+  // the two-hour timetable window forward and picks the next upcoming buses.
+  function visibleBusSlots(available, expressCount, regionalCount) {
     const total=Number(available)>160 ? Number(available) : 480;
-    const wanted=count=>30+Math.max(1,count)*50; // 24px heading + 48px/row + gaps
-    const minimum=80; // heading and at least one readable/empty bus row
-    const expressReserve=Math.min(wanted(expressCount),Math.max(minimum,Math.floor((total-5)*0.55)));
-    return Math.max(minimum,Math.min(wanted(regionalCount),total-expressReserve-5));
+    const header=24, pitch=64, gapBetweenGroups=5, outerGuard=14;
+    const capacity=Math.max(2,Math.floor((total-2*header-gapBetweenGroups-outerGuard)/pitch));
+    const reserve=Math.max(1,Math.ceil(capacity*.55));
+    let express=Math.min(expressCount,reserve);
+    let regional=Math.min(regionalCount,Math.max(0,capacity-express));
+    if(expressCount && regionalCount && regional===0) {
+      regional=1; express=Math.min(expressCount,capacity-1);
+    }
+    let remaining=capacity-express-regional;
+    const moreExpress=Math.min(remaining,Math.max(0,expressCount-express));
+    express+=moreExpress; remaining-=moreExpress;
+    regional+=Math.min(remaining,Math.max(0,regionalCount-regional));
+    return {express,regional,regionalHeight:header+regional*pitch,capacity};
   }
   function renderBus(rows) {
     const now=japanNow();
     const root = $('bus-rows');
-    const dir=currentDirection();
-    if(busGroupDay!==now.iso){
-      busGroupDay=now.iso;
-      for(const direction of ['departure','arrival']){
-        for(const kind of ['long','regional']){
-          busGroupOffsets[direction][kind]=0;
-          busManualUntil[direction][kind]=0;
-        }
-      }
-    }else if(busGroupRenderedDirection){
-      // A redraw may occur immediately after switching departure/arrival.
-      // Save the *previous* screen's scroll, not the new direction's slot.
-      for(const kind of ['long','regional']){
-        const previous=root.querySelector('.freewifi-bus-'+kind);
-        if(previous)busGroupOffsets[busGroupRenderedDirection][kind]=previous.scrollTop;
-      }
-    }
     root.innerHTML = '';
-    busGroupRenderedDirection=dir;
-    const dep = dir === 'departure';
+    const dep = currentDirection() === 'departure';
     root.classList.remove('bus-end');
     if (!rows.length) {
       root.classList.add('bus-end');
@@ -3549,9 +3536,11 @@
       const grouped=FREEWIFI_TV;
       const adaptiveBusLayout=grouped &&
         document.documentElement.classList.contains('company-pc');
-      if(adaptiveBusLayout){
-        root.style.setProperty('--company-bus-regional-height',
-          Math.round(regionalBusGroupHeight(root.clientHeight,longDistance.length,regional.length))+'px');
+      const availableSlots=adaptiveBusLayout
+        ? visibleBusSlots(root.clientHeight,longDistance.length,regional.length)
+        : null;
+      if(availableSlots) {
+        root.style.setProperty('--company-bus-regional-height',availableSlots.regionalHeight+'px');
       }else{
         root.style.removeProperty('--company-bus-regional-height');
       }
@@ -3566,10 +3555,14 @@
           root.appendChild(group);
         }
       } else root.classList.remove('freewifi-bus-grouped');
-      // These are upcoming *services*, not one mandatory slot per route.
-      // Preserve every confirmed bus, ordered by its actual departure or
-      // arrival time. Later services are reachable by scrolling each group.
-      const selected=rows.slice().sort((a,b)=>rMinutes(a)-rMinutes(b));
+      // Display the first services by actual clock time, never one per route.
+      // Overflow is omitted until later departures/arrivals fall into view.
+      const visible=availableSlots
+        ? new Set([...longDistance.slice(0,availableSlots.express),
+                   ...regional.slice(0,availableSlots.regional)])
+        : null;
+      const selected=rows.filter(r=>!visible||visible.has(r))
+        .sort((a,b)=>rMinutes(a)-rMinutes(b));
       selected.forEach(r => {
       const row = document.createElement('div'); row.className = `row${r.isFinal?' is-final':''}${dep && isDepartSoon(r, japanNow()) ? ' depart-soon' : ''}`;
       const firstBadge = r.isNextDayStart ? badgeHtml('first','翌日') : '';
@@ -3610,45 +3603,13 @@
       }
       (grouped?(isRegional(r)?regionalRoot:longRoot):root).appendChild(row);
       });
-      if(grouped)for(const [group,records] of [[longRoot,longDistance],[regionalRoot,regional]]) {
-        if(!records.length){const empty=document.createElement('div');empty.className='row placeholder';empty.textContent='該当する便はありません';group.appendChild(empty);}
-      }
       if(grouped){
-        const dir=dep?'departure':'arrival';
-        for(const [kind,group] of [['long',longRoot],['regional',regionalRoot]]){
-          group.scrollTop=busGroupOffsets[dir][kind];
-          group.dataset.manualUntil=String(busManualUntil[dir][kind]);
-          group.addEventListener('scroll',()=>{
-            busGroupOffsets[dir][kind]=group.scrollTop;
-          },{passive:true});
-          // Manual wheel movement pauses automation, even across redraws.
-          group.addEventListener('wheel',()=>{
-            busManualUntil[dir][kind]=Date.now()+12000;
-            group.dataset.manualUntil=String(busManualUntil[dir][kind]);
-          },{passive:true});
-        }
+        if(!longDistance.length)longRoot.querySelector('.freewifi-bus-group-head').textContent+='（該当便なし）';
+        if(!regional.length)regionalRoot.querySelector('.freewifi-bus-group-head').textContent+='（該当便なし）';
       }
     }
     activatePanelOverflow(root);
-    restoreScroll('bus'); attachScrollMemory('bus');
   }
-  // Scroll only while the bus page is actually visible.
-  // Each 3-second step advances roughly one bus, then loops from the top.
-  // Rebuilds happen on API refresh; busGroupOffsets keeps the user's place.
-  setInterval(()=>{
-    if(!FREEWIFI_TV || !$('panel-bus')?.classList.contains('freewifi-active'))return;
-    const groups=$('bus-rows')?.querySelectorAll('.freewifi-bus-group');
-    if(!groups)return;
-    groups.forEach(group=>{
-      if(Date.now()<Number(group.dataset.manualUntil||0))return;
-      if(group.scrollHeight<=group.clientHeight+8)return;
-      const row=group.querySelector('.row');
-      const step=Math.max(36,row?.getBoundingClientRect().height||48);
-      const target=group.scrollTop+group.clientHeight>=group.scrollHeight-6
-        ? 0 : Math.min(group.scrollHeight-group.clientHeight,group.scrollTop+step);
-      group.scrollTo({top:target,behavior:'smooth'});
-    });
-  },3000);
   function renderPort(rows) {
     const root = $('port-rows');
     // Preserve the persistent ticker when the ferry rows are redrawn.
