@@ -955,6 +955,52 @@
       ['07:45','08:45','09:45','11:05','12:40','13:15','14:45','16:05','17:05','18:20','19:20','20:20'],
       ['10:35','11:35','12:35','13:55','15:05','16:05','17:35','18:55','19:30','21:10','22:10','23:10'],
       'https://www.jr-shikokubus.co.jp/businfo/bocchan_ex/matsuyama.html');
+    // 2026-05-19 JR official operating schedule: Kansai -> JR Matsuyama.
+    // Friday/Saturday only: first Osaka 06:30 service (△ in operator PDF).
+    // Overnight 00:00 and 05:40 arrivals depart Kansai the previous day.
+    const kansaiJr=[
+      ['JR大阪駅','06:30','12:31','西日本JRバス','fri_sat'],
+      ['JR大阪駅','08:00','14:01','西日本JRバス'],
+      ['JR大阪駅','10:10','16:08','JR四国バス'],
+      ['JR大阪駅','11:40','17:38','JR四国バス'],
+      ['JR大阪駅','13:20','19:27','西日本JRバス'],
+      ['京都駅中央口','12:50','20:08','JR四国バス'],
+      ['JR大阪駅','15:20','21:20','西日本JRバス'],
+      ['JR大阪駅','16:25','22:33','JR四国バス'],
+      ['JR大阪駅','17:55','00:00','西日本JRバス','previous'],
+      ['京都駅中央口','21:20','05:40','JR四国バス','previous']
+    ];
+    const serviceWeekday=new Date(iso+'T12:00:00+09:00').getDay();
+    kansaiJr.forEach(([origin,depart,arrive,operator,condition],i)=>{
+      if(condition==='fri_sat' && ![5,6].includes(serviceWeekday))return;
+      out.push({id:'verified-jr-kansai-in-'+iso+'-'+i,
+        board:'bus',kind:'bus',direction:'arrival',
+        source:'jr_kansai_official_in',service:operator,
+        origin,dest:'JR松山駅',time:arrive,
+        originDepartureTime:depart,
+        originDepartureDay:condition==='previous'?'前日':'',
+        arrivalTerminal:'JR松山駅',arrivalTerminalTime:arrive,
+        noSyntheticArrival:true,
+        info:'松山エクスプレス／京阪神ドリーム松山・2026年5月19日減便ダイヤ',
+        timetableReference:'https://www.jr-shikokubus.co.jp/news/2026/05/82d2a07ba7df0e45584aa4eaa4845505f79ebfd5.pdf'});
+    });
+    // Kirara Express Fukuyama -> Matsuyama: 2 daily trains, NOT
+    // the currently suspended 08:30 and 14:20 departures.
+    // All buses are suspended for Cycling Shimanami on 2026-10-25.
+    if(iso!=='2026-10-25'){
+      [['10:30','13:10','中国バス／本四バス'],
+       ['16:40','19:25','しまなみバス／伊予鉄バス']]
+        .forEach(([depart,arrive,operator],i)=>{
+          out.push({id:'verified-kirara-in-'+iso+'-'+i,
+            board:'bus',kind:'bus',direction:'arrival',
+            source:'kirara_official_in',service:operator,
+            origin:'福山駅前',dest:'松山市駅',time:arrive,
+            originDepartureTime:depart,arrivalTerminal:'松山市駅',
+            arrivalTerminalTime:arrive,noSyntheticArrival:true,
+            info:'キララエクスプレス・運行便のみ',
+            timetableReference:'https://www.iyotetsu.co.jp/kousoku/hiroshima.html'});
+        });
+    }
     // マドンナエクスプレス（岡山 -> 松山）
     add('岡山駅西口','okayama_official_in',
       ['両備バス','下津井電鉄','JR四国バス','伊予鉄バス'],
