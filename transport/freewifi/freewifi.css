@@ -2489,3 +2489,34 @@ html.company-pc body.freewifi-tv #bus-rows.freewifi-bus-grouped > .freewifi-bus-
 body.freewifi-tv #bus-rows.freewifi-bus-grouped > .freewifi-bus-group::-webkit-scrollbar {
   display:none!important;
 }
+
+/* 2026-10-11: ferry ARRIVALS use consistent LEFT alignment in every column.
+   Do not change departure layout, column widths, or the ferry timetable. */
+body.freewifi-tv #panel-port.arrival-columns #port-rows .row > .port-route,
+body.freewifi-tv #panel-port.arrival-columns #port-rows .row > .port-route-guidance,
+body.freewifi-tv #panel-port.arrival-columns #port-rows .row > .cell.service,
+body.freewifi-tv #panel-port.arrival-columns #port-rows .row > .port-arrival-time {
+  text-align:left!important;
+  justify-content:flex-start!important;
+}
+body.freewifi-tv #panel-port.arrival-columns #port-rows .row .port-arrival-route-wrap,
+body.freewifi-tv #panel-port.arrival-columns #port-rows .row .port-dest-wrap {
+  align-items:flex-start!important;
+  text-align:left!important;
+  margin-left:0!important;
+  margin-right:auto!important;
+}
+body.freewifi-tv #panel-port.arrival-columns #port-rows .row .port-arrival-route-line,
+body.freewifi-tv #panel-port.arrival-columns #port-rows .row .port-dest-main,
+body.freewifi-tv #panel-port.arrival-columns #port-rows .row .port-via-line,
+body.freewifi-tv #panel-port.arrival-columns #port-rows .row .port-estimated-position {
+  margin-left:0!important;
+  margin-right:auto!important;
+  text-align:left!important;
+}
+body.freewifi-tv #panel-port.arrival-columns #port-rows .row .port-route-guidance .port-guidance-scroll,
+body.freewifi-tv #panel-port.arrival-columns #port-rows .row .port-route-guidance .overflow-scroll-copy {
+  text-align:left!important;
+  margin-left:0!important;
+  margin-right:auto!important;
+}
