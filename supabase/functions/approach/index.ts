@@ -266,7 +266,7 @@ function liveSpecialKind(pos: Record<string, unknown>, route: Route | null) {
   const type = String(pos.Type ?? pos.type ?? pos.TrainType ?? "").trim();
   if (/試運転|試験運転|検測|試験列車|試送|(^|[^a-z])(?:test|trial|inspection)(?:[^a-z]|$)/i.test(type) ||
       /^試(?:運転)?[0-9]/.test(num)) return "test";
-  if (/回送|deadhead|out.of.service/i.test(type) ||
+  if (/回送|deadhead|out.of.service|入換|入れ換え|入替/i.test(type) ||
       /^[0-9]{1,4}[AER]$/i.test(num) || /^回[0-9]/.test(num)) return "deadhead";
   if (/貨物|freight/i.test(type) || /^(3072|3073)$/.test(num)) return "freight";
   // The 9xxx series is not automatically a test run. Label its kind unconfirmed.
@@ -313,18 +313,36 @@ function collectMatsuyamaSpecialTrains(positions: Record<string, unknown>[], dia
     const pass = stationPoints.find((point) => /通/.test(point.event));
     const arrival = stationPoints.find((point) => /着/.test(point.event));
     const departure = stationPoints.find((point) => /発/.test(point.event));
-    const stationEvent = pass ? "pass" : arrival && departure ? "arrival_departure" :
+    // A labelled Matsuyama yard shunt is not an inbound deadhead or 留置.
+    // Require the unofficial position/diagram to explicitly identify 入換;
+    // never infer it from the train number or its location alone.
+    const remarks = [
+      pos.Type, pos.type, pos.TrainType, pos.Destination, pos.destination,
+      pos.Status, pos.status, pos.Info, pos.info, pos.Remarks, pos.remarks,
+      route?.destination, ...(route?.points ?? []).flatMap(p => [p.station, p.event])
+    ].map(v => String(v ?? "").trim()).filter(Boolean);
+    const hasYardLabel = remarks.some(v =>
+      /松山.*(?:入換|入れ換え|入替)|構内(?:入換|入れ換え|入替)/.test(v));
+    const yardShunt = kind === "deadhead" && /松山/.test(position) && hasYardLabel;
+    const yardPoint = yardShunt ? route?.points.find(p =>
+      /松山/.test(normalizeStationName(p.station)) &&
+      /入換|入れ換え|入替/.test(p.event) &&
+      /^[0-9]{1,2}:[0-9]{2}$/.test(p.time)) : undefined;
+    const stationEvent = yardShunt ? "shunting" :
+      pass ? "pass" : arrival && departure ? "arrival_departure" :
       arrival ? "arrival" : departure ? "departure" : "unconfirmed";
-    const stationTime = stationEvent === "pass" ? pass?.time :
+    const stationTime = yardShunt ? yardPoint?.time :
+      stationEvent === "pass" ? pass?.time :
       stationEvent === "departure" ? departure?.time : arrival?.time;
-    const time = /^\d{1,2}:\d{2}$/.test(String(stationTime ?? "")) ? String(stationTime) : "";
+    const time = /^[0-9]{1,2}:[0-9]{2}$/.test(String(stationTime ?? "")) ? String(stationTime) : "";
     const delay = Number(pos.delay);
     return {
       trainNum: num, kind, position, corridor: corridor || "unknown",
       destination: liveSpecialDestination(pos, route),
       origin: route?.origin ?? "",
       stationEvent, stationTime: time,
-      stationConfirmed: stationPoints.length > 0,
+      operationLabel: yardShunt ? "松山駅構内入換" : "",
+      stationConfirmed: yardShunt ? !!yardPoint : stationPoints.length > 0,
       delayMinutes: Number.isFinite(delay) ? delay : 0,
       timeSource: time ? "today_diagram" : "unavailable",
       // If the train has no entry in the operating diagram, its event and
