@@ -2512,10 +2512,9 @@ html.company-pc body.freewifi-tv #bus-rows.freewifi-bus-grouped .freewifi-bus-gr
   line-height:1.1!important;
 }
 
-/* Workplace bus ARRIVALS: allocate only the occupied regional rows.
-   The upper express/highway group receives all remaining height.
-   JS sets the lower group's pixel height from the next 2 hours of arrivals;
-   40% remains a safe fallback until the page has finished rendering. */
-html.company-pc body.freewifi-tv #panel-bus.arr-mode #bus-rows.freewifi-bus-grouped {
-  grid-template-rows:minmax(0,1fr) minmax(0,var(--company-arrival-regional-height,40%))!important;
+/* Workplace bus DEPARTURES and ARRIVALS: the number of upcoming regional
+   services determines the lower pane height; highway/express fills the rest.
+   This adjusts dynamically inside the next two hours without hiding trips. */
+html.company-pc body.freewifi-tv #panel-bus #bus-rows.freewifi-bus-grouped {
+  grid-template-rows:minmax(0,1fr) minmax(0,var(--company-bus-regional-height,40%))!important;
 }
