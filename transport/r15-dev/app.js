@@ -3497,7 +3497,16 @@
     if(remaining>=0 && remaining<=1440)return '位置未確認｜あと約'+remaining+'分';
     return '位置未確認';
   }
+  // Keep a separate scroll position for inbound/outbound bus departures.
+  // The service list is redrawn after each live-data refresh.
+  const busGroupOffsets={departure:{long:0,regional:0},arrival:{long:0,regional:0}};
+  let busGroupDay='';
   function renderBus(rows) {
+    const now=japanNow();
+    if(busGroupDay!==now.iso){
+      busGroupDay=now.iso;
+      for(const dir of ['departure','arrival'])for(const kind of ['long','regional'])busGroupOffsets[dir][kind]=0;
+    }
     const root = $('bus-rows'); root.innerHTML = '';
     const dep = currentDirection() === 'departure';
     root.classList.remove('bus-end');
@@ -3569,10 +3578,37 @@
       if(grouped)for(const [group,records] of [[longRoot,longDistance],[regionalRoot,regional]]) {
         if(!records.length){const empty=document.createElement('div');empty.className='row placeholder';empty.textContent='該当する便はありません';group.appendChild(empty);}
       }
+      if(grouped){
+        const dir=dep?'departure':'arrival';
+        for(const [kind,group] of [['long',longRoot],['regional',regionalRoot]]){
+          group.scrollTop=busGroupOffsets[dir][kind];
+          group.addEventListener('scroll',()=>{
+            busGroupOffsets[dir][kind]=group.scrollTop;
+          },{passive:true});
+          // A person moving the wheel gets priority over the automatic ticker.
+          group.addEventListener('wheel',()=>{group.dataset.manualUntil=String(Date.now()+12000);},{passive:true});
+        }
+      }
     }
     activatePanelOverflow(root);
     restoreScroll('bus'); attachScrollMemory('bus');
   }
+  // Advance surplus bus services automatically when the bus screen is active.
+  // Nothing is thrown away to force one row per route; reading order remains
+  // chronological, and a manual wheel scroll takes temporary precedence.
+  setInterval(()=>{
+    if(!FREEWIFI_TV || !$('panel-bus')?.classList.contains('freewifi-active'))return;
+    const groups=$('bus-rows')?.querySelectorAll('.freewifi-bus-group');
+    if(!groups)return;
+    groups.forEach(group=>{
+      if(Date.now()<Number(group.dataset.manualUntil||0))return;
+      if(group.scrollHeight<=group.clientHeight+8)return;
+      const row=group.querySelector('.row');
+      const step=Math.max(36,(row?.getBoundingClientRect().height||44)*2);
+      if(group.scrollTop+group.clientHeight>=group.scrollHeight-6)group.scrollTop=0;
+      else group.scrollTop=Math.min(group.scrollHeight-group.clientHeight,group.scrollTop+step);
+    });
+  },5000);
   function renderPort(rows) {
     const root = $('port-rows');
     // Preserve the persistent ticker when the ferry rows are redrawn.
