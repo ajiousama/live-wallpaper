@@ -2850,6 +2850,11 @@
   function railStationedStatus(x, now) {
     const here=cleanStation(x?.position||'');
     if(!/^(?:松山|松山駅|松山基地)$/.test(here))return '';
+    // Respect explicit nonofficial shunting labels, e.g. 回561M
+    // 「松山駅構内入換」. This is neither storage nor an inbound arrival.
+    if(x?.stationEvent==='shunting' &&
+      String(x?.operationLabel||'')==='松山駅構内入換')
+      return '松山駅構内入換（非公式データ）';
     const time=padTime(x?.stationTime||'');
     const depScheduled=x?.stationEvent==='departure' &&
       /^[0-9]{2}:[0-9]{2}$/.test(time) &&
@@ -2874,7 +2879,10 @@
       x.destination?'行先 '+railSpecialText(x.destination):'行先未確認',
       x.stationConfirmed?'松山駅の情報は当日ダイヤ照合':'松山駅の停車・通過は未確認'
     ];
-    if(railStationedStatus(x,japanNow()))details.push('現在地は確認済み／留置・折返しの実態は未確認');
+    if(x.stationEvent==='shunting' && x.operationLabel==='松山駅構内入換')
+      details.push('非公式運行情報：松山駅構内入換（留置・到着予定とは別）');
+    else if(railStationedStatus(x,japanNow()))
+      details.push('現在地は確認済み／留置・折返しの実態は未確認');
     if(x.delayMinutes>0)details.push(railSpecialText(x.delayMinutes)+'分遅れ');
     row.innerHTML='<div class="rail-primary">'+
       '<div class="cell rail-service '+kind+'"><span class="kindtxt">'+
