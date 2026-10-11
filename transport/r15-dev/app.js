@@ -917,7 +917,9 @@
   }
 
   function ferryRouteGuidance(record, direction, now) {
-    const via=portViaLabel(record);
+    const via=record._gogoshimaDock
+      ? '10/14〜20 ドック臨時ダイヤ・由良⇔泊 無料送迎バス'
+      : portViaLabel(record);
     const position=direction==='departure'
       ? ferryDeparturePosition(record,now)
       : (()=>{
@@ -1133,7 +1135,18 @@
   // https://gogoshima-ferry.com/timetable_faretable/
   function gogoshimaPortRecords(iso) {
     const holidayClosure=/-(?:12-31|01-0[1-3])$/.test(iso);
-    const routes=[
+    // 2026-10-14–20: しとらす dry-dock; only ミソラ operates.
+    // Read directly from operator's dated temporary ferry timetable:
+    // https://gogoshima-ferry.com/wp-content/uploads/rinji_daiya.pdf
+    const dock=iso>='2026-10-14' && iso<='2026-10-20';
+    const routes=dock ? [
+      {name:'由良港',ship:'フェリーミソラ',travel:13,
+       outward:['06:15','06:45','07:17','07:52','08:40','09:25','10:25','11:25','13:25','14:25','15:25','17:05','17:40','18:40','19:40'],
+       inward:['05:55','13:05','16:45']},
+      {name:'泊港',ship:'フェリーミソラ',travel:10,
+       outward:['12:25','16:25','20:25'],
+       inward:['06:30','07:00','07:35','08:20','09:05','10:05','11:05','12:05','14:05','15:05','16:05','17:25','18:20','19:20','20:10']}
+    ] : [
       {name:'由良港',ship:'フェリーミソラ',travel:13,
        outward:['06:15','07:25','08:08','08:55','09:55','10:55','11:55','13:15','14:40','16:00','17:10','18:10','19:10','20:10'],
        inward:['05:55','07:08','07:44','08:35','09:35','10:35','11:35','12:55','14:20','15:35','16:40','17:50','18:50','19:50']},
@@ -1146,21 +1159,22 @@
       for(const [direction,times] of [['departure',route.outward],['arrival',route.inward]]){
         times.forEach((time,i)=>{
           if(holidayClosure && i===times.length-1)return;
-          const isSummer=/-(?:07|08)-/.test(iso);
           const landing=route.name;
           out.push({id:`gogoshima-${landing}-${direction}-${i}`,
             board:'port',kind:'ferry',source:'gogoshima_official',port:'高浜港',
-            arrivalPort:'高浜港',service:'株式会社ごごしま',shipName:route.ship,
+            arrivalPort:direction==='arrival'?'高浜港':landing,
+            service:'株式会社ごごしま',shipName:route.ship,
             dest:direction==='departure'?landing:'高浜港',
             origin:direction==='arrival'?landing:'高浜港',
-            info:`${route.ship}・${landing}航路`,time:direction==='arrival'?addMinutes(time,route.travel):time,
+            info:`${route.ship}・${landing}航路${dock?'・ドック臨時便':''}`,
+            time:direction==='arrival'?addMinutes(time,route.travel):time,
             originDepartureTime:direction==='arrival'?time:undefined,
             // Operator's published approximate sailing times: Yura ~13 min,
             // Tomari ~10 min. Otherwise portTravelMinutes() defaults to 120.
             travelMinutes:route.travel,
             direction,noSyntheticArrival:true,
             estimatedArrival:true,
-            _gogoshima:true});
+            _gogoshima:true,_gogoshimaDock:dock});
         });
       }
     }
