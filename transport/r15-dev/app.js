@@ -3503,9 +3503,11 @@
   // No automatic or manual scrolling is needed; every page refresh moves
   // the two-hour timetable window forward and picks the next upcoming buses.
   function visibleBusSlots(available, expressCount, regionalCount) {
+    // The board shows all services that physically fit, with no scrolling.
+    // Each group has one 24px heading; bus rows are 62px + 2px gaps.
     const total=Number(available)>160 ? Number(available) : 480;
-    const header=24, pitch=64, gapBetweenGroups=5, outerGuard=14;
-    const capacity=Math.max(2,Math.floor((total-2*header-gapBetweenGroups-outerGuard)/pitch));
+    const header=24, pitch=64, gapBetweenGroups=5;
+    const capacity=Math.max(1,Math.floor((total-2*header-gapBetweenGroups)/pitch));
     const reserve=Math.max(1,Math.ceil(capacity*.55));
     let express=Math.min(expressCount,reserve);
     let regional=Math.min(regionalCount,Math.max(0,capacity-express));
@@ -3537,7 +3539,14 @@
       const adaptiveBusLayout=grouped &&
         document.documentElement.classList.contains('company-pc');
       const availableSlots=adaptiveBusLayout
-        ? visibleBusSlots(root.clientHeight,longDistance.length,regional.length)
+        ? (() => {
+            // clientHeight includes the board's own padding, which cannot
+            // hold rows. Do not count padded space as a visible service slot.
+            const computed=getComputedStyle(root);
+            const verticalPad=(parseFloat(computed.paddingTop)||0)+(parseFloat(computed.paddingBottom)||0);
+            const usable=Math.max(0,root.clientHeight-verticalPad);
+            return visibleBusSlots(usable,longDistance.length,regional.length);
+          })()
         : null;
       if(availableSlots) {
         root.style.setProperty('--company-bus-regional-height',availableSlots.regionalHeight+'px');
@@ -3557,9 +3566,12 @@
       } else root.classList.remove('freewifi-bus-grouped');
       // Display the first services by actual clock time, never one per route.
       // Overflow is omitted until later departures/arrivals fall into view.
+      // Never choose records before sorting: record files are not guaranteed
+      // to list the earliest departure/arrival first.
+      const byTime=(a,b)=>rMinutes(a)-rMinutes(b);
       const visible=availableSlots
-        ? new Set([...longDistance.slice(0,availableSlots.express),
-                   ...regional.slice(0,availableSlots.regional)])
+        ? new Set([...longDistance.slice().sort(byTime).slice(0,availableSlots.express),
+                   ...regional.slice().sort(byTime).slice(0,availableSlots.regional)])
         : null;
       const selected=rows.filter(r=>!visible||visible.has(r))
         .sort((a,b)=>rMinutes(a)-rMinutes(b));
