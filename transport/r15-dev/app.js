@@ -360,25 +360,78 @@
     if(!arrivedFlightObservedAt.has(key))arrivedFlightObservedAt.set(key,now.minutes);
     return arrivedFlightObservedAt.get(key);
   }
+  // Public Matsuyama flight rows do not normally include a tail number.
+  // Explicit aircraft/turnaround IDs win. Otherwise accept a *confirmed*
+  // outbound airport-board departure only for a uniquely adjacent
+  // same-carrier/same-route flight pair from the published daily timetable.
+  // This is an arrival-board cleanup rule, not proof of identical airframes.
   function completedTurnaroundDeparted(arrival, departures, now) {
-    // Do not infer the same physical aircraft from airline, time or route.
-    // Require an explicit turnaround flight number or the same aircraft ID.
-    if(!Array.isArray(departures)) return false;
+    if(!Array.isArray(departures)||!departures.length)return false;
+    const flightClock=t=>/^\d{2}:\d{2}$/.test(t)?toMinutes(t):NaN;
+    const arrivalClock=flightClock(padTime(arrival.actualArrivalTime||arrival.actualArrival||
+      arrival.arrivedAt||arrival.changed||arrival.scheduled||''));
+    if(!Number.isFinite(arrivalClock)||arrivalClock>now.minutes+1)return false;
+    const departed=departures.filter(dep=>/出発済み|離陸済み|出発完了|離陸完了/.test(
+      [dep?.status,dep?.changeText].map(v=>String(v||'')).join(' ')));
+    if(!departed.length)return false;
     const arrId=String(arrival.aircraftHex||arrival.aircraftRegistration||'').trim().toUpperCase();
     const explicit=Array.isArray(arrival.turnaroundDepartureNumbers)
       ? arrival.turnaroundDepartureNumbers.map(String)
       : [arrival.turnaroundDepartureNumber].filter(Boolean).map(String);
-    return departures.some(dep=>{
+    // Explicit linkage also works if the live page has lost the arrival-complete label.
+    for(const dep of departed){
       const depId=String(dep.aircraftHex||dep.aircraftRegistration||'').trim().toUpperCase();
-      const matchedByAircraft=arrId && depId && arrId===depId;
-      const matchedByFlight=explicit.length && Array.isArray(dep.numbers) &&
+      const sameId=!!(arrId&&depId&&arrId===depId);
+      const explicitLink=explicit.length>0 && Array.isArray(dep.numbers) &&
         explicit.some(n=>dep.numbers.map(String).includes(n));
-      if(!matchedByAircraft && !matchedByFlight) return false;
-      if(!/出発済み|離陸済み|出発完了/.test(String(dep.status||''))) return false;
-      const depTime=padTime(dep.actualDepartureTime||dep.actualDeparture||dep.changed||dep.scheduled||'');
-      const arrTime=padTime(arrival.actualArrivalTime||arrival.actualArrival||arrival.arrivedAt||arrival.changed||arrival.scheduled||'');
-      return /^\d{2}:\d{2}$/.test(depTime) && /^\d{2}:\d{2}$/.test(arrTime) &&
-        toMinutes(depTime)>=toMinutes(arrTime) && toMinutes(depTime)<=now.minutes+1;
+      if(!sameId&&!explicitLink)continue;
+      const depClock=flightClock(padTime(dep.actualDepartureTime||dep.actualDeparture||
+        dep.changed||dep.scheduled||''));
+      if(Number.isFinite(depClock)&&depClock>=arrivalClock&&depClock<=now.minutes+1)return true;
+    }
+    const flightRecords=data.records.filter(row=>row.board==='air' &&
+      validRecord(row,now.iso));
+    const matchingStatic=(item,dir)=>{
+      const nums=(Array.isArray(item?.numbers)?item.numbers:[]).map(String);
+      const at=padTime(item?.scheduled||'');
+      const possible=flightRecords.filter(row=>row.direction===dir &&
+        nums.includes(String(parseAirService(row.service).number)));
+      const exact=possible.filter(row=>padTime(effectiveTime(row,now))===at);
+      return exact.length===1?exact[0]:null;
+    };
+    const a=matchingStatic(arrival,'arrival');
+    if(!a)return false;
+    const signature=row=>{
+      const x=String(row.service||'').trim().split(/\s+/)[0];
+      const destination=String(row.dest||'').replace(/[\s（）()・]/g,'');
+      return x+'|'+destination;
+    };
+    const route=signature(a),aMin=flightClock(padTime(effectiveTime(a,now)));
+    const sameRoute=flightRecords.filter(x=>signature(x)===route);
+    const inbound=sameRoute.filter(x=>x.direction==='arrival');
+    const outbound=sameRoute.filter(x=>x.direction==='departure');
+    const turnbackCandidate=outbound
+      .filter(x=>{
+        const t=flightClock(padTime(effectiveTime(x,now)));
+        return t-aMin>=12&&t-aMin<=150;
+      }).sort((x,y)=>flightClock(padTime(effectiveTime(x,now)))-
+        flightClock(padTime(effectiveTime(y,now))))[0];
+    if(!turnbackCandidate)return false;
+    const depScheduled=flightClock(padTime(effectiveTime(turnbackCandidate,now)));
+    // A closer arrival of this carrier/route belongs to the later departure;
+    // never clear a preceding unrelated inbound flight.
+    if(inbound.some(x=>{
+      if(x===a)return false;
+      const t=flightClock(padTime(effectiveTime(x,now)));
+      return t>aMin&&t<depScheduled;
+    }))return false;
+    return departed.some(dep=>{
+      const d=matchingStatic(dep,'departure');
+      if(!d||d!==turnbackCandidate)return false;
+      const depClock=flightClock(padTime(dep.actualDepartureTime||dep.actualDeparture||
+        dep.changed||dep.scheduled||''));
+      return Number.isFinite(depClock)&&depClock>=arrivalClock &&
+        depClock<=now.minutes+1;
     });
   }
   const AIRPORT_ARRIVAL_CURFEW_MINUTES=22*60;
@@ -459,6 +512,9 @@
       // A delayed arrival ceases to be an active problem once its revised
       // expected arrival time is one hour in the past.
       if(!dep && delayedArrivalNoticeExpired(x,now))return;
+      // An officially departed, uniquely matched later outbound service
+      // means the earlier arrival no longer belongs on this board.
+      if(!dep && completedTurnaroundDeparted(x,slowLive.airport?.departures,now))return;
       // Official Matsuyama arrivals remain visible as a FORECAST even when
       // we have not yet verified departure at the origin airport.
       // Only explicitly verified evidence can assert departure or location.
@@ -489,7 +545,7 @@
         const key=`${now.iso}|${nums.join('/')}|${padTime(x.scheduled)}`;
         const completion=arrivalCompletionTime(x,key,now);
         arrivalCompleted=completion!==null;
-        if(arrivalCompleted && completedTurnaroundDeparted(x,slowLive.airport?.departures,now)) return;
+
         if(arrivalCompleted){
           arrivalAge=(now.minutes-completion+1440)%1440;
           // A stale completed state must not survive a new page load all day.
@@ -2187,6 +2243,7 @@
       if(!Array.isArray(rows)) return;
       rows.forEach(x=>{
         if(direction==='arrival' && delayedArrivalNoticeExpired(x,now))return;
+        if(direction==='arrival' && completedTurnaroundDeparted(x,airport.departures,now))return;
         const delta=Number(x?.deltaMinutes);
         const status=String(x?.status||'');
         if(!(Number.isFinite(delta) && delta>0) && !/遅延|遅れ/.test(status)) return;
@@ -2234,6 +2291,7 @@
     const items=[];
     rows.forEach(x=>{
       if(arrival && delayedArrivalNoticeExpired(x,now))return;
+      if(arrival && completedTurnaroundDeparted(x,airport.departures,now))return;
       const status=String(x?.status||'').trim();
       const delta=Number(x?.deltaMinutes);
       const isCancel=!arrival && /欠航|運休/.test(status);
