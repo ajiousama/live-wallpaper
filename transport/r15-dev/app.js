@@ -950,6 +950,44 @@
     });
     return out;
   }
+  // Official inbound medium-distance services. Never reverse a Matsuyama
+  // outbound service and call it an actual inbound timetable.
+  // Source: https://www.uwajima-bus.co.jp/matsuyama (2026-04-01)
+  // https://www.setouchibus.co.jp/rosen/niihama.html (2025-10-01)
+  // https://www.setouchibus.co.jp/rosen/omishima.html (2026-04-01)
+  function confirmedRegionalInboundRows(iso) {
+    const rows=[];
+    const add=(source,operator,origin,terminal,dep,arr,reference)=>{
+      if(!/^\d{2}:\d{2}$/.test(dep)||!/^\d{2}:\d{2}$/.test(arr))return;
+      rows.push({id:'verified-'+source+'-'+iso+'-'+arr+'-'+dep,
+        board:'bus',kind:'midbus',source,direction:'arrival',
+        origin,dest:terminal,service:operator,time:arr,
+        originDepartureTime:dep,arrivalTerminal:terminal,
+        arrivalTerminalTime:arr,noSyntheticArrival:true,
+        info:'事業者公式時刻表・松山到着',timetableReference:reference});
+    };
+    // 宇和島バスセンター -> 松山市駅前 (some services originate in 城辺).
+    const uwajimaDep=['06:20','07:00','07:30','08:30','10:00','11:00','12:30','14:00','16:00','18:20'];
+    const uwajimaArr=['08:14','09:09','09:39','10:24','11:54','13:09','14:24','16:09','18:09','20:14'];
+    uwajimaDep.forEach((t,i)=>add('uwajima_bus_official_in','宇和島自動車',
+      [2,3,4].includes(i)?'城辺・宇和島':'宇和島','松山市駅',t,uwajimaArr[i],
+      'https://www.uwajima-bus.co.jp/matsuyama'));
+    // 新居浜駅 -> JR松山駅前. The two early arrivals 08:25 are alternate
+    // operating-day slots at the same time; show them as one display event.
+    const niihamaDep=['06:00','07:30','09:00','10:30','12:30','14:00','16:00'];
+    const niihamaArr=['08:25','09:45','11:15','12:45','14:45','16:15','18:15'];
+    niihamaDep.forEach((t,i)=>add('setouchi_niihama_official_in',
+      i===4?'伊予鉄バス':'せとうちバス','新居浜駅','JR松山駅',
+      t,niihamaArr[i],'https://www.setouchibus.co.jp/rosen/niihama.html'));
+    // 今治桟橋 -> 松山市駅, verified through-running 特急 only.
+    const imabariDep=['06:38','07:30','08:53','12:33','14:33','16:02'];
+    const imabariArr=['07:57','08:49','10:12','13:52','15:52','17:21'];
+    imabariDep.forEach((t,i)=>add('setouchi_omishima_official_in',
+      'せとうちバス','今治桟橋','松山市駅',t,imabariArr[i],
+      'https://www.setouchibus.co.jp/rosen/omishima.html'));
+    return rows;
+  }
+
   function getBoardRecords(board, now) {
     const displayIso = boardDisplayIso(board, now);
     const rows = recordsForDay(board, (board === 'rail' || board === 'air') ? displayIso : now.iso);
@@ -964,7 +1002,7 @@
         .sort((a, b) => rMinutes(a) - rMinutes(b));
     }
     if (board === 'bus') {
-      const explicitArrivals = [...rows.filter(r => r.direction === 'arrival'), ...confirmedHighwayInboundRows(now.iso)].map(r => {
+      const explicitArrivals = [...rows.filter(r => r.direction === 'arrival'), ...confirmedHighwayInboundRows(now.iso), ...confirmedRegionalInboundRows(now.iso)].map(r => {
         const terminal = String(r.arrivalTerminal || r.stop || '松山市駅').trim() || '松山市駅';
         const terminalTime = padTime(r.arrivalTerminalTime || r.time || '');
         return {
@@ -3396,7 +3434,37 @@
           root.appendChild(group);
         }
       } else root.classList.remove('freewifi-bus-grouped');
-      const selected=grouped?[...longDistance.slice(0,6),...regional.slice(0,3)]:rows;
+      // Reserve four of nine visible rows for distinct regional corridors.
+      // Otherwise a high-frequency single line (久万高原, for example)
+      // pushes every other medium-distance route off the arrival board.
+      const regionalCorridor=r=>{
+        const src=String(r.source||'');
+        const place=String(r.origin||r.dest||'');
+        if(/kumakogen|久万高原/.test(src+' '+place))return 'kuma';
+        if(/niihama|新居浜/.test(src+' '+place))return 'niihama';
+        if(/omishima|今治|宮浦|大三島/.test(src+' '+place))return 'imabari';
+        if(/uwajima|宇和島|城辺/.test(src+' '+place))return 'uwajima';
+        if(/misaki|三崎/.test(src+' '+place))return 'misaki';
+        return src+'|'+place;
+      };
+      const diversifyRegional=(entries,limit)=>{
+        const selected=[],used=new Set();
+        for(const row of entries){
+          const corridor=regionalCorridor(row);
+          if(used.has(corridor))continue;
+          used.add(corridor);selected.push(row);
+          if(selected.length>=limit)break;
+        }
+        if(selected.length<limit){
+          for(const row of entries){
+            if(selected.includes(row))continue;
+            selected.push(row);
+            if(selected.length>=limit)break;
+          }
+        }
+        return selected.sort((a,b)=>rMinutes(a)-rMinutes(b));
+      };
+      const selected=grouped?[...longDistance.slice(0,5),...diversifyRegional(regional,4)]:rows;
       selected.forEach(r => {
       const row = document.createElement('div'); row.className = `row${r.isFinal?' is-final':''}${dep && isDepartSoon(r, japanNow()) ? ' depart-soon' : ''}`;
       const firstBadge = r.isNextDayStart ? badgeHtml('first', dep ? '始発' : '初便') : '';
