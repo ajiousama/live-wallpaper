@@ -249,7 +249,10 @@ function nextRouteIndex(route: Route, idx: number) {
 
 function isDeadhead(pos: Record<string, unknown>, route: Route) {
   const num = String(pos.TrainNum ?? route.trainNum ?? "").trim();
-  return /^[0-9]{1,4}[AER]$/i.test(num);
+  const type = String(pos.Type ?? pos.type ?? pos.TrainType ?? "").trim();
+  // A trailing R alone is not positive evidence of a deadhead.
+  return /回送|deadhead|out.of.service|入換|入れ換え|入替/i.test(type) ||
+    /^[0-9]{1,4}[AE]$/i.test(num) || /^回[0-9]/.test(num);
 }
 
 function isFreight(pos: Record<string, unknown>, route: Route) {
@@ -267,10 +270,15 @@ function liveSpecialKind(pos: Record<string, unknown>, route: Route | null) {
   if (/試運転|試験運転|検測|試験列車|試送|(^|[^a-z])(?:test|trial|inspection)(?:[^a-z]|$)/i.test(type) ||
       /^試(?:運転)?[0-9]/.test(num)) return "test";
   if (/回送|deadhead|out.of.service|入換|入れ換え|入替/i.test(type) ||
-      /^[0-9]{1,4}[AER]$/i.test(num) || /^回[0-9]/.test(num)) return "deadhead";
+      /^[0-9]{1,4}[AE]$/i.test(num) || /^回[0-9]/.test(num)) return "deadhead";
   if (/貨物|freight/i.test(type) || /^(3072|3073)$/.test(num)) return "freight";
-  // The 9xxx series is not automatically a test run. Label its kind unconfirmed.
-  if (/^9[0-9]{3,4}[A-Z]$/i.test(num) || /臨時|extra|special/i.test(type)) return "extra";
+  if (/臨時|extra|special/i.test(type)) return "extra";
+  // An R suffix does NOT imply 回送. If the source explicitly identifies a
+  // passenger service, let the timetable/live-passenger path handle it.
+  if (/^(?:普通|各停|各駅停車|local|regional|rapid)(?:$|[:：])/i.test(type)) return "";
+  // Unknown R and 9xxx trains should still appear when their live position
+  // is confirmed, but with a truthful "unclassified" badge.
+  if (/^[0-9]{1,4}R$/i.test(num) || /^9[0-9]{3,4}[A-Z]$/i.test(num)) return "unknown";
   return "";
 }
 
