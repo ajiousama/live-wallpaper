@@ -4338,9 +4338,9 @@
     }
     root.innerHTML = '';
     const dep = currentDirection() === 'departure';
-    // Suppress next-day or distant ferry listings when no sailing/arrival is
-    // expected within five hours. Do this per voyage, so an active route is
-    // not hidden merely because another route has already finished today.
+    // Most ferry groups use a five-hour near-term window. The "other"
+    // ARRIVAL group uses the full already-computed rolling 24-hour arrival
+    // timetable: a distant next arrival is not "today's service ended".
     const FIVE_HOURS_MINUTES=300;
     const now=japanNow();
     const nearPortRows=rows.filter(r=>{
@@ -4388,7 +4388,7 @@
           <div class="cell main port-route port-route-main"><span class="port-arrival-route-line">${arrivalRoute}</span></div>
           <div class="cell sub port-route-guidance">${overflowScrollHtml(routeGuidance,'port-guidance-scroll')}</div>
           <div class="cell service">${service}</div>
-          <div class="cell time port-arrival-time">${r.isNextDayStart || (r._serviceIso && r._serviceIso!==japanNow().iso) ? '翌日 ' : ''}${r.time}頃予定</div>`;
+          <div class="cell time port-arrival-time">${rMinutes(r)>=1440 ? '翌日 ' : ''}${r.time}頃予定</div>`;
       }
       return row;
     };
@@ -4398,11 +4398,15 @@
       const kyushu=(r)=>/^(uwajima_beppu|uwajima_usuki|koku94|koku94_verified_arrival)$/.test(String(r.source||'')) || /別府|臼杵|佐賀関|三崎港/.test([r.dest,r.origin,r.port,r.arrivalPort].map(v=>String(v||'')).join(' '));
       const matsuyamaPorts=(r)=>/三津浜港|松山観光港/.test(String(r.port||r.arrivalPort||''));
       const gogoshima=r=>r.source==='gogoshima_official' || r.source==='nakajima_takahama_call' || r.source==='nakajima_takahama_departure';
+      const isOtherRoute=r=>!kyushu(r)&&!matsuyamaPorts(r)&&!gogoshima(r);
+      const otherArrivalRows=rows.filter(isOtherRoute).slice(0,2);
       const groups=[
         {key:'matsuyama',title:'三津浜港・松山観光港 発着',rows:nearPortRows.filter(r=>!kyushu(r)&&matsuyamaPorts(r)).slice(0,3)},
         {key:'gogoshima',title:'高浜港・興居島・中島航路',rows:nearPortRows.filter(gogoshima).slice(0,1)},
         {key:'kyushu',title:'九州航路',rows:nearPortRows.filter(kyushu).slice(0,3)},
-        {key:'other',title:'その他の航路',rows:nearPortRows.filter(r=>!kyushu(r)&&!matsuyamaPorts(r)&&!gogoshima(r)).slice(0,2)}
+        {key:'other',title:'その他の航路',rows:dep
+          ? nearPortRows.filter(isOtherRoute).slice(0,2)
+          : otherArrivalRows}
       ];
       groups.forEach(g=>{
         const section=document.createElement('section');
@@ -4417,7 +4421,11 @@
         } else {
           const empty=document.createElement('div');
           empty.className='row placeholder';
-          empty.innerHTML='<div class="cell main">本日の運航は終了しました</div>';
+          const noNext= g.key==='other' && !dep;
+          empty.innerHTML='<div class="cell main">'+
+            (noNext?'24時間以内に掲載できる到着予定はありません':
+              dep?'現在5時間以内の出航予定はありません':'現在5時間以内の到着予定はありません')+
+            '</div>';
           section.appendChild(empty);
         }
         root.appendChild(section);
@@ -4433,7 +4441,11 @@
     } else {
       root.classList.remove('freewifi-port-groups');
       if (!nearPortRows.length) {
-        const row=document.createElement('div'); row.className='row placeholder'; row.innerHTML='<div class="cell main">本日の運航は終了しました</div>'; root.appendChild(row);
+        const row=document.createElement('div'); row.className='row placeholder';
+        row.innerHTML='<div class="cell main">'+
+          (dep?'現在5時間以内の出航予定はありません':'現在5時間以内の到着予定はありません')+
+          '</div>';
+        root.appendChild(row);
       } else nearPortRows.forEach(r => root.appendChild(makePortRow(r)));
     }
     activatePanelOverflow(root);
