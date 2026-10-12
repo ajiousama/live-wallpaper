@@ -11,6 +11,7 @@ import pathlib
 import re
 import sys
 import urllib.request
+import urllib.error
 from bs4 import BeautifulSoup
 
 JST = dt.timezone(dt.timedelta(hours=9))
@@ -18,7 +19,11 @@ THEATERS = {
     "shigenobu": ("重信", "70088", "https://www.cinemasunshine.co.jp/theater/shigenobu/"),
     "masaki": ("エミフルMASAKI", "70115", "https://www.cinemasunshine.co.jp/theater/masaki/"),
     "kinuyama": ("衣山", "70073", "https://www.cinemasunshine.co.jp/theater/kinuyama/"),
+    "lunatic": ("シネマルナティック", "70097", "https://cinemalunatic.sx3.jp/"),
+    "imabari": ("イオンシネマ今治新都市", "70121", "https://theater.aeoncinema.com/theaters/imabari/"),
 }
+LUNATIC_LAST_DAY = dt.date(2026, 11, 24)
+CORE_THEATERS = frozenset(("shigenobu", "masaki", "kinuyama"))
 SOURCE = "https://www.crank-in.net/theater/search/all/38/"
 RELEASE = re.compile(r"^20\d{2}年\d{1,2}月\d{1,2}日.+公開")
 DURATION = re.compile(r"^上映時間[:：]\s*(\d+)\s*分")
@@ -108,10 +113,32 @@ def build(today, fetch=listing):
               "source": "crank-in.net (third-party listing; verify with the theater)",
               "theaters": {}}
     for slug,(name,number,official) in THEATERS.items():
+        # Official venue notice: the last day is 2026-11-24.
+        # Do not request or publish any post-closure screenings.
+        if slug == "lunatic" and today > LUNATIC_LAST_DAY:
+            continue
         url = SOURCE + number
-        records = parse_listing(fetch(url), name, today)
+        try:
+            records = parse_listing(fetch(url), name, today)
+        except (OSError, ValueError, TimeoutError, urllib.error.URLError) as exc:
+            if slug in CORE_THEATERS:
+                # Preserve the existing strict validation for the original
+                # three theaters: a partial failure must not overwrite them.
+                raise
+            # A temporary failure in either newly adopted theater must not
+            # suspend refreshes of the already-working cinemas.
+            result["theaters"][slug] = {
+                "name": name, "officialUrl": official, "listingUrl": url,
+                "shows": [], "status": "unavailable",
+            }
+            print(f"{name}: unavailable ({exc})", file=sys.stderr)
+            continue
+        if slug == "lunatic":
+            records = [x for x in records
+                       if x["date"] <= LUNATIC_LAST_DAY.isoformat()]
         result["theaters"][slug] = {
-            "name": name, "officialUrl": official, "listingUrl": url, "shows": records
+            "name": name, "officialUrl": official, "listingUrl": url,
+            "shows": records, "status": "ok"
         }
         print(f"{name}: {len(records)} sessions / {len(set(x['title'] for x in records))} films",
               file=sys.stderr)
