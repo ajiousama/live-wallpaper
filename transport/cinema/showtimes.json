@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-12T15:08:16.215549+00:00",
+  "generatedAt": "2026-10-12T15:10:52.838442+00:00",
   "timezone": "Asia/Tokyo",
   "date": "2026-10-13",
   "source": "crank-in.net (third-party listing; verify with the theater)",
@@ -2853,6 +2853,7 @@
       "name": "シネマルナティック",
       "officialUrl": "https://cinemalunatic.sx3.jp/",
       "listingUrl": "https://www.crank-in.net/theater/search/all/38/70097",
+      "secondaryListingUrl": "https://eiga.com/theater/38/380101/6058/",
       "shows": [
         {
           "date": "2026-10-14",
@@ -2860,6 +2861,13 @@
           "title": "私たちは、ちょうどいい。《字幕版》",
           "durationMinutes": 102,
           "releaseDate": "2026-09-11"
+        },
+        {
+          "date": "2026-10-14",
+          "time": "12:10",
+          "title": "ハードボイルド",
+          "durationMinutes": 112,
+          "releaseDate": null
         },
         {
           "date": "2026-10-14",
@@ -2876,11 +2884,88 @@
           "releaseDate": "2013-05-18"
         },
         {
+          "date": "2026-10-14",
+          "time": "18:00",
+          "title": "大杉漣 FURIDASHI LIVE!",
+          "durationMinutes": null,
+          "releaseDate": null
+        },
+        {
           "date": "2026-10-15",
           "time": "10:10",
           "title": "私たちは、ちょうどいい。《字幕版》",
           "durationMinutes": 102,
           "releaseDate": "2026-09-11"
+        },
+        {
+          "date": "2026-10-15",
+          "time": "12:10",
+          "title": "ハードボイルド",
+          "durationMinutes": 112,
+          "releaseDate": null
+        },
+        {
+          "date": "2026-10-15",
+          "time": "14:30",
+          "title": "内子こども狂言記",
+          "durationMinutes": null,
+          "releaseDate": null
+        },
+        {
+          "date": "2026-10-15",
+          "time": "16:15",
+          "title": "戦争と平和～宝田明の証言～",
+          "durationMinutes": null,
+          "releaseDate": null
+        },
+        {
+          "date": "2026-10-15",
+          "time": "18:10",
+          "title": "諫山節考",
+          "durationMinutes": null,
+          "releaseDate": null
+        },
+        {
+          "date": "2026-10-15",
+          "time": "19:20",
+          "title": "プロデューサーズ",
+          "durationMinutes": 119,
+          "releaseDate": "2016-10-29"
+        },
+        {
+          "date": "2026-10-16",
+          "time": "10:10",
+          "title": "私たちは、ちょうどいい。《字幕版》",
+          "durationMinutes": 102,
+          "releaseDate": null
+        },
+        {
+          "date": "2026-10-16",
+          "time": "12:10",
+          "title": "ハードボイルド",
+          "durationMinutes": 112,
+          "releaseDate": null
+        },
+        {
+          "date": "2026-10-17",
+          "time": "11:00",
+          "title": "船を降りたら彼女の島",
+          "durationMinutes": 112,
+          "releaseDate": "2003-02-15"
+        },
+        {
+          "date": "2026-10-17",
+          "time": "13:10",
+          "title": "がんばっていきまっしょい（1998）",
+          "durationMinutes": 120,
+          "releaseDate": null
+        },
+        {
+          "date": "2026-10-17",
+          "time": "17:10",
+          "title": "ハードボイルド",
+          "durationMinutes": 112,
+          "releaseDate": null
         }
       ],
       "status": "ok"
