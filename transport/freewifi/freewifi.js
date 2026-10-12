@@ -13,7 +13,7 @@
     {id:'panel-port', mode:0, duration:15000, title:'フェリー　出航'},
     {id:'panel-port', mode:1, duration:15000, title:'フェリー　到着'}
   ];
-  const cinemaPage = {id:'cinema-screen', cinema:true, duration:30000, title:'映画上映案内（3館）'};
+  const cinemaPage = {id:'cinema-screen', cinema:true, duration:30000, title:'映画上映案内（5館）'};
   const rawPages = companyPc
     ? [...transportPages,cinemaPage]
     : [...transportPages,cinemaPage,{id:'gamble-screen', gamble:true, duration:20000, title:'ギャンブル'}];
