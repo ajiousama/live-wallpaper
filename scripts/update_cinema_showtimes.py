@@ -76,6 +76,15 @@ def parse_listing(html, theater_name, today):
                          if (m:=DURATION.match(x))), None)
         if duration is None:
             continue
+        # Use only the verified release date printed next to this work.
+        # Do not infer a premiere from the first day available in the listing.
+        release_date = None
+        release_match = re.match(r"^(20\d{2})年(\d{1,2})月(\d{1,2})日", lines[release_i])
+        if release_match:
+            try:
+                release_date = dt.date(*map(int, release_match.groups())).isoformat()
+            except ValueError:
+                pass
         valid_titles += 1
         target_date = None
         for line in lines[release_i+1:stop]:
@@ -99,7 +108,8 @@ def parse_listing(html, theater_name, today):
             for h,minute in TIMES.findall(line):
                 time = f"{int(h):02d}:{minute}"
                 shows.append({"date": target_date.isoformat(), "time": time,
-                              "title": title, "durationMinutes": duration})
+                              "title": title, "durationMinutes": duration,
+                              "releaseDate": release_date})
     unique = {(x["date"],x["time"],x["title"]):x for x in shows}
     sorted_rows = sorted(unique.values(), key=lambda x:(x["date"],x["time"],x["title"]))
     if valid_titles < 2 or len(sorted_rows) < 3:
