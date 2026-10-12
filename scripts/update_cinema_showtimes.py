@@ -12,6 +12,7 @@ import re
 import sys
 import urllib.request
 import urllib.error
+import unicodedata
 from bs4 import BeautifulSoup
 
 JST = dt.timezone(dt.timedelta(hours=9))
@@ -25,6 +26,8 @@ THEATERS = {
 LUNATIC_LAST_DAY = dt.date(2026, 11, 24)
 CORE_THEATERS = frozenset(("shigenobu", "masaki", "kinuyama"))
 SOURCE = "https://www.crank-in.net/theater/search/all/38/"
+LUNATIC_SUPPLEMENT = "https://eiga.com/theater/38/380101/6058/"
+EIGA_DATE = re.compile(r"(?<!\d)(\d{1,2})/(\d{1,2})\s*[（(][月火水木金土日][）)]")
 RELEASE = re.compile(r"^20\d{2}年\d{1,2}月\d{1,2}日.+公開")
 DURATION = re.compile(r"^上映時間[:：]\s*(\d+)\s*分")
 DATE = re.compile(r"^(\d{1,2})月(\d{1,2})日(?:\s*[（(][月火水木金土日][）)])?$")
@@ -117,6 +120,89 @@ def parse_listing(html, theater_name, today):
     return sorted_rows
 
 
+def parse_lunatic_supplement(html, today):
+    """Parse the second, cinema-specific listing only where a film and date
+    are explicitly present. Missing source data never creates fake screenings.
+    Each work on eiga.com is a separate section with an h2 title and daily cells.
+    """
+    soup = BeautifulSoup(html, "html.parser")
+    if "シネマルナティック" not in soup.get_text(" ", strip=True):
+        raise ValueError("Alternative theater identity missing")
+    shows = []
+    for heading in soup.find_all("h2"):
+        section = heading.parent
+        if section.name != "section":
+            continue
+        title = heading.get_text(" ", strip=True)
+        if not title or len(title) > 180:
+            continue
+        text = section.get_text(" ", strip=True)
+        day_marks = list(EIGA_DATE.finditer(text))
+        if len(day_marks) < 3:
+            continue
+        # A release date is usable as a premiere marker ONLY if its year is shown.
+        details = text[:day_marks[0].start()]
+        release = re.search(r"(20\d{2})年(\d{1,2})月(\d{1,2})日公開", details)
+        release_date = None
+        if release:
+            try:
+                release_date = dt.date(*map(int, release.groups())).isoformat()
+            except ValueError:
+                pass
+        duration = re.search(r"(?<!\d)(\d{2,3})\s*分", details)
+        minutes = int(duration.group(1)) if duration else None
+        for i,mark in enumerate(day_marks):
+            month,day = map(int, mark.groups())
+            year = today.year + (1 if today.month == 12 and month == 1 else 0)
+            try:
+                screening_date = dt.date(year,month,day)
+            except ValueError:
+                continue
+            if not today <= screening_date <= today + dt.timedelta(days=4):
+                continue
+            if screening_date > LUNATIC_LAST_DAY:
+                continue
+            end = day_marks[i+1].start() if i+1 < len(day_marks) else len(text)
+            block = text[mark.end():end]
+            for hour,minute in TIMES.findall(block):
+                shows.append({
+                    "date": screening_date.isoformat(),
+                    "time": f"{int(hour):02d}:{minute}",
+                    "title": title,
+                    "durationMinutes": minutes,
+                    "releaseDate": release_date
+                })
+    if not shows:
+        raise ValueError("No dated sessions verified in alternative theater listing")
+    return shows
+
+
+def cinema_title_key(title):
+    # Resolve presentation-only differences in the two source listings.
+    title = re.sub(r"《(?:字幕|吹替)版》", "", str(title))
+    title = unicodedata.normalize("NFKC", title)
+    return re.sub(r"[\s・!！、,.。/／:：]+", "", title).casefold()
+
+
+def merge_cinema_sessions(primary, supplement):
+    titles = {}
+    for r in primary:
+        titles.setdefault(cinema_title_key(r["title"]), r["title"])
+    merged = {}
+    for r in primary + supplement:
+        canon = cinema_title_key(r["title"])
+        label = titles.setdefault(canon, r["title"])
+        row = dict(r, title=label)
+        key = (row["date"], row["time"], canon)
+        if key not in merged:
+            merged[key] = row
+        elif row.get("releaseDate") and not merged[key].get("releaseDate"):
+            merged[key]["releaseDate"] = row["releaseDate"]
+        if key in merged and row.get("durationMinutes") and not merged[key].get("durationMinutes"):
+            merged[key]["durationMinutes"] = row["durationMinutes"]
+    return sorted(merged.values(), key=lambda r:(r["date"],r["time"],r["title"]))
+
+
 def build(today, fetch=listing):
     result = {"generatedAt": dt.datetime.now(dt.timezone.utc).isoformat(),
               "timezone": "Asia/Tokyo", "date": today.isoformat(),
@@ -128,18 +214,6 @@ def build(today, fetch=listing):
         if slug == "lunatic" and today > LUNATIC_LAST_DAY:
             continue
         url = SOURCE + number
-        if slug == "lunatic":
-            try:
-                test_html=listing("https://eiga.com/theater/38/380101/6058/")
-                soup_dbg=BeautifulSoup(test_html,"html.parser")
-                heads=[{"tag":h.name,"title":h.get_text(" ",strip=True)[:100],"parent":h.parent.name,
-                        "cl":h.parent.get("class"),"up":h.parent.get_text(" ",strip=True)[:250]}
-                       for h in soup_dbg.find_all(["h2","h3","h4"]) if
-                       any(x in h.get_text(" ",strip=True) for x in ["ハードボイルド","オース","シネマルナティック","私たちは","こまどり","大杉漣","諫山節考","内子こども"])]
-                print("LUNATIC_DOM_PROBE "+json.dumps(heads[:28],ensure_ascii=False),file=sys.stderr)
-                print("LUNATIC_PROBE_SIZE "+str(len(test_html)),file=sys.stderr)
-            except Exception as e:
-                print("LUNATIC_DOM_PROBE_ERROR "+repr(e),file=sys.stderr)
         try:
             records = parse_listing(fetch(url), name, today)
         except (OSError, ValueError, TimeoutError, urllib.error.URLError) as exc:
@@ -149,18 +223,24 @@ def build(today, fetch=listing):
                 raise
             # A temporary failure in either newly adopted theater must not
             # suspend refreshes of the already-working cinemas.
-            result["theaters"][slug] = {
-                "name": name, "officialUrl": official, "listingUrl": url,
-                "shows": [], "status": "unavailable",
-            }
-            print(f"{name}: unavailable ({exc})", file=sys.stderr)
-            continue
+            print(f"{name}: first source unavailable ({exc})", file=sys.stderr)
+            records = []
+
+        secondary_url = None
         if slug == "lunatic":
+            secondary_url = LUNATIC_SUPPLEMENT
+            try:
+                extra = parse_lunatic_supplement(fetch(secondary_url), today)
+                records = merge_cinema_sessions(records, extra)
+                print(f"{name}: verified +{len(extra)} secondary sessions", file=sys.stderr)
+            except (OSError, ValueError, TimeoutError, urllib.error.URLError) as exc:
+                print(f"{name}: secondary source unavailable ({exc})", file=sys.stderr)
             records = [x for x in records
                        if x["date"] <= LUNATIC_LAST_DAY.isoformat()]
         result["theaters"][slug] = {
             "name": name, "officialUrl": official, "listingUrl": url,
-            "shows": records, "status": "ok"
+            **({"secondaryListingUrl": secondary_url} if secondary_url else {}),
+            "shows": records, "status": "ok" if records else "unavailable"
         }
         print(f"{name}: {len(records)} sessions / {len(set(x['title'] for x in records))} films",
               file=sys.stderr)
