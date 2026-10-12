@@ -128,6 +128,18 @@ def build(today, fetch=listing):
         if slug == "lunatic" and today > LUNATIC_LAST_DAY:
             continue
         url = SOURCE + number
+        if slug == "lunatic":
+            try:
+                test_html=listing("https://eiga.com/theater/38/380101/6058/")
+                soup_dbg=BeautifulSoup(test_html,"html.parser")
+                heads=[{"tag":h.name,"title":h.get_text(" ",strip=True)[:100],"parent":h.parent.name,
+                        "cl":h.parent.get("class"),"up":h.parent.get_text(" ",strip=True)[:250]}
+                       for h in soup_dbg.find_all(["h2","h3","h4"]) if
+                       any(x in h.get_text(" ",strip=True) for x in ["ハードボイルド","オース","シネマルナティック","私たちは","こまどり","大杉漣","諫山節考","内子こども"])]
+                print("LUNATIC_DOM_PROBE "+json.dumps(heads[:28],ensure_ascii=False),file=sys.stderr)
+                print("LUNATIC_PROBE_SIZE "+str(len(test_html)),file=sys.stderr)
+            except Exception as e:
+                print("LUNATIC_DOM_PROBE_ERROR "+repr(e),file=sys.stderr)
         try:
             records = parse_listing(fetch(url), name, today)
         except (OSError, ValueError, TimeoutError, urllib.error.URLError) as exc:
