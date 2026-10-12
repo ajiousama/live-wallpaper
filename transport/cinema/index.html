@@ -64,6 +64,9 @@ h1{font-size:clamp(23px,2.9vw,35px);margin:0;line-height:1.08}
 @media(prefers-reduced-motion:reduce){.showtime.blink{animation:none;color:#ffe067}}
 
 /* Compact two-line cinema rows, matching the JR departure-board rhythm. */
+/* Use a slower ticker so viewers can read the time followed by the cinema. */
+@media(prefers-reduced-motion:reduce){.film-session.blink{animation:none}}
+
 :root{--row-h:54px}
 .board-head{height:28px;display:flex;align-items:center;padding:0 10px}
 .board-head>div{border:0!important;padding:0!important}
@@ -122,7 +125,7 @@ const venues=[
   {id:"lunatic",label:"ルナティック",color:"#dcb7fa",until:"2026-11-24"},
   {id:"imabari",label:"今治新都市",color:"#ffb09e"}
 ];
-const JST=32400000,DURATION=30000,PAGE_MS=7500,SCROLL_SPEED=43;
+const JST=32400000,DURATION=30000,PAGE_MS=7500,SCROLL_SPEED=34;
 const two=n=>String(n).padStart(2,"0");
 const dateJst=ms=>{const d=new Date(ms+JST);return d.getUTCFullYear()+"-"+two(d.getUTCMonth()+1)+"-"+two(d.getUTCDate())};
 const startMs=(date,time)=>Date.parse(date+"T"+time+":00+09:00");
