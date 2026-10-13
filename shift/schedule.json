@@ -11,47 +11,47 @@
     "玉井": {
       "full": "玉井 圭二",
       "color": "#ffffff",
-      "text": "#15191e"
+      "text": "#111111"
     },
     "小平": {
       "full": "小平 純",
-      "color": "#d9d9d9",
-      "text": "#15191e"
+      "color": "#171717",
+      "text": "#ffffff"
     },
     "高橋": {
       "full": "高橋 哲也",
-      "color": "#fce4d6",
-      "text": "#15191e"
+      "color": "#d92f35",
+      "text": "#101010"
     },
     "上田": {
       "full": "上田 誠司",
-      "color": "#d9e2f3",
-      "text": "#15191e"
+      "color": "#168bd1",
+      "text": "#101010"
     },
     "出石": {
       "full": "出石 英児",
-      "color": "#ffff99",
-      "text": "#15191e"
+      "color": "#ffdf00",
+      "text": "#101010"
     },
     "山口": {
       "full": "山口 徳典",
-      "color": "#ededed",
-      "text": "#15191e"
+      "color": "#71b777",
+      "text": "#101010"
     },
     "笹田": {
       "full": "笹田 伸彦",
-      "color": "#f8cbad",
-      "text": "#15191e"
+      "color": "#ffdf00",
+      "text": "#101010"
     },
     "木藤": {
       "full": "木藤 雅",
-      "color": "#ff99ff",
-      "text": "#15191e"
+      "color": "#e5a0b7",
+      "text": "#101010"
     },
     "黒河": {
       "full": "黒河 満夫",
-      "color": "#fce4d6",
-      "text": "#15191e"
+      "color": "#e6bf99",
+      "text": "#101010"
     }
   },
   "days": {
