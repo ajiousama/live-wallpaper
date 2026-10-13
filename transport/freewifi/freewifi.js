@@ -13,17 +13,19 @@
     {id:'panel-port', mode:0, duration:15000, title:'フェリー　出航'},
     {id:'panel-port', mode:1, duration:15000, title:'フェリー　到着'}
   ];
+  const ichitsuboPage = {id:'ichitsubo-screen', ichitsubo:true, duration:20000, title:'JR 市坪駅　列車位置案内'};
   const cinemaPage = {id:'cinema-screen', cinema:true, duration:30000, title:'映画上映案内（5館）'};
   const shiftPage = {id:'shift-screen', shift:true, duration:30000, title:'勤務予定・本日／翌日'};
   const rawPages = companyPc
-    ? [...transportPages,cinemaPage,shiftPage]
-    : [...transportPages,cinemaPage,{id:'gamble-screen', gamble:true, duration:20000, title:'ギャンブル'}];
+    ? [...transportPages.slice(0,2),ichitsuboPage,...transportPages.slice(2),cinemaPage,shiftPage]
+    : [...transportPages.slice(0,2),ichitsuboPage,...transportPages.slice(2),cinemaPage,{id:'gamble-screen', gamble:true, duration:20000, title:'ギャンブル'}];
   const pages = rawPages.map((p,i)=>({...p,label:`${String(i+1).padStart(2,'0')} / ${String(rawPages.length).padStart(2,'0')}　${p.title}`}));
 
   const TRANSPORT_IDS = ['panel-rail','panel-air','panel-bus','panel-port'];
   const gambleScreen = document.getElementById('gamble-screen');
   const gambleFrame = document.getElementById('gamble-frame');
   const shiftScreen = document.getElementById('shift-screen');
+  const ichitsuboScreen = document.getElementById('ichitsubo-screen');
   const cinemaScreen = document.getElementById('cinema-screen');
   const cinemaFrame = document.getElementById('cinema-frame');
   const status = document.getElementById('freewifi-page-status');
@@ -73,6 +75,10 @@
         try { cinemaFrame.contentWindow?.postMessage({type:'cinema-page-active'},location.origin); } catch(e) {}
       }
     }
+    if(ichitsuboScreen){
+      ichitsuboScreen.hidden = !page.ichitsubo;
+      ichitsuboScreen.classList.toggle('freewifi-active', !!page.ichitsubo);
+    }
     if(shiftScreen){
       shiftScreen.hidden = !page.shift;
       shiftScreen.classList.toggle('freewifi-active', !!page.shift);
@@ -86,7 +92,7 @@
     document.body.classList.toggle('air-board-page', isAir);
     document.body.classList.toggle('air-board-arrival', isAir && page.mode === 1);
 
-    if(!page.gamble && !page.cinema && !page.shift){
+    if(!page.gamble && !page.cinema && !page.shift && !page.ichitsubo){
       const controller = ui();
       if(controller && typeof controller.setMode === 'function'){
         // The transport renderer may fail on one record. Never allow that
