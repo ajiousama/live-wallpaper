@@ -9,8 +9,8 @@
 *{box-sizing:border-box}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#07111c;color:#18212c;font-family:"Noto Sans JP","Yu Gothic","Meiryo",sans-serif}
 #frame{height:100%;width:100%;padding:11px 13px;background:#dce3e8}
-#board{width:100%;height:100%;min-height:0;display:grid;grid-template-columns:minmax(0,2.15fr) minmax(290px,0.96fr);grid-template-rows:72px minmax(0,1fr);gap:10px;padding:15px;background:#f8fafc;border:5px ridge #b6c1c9;border-radius:10px;box-shadow:inset 0 0 5px #798897}
-#month-panel{min-height:0;min-width:0;display:flex;flex-direction:column;grid-row:2}
+#board{width:100%;height:100%;min-height:0;display:grid;grid-template-columns:minmax(0,2.15fr) minmax(290px,0.96fr);grid-template-rows:minmax(0,1fr);gap:10px;padding:15px;background:#f8fafc;border:5px ridge #b6c1c9;border-radius:10px;box-shadow:inset 0 0 5px #798897}
+#month-panel{min-height:0;min-width:0;display:flex;flex-direction:column;}
 .heading{height:57px;display:flex;align-items:center;gap:15px;white-space:nowrap}
 .heading h1{font-size:38px;letter-spacing:.03em;line-height:1;margin:0;color:#10151b}
 .heading small{font-size:13px;color:#52616b;font-weight:900;letter-spacing:.07em}
@@ -26,7 +26,7 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#07111c;col
 .day .dt{font-size:15px;font-weight:950;line-height:1.1;color:#141b22;font-variant-numeric:tabular-nums}
 .day .dt.sat{color:#1466b6}.day .dt.sun{color:#c32234}
 .tile{border:1px solid #acb5bb;border-radius:5px;box-shadow:0 1px 2px #0001;text-align:center;font-weight:900;color:#15191e;min-height:24px;display:grid;place-items:center;font-size:17px;line-height:1;padding:2px;white-space:nowrap}
-#pickup{grid-row:2;min-height:0;min-width:0;display:flex;flex-direction:column;gap:12px;border-left:2px solid #a0aab0;padding-left:13px}
+#pickup{min-height:0;min-width:0;display:flex;flex-direction:column;gap:12px;border-left:2px solid #a0aab0;padding-left:13px}
 #pickup h2{margin:2px 0 0;text-align:center;font-size:37px;letter-spacing:.07em;line-height:1.05;color:#131923}
 #pickup .subtitle{margin:0;text-align:center;font-size:16px;font-weight:850;color:#5e6872}
 .pickcard{flex:1;min-height:0;border:3px solid #d9a0a0;border-radius:14px;background:#fff9f9;padding:12px 10px;display:flex;flex-direction:column;gap:11px}
@@ -43,45 +43,10 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#07111c;col
 #small-note{text-align:center;font-weight:800;font-size:12px;color:#55606b;line-height:1.5}
 @media(max-width:900px){#frame{padding:4px}#board{padding:8px;gap:7px;grid-template-columns:minmax(0,2fr) minmax(225px,0.85fr)}.heading h1{font-size:27px}.heading small{font-size:10px}.tile{font-size:12px}.day .dt{font-size:12px}#pickup{padding-left:7px;gap:5px}#pickup h2{font-size:26px}.pickcard{padding:7px 5px}.tag{font-size:16px}.pickdate{font-size:16px}.pickrow{height:41px;grid-template-columns:33px 1fr}.name{font-size:15px}.num{font-size:21px}}
 
-/* Only the shift page gains this shared-header-style strip. The monthly
-   calendar and both pickup cards stay inside the same whiteboard below it. */
-#shift-top{grid-column:1 / -1;grid-row:1;display:grid;
- grid-template-columns:minmax(0,1fr) 185px 175px;align-items:stretch;gap:9px;
- min-width:0;min-height:0;padding:7px 10px;background:#102738;color:#fff;
- border-radius:8px;border:1px solid #3d657c;overflow:hidden}
-#ichitsubo-info{min-width:0;min-height:0;overflow:hidden;display:flex;flex-direction:column;
- gap:3px;justify-content:center}
-#ichitsubo-info strong{font-size:15px;letter-spacing:.05em;color:#94e9bb;line-height:1.2}
-#ichitsubo-info .station-line{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
- font-size:14px;font-weight:850;line-height:1.2;color:#eef7ff}
-#ichitsubo-info .station-line.empty{color:#aabac4}
-.top-widget{border-left:1px solid #618296;display:flex;flex-direction:column;
- align-items:center;justify-content:center;gap:3px;min-width:0}
-.top-widget .top-caption{font-size:12px;font-weight:850;color:#a5cce0;white-space:nowrap}
-.top-widget .top-digit{font-size:29px;line-height:1.1;font-weight:950;letter-spacing:.02em;
- font-variant-numeric:tabular-nums;white-space:nowrap;color:white}
-#rotation-left{color:#ffdd78}
-@media(max-width:900px){
- #board{grid-template-rows:67px minmax(0,1fr)}
- #shift-top{padding:5px;grid-template-columns:minmax(0,1fr) 125px 105px;gap:3px}
- #ichitsubo-info strong{font-size:12px}
- #ichitsubo-info .station-line{font-size:11px}
- .top-widget .top-caption{font-size:10px}
- .top-widget .top-digit{font-size:21px}
-}
 </style>
 </head>
 <body>
 <div id="frame"><main id="board">
-<header id="shift-top" aria-label="市坪駅・時計・切替案内">
-  <div id="ichitsubo-info" aria-live="off">
-    <strong>JR 市坪駅　列車位置・接近案内</strong>
-    <div class="station-line empty" id="station-north">松山方面：位置情報を確認中</div>
-    <div class="station-line empty" id="station-south">宇和島・伊予市方面：位置情報を確認中</div>
-  </div>
-  <div class="top-widget"><span class="top-caption">現在時刻（JST）</span><time class="top-digit" id="shift-live-clock">--:--:--</time></div>
-  <div class="top-widget"><span class="top-caption">次の画面まで</span><span class="top-digit" id="rotation-left">--:--</span></div>
-</header>
 <section id="month-panel"><header class="heading"><h1 id="month-title">11月度 勤務予定</h1><small>MONTHLY PLANNER</small></header><div id="calendar"></div></section>
 <aside id="pickup"><h2>PICK UP</h2><p class="subtitle">本日分・翌日分</p>
 <section class="pickcard" id="today-card"><div class="pickhead"><span class="tag">本日</span><strong class="pickdate" id="today-date">--/--</strong></div><div class="pickrows" id="today-rows"></div></section>
@@ -137,107 +102,6 @@ function tick(){if(!data)return;const today=shiftToday();if(today===lastKey)retu
 async function fetchSchedule(){try{const response=await fetch('./schedule.json?t='+Date.now(),{cache:'no-store'});if(!response.ok)throw Error('HTTP '+response.status);data=await response.json();$('month-title').textContent=(data.period||'11月度')+' 勤務予定';lastKey='';tick()}catch(err){console.error('shift schedule load failed:',err)}}
 fetchSchedule();setInterval(tick,1000);setInterval(fetchSchedule,60000);
 
-/* Match the existing JR 市坪 approach system: reuse its scope=fast API,
-   freshness window, position validation, and 15-second fetch interval.
-   Never put timetable-only or unconfirmed positions on this strip. */
-const approachUrl='https://ihhiymkepuydykrhmzwo.supabase.co/functions/v1/approach';
-const digitalClock=new Intl.DateTimeFormat('ja-JP',{
- timeZone:'Asia/Tokyo',hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'
-});
-const cityTimeParts=new Intl.DateTimeFormat('en-CA',{
- timeZone:'Asia/Tokyo',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'
-});
-let cityPayload=null,cityReceived=0,cityFetching=false;
-function cityMinutes(){
- const p={};cityTimeParts.formatToParts(new Date()).forEach(x=>p[x.type]=x.value);
- return Number(p.hour)*60+Number(p.minute);
-}
-function cityValidPosition(value){
- const v=String(value||'').replace(/（.*?）/g,'').replace(/予告窓/g,'').trim();
- return !!v&&!/^(?:-|—|不明|未取得|取得中|確認中|データなし|位置情報なし)$/.test(v);
-}
-function cityDirection(x){
- if(x.direction==='north'||x.direction==='south')return x.direction;
- return /^(?:松山|伊予北条)$/.test(String(x.destination||''))?'north':'south';
-}
-function cityVisibleTrains(){
- const ts=Date.parse(String(cityPayload?.generatedAtJst||''));
- const age=Date.now()-ts;
- if(cityPayload?.ok!==true || cityPayload.ichitsubo?.ok!==true ||
-    !Number.isFinite(ts)||age < -15000||age>45000||
-    Date.now()-cityReceived>45000)return [];
- const now=cityMinutes();
- return (Array.isArray(cityPayload.ichitsubo.approaching)?cityPayload.ichitsubo.approaching:[])
- .filter(x=>{
-  if(!x||!cityValidPosition(x.position))return false;
-  const mins=x.minutesToIchitsubo==null?NaN:Number(x.minutesToIchitsubo);
-  if(Number.isFinite(mins)&&mins<0)return false;
-  const m=String(x.scheduledIchitsubo||'').match(/^(\d{1,2}):(\d{2})$/);
-  if(m){
-   let diff=Number(m[1])*60+Number(m[2])+(Number(x.delayMinutes)||0)-now;
-   if(diff < -720)diff+=1440;
-   if(diff > 720)diff-=1440;
-   if(diff<0)return false;
-  }
-  return true;
- }).sort((a,b)=>{
-  const am=a.minutesToIchitsubo==null?Infinity:Number(a.minutesToIchitsubo);
-  const bm=b.minutesToIchitsubo==null?Infinity:Number(b.minutesToIchitsubo);
-  return (Number.isFinite(am)?am:Infinity)-(Number.isFinite(bm)?bm:Infinity);
- });
-}
-function cityTrainLabel(x){
- const kind=String(x.kind||'');
- const type=kind==='deadhead'?'回送':kind==='freight'?'貨物':
-            kind==='pass'?'通過':kind==='unknown'?'種別未確認':
-            x.trainClass==='limited'?'特急':'普通';
- const time=String(x.scheduledIchitsubo||'').replace(/^(\d):/,'0$1:');
- const place=String(x.position||'').trim();
- const dest=String(x.destination||'').trim();
- const mins=x.minutesToIchitsubo==null?NaN:Number(x.minutesToIchitsubo);
- const arriving=Number.isFinite(mins)?'／約'+Math.max(0,Math.round(mins))+'分':'';
- return [time||'時刻未確認',type,dest?(dest+'行'):'行先未確認','現在位置 '+place].join('　')+arriving;
-}
-function cityRender(){
- const trains=cityVisibleTrains();
- for(const [direction,id,title] of [['north','station-north','松山方面'],['south','station-south','宇和島・伊予市方面']]){
-  const x=trains.find(t=>cityDirection(t)===direction);
-  const el=$(id);
-  el.classList.toggle('empty',!x);
-  const value=title+'：'+(x?cityTrainLabel(x):'現在、位置確認できた接近列車なし');
-  el.textContent=value;
-  el.title=value;
- }
-}
-async function refreshCity(){
- if(cityFetching)return;
- cityFetching=true;
- try{
-  const r=await fetch(approachUrl+'?scope=fast&t='+Date.now(),{cache:'no-store'});
-  if(!r.ok)throw Error('HTTP '+r.status);
-  cityPayload=await r.json();
-  cityReceived=Date.now();
- }catch(e){cityPayload=null;cityReceived=0}
- finally{cityFetching=false;cityRender()}
-}
-function updateShiftTop(){
- $('shift-live-clock').textContent=digitalClock.format(new Date());
- let due=0;
- try{
-  if(window.parent!==window && window.parent.location.origin===window.location.origin)
-    due=Number(window.parent.document.documentElement.dataset.companyPageDue||0);
- }catch(e){}
- const sec=due>0?Math.max(0,Math.ceil((due-Date.now())/1000)):NaN;
- $('rotation-left').textContent=Number.isFinite(sec)
-  ?String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0')
-  :'--:--';
-}
-refreshCity();
-updateShiftTop();
-setInterval(refreshCity,15000);
-setInterval(cityRender,5000);
-setInterval(updateShiftTop,250);
-window.addEventListener('pageshow',updateShiftTop);
 
 })();
 </script></body></html>
