@@ -15,6 +15,7 @@ on:
       - "data/**"
       - "jra/**"
       - "gamble/**"
+      - "shift/**"
       - ".nojekyll"
       - ".github/workflows/pages.yml"
 
@@ -126,7 +127,7 @@ jobs:
       - name: Stamp wallpaper UI version
         shell: bash
         run: |
-          BUILD_ID="$(find transport assets config -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum | cut -c1-16)"
+          BUILD_ID="$(find transport assets config shift -type f -print0 | sort -z | xargs -0 sha256sum | sha256sum | cut -c1-16)"
           printf '{"build":"%s"}\n' "$BUILD_ID" > deploy-version.json
           python - "$BUILD_ID" <<'PY'
           from pathlib import Path
