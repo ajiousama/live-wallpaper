@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache,no-store,must-revalidate">
+<title>JR市坪駅 列車位置案内</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#07111b;color:#eef9ff;font-family:"Noto Sans JP","Yu Gothic UI","Meiryo",sans-serif}
+#app{height:100%;width:100%;padding:22px 22px 18px;display:grid;grid-template-rows:95px auto minmax(0,1fr) 28px;gap:12px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:2px solid #2a566f;padding-bottom:13px}
+.headline h1{font-size:43px;line-height:1.15;margin:0;font-weight:1000}
+.headline small{color:#86b6d4;font-size:13px;letter-spacing:.1em;font-weight:900}
+.live{display:flex;gap:9px;align-items:center;font-weight:900;font-size:15px;color:#84f0c0}
+.dot{width:12px;height:12px;background:#44e6a0;display:block;border-radius:100%;box-shadow:0 0 12px #00c37a88}
+.live.offline{color:#faaf8d}.live.offline .dot{background:#cb6d58;box-shadow:none}
+#overview{color:#f3cf84;font-weight:800;font-size:16px}
+.panels{display:grid;grid-template-columns:1fr 1fr;gap:14px;min-height:0}
+.panel{border:1px solid #355d75;background:#0e1f30;border-radius:13px;min-width:0;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+.panel-head{height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 18px;background:#153147;border-bottom:1px solid #46708b;flex:none}
+.panel-head h2{font-size:25px;margin:0}
+.panel-head span{font-size:14px;color:#c1d7e7;font-weight:800}
+.records{flex:1;min-height:0;display:flex;flex-direction:column;gap:9px;padding:12px 13px;overflow:hidden}
+.train{border:1px solid #41617a;background:#172c42;border-radius:10px;padding:11px 13px;min-height:0;flex:1;max-height:122px;display:grid;grid-template-rows:auto auto;gap:5px}
+.train-top{display:flex;gap:7px;align-items:center;min-width:0}
+.time{font-size:24px;letter-spacing:.02em;font-weight:950;color:#ffe18b;flex:none}
+.kind{border:1px solid #899cad;color:#e7f5ff;padding:3px 6px;border-radius:5px;font-size:14px;font-weight:950;flex:none}
+.dest{font-weight:950;font-size:23px;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.train-bottom{font-weight:700;font-size:14px;color:#a7dbf6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.special{color:#ffc87b;font-weight:950}
+.missing{flex:1;display:grid;place-items:center;text-align:center;color:#92aebb;font-size:20px;font-weight:800}
+footer{display:flex;justify-content:space-between;align-items:center;color:#b4c8d6;font-size:12px;font-weight:750}
+@media(max-width:850px){#app{padding:10px;grid-template-rows:74px auto minmax(0,1fr) 22px;gap:5px}.headline h1{font-size:30px}.panel-head{height:48px;padding:0 10px}.panel-head h2{font-size:19px}.panel-head span{font-size:11px}.records{padding:7px;gap:5px}.train{padding:6px 8px}.time{font-size:20px}.kind{font-size:11px}.dest{font-size:16px}.train-bottom{font-size:11px}}
+</style>
+</head>
+<body>
+<main id="app">
+<header>
+<div class="headline"><small>JR SHIKOKU / ICHITSUBO STATION</small><h1>市坪駅 列車運行案内</h1></div>
+<div class="live offline" id="live-status"><span class="dot"></span><span id="status-text">位置情報を照会中</span></div>
+</header>
+<div id="overview">市坪駅の列車位置情報を確認しています</div>
+<section class="panels">
+<article class="panel"><div class="panel-head"><h2>松山方面</h2><span>JR MATSUYAMA</span></div><div class="records" id="north"></div></article>
+<article class="panel"><div class="panel-head"><h2>宇和島・伊予市方面</h2><span>UWAJIMA / IYO</span></div><div class="records" id="south"></div></article>
+</section>
+<footer><span>既存のJR市坪駅ダイヤ・列車位置監視システムを使用</span><span>位置情報の確認できない列車は掲載しません</span></footer>
+</main>
+<script src="../r15-dev/schedule.js"></script>
+<script>
+(()=>{
+'use strict';
+// Reuse the same Supabase "fast" feed and the same R15 市坪 schedule
+// that currently power the existing JR approaching-alert system.
+const API='https://ihhiymkepuydykrhmzwo.supabase.co/functions/v1/approach';
+const records=(window.MATSUYAMA_DATA?.records||[]).filter(r=>r.board==='ichitsubo');
+const $=id=>document.getElementById(id);
+const clock=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Tokyo',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'});
+let payload=null,received=0,busy=false;
+function pad(t){const m=String(t||'').match(/^(\d{1,2}):(\d{2})$/);return m?m[1].padStart(2,'0')+':'+m[2]:''}
+function nowJst(){const o={};clock.formatToParts(new Date()).forEach(p=>o[p.type]=p.value);return {iso:o.year+'-'+o.month+'-'+o.day,minutes:Number(o.hour)*60+Number(o.minute)}}
+function validRec(r,iso){return (!r.start||r.start<=iso)&&(!r.end||r.end>=iso)&&(!r.exclude||!r.exclude.includes(iso))&&(!r.dates||r.dates.includes(iso))&&(!r.days||r.days.includes(new Date(iso+'T12:00:00Z').getUTCDay()))}
+function usablePosition(v){const t=String(v||'').replace(/（.*?）/g,'').replace(/予告窓/g,'').trim();return !!t&&!/^(?:-|—|不明|未取得|取得中|確認中|データなし|位置情報なし)$/.test(t)}
+function dir(x){if(x.direction==='north'||x.direction==='south')return x.direction;return /^(?:松山|伊予北条)$/.test(String(x.destination||''))?'north':'south'}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]))}
+function trainKind(x){const k=String(x.kind||'');if(k==='deadhead')return '回送';if(k==='freight')return '貨物';if(k==='pass')return '通過';if(k==='unknown')return '種別未確認';return x.trainClass==='limited'?'特急':'普通'}
+function serviceFinal(x,iso){const d=dir(x),at=pad(x.scheduledIchitsubo);if(!at)return false;const list=records.filter(r=>r.direction===d&&validRec(r,iso)).map(r=>pad(r.time)).filter(Boolean).sort();return list.length>0 && list[list.length-1]===at}
+function readable(items,now){
+  return items.filter(x=>{
+    if(!x||!usablePosition(x.position))return false;
+    const m=x.minutesToIchitsubo==null?NaN:Number(x.minutesToIchitsubo);
+    if(Number.isFinite(m)&&m<0)return false;
+    const t=pad(x.scheduledIchitsubo);
+    const delay=Number(x.delayMinutes)||0;
+    if(t){
+      let diff=Number(t.slice(0,2))*60+Number(t.slice(3,5))+delay-now.minutes;
+      if(diff<-720)diff+=1440;
+      if(diff>720)diff-=1440;
+      if(diff<0)return false;
+    }
+    return true;
+  }).sort((a,b)=>{
+    const am=a.minutesToIchitsubo==null?Infinity:Number(a.minutesToIchitsubo);
+    const bm=b.minutesToIchitsubo==null?Infinity:Number(b.minutesToIchitsubo);
+    return (Number.isFinite(am)?am:Infinity)-(Number.isFinite(bm)?bm:Infinity);
+  });
+}
+function renderList(place,items,now){
+  const root=$(place);root.replaceChildren();
+  const show=items.filter(x=>dir(x)===place).slice(0,4);
+  if(!show.length){const empty=document.createElement('div');empty.className='missing';empty.textContent='現在、位置確認できた接近列車はありません';root.appendChild(empty);return}
+  for(const x of show){
+    const row=document.createElement('div');row.className='train';
+    const mins=x.minutesToIchitsubo==null?NaN:Number(x.minutesToIchitsubo);
+    const sTime=pad(x.scheduledIchitsubo);
+    const time=sTime||'時刻未確認';
+    const lead=Number.isFinite(mins)&&mins<=15?'約'+Math.max(0,Math.round(mins))+'分':''; 
+    const trainNum=String(x.trainNum||'').trim();
+    const destination=String(x.destination||'行先確認中').trim();
+    const final=serviceFinal(x,now.iso);
+    const title=final?'最終　':'';
+    row.innerHTML='<div class="train-top"><span class="time">'+esc(time)+'</span><span class="kind">'+esc(trainKind(x))+'</span><span class="dest">'+esc(title+destination)+' 行</span></div>'+
+      '<div class="train-bottom">'+(lead?'<span class="special">'+esc(lead)+' ｜ </span>':'')+
+      (trainNum?esc(trainNum)+' ｜ ':'')+'現在位置 '+esc(x.position)+
+      ((Number(x.delayMinutes)||0)>0?' ｜ '+esc(x.delayMinutes)+'分遅れ':'')+'</div>';
+    root.appendChild(row);
+  }
+}
+function render(){
+  const now=nowJst();
+  const generated=Date.parse(String(payload?.generatedAtJst||''));
+  const age=Date.now()-generated;
+  const live=payload?.ok===true&&payload.ichitsubo?.ok===true&&Number.isFinite(generated)&&age>=-15000&&age<=45000&&Date.now()-received<=45000;
+  const status=$('live-status');
+  status.classList.toggle('offline',!live);
+  $('status-text').textContent=live?'列車位置 LIVE':'列車位置 更新待ち';
+  const all=live&&Array.isArray(payload.ichitsubo.approaching)?readable(payload.ichitsubo.approaching,now):[];
+  $('overview').textContent=live?'接近中・現在位置を確認できた列車のみ表示（回送・貨物を含む）':'列車位置情報が取得できないため、未確認の列車は表示しません';
+  renderList('north',all,now);renderList('south',all,now);
+}
+async function refresh(){
+ if(busy)return;busy=true;
+ try{
+  const r=await fetch(API+'?scope=fast&t='+Date.now(),{cache:'no-store'});
+  if(!r.ok)throw Error('HTTP '+r.status);
+  payload=await r.json();received=Date.now();
+ }catch(e){payload=null;received=0}
+ finally{busy=false;render()}
+}
+refresh();setInterval(refresh,15000);setInterval(render,5000);
+})();
+</script>
+</body></html>
