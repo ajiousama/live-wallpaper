@@ -56,29 +56,6 @@
   </script>
   <link rel="stylesheet" href="../r15-dev/style.css?v=__BUILD_ID__" />
   <link rel="stylesheet" href="freewifi.css?v=__BUILD_ID__" />
-  <style id="wallpaper-countdown-style">
-    /* Independent on-screen clock and real page-switch countdown. */
-    .wallpaper-change-counter {
-      position:fixed;right:14px;bottom:11px;z-index:160;display:flex;
-      align-items:center;gap:13px;padding:7px 13px;
-      border:1px solid rgba(156,219,253,.65);border-radius:10px;
-      background:rgba(4,16,28,.95);box-shadow:0 3px 16px rgba(0,0,0,.45);
-      color:#eefaff;font-family:"Meiryo","Yu Gothic UI",sans-serif;
-      font-weight:900;font-variant-numeric:tabular-nums;pointer-events:none;
-      white-space:nowrap;
-    }
-    .wallpaper-change-counter[hidden]{display:none!important}
-    .wallpaper-change-counter .watch-clock{font-size:21px;letter-spacing:.03em;color:white}
-    .wallpaper-change-counter .watch-divider{width:1px;height:25px;background:#7292a7}
-    .wallpaper-change-counter .watch-label{font-size:12px;color:#9edcff}
-    .wallpaper-change-counter .watch-remaining{font-size:23px;color:#ffda69;letter-spacing:.04em}
-    @media(max-width:800px){
-      .wallpaper-change-counter{right:5px;bottom:5px;padding:4px 8px;gap:6px}
-      .wallpaper-change-counter .watch-clock{font-size:16px}
-      .wallpaper-change-counter .watch-remaining{font-size:18px}
-      .wallpaper-change-counter .watch-label{font-size:10px}
-    }
-  </style>
   <!-- Keep this essential workplace size in HTML: Lively may run with stale
        external CSS/JS, or the application script may fail before scaling. -->
   <style id="force-workplace-wallpaper-size">
@@ -216,10 +193,6 @@
       <div class="gamble-page-badge">10 / 10　GAMBLE</div>
     </section>
 
-    <section class="ichitsubo-screen" id="ichitsubo-screen" hidden aria-label="JR市坪駅 列車位置案内">
-      <iframe id="ichitsubo-frame" src="../ichitsubo/" title="市坪駅 列車位置・接近案内" loading="eager" referrerpolicy="same-origin"></iframe>
-    </section>
-
     <section class="shift-screen" id="shift-screen" hidden aria-label="勤務予定・本日と翌日">
       <iframe id="shift-frame" src="../../shift/" title="11月度勤務予定・本日と翌日" loading="eager" referrerpolicy="same-origin"></iframe>
     </section>
@@ -287,43 +260,9 @@
     </div>
   </main>
 
-  <div class="wallpaper-change-counter" id="wallpaper-change-counter" role="status" aria-label="日本時間と次画面までのカウントダウン">
-    <span class="watch-clock" id="wallpaper-live-clock">--:--:--</span>
-    <span class="watch-divider"></span>
-    <span class="watch-label">次の画面まで</span>
-    <span class="watch-remaining" id="wallpaper-next-countdown">--:--</span>
-  </div>
-
   <script src="../r15-dev/schedule.js?v=__BUILD_ID__"></script>
   <script src="../r15-dev/app.js?v=__BUILD_ID__"></script>
   <script src="freewifi.js?v=__BUILD_ID__"></script>
-  <script>
-    // The existing page rotation publishes its real deadline; this display
-    // simply reads it. It never starts a second timer or changes page order.
-    (function(){
-      const timeParts=new Intl.DateTimeFormat('ja-JP',{
-        timeZone:'Asia/Tokyo',hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'
-      });
-      const root=document.getElementById('wallpaper-change-counter');
-      const clock=document.getElementById('wallpaper-live-clock');
-      const remaining=document.getElementById('wallpaper-next-countdown');
-      function update(){
-        const emergency=document.getElementById('disaster-overlay');
-        const modal=document.getElementById('update-modal');
-        root.hidden=!!(emergency&&!emergency.hidden)||!!(modal&&!modal.hidden);
-        if(root.hidden)return;
-        clock.textContent=timeParts.format(new Date());
-        const due=Number(document.documentElement.dataset.companyPageDue||0);
-        if(!Number.isFinite(due)||due<=0){remaining.textContent='--:--';return}
-        const seconds=Math.max(0,Math.ceil((due-Date.now())/1000));
-        const mm=String(Math.floor(seconds/60)).padStart(2,'0');
-        const ss=String(seconds%60).padStart(2,'0');
-        remaining.textContent=mm+':'+ss;
-      }
-      update();setInterval(update,250);
-      window.addEventListener('pageshow',update);
-    })();
-  </script>
   <script>
     // Workplace independent watchdog. The rotation script publishes its
     // actual page deadline: JR/air/bus/ferry = 15 seconds, cinema = 30 seconds.
