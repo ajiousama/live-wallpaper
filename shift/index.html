@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache">
+<title>勤務予定 | 松山 会社PC壁紙</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#07111c;color:#18212c;font-family:"Noto Sans JP","Yu Gothic","Meiryo",sans-serif}
+#frame{height:100%;width:100%;padding:11px 13px;background:#dce3e8}
+#board{width:100%;height:100%;min-height:0;display:grid;grid-template-columns:minmax(0,2.15fr) minmax(290px,0.96fr);gap:12px;padding:15px;background:#f8fafc;border:5px ridge #b6c1c9;border-radius:10px;box-shadow:inset 0 0 5px #798897}
+#month-panel{min-height:0;min-width:0;display:flex;flex-direction:column}
+.heading{height:57px;display:flex;align-items:center;gap:15px;white-space:nowrap}
+.heading h1{font-size:38px;letter-spacing:.03em;line-height:1;margin:0;color:#10151b}
+.heading small{font-size:13px;color:#52616b;font-weight:900;letter-spacing:.07em}
+#calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));grid-template-rows:40px repeat(5,minmax(0,1fr));border:2px solid #2b3842;flex:1;min-height:0;background:#fff}
+.dow{display:grid;place-items:center;background:#f0f4f7;font-weight:900;font-size:14px;border-right:1px solid #7b8790;border-bottom:2px solid #31404a}
+.dow:last-child{border-right:0}
+.dow.sat{background:#235c92;color:white}.dow.sun{background:#b8323b;color:white}
+.day{min-width:0;min-height:0;padding:5px 4px 3px;border-right:1px solid #7b8790;border-bottom:1px solid #7b8790;display:flex;flex-direction:column;gap:3px}
+.day:nth-child(7n){border-right:0}
+.day.empty{background:#f3f5f6}
+.day.today{background:#fff5e8;box-shadow:inset 0 0 0 3px #ef993a}
+.day.tomorrow{background:#eef7ff;box-shadow:inset 0 0 0 2px #2782d2}
+.day .dt{font-size:15px;font-weight:950;line-height:1.1;color:#141b22;font-variant-numeric:tabular-nums}
+.day .dt.sat{color:#1466b6}.day .dt.sun{color:#c32234}
+.tile{border:1px solid #acb5bb;border-radius:5px;box-shadow:0 1px 2px #0001;text-align:center;font-weight:900;color:#15191e;min-height:24px;display:grid;place-items:center;font-size:17px;line-height:1;padding:2px;white-space:nowrap}
+#pickup{min-height:0;min-width:0;display:flex;flex-direction:column;gap:12px;border-left:2px solid #a0aab0;padding-left:13px}
+#pickup h2{margin:2px 0 0;text-align:center;font-size:37px;letter-spacing:.07em;line-height:1.05;color:#131923}
+#pickup .subtitle{margin:0;text-align:center;font-size:16px;font-weight:850;color:#5e6872}
+.pickcard{flex:1;min-height:0;border:3px solid #d9a0a0;border-radius:14px;background:#fff9f9;padding:12px 10px;display:flex;flex-direction:column;gap:11px}
+.pickcard.tomorrow{border-color:#93c0e8;background:#f5faff}
+.pickhead{display:flex;align-items:center;gap:8px}
+.tag{font-weight:950;background:#c42d3a;color:white;border-radius:8px;font-size:22px;padding:7px 10px;white-space:nowrap}
+.tomorrow .tag{background:#226baa}
+.pickdate{font-size:22px;font-weight:950;white-space:nowrap;letter-spacing:-.02em}
+.pickrows{display:flex;flex-direction:column;gap:12px;justify-content:center;flex:1}
+.pickrow{display:grid;grid-template-columns:44px minmax(0,1fr);gap:8px;height:56px}
+.num{border:2px solid #9ca9b6;border-radius:7px;background:white;display:grid;place-items:center;font-size:28px;font-weight:950;color:#193857}
+.name{border:1px solid #a8b2b9;border-radius:8px;font-size:22px;font-weight:950;display:flex;align-items:center;justify-content:center;color:#11181f}
+.name.missing{font-size:16px;color:#5f6b77;background:#edf0f2}
+#small-note{text-align:center;font-weight:800;font-size:12px;color:#55606b;line-height:1.5}
+@media(max-width:900px){#frame{padding:4px}#board{padding:8px;gap:7px;grid-template-columns:minmax(0,2fr) minmax(225px,0.85fr)}.heading h1{font-size:27px}.heading small{font-size:10px}.tile{font-size:12px}.day .dt{font-size:12px}#pickup{padding-left:7px;gap:5px}#pickup h2{font-size:26px}.pickcard{padding:7px 5px}.tag{font-size:16px}.pickdate{font-size:16px}.pickrow{height:41px;grid-template-columns:33px 1fr}.name{font-size:15px}.num{font-size:21px}}
+</style>
+</head>
+<body>
+<div id="frame"><main id="board">
+<section id="month-panel"><header class="heading"><h1 id="month-title">11月度 勤務予定</h1><small>MONTHLY PLANNER</small></header><div id="calendar"></div></section>
+<aside id="pickup"><h2>PICK UP</h2><p class="subtitle">本日分・翌日分</p>
+<section class="pickcard" id="today-card"><div class="pickhead"><span class="tag">本日</span><strong class="pickdate" id="today-date">--/--</strong></div><div class="pickrows" id="today-rows"></div></section>
+<section class="pickcard tomorrow" id="tomorrow-card"><div class="pickhead"><span class="tag">翌日</span><strong class="pickdate" id="tomorrow-date">--/--</strong></div><div class="pickrows" id="tomorrow-rows"></div></section>
+<div id="small-note">切替 08:30 ～ 翌08:30<br>勤務予定は手動登録・変更時に更新</div>
+</aside></main></div>
+<script>
+(function(){
+"use strict";
+const weekdays=['日','月','火','水','木','金','土'];
+const fmt=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Tokyo',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'});
+const $=(id)=>document.getElementById(id);
+let data=null,lastKey='';
+function dateAdd(iso,n){const p=iso.split('-').map(Number);return new Date(Date.UTC(p[0],p[1]-1,p[2]+n)).toISOString().slice(0,10)}
+function dow(iso){return new Date(iso+'T12:00:00Z').getUTCDay()}
+function dateLabel(iso){const p=iso.split('-').map(Number);return p[1]+'/'+p[2]+'（'+weekdays[dow(iso)]+'）'}
+function part(iso){const p=iso.split('-').map(Number);return p[1]+'/'+p[2]}
+function shiftToday(){const p={};fmt.formatToParts(new Date()).forEach(x=>p[x.type]=x.value);const day=p.year+'-'+p.month+'-'+p.day;return Number(p.hour)*60+Number(p.minute)<510?dateAdd(day,-1):day}
+function staff(name,full){const x=(data.people||{})[name];const e=document.createElement('span');e.className=full?'name':'tile';e.textContent=x?(full?x.full:name):name;e.style.backgroundColor=x?x.color:'#eef0f2';e.style.color=x?x.text:'#111';return e}
+function renderCalendar(today,tomorrow){
+ const el=$('calendar');el.replaceChildren();
+ const dows=['月','火','水','木','金','土','日'];
+ dows.forEach((w,i)=>{const e=document.createElement('div');e.className='dow'+(i===5?' sat':i===6?' sun':'');e.textContent=w+'曜日';el.appendChild(e)});
+ const begin=data.range.from;
+ const offset=(dow(begin)+6)%7;
+ for(let i=0;i<35;i++){
+  const iso=dateAdd(begin,i-offset);
+  const names=(data.days||{})[iso];
+  const elDay=document.createElement('div');
+  elDay.className='day'+(!names?' empty':'')+(iso===today?' today':'')+(iso===tomorrow?' tomorrow':'');
+  if(names){
+   const dt=document.createElement('strong');dt.className='dt'+(dow(iso)===0?' sun':dow(iso)===6?' sat':'');
+   dt.textContent=part(iso);
+   elDay.appendChild(dt);
+   names.forEach(n=>elDay.appendChild(staff(n,false)));
+  }
+  el.appendChild(elDay);
+ }
+}
+function renderPick(slot,iso){
+ $(slot+'-date').textContent=dateLabel(iso);
+ const rows=$(slot+'-rows');rows.replaceChildren();
+ const names=(data.days||{})[iso]||[];
+ for(let i=0;i<2;i++){
+  const row=document.createElement('div');row.className='pickrow';
+  const number=document.createElement('span');number.className='num';number.textContent=String(i+1);row.appendChild(number);
+  if(names[i])row.appendChild(staff(names[i],true));
+  else{const empty=document.createElement('div');empty.className='name missing';empty.textContent='勤務データ未登録';row.appendChild(empty)}
+  rows.appendChild(row);
+ }
+}
+function tick(){if(!data)return;const today=shiftToday();if(today===lastKey)return;lastKey=today;const tomorrow=dateAdd(today,1);renderCalendar(today,tomorrow);renderPick('today',today);renderPick('tomorrow',tomorrow)}
+async function fetchSchedule(){try{const response=await fetch('./schedule.json?t='+Date.now(),{cache:'no-store'});if(!response.ok)throw Error('HTTP '+response.status);data=await response.json();$('month-title').textContent=(data.period||'11月度')+' 勤務予定';lastKey='';tick()}catch(err){console.error('shift schedule load failed:',err)}}
+fetchSchedule();setInterval(tick,1000);setInterval(fetchSchedule,60000);
+})();
+</script></body></html>
