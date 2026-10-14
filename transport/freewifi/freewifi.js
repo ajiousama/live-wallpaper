@@ -136,8 +136,29 @@
     status.textContent = `${page.label}　｜　次画面まで ${left}秒`;
   }
 
-  if(webPrev) webPrev.addEventListener('click', ()=>showPage(pageIndex - 1));
-  if(webNext) webNext.addEventListener('click', ()=>showPage(pageIndex + 1));
+  // One shared pager: inside the cinema, browse its movie pages first.
+  // On the first/last movie page, the same button moves to the adjacent main screen.
+  function sharedPageStep(delta){
+    if(pages[pageIndex]?.cinema && cinemaFrame?.contentWindow){
+      cinemaFrame.contentWindow.postMessage({type:'cinema-page-step',delta},location.origin);
+      // Give a manually selected movie page a full rotation interval.
+      nextPageAt=Date.now()+pages[pageIndex].duration;
+      document.documentElement.dataset.companyPageDue=String(nextPageAt);
+      updatePageCountdown();
+      scheduleNextPage();
+      return;
+    }
+    showPage(pageIndex+delta);
+  }
+  window.addEventListener('message',event=>{
+    if(event.origin!==location.origin ||
+       event.source!==cinemaFrame?.contentWindow ||
+       event.data?.type!=='cinema-page-boundary')return;
+    if(!pages[pageIndex]?.cinema)return;
+    showPage(pageIndex+(event.data.delta===-1?-1:1));
+  });
+  if(webPrev) webPrev.addEventListener('click', ()=>sharedPageStep(-1));
+  if(webNext) webNext.addEventListener('click', ()=>sharedPageStep(1));
 
   showPage(0);
   setInterval(updatePageCountdown, 1000);
