@@ -4516,9 +4516,29 @@
     if(key==='air') return '';
     return '';
   }
+  function berthedCruiseNotices(now=japanNow()) {
+    // Scheduled berth interval, not live vessel-position confirmation.
+    const clock=now.iso+'T'+now.time;
+    const ships=data.records.filter(r=>r.board==='port' &&
+      r.source==='matsuyama_city_cruise' && r.direction==='arrival');
+    return ships.flatMap(arrival=>{
+      const arrivalDate=Array.isArray(arrival.dates)?arrival.dates[0]:'';
+      const departure=data.records.find(r=>r.board==='port' &&
+        r.source==='matsuyama_city_cruise' && r.direction==='departure' &&
+        r.shipName===arrival.shipName);
+      const departureDate=Array.isArray(departure?.dates)?departure.dates[0]:'';
+      if(!arrivalDate || !departureDate || !departure ||
+         clock<arrivalDate+'T'+arrival.time ||
+         clock>=departureDate+'T'+departure.time)return [];
+      const nextDay=departureDate!==now.iso?departureDate.slice(5).replace('-','/')+' ':'';
+      const ship=String(arrival.shipName||'クルーズ船').replace(/[&<>"']/g,'');
+      return [`<span class="cruise-berth-alert">松山外港にクルーズ船${ship}が停泊中（予定）　${nextDay}${departure.time}出航予定</span>`];
+    });
+  }
   function ferryTickerItems(now=japanNow()) {
     const rows=slowLive.ferry?.items; const items=[];
     if(Array.isArray(rows)&&rows.length){rows.forEach(x=>{const st=String(x.status||'');const cls=/欠航|休航/.test(st)?'ferry-cancel':/減便|一部/.test(st)?'ferry-reduced':'ferry-normal';items.push(`<span class="${cls}">フェリーLIVE｜${x.name}｜${st}</span>`);});}
+    items.unshift(...berthedCruiseNotices(now));
     if(!items.length)items.push('フェリーLIVE｜公式運航情報を取得中');
     items.push(PORT_WARNING); return items;
   }
