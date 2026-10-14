@@ -4442,8 +4442,8 @@
           empty.className='row placeholder';
           const noNext= g.key==='other' && !dep;
           empty.innerHTML='<div class="cell main">'+
-            (noNext?'24時間以内に掲載できる到着予定はありません':
-              dep?'現在5時間以内の出航予定はありません':'現在5時間以内の到着予定はありません')+
+            (noNext?'24時間以内の到着予定なし':
+              dep?'5時間以内の出航予定なし':'5時間以内の到着予定なし')+
             '</div>';
           section.appendChild(empty);
         }
@@ -4462,7 +4462,7 @@
       if (!nearPortRows.length) {
         const row=document.createElement('div'); row.className='row placeholder';
         row.innerHTML='<div class="cell main">'+
-          (dep?'現在5時間以内の出航予定はありません':'現在5時間以内の到着予定はありません')+
+          (dep?'5時間以内の出航予定なし':'5時間以内の到着予定なし')+
           '</div>';
         root.appendChild(row);
       } else nearPortRows.forEach(r => root.appendChild(makePortRow(r)));
