@@ -56,6 +56,67 @@
   </script>
   <link rel="stylesheet" href="../r15-dev/style.css?v=__BUILD_ID__" />
   <link rel="stylesheet" href="freewifi.css?v=__BUILD_ID__" />
+  <!-- If the core stylesheet is missing or arrives stale in Lively, avoid an
+       unstyled white board with overlapping ferry rows. This safety CSS is
+       activated only when the core #wall background is absent. -->
+  <style id="transport-core-css-safety">
+    html.transport-css-fallback,html.transport-css-fallback body.freewifi-tv{
+      background:#071217!important;color:#eef6f9!important;
+      font-family:'Yu Gothic','Meiryo',sans-serif!important
+    }
+    html.transport-css-fallback body.freewifi-tv #wall{
+      background:#071217!important;color:#eef6f9!important;
+      border:1px solid #17303b!important;overflow:hidden!important
+    }
+    html.transport-css-fallback body.freewifi-tv .hero{
+      display:flex!important;align-items:center!important;justify-content:space-between!important;
+      background:#071217!important;color:#eef6f9!important;overflow:hidden!important
+    }
+    html.transport-css-fallback body.freewifi-tv .grid{
+      display:block!important;height:546px!important;overflow:hidden!important
+    }
+    html.transport-css-fallback body.freewifi-tv .grid>.panel{
+      display:none!important;background:#09161c!important;color:#eef6f9!important;
+      border:1px solid #1b3340!important;overflow:hidden!important;
+      grid-template-rows:58px 34px minmax(0,1fr) 44px!important
+    }
+    html.transport-css-fallback body.freewifi-tv .grid>.panel.freewifi-active{display:grid!important}
+    html.transport-css-fallback body.freewifi-tv .panel-head{
+      display:flex!important;justify-content:space-between!important;align-items:center!important;
+      min-height:0!important;background:#102631!important;color:#eef6f9!important;overflow:hidden!important
+    }
+    html.transport-css-fallback body.freewifi-tv .table-head{
+      display:flex!important;align-items:center!important;background:#193547!important;
+      color:#d7e9f3!important;overflow:hidden!important
+    }
+    html.transport-css-fallback body.freewifi-tv .rows{
+      display:flex!important;flex-direction:column!important;min-height:0!important;
+      overflow:hidden!important;background:#09161c!important;color:#eef6f9!important
+    }
+    html.transport-css-fallback body.freewifi-tv .row{
+      display:grid!important;align-items:center!important;background:#102631!important;
+      border-bottom:1px solid #385361!important;overflow:hidden!important
+    }
+    html.transport-css-fallback body.freewifi-tv .cell{min-width:0!important;overflow:hidden!important;color:#eef6f9!important}
+    html.transport-css-fallback body.freewifi-tv .note{
+      display:flex!important;align-items:center!important;min-width:0!important;
+      overflow:hidden!important;background:#0a211f!important;color:#ccfff9!important
+    }
+    html.transport-css-fallback body.freewifi-tv .freewifi-port-group{min-height:0!important;overflow:hidden!important}
+    html.transport-css-fallback body.freewifi-tv #port-rows .row{
+      display:grid!important;grid-template-columns:minmax(0,1.8fr) minmax(0,1.1fr) minmax(0,1fr) 120px!important;
+      min-height:55px!important;overflow:hidden!important
+    }
+  </style>
+  <script>
+    document.addEventListener('DOMContentLoaded',()=>{
+      const wall=document.getElementById('wall');
+      if(wall && getComputedStyle(wall).backgroundImage==='none'){
+        document.documentElement.classList.add('transport-css-fallback');
+        console.warn('Transport core CSS unavailable; safety theme activated');
+      }
+    });
+  </script>
   <!-- Keep this essential workplace size in HTML: Lively may run with stale
        external CSS/JS, or the application script may fail before scaling. -->
   <style id="force-workplace-wallpaper-size">
