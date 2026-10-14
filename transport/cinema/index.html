@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>愛媛・映画別上映案内｜5館</title>
+<title>愛媛・映画＆プラネタリウム上映案内</title>
 <style>
 :root{color-scheme:dark;font-family:"Yu Gothic","Meiryo",system-ui,sans-serif;--row-h:78px}
 *{box-sizing:border-box}
@@ -106,12 +106,14 @@ h1{font-size:clamp(23px,2.9vw,35px);margin:0;line-height:1.08}
  .film-session .session-time{font-size:14px}
  .film-session .session-venue{font-size:12px}
 }
+ .film-row.planetarium{border-left:4px solid #b88aff;background:linear-gradient(90deg,#2c2145,#152a3c)}
+ .film-row.planetarium .film-flag{background:#50357a;color:#f3e3ff;border-color:#b88aff}
 </style>
 </head>
 <body>
 <main>
 <header>
-  <div><div class="eyebrow" id="venue-count">EHIME CINEMA / 5 THEATERS</div><h1>🎬 映画別 上映案内</h1></div>
+  <div><div class="eyebrow" id="venue-count">EHIME CINEMA &amp; PLANETARIUM</div><h1>🎬 映画・プラネタリウム上映案内</h1></div>
   <div class="header-right"><div id="date-kind">本日のこれからの上映</div><div>映画ごとに時刻（上映館）をスクロール</div><div id="clock">--:--:--</div></div>
 </header>
 <section class="board" aria-label="映画作品ごとの上映時刻と映画館">
@@ -129,7 +131,9 @@ const venues=[
   {id:"masaki",label:"エミフル",color:"#ffda89"},
   {id:"kinuyama",label:"衣山",color:"#85d4ff"},
   {id:"lunatic",label:"ルナティック",color:"#dcb7fa",until:"2026-11-24"},
-  {id:"imabari",label:"今治新都市",color:"#ffb09e"}
+  {id:"imabari",label:"今治新都市",color:"#ffb09e"},
+  {id:"cosmo",label:"コスモシアター",color:"#e3b6ff"},
+  {id:"kahaku",label:"県総合科学博物館",color:"#81edee"}
 ];
 const JST=32400000,DURATION=30000,PAGE_MS=7500,SCROLL_SPEED=34;
 const two=n=>String(n).padStart(2,"0");
@@ -143,22 +147,59 @@ function rowsPerPage(){
  const row=parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--row-h"))||54;
  return Math.max(1,Math.floor((list.clientHeight-2)/row));
 }
+// Date-scoped public planetarium programs. Never substitute a group/private slot.
+function planetariumShows(date) {
+ const day=new Date(date+"T12:00:00+09:00").getDay(),weekend=day===0||day===6;
+ const closedMonday=day===1;
+ const shows=[];
+ const add=(venue,title,time)=>shows.push({title,time,date,venue});
+ if(date>="2026-09-01"&&date<="2026-11-29"&&!closedMonday&&date!=="2026-11-15"){
+   if(weekend)add(venues[5],"イナズマデリバリー バイザウェイの地球探査?! −オーロラとの遭遇−","11:00");
+   add(venues[5],"ハナビリウム ～花火って、なんであるの？～","13:00");
+   add(venues[5],"イナズマデリバリー バイザウェイの地球探査?! −オーロラとの遭遇−","14:00");
+   add(venues[5],date>="2026-10-20"&&date<="2026-11-19"?"MMX 火星衛星探査計画":"国際宇宙ステーションからの眺め","15:00");
+   add(venues[5],"今夜の星空（生解説）","16:00");
+ }
+ // Science Museum weekday general sessions verified for October and November.
+ // Exclude days with a published special or weekend timetable until its individual times are confirmed.
+ if(date>="2026-10-01"&&date<="2026-11-30"&&!closedMonday&&!weekend){
+   const special=['2026-10-09','2026-10-16','2026-11-06'].includes(date);
+   add(venues[6],"海竜王 モササウルス","12:00");
+   if(special){
+     if(date==="2026-10-16"){
+       add(venues[6],"ほしぞらパレット（生解説）","14:00");
+       add(venues[6],"イナズマデリバリー −オーロラとの遭遇−","16:30");
+     }else if(date==="2026-11-06"){
+       add(venues[6],"ほしぞらパレット（生解説）","14:00");
+       add(venues[6],"チ。―地球の運動について―","16:00");
+     }else add(venues[6],"イナズマデリバリー −オーロラとの遭遇−","16:30");
+   }else{
+     add(venues[6],"チ。―地球の運動について―","14:00");
+     add(venues[6],"イナズマデリバリー −オーロラとの遭遇−","16:00");
+   }
+ }
+ return shows;
+}
 function makeGroups(now){
  if(!snapshot)return {date:"",items:[]};
  const today=dateJst(now),tomorrow=dateJst(now+86400000),byDay=new Map([[today,[]],[tomorrow,[]]]);
- for(const v of venues)for(const show of (snapshot.theaters[v.id]?.shows||[])){
+ for(const v of venues.slice(0,5))for(const show of (snapshot.theaters[v.id]?.shows||[])){
    if(!show||typeof show.title!=="string"||!show.title.trim()||
       !/^[0-9]{2}:[0-9]{2}$/.test(show.time)||!byDay.has(show.date)||
       (v.until&&show.date>v.until))continue;
    const start=startMs(show.date,show.time);
    if(start>now)byDay.get(show.date).push({title:show.title.trim(),time:show.time,start,venue:v,releaseDate:show.releaseDate||""});
  }
+ for(const date of [today,tomorrow])for(const show of planetariumShows(date)){
+   const start=startMs(date,show.time);
+   if(start>now)byDay.get(date).push({...show,start,releaseDate:"",planetarium:true});
+ }
  const day=byDay.get(today).length?today:tomorrow,byTitle=new Map();
  for(const show of byDay.get(day)){
    if(!byTitle.has(show.title))byTitle.set(show.title,{title:show.title,first:show.start,sessions:[],seen:new Set(),releaseDates:new Set(),theaters:new Set()});
    const g=byTitle.get(show.title),key=show.venue.id+"|"+show.start;
    if(g.seen.has(key))continue;
-   g.seen.add(key);g.sessions.push(show);g.theaters.add(show.venue.id);
+   g.seen.add(key);g.sessions.push(show);g.theaters.add(show.venue.id);if(show.planetarium)g.planetarium=true;
    if(show.releaseDate)g.releaseDates.add(show.releaseDate);
    g.first=Math.min(g.first,show.start);
  }
@@ -216,11 +257,11 @@ function renderPage(force=false){
  }
  for(const g of groups.slice(page*pageSize,(page+1)*pageSize)){
    const row=document.createElement("div");
-   row.className="film-row"+(g.premiere?" premiere":g.popular?" featured":g.multi?" multi":"");
+   row.className="film-row"+(g.planetarium?" planetarium":"")+(g.premiere?" premiere":g.popular?" featured":g.multi?" multi":"");
    const title=document.createElement("div");title.className="film-title";
-   if(g.priority<3){
+   if(g.priority<3||g.planetarium){
      const flag=document.createElement("span");flag.className="film-flag"+(g.priority===2?" multi":"");
-     flag.textContent=g.premiere?"本日公開":g.popular?"注目上映":"複数館";
+     flag.textContent=g.planetarium?"プラネタリウム":g.premiere?"本日公開":g.popular?"注目上映":"複数館";
      title.appendChild(flag);
    }
    const name=document.createElement("span");name.className="movie-name"+(g.title.length>31?" long":"");
@@ -235,7 +276,7 @@ function render(){
  const sig=JSON.stringify([next.date,next.items.map(g=>[g.title,g.priority,...g.sessions.map(x=>x.time+x.venue.id)])]);
  const size=rowsPerPage(),changed=sig!==signature||size!==pageSize;
  if(changed){groups=next.items;activeDate=next.date;signature=sig;pageSize=size;displayed=-1;manualPage=null;}
- document.getElementById("venue-count").textContent="EHIME CINEMA / "+venues.filter(v=>!v.until||dateJst(now)<=v.until).length+" THEATERS";
+ document.getElementById("venue-count").textContent="EHIME CINEMA / "+venues.slice(0,5).filter(v=>!v.until||dateJst(now)<=v.until).length+" THEATERS ＋ 2 PLANETARIUMS";
  const today=dateJst(now);
  document.getElementById("date-kind").textContent=activeDate===today?"本日 "+today.slice(5).replace("-","/")+" のこれからの上映":
    activeDate?"翌日 "+activeDate.slice(5).replace("-","/")+" の上映予定":"上映情報を確認中";
