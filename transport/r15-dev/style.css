@@ -2187,3 +2187,18 @@ html.company-pc body.freewifi-tv .panel-bus .bus-logo-willer .willer-express-wor
   background:#2464b5!important;
   border:1px solid #75adf0!important;
 }
+
+/* Special visiting cruise liner: red blinking message on existing port ticker. */
+#panel-port .cruise-berth-alert{
+  color:#ff4141!important;
+  font-weight:950!important;
+  text-shadow:0 0 7px rgba(255,56,56,.7);
+  animation:cruise-berth-blink .85s steps(2,end) infinite;
+}
+@keyframes cruise-berth-blink{
+  0%,49%{opacity:1}
+  50%,100%{opacity:.2}
+}
+@media(prefers-reduced-motion:reduce){
+  #panel-port .cruise-berth-alert{animation:none;text-decoration:underline}
+}
