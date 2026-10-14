@@ -1280,7 +1280,7 @@
       if(!/nakajima/.test(String(r.source||''))) return [];
       const calls=Array.isArray(r.calls)?r.calls:[];
       return calls.filter(call=>Array.isArray(call) &&
-        String(call[0])==='高浜港' && /^\\d{1,2}:\\d{2}$/.test(String(call[1]||'')))
+        String(call[0])==='高浜港' && /^\d{1,2}:\d{2}$/.test(String(call[1]||'')))
         .map((call,index)=>({
           ...r,id:`takahama-nakajima-${r.id||r.time}-${index}`,
           source:'nakajima_takahama_call',port:'高浜港',arrivalPort:'高浜港',
