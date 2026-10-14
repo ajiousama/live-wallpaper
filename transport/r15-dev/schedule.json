@@ -7447,6 +7447,150 @@
       "dates": [
         "2026-12-05"
       ]
+    },
+    {
+      "id": "remedia2026-out-2026-10-17-0934",
+      "board": "rail",
+      "time": "09:34",
+      "service": "RE:MEDIA FESTIVAL 臨時列車",
+      "dest": "市坪",
+      "info": "【臨時列車】市坪 09:37着予定・イベント輸送／列車位置は別途確認",
+      "kind": "extra",
+      "direction": "south",
+      "source": "jr_shikoku_remedia2026",
+      "dates": [
+        "2026-10-17"
+      ]
+    },
+    {
+      "id": "remedia2026-out-2026-10-17-0955",
+      "board": "rail",
+      "time": "09:55",
+      "service": "RE:MEDIA FESTIVAL 臨時列車",
+      "dest": "市坪",
+      "info": "【臨時列車】市坪 09:59着予定・イベント輸送／列車位置は別途確認",
+      "kind": "extra",
+      "direction": "south",
+      "source": "jr_shikoku_remedia2026",
+      "dates": [
+        "2026-10-17"
+      ]
+    },
+    {
+      "id": "remedia2026-out-2026-10-17-1103",
+      "board": "rail",
+      "time": "11:03",
+      "service": "RE:MEDIA FESTIVAL 臨時列車",
+      "dest": "市坪",
+      "info": "【臨時列車】市坪 11:07着予定・イベント輸送／列車位置は別途確認",
+      "kind": "extra",
+      "direction": "south",
+      "source": "jr_shikoku_remedia2026",
+      "dates": [
+        "2026-10-17"
+      ]
+    },
+    {
+      "id": "remedia2026-in-2026-10-17-1834",
+      "board": "rail_special_arrival",
+      "time": "18:37",
+      "service": "RE:MEDIA FESTIVAL 臨時列車",
+      "origin": "市坪駅",
+      "dest": "松山駅",
+      "info": "【臨時列車】市坪 18:34発・JR松山 18:37着予定",
+      "kind": "extra",
+      "direction": "south",
+      "source": "jr_shikoku_remedia2026",
+      "dates": [
+        "2026-10-17"
+      ]
+    },
+    {
+      "id": "remedia2026-in-2026-10-17-1853",
+      "board": "rail_special_arrival",
+      "time": "18:57",
+      "service": "RE:MEDIA FESTIVAL 臨時列車",
+      "origin": "市坪駅",
+      "dest": "松山駅",
+      "info": "【臨時列車】市坪 18:53発・JR松山 18:57着予定",
+      "kind": "extra",
+      "direction": "south",
+      "source": "jr_shikoku_remedia2026",
+      "dates": [
+        "2026-10-17"
+      ]
+    },
+    {
+      "id": "remedia2026-out-2026-10-18-0934",
+      "board": "rail",
+      "time": "09:34",
+      "service": "RE:MEDIA FESTIVAL 臨時列車",
+      "dest": "市坪",
+      "info": "【臨時列車】市坪 09:37着予定・イベント輸送／列車位置は別途確認",
+      "kind": "extra",
+      "direction": "south",
+      "source": "jr_shikoku_remedia2026",
+      "dates": [
+        "2026-10-18"
+      ]
+    },
+    {
+      "id": "remedia2026-out-2026-10-18-0955",
+      "board": "rail",
+      "time": "09:55",
+      "service": "RE:MEDIA FESTIVAL 臨時列車",
+      "dest": "市坪",
+      "info": "【臨時列車】市坪 09:59着予定・イベント輸送／列車位置は別途確認",
+      "kind": "extra",
+      "direction": "south",
+      "source": "jr_shikoku_remedia2026",
+      "dates": [
+        "2026-10-18"
+      ]
+    },
+    {
+      "id": "remedia2026-out-2026-10-18-1103",
+      "board": "rail",
+      "time": "11:03",
+      "service": "RE:MEDIA FESTIVAL 臨時列車",
+      "dest": "市坪",
+      "info": "【臨時列車】市坪 11:07着予定・イベント輸送／列車位置は別途確認",
+      "kind": "extra",
+      "direction": "south",
+      "source": "jr_shikoku_remedia2026",
+      "dates": [
+        "2026-10-18"
+      ]
+    },
+    {
+      "id": "remedia2026-in-2026-10-18-1734",
+      "board": "rail_special_arrival",
+      "time": "17:38",
+      "service": "RE:MEDIA FESTIVAL 臨時列車",
+      "origin": "市坪駅",
+      "dest": "松山駅",
+      "info": "【臨時列車】市坪 17:34発・JR松山 17:38着予定",
+      "kind": "extra",
+      "direction": "south",
+      "source": "jr_shikoku_remedia2026",
+      "dates": [
+        "2026-10-18"
+      ]
+    },
+    {
+      "id": "remedia2026-in-2026-10-18-1750",
+      "board": "rail_special_arrival",
+      "time": "17:53",
+      "service": "RE:MEDIA FESTIVAL 臨時列車",
+      "origin": "市坪駅",
+      "dest": "松山駅",
+      "info": "【臨時列車】市坪 17:50発・JR松山 17:53着予定",
+      "kind": "extra",
+      "direction": "south",
+      "source": "jr_shikoku_remedia2026",
+      "dates": [
+        "2026-10-18"
+      ]
     }
   ],
   "sources": {
