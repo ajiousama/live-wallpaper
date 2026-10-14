@@ -3542,6 +3542,10 @@
       const timed=[...info.matchAll(/(松山市駅|松山IC口|川内IC)(\d{1,2}:\d{2})/g)]
         .map(m=>`${m[1]} ${m[2]}`);
       if (timed.length) parts.push(...timed);
+    } else if (/koto/.test(src)) {
+      parts.push('三島川之江IC','コトバスステーション鳴門IC（乗換）');
+    } else if (/willer_202609/.test(src)) {
+      parts.push('神戸三宮','USJ','大阪梅田');
     } else if (/iyotetsu_misaki/.test(src)) {
       parts.push('伊予市','中山','内子','大洲','八幡浜駅前','八幡浜港','伊方');
     } else if (/uwajima_bus_matsuyama/.test(src)) {
