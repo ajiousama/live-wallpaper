@@ -2552,3 +2552,61 @@ body.freewifi-tv .update-modal:not([hidden]),
 body.freewifi-tv .disaster-overlay:not([hidden]){
   z-index:95!important;
 }
+
+/* Workplace R15 visual geometry repair — 2026-10-15 */
+html.company-pc,
+html.company-pc body.freewifi-tv{
+  background:#071217!important;
+  color:#eef6f9!important;
+}
+html.company-pc body.freewifi-tv #wall{
+  background:linear-gradient(180deg,#071217,#051016)!important;
+  color:#eef6f9!important;
+  overflow:hidden!important;
+  box-sizing:border-box!important;
+}
+html.company-pc body.freewifi-tv .hero,
+html.company-pc body.freewifi-tv .hero-center{
+  min-width:0!important;
+  overflow:hidden!important;
+  box-sizing:border-box!important;
+}
+html.company-pc body.freewifi-tv #top-live-alert,
+html.company-pc body.freewifi-tv #freewifi-page-status{
+  max-width:100%!important;
+  min-width:0!important;
+  box-sizing:border-box!important;
+  overflow:hidden!important;
+}
+html.company-pc body.freewifi-tv #panel-port #port-rows.freewifi-port-groups,
+html.company-pc body.freewifi-tv #panel-port .freewifi-port-group{
+  min-width:0!important;
+  min-height:0!important;
+  overflow:hidden!important;
+}
+html.company-pc body.freewifi-tv #panel-port .freewifi-port-group>.row{
+  min-width:0!important;
+  max-width:100%!important;
+  overflow:hidden!important;
+  box-sizing:border-box!important;
+}
+html.company-pc body.freewifi-tv #panel-port .freewifi-port-group>.row>*{
+  min-width:0!important;
+  max-width:100%!important;
+  box-sizing:border-box!important;
+}
+html.company-pc body.freewifi-tv #panel-port .port-route-main,
+html.company-pc body.freewifi-tv #panel-port .port-route-guidance,
+html.company-pc body.freewifi-tv #panel-port .port-arrival-route-wrap,
+html.company-pc body.freewifi-tv #panel-port .port-dest-wrap{
+  min-width:0!important;
+  max-width:100%!important;
+  overflow:hidden!important;
+}
+html.company-pc body.freewifi-tv #panel-port .port-dest-main,
+html.company-pc body.freewifi-tv #panel-port .port-via-line,
+html.company-pc body.freewifi-tv #panel-port .port-arrival-route-line{
+  max-width:100%!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
