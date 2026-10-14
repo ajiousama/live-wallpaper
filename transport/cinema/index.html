@@ -117,7 +117,7 @@ h1{font-size:clamp(23px,2.9vw,35px);margin:0;line-height:1.08}
 <section class="board" aria-label="映画作品ごとの上映時刻と映画館">
   <div class="board-head"><div class="head-film">作品名　｜　下段に上映時刻（上映館）</div></div>
   <div class="film-list" id="film-list"></div>
-  <div class="board-foot"><span>開始3分前点滅・封切り初日と複数館上映を優先</span><div class="cinema-page-controls"><button type="button" id="cinema-prev" aria-label="映画案内の前のページ">◀ 前へ</button><span id="page-info" aria-live="polite">作品を確認中</span><button type="button" id="cinema-next" aria-label="映画案内の次のページ">次へ ▶</button></div></div>
+  <div class="board-foot"><span>開始3分前点滅・封切り初日と複数館上映を優先</span><div class="cinema-page-controls"><button type="button" id="cinema-page-switch" aria-label="映画案内の次のページへ"><span id="page-info" aria-live="polite">作品を確認中</span> <span aria-hidden="true">▶</span></button></div></div>
 </section>
 <div class="footer"><span id="data-info">上映データを確認中</span><span id="remaining">次の画面まで 30秒</span></div>
 </main>
@@ -208,8 +208,7 @@ function renderPage(force=false){
  const page=manualPage===null?((visit+cycle)*4+part)%total:Math.max(0,Math.min(total-1,manualPage));
  if(!force&&page===displayed)return;
  displayed=page;list.replaceChildren();tickers=[];pills=[];
- document.getElementById("cinema-prev").disabled=total<=1;
- document.getElementById("cinema-next").disabled=total<=1;
+ document.getElementById("cinema-page-switch").disabled=total<=1;
  if(!groups.length){
    const empty=document.createElement("div");empty.className="empty";
    empty.textContent=snapshot?"この先の上映予定はありません":"上映データを取得できませんでした";
@@ -286,8 +285,7 @@ function moveCinemaPage(delta){
  manualPage=(current+delta+total)%total;
  renderPage(true);
 }
-document.getElementById("cinema-prev").addEventListener("click",()=>moveCinemaPage(-1));
-document.getElementById("cinema-next").addEventListener("click",()=>moveCinemaPage(1));
+document.getElementById("cinema-page-switch").addEventListener("click",()=>moveCinemaPage(1));
 window.addEventListener("keydown",e=>{
  if(e.key==="ArrowLeft"){e.preventDefault();moveCinemaPage(-1);}
  if(e.key==="ArrowRight"){e.preventDefault();moveCinemaPage(1);}
