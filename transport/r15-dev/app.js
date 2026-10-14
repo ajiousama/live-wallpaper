@@ -853,7 +853,7 @@
     if(/福岡/.test(key))
       return ['福岡','小倉','しまなみ海道','今治駅前','今治桟橋','川内インター','松山インター口','余戸南インター',terminal];
     if(/新居浜/.test(key)) return ['新居浜駅前','西条駅前','石鎚神社','川内','横河原','愛大病院前','四国がんセンター','新久米','大街道','松山市駅',terminal];
-    if(/三崎|iyotetsu_misaki/.test(key)) return ['三崎港口','伊方','八幡浜','大洲','内子','中山','伊予市','松山市内（一般道）',terminal];
+    if(/三崎|iyotetsu_misaki/.test(key)) return ['三崎港口','伊方町役場前','八幡浜駅前','大洲','内子','中山','伊予市','保免','松山市駅',terminal];
     if(/久万高原|jrshikoku_kumakogen/.test(key)) return ['久万高原','三坂道路','砥部','森松','大街道','松山市内（一般道）',terminal];
     if(/宇和島|城辺/.test(key)) return ['宇和島方面','吉田営業所','卯之町営業所','大洲方面','エミフル松前','松山市駅',terminal];
 
@@ -3543,7 +3543,7 @@
         .map(m=>`${m[1]} ${m[2]}`);
       if (timed.length) parts.push(...timed);
     } else if (/iyotetsu_misaki/.test(src)) {
-      parts.push('伊予市','内子','大洲','八幡浜港');
+      parts.push('伊予市','中山','内子','大洲','八幡浜駅前','八幡浜港','伊方');
     } else if (/uwajima_bus_matsuyama/.test(src)) {
       if (/大洲/.test(info)) parts.push('大洲');
       if (/卯之町/.test(info)) parts.push('卯之町');
