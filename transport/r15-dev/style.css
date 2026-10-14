@@ -2202,3 +2202,10 @@ html.company-pc body.freewifi-tv .panel-bus .bus-logo-willer .willer-express-wor
 @media(prefers-reduced-motion:reduce){
   #panel-port .cruise-berth-alert{animation:none;text-decoration:underline}
 }
+
+/* RE:MEDIA FESTIVAL official extra passenger trains: stand out from ordinary and express. */
+#rail-rows .rail-event-extra-row{border-left:5px solid #ff9b26!important;background:linear-gradient(90deg,rgba(116,49,7,.76),rgba(36,27,25,.92))!important}
+#rail-rows .rail-event-extra-row .cell.main{color:#ffe6a7!important;font-weight:950!important}
+#rail-rows .rail-event-extra{display:inline-flex!important;align-items:center!important;background:#ed5f16!important;color:#fff!important;border:2px solid #ffd16d!important;padding:3px 8px!important;border-radius:4px!important;font-weight:950!important;box-shadow:0 0 10px rgba(255,127,27,.55)!important;animation:rail-event-pulse 1.4s ease-in-out infinite}
+@keyframes rail-event-pulse{50%{filter:brightness(1.35)}}
+@media(prefers-reduced-motion:reduce){#rail-rows .rail-event-extra{animation:none}}
