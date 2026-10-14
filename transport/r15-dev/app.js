@@ -1629,6 +1629,7 @@
   }
   function portOperator(record) {
     const svc = String(record.service || '');
+    if (record.source==='matsuyama_city_cruise') return { name:svc, type:'大型クルーズ船' };
     if (/芸予汽船/.test(svc)) return { name:'芸予汽船', type:'高速船' };
     if (/第二せきぜん/.test(svc)) return { name:'今治市営', type:'フェリー 第二せきぜん' };
     if (/とびしま/.test(svc)) return { name:'今治市営', type:'旅客船 とびしま' };
@@ -1800,6 +1801,7 @@
     '19:05': [['松山観光港','19:30'],['睦月港','19:55'],['大浦港','20:14']]
   };
   function portDepartureCalls(record) {
+    if(record.source==='matsuyama_city_cruise') return []; // The next port's arrival time is not published here.
     if (Array.isArray(record.calls) && record.calls.length) return record.calls;
     if (record.arrivalTime) return [[portDestinationName(record.dest), record.arrivalTime]];
     const svc=String(record.service||'');
@@ -4388,7 +4390,9 @@
         const arrivalDay=toMinutes(arrivalClock)<toMinutes(r.time)?'翌日':'';
         const arrivalPort=String(lastCall?.[0]||r.dest||'目的港').trim();
         const arrivalGuide=`${arrivalPort} ${arrivalDay}${arrivalClock}${arrivalIsEstimate?'頃着（見込）':'着予定'}`;
-        const departureGuidance=[routeGuidance==='—'?'':routeGuidance,arrivalGuide].filter(Boolean).join(' ｜ ');
+        const departureGuidance=r.source==='matsuyama_city_cruise'
+          ? `大型クルーズ船 ${r.shipName}｜${r.info||'松山市公式の出港予定'}`
+          : [routeGuidance==='—'?'':routeGuidance,arrivalGuide].filter(Boolean).join(' ｜ ');
         row.innerHTML = `
           <div class="cell main port-route port-route-main">${portDepartureDestinationHtml(r,`${firstBadge}${finalBadge}`)}</div>
           <div class="cell sub port-route-guidance">${overflowScrollHtml(departureGuidance,'port-guidance-scroll')}</div>
@@ -4415,7 +4419,7 @@
     if (FREEWIFI_TV) {
       root.classList.add('freewifi-port-groups');
       const kyushu=(r)=>/^(uwajima_beppu|uwajima_usuki|koku94|koku94_verified_arrival)$/.test(String(r.source||'')) || /別府|臼杵|佐賀関|三崎港/.test([r.dest,r.origin,r.port,r.arrivalPort].map(v=>String(v||'')).join(' '));
-      const matsuyamaPorts=(r)=>/三津浜港|松山観光港/.test(String(r.port||r.arrivalPort||''));
+      const matsuyamaPorts=(r)=>/三津浜港|松山観光港|松山港外港/.test(String(r.port||r.arrivalPort||''));
       const gogoshima=r=>r.source==='gogoshima_official' || r.source==='nakajima_takahama_call' || r.source==='nakajima_takahama_departure';
       const isOtherRoute=r=>!kyushu(r)&&!matsuyamaPorts(r)&&!gogoshima(r);
       const otherArrivalRows=rows.filter(isOtherRoute).slice(0,2);
