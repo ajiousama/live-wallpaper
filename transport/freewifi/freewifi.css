@@ -2552,3 +2552,75 @@ body.freewifi-tv .update-modal:not([hidden]),
 body.freewifi-tv .disaster-overlay:not([hidden]){
   z-index:95!important;
 }
+
+/* 2026-10-15: FreeWiFi transport visual containment hotfix
+   Presentation-only: preserve ferry data, animation timings and rotation logic. */
+html,html body.freewifi-tv{
+  background:#071217!important;
+  color:#eef6f9!important;
+}
+body.freewifi-tv #wall{
+  background:linear-gradient(180deg,#071217 0%,#051016 100%)!important;
+  color:#eef6f9!important;
+  box-sizing:border-box!important;
+  overflow:hidden!important;
+}
+body.freewifi-tv .hero{
+  min-width:0!important;
+  box-sizing:border-box!important;
+  overflow:hidden!important;
+}
+body.freewifi-tv .hero-left,
+body.freewifi-tv .hero-center,
+body.freewifi-tv .hero-right{
+  min-width:0!important;
+  max-height:100%!important;
+  box-sizing:border-box!important;
+}
+body.freewifi-tv .hero-center{
+  overflow:hidden!important;
+}
+body.freewifi-tv .freewifi-page-status,
+body.freewifi-tv #top-live-alert{
+  width:100%!important;
+  max-width:100%!important;
+  box-sizing:border-box!important;
+  overflow:hidden!important;
+}
+body.freewifi-tv #panel-port #port-rows.freewifi-port-groups,
+body.freewifi-tv #panel-port .freewifi-port-group{
+  min-height:0!important;
+  min-width:0!important;
+  overflow:hidden!important;
+}
+body.freewifi-tv #panel-port .freewifi-port-group>.row{
+  min-width:0!important;
+  max-width:100%!important;
+  box-sizing:border-box!important;
+  overflow:hidden!important;
+}
+body.freewifi-tv #panel-port .freewifi-port-group>.row > *{
+  min-width:0!important;
+  max-width:100%!important;
+  box-sizing:border-box!important;
+}
+body.freewifi-tv #panel-port .port-route-main,
+body.freewifi-tv #panel-port .port-route-guidance,
+body.freewifi-tv #panel-port .port-arrival-route-wrap,
+body.freewifi-tv #panel-port .port-dest-wrap{
+  min-width:0!important;
+  max-width:100%!important;
+  overflow:hidden!important;
+}
+body.freewifi-tv #panel-port .port-dest-main,
+body.freewifi-tv #panel-port .port-via-line,
+body.freewifi-tv #panel-port .port-arrival-route-line,
+body.freewifi-tv #panel-port .port-estimated-position{
+  max-width:100%!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+}
+body.freewifi-tv #panel-port .port-route-guidance .port-guidance-scroll{
+  max-width:100%!important;
+  overflow:hidden!important;
+}
