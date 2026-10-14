@@ -2639,7 +2639,7 @@
     if(kind==='deadhead') return '<span class="rail-kind-badge rail-kind-deadhead">回送</span>';
     if(kind==='freight') return '<span class="rail-kind-badge rail-kind-freight">貨物</span>';
     if(kind==='test') return '<span class="rail-kind-badge rail-kind-test">試運転</span>';
-    if(kind==='extra') return '<span class="rail-kind-badge rail-kind-extra">臨時</span>';
+    if(kind==='extra') return '<span class="rail-kind-badge rail-kind-extra rail-event-extra">臨時列車</span>';
     if(kind==='unknown') return '<span class="rail-kind-badge rail-kind-extra">種別未確認</span>';
     return '<span class="rail-kind-badge rail-kind-local">普通</span>';
   }
@@ -2779,7 +2779,9 @@
     const row=document.createElement('div');
     row.className='row rail-row terminal-arrival-row';
     const info=railLiveTrainLabel(x);
-    const serviceBadge=x.isOfficialScheduled
+    const serviceBadge=x.isOfficialScheduled && /臨時列車/.test(String(x.serviceName||''))
+      ? railServiceBadgeHtml('extra')
+      : x.isOfficialScheduled
       ? '<span class="rail-kind-badge rail-kind-tourist">伊予灘ものがたり</span>'
       : railServiceBadgeHtml(info.kind,info.kind==='limited'?info.service:'');
     // Inbound trains from the Uwajima direction: distinguish the coastal and inland routes.
@@ -2824,7 +2826,7 @@
       <div class="rail-primary">
         <div class="cell rail-service ${info.kind}"><span class="kindtxt">${serviceBadge}</span></div>
         <div class="cell time">${x.arrival}</div>
-        <div class="cell main"><span class="rail-terminal-label" title="松山駅止まり・ここから先へは発車しません">松山止</span>${x.isOfficialScheduled ? ` 伊予灘ものがたり ${x.specialName}` : ''}${arrivalRoute?`［${arrivalRoute}］`:``}</div>
+        <div class="cell main"><span class="rail-terminal-label" title="松山駅止まり・ここから先へは発車しません">松山止</span>${x.isOfficialScheduled ? ( /臨時列車/.test(String(x.serviceName||'')) ? ` ${x.serviceName}` : ` 伊予灘ものがたり ${x.specialName}` ) : ''}${arrivalRoute?`［${arrivalRoute}］`:``}</div>
       </div>
       <div class="rail-detail">${tickerHtml(details)}</div>`;
     root.appendChild(row);
@@ -3057,8 +3059,8 @@
           return;
         }
         const r=item.data;
-        const row = document.createElement('div'); row.className = `row rail-row${r.isFinal ? ' is-final' : ''}${isDepartSoon(r, now) ? ' depart-soon' : ''}`;
-        const kind = r.kind === 'limited' ? 'limited' : r.kind === 'sightseeing' ? 'tourist' : 'local';
+        const row = document.createElement('div'); row.className = `row rail-row${r.kind==='extra'?' rail-event-extra-row':''}${r.isFinal ? ' is-final' : ''}${isDepartSoon(r, now) ? ' depart-soon' : ''}`;
+        const kind = r.kind === 'limited' ? 'limited' : r.kind === 'sightseeing' ? 'tourist' : r.kind === 'extra' ? 'extra' : 'local';
         const serviceBadge = railServiceBadgeHtml(kind,r.service);
         const departureRank=departureRanks.get(r);
         const departureMark=departureRank===1
