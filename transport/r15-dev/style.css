@@ -2159,3 +2159,31 @@ html.company-pc body.freewifi-tv .panel-bus .bus-logo-willer .willer-express-wor
   color:#d5dce3!important;
   font-weight:700!important;
 }
+
+/* Departure-order marks belong to the lower JR list, NOT service class logos. */
+#rail-rows .rail-order-badge{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  vertical-align:middle!important;
+  flex:none!important;
+  margin-right:7px!important;
+  padding:2px 6px!important;
+  border-radius:4px!important;
+  font-size:11px!important;
+  line-height:1.25!important;
+  font-weight:900!important;
+  letter-spacing:0!important;
+  white-space:nowrap!important;
+  box-shadow:none!important;
+}
+#rail-rows .rail-order-next{
+  color:#fff!important;
+  background:#b52e36!important;
+  border:1px solid #f06d73!important;
+}
+#rail-rows .rail-order-second{
+  color:#fff!important;
+  background:#2464b5!important;
+  border:1px solid #75adf0!important;
+}
