@@ -3722,10 +3722,10 @@ window.MATSUYAMA_DATA = {
     },
     {
       "board": "port",
-      "time": "19:05",
+      "time": "19:10",
       "service": "中島汽船フェリー",
       "dest": "中島・大浦（観光港経由便）",
-      "info": "松山観光港・睦月経由（高浜・野忽那は通過）",
+      "info": "睦月経由・高浜寄港なし（野忽那の寄港条件は要確認）",
       "kind": "ferry",
       "source": "nakajima_mitsuhama",
       "id": "extra-port-005",
