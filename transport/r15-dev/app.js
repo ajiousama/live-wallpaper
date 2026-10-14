@@ -849,9 +849,9 @@
       return ['今治周辺','玉川','奥道後','松山市内',terminal];
     // The Shimanami express routes must not inherit the obsolete coastal path.
     if(/福山|新尾道/.test(key))
-      return ['福山・尾道','しまなみ海道','来島海峡周辺','松山方面',terminal];
+      return ['福山・新尾道','しまなみ海道','大島BS','来島海峡BS','川内インター','松山インター口',terminal];
     if(/福岡/.test(key))
-      return ['福岡','北九州','山口','広島周辺','しまなみ海道','松山方面',terminal];
+      return ['福岡','小倉','しまなみ海道','今治駅前','今治桟橋','川内インター','松山インター口','余戸南インター',terminal];
     if(/新居浜/.test(key)) return ['新居浜','西条','小松','川内IC','松山IC',terminal];
     if(/三崎|iyotetsu_misaki/.test(key)) return ['三崎港口','伊方','八幡浜','大洲','内子','中山','伊予市','松山市内（一般道）',terminal];
     if(/久万高原|jrshikoku_kumakogen/.test(key)) return ['久万高原','三坂道路','砥部','森松','大街道','松山市内（一般道）',terminal];
