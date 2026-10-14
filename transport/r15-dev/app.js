@@ -852,7 +852,7 @@
       return ['福山・新尾道','しまなみ海道','大島BS','来島海峡BS','川内インター','松山インター口',terminal];
     if(/福岡/.test(key))
       return ['福岡','小倉','しまなみ海道','今治駅前','今治桟橋','川内インター','松山インター口','余戸南インター',terminal];
-    if(/新居浜/.test(key)) return ['新居浜','西条','小松','川内IC','松山IC',terminal];
+    if(/新居浜/.test(key)) return ['新居浜駅前','西条駅前','石鎚神社','川内','横河原','愛大病院前','四国がんセンター','新久米','大街道','松山市駅',terminal];
     if(/三崎|iyotetsu_misaki/.test(key)) return ['三崎港口','伊方','八幡浜','大洲','内子','中山','伊予市','松山市内（一般道）',terminal];
     if(/久万高原|jrshikoku_kumakogen/.test(key)) return ['久万高原','三坂道路','砥部','森松','大街道','松山市内（一般道）',terminal];
     if(/宇和島|城辺/.test(key)) return ['宇和島','大洲','内子','伊予市','松山IC',terminal];
@@ -3553,7 +3553,7 @@
       parts.push('奥道後','玉川','今治');
     } else if (/iyotetsu_niihama/.test(src)) {
       if (stop==='JR松山駅') parts.push('松山市駅');
-      parts.push('四国がんセンター','西条');
+      parts.push('大街道','新久米','四国がんセンター','横河原','川内','西条駅前');
     } else if (/iyotetsu_tokyo|iyo_city_fukuoka/.test(src) || /東京|横浜|福岡/.test(dest)) {
       parts.push('余戸南インター','松山インター口','川内インター');
       if (/福岡/.test(dest)) parts.push('今治桟橋','今治駅前');
