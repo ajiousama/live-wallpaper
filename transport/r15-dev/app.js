@@ -854,7 +854,7 @@
       return ['福岡','小倉','しまなみ海道','今治駅前','今治桟橋','川内インター','松山インター口','余戸南インター',terminal];
     if(/新居浜/.test(key)) return ['新居浜駅前','西条駅前','石鎚神社','川内','横河原','愛大病院前','四国がんセンター','新久米','大街道','松山市駅',terminal];
     if(/三崎|iyotetsu_misaki/.test(key)) return ['三崎港口','伊方町役場前','八幡浜駅前','大洲','内子','中山','伊予市','保免','松山市駅',terminal];
-    if(/久万高原|jrshikoku_kumakogen/.test(key)) return ['久万高原','三坂道路','砥部','森松','大街道','松山市内（一般道）',terminal];
+    if(/久万高原|jrshikoku_kumakogen/.test(key)) return ['久万高原','大平','岩谷口','砥部','麻生','森松本町','天山橋','大街道','大手町',terminal];
     if(/宇和島|城辺/.test(key)) return ['宇和島方面','吉田営業所','卯之町営業所','大洲方面','エミフル松前','松山市駅',terminal];
 
     const label=origin.replace(/[（(].*?[）)]/g,'').trim()||'出発地';
