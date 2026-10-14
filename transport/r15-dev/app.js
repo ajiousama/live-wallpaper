@@ -839,10 +839,10 @@
     if(/名古屋/.test(key)) return ['名古屋駅','松茂','徳島駅','高松中央インターBT','高松駅高速BT','三島川之江インター','川内インター','松山インター口','大街道','松山市駅',terminal];
     if(/大阪|京都|USJ/.test(key)) return ['大阪・京都','神戸周辺','淡路島','徳島道','川之江JCT','川内IC','松山IC',terminal];
     if(/神戸/.test(key)) return ['神戸三宮','高速舞子','淡路島','徳島道','川内インター','松山インター口',terminal];
-    if(/高松/.test(key)) return ['高松','坂出','善通寺','川之江JCT','新居浜','川内IC','松山IC',terminal];
+    if(/高松/.test(key)) return ['高松駅高速BT','ゆめタウン高松','高速丸亀','高速善通寺','三島川之江インター','川内インター','松山インター口',terminal];
     if(/徳島|鳴門/.test(key)) return ['徳島駅周辺','脇町BS','三好BS','三島川之江インター','川内インター','松山インター口','大街道','松山市駅',terminal];
     if(/高知/.test(key)) return ['高知駅','一宮バスターミナル','三島川之江インター','川内インター','松山インター口','松山市駅',terminal];
-    if(/岡山/.test(key)) return ['岡山','瀬戸大橋','坂出','川之江JCT','新居浜','川内IC','松山IC',terminal];
+    if(/岡山/.test(key)) return ['岡山駅西口','津高','有城南','鷲羽山北','瀬戸大橋','川内インター','松山インター口','大街道','松山市駅',terminal];
     // Setouchi Matsuyama–Imabari services use Route 317 via Tamagawa,
     // not the old Hojo/Kikuma coast road.
     if(/setouchi_omishima/.test(key) || /今治|宮浦/.test(key))
@@ -855,7 +855,7 @@
     if(/新居浜/.test(key)) return ['新居浜駅前','西条駅前','石鎚神社','川内','横河原','愛大病院前','四国がんセンター','新久米','大街道','松山市駅',terminal];
     if(/三崎|iyotetsu_misaki/.test(key)) return ['三崎港口','伊方','八幡浜','大洲','内子','中山','伊予市','松山市内（一般道）',terminal];
     if(/久万高原|jrshikoku_kumakogen/.test(key)) return ['久万高原','三坂道路','砥部','森松','大街道','松山市内（一般道）',terminal];
-    if(/宇和島|城辺/.test(key)) return ['宇和島','大洲','内子','伊予市','松山IC',terminal];
+    if(/宇和島|城辺/.test(key)) return ['宇和島方面','吉田営業所','卯之町営業所','大洲方面','エミフル松前','松山市駅',terminal];
 
     const label=origin.replace(/[（(].*?[）)]/g,'').trim()||'出発地';
     return [label,'高速道路上','愛媛県内','松山IC',terminal];
