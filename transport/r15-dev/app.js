@@ -843,10 +843,16 @@
     if(/徳島|鳴門/.test(key)) return ['徳島','脇町','三好','川之江JCT','新居浜','川内IC','松山IC',terminal];
     if(/高知/.test(key)) return ['高知','大豊','川之江JCT','新居浜','川内IC','松山IC',terminal];
     if(/岡山/.test(key)) return ['岡山','瀬戸大橋','坂出','川之江JCT','新居浜','川内IC','松山IC',terminal];
-    if(/福山|新尾道/.test(key)) return ['福山・尾道','しまなみ海道','今治','菊間','北条','堀江',terminal];
-    if(/福岡/.test(key)) return ['福岡','北九州','山口','広島周辺','しまなみ海道','今治','北条','堀江',terminal];
+    // Setouchi Matsuyama–Imabari services use Route 317 via Tamagawa,
+    // not the old Hojo/Kikuma coast road.
+    if(/setouchi_omishima/.test(key) || /今治|宮浦/.test(key))
+      return ['今治周辺','玉川','奥道後','松山市内',terminal];
+    // The Shimanami express routes must not inherit the obsolete coastal path.
+    if(/福山|新尾道/.test(key))
+      return ['福山・尾道','しまなみ海道','来島海峡周辺','松山方面',terminal];
+    if(/福岡/.test(key))
+      return ['福岡','北九州','山口','広島周辺','しまなみ海道','松山方面',terminal];
     if(/新居浜/.test(key)) return ['新居浜','西条','小松','川内IC','松山IC',terminal];
-    if(/今治|宮浦/.test(key)) return ['今治周辺','菊間','北条','堀江',terminal];
     if(/三崎|iyotetsu_misaki/.test(key)) return ['三崎港口','伊方','八幡浜','大洲','内子','中山','伊予市','松山市内（一般道）',terminal];
     if(/久万高原|jrshikoku_kumakogen/.test(key)) return ['久万高原','三坂道路','砥部','森松','大街道','松山市内（一般道）',terminal];
     if(/宇和島|城辺/.test(key)) return ['宇和島','大洲','内子','伊予市','松山IC',terminal];
