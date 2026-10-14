@@ -146,15 +146,12 @@
     if (!rows.length) return null;
     return Math.min(...rows.map(r => toMinutes(r.time)));
   }
+  // JR, buses and aviation roll over at 04:30 JST, never at midnight.
+  // Do not preview the next operating day's services overnight.
+  const TRANSPORT_DAY_START_MINUTE = 4 * 60 + 30;
   function boardDisplayIso(board, now) {
-    if (board !== 'rail' && board !== 'air') return now.iso;
-    const todayIso = now.iso;
-    const prevIso = shiftIso(todayIso, -1);
-    const firstMinute = board === 'rail'
-      ? firstServiceMinuteFor('rail', todayIso, r => r.direction === currentRailDir())
-      : firstServiceMinuteFor('air', todayIso, r => r.direction === currentDirection());
-    if (Number.isFinite(firstMinute) && now.minutes < Math.max(0, firstMinute - 120)) return prevIso;
-    return todayIso;
+    if (board !== 'rail' && board !== 'air' && board !== 'bus') return now.iso;
+    return now.minutes < TRANSPORT_DAY_START_MINUTE ? shiftIso(now.iso,-1) : now.iso;
   }
   function recordsForDay(board, iso) {
     const ctx=dayContext(iso);
@@ -1452,6 +1449,10 @@
   }
 
   function nextRows(board, now) {
+    // 00:00–04:29: do not show the following day's early JR/bus/air departures.
+    // Overnight operational exceptions require their own verified-day handling.
+    if ((board==='rail' || board==='bus' || board==='air') &&
+        now.minutes < TRANSPORT_DAY_START_MINUTE) return [];
     // Ferries are a rolling 24-hour board, not a calendar-day board.
     // Keep overnight sailings visible until arrival, including next-day arrivals.
     if(board==='port'){
