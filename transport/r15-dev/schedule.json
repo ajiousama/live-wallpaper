@@ -7219,22 +7219,6 @@
       "info": "木江07:40発→宗方07:53→今治08:10着"
     },
     {
-      "id": "official-202610-in-imabari_blue_official_in-0740",
-      "board": "port",
-      "kind": "ferry",
-      "source": "imabari_blue_official_in",
-      "service": "大三島ブルーライン",
-      "port": "今治港",
-      "arrivalPort": "今治港",
-      "origin": "木江港",
-      "dest": "今治港",
-      "direction": "arrival",
-      "time": "08:43",
-      "originDepartureTime": "07:40",
-      "noSyntheticArrival": true,
-      "info": "宗方港07:53経由"
-    },
-    {
       "id": "official-202610-in-imabari_blue_official_in-1845",
       "board": "port",
       "kind": "ferry",
