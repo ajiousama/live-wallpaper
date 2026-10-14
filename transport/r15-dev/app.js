@@ -1451,8 +1451,20 @@
   function nextRows(board, now) {
     // 00:00–04:29: do not show the following day's early JR/bus/air departures.
     // Overnight operational exceptions require their own verified-day handling.
-    if ((board==='rail' || board==='bus' || board==='air') &&
-        now.minutes < TRANSPORT_DAY_START_MINUTE) return [];
+    if (now.minutes < TRANSPORT_DAY_START_MINUTE) {
+      if (board==='rail') {
+        // Exception: explicitly dated EXTRA passenger trains actually running
+        // between midnight and 04:29 remain visible. Do not preload 04:30+
+        // regular service or an early train from the next timetable day.
+        return recordsForDay('rail',now.iso)
+          .filter(r=>r.kind==='extra' && r.direction===currentRailDir() &&
+            toMinutes(r.time)>=now.minutes &&
+            toMinutes(r.time)<TRANSPORT_DAY_START_MINUTE)
+          .map(r=>({...r,minutes:toMinutes(r.time),railTimetableOnly:true,
+            displayIso:now.iso}));
+      }
+      if(board==='bus' || board==='air')return [];
+    }
     // Ferries are a rolling 24-hour board, not a calendar-day board.
     // Keep overnight sailings visible until arrival, including next-day arrivals.
     if(board==='port'){
