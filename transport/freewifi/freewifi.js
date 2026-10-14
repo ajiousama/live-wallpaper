@@ -1,5 +1,10 @@
 (() => {
   const companyPc = document.documentElement.classList.contains('company-pc');
+  // Temporary pause requested for the workplace R15 wallpaper only.
+  // Flip to false to restore automatic page rotation later.
+  const PAUSE_WORKPLACE_PAGE_ROTATION = true;
+  const autoRotationPaused = companyPc && PAUSE_WORKPLACE_PAGE_ROTATION;
+  const pausedPageKey = 'matsuyama-workplace-paused-page';
 
   // Web/FreeWiFi: eight transport screens + cinema + gamble.
   // Workplace PC: transport and cinema only; do not load or rotate into gamble.
@@ -52,6 +57,9 @@
   function showPage(index){
     pageIndex = (index + pages.length) % pages.length;
     const page = pages[pageIndex];
+    if(autoRotationPaused){
+      try { sessionStorage.setItem(pausedPageKey, String(pageIndex)); } catch(e) {}
+    }
 
     // The large hero title must follow the ACTUAL visible board, not the
     // initial HTML placeholder. JR north/south are both departures.
@@ -111,7 +119,9 @@
       });
     }
 
-    nextPageAt = Date.now() + page.duration;
+    // A far-future deadline also prevents legacy R15 / Lively watchdogs
+    // from interpreting an intentional pause as a stalled page.
+    nextPageAt = autoRotationPaused ? Number.MAX_SAFE_INTEGER : Date.now() + page.duration;
     // Expose a separate heartbeat for the inline watchdog: cinema lasts 30s,
     // so do not use a fixed 20-second "stuck" threshold.
     document.documentElement.dataset.companyPageIndex = String(pageIndex);
@@ -123,6 +133,7 @@
 
   function scheduleNextPage(){
     clearTimeout(pageTimer);
+    if(autoRotationPaused) return;
     pageTimer = setTimeout(
       ()=>showPage(pageIndex + 1),
       Math.max(0, nextPageAt - Date.now())
@@ -132,6 +143,10 @@
   function updatePageCountdown(){
     if(!status) return;
     const page = pages[pageIndex];
+    if(autoRotationPaused){
+      status.textContent = `${page.label}　｜　自動切替停止中`;
+      return;
+    }
     const left = Math.max(0, Math.ceil((nextPageAt - Date.now()) / 1000));
     status.textContent = `${page.label}　｜　次画面まで ${left}秒`;
   }
@@ -142,7 +157,7 @@
     if(pages[pageIndex]?.cinema && cinemaFrame?.contentWindow){
       cinemaFrame.contentWindow.postMessage({type:'cinema-page-step',delta},location.origin);
       // Give a manually selected movie page a full rotation interval.
-      nextPageAt=Date.now()+pages[pageIndex].duration;
+      nextPageAt=autoRotationPaused ? Number.MAX_SAFE_INTEGER : Date.now()+pages[pageIndex].duration;
       document.documentElement.dataset.companyPageDue=String(nextPageAt);
       updatePageCountdown();
       scheduleNextPage();
@@ -160,16 +175,23 @@
   if(webPrev) webPrev.addEventListener('click', ()=>sharedPageStep(-1));
   if(webNext) webNext.addEventListener('click', ()=>sharedPageStep(1));
 
-  showPage(0);
+  let initialPage = 0;
+  if(autoRotationPaused){
+    try {
+      const saved = Number(sessionStorage.getItem(pausedPageKey));
+      if(Number.isInteger(saved) && saved >= 0 && saved < pages.length) initialPage = saved;
+    } catch(e) {}
+  }
+  showPage(initialPage);
   setInterval(updatePageCountdown, 1000);
   // Lively's WebView may throttle or drop a long setTimeout after sleeping.
   // This independent clock check restores page switching, even when the
   // queued timeout was lost. A hidden/resumed WebView advances one page.
   setInterval(()=>{
-    if(Date.now() > nextPageAt + 1250) showPage(pageIndex + 1);
+    if(!autoRotationPaused && Date.now() > nextPageAt + 1250) showPage(pageIndex + 1);
   }, 1000);
   window.addEventListener('pageshow',()=>{
-    if(Date.now() > nextPageAt + 1250) showPage(pageIndex + 1);
+    if(!autoRotationPaused && Date.now() > nextPageAt + 1250) showPage(pageIndex + 1);
   });
 
   // Optional Lively ZIP shell heartbeat. A local wrapper can reload only a
