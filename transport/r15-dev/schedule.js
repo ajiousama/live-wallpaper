@@ -6441,54 +6441,6 @@ window.MATSUYAMA_DATA = {
         "2026-10-29",
         "2026-11-02"
       ]
-    },
-    {
-      "id": "imabari-blue-verified-0810",
-      "board": "port",
-      "time": "08:10",
-      "service": "大三島ブルーライン",
-      "dest": "木江港",
-      "info": "宗方港経由・木江港行（公式時刻表）",
-      "kind": "ferry",
-      "source": "imabari_blue",
-      "port": "今治港",
-      "noSyntheticArrival": true
-    },
-    {
-      "id": "imabari-blue-verified-1035",
-      "board": "port",
-      "time": "10:35",
-      "service": "大三島ブルーライン",
-      "dest": "木江港",
-      "info": "宗方港経由・木江港行（公式時刻表）",
-      "kind": "ferry",
-      "source": "imabari_blue",
-      "port": "今治港",
-      "noSyntheticArrival": true
-    },
-    {
-      "id": "imabari-blue-verified-1630",
-      "board": "port",
-      "time": "16:30",
-      "service": "大三島ブルーライン",
-      "dest": "木江港",
-      "info": "宗方港経由・木江港行（公式時刻表）",
-      "kind": "ferry",
-      "source": "imabari_blue",
-      "port": "今治港",
-      "noSyntheticArrival": true
-    },
-    {
-      "id": "imabari-blue-verified-1830",
-      "board": "port",
-      "time": "18:30",
-      "service": "大三島ブルーライン",
-      "dest": "木江港",
-      "info": "宗方港経由・木江港行（公式時刻表）",
-      "kind": "ferry",
-      "source": "imabari_blue",
-      "port": "今治港",
-      "noSyntheticArrival": true
     }
   ],
   "sources": {
