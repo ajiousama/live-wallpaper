@@ -3538,7 +3538,10 @@
       parts.push(`始発 ${start} ${startTime}`);
     }
 
-    if (/orange_ferry_shuttle/.test(src)) {
+    if (/jr_osaka/.test(src)) {
+      parts.push('大街道','松山インター口','川内インター');
+      if(info) parts.push(...info.split('・').filter(Boolean));
+    } else if (/orange_ferry_shuttle/.test(src)) {
       const timed=[...info.matchAll(/(松山市駅|松山IC口|川内IC)(\d{1,2}:\d{2})/g)]
         .map(m=>`${m[1]} ${m[2]}`);
       if (timed.length) parts.push(...timed);
