@@ -3556,13 +3556,13 @@
       parts.push('四国がんセンター','西条');
     } else if (/iyotetsu_tokyo|iyo_city_fukuoka/.test(src) || /東京|横浜|福岡/.test(dest)) {
       parts.push('余戸南インター','松山インター口','川内インター');
-      if (/福岡/.test(dest)) parts.push('今治');
+      if (/福岡/.test(dest)) parts.push('今治桟橋','今治駅前');
     } else if (/jr_osaka|takamatsu|tokushima|kochi|okayama|nagoya|iyo_city_(?:osaka|takamatsu|tokushima|kochi|okayama|nagoya)/.test(src)
       || /大阪|京都|神戸|高松|徳島|高知|岡山|名古屋/.test(dest)) {
       if (stop==='JR松山駅') parts.push('松山市駅');
       parts.push('松山インター口','川内インター');
     } else if (/新尾道|福山/.test(dest)) {
-      parts.push('今治','来島海峡BS');
+      parts.push('松山インター口','川内インター','来島海峡BS','大島BS');
     }
 
     const seen=new Set();
