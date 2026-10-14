@@ -3024,6 +3024,12 @@
     // Never reserve priority slots by train category: earlier times always
     // come before later times, including specials/terminal arrivals.
     const visible=candidates.slice(0,limit);
+    // Departure order is independent of train type and the upper summary cards.
+    // Use the full future passenger departure list, not just visible rows:
+    // arrivals, freight and deadheads never receive departure-order marks.
+    const departureRanks=new Map();
+    services.slice().sort((a,b)=>a._sortMinutes-b._sortMinutes)
+      .forEach((item,index)=>{if(index<2)departureRanks.set(item.data,index+1);});
 
     if (!visible.length) {
       // A missing live fix must never be described as an ended service.
@@ -3052,12 +3058,18 @@
         const row = document.createElement('div'); row.className = `row rail-row${r.isFinal ? ' is-final' : ''}${isDepartSoon(r, now) ? ' depart-soon' : ''}`;
         const kind = r.kind === 'limited' ? 'limited' : r.kind === 'sightseeing' ? 'tourist' : 'local';
         const serviceBadge = railServiceBadgeHtml(kind,r.service);
+        const departureRank=departureRanks.get(r);
+        const departureMark=departureRank===1
+          ? '<span class="rail-order-badge rail-order-next" aria-label="発車順一番目">次発</span>'
+          : departureRank===2
+            ? '<span class="rail-order-badge rail-order-second" aria-label="発車順二番目">次々発</span>'
+            : '';
         const badges = `${r.isNextDayStart ? badgeHtml('first') : ''}${railSpecialFinalBadge(r,now)}`;
         row.innerHTML = `
           <div class="rail-primary">
             <div class="cell rail-service ${kind}"><span class="kindtxt">${serviceBadge}</span></div>
             <div class="cell time">${r.time}</div>
-            <div class="cell main">${railDestLabel(r)}行 ${badges}</div>
+            <div class="cell main">${departureMark}${railDestLabel(r)}行 ${badges}</div>
           </div>
           <div class="rail-detail">${tickerHtml(railRowDetailItems(r))}</div>`;
         root.appendChild(row);
