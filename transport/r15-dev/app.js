@@ -1385,7 +1385,7 @@
           const m=toMinutes(r.time)+baseOffset;
           if(m>=now.minutes && m<=now.minutes+1440)out.push({...r,minutes:m,_serviceIso:baseIso});
         });
-        src.filter(r=>r.direction!=='arrival' && !r.noSyntheticArrival && r.source!=='jumbo_ferry_reference' && r.source!=='koku94' && r.source!=='imabari_geiyo' && r.source!=='orange_niihama' && r.source!=='boyo' && r.source!=='port_highspeed').map(synthPortArrival).forEach(r=>{
+        src.filter(r=>r.direction!=='arrival' && !r.noSyntheticArrival && r.source!=='jumbo_ferry_reference' && r.source!=='koku94' && r.source!=='imabari_geiyo' && r.source!=='orange_niihama' && r.source!=='boyo' && r.source!=='port_highspeed' && r.source!=='port').map(synthPortArrival).forEach(r=>{
           let m=toMinutes(r.time);
           if(r._arrivalNextDay) m+=1440;
           m+=baseOffset;
@@ -1397,7 +1397,7 @@
 
       const prev=recordsForDay('port',prevIso);
       // Previous-day sailings that cross midnight arrive on the current day.
-      prev.filter(r=>r.direction!=='arrival' && !r.noSyntheticArrival && r.source!=='jumbo_ferry_reference' && r.source!=='koku94' && r.source!=='imabari_geiyo' && r.source!=='orange_niihama' && r.source!=='boyo' && r.source!=='port_highspeed').map(synthPortArrival).filter(r=>r._arrivalNextDay).forEach(r=>{
+      prev.filter(r=>r.direction!=='arrival' && !r.noSyntheticArrival && r.source!=='jumbo_ferry_reference' && r.source!=='koku94' && r.source!=='imabari_geiyo' && r.source!=='orange_niihama' && r.source!=='boyo' && r.source!=='port_highspeed' && r.source!=='port').map(synthPortArrival).filter(r=>r._arrivalNextDay).forEach(r=>{
         const m=toMinutes(r.time);
         if(m>=now.minutes && m<=now.minutes+1440){
           out.push({...r,originDepartureDay:'前日',minutes:m,_serviceIso:prevIso});
