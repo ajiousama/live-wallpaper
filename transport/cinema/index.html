@@ -133,7 +133,8 @@ const venues=[
   {id:"lunatic",label:"ルナティック",color:"#dcb7fa",until:"2026-11-24"},
   {id:"imabari",label:"今治新都市",color:"#ffb09e"},
   {id:"cosmo",label:"コスモシアター",color:"#e3b6ff"},
-  {id:"kahaku",label:"県総合科学博物館",color:"#81edee"}
+  {id:"kahaku",label:"県総合科学博物館",color:"#81edee"},
+  {id:"niihama",label:"TOHO新居浜",color:"#ffbd8c"}
 ];
 const JST=32400000,DURATION=30000,PAGE_MS=7500,SCROLL_SPEED=34;
 const two=n=>String(n).padStart(2,"0");
@@ -183,7 +184,7 @@ function planetariumShows(date) {
 function makeGroups(now){
  if(!snapshot)return {date:"",items:[]};
  const today=dateJst(now),tomorrow=dateJst(now+86400000),byDay=new Map([[today,[]],[tomorrow,[]]]);
- for(const v of venues.slice(0,5))for(const show of (snapshot.theaters[v.id]?.shows||[])){
+ for(const v of venues.filter(v=>v.id!=="cosmo"&&v.id!=="kahaku"))for(const show of (snapshot.theaters[v.id]?.shows||[])){
    if(!show||typeof show.title!=="string"||!show.title.trim()||
       !/^[0-9]{2}:[0-9]{2}$/.test(show.time)||!byDay.has(show.date)||
       (v.until&&show.date>v.until))continue;
@@ -276,7 +277,7 @@ function render(){
  const sig=JSON.stringify([next.date,next.items.map(g=>[g.title,g.priority,...g.sessions.map(x=>x.time+x.venue.id)])]);
  const size=rowsPerPage(),changed=sig!==signature||size!==pageSize;
  if(changed){groups=next.items;activeDate=next.date;signature=sig;pageSize=size;displayed=-1;manualPage=null;}
- document.getElementById("venue-count").textContent="EHIME CINEMA / "+venues.slice(0,5).filter(v=>!v.until||dateJst(now)<=v.until).length+" THEATERS ＋ 2 PLANETARIUMS";
+ document.getElementById("venue-count").textContent="EHIME CINEMA / "+venues.filter(v=>v.id!=="cosmo"&&v.id!=="kahaku").filter(v=>!v.until||dateJst(now)<=v.until).length+" THEATERS ＋ 2 PLANETARIUMS";
  const today=dateJst(now);
  document.getElementById("date-kind").textContent=activeDate===today?"本日 "+today.slice(5).replace("-","/")+" のこれからの上映":
    activeDate?"翌日 "+activeDate.slice(5).replace("-","/")+" の上映予定":"上映情報を確認中";
@@ -297,7 +298,7 @@ async function load(){
      const data=await response.json(),age=Date.now()-Date.parse(data.generatedAt);
      if(data.theaters&&Number.isFinite(age)&&age>=-300000&&age<18*3600000){found=data;break}
    }catch(_){}
-   if(!found||!venues.every(v=>(v.until&&dateJst(Date.now())>v.until)||
+   if(!found||!venues.filter(v=>v.id!=="cosmo"&&v.id!=="kahaku"&&v.id!=="niihama").every(v=>(v.until&&dateJst(Date.now())>v.until)||
       Array.isArray(found.theaters[v.id]?.shows)))throw Error("Showtime listing unavailable");
    snapshot=found;updatedAt=Date.parse(found.generatedAt);
  }catch(_){snapshot=null;updatedAt=0}
