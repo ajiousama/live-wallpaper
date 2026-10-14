@@ -836,12 +836,12 @@
     const terminal=String(record.arrivalTerminal||record.stop||'松山市駅').trim()||'松山市駅';
 
     if(/東京|横浜/.test(key)) return ['首都圏','東名高速','名古屋周辺','京阪神','淡路島','徳島道','川内IC','松山IC',terminal];
-    if(/名古屋/.test(key)) return ['名古屋','新名神','京阪神','淡路島','徳島道','川内IC','松山IC',terminal];
+    if(/名古屋/.test(key)) return ['名古屋駅','松茂','徳島駅','高松中央インターBT','高松駅高速BT','三島川之江インター','川内インター','松山インター口','大街道','松山市駅',terminal];
     if(/大阪|京都|USJ/.test(key)) return ['大阪・京都','神戸周辺','淡路島','徳島道','川之江JCT','川内IC','松山IC',terminal];
-    if(/神戸/.test(key)) return ['神戸','淡路島','徳島道','川之江JCT','川内IC','松山IC',terminal];
+    if(/神戸/.test(key)) return ['神戸三宮','高速舞子','淡路島','徳島道','川内インター','松山インター口',terminal];
     if(/高松/.test(key)) return ['高松','坂出','善通寺','川之江JCT','新居浜','川内IC','松山IC',terminal];
-    if(/徳島|鳴門/.test(key)) return ['徳島','脇町','三好','川之江JCT','新居浜','川内IC','松山IC',terminal];
-    if(/高知/.test(key)) return ['高知','大豊','川之江JCT','新居浜','川内IC','松山IC',terminal];
+    if(/徳島|鳴門/.test(key)) return ['徳島駅周辺','脇町BS','三好BS','三島川之江インター','川内インター','松山インター口','大街道','松山市駅',terminal];
+    if(/高知/.test(key)) return ['高知駅','一宮バスターミナル','三島川之江インター','川内インター','松山インター口','松山市駅',terminal];
     if(/岡山/.test(key)) return ['岡山','瀬戸大橋','坂出','川之江JCT','新居浜','川内IC','松山IC',terminal];
     // Setouchi Matsuyama–Imabari services use Route 317 via Tamagawa,
     // not the old Hojo/Kikuma coast road.
