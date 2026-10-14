@@ -4535,9 +4535,23 @@
       return [`<span class="cruise-berth-alert">松山外港にクルーズ船${ship}が停泊中（予定）　${nextDay}${departure.time}出航予定</span>`];
     });
   }
+  function specialVesselEventNotices(now=japanNow()) {
+    // Public ship-viewing events belong in the port ticker, not ferry arrivals.
+    // Only show a notice on the published event day, and stop at its end time.
+    const events=[
+      {date:'2026-10-17',start:'11:00',end:'16:00',
+       text:'海上保安庁 巡視船「いよ」一般公開｜松山港外港第2ふ頭｜11:00〜12:00／13:30〜16:00（受付15:30まで）'},
+      {date:'2026-11-15',start:'09:30',end:'16:00',
+       text:'海上保安庁 巡視艇「はまぎく」体験航海イベント｜マリンパーク新居浜｜9:30〜16:00（乗船条件は主催者案内を確認）'}
+    ];
+    return events.filter(e=>now.iso===e.date && now.minutes>=toMinutes(e.start)
+        && now.minutes<toMinutes(e.end))
+      .map(e=>'<span class="special-vessel-event">'+e.text+'</span>');
+  }
   function ferryTickerItems(now=japanNow()) {
     const rows=slowLive.ferry?.items; const items=[];
     if(Array.isArray(rows)&&rows.length){rows.forEach(x=>{const st=String(x.status||'');const cls=/欠航|休航/.test(st)?'ferry-cancel':/減便|一部/.test(st)?'ferry-reduced':'ferry-normal';items.push(`<span class="${cls}">フェリーLIVE｜${x.name}｜${st}</span>`);});}
+    items.unshift(...specialVesselEventNotices(now));
     items.unshift(...berthedCruiseNotices(now));
     if(!items.length)items.push('フェリーLIVE｜公式運航情報を取得中');
     items.push(PORT_WARNING); return items;
