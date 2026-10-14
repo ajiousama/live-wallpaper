@@ -7351,6 +7351,86 @@ window.MATSUYAMA_DATA = {
       "originDepartureTime": "17:35",
       "noSyntheticArrival": true,
       "info": "小大下・大下・宗方経由"
+    },
+    {
+      "board": "port",
+      "kind": "cruise",
+      "source": "matsuyama_city_cruise",
+      "service": "郵船クルーズ",
+      "shipName": "飛鳥III",
+      "port": "松山港外港第1ふ頭",
+      "arrivalPort": "松山港外港第1ふ頭",
+      "noSyntheticArrival": true,
+      "info": "大型クルーズ船 飛鳥III｜市公式寄港予定（変更あり）",
+      "reference": "https://www.city.matsuyama.ehime.jp/shisei/keikaku/kanko/cruisezyoho.html",
+      "id": "matsuyama-cruise-city-1-in",
+      "direction": "arrival",
+      "time": "08:10",
+      "origin": "細島港（宮崎）",
+      "dest": "松山港外港第1ふ頭",
+      "dates": [
+        "2026-10-16"
+      ]
+    },
+    {
+      "board": "port",
+      "kind": "cruise",
+      "source": "matsuyama_city_cruise",
+      "service": "郵船クルーズ",
+      "shipName": "飛鳥III",
+      "port": "松山港外港第1ふ頭",
+      "arrivalPort": "松山港外港第1ふ頭",
+      "noSyntheticArrival": true,
+      "info": "大型クルーズ船 飛鳥III｜市公式寄港予定（変更あり）",
+      "reference": "https://www.city.matsuyama.ehime.jp/shisei/keikaku/kanko/cruisezyoho.html",
+      "id": "matsuyama-cruise-city-1-out",
+      "direction": "departure",
+      "time": "08:50",
+      "origin": "松山港外港第1ふ頭",
+      "dest": "横浜港（神奈川）",
+      "dates": [
+        "2026-10-17"
+      ]
+    },
+    {
+      "board": "port",
+      "kind": "cruise",
+      "source": "matsuyama_city_cruise",
+      "service": "商船三井クルーズ",
+      "shipName": "三井オーシャンフジ",
+      "port": "松山港外港第1ふ頭",
+      "arrivalPort": "松山港外港第1ふ頭",
+      "noSyntheticArrival": true,
+      "info": "大型クルーズ船 三井オーシャンフジ｜市公式寄港予定（変更あり）",
+      "reference": "https://www.city.matsuyama.ehime.jp/shisei/keikaku/kanko/cruisezyoho.html",
+      "id": "matsuyama-cruise-city-2-in",
+      "direction": "arrival",
+      "time": "08:00",
+      "origin": "鞆の浦（広島）",
+      "dest": "松山港外港第1ふ頭",
+      "dates": [
+        "2026-12-05"
+      ]
+    },
+    {
+      "board": "port",
+      "kind": "cruise",
+      "source": "matsuyama_city_cruise",
+      "service": "商船三井クルーズ",
+      "shipName": "三井オーシャンフジ",
+      "port": "松山港外港第1ふ頭",
+      "arrivalPort": "松山港外港第1ふ頭",
+      "noSyntheticArrival": true,
+      "info": "大型クルーズ船 三井オーシャンフジ｜市公式寄港予定（変更あり）",
+      "reference": "https://www.city.matsuyama.ehime.jp/shisei/keikaku/kanko/cruisezyoho.html",
+      "id": "matsuyama-cruise-city-2-out",
+      "direction": "departure",
+      "time": "17:00",
+      "origin": "松山港外港第1ふ頭",
+      "dest": "釜山港（韓国）",
+      "dates": [
+        "2026-12-05"
+      ]
     }
   ],
   "sources": {
