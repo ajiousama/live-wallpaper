@@ -2134,3 +2134,28 @@ html.company-pc body.freewifi-tv .panel-bus .bus-logo-willer .willer-word{
 html.company-pc body.freewifi-tv .panel-bus .bus-logo-willer .willer-express-word{
   font-size:10px!important;
 }
+
+/* JR hierarchy: departures are the primary information; terminating arrivals
+   stay in chronological order but must not visually dominate departures. */
+#rail-rows .rail-row:not(.terminal-arrival-row):not(.deadhead-row):not(.freight-row){
+  border-left:4px solid #4bcae9!important;
+}
+#rail-rows .rail-row:not(.terminal-arrival-row) .rail-primary .cell.time{
+  font-weight:950!important;
+}
+#rail-rows .terminal-arrival-row{
+  border-left:2px solid #788898!important;
+  background:rgba(24,32,42,.76)!important;
+}
+#rail-rows .terminal-arrival-row .rail-primary .cell.time,
+#rail-rows .terminal-arrival-row .cell.main,
+#rail-rows .terminal-arrival-row .rail-detail{
+  color:#b0bbc7!important;
+  font-weight:650!important;
+}
+#rail-rows .terminal-arrival-row .rail-terminal-label{
+  background:#34404c!important;
+  border-color:#657485!important;
+  color:#d5dce3!important;
+  font-weight:700!important;
+}
