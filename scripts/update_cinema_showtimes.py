@@ -22,6 +22,7 @@ THEATERS = {
     "kinuyama": ("衣山", "70073", "https://www.cinemasunshine.co.jp/theater/kinuyama/"),
     "lunatic": ("シネマルナティック", "70097", "https://cinemalunatic.sx3.jp/"),
     "imabari": ("イオンシネマ今治新都市", "70121", "https://theater.aeoncinema.com/theaters/imabari/"),
+    "niihama": ("TOHOシネマズ 新居浜", "70086", "https://www.tohotheater.jp/theater/048/"),
 }
 LUNATIC_LAST_DAY = dt.date(2026, 11, 24)
 CORE_THEATERS = frozenset(("shigenobu", "masaki", "kinuyama"))
