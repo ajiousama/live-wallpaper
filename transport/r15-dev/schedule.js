@@ -7200,7 +7200,7 @@ window.MATSUYAMA_DATA = {
       "time": "08:10",
       "originDepartureTime": "07:40",
       "noSyntheticArrival": true,
-      "info": "木江→宗方→今治（公式表）"
+      "info": "木江07:40発→宗方07:53→今治08:10着"
     },
     {
       "id": "official-202610-in-imabari_blue_official_in-0740",
@@ -7217,22 +7217,6 @@ window.MATSUYAMA_DATA = {
       "originDepartureTime": "07:40",
       "noSyntheticArrival": true,
       "info": "宗方港07:53経由"
-    },
-    {
-      "id": "official-202610-in-imabari_blue_official_in-1415",
-      "board": "port",
-      "kind": "ferry",
-      "source": "imabari_blue_official_in",
-      "service": "大三島ブルーライン",
-      "port": "今治港",
-      "arrivalPort": "今治港",
-      "origin": "木江港",
-      "dest": "今治港",
-      "direction": "arrival",
-      "time": "15:23",
-      "originDepartureTime": "14:15",
-      "noSyntheticArrival": true,
-      "info": "宗方港14:28経由"
     },
     {
       "id": "official-202610-in-imabari_blue_official_in-1845",
@@ -7319,22 +7303,6 @@ window.MATSUYAMA_DATA = {
       "originDepartureTime": "13:00",
       "noSyntheticArrival": true,
       "info": "小豆島（坂手）経由"
-    },
-    {
-      "id": "official-202610-in-jumbo_ferry_official_arrival-1945",
-      "board": "port",
-      "kind": "ferry",
-      "source": "jumbo_ferry_official_arrival",
-      "service": "ジャンボフェリー",
-      "port": "高松東港",
-      "arrivalPort": "高松東港",
-      "origin": "神戸港",
-      "dest": "高松東港",
-      "direction": "arrival",
-      "time": "00:00",
-      "originDepartureTime": "19:45",
-      "noSyntheticArrival": true,
-      "info": "直行・翌日着"
     }
   ],
   "sources": {
