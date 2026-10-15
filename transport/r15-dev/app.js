@@ -561,7 +561,18 @@
       .sort((a,b)=>toMinutes(effectiveTime(a,displayCtx))-toMinutes(effectiveTime(b,displayCtx)));
     const lastStaticMinute=staticRows.length?Math.max(...staticRows.map(r=>toMinutes(effectiveTime(r,displayCtx)))):null;
     const out=[];
-    live.forEach(x=>{
+    live.forEach(source=>{
+      let x=source;
+      // Guard even isolated leftovers during partial source-day rollover:
+      // a 18:00 arrival cannot be 'about to arrive' at 05:06.
+      if(!dep){
+        const clock=padTime(x.changed||x.scheduled||'');
+        const until=/^([01][0-9]|2[0-3]):[0-5][0-9]$/.test(clock)
+          ?toMinutes(clock)-now.minutes:NaN;
+        if(Number.isFinite(until)&&until>75 &&
+           /到着済み|ただいま到着|着陸済み|まもなく到着|接近中/.test(String(x.status||'')))
+          x={...x,status:'',sourceStatusUnverified:true};
+      }
       // At Matsuyama Airport's 22:00 curfew, remove normal inbound flights
       // from the arrival board. Only officially delayed flights can remain.
       // The departure board is intentionally unchanged.
