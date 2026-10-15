@@ -3260,8 +3260,10 @@
       // Exact-match official timetable only; never fabricate an estimated ETA.
       const arrivalForDisplay=/^([01]\d|2[0-3]):[0-5]\d$/.test(publishedDestinationArrival)
         ? publishedDestinationArrival : '';
+      const arrivalTimeBasis=String(r.liveRaw?.destinationArrivalTimezone||'')==='現地時刻'
+        ? '（現地）' : '';
       const placeHtml=arrivalForDisplay
-        ? `<span class="air-place-primary">${place} ${firstBadge}${finalBadge}</span><span class="air-arrival-scheduled">到着予定 ${arrivalForDisplay}</span>`
+        ? `<span class="air-place-primary">${place} ${firstBadge}${finalBadge}</span><span class="air-arrival-scheduled">到着予定 ${arrivalForDisplay}${arrivalTimeBasis}</span>`
         : `${place} ${firstBadge}${finalBadge}`;
       const airlineName=airServiceHtml(r,p);
       const airlineKey=/ANA/i.test(p.airline)?'ana':/JAL/i.test(p.airline)?'jal':/IBEX/i.test(p.airline)?'ibex':/Jetstar/i.test(p.airline)?'jetstar':/チェジュ/i.test(p.airline)?'jeju':/エアプサン/i.test(p.airline)?'busan':/エバー/i.test(p.airline)?'eva':'other';
