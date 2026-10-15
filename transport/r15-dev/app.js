@@ -1138,11 +1138,12 @@
     const rows = recordsForDay(board, (board === 'rail' || board === 'air') ? displayIso : now.iso);
     if (board === 'rail') {
       return rows.map(r => {
-          const serviceText = [r.service, r.name, r.trainName, r.info].filter(Boolean).join(' ');
           const destText = String(r.dest || '');
-          // しおかぜ20号（岡山行）は今治方面。元データの方面誤設定を補正する。
-          const correctedDirection = /しおかぜ\s*20\s*号?/.test(serviceText) && /岡山/.test(destText)
-            ? 'north' : r.direction;
+          // 方面は列車名ではなく行先で照合。データ側の誤設定を表示時に防止する。
+          const northDest = /岡山|高松|観音寺|丸亀|今治|新居浜|伊予西条|壬生川|伊予北条/.test(destText);
+          const southDest = /宇和島|八幡浜|伊予大洲|卯之町|伊予市|伊予長浜|内子|市坪/.test(destText);
+          const correctedDirection = northDest && !southDest ? 'north'
+            : southDest && !northDest ? 'south' : r.direction;
           return { ...r, direction: correctedDirection, minutes: toMinutes(r.time), displayIso };
         }).filter(r => r.direction === currentRailDir())
         .sort((a, b) => rMinutes(a) - rMinutes(b));
