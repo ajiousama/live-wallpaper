@@ -589,7 +589,7 @@
       if (Number.isFinite(delta) && delta>0 && (!liveStatus || /定刻/.test(liveStatus))) liveStatus=`遅れ +${delta}分`;
       if (Number.isFinite(delta) && delta<0 && (!liveStatus || /定刻/.test(liveStatus))) liveStatus=dep?`変更 ${Math.abs(delta)}分前`:`早着予定 ${Math.abs(delta)}分`;
       if(arrivalCompleted){
-        liveStatus=arrivalAge>=10?'到着済み・降機中（推定）':'到着済み';
+        liveStatus='到着済み';
       }
       if (forecastOnly && !arrivalCompleted) {
         // An adjusted airport-board arrival time is still a forecast, never
