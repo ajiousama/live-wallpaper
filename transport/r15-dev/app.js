@@ -576,7 +576,7 @@
           x.aircraftFlightPhase==='waiting' &&
           Number.isFinite(obsAge)&&obsAge>=-15000&&obsAge<=105000;
         liveStatus=confirmedWaiting
-          ? `出発前（機体位置確認）${info}`
+          ? `空港地上（離陸未確認）${info}`
           : `到着見込（出発未確認）${info}`;
       }
       out.push({...r,time:padTime(x.changed),liveScheduled:padTime(x.scheduled),liveChangedTime:padTime(x.changed),liveStatus,liveDelta:delta,liveRaw:x,
