@@ -2743,6 +2743,10 @@
       const suffix=String(m[2]||'').toUpperCase();
       if (suffix==='M' && n>=1 && n<=40) return {kind:'limited',service:`しおかぜ${n}号`};
       if (suffix==='D' && n>=1051 && n<=1099) return {kind:'limited',service:`宇和海${n-1050}号`};
+      // Matsuyama-originating Ishizuchi 102/104/106 have 1042M/1044M/1046M
+      // in the actual operating diagram, not 1102M/1104M/1106M.
+      if (suffix==='M' && [1042,1044,1046].includes(n))
+        return {kind:'limited',service:`いしづち${n-940}号`};
       if (suffix==='M' && n>=1000 && n<=1199) return {kind:'limited',service:`いしづち${n-1000}号`};
       return {kind:'limited',service:'特急'};
     }
@@ -5006,7 +5010,12 @@
       wall.style.right = `${edge}px`;
       wall.style.top = '50%';
       wall.style.transformOrigin = 'right center';
-      wall.style.transform = `translateY(-50%) scale(${ratio})`;
+      // Chromium CSS zoom rerenders glyphs and graphics at the final size.
+      // Avoid compositor scale() on Windows wallpaper: it blurs the whole board.
+      // Keep the same right-hand position and the 300px icon space.
+      wall.style.transform = companyPc
+        ? 'translateY(-50%)'
+        : `translateY(-50%) scale(${ratio})`;
     }
   }
 
