@@ -2689,12 +2689,8 @@
   // Original generic train-front illustration. This is NOT a claim about the
   // vehicle series: train number (M/D) does not uniquely identify rolling stock.
   function railVehicleIconHtml(record={}) {
-    const num=String(record?.trainNum||record?.liveTrainNum||'').trim().toUpperCase();
-    const diesel=/D$/.test(num);
-    const limited=record?.kind==='limited'||record?.trainClass==='limited';
-    const stripe=limited?'#d9a841':diesel?'#2089ca':'#3878b9';
-    // Arrival side names are the corridor from which the train arrived;
-    // the actual motion is the opposite direction.
+    // Use ONLY vehicle graphics from the unofficial train-operation service
+    // or its train-number database. No locally invented SVG substitutes.
     const dir=record.side==='south'?'north':
       record.side==='north'?'south':
       record.direction==='north'||record.direction==='south' ? record.direction : currentRailDir();
@@ -2708,19 +2704,11 @@
         imageUrl=u.href.replaceAll('&','&amp;').replaceAll('"','&quot;').replaceAll('<','&lt;');
       }
     } catch(e){}
-    const actualImg=imageUrl?'<img class="rail-vehicle-live-image" alt="" loading="lazy" referrerpolicy="no-referrer" src="'+imageUrl+'" onerror="this.remove()"/>':'';
-    return '<span class="rail-train-illustration" title="'+(imageUrl?'当日運用データに基づく車両画像':'列車の参考イラスト（車両形式の断定ではありません）')+'" aria-label="列車のイラスト">'+
-      '<svg viewBox="0 0 64 60" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">'+
-      '<path d="M18 3H46Q53 3 53 11V44L46 53H18L11 44V11Q11 3 18 3Z" fill="#e6eaf0" stroke="#6c7b88" stroke-width="2.5"/>'+
-      '<path d="M18 9H46Q48 9 48 13V30H16V13Q16 9 18 9Z" fill="#253d54"/>'+
-      '<path d="M31 9H33V30H31Z" fill="#c7d3dc"/>'+
-      '<path d="M16 32H48V41H16Z" fill="'+stripe+'"/>'+
-      '<path d="M17 35H47V38H17Z" fill="#f4f8fc" opacity=".75"/>'+
-      '<circle cx="20" cy="44" r="3.3" fill="#ffdb6b" stroke="#b48d36" stroke-width=".8"/>'+
-      '<circle cx="44" cy="44" r="3.3" fill="#ffdb6b" stroke="#b48d36" stroke-width=".8"/>'+
-      '<path d="M20 54V58M44 54V58" stroke="#4a5159" stroke-width="4" stroke-linecap="round"/>'+
-      '<path d="M24 48H40L36 52H28Z" fill="#536572"/>'+
-      '</svg>'+actualImg+'</span>';
+    if(!imageUrl) return '';
+    const label='JR四国非公式データの車両画像（当日運用または列車番号別情報）';
+    return '<span class="rail-train-illustration" title="'+label+'" aria-label="'+label+'">'+
+      '<img class="rail-vehicle-live-image" alt="" loading="eager" referrerpolicy="no-referrer" src="'+imageUrl+'" onerror="this.parentElement.remove()"/>'+
+      '</span>';
   }
 
   function railServiceBadgeHtml(kind, service='') {
