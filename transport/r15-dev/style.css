@@ -2209,3 +2209,24 @@ html.company-pc body.freewifi-tv .panel-bus .bus-logo-willer .willer-express-wor
 #rail-rows .rail-event-extra{display:inline-flex!important;align-items:center!important;background:#ed5f16!important;color:#fff!important;border:2px solid #ffd16d!important;padding:3px 8px!important;border-radius:4px!important;font-weight:950!important;box-shadow:0 0 10px rgba(255,127,27,.55)!important;animation:rail-event-pulse 1.4s ease-in-out infinite}
 @keyframes rail-event-pulse{50%{filter:brightness(1.35)}}
 @media(prefers-reduced-motion:reduce){#rail-rows .rail-event-extra{animation:none}}
+
+/* Original neutral train-front illustrations (no unverified rolling-stock ID). */
+.rail-train-illustration{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  flex:0 0 34px!important;
+  width:34px!important;
+  height:28px!important;
+  vertical-align:middle!important;
+  overflow:visible!important;
+  line-height:0!important;
+}
+.rail-train-illustration svg{display:block;width:100%;height:100%;filter:drop-shadow(0 1px 1px rgba(0,0,0,.35))}
+#rail-rows .rail-primary .rail-service .kindtxt{gap:3px!important}
+#rail-rows .rail-primary .rail-train-illustration{width:30px!important;height:28px!important;flex-basis:30px!important}
+.top-live-alert .rail-train-illustration,
+.hero-alert .rail-train-illustration,
+.note .rail-train-illustration{
+  width:26px!important;height:22px!important;flex-basis:26px!important;
+}
