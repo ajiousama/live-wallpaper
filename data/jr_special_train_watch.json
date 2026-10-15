@@ -1,5 +1,5 @@
 {
-  "checked_at_utc": "2026-10-14T23:57:43.795382+00:00",
+  "checked_at_utc": "2026-10-15T23:42:14.367961+00:00",
   "source_urls": {
     "jr_shikoku_press": "https://www.jr-shikoku.co.jp/03_news/press/info/",
     "jr_shikoku_home": "https://www.jr-shikoku.co.jp/",
@@ -38,8 +38,8 @@
     },
     {
       "source": "jr_shikoku_home",
-      "title": "「サイクルトレイン愛ある伊予灘号」の運行について",
-      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/10/07/20261007%2004.pdf"
+      "title": "観光列車「四国まんなか千年ものがたり」のご乗車１３万人達成記念企画について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/10/15/20261015%2001.pdf"
     },
     {
       "source": "jr_shikoku_press",
@@ -1003,6 +1003,11 @@
     },
     {
       "source": "jr_shikoku_press",
+      "title": "観光列車「四国まんなか千年ものがたり」のご乗車１３万人達成記念企画について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/10/15/20261015%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
       "title": "秋の臨時列車運転のお知らせ",
       "url": "https://www.jr-shikoku.co.jp/03_news/press/b0098b93f9135d5ad20efd86480f75f7651a6bbd.pdf"
     },
@@ -1012,7 +1017,18 @@
       "url": "https://www.jr-shikoku.co.jp/03_news/press/ec892776475f77919205413ed13987427003fc89.pdf"
     }
   ],
-  "new_announcements": [],
+  "new_announcements": [
+    {
+      "source": "jr_shikoku_home",
+      "title": "観光列車「四国まんなか千年ものがたり」のご乗車１３万人達成記念企画について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/10/15/20261015%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "観光列車「四国まんなか千年ものがたり」のご乗車１３万人達成記念企画について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/10/15/20261015%2001.pdf"
+    }
+  ],
   "fetch_errors": [],
   "note": "候補発見のみ。松山駅の発着時刻・運転日・経路を確認できるまで列車としては表示しない。"
 }
