@@ -571,7 +571,13 @@
         const originalStatus=String(x.status||'').trim();
         const info=originalStatus && !/^(定刻|通常運航|通常運行)$/.test(originalStatus)
           ? `　｜　${originalStatus}` : '';
-        liveStatus=`到着見込（出発未確認）${info}`;
+        const obsAge=Date.now()-Date.parse(String(x.aircraftObservedAt||''));
+        const confirmedWaiting=x.aircraftPositionConfirmed===true &&
+          x.aircraftFlightPhase==='waiting' &&
+          Number.isFinite(obsAge)&&obsAge>=-15000&&obsAge<=105000;
+        liveStatus=confirmedWaiting
+          ? `出発前（機体位置確認）${info}`
+          : `到着見込（出発未確認）${info}`;
       }
       out.push({...r,time:padTime(x.changed),liveScheduled:padTime(x.scheduled),liveChangedTime:padTime(x.changed),liveStatus,liveDelta:delta,liveRaw:x,
         destinationArrivalScheduled:dep?padTime(x.destinationArrivalScheduled||''):'',
