@@ -129,7 +129,9 @@
       right: 16px !important;
       top: 50% !important;
       transform-origin: right center !important;
-      transform: translateY(-50%) scale(var(--company-wall-scale)) !important;
+      /* Keep a crisp fallback while external CSS/JS is loading. */
+      zoom: var(--company-wall-scale) !important;
+      transform: translateY(-50%) !important;
     }
   </style>
 </head>
