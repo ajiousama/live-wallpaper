@@ -11,7 +11,7 @@ body{display:flex;flex-direction:column;align-items:center;justify-content:cente
 .heading .jp{font-size:clamp(11px,1.58vw,22px);letter-spacing:.04em;line-height:1.2}
 .heading .en{font-size:clamp(10px,1.65vw,23px);line-height:1.25;font-family:Arial,sans-serif}
 .led{position:relative;background:#070707;border:0;overflow:hidden}
-.led canvas{display:block;width:100%;height:auto;image-rendering:auto}
+.led canvas{display:block;width:100%;height:auto;image-rendering:pixelated}
 #controls{margin-top:14px;display:flex;justify-content:center;gap:8px;flex-wrap:wrap;color:#aab0b4}
 button{background:#242b30;border:1px solid #626b71;border-radius:4px;color:#e8ecef;font-size:13px;padding:9px 13px;cursor:pointer}
 button[aria-pressed=true]{background:#39536a;border-color:#8ec7ff}
@@ -53,20 +53,46 @@ function roman(r){
  return s;
 }
 function pixel(ctx,text,x,y,color,size,maxWidth,offset){
- if(!text)return;ctx.save();ctx.beginPath();ctx.rect(x,y,maxWidth,size+4);ctx.clip();
+ if(!text)return 0;
  const key=text+'|'+color+'|'+size;
- let sp=mem.get(key);if(!sp){
-  const low=document.createElement('canvas');let lc=low.getContext('2d',{willReadFrequently:true});
-  lc.font='bold '+Math.max(10,Math.round(size*.43))+'px Meiryo, sans-serif';let tw=Math.min(2000,Math.ceil(lc.measureText(text).width)+3);low.width=tw;low.height=Math.max(12,Math.ceil(size*.49));lc=low.getContext('2d',{willReadFrequently:true});
-  lc.fillStyle='#fff';lc.font='bold '+Math.max(10,Math.round(size*.43))+'px Meiryo, sans-serif';lc.textBaseline='top';lc.fillText(text,0,-1);
-  let pix=lc.getImageData(0,0,tw,low.height).data;
-  sp=document.createElement('canvas');sp.width=tw*2;sp.height=low.height*2;let pc=sp.getContext('2d');pc.fillStyle=color;
-  for(let yy=0;yy<low.height;yy++)for(let xx=0;xx<tw;xx++)if(pix[(yy*tw+xx)*4+3]>110){pc.beginPath();pc.arc(xx*2+1,yy*2+1,.83,0,Math.PI*2);pc.fill()}
-  if(mem.size>250)mem.clear();mem.set(key,sp);
+ let sp=mem.get(key);
+ if(!sp){
+  // Draw the glyph onto a 16-row monochrome bitmap before creating LEDs.
+  // Each illuminated pixel becomes one uniform, crisp dot on the same grid.
+  const low=document.createElement('canvas');
+  let lc=low.getContext('2d',{willReadFrequently:true});
+  const fontPx=15;
+  lc.font='bold '+fontPx+'px "MS Gothic","Yu Gothic",monospace';
+  const tw=Math.min(1800,Math.ceil(lc.measureText(text).width)+3);
+  low.width=Math.max(2,tw);low.height=16;
+  lc=low.getContext('2d',{willReadFrequently:true});
+  lc.clearRect(0,0,low.width,low.height);
+  lc.font='bold '+fontPx+'px "MS Gothic","Yu Gothic",monospace';
+  lc.textBaseline='top';lc.fillStyle='#fff';lc.fillText(text,0,0);
+  const pix=lc.getImageData(0,0,low.width,16).data;
+  // Render at the final dot spacing, without a subsequent smooth rescale.
+  const pitch=2.0, radius=.77;
+  sp=document.createElement('canvas');
+  sp.width=Math.ceil(low.width*pitch);sp.height=32;
+  const pc=sp.getContext('2d');
+  pc.fillStyle=color;
+  for(let yy=0;yy<16;yy++)for(let xx=0;xx<low.width;xx++){
+   if(pix[(yy*low.width+xx)*4+3]<115)continue;
+   pc.beginPath();
+   pc.arc((xx+.5)*pitch,(yy+.5)*pitch,radius,0,Math.PI*2);
+   pc.fill();
+  }
+  if(mem.size>250)mem.clear();
+  mem.set(key,sp);
  }
- const scale=size/sp.height;const ww=sp.width*scale;
- ctx.drawImage(sp,x-(offset||0),y,ww,size);ctx.restore();
- return ww;
+ const targetWidth=sp.width*(size/32);
+ ctx.save();
+ ctx.beginPath();ctx.rect(x,y,maxWidth,size+4);ctx.clip();
+ // Disable texture filtering: it causes the uneven, fuzzy dots seen on v3.
+ ctx.imageSmoothingEnabled=false;
+ ctx.drawImage(sp,x-(offset||0),y,targetWidth,size);
+ ctx.restore();
+ return targetWidth;
 }
 function text(ctx,s,x,y,color,size=29,w=400,seconds=0){
  const wide=pixel(ctx,s,x,y,color,size,w,0);
