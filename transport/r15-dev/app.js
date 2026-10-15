@@ -572,7 +572,9 @@
           ? `　｜　${originalStatus}` : '';
         liveStatus=`到着見込（出発未確認）${info}`;
       }
-      out.push({...r,time:padTime(x.changed),liveScheduled:padTime(x.scheduled),liveChangedTime:padTime(x.changed),liveStatus,liveDelta:delta,liveRaw:x,arrivalForecastOnly:forecastOnly,isFinal:dep&&Number.isFinite(lastStaticMinute)&&toMinutes(effectiveTime(r,now))===lastStaticMinute,isNextDayStart:false});
+      out.push({...r,time:padTime(x.changed),liveScheduled:padTime(x.scheduled),liveChangedTime:padTime(x.changed),liveStatus,liveDelta:delta,liveRaw:x,
+        destinationArrivalScheduled:dep?padTime(x.destinationArrivalScheduled||''):'',
+        arrivalForecastOnly:forecastOnly,isFinal:dep&&Number.isFinite(lastStaticMinute)&&toMinutes(effectiveTime(r,now))===lastStaticMinute,isNextDayStart:false});
     });
     out.sort((a,b)=>toMinutes(a.liveChangedTime)-toMinutes(b.liveChangedTime));
     // LIVE取得に成功して0件なら「本日終了」。誤った静的データへ戻さない。
@@ -3253,6 +3255,14 @@
       const finalBadge=dep&&r.isFinal?badgeHtml('final','最終便'):'';
       const place=String(r.dest||'—');
       const firstBadge=r.isNextDayStart?badgeHtml('first',dep?'始発':'初便'):'';
+      const publishedDestinationArrival=dep?padTime(
+        r.destinationArrivalScheduled||r.liveRaw?.destinationArrivalScheduled||''):'';
+      // Exact-match official timetable only; never fabricate an estimated ETA.
+      const arrivalForDisplay=/^([01]\d|2[0-3]):[0-5]\d$/.test(publishedDestinationArrival)
+        ? publishedDestinationArrival : '';
+      const placeHtml=arrivalForDisplay
+        ? `<span class="air-place-primary">${place} ${firstBadge}${finalBadge}</span><span class="air-arrival-scheduled">到着予定 ${arrivalForDisplay}</span>`
+        : `${place} ${firstBadge}${finalBadge}`;
       const airlineName=airServiceHtml(r,p);
       const airlineKey=/ANA/i.test(p.airline)?'ana':/JAL/i.test(p.airline)?'jal':/IBEX/i.test(p.airline)?'ibex':/Jetstar/i.test(p.airline)?'jetstar':/チェジュ/i.test(p.airline)?'jeju':/エアプサン/i.test(p.airline)?'busan':/エバー/i.test(p.airline)?'eva':'other';
       row.classList.add(`airline-${airlineKey}`);
@@ -3295,7 +3305,7 @@
           <span class="airline-strip" aria-hidden="true"></span>
           <div class="service-wrap airline-service-wrap">${airlineName}</div>
         </div>
-        <div class="cell main air-place">${place} ${firstBadge}${finalBadge}</div>
+        <div class="cell main air-place">${placeHtml}</div>
         <div class="cell time air-board-time">${timeHtml}</div>
         <div class="${statusClass}">${overflowScrollHtml(guidance,'air-status-scroll')}</div>`;
       root.appendChild(row);
