@@ -1136,6 +1136,16 @@
     return rows;
   }
 
+  // Single direction rule for both the published JR timetable and
+  // independently observed live-only trains. Unknown destinations do not
+  // override a verified route direction.
+  function railDirectionByDestination(dest) {
+    const text=cleanStation(dest||'');
+    const north=/岡山|高松|観音寺|丸亀|坂出|多度津|今治|新居浜|伊予西条|壬生川|伊予北条|菊間|浅海|大西|波止浜|堀江|伊予和気|三津浜/.test(text);
+    const south=/宇和島|八幡浜|伊予大洲|卯之町|伊予市|伊予長浜|内子|市坪|北伊予|南伊予|伊予横田|鳥ノ木|向井原|伊予中山|伊予立川|五十崎|喜多山/.test(text);
+    return north===south?'':north?'north':'south';
+  }
+
   function getBoardRecords(board, now) {
     const displayIso = boardDisplayIso(board, now);
     const rows = recordsForDay(board, (board === 'rail' || board === 'air') ? displayIso : now.iso);
@@ -1147,10 +1157,7 @@
       return rows.map(r => {
           const destText = String(r.dest || '');
           // 方面は列車名ではなく行先で照合。データ側の誤設定を表示時に防止する。
-          const northDest = /岡山|高松|観音寺|丸亀|今治|新居浜|伊予西条|壬生川|伊予北条/.test(destText);
-          const southDest = /宇和島|八幡浜|伊予大洲|卯之町|伊予市|伊予長浜|内子|市坪/.test(destText);
-          const correctedDirection = northDest && !southDest ? 'north'
-            : southDest && !northDest ? 'south' : r.direction;
+          const correctedDirection = railDirectionByDestination(destText) || r.direction;
           const iconMatches=withIcons.filter(x=>{
             if(String(x.direction||'')!==correctedDirection ||
                padTime(x.departure||'')!==padTime(r.time||''))return false;
@@ -1536,22 +1543,30 @@
           const known=new Set(verified.map(v=>String(v.liveTrainNum||'')));
           const specialNums=new Set((approachLive.ichitsubo?.matsuyamaSpecialTrains||[]).map(x=>String(x.trainNum||'')));
           const extras=[];
+          const displayedRailDirection=currentRailDir();
           for(const x of active){
             const num=String(x.trainNum||'').trim(),time=padTime(x.departure||'');
+            const sourceDirection=String(x.direction||'');
+            const destination=cleanStation(x.destination||'');
+            const destinationDirection=railDirectionByDestination(destination);
             if(!num || specialNums.has(num) || !(/^[0-9]{2}:[0-9]{2}$/.test(time)) ||
-                !['north','south'].includes(String(x.direction||'')) ||
+                !['north','south'].includes(sourceDirection) ||
+                // Live-only extra services must NEVER leak into the opposite page.
+                sourceDirection!==displayedRailDirection ||
+                // A contradictory direction/destination is not reliable departure data.
+                (destinationDirection && sourceDirection!==destinationDirection) ||
                 !jrPositionUsable(x.position) || toMinutes(time)<now.minutes ||
                 known.has(num)) continue;
-            const duplicate=base.some(r=>r.direction===x.direction && padTime(r.time)===time &&
+            const duplicate=base.some(r=>r.direction===sourceDirection && padTime(r.time)===time &&
               ((r.kind==='limited')===(x.trainClass==='limited')));
             if(duplicate) continue; // no ambiguous extra identity on the board
             known.add(num);
             const named=railLiveTrainLabel(x);
             const limited=x.trainClass==='limited' && named.kind==='limited';
             extras.push({
-              board:'rail',direction:x.direction,time,kind:limited?'limited':'local',
+              board:'rail',direction:sourceDirection,time,kind:limited?'limited':'local',
               service:limited?named.service:'当日運行列車',
-              dest:cleanStation(x.destination||'')||'行先確認中',
+              dest:destination||'行先確認中',
               info:'非公式列車運行情報・当日位置確認／列車番号 '+num,
               id:'live-extra-'+num,source:'jr_unofficial_live',
               liveTrainNum:num,livePosition:cleanStation(x.position),
