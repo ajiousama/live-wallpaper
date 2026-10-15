@@ -647,7 +647,7 @@
     const dest=String(record.dest||''), info=String(record.info||''),service=String(record.service||'');
     if(record.direction!=='south' || !/伊予大洲|八幡浜|卯之町|宇和島/.test(dest)) return '';
     if(/伊予長浜経由|愛ある伊予灘|海回り/.test(info)) return '海回り・伊予長浜経由';
-    if(/内子経由|山回り/.test(info) || /宇和海/.test(service)) return '山回り・内子経由';
+    // 通常の内子経由（山回り）は注記しない。
     return '';
   }
   function railDestLabel(record) {
@@ -2010,7 +2010,7 @@
       items.push('各駅停車');
       const info = String(record.info || '');
       if (/伊予長浜経由/.test(info)) items.push('愛ある伊予灘線経由');
-      else if (/内子経由/.test(info)) items.push('内子経由');
+      
       if (record.dest) items.push(`終点 ${record.dest}`);
       if (terminalArrival) items.push(`終点着 ${terminalArrival}`);
     }
@@ -2809,7 +2809,7 @@
       if(x.side!=='south') return '';
       const infoText=[x.route,x.via,x.info,x.origin,x.position].map(v=>String(v||'')).join(' ');
       if(/伊予長浜|海回り|愛ある伊予灘/.test(infoText)) return '海回り・伊予長浜経由';
-      if(/内子|山回り/.test(infoText) || /宇和海/.test(String(info.service||''))) return '山回り・内子経由';
+      // 通常の内子経由（山回り）は注記しない。
       return '';
     })();
     const details=['この列車は松山止まりです'];
