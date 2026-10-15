@@ -194,7 +194,10 @@
       if(taken.has(number))return [];
       taken.add(number);
       return [{...r,liveTrainNum:number,livePosition:cleanStation(train.position),
-        liveDelayMinutes:Number(train.delayMinutes)||0}];
+        liveDelayMinutes:Number(train.delayMinutes)||0,
+        vehicleImageNorth:String(train.vehicleImageNorth||''),
+        vehicleImageSouth:String(train.vehicleImageSouth||''),
+        vehicleImageSource:String(train.vehicleImageSource||'')}];
     });
   }
   function currentDirection() { return state.modeIndex % 2 === 0 ? 'departure' : 'arrival'; }
@@ -1535,6 +1538,9 @@
               id:'live-extra-'+num,source:'jr_unofficial_live',
               liveTrainNum:num,livePosition:cleanStation(x.position),
               liveDelayMinutes:Number(x.delayMinutes)||0,railPositionConfirmed:true,
+              vehicleImageNorth:String(x.vehicleImageNorth||''),
+              vehicleImageSouth:String(x.vehicleImageSouth||''),
+              vehicleImageSource:String(x.vehicleImageSource||''),
               isExtraRunning:true
             });
           }
@@ -2654,7 +2660,23 @@
     const diesel=/D$/.test(num);
     const limited=record?.kind==='limited'||record?.trainClass==='limited';
     const stripe=limited?'#d9a841':diesel?'#2089ca':'#3878b9';
-    return '<span class="rail-train-illustration" title="列車の参考イラスト（車両形式の断定ではありません）" aria-label="列車の参考イラスト">'+
+    // Arrival side names are the corridor from which the train arrived;
+    // the actual motion is the opposite direction.
+    const dir=record.side==='south'?'north':
+      record.side==='north'?'south':
+      record.direction==='north'||record.direction==='south' ? record.direction : currentRailDir();
+    const raw=String((dir==='north'?record.vehicleImageNorth:record.vehicleImageSouth)||'');
+    let imageUrl='';
+    try {
+      const u=new URL(raw);
+      if(u.protocol==='https:' && /(^|\.)haruk\.in$/i.test(u.hostname) &&
+        (/\.(?:png|webp|gif|jpe?g)(?:$|\?)/i.test(u.href) ||
+         /\/webhook\/anpanman-pictures(?:-hub)?\.png/i.test(u.pathname))){
+        imageUrl=u.href.replaceAll('&','&amp;').replaceAll('"','&quot;').replaceAll('<','&lt;');
+      }
+    } catch(e){}
+    const actualImg=imageUrl?'<img class="rail-vehicle-live-image" alt="" loading="lazy" referrerpolicy="no-referrer" src="'+imageUrl+'" onerror="this.remove()"/>':'';
+    return '<span class="rail-train-illustration" title="'+(imageUrl?'当日運用データに基づく車両画像':'列車の参考イラスト（車両形式の断定ではありません）')+'" aria-label="列車のイラスト">'+
       '<svg viewBox="0 0 64 60" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">'+
       '<path d="M18 3H46Q53 3 53 11V44L46 53H18L11 44V11Q11 3 18 3Z" fill="#e6eaf0" stroke="#6c7b88" stroke-width="2.5"/>'+
       '<path d="M18 9H46Q48 9 48 13V30H16V13Q16 9 18 9Z" fill="#253d54"/>'+
@@ -2665,7 +2687,7 @@
       '<circle cx="44" cy="44" r="3.3" fill="#ffdb6b" stroke="#b48d36" stroke-width=".8"/>'+
       '<path d="M20 54V58M44 54V58" stroke="#4a5159" stroke-width="4" stroke-linecap="round"/>'+
       '<path d="M24 48H40L36 52H28Z" fill="#536572"/>'+
-      '</svg></span>';
+      '</svg>'+actualImg+'</span>';
   }
 
   function railServiceBadgeHtml(kind, service='') {
