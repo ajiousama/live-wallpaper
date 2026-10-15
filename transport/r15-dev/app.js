@@ -646,7 +646,7 @@
   function railSouthRoute(record) {
     const dest=String(record.dest||''), info=String(record.info||''),service=String(record.service||'');
     if(record.direction!=='south' || !/伊予大洲|八幡浜|卯之町|宇和島/.test(dest)) return '';
-    if(/伊予長浜経由|愛ある伊予灘|海回り/.test(info)) return '海回り・伊予長浜経由';
+    if(/伊予長浜経由|愛ある伊予灘|海回り/.test(info)) return '愛ある伊予灘線経由';
     // 通常の内子経由（山回り）は注記しない。
     return '';
   }
@@ -2808,7 +2808,7 @@
     const arrivalRoute=(()=>{
       if(x.side!=='south') return '';
       const infoText=[x.route,x.via,x.info,x.origin,x.position].map(v=>String(v||'')).join(' ');
-      if(/伊予長浜|海回り|愛ある伊予灘/.test(infoText)) return '海回り・伊予長浜経由';
+      if(/伊予長浜|海回り|愛ある伊予灘/.test(infoText)) return '愛ある伊予灘線経由';
       // 通常の内子経由（山回り）は注記しない。
       return '';
     })();
