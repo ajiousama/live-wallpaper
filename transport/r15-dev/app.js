@@ -1137,8 +1137,14 @@
     const displayIso = boardDisplayIso(board, now);
     const rows = recordsForDay(board, (board === 'rail' || board === 'air') ? displayIso : now.iso);
     if (board === 'rail') {
-      return rows.map(r => ({ ...r, minutes: toMinutes(r.time), displayIso }))
-        .filter(r => r.direction === currentRailDir())
+      return rows.map(r => {
+          const serviceText = [r.service, r.name, r.trainName, r.info].filter(Boolean).join(' ');
+          const destText = String(r.dest || '');
+          // しおかぜ20号（岡山行）は今治方面。元データの方面誤設定を補正する。
+          const correctedDirection = /しおかぜ\s*20\s*号?/.test(serviceText) && /岡山/.test(destText)
+            ? 'north' : r.direction;
+          return { ...r, direction: correctedDirection, minutes: toMinutes(r.time), displayIso };
+        }).filter(r => r.direction === currentRailDir())
         .sort((a, b) => rMinutes(a) - rMinutes(b));
     }
     if (board === 'air') {
