@@ -3256,6 +3256,26 @@
       }
       activatePanelOverflow(root);
     }
+    // Optional pixel-by-pixel LED preview. The same chronological candidate list
+    // drives both renderers; never generate train movements or platform numbers.
+    if (window.MATSUYAMA_JR_LED?.enabled) {
+      const entries=visible.map(item => {
+        const r={...item.data};
+        if(item._deadhead){
+          r.kind='deadhead'; r.time=item.data.arrival||'';r.dest='松山';
+        }else if(item._freight){
+          r.kind='freight';r.time=item.data.displayTime||item.data.passTime||'';
+          r.dest=item.data.destination||'松山';
+        }else if(item._terminalArrival){
+          r.kind='arrival';r.time=item.data.arrival||'';r.dest='松山';
+        }else if(item._special){
+          r.kind=item.data.kind||'extra';r.time=item.data.stationTime||'';
+          r.dest=item.data.destination||'';
+        }
+        return r;
+      });
+      window.MATSUYAMA_JR_LED.update(entries,{direction:currentRailDir()});
+    }
   }
 
   function lastAirMovement(now, dep) {

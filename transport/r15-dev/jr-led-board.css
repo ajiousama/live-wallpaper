@@ -1,0 +1,41 @@
+/*
+  Matsuyama station LED display preview.
+  Opt-in (?jrled=1) and scoped to the JR panel only.
+  No changes to airport, highway bus, ferry, clock, disaster or rotation UI.
+*/
+body.freewifi-tv #panel-rail.jr-led-enabled,
+html.company-pc body.freewifi-tv #panel-rail.jr-led-enabled {
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  grid-template-rows:minmax(0,1fr)!important;
+  overflow:hidden!important;
+  padding:0!important;
+  background:#202124!important;
+  border:2px solid #46494d!important;
+}
+body.freewifi-tv #panel-rail.jr-led-enabled > .panel-head,
+body.freewifi-tv #panel-rail.jr-led-enabled > .rail-head,
+body.freewifi-tv #panel-rail.jr-led-enabled > .rail-summary-panels,
+body.freewifi-tv #panel-rail.jr-led-enabled > #rail-rows,
+body.freewifi-tv #panel-rail.jr-led-enabled > #rail-note {
+  display:none!important;
+}
+body.freewifi-tv #panel-rail.jr-led-enabled > .jr-led-reproduction {
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  min-width:0!important;
+  min-height:0!important;
+  overflow:hidden!important;
+  background:#212124!important;
+  border:none!important;
+  padding:0!important;
+  position:relative!important;
+}
+body.freewifi-tv #panel-rail.jr-led-enabled .jr-led-canvas{
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  image-rendering:pixelated;
+  background:#212124;
+}
