@@ -344,7 +344,8 @@
     const positionFresh=item?.aircraftPositionConfirmed===true &&
       /^[A-Z]{3}[0-9]+[A-Z]?$/.test(String(item?.aircraftCallsign||'')) &&
       Number.isFinite(observation) && age>=-15000 && age<=105000;
-    if(positionFresh && /^(waiting|airborne|approaching)$/.test(phase))return true;
+    if(positionFresh && phase==='waiting')return false;
+    if(positionFresh && /^(airborne|approaching)$/.test(phase))return true;
     if(/出発前|搭乗中|搭乗手続|出発待/.test(status))return false;
     if(!statusConfirmed && !actualConfirmed) return false;
     if(actualConfirmed && toMinutes(actual)>now.minutes+1) return false;
