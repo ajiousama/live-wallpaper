@@ -137,14 +137,14 @@
     ctx.restore();
   }
 
-  function drawBoardBorder(){
+  function drawBoardBorder(headerPlatform){
     ctx.fillStyle='#212124';ctx.fillRect(0,0,W,H);
     ctx.strokeStyle='#4a4d50';ctx.lineWidth=4;ctx.strokeRect(2,2,W-4,H-4);
     ctx.fillStyle='#2b2d30';ctx.fillRect(12,12,W-24,142);
     ctx.fillStyle='#b6bac0';
     ctx.font='bold 80px Arial,sans-serif';ctx.fillText('←',48,115);
     ctx.fillStyle='#bbbfc3';ctx.fillRect(156,42,86,89);
-    ctx.fillStyle='#17181a';ctx.font='bold 76px Arial,sans-serif';ctx.fillText('1',176,115);
+    ctx.fillStyle='#17181a';ctx.font='bold 76px Arial,sans-serif';ctx.fillText(headerPlatform||'―',176,115);
     ctx.fillStyle='#bbbfc3';ctx.font='bold 49px "Yu Gothic","Meiryo",sans-serif';
     ctx.fillText('今度の発車は',316,83);
     ctx.font='bold 34px Arial,sans-serif';ctx.fillText('Next Train',316,129);
@@ -183,13 +183,13 @@
       lastWidth=bw;lastHeight=bh;initialFrame=false;
     }
     ctx.setTransform(bw/W,0,0,bh/H,0,0);
-    drawBoardBorder();
     const t=Date.now(),elapsed=t%1000000;
     const english=(t%9200)>=6100;
     const pages=Math.max(1,Math.ceil(records.length/2));
     const page=Math.floor(t/10500)%pages;
     if(page!==lastPair)lastPair=page;
     const first=records[page*2],second=records[page*2+1];
+    drawBoardBorder(first?.platform||'―');
     if(first){
       row(first,185,english,elapsed);
       const middle=english
