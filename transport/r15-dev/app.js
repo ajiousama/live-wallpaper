@@ -2054,7 +2054,7 @@
       const serviceLogo=railApproachBadgeHtml(x);
       if (kind==='deadhead') { text=`${serviceLogo} まもなく市坪駅を${dir}へ回送列車が通過します。`; mode='pass'; }
       else if (kind==='freight') { text=`${serviceLogo} まもなく市坪駅を${dir}へ貨物列車が通過します。`; mode='pass'; }
-      else if (kind==='unknown') { const num=String(x.trainNum||'').trim(); text=`${serviceLogo} ${num?'列車番号 '+num+'｜':''}種別未確認の列車が市坪駅付近を走行中です。`; mode='pass'; }
+      else if (kind==='unknown') { const num=String(x.trainNum||'').trim(); text=`${serviceLogo} ${num?'列車番号 '+num+'｜':''}市坪駅付近を走行中（運行種別は未判定）。`; mode='pass'; }
       else if (kind==='pass') { text=`${serviceLogo} まもなく市坪駅を${dir}へ列車が通過します。`; mode='pass'; }
       else {
         const finalTrain=ichitsuboIsFinal(x,now); const prefix=finalTrain?'最終列車 ':'';
@@ -2223,7 +2223,7 @@
     const kind=String(x?.kind||'');
     if(kind==='deadhead') return railTickerServiceHtml('deadhead');
     if(kind==='freight') return railTickerServiceHtml('freight');
-    if(kind==='unknown') return railTickerServiceHtml('unknown');
+    if(kind==='unknown') return railVehicleIconHtml(x);
     if(kind==='stop' || kind==='pass'){
       const info=railLiveTrainLabel(x);
       if(info.kind==='limited') return railTickerServiceHtml('limited',info.service);
@@ -2646,6 +2646,28 @@
     return [...byTrain.values()];
   }
 
+
+  // Original generic train-front illustration. This is NOT a claim about the
+  // vehicle series: train number (M/D) does not uniquely identify rolling stock.
+  function railVehicleIconHtml(record={}) {
+    const num=String(record?.trainNum||record?.liveTrainNum||'').trim().toUpperCase();
+    const diesel=/D$/.test(num);
+    const limited=record?.kind==='limited'||record?.trainClass==='limited';
+    const stripe=limited?'#d9a841':diesel?'#2089ca':'#3878b9';
+    return '<span class="rail-train-illustration" title="列車の参考イラスト（車両形式の断定ではありません）" aria-label="列車の参考イラスト">'+
+      '<svg viewBox="0 0 64 60" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">'+
+      '<path d="M18 3H46Q53 3 53 11V44L46 53H18L11 44V11Q11 3 18 3Z" fill="#e6eaf0" stroke="#6c7b88" stroke-width="2.5"/>'+
+      '<path d="M18 9H46Q48 9 48 13V30H16V13Q16 9 18 9Z" fill="#253d54"/>'+
+      '<path d="M31 9H33V30H31Z" fill="#c7d3dc"/>'+
+      '<path d="M16 32H48V41H16Z" fill="'+stripe+'"/>'+
+      '<path d="M17 35H47V38H17Z" fill="#f4f8fc" opacity=".75"/>'+
+      '<circle cx="20" cy="44" r="3.3" fill="#ffdb6b" stroke="#b48d36" stroke-width=".8"/>'+
+      '<circle cx="44" cy="44" r="3.3" fill="#ffdb6b" stroke="#b48d36" stroke-width=".8"/>'+
+      '<path d="M20 54V58M44 54V58" stroke="#4a5159" stroke-width="4" stroke-linecap="round"/>'+
+      '<path d="M24 48H40L36 52H28Z" fill="#536572"/>'+
+      '</svg></span>';
+  }
+
   function railServiceBadgeHtml(kind, service='') {
     const svc=String(service||'').trim();
     if(kind==='limited'){
@@ -2660,7 +2682,7 @@
     if(kind==='freight') return '<span class="rail-kind-badge rail-kind-freight">貨物</span>';
     if(kind==='test') return '<span class="rail-kind-badge rail-kind-test">試運転</span>';
     if(kind==='extra') return '<span class="rail-kind-badge rail-kind-extra rail-event-extra">臨時列車</span>';
-    if(kind==='unknown') return '<span class="rail-kind-badge rail-kind-extra">種別未確認</span>';
+    if(kind==='unknown') return ''; // Unresolved service: show a neutral train illustration instead.
     return '<span class="rail-kind-badge rail-kind-local">普通</span>';
   }
 
@@ -2799,11 +2821,11 @@
     const row=document.createElement('div');
     row.className='row rail-row terminal-arrival-row';
     const info=railLiveTrainLabel(x);
-    const serviceBadge=x.isOfficialScheduled && /臨時列車/.test(String(x.serviceName||''))
+    const serviceBadge=railVehicleIconHtml(x)+(x.isOfficialScheduled && /臨時列車/.test(String(x.serviceName||''))
       ? railServiceBadgeHtml('extra')
       : x.isOfficialScheduled
       ? '<span class="rail-kind-badge rail-kind-tourist">伊予灘ものがたり</span>'
-      : railServiceBadgeHtml(info.kind,info.kind==='limited'?info.service:'');
+      : railServiceBadgeHtml(info.kind,info.kind==='limited'?info.service:''));
     // Inbound trains from the Uwajima direction: distinguish the coastal and inland routes.
     const arrivalRoute=(()=>{
       if(x.side!=='south') return '';
@@ -2916,7 +2938,7 @@
     if(x.delayMinutes>0)details.push(railSpecialText(x.delayMinutes)+'分遅れ');
     row.innerHTML='<div class="rail-primary">'+
       '<div class="cell rail-service '+kind+'"><span class="kindtxt">'+
-      railServiceBadgeHtml(kind)+'<span class="rail-name-badge">'+railSpecialText(x.trainNum)+'</span></span></div>'+
+      railVehicleIconHtml(x)+railServiceBadgeHtml(kind)+'<span class="rail-name-badge">'+railSpecialText(x.trainNum)+'</span></span></div>'+
       '<div class="cell time">'+railSpecialText(time)+'</div>'+
       '<div class="cell main">'+event+'</div></div>'+
       '<div class="rail-detail">'+tickerHtml(details)+'</div>';
@@ -2932,7 +2954,7 @@
     if(x.delay>0) details.push(`${x.delay}分遅れ`);
     row.innerHTML=`
       <div class="rail-primary">
-        <div class="cell rail-service deadhead"><span class="kindtxt">${railServiceBadgeHtml('deadhead')}</span></div>
+        <div class="cell rail-service deadhead"><span class="kindtxt">${railVehicleIconHtml(x)}${railServiceBadgeHtml('deadhead')}</span></div>
         <div class="cell time">${x.arrival}</div>
         <div class="cell main">松山　到着</div>
       </div>
@@ -2953,7 +2975,7 @@
     if(x.delay>0) details.push(`${x.delay}分遅れ`);
     row.innerHTML=`
       <div class="rail-primary">
-        <div class="cell rail-service freight"><span class="kindtxt">${railServiceBadgeHtml('freight')}<span class="rail-name-badge">${x.trainNum||''}レ</span></span></div>
+        <div class="cell rail-service freight"><span class="kindtxt">${railVehicleIconHtml(x)}${railServiceBadgeHtml('freight')}<span class="rail-name-badge">${x.trainNum||''}レ</span></span></div>
         <div class="cell time">${x.displayTime||x.passTime||'時刻確認中'}</div>
         <div class="cell main">松山　${x.timetableOnly?'通過予定':'通過'}</div>
       </div>
@@ -3081,7 +3103,7 @@
         const r=item.data;
         const row = document.createElement('div'); row.className = `row rail-row${r.kind==='extra'?' rail-event-extra-row':''}${r.isFinal ? ' is-final' : ''}${isDepartSoon(r, now) ? ' depart-soon' : ''}`;
         const kind = r.kind === 'limited' ? 'limited' : r.kind === 'sightseeing' ? 'tourist' : r.kind === 'extra' ? 'extra' : 'local';
-        const serviceBadge = railServiceBadgeHtml(kind,r.service);
+        const serviceBadge = railVehicleIconHtml(r)+railServiceBadgeHtml(kind,r.service);
         const departureRank=departureRanks.get(r);
         const departureMark=departureRank===1
           ? '<span class="rail-order-badge rail-order-next" aria-label="発車順一番目">次発</span>'
