@@ -494,9 +494,38 @@
     const recentlyCompleted=completed&&Number.isFinite(since)&&since>=-15&&since<=30;
     return {unfinished,recentlyCompleted,completed,cancelled};
   }
+  // A freshly downloaded airport page can still contain the PREVIOUS day's
+  // completed statuses during the morning rollover. Detect contradictions.
+  function airportLiveHasPreviousDayStatuses(now) {
+    if(boardDisplayIso('air',now)!==now.iso)return false;
+    const ap=slowLive.airport;
+    if(!ap?.ok)return false;
+    const dm=String(ap.updatedAt||'').match(/(\d{4})年(\d{1,2})月(\d{1,2})日/);
+    if(dm){
+      const officialDay=dm[1]+'-'+String(Number(dm[2])).padStart(2,'0')+'-'+String(Number(dm[3])).padStart(2,'0');
+      if(officialDay!==now.iso)return true;
+    }
+    const flights=[
+      ...(Array.isArray(ap.arrivals)?ap.arrivals.map(x=>({...x,_arr:true})):[]),
+      ...(Array.isArray(ap.departures)?ap.departures.map(x=>({...x,_arr:false})):[])
+    ];
+    let futureCompleted=0,futureApproach=0;
+    for(const item of flights){
+      const t=padTime(item.scheduled||'');
+      if(!/^([01][0-9]|2[0-3]):[0-5][0-9]$/.test(t))continue;
+      const until=toMinutes(t)-now.minutes;
+      const st=String(item.status||'');
+      if(until>=60&&(item._arr
+        ?/到着済み|ただいま到着|着陸済み|到着完了/.test(st)
+        :/出発済み|離陸済み|出発完了/.test(st)))futureCompleted++;
+      if(item._arr&&until>=90&&/まもなく到着|接近中|着陸態勢/.test(st))futureApproach++;
+      if(futureCompleted>=3||(futureCompleted>=1&&futureApproach>=1))return true;
+    }
+    return false;
+  }
   function airportArrivalBoardState(now) {
     const ap=slowLive.airport;
-    if(!slowLive.ok||!ap?.ok||!Array.isArray(ap.arrivals)||boardDisplayIso('air',now)!==now.iso)return 'unverified';
+    if(!slowLive.ok||!ap?.ok||!Array.isArray(ap.arrivals)||boardDisplayIso('air',now)!==now.iso||airportLiveHasPreviousDayStatuses(now))return 'unverified';
     const age=Date.now()-Date.parse(String(slowLive.generatedAtJst||''));
     if(!Number.isFinite(age)||age< -15000||age>150000)return 'unverified';
     const dm=String(ap.updatedAt||'').match(/([0-9]{4})年([0-9]{1,2})月([0-9]{1,2})日/);
@@ -508,10 +537,13 @@
     const dep=currentDirection()==='departure';
     if (boardDisplayIso('air', now) !== now.iso) return dep?null:[];
     const live=dep ? slowLive.airport?.departures : slowLive.airport?.arrivals;
-    if (!slowLive.airport?.ok || !Array.isArray(live)) return dep?null:[];
+    if (!slowLive.airport?.ok || !Array.isArray(live)) return null;
+    // Until the airport source switches operational days, use today's
+    // published timetable without importing yesterday's status badges.
+    if(airportLiveHasPreviousDayStatuses(now))return null;
     // A stale successful fetch must never keep a historical inbound flight visible.
     const fetchAge=Date.now()-Date.parse(String(slowLive.generatedAtJst||''));
-    if(!dep && (!slowLive.ok || !Number.isFinite(fetchAge) || fetchAge<-15000 || fetchAge>150000))return [];
+    if(!dep && (!slowLive.ok || !Number.isFinite(fetchAge) || fetchAge<-15000 || fetchAge>150000))return null;
 
     // LIVE側の日付が今日と一致しない時だけ静的時刻表へ戻す。
     // 「時刻だけ」で前日便を翌日扱いしないことが重要。
@@ -519,7 +551,7 @@
     const dm=upd.match(/(\d{4})年(\d{1,2})月(\d{1,2})日/);
     if (dm) {
       const liveIso=`${dm[1]}-${String(Number(dm[2])).padStart(2,'0')}-${String(Number(dm[3])).padStart(2,'0')}`;
-      if (liveIso!==now.iso) return dep?null:[];
+      if (liveIso!==now.iso) return null;
     }
 
     const displayIso = boardDisplayIso('air', now);
@@ -2452,7 +2484,7 @@
     // Airport lower ticker: delay notices only for the direction currently shown.
     // Once that side has no more active flights, clear the ticker completely.
     const airport=slowLive.airport;
-    if(!airport?.ok) return [''];
+    if(!airport?.ok||airportLiveHasPreviousDayStatuses(now)) return [''];
 
     const dep=currentDirection()==='departure';
     const activeRows=liveFlightRows(now) || nextRows('air',now);
@@ -2499,6 +2531,8 @@
   function airportDisruptionItems(now, direction) {
     const airport=slowLive.airport;
     if(!airport?.ok) return [{type:'loading',text:'運航情報取得中'}];
+    if(airportLiveHasPreviousDayStatuses(now))
+      return [{type:'loading',text:'公式サイトの当日運航情報切替待ち｜時刻表を表示中'}];
 
     const arrival=direction==='arrival';
     const activeRows=liveFlightRows(now) || nextRows('air',now);
@@ -3309,7 +3343,10 @@
       const airlineName=airServiceHtml(r,p);
       const airlineKey=/ANA/i.test(p.airline)?'ana':/JAL/i.test(p.airline)?'jal':/IBEX/i.test(p.airline)?'ibex':/Jetstar/i.test(p.airline)?'jetstar':/チェジュ/i.test(p.airline)?'jeju':/エアプサン/i.test(p.airline)?'busan':/エバー/i.test(p.airline)?'eva':'other';
       row.classList.add(`airline-${airlineKey}`);
-      const status=String(r.liveStatus||r.info||'').trim();
+      const status=r.liveRaw?String(r.liveStatus||r.info||'').trim()
+        :(airportLiveHasPreviousDayStatuses(japanNow())
+          ?'時刻表（当日運航情報の更新待ち）'
+          :String(r.liveStatus||r.info||'').trim());
       const changed=r.liveChangedTime||r.time;
       const scheduled=r.liveScheduled||r.time;
       const delta=Number(r.liveDelta);
