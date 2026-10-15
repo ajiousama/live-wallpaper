@@ -2230,3 +2230,14 @@ html.company-pc body.freewifi-tv .panel-bus .bus-logo-willer .willer-express-wor
 .note .rail-train-illustration{
   width:26px!important;height:22px!important;flex-basis:26px!important;
 }
+
+/* When upstream has a confirmed train icon, overlay the neutral SVG.
+   The SVG remains visible as fallback if the external image fails to load. */
+.rail-train-illustration{position:relative!important;isolation:isolate}
+.rail-train-illustration .rail-vehicle-live-image{
+  position:absolute!important;left:0!important;top:0!important;
+  width:100%!important;height:100%!important;
+  object-fit:contain!important;
+  z-index:2!important;
+  display:block!important;
+}
