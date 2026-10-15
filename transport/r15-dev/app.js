@@ -195,9 +195,9 @@
       taken.add(number);
       return [{...r,liveTrainNum:number,livePosition:cleanStation(train.position),
         liveDelayMinutes:Number(train.delayMinutes)||0,
-        vehicleImageNorth:String(train.vehicleImageNorth||''),
-        vehicleImageSouth:String(train.vehicleImageSouth||''),
-        vehicleImageSource:String(train.vehicleImageSource||'')}];
+        vehicleImageNorth:String(train.vehicleImageNorth||r.vehicleImageNorth||''),
+        vehicleImageSouth:String(train.vehicleImageSouth||r.vehicleImageSouth||''),
+        vehicleImageSource:String(train.vehicleImageSource||r.vehicleImageSource||'')}];
     });
   }
   function currentDirection() { return state.modeIndex % 2 === 0 ? 'departure' : 'arrival'; }
@@ -1140,6 +1140,10 @@
     const displayIso = boardDisplayIso(board, now);
     const rows = recordsForDay(board, (board === 'rail' || board === 'air') ? displayIso : now.iso);
     if (board === 'rail') {
+      // Images from the day's operation logs remain available before the
+      // physical train is observed. They must not imply a confirmed location.
+      const withIcons=Array.isArray(approachLive.ichitsubo?.matsuyamaSchedule)
+        ? approachLive.ichitsubo.matsuyamaSchedule : [];
       return rows.map(r => {
           const destText = String(r.dest || '');
           // 方面は列車名ではなく行先で照合。データ側の誤設定を表示時に防止する。
@@ -1147,7 +1151,21 @@
           const southDest = /宇和島|八幡浜|伊予大洲|卯之町|伊予市|伊予長浜|内子|市坪/.test(destText);
           const correctedDirection = northDest && !southDest ? 'north'
             : southDest && !northDest ? 'south' : r.direction;
-          return { ...r, direction: correctedDirection, minutes: toMinutes(r.time), displayIso };
+          const iconMatches=withIcons.filter(x=>{
+            if(String(x.direction||'')!==correctedDirection ||
+               padTime(x.departure||'')!==padTime(r.time||''))return false;
+            const named=railLiveTrainLabel(x);
+            if(r.kind==='limited')return named.kind==='limited' && named.service===String(r.service||'');
+            return r.kind==='local' && named.kind==='local';
+          });
+          const iconMatch=iconMatches.length===1?iconMatches[0]:null;
+          return { ...r, direction: correctedDirection, minutes: toMinutes(r.time), displayIso,
+            // Image-only evidence: retain the existing timetable-only flag
+            // unless the independent live-position matcher confirms position.
+            vehicleImageNorth:String(iconMatch?.vehicleImageNorth||''),
+            vehicleImageSouth:String(iconMatch?.vehicleImageSouth||''),
+            vehicleImageSource:String(iconMatch?.vehicleImageSource||'')
+          };
         }).filter(r => r.direction === currentRailDir())
         .sort((a, b) => rMinutes(a) - rMinutes(b));
     }
@@ -3020,7 +3038,7 @@
         const confirmed=nextLimited.railPositionConfirmed && nextLimited.livePosition;
         const status=confirmed?'現在位置 '+nextLimited.livePosition:'時刻表予定・位置未確認';
         const details=railRowDetailItems(nextLimited);
-        nextCard.innerHTML=`<div class="rail-next-main"><span class="rail-next-label">次の特急は？</span><span class="rail-next-service">${railServiceBadgeHtml('limited',nextLimited.service)}</span><span class="rail-next-time">${nextLimited.time}発</span><span class="rail-next-dest">${railDestLabel(nextLimited)}行</span></div><div class="rail-next-details">${tickerHtml(details.length?details:[status])}</div>`;
+        nextCard.innerHTML=`<div class="rail-next-main"><span class="rail-next-label">次の特急は？</span><span class="rail-next-service">${railVehicleIconHtml(nextLimited)}${railServiceBadgeHtml('limited',nextLimited.service)}</span><span class="rail-next-time">${nextLimited.time}発</span><span class="rail-next-dest">${railDestLabel(nextLimited)}行</span></div><div class="rail-next-details">${tickerHtml(details.length?details:[status])}</div>`;
       } else {
         nextCard.innerHTML='<span class="rail-next-label">次の特急は？</span><span class="rail-next-status">この方面の本日の特急は終了しました</span>';
       }
@@ -3032,7 +3050,7 @@
       const localCard=document.getElementById('rail-next-local');
       if(nextLocal){
         const details=railRowDetailItems(nextLocal);
-        localCard.innerHTML=`<div class="rail-next-main"><span class="rail-next-label">次の普通列車は？</span><span class="rail-next-service">${railServiceBadgeHtml('local',nextLocal.service)}</span><span class="rail-next-time">${nextLocal.time}発</span><span class="rail-next-dest">${railDestLabel(nextLocal)}行</span></div><div class="rail-next-details">${tickerHtml(details)}</div>`;
+        localCard.innerHTML=`<div class="rail-next-main"><span class="rail-next-label">次の普通列車は？</span><span class="rail-next-service">${railVehicleIconHtml(nextLocal)}${railServiceBadgeHtml('local',nextLocal.service)}</span><span class="rail-next-time">${nextLocal.time}発</span><span class="rail-next-dest">${railDestLabel(nextLocal)}行</span></div><div class="rail-next-details">${tickerHtml(details)}</div>`;
       } else {
         localCard.innerHTML='<span class="rail-next-label">次の普通列車は？</span><span class="rail-next-status">この方面の本日の普通列車は終了しました</span>';
       }
