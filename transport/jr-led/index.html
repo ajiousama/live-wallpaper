@@ -31,7 +31,42 @@ const W=668,H=185, C={red:'#fd354a',yellow:'#fff01a',white:'#f4f4e9',green:'#63e
 const canvases={north:document.getElementById('north'),south:document.getElementById('south')};
 const states={north:canvases.north.getContext('2d'),south:canvases.south.getContext('2d')};
 const fclock=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Tokyo',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23',weekday:'short'});
+
 const mem=new Map();let english=true,speed=1,scrollUp=true;
+const sourceSprite=new Image();
+sourceSprite.decoding='async';
+let spriteReady=false;
+sourceSprite.onload=()=>{spriteReady=true;render()};
+sourceSprite.onerror=()=>{spriteReady=false};
+sourceSprite.src='https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png';
+const spriteServices=[
+ ['しおかぜ',0,169,79,19],
+ ['宇和海',0,187,77,19],
+ ['いしづち',0,205,96,19],
+ ['普通',0,153,70,18],
+ ['特急',0,1,33,18],
+ ['伊予灘ものがたり',0,345,125,17]
+];
+const spriteDest=[
+ ['岡山',432,14,34,18],['高松',432,35,37,18],
+ ['今治',432,91,36,18],['伊予西条',432,148,80,18],
+ ['宇和島',432,185,58,18],['八幡浜',432,414,60,18],
+ ['観音寺',432,73,58,18],['伊予市',432,129,55,18],
+ ['新居浜',432,110,55,18],['伊予大洲',432,168,78,18]
+];
+function drawSpriteText(ctx,label,entries,x,y,maxWidth,size) {
+ if(!spriteReady || !sourceSprite.naturalWidth)return false;
+ const entry=entries.find(v=>v[0]===label);
+ if(!entry)return false;
+ const [,sx,sy,sw,sh]=entry;
+ if(sx+sw>sourceSprite.naturalWidth||sy+sh>sourceSprite.naturalHeight)return false;
+ const w=sw*(size/sh);
+ ctx.save();ctx.beginPath();ctx.rect(x,y,maxWidth,size+2);ctx.clip();
+ ctx.imageSmoothingEnabled=false;
+ ctx.drawImage(sourceSprite,sx,sy,sw,sh,x,y,Math.min(w,maxWidth),size);
+ ctx.restore();
+ return true;
+}
 function now(){let v={};fclock.formatToParts(new Date()).forEach(p=>v[p.type]=p.value);return {iso:v.year+'-'+v.month+'-'+v.day,dow:new Date(v.year+'-'+v.month+'-'+v.day+'T12:00:00+09:00').getDay(),min:+v.hour*60 + +v.minute}}
 function mn(t){const a=/^(\d{1,2}):(\d{2})$/.exec(String(t||''));return a?+a[1]*60 + +a[2]:Infinity}
 function valid(r,d){return !(r.start&&d.iso<r.start)&&!(r.end&&d.iso>r.end)&&!(Array.isArray(r.exclude)&&r.exclude.includes(d.iso))&&!(Array.isArray(r.dates)&&!r.dates.includes(d.iso))&&!(Array.isArray(r.days)&&!r.days.includes(d.dow))}
@@ -107,9 +142,9 @@ function drawRow(ctx,r,y,dir,seconds,useEn){
  const service=useEn?roman(r):name(r);
  // Mirror the original signage: class/service on left, departure in the
  // centre, coloured destination to the right, and platform at far right.
- text(ctx,service,8,y+5,typeColor,28,275,seconds);
+ if(!useEn&&!drawSpriteText(ctx,service,spriteServices,8,y+5,275,28))text(ctx,service,8,y+5,typeColor,28,275,seconds);
  text(ctx,r.time,322,y+5,C.white,29,95);
- text(ctx,dest(r),429,y+5,C.yellow,26,167,seconds);
+ if(!drawSpriteText(ctx,dest(r),spriteDest,429,y+5,167,26))text(ctx,dest(r),429,y+5,C.yellow,26,167,seconds);
  text(ctx,platform(r),624,y+5,C.white,29,35);
 }
 function ticker(ctx,seconds){
