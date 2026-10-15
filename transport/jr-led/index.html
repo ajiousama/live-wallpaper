@@ -52,6 +52,34 @@ button:focus-visible{outline:3px solid #acdfff}
 #controls button{font-size:11px;padding:6px 8px}
 }
 @media(max-height:580px){#scene{gap:6px}#stationboard{padding-top:8px;padding-bottom:8px}#cab-top{height:70px}#controls{gap:4px}#controls button{padding:5px 10px}#board-foot{padding-top:5px}}
+
+/* Real-site reference: Matsuyama platform's flat, horizontal 3-line black LED board. */
+body{background:#090a0c}
+#scene{width:min(98vw,1320px);gap:10px}
+#stationboard{padding:0 20px 12px;background:linear-gradient(#303034,#242529);border:2px solid #424449;border-radius:1px;box-shadow:0 1px 0 #6a6a6a inset,0 18px 50px #000a}
+#cab-top{height:112px;grid-template-columns:135px 1fr 176px;padding:11px 3px 9px;gap:12px}
+#side-pointer{align-self:center;gap:8px}
+.arrow{color:#bfc4ce;font-size:79px}
+.platform{font-size:65px;border:none;background:#c4cad2;color:#17191c;padding:6px 14px;border-radius:3px}
+#heading{align-self:center;color:#bfc0c6}
+#heading .jp{font-size:clamp(26px,3.5vw,50px);line-height:1.05;letter-spacing:0;font-weight:700}
+#heading .en{font-size:clamp(20px,2.7vw,39px);font-weight:700;line-height:1.15}
+#right-info{align-self:end}
+#right-info .way{color:#babdc3;font-size:19px}
+#right-info .date{color:#a4a8ac;font-size:13px}
+#led-screen{border:0;background:#121314;border-radius:0;padding:0;box-shadow:none}
+#led-screen:before{inset:0;opacity:.15}
+#board-foot{display:none}
+#matrix{aspect-ratio:1100/232}
+@media(max-width:800px){
+#stationboard{padding:0 6px 7px}
+#cab-top{height:72px;grid-template-columns:78px 1fr 104px;padding:6px 0}
+.arrow{font-size:38px}.platform{font-size:37px;padding:2px 6px}
+#heading .jp{font-size:clamp(15px,3.2vw,29px)}
+#heading .en{font-size:clamp(13px,2.8vw,24px)}
+#right-info .way{font-size:10px}
+#right-info .date{font-size:9px}
+}
 </style>
 <script src="../r15-dev/schedule.js"></script>
 </head>
@@ -163,7 +191,7 @@ function serviceText(r,en){
  return en?romanService(r.service||r.kind):String(r.service||'普通');
 }
 function colorFor(r){
- return r&&r.kind==='limited'?'#ff6157':r&&r.kind==='extra'?'#ffd04b':r&&r.kind==='local'?'#a7f2fa':'#ffd54c';
+ return r&&r.kind==='limited'?'#ff343f':r&&r.kind==='extra'?'#ffca00':r&&r.kind==='local'?'#7fdafa':'#ffda18';
 }
 function strip(text,color){
  var key=color+'|'+text;if(CACHE.has(key))return CACHE.get(key);
@@ -202,17 +230,17 @@ function drawText(text,color,x,y,width,scrollSeconds,align){
  ctx.drawImage(sprite,x-offset,y+2);ctx.restore();
 }
 function screenRow(y){
- ctx.fillStyle='#030504';ctx.fillRect(0,y,BASEW,ROW-1);
- ctx.fillStyle='#171c1b';ctx.fillRect(0,y+ROW-1,BASEW,1);
+ ctx.fillStyle='#101113';ctx.fillRect(0,y,BASEW,ROW-1);
+ ctx.fillStyle='#17191b';ctx.fillRect(0,y+ROW-1,BASEW,1);
 }
 function clockText(str){return String(str||'').padStart(5,'0')}
 function renderTrain(r,y,en,secs){
  if(!r){drawText(en?'NO MORE TRAINS':'本日の列車は終了しました','#ffe277',25,y+8,1020,secs);return}
  var text=serviceText(r,en),destination=en?romanDestination(r.dest):String(r.dest||'');
  drawText(text,colorFor(r),14,y+10,365,secs);
- drawText(clockText(r.time),'#f0f0ff',397,y+10,152,secs,'center');
- drawText(destination,'#ffe965',575,y+10,380,secs);
- drawText(String(r.platform||'-'),'#f0f0ff',1010,y+10,65,secs,'center');
+ drawText(clockText(r.time),'#eeeeff',397,y+10,152,secs,'center');
+ drawText(destination,'#f5e01a',575,y+10,380,secs);
+ drawText(String(r.platform||'-'),'#eeeeff',1010,y+10,65,secs,'center');
 }
 function infoText(r,en){
  if(!r)return en?'End of service':'本日の発車は終了しました';
@@ -230,7 +258,7 @@ function render(){
  document.getElementById('arrow').textContent=dir==='north'?'←':'→';
  document.getElementById('direction-title').textContent=dir==='north'?'今治・高松・岡山方面':'伊予市・八幡浜・宇和島方面';
  document.getElementById('date-label').textContent=day.day+' '+day.clock;
- document.getElementById('big-platform').textContent=rows[0]?rows[0].platform:'-';
+ document.getElementById('big-platform').textContent=dir==='north'?'1':'2';
  var sourcePresent=!!(window.MATSUYAMA_DATA&&Array.isArray(window.MATSUYAMA_DATA.records));
  document.getElementById('status').textContent=!sourcePresent?'時刻表データが読み込めません':
   'JR 松山駅 ｜ 交通壁紙の共通時刻表 '+String(window.MATSUYAMA_DATA.checked||'')+'確認 ｜ JST '+day.clock;
@@ -245,7 +273,7 @@ function render(){
   drawText('MATSUYAMA STATION','#ebeff0',30,ROW*2+20,1030,secs);
  }else{
   renderTrain(rows[0],5,en,secs);
-  drawText(infoText(rows[0],en),rows[0].position?'#72f9da':'#f1e67c',15,ROW+12,1060,secs);
+  drawText(infoText(rows[0],en),rows[0].position?'#7edbee':'#e5d51e',15,ROW+12,1060,secs);
   if(rows[1])renderTrain(rows[1],ROW*2+5,en,secs);
   else drawText(en?'NO FOLLOWING TRAIN':'この方面の次発列車はありません','#fff0a9',22,ROW*2+18,1035,secs);
  }
