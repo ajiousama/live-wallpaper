@@ -480,6 +480,30 @@
     const elapsed=arrivalDelayElapsedMinutes(item,now);
     return elapsed!==null && elapsed>=60;
   }
+  // Official same-day arrival records take priority over the 22:00 cutoff.
+  function airportOfficialArrivalState(item,now) {
+    const status=String(item?.status||'').trim();
+    const cancelled=/欠航|運休|取消|キャンセル/.test(status+' '+String(item?.changeText||''));
+    const completed=/到着済み|ただいま到着|着陸済み|到着完了/.test(status);
+    const time=padTime(item?.changed||item?.scheduled||'');
+    const minute=/^([01][0-9]|2[0-3]):[0-5][0-9]$/.test(time)?toMinutes(time):NaN;
+    const since=Number.isFinite(minute)?now.minutes-minute:Infinity;
+    const pendingText=/遅れ|遅延|到着予定|まもなく到着|飛行中|接近中/.test(status);
+    const unfinished=!cancelled&&!completed&&Number.isFinite(since)&&since>=-240&&
+      (since<=90||(pendingText&&since<=240));
+    const recentlyCompleted=completed&&Number.isFinite(since)&&since>=-15&&since<=30;
+    return {unfinished,recentlyCompleted,completed,cancelled};
+  }
+  function airportArrivalBoardState(now) {
+    const ap=slowLive.airport;
+    if(!slowLive.ok||!ap?.ok||!Array.isArray(ap.arrivals)||boardDisplayIso('air',now)!==now.iso)return 'unverified';
+    const age=Date.now()-Date.parse(String(slowLive.generatedAtJst||''));
+    if(!Number.isFinite(age)||age< -15000||age>150000)return 'unverified';
+    const dm=String(ap.updatedAt||'').match(/([0-9]{4})年([0-9]{1,2})月([0-9]{1,2})日/);
+    const day=dm?dm[1]+'-'+String(Number(dm[2])).padStart(2,'0')+'-'+String(Number(dm[3])).padStart(2,'0'):'';
+    if(day&&day!==now.iso)return 'unverified';
+    return ap.arrivals.some(x=>airportOfficialArrivalState(x,now).unfinished)?'pending':'complete';
+  }
   function liveFlightRows(now) {
     const dep=currentDirection()==='departure';
     if (boardDisplayIso('air', now) !== now.iso) return dep?null:[];
@@ -509,11 +533,13 @@
       // At Matsuyama Airport's 22:00 curfew, remove normal inbound flights
       // from the arrival board. Only officially delayed flights can remain.
       // The departure board is intentionally unchanged.
+      const officialArrival=!dep?airportOfficialArrivalState(x,now):null;
       if(!dep && now.minutes>=AIRPORT_ARRIVAL_CURFEW_MINUTES &&
-         !isDelayedAirportArrival(x))return;
+         !officialArrival.unfinished&&!officialArrival.recentlyCompleted)return;
       // A delayed arrival ceases to be an active problem once its revised
       // expected arrival time is one hour in the past.
-      if(!dep && delayedArrivalNoticeExpired(x,now))return;
+      if(!dep && delayedArrivalNoticeExpired(x,now) &&
+         !officialArrival.unfinished&&!officialArrival.recentlyCompleted)return;
       // An officially departed, uniquely matched later outbound service
       // means the earlier arrival no longer belongs on this board.
       if(!dep && completedTurnaroundDeparted(x,slowLive.airport?.departures,now))return;
@@ -558,7 +584,7 @@
       if(!arrivalCompleted && diff < (!dep && isDelayedAirportArrival(x) ? -60 : -20)) return;
       let liveStatus=status || (Number(x.deltaMinutes)===0?'定刻':'');
       if (dep && /出発済み/.test(liveStatus) && diff > 1) liveStatus='';
-      if (!dep && /到着済み|ただいま到着/.test(liveStatus) && diff > 1) liveStatus='';
+      if (!dep && /到着済み|ただいま到着/.test(liveStatus) && diff > 1 && !officialArrival.recentlyCompleted) liveStatus='';
       const delta=Number(x.deltaMinutes);
       if (Number.isFinite(delta) && delta>0 && (!liveStatus || /定刻/.test(liveStatus))) liveStatus=`遅れ +${delta}分`;
       if (Number.isFinite(delta) && delta<0 && (!liveStatus || /定刻/.test(liveStatus))) liveStatus=dep?`変更 ${Math.abs(delta)}分前`:`早着予定 ${Math.abs(delta)}分`;
@@ -2477,6 +2503,8 @@
     const arrival=direction==='arrival';
     const activeRows=liveFlightRows(now) || nextRows('air',now);
     if(!Array.isArray(activeRows) || !activeRows.length){
+      if(arrival && airportArrivalBoardState(now)!=='complete')
+        return [{type:'loading',text:'公式到着情報を確認中（終了未確定）'}];
       return [{type:'ended',text:arrival?'本日の到着便は終了しました':'本日の出発便は終了しました'}];
     }
     const rows=arrival
@@ -3249,12 +3277,14 @@
       const now=japanNow(); const last=dep?lastAirMovement(now,true):null;
       root.classList.add('air-end');
       const mode=dep?'DEPARTURES — 出発便 —':'ARRIVALS — 到着便 —';
+      const arrivalBoardState=dep?'':airportArrivalBoardState(now);
       const msg=dep?'本日の出発便は終了しました'
-        :japanNow().minutes>=AIRPORT_ARRIVAL_CURFEW_MINUTES
-          ?'本日の到着便は終了しました'
-          :'現在表示できる到着予定便はありません';
+        :arrivalBoardState==='unverified'?'公式到着情報を取得・確認中'
+        :arrivalBoardState==='pending'?'公式到着情報を確認中（終了未確定）'
+        :now.minutes>=AIRPORT_ARRIVAL_CURFEW_MINUTES?'本日の到着便は終了しました'
+        :'現在表示できる到着予定便はありません';
       const detail=dep && last ? `最終出発便：${last.place}行　${last.time}　出発済み` : (dep?'':japanNow().minutes>=AIRPORT_ARRIVAL_CURFEW_MINUTES
-        ?'22:00以降は遅延便のみ表示'
+        ?'22:00以降も公式案内が未完了の便は引き続き表示'
         :'公式の当日到着案内を取得できた便のみ表示');
       root.innerHTML=`<div class="air-end-state"><div class="air-end-mode">✈ ${mode}</div><div class="air-end-message">${msg}</div>${detail?`<div class="air-end-detail">${detail}</div>`:''}</div>`;
     } else {
