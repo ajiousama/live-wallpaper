@@ -22,7 +22,7 @@ button[aria-pressed=true]{background:#39536a;border-color:#8ec7ff}
   <section class="board"><div class="heading"><span class="jp">八幡浜・宇和島方面 発車時刻</span><span class="en">for Yawatahama, Uwajima</span></div><div class="led"><canvas id="south" width="668" height="185" aria-label="八幡浜・宇和島方面の発車案内"></canvas></div></section>
   <section class="board"><div class="heading"><span class="jp">今治・高松・岡山方面 発車時刻</span><span class="en">for Imabari, Takamatsu, Okayama</span></div><div class="led"><canvas id="north" width="668" height="185" aria-label="今治・高松・岡山方面の発車案内"></canvas></div></section>
 </main>
-<div id="controls"><button id="lang" aria-pressed="true">日本語・英語切替</button><button id="speed">速度：ふつう</button><button id="scroll">スクロール：上へ</button></div>
+<div id="controls"><button id="lang" aria-pressed="true">日本語・英語切替</button><button id="speed">速度：ふつう</button><button id="scroll">テロップ：左へ</button></div>
 <div id="foot">JR松山駅｜共通時刻表使用｜列車位置未確認時は運行状況を推定しません</div>
 <script>
 (()=>{
@@ -72,7 +72,7 @@ function text(ctx,s,x,y,color,size=29,w=400,seconds=0){
  const wide=pixel(ctx,s,x,y,color,size,w,0);
  if(wide>w){
   ctx.fillStyle='#070707';ctx.fillRect(x,y,w,size+2);
-  const length=wide-w;const frame=seconds*speed*17;const off=frame%(length+90);pixel(ctx,s,x,y,color,size,w,Math.min(length,Math.max(0,off-45)));
+  const length=wide-w;const frame=seconds*speed*17;const off=frame%(length+90);pixel(ctx,s,x,y,color,size,w,(scrollUp?Math.min(length,Math.max(0,off-45)):length-Math.min(length,Math.max(0,off-45))));
  }
 }
 function drawRow(ctx,r,y,dir,seconds,useEn){
@@ -114,7 +114,7 @@ function draw(dir,sec){
 function render(){const sec=Date.now()/1000;draw('north',sec);draw('south',sec)}
 document.getElementById('lang').onclick=function(){english=!english;this.textContent=english?'日本語・英語切替':'日本語固定';this.setAttribute('aria-pressed',String(english))};
 document.getElementById('speed').onclick=function(){speed=speed===1?1.6:speed===1.6?.6:1;this.textContent='速度：'+(speed===1?'ふつう':speed===1.6?'はやく':'おそく')};
-document.getElementById('scroll').onclick=function(){scrollUp=!scrollUp;this.textContent='スクロール：'+(scrollUp?'上へ':'下へ')};
+document.getElementById('scroll').onclick=function(){scrollUp=!scrollUp;this.textContent='テロップ：'+(scrollUp?'左へ':'右へ')};
 render();setInterval(render,150);
 })();
 </script></body></html>
