@@ -2606,3 +2606,39 @@ html.company-pc body.freewifi-tv #panel-port .port-arrival-route-line{
   overflow:hidden!important;
   text-overflow:ellipsis!important;
 }
+
+/* Matsuyama airport departures: published destination arrival time.
+   Reuse the existing destination column and fixed row height; no fifth column. */
+body.freewifi-tv.air-board-page:not(.air-board-arrival) #air-rows .air-place{
+  flex-direction:column!important;
+  align-items:flex-start!important;
+  justify-content:center!important;
+  gap:2px!important;
+  line-height:1.08!important;
+  overflow:hidden!important;
+}
+body.freewifi-tv.air-board-page:not(.air-board-arrival) #air-rows .air-place-primary{
+  display:block!important;
+  width:100%!important;
+  flex:0 0 auto!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+  text-overflow:ellipsis!important;
+  font-size:inherit!important;
+  line-height:1.08!important;
+}
+body.freewifi-tv.air-board-page:not(.air-board-arrival) #air-rows .air-arrival-scheduled{
+  display:block!important;
+  width:100%!important;
+  flex:0 0 auto!important;
+  font-size:13px!important;
+  font-weight:850!important;
+  letter-spacing:.01em!important;
+  line-height:1.1!important;
+  color:#9ce0ff!important;
+  font-variant-numeric:tabular-nums!important;
+  white-space:nowrap!important;
+}
+html.company-pc body.freewifi-tv.air-board-page:not(.air-board-arrival) #air-rows .air-arrival-scheduled{
+  font-size:13px!important;
+}
