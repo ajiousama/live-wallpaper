@@ -192,8 +192,9 @@
     const first=records[page*2],second=records[page*2+1];
     if(first){
       row(first,185,english,elapsed);
-      const middle=(first.delay>0?'おくれ約'+first.delay+'分　':'') +
-        (english ? (first.delay>0?'Delay information':'Service information') : first.info);
+      const middle=english
+        ? (first.delay>0?'Delay approx. '+first.delay+' min':'Service information')
+        : first.info;
       ledText(middle,first.delay>0?'orange':'yellow',43,290,1033,elapsed);
       row(second,394,english,elapsed);
     }else{
