@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>JR松山駅 16ドットLED発車標｜交通壁紙</title>
+<style>
+:root{color-scheme:dark;--cab:#292a2b;--led:#040605;--trim:#474a4c}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#0b0e11;color:#e8e8e6;font-family:"BIZ UDPGothic","Yu Gothic UI","Meiryo",sans-serif}
+body{display:flex;align-items:center;justify-content:center}
+#scene{width:min(97vw,1480px);display:flex;flex-direction:column;gap:17px}
+#stationboard{border:3px solid #111314;background:linear-gradient(160deg,#333638,#202223 70%,#252829);box-shadow:0 0 0 1px #515457,0 20px 80px #000c,inset 0 1px 1px #8a8d8f66;border-radius:7px;padding:26px 23px 26px}
+#cab-top{display:grid;grid-template-columns:145px 1fr 190px;align-items:center;gap:14px;height:113px;padding:0 6px 15px}
+#side-pointer{display:flex;align-items:center;gap:12px;white-space:nowrap}
+.arrow{font-family:Arial,sans-serif;font-weight:900;font-size:70px;line-height:1;color:#c7c9c9}
+.platform{border:3px solid #a6a8a9;color:#e4e6e6;border-radius:5px;background:#1c1e20;font:bold 68px/.98 Arial,sans-serif;padding:7px 15px}
+#heading{min-width:0;text-align:left;color:#c4c8c8}
+#heading .jp{font-size:clamp(20px,3.3vw,47px);font-weight:800;letter-spacing:.04em;white-space:nowrap}
+#heading .en{font:700 clamp(16px,2.5vw,34px)/1.3 Arial,sans-serif;color:#b6b9bb}
+#right-info{text-align:right;line-height:1.5}
+#right-info .way{font-weight:800;font-size:20px;color:#c7c9cb}
+#right-info .date{font-weight:700;font-size:17px;color:#95999d}
+#led-screen{position:relative;padding:7px 10px;background:linear-gradient(#050606,#111314 52%,#040505);border:7px solid #161718;box-shadow:inset 0 1px 12px #000,inset 0 0 0 1px #444;overflow:hidden;border-radius:2px}
+#led-screen:before{content:"";position:absolute;inset:7px 10px;pointer-events:none;opacity:.3;background-image:radial-gradient(circle,#262b29 21%,transparent 26%);background-size:3.1px 3.1px}
+#matrix{display:block;width:100%;height:auto;aspect-ratio:1100/232;image-rendering:auto;position:relative}
+#board-foot{padding:13px 9px 0;display:flex;justify-content:space-between;gap:18px;color:#a0a5a7;font-size:13px;line-height:1.3}
+#board-foot strong{color:#ccd0d1}
+#ticker-status{flex:1;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#meta{display:flex;align-items:center;justify-content:space-between;color:#8e9497;font-size:13px;gap:10px}
+#meta a{color:#9da7ad;text-decoration:none}
+#meta a:hover{text-decoration:underline}
+#controls{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;transition:opacity .2s}
+button{cursor:pointer;border:1px solid #4e555a;background:#20272b;color:#dedede;border-radius:5px;padding:9px 15px;font-weight:700;font-size:14px}
+button[aria-pressed=true]{background:#344c5a;color:#fff;border-color:#7290a1}
+button:focus-visible{outline:3px solid #acdfff}
+#status-pill{font-size:12px;margin-left:8px;color:#abb9c0}
+@media(max-width:800px){
+#scene{width:98vw;gap:8px}
+#stationboard{padding:12px 8px}
+#cab-top{grid-template-columns:70px 1fr 100px;height:70px;gap:7px}
+.arrow{font-size:33px}.platform{font-size:31px;border-width:2px;padding:4px 7px}
+#side-pointer{gap:5px}
+#heading .jp{font-size:clamp(13px,3vw,23px)}
+#heading .en{font-size:clamp(11px,2.6vw,18px)}
+#right-info .way{font-size:11px}
+#right-info .date{font-size:10px}
+#led-screen{padding:4px;border-width:3px}
+#board-foot{font-size:9px;padding-top:8px}
+#meta{font-size:10px;flex-wrap:wrap}
+#controls button{font-size:11px;padding:6px 8px}
+}
+@media(max-height:580px){#scene{gap:6px}#stationboard{padding-top:8px;padding-bottom:8px}#cab-top{height:70px}#controls{gap:4px}#controls button{padding:5px 10px}#board-foot{padding-top:5px}}
+</style>
+<script src="../r15-dev/schedule.js"></script>
+</head>
+<body>
+<div id="scene">
+  <div id="stationboard">
+    <div id="cab-top">
+      <div id="side-pointer"><span class="arrow" id="arrow">←</span><span class="platform" id="big-platform">1</span></div>
+      <div id="heading"><div class="jp">今度の発車は</div><div class="en">Next Train</div></div>
+      <div id="right-info"><div class="way" id="direction-title">今治・高松・岡山方面</div><div class="date" id="date-label">--月--日（--）</div></div>
+    </div>
+    <div id="led-screen"><canvas id="matrix" width="1100" height="232" aria-label="松山駅の列車発車案内"></canvas></div>
+    <div id="board-foot"><span><strong>JR 松山駅</strong>　MATSUYAMA</span><span id="ticker-status">時刻表読み込み中</span></div>
+  </div>
+  <div id="meta">
+    <span id="status">時刻表・運行情報を確認中</span>
+    <a href="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/index.html" target="_blank" rel="noopener noreferrer">参考：JR四国 松山駅 発車標シミュレーター（r113）</a>
+  </div>
+  <div id="controls" aria-label="表示設定">
+    <button type="button" data-dir="north">今治・高松方面</button>
+    <button type="button" data-dir="south">宇和島・八幡浜方面</button>
+    <button type="button" data-dir="auto">両方面 自動切替</button>
+    <button type="button" id="lang-toggle">日英交互</button>
+    <button type="button" id="speed-toggle">標準スクロール</button>
+  </div>
+</div>
+<script>
+(function(){
+'use strict';
+var BACKEND='https://ihhiymkepuydykrhmzwo.supabase.co/functions/v1/approach';
+var params=new URLSearchParams(location.search);
+var directionPref=['north','south','auto'].includes(params.get('dir'))?params.get('dir'):'auto';
+var languagePref=params.get('lang')==='jp'?'jp':'auto';
+var scrollSpeed=2.2;
+var live={ok:false,ichitsubo:null,generatedAtJst:''};
+var lastError='';
+var lastFetchAt=0;
+var matrix=document.getElementById('matrix');
+var ctx=matrix.getContext('2d',{alpha:false});
+var BASEW=1100, ROW=74, BASEH=232;
+var DOTT=3.28, FONT=16, CACHE=new Map();
+var activeMode='', lastMinuteKey='', latestRows=[], liveMessage='';
+var firstRun=Date.now(), dirSwitchAt=Date.now()+15000;
+var namedEn={'しおかぜ':'SHIOKAZE','いしづち':'ISHIZUCHI','宇和海':'UWAKAI','伊予灘ものがたり':'IYONADA MONOGATARI','普通':'LOCAL','快速':'RAPID','特急':'LTD. EXP.','回送':'OUT OF SERVICE','貨物':'FREIGHT','臨時':'EXTRA'};
+var destEn={'岡山':'Okayama','高松':'Takamatsu','今治':'Imabari','観音寺':'Kanonji','伊予西条':'Iyo-Saijo','新居浜':'Niihama','宇和島':'Uwajima','八幡浜':'Yawatahama','伊予市':'Iyo-shi','伊予大洲':'Iyo-Ozu','内子':'Uchiko','卯之町':'Unomachi','松山':'Matsuyama','児島':'Kojima','大洲':'Ozu','伊予長浜':'Iyo-Nagahama'};
+var dateFormat=new Intl.DateTimeFormat('ja-JP',{timeZone:'Asia/Tokyo',year:'numeric',month:'2-digit',day:'2-digit',weekday:'short',hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'});
+function jst(){
+ var pieces={};dateFormat.formatToParts(new Date()).forEach(function(p){pieces[p.type]=p.value});
+ var clock=pieces.hour+':'+pieces.minute;
+ return {iso:pieces.year+'-'+pieces.month+'-'+pieces.day,day:pieces.month+'月'+pieces.day+'日（'+pieces.weekday+'）',
+   clock:clock,minute:Number(pieces.hour)*60+Number(pieces.minute),dow:new Date(pieces.year+'-'+pieces.month+'-'+pieces.day+'T12:00:00+09:00').getDay()};
+}
+function minute(t){var x=String(t||'').match(/^(\d{1,2}):(\d{2})$/);return x?Number(x[1])*60+Number(x[2]):Infinity}
+function valid(r,day){
+ if(r.start&&r.start>day.iso)return false;
+ if(r.end&&r.end<day.iso)return false;
+ if(Array.isArray(r.dates)&&!r.dates.includes(day.iso))return false;
+ if(Array.isArray(r.exclude)&&r.exclude.includes(day.iso))return false;
+ if(Array.isArray(r.days)&&!r.days.includes(day.dow))return false;
+ return true;
+}
+function norm(s){return String(s||'').replace(/[（）() ・]/g,'').trim()}
+function destDirection(d){
+ var n=/今治|高松|岡山|伊予西条|新居浜|観音寺|丸亀|児島|多度津|壬生川/.test(d);
+ var s=/宇和島|八幡浜|伊予大洲|卯之町|伊予市|伊予長浜|内子|市坪|北伊予|南伊予|伊予中山|向井原/.test(d);
+ return n!==s?(n?'north':'south'):'';
+}
+function serviceCategory(r){return r.kind==='limited'?'limited':r.kind==='extra'?'extra':r.kind==='freight'?'freight':r.kind==='deadhead'?'deadhead':'local'}
+function platformOf(r){var m=String(r.info||'').match(/(\d+)\s*番/);return m?m[1]:'-'}
+function freshLive(){
+ var time=Date.parse(live.generatedAtJst||'');
+ return live.ok&&live.ichitsubo&&live.ichitsubo.ok===true&&Number.isFinite(time)&&Date.now()-time>=-15000&&Date.now()-time<45000;
+}
+function liveMatch(r){
+ if(!freshLive()||!Array.isArray(live.ichitsubo.matsuyamaActiveTrains))return null;
+ var hits=live.ichitsubo.matsuyamaActiveTrains.filter(function(x){
+  return x.direction===r.direction&&String(x.departure||'').padStart(5,'0')===r.time&&
+    (x.trainClass==='limited')===(r.kind==='limited')&&x.position&&!/^(不明|確認中|未取得|—|-)$/.test(String(x.position))
+ });
+ return hits.length===1?hits[0]:null;
+}
+function allRows(dir,day){
+ var raw=window.MATSUYAMA_DATA&&Array.isArray(window.MATSUYAMA_DATA.records)?window.MATSUYAMA_DATA.records:[];
+ if(day.minute<270)return [];
+ return raw.filter(function(r){return r.board==='rail'&&valid(r,day)})
+  .map(function(r){var time=r.timeByDow&&r.timeByDow[String(day.dow)]||r.time;return Object.assign({},r,{time:time,direction:destDirection(r.dest||'')||r.direction})})
+  .filter(function(r){return r.direction===dir&&minute(r.time)>=day.minute&&Number.isFinite(minute(r.time))})
+  .map(function(r){var match=liveMatch(r);return Object.assign({},r,{platform:platformOf(r),position:match?String(match.position):'',delay:match?Number(match.delayMinutes)||0:0})})
+  .sort(function(a,b){return minute(a.time)-minute(b.time)});
+}
+function firstClock(){return (Date.now()-firstRun)/1000}
+function mode(){
+ if(directionPref!=='auto')return directionPref;
+ if(Date.now()>=dirSwitchAt){dirSwitchAt=Date.now()+15000;activeMode=activeMode==='north'?'south':'north'}
+ return activeMode||'north';
+}
+function isEnglish(){var n=firstClock()%12;return languagePref==='auto'&&n>=8}
+function romanService(name){
+ var s=String(name||'');
+ for(var k in namedEn)if(s.includes(k))return namedEn[k]+(s.match(/\d+号/)||[''])[0].replace('号','');
+ return s==='普通'?'LOCAL':s;
+}
+function romanDestination(d){
+ return String(d||'').split(/[・／/]/).map(function(x){return destEn[x]||x}).join(' / ');
+}
+function speedAdjust(s){return Math.max(.4,Math.min(8,s))}
+function serviceText(r,en){
+ if(!r)return '';
+ return en?romanService(r.service||r.kind):String(r.service||'普通');
+}
+function colorFor(r){
+ return r&&r.kind==='limited'?'#ff6157':r&&r.kind==='extra'?'#ffd04b':r&&r.kind==='local'?'#a7f2fa':'#ffd54c';
+}
+function strip(text,color){
+ var key=color+'|'+text;if(CACHE.has(key))return CACHE.get(key);
+ if(CACHE.size>180)CACHE.clear();
+ var src=document.createElement('canvas'),sx=src.getContext('2d',{willReadFrequently:true});
+ sx.font='bold 15px "Meiryo","Yu Gothic",sans-serif';
+ var length=Math.min(4200,Math.ceil(sx.measureText(text).width)+6);
+ src.width=Math.max(2,length);src.height=16;sx=src.getContext('2d',{willReadFrequently:true});
+ sx.font='bold 15px "Meiryo","Yu Gothic",sans-serif';sx.textBaseline='top';sx.fillStyle='#fff';sx.fillText(text,1,-1);
+ var data=sx.getImageData(0,0,src.width,16).data;
+ var can=document.createElement('canvas');can.width=Math.ceil(src.width*DOTT);can.height=Math.ceil(FONT*DOTT);
+ var c=can.getContext('2d');c.fillStyle=color;
+ // Independently rasterize each lit 16-dot-matrix pixel rather than applying a
+ // transparent dot overlay to a smooth browser font.
+ for(var y=0;y<16;y++)for(var x=0;x<src.width;x++){
+  var alpha=data[(y*src.width+x)*4+3];
+  if(alpha<82)continue;
+  c.globalAlpha=Math.min(1,.52+alpha/510);
+  c.beginPath();c.arc((x+.5)*DOTT,(y+.5)*DOTT,1.18,0,Math.PI*2);c.fill();
+ }
+ c.globalAlpha=1;CACHE.set(key,can);return can;
+}
+function drawText(text,color,x,y,width,scrollSeconds,align){
+ if(!text)return;
+ var sprite=strip(String(text),color);
+ var offset=0;
+ if(sprite.width>width){
+  var overflow=sprite.width-width;
+  // Pause at the beginning/end; move right-to-left through long station notices.
+  var travel=overflow/(scrollSpeed*30);
+  var phase=scrollSeconds%(travel+3.4);
+  offset=Math.min(overflow,Math.max(0,phase-1.2)*scrollSpeed*30);
+ }else if(align==='right')offset=-(width-sprite.width);
+ else if(align==='center')offset=-(width-sprite.width)/2;
+ ctx.save();ctx.beginPath();ctx.rect(x,y,width,58);ctx.clip();
+ ctx.drawImage(sprite,x-offset,y+2);ctx.restore();
+}
+function screenRow(y){
+ ctx.fillStyle='#030504';ctx.fillRect(0,y,BASEW,ROW-1);
+ ctx.fillStyle='#171c1b';ctx.fillRect(0,y+ROW-1,BASEW,1);
+}
+function clockText(str){return String(str||'').padStart(5,'0')}
+function renderTrain(r,y,en,secs){
+ if(!r){drawText(en?'NO MORE TRAINS':'本日の列車は終了しました','#ffe277',25,y+8,1020,secs);return}
+ var text=serviceText(r,en),destination=en?romanDestination(r.dest):String(r.dest||'');
+ drawText(text,colorFor(r),14,y+10,365,secs);
+ drawText(clockText(r.time),'#f0f0ff',397,y+10,152,secs,'center');
+ drawText(destination,'#ffe965',575,y+10,380,secs);
+ drawText(String(r.platform||'-'),'#f0f0ff',1010,y+10,65,secs,'center');
+}
+function infoText(r,en){
+ if(!r)return en?'End of service':'本日の発車は終了しました';
+ if(r.position)return en?'TRAIN POSITION: '+String(r.position)+'   DELAY '+(r.delay||0)+' MIN':
+  '現在位置 '+r.position+(r.delay>0?'　遅れ約'+r.delay+'分':'　定刻');
+ var info=String(r.info||'').replace(/^\d+番[・\s]*/,'');
+ return en?(info?'TIMETABLE / SERVICE INFORMATION':'TIMETABLE / POSITION NOT CONFIRMED'):
+  (info?'停車駅・ご案内　'+info+'　｜　時刻表予定・位置未確認':'時刻表予定・列車位置は未確認です');
+}
+function render(){
+ var day=jst(),dir=mode(),en=isEnglish(),secs=firstClock();
+ var rows=allRows(dir,day);
+ latestRows=rows;
+ document.querySelectorAll('[data-dir]').forEach(function(b){b.setAttribute('aria-pressed',String(b.dataset.dir===directionPref))});
+ document.getElementById('arrow').textContent=dir==='north'?'←':'→';
+ document.getElementById('direction-title').textContent=dir==='north'?'今治・高松・岡山方面':'伊予市・八幡浜・宇和島方面';
+ document.getElementById('date-label').textContent=day.day+' '+day.clock;
+ document.getElementById('big-platform').textContent=rows[0]?rows[0].platform:'-';
+ var sourcePresent=!!(window.MATSUYAMA_DATA&&Array.isArray(window.MATSUYAMA_DATA.records));
+ document.getElementById('status').textContent=!sourcePresent?'時刻表データが読み込めません':
+  'JR 松山駅 ｜ 交通壁紙の共通時刻表 '+String(window.MATSUYAMA_DATA.checked||'')+'確認 ｜ JST '+day.clock;
+ document.getElementById('ticker-status').textContent=rows[0]&&rows[0].position
+  ?'● 列車位置確認 '+rows[0].position
+  :rows.length?'時刻表表示（位置未確認は運行中とは断定しません）':'本日の発車案内は終了しました';
+ ctx.clearRect(0,0,BASEW,BASEH);
+ for(var i=0;i<3;i++)screenRow(i*ROW+4);
+ if(!rows.length){
+  drawText(day.minute<270?'翌日分の表示は4:30から':'本日の発車は終了しました','#e6da83',30,20,1040,secs);
+  drawText('JR松山駅  発車案内','#7cdfee',30,ROW+20,1030,secs);
+  drawText('MATSUYAMA STATION','#ebeff0',30,ROW*2+20,1030,secs);
+ }else{
+  renderTrain(rows[0],5,en,secs);
+  drawText(infoText(rows[0],en),rows[0].position?'#72f9da':'#f1e67c',15,ROW+12,1060,secs);
+  if(rows[1])renderTrain(rows[1],ROW*2+5,en,secs);
+  else drawText(en?'NO FOLLOWING TRAIN':'この方面の次発列車はありません','#fff0a9',22,ROW*2+18,1035,secs);
+ }
+}
+function tick(){try{render()}catch(e){document.getElementById('status').textContent='描画エラー: '+e.message}}
+function poll(){
+ lastFetchAt=Date.now();
+ fetch(BACKEND+'?scope=fast&t='+Date.now(),{cache:'no-store'})
+ .then(function(resp){if(!resp.ok)throw Error('HTTP '+resp.status);return resp.json()})
+ .then(function(json){live={ok:!!json.ok,ichitsubo:json.ichitsubo||null,generatedAtJst:String(json.generatedAtJst||'')};lastError=''})
+ .catch(function(e){live={ok:false,ichitsubo:null,generatedAtJst:''};lastError=e.message});
+}
+document.querySelectorAll('[data-dir]').forEach(function(b){
+ b.addEventListener('click',function(){directionPref=b.dataset.dir;activeMode='north';dirSwitchAt=Date.now()+15000;
+ var url=new URL(location.href);url.searchParams.set('dir',directionPref);history.replaceState(null,'',url.href);tick()});
+});
+document.getElementById('lang-toggle').addEventListener('click',function(){
+ languagePref=languagePref==='jp'?'auto':'jp';this.textContent=languagePref==='auto'?'日英交互':'日本語固定';tick()
+});
+document.getElementById('speed-toggle').addEventListener('click',function(){
+ scrollSpeed=speedAdjust(scrollSpeed===2.2?4:scrollSpeed===4?1.1:2.2);
+ this.textContent=scrollSpeed===4?'高速スクロール':scrollSpeed===1.1?'低速スクロール':'標準スクロール'
+});
+window.addEventListener('visibilitychange',function(){if(!document.hidden){dirSwitchAt=Date.now()+15000;poll();tick()}});
+poll();tick();setInterval(tick,130);setInterval(poll,15000);
+})();
+</script>
+</body>
+</html>
