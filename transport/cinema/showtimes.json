@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-15T07:22:41.397700+00:00",
+  "generatedAt": "2026-10-15T14:58:07.739272+00:00",
   "timezone": "Asia/Tokyo",
   "date": "2026-10-15",
   "source": "crank-in.net (third-party listing; verify with the theater)",
@@ -4760,6 +4760,27 @@
           "releaseDate": null
         },
         {
+          "date": "2026-10-16",
+          "time": "14:30",
+          "title": "学校の怪談 物の怪スペシャル",
+          "durationMinutes": null,
+          "releaseDate": null
+        },
+        {
+          "date": "2026-10-16",
+          "time": "16:30",
+          "title": "学校の怪談 呪いスペシャル",
+          "durationMinutes": null,
+          "releaseDate": null
+        },
+        {
+          "date": "2026-10-16",
+          "time": "18:25",
+          "title": "学校の怪談 たたりスペシャル",
+          "durationMinutes": null,
+          "releaseDate": null
+        },
+        {
           "date": "2026-10-17",
           "time": "11:00",
           "title": "船を降りたら彼女の島",
@@ -4807,6 +4828,34 @@
           "title": "ハードボイルド",
           "durationMinutes": 112,
           "releaseDate": null
+        },
+        {
+          "date": "2026-10-19",
+          "time": "13:10",
+          "title": "学校の怪談 たたりスペシャル",
+          "durationMinutes": null,
+          "releaseDate": null
+        },
+        {
+          "date": "2026-10-19",
+          "time": "15:05",
+          "title": "ウルチョラ・セブン(愛と不思議と恐怖の物語)",
+          "durationMinutes": null,
+          "releaseDate": null
+        },
+        {
+          "date": "2026-10-19",
+          "time": "16:40",
+          "title": "心魔師",
+          "durationMinutes": 95,
+          "releaseDate": "2018-10-27"
+        },
+        {
+          "date": "2026-10-19",
+          "time": "18:35",
+          "title": "ハッピーウエディング",
+          "durationMinutes": 77,
+          "releaseDate": "2016-11-05"
         }
       ],
       "status": "ok"
