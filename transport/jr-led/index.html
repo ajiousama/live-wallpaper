@@ -385,7 +385,9 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
   const telopSignatures = ['', ''];
   const red = t => '<span style="color:#f00">' + t + '</span>';
   const yellow = t => '<span style="color:#ff0">' + t + '</span>';
-  function stopAnnouncement(board, limited) {
+  function stopAnnouncement(board, limited, hasUpcoming=true) {
+    if (!limited && !hasUpcoming)
+      return yellow('本日の発車案内は終了しました。');
     if (!limited) return yellow('この方面の本日の特急案内は終了しました。');
     const service = String(limited.service || '');
     const info = String(limited.info || '');
@@ -438,15 +440,15 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
     track.style.setProperty('--led-loop-target',-distance+'px');
     track.style.setProperty('--led-loop-seconds',Math.max(8,distance/58).toFixed(2)+'s');
   }
-  function updateStopAnnouncement(board, limited) {
+  function updateStopAnnouncement(board, limited, hasUpcoming=true) {
     const editor=document.getElementById('messageTelopInput'+board);
     const title=document.getElementById('messageTelopTitleInput'+board);
     if(!editor || !title)return;
-    const message=stopAnnouncement(board,limited);
+    const message=stopAnnouncement(board,limited,hasUpcoming);
     if(telopSignatures[board]!==message){
       telopSignatures[board]=message;
       editor.value=message;
-      choose('messageTelopTitleInput'+board,['停車駅']);
+      choose('messageTelopTitleInput'+board,[hasUpcoming?'停車駅':'お知らせ']);
       if(Array.isArray(statusDisp))statusDisp[board]=1;
       if(typeof updateStatus==='function')updateStatus(board);
     }
@@ -635,6 +637,19 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
     refresh();
   });
 
+  // The original LED engine retains the last entered hour/minute even when
+  // the train type/name is cleared. Hide each EMPTY native row after readForm
+  // so a completed 22:59/22:50 service can never stay visible overnight.
+  function setNativeRowVisibility(units) {
+    units.forEach(unit => {
+      [0,1].forEach(slot => {
+        const contents=document.getElementById('lineContents'+unit.board+'_'+slot);
+        const wrapper=contents?.parentElement;
+        if(!wrapper)return;
+        wrapper.style.visibility=unit.rows[slot] ? 'visible' : 'hidden';
+      });
+    });
+  }
   let lastRenderSignature = '';
   function refresh() {
     const data = window.MATSUYAMA_DATA;
@@ -646,7 +661,8 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
         if (typeof readForm === 'function') readForm();
         lastRenderSignature = 'pre-service';
       }
-      [0,1].forEach(board => updateStopAnnouncement(board,null));
+      setNativeRowVisibility([{board:0,rows:[]},{board:1,rows:[]}]);
+      [0,1].forEach(board => updateStopAnnouncement(board,null,false));
       return; // No next-day train display before 04:30.
     }
     const units = [[0,'south'],[1,'north']].map(([board,direction]) => {
@@ -693,8 +709,13 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
     }
     // The ticker is independent of express priority in the two departure rows.
     // Do this AFTER native readForm, so its redraw cannot erase ticker content.
-    units.forEach(unit => updateStopAnnouncement(unit.board,unit.nextLimited));
+    units.forEach(unit => updateStopAnnouncement(
+      unit.board,unit.nextLimited,unit.rows.length>0
+    ));
     renderPassLabels(units);
+    // Reapply even when no train data changed: source animation can recreate
+    // row nodes, and its input fields keep the previous clock time.
+    setNativeRowVisibility(units);
   }
 })();
 </script><script id="wallpaper-scale-fidelity">
