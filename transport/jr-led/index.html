@@ -105,6 +105,33 @@ html[data-led-direction="south"] #LEDUnitDiv>div>div:first-child,
 html[data-led-direction="north"] #LEDUnitDiv>div>div:nth-child(2){
   display:block!important;left:0!important;top:0!important;
 }
+</style><style id="led-passage-labels">
+/* Status added ONLY for feed-confirmed/scheduled pass-throughs; native time
+   digits remain intact at x112-176. Distinguish unconfirmed "通過予定". */
+#LEDUnitDiv .led-passage-label{
+  position:absolute!important;
+  top:0!important;
+  height:16px!important;
+  line-height:16px!important;
+  display:block!important;
+  overflow:hidden!important;
+  white-space:nowrap!important;
+  box-sizing:border-box!important;
+  background:#000!important;
+  z-index:1000!important;
+  pointer-events:none!important;
+  font-family:'Yu Gothic','Meiryo',sans-serif!important;
+  font-size:13px!important;
+  font-weight:bold!important;
+  text-align:center!important;
+}
+#LEDUnitDiv .led-passage-service{
+  left:0!important;width:112px!important;color:#f8c14b!important;
+  font-size:12px!important;
+}
+#LEDUnitDiv .led-passage-status{
+  left:176px!important;width:80px!important;color:#ffe34c!important;
+}
 </style><style id="led-continuous-ticker-style">
 /* Deterministic seamless station-stop ticker; replaces browser-specific marquee
    behavior. One complete message is followed by its exact duplicate. */
@@ -440,7 +467,8 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
     }
     const limited = r.kind === 'limited';
     choose('typeInput' + key,
-      [limited ? '特急' : r.kind === 'extra' ? '臨時' : '----']);
+      [r.kind === 'freight' ? '貨物' :
+       limited ? '特急' : r.kind === 'extra' ? '臨時' : '----']);
     const service = String(r.service || '');
     const info = String(r.info || '');
     const nameCandidates = [];
@@ -495,6 +523,70 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
     choose('trackInput' + key, [platform ? platform[1] + '番線' : '----']);
     choose('soonInput' + key, ['----']);
   }
+  // Live/scheduled passage movements from the exact same Matsuyama feed
+  // used by the detailed six-row timeline. The source timetable has
+  // passenger departures only: NEVER fabricate freight passage minutes.
+  const ledPassageFeed = {south:{iso:'',movements:[]},north:{iso:'',movements:[]}};
+  function hhmmToMinutes(value) {
+    const m=String(value||'').match(/^([01]?\d|2[0-3]):([0-5]\d)$/);
+    return m ? +m[1]*60 + +m[2] : NaN;
+  }
+  function passageRows(direction,n) {
+    const feed=ledPassageFeed[direction];
+    if(!feed || feed.iso!==n.iso)return [];
+    const seen=new Set();
+    return feed.movements.flatMap(item=>{
+      const t=hhmmToMinutes(item.time);
+      const trainNum=String(item.trainNum||'').trim();
+      if(!Number.isFinite(t) || t<n.minutes ||
+         (item.kind!=='freight' && item.kind!=='pass') ||
+         item.direction!==direction || !trainNum)return [];
+      const key=item.kind+'|'+trainNum+'|'+t;
+      if(seen.has(key))return [];
+      seen.add(key);
+      const time=String(Math.floor(t/60)).padStart(2,'0')+':'+String(t%60).padStart(2,'0');
+      return [{
+        id:'passage-'+key,board:'rail',direction,time,
+        kind:item.kind,trainNum,
+        service:item.kind==='freight'?trainNum+'レ':trainNum,
+        dest:'通過',info:item.timetableOnly?'松山通過予定':'松山通過',
+        passLabel:item.kind==='freight'?'貨物 '+trainNum+'レ':'通過 '+trainNum,
+        passStatus:item.timetableOnly?'通過予定':'通過'
+      }];
+    });
+  }
+  function renderPassLabels(units) {
+    // Original sprites have no "pass" destination or four-digit freight number.
+    // Overlay ONLY those passages inside the existing 256x16 native row.
+    units.forEach(unit=>[0,1].forEach(slot=>{
+      const line=document.getElementById('lineContents'+unit.board+'_'+slot);
+      if(!line)return;
+      line.querySelectorAll('.led-passage-label').forEach(el=>el.remove());
+      const row=unit.rows[slot];
+      if(!row || !row.passStatus)return;
+      const label=document.createElement('span');
+      label.className='led-passage-label led-passage-service';
+      label.textContent=row.passLabel;
+      line.appendChild(label);
+      const status=document.createElement('span');
+      status.className='led-passage-label led-passage-status';
+      status.textContent=row.passStatus;
+      line.appendChild(status);
+    }));
+  }
+  window.addEventListener('message',event=>{
+    if(event.origin!==location.origin ||
+       event.data?.type!=='matsuyama-led-movements')return;
+    const {direction,iso,movements}=event.data;
+    if(!['south','north'].includes(direction) ||
+       !/^\d{4}-\d{2}-\d{2}$/.test(String(iso)) ||
+       !Array.isArray(movements))return;
+    ledPassageFeed[direction]={
+      iso,movements:movements.slice(0,30).filter(v=>v && v.direction===direction)
+    };
+    refresh();
+  });
+
   let lastRenderSignature = '';
   function refresh() {
     const data = window.MATSUYAMA_DATA;
@@ -510,22 +602,19 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
       return; // No next-day train display before 04:30.
     }
     const units = [[0,'south'],[1,'north']].map(([board,direction]) => {
-      const upcoming = data.records
+      const passenger = data.records
         .filter(r => r.board === 'rail' && r.direction === direction && available(r,n))
         .map(r => ({...r,time:r.timeByDow?.[String(n.dow)] || r.time}))
-        .filter(r => {
-          const t = String(r.time).match(/^(\d{1,2}):(\d{2})$/);
-          return t && +t[1] * 60 + +t[2] >= n.minutes;
-        })
-        .sort((a,b) => {
-          const mins = r => {
-            const m = String(r.time).match(/^(\d{1,2}):(\d{2})$/);
-            return m ? +m[1]*60 + +m[2] : Infinity;
-          };
-          return mins(a)-mins(b);
-        });
+        .filter(r => Number.isFinite(hhmmToMinutes(r.time)) &&
+                     hhmmToMinutes(r.time)>=n.minutes);
+      // Time-bearing passenger departures and known freight/other passages
+      // share ONE timeline. Train type never determines the LED order.
+      const upcoming=[...passenger,...passageRows(direction,n)]
+        .sort((a,b)=>hhmmToMinutes(a.time)-hhmmToMinutes(b.time) ||
+                      (a.passStatus?1:0)-(b.passStatus?1:0));
       return {board, rows:upcoming.slice(0,2),
-        nextLimited:upcoming.find(r => r.kind==='limited') || null};
+        nextLimited:passenger.filter(r=>r.kind==='limited')
+          .sort((a,b)=>hhmmToMinutes(a.time)-hhmmToMinutes(b.time))[0] || null};
     });
     const signature = JSON.stringify(units.map(unit => [
       unit.board,
@@ -546,6 +635,7 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
     // The ticker is independent of express priority in the two departure rows.
     // Do this AFTER native readForm, so its redraw cannot erase ticker content.
     units.forEach(unit => updateStopAnnouncement(unit.board,unit.nextLimited));
+    renderPassLabels(units);
   }
 })();
 </script><script id="wallpaper-scale-fidelity">
