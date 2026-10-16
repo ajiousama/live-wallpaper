@@ -105,6 +105,32 @@ html[data-led-direction="south"] #LEDUnitDiv>div>div:first-child,
 html[data-led-direction="north"] #LEDUnitDiv>div>div:nth-child(2){
   display:block!important;left:0!important;top:0!important;
 }
+</style><style id="led-continuous-ticker-style">
+/* Deterministic seamless station-stop ticker; replaces browser-specific marquee
+   behavior. One complete message is followed by its exact duplicate. */
+#LEDUnitDiv .led-continuous-ticker-track{
+  display:flex!important;
+  flex-wrap:nowrap!important;
+  align-items:center!important;
+  width:max-content!important;
+  min-width:max-content!important;
+  height:16px!important;
+  position:relative!important;
+  white-space:nowrap!important;
+  will-change:transform;
+  animation:led-continuous-ticker var(--led-loop-seconds, 35s) linear infinite!important;
+}
+#LEDUnitDiv .led-continuous-ticker-copy{
+  display:block!important;
+  flex:none!important;
+  white-space:nowrap!important;
+  padding-right:80px!important;
+  box-sizing:content-box!important;
+}
+@keyframes led-continuous-ticker{
+  from{transform:translate3d(0px,0px,0px)}
+  to{transform:translate3d(var(--led-loop-target,-300px),0px,0px)}
+}
 </style></head>
 
 <body>
@@ -335,23 +361,43 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
     return (sections.length ? sections.join(separator) :
       red('特急列車のご案内') + '　停車駅は列車により異なります。') + separator;
   }
+  function installSeamlessTicker(board) {
+    const root = document.getElementById('messageTelopDiv' + board);
+    if (!root || root.querySelector('.led-continuous-ticker-track')) return;
+    const old = root.querySelector('marquee');
+    if (!old) return; // Native engine has not drawn its ticker yet.
+    const track = document.createElement('div');
+    track.className = 'led-continuous-ticker-track';
+    const first = document.createElement('span');
+    first.className = 'led-continuous-ticker-copy';
+    first.innerHTML = old.innerHTML;
+    const second = first.cloneNode(true);
+    track.append(first, second);
+    old.replaceWith(track);
+    // offsetWidth uses unscaled LED coordinates; CSS transforms the original
+    // 284px sign without shortening the journey or breaking the loop boundary.
+    const distance = Math.max(1, first.offsetWidth);
+    track.style.setProperty('--led-loop-target', -distance + 'px');
+    track.style.setProperty('--led-loop-seconds', Math.max(8, distance / 58).toFixed(2) + 's');
+  }
   function updateStopAnnouncement(board, limited) {
     const editor = document.getElementById('messageTelopInput' + board);
     const title = document.getElementById('messageTelopTitleInput' + board);
     if (!editor || !title || typeof updateStatus !== 'function') return;
     const message = stopAnnouncement(board, limited);
-    if (telopSignatures[board] === message) return; // No 15-second restart!
+    // Schedule data is refreshed every 15s, but the marquee must NOT be
+    // reconstructed while its message is unchanged. Reinstall if the original
+    // engine happened to recreate the marquee on its own.
+    if (telopSignatures[board] === message) {
+      installSeamlessTicker(board);
+      return;
+    }
     telopSignatures[board] = message;
     editor.value = message;
     choose('messageTelopTitleInput' + board, ['停車駅']);
     if (Array.isArray(statusDisp)) statusDisp[board] = 1;
-    updateStatus(board); // Original LED engine renders its native marquee.
-    const marquee = document.querySelector('#messageTelopDiv' + board + ' marquee');
-    if (marquee) {
-      marquee.setAttribute('loop','-1'); // Endless leftward loop.
-      marquee.setAttribute('direction','left');
-      marquee.setAttribute('behavior','scroll');
-    }
+    updateStatus(board);
+    installSeamlessTicker(board);
   }
 
   function updateRow(board, slot, r) {
