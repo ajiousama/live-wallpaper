@@ -177,12 +177,13 @@
           </div>
           <div class="mode-badge" id="rail-badge">宇和島方面</div>
         </div>
-        <!-- Authentic LED simulator stays independent of the detailed JR train list. -->
-        <!-- Its two directions are fixed: Uwajima left / Imabari right. -->
-        <div class="jr-led-strip" id="jr-led-embed" aria-label="JR松山駅 LED発車標・両方面">
+        <!-- Each existing JR page shows only its matching original LED board. -->
+        <!-- Mode 0: south (Uwajima), mode 1: north (Imabari). -->
+        <div class="jr-led-strip" id="jr-led-embed" aria-label="JR松山駅 LED発車標・表示方面に連動">
           <iframe
-            src="../jr-led/index.html?v=__BUILD_ID__"
-            title="JR松山駅 LED発車標：八幡浜・宇和島方面／今治・高松・岡山方面"
+            id="jr-led-frame"
+            src="../jr-led/index.html?v=__BUILD_ID__&amp;dir=south"
+            title="JR松山駅 LED発車標（表示方面に連動）"
             loading="eager"
             referrerpolicy="no-referrer"
             tabindex="-1"
