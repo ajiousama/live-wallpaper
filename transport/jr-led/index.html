@@ -466,38 +466,57 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
     choose('trackInput' + key, [platform ? platform[1] + '番線' : '----']);
     choose('soonInput' + key, ['----']);
   }
+  let lastRenderSignature = '';
   function refresh() {
     const data = window.MATSUYAMA_DATA;
     if (!data || !Array.isArray(data.records)) return;
     const n = jst();
     if (n.minutes < 270) {
-      [[0,1],[1,0]].forEach(([board])=>[0,1].forEach(slot=>updateRow(board,slot,null)));
-      if (typeof readForm === 'function') readForm();
-      return; // Before 04:30: do not display next-day services.
+      if (lastRenderSignature !== 'pre-service') {
+        [0,1].forEach(board => [0,1].forEach(slot => updateRow(board,slot,null)));
+        if (typeof readForm === 'function') readForm();
+        lastRenderSignature = 'pre-service';
+      }
+      [0,1].forEach(board => updateStopAnnouncement(board,null));
+      return; // No next-day train display before 04:30.
     }
-    [[0, 'south'], [1, 'north']].forEach(([board, direction]) => {
+    const units = [[0,'south'],[1,'north']].map(([board,direction]) => {
       const upcoming = data.records
-        .filter(r => r.board === 'rail' && r.direction === direction && available(r, n))
-        .map(r => ({...r, time: r.timeByDow?.[String(n.dow)] || r.time}))
+        .filter(r => r.board === 'rail' && r.direction === direction && available(r,n))
+        .map(r => ({...r,time:r.timeByDow?.[String(n.dow)] || r.time}))
         .filter(r => {
           const t = String(r.time).match(/^(\d{1,2}):(\d{2})$/);
           return t && +t[1] * 60 + +t[2] >= n.minutes;
         })
         .sort((a,b) => {
-          const minutes = r => {
+          const mins = r => {
             const m = String(r.time).match(/^(\d{1,2}):(\d{2})$/);
-            return m ? Number(m[1]) * 60 + Number(m[2]) : Infinity;
+            return m ? +m[1]*60 + +m[2] : Infinity;
           };
-          return minutes(a) - minutes(b);
+          return mins(a)-mins(b);
         });
-      // The original two-line LED shows the NEXT TWO DEPARTURES by clock time,
-      // with no special priority for limited expresses or ordinary services.
-      [0,1].forEach(slot => updateRow(board, slot, upcoming[slot] || null));
-      // Stopping-station ticker is separate from the displayed departure order.
-      // Keep the next Uwakai / Ishizuchi / Shiokaze announcement available.
-      updateStopAnnouncement(board, upcoming.find(r => r.kind === 'limited') || null);
+      return {board, rows:upcoming.slice(0,2),
+        nextLimited:upcoming.find(r => r.kind==='limited') || null};
     });
-    if (typeof readForm === 'function') readForm();
+    const signature = JSON.stringify(units.map(unit => [
+      unit.board,
+      [0,1].map(i => {
+        const r = unit.rows[i];
+        return r ? [r.id,r.time,r.kind,r.service,r.dest,r.info] : null;
+      })
+    ]));
+    // Calling readForm every 15s destroys the in-progress LED ticker and
+    // stops long announcements completing even one pass. Render on changes ONLY.
+    if (signature !== lastRenderSignature) {
+      units.forEach(unit =>
+        [0,1].forEach(slot => updateRow(unit.board,slot,unit.rows[slot] || null))
+      );
+      if (typeof readForm === 'function') readForm();
+      lastRenderSignature = signature;
+    }
+    // The ticker is independent of express priority in the two departure rows.
+    // Do this AFTER native readForm, so its redraw cannot erase ticker content.
+    units.forEach(unit => updateStopAnnouncement(unit.board,unit.nextLimited));
   }
 })();
 </script><script id="wallpaper-scale-fidelity">
