@@ -34,6 +34,7 @@
   const status = document.getElementById('freewifi-page-status');
   const webPrev = document.getElementById('web-page-prev');
   const webNext = document.getElementById('web-page-next');
+  const jrLedFrame = document.getElementById('jr-led-frame');
 
 
 
@@ -53,6 +54,22 @@
   function ui(){
     return window.MATSUYAMA_TRANSPORT_UI || null;
   }
+
+  // Direction is owned by the existing two JR pages, not by the LED itself.
+  // Message-based switching keeps both original board engines alive without
+  // reloading the simulator every 15 seconds.
+  function syncJrLed(page){
+    if(!jrLedFrame || page?.id!=='panel-rail')return;
+    const dir=page.mode===1?'north':'south';
+    try {
+      jrLedFrame.contentWindow?.postMessage(
+        {type:'matsuyama-led-direction',dir},location.origin
+      );
+    } catch(e) { console.warn('JR LED direction sync failed',e); }
+  }
+  if(jrLedFrame)jrLedFrame.addEventListener('load',()=>{
+    syncJrLed(pages[pageIndex]);
+  });
 
   function showPage(index){
     pageIndex = (index + pages.length) % pages.length;
@@ -90,6 +107,7 @@
       gambleScreen.classList.toggle('freewifi-active', !!page.gamble);
     }
 
+    syncJrLed(page);
     const isAir = page.id === 'panel-air' && !page.gamble;
     document.body.classList.toggle('air-board-page', isAir);
     document.body.classList.toggle('air-board-arrival', isAir && page.mode === 1);
