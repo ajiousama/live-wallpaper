@@ -483,15 +483,19 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
           const t = String(r.time).match(/^(\d{1,2}):(\d{2})$/);
           return t && +t[1] * 60 + +t[2] >= n.minutes;
         })
-        .sort((a,b) => a.time.localeCompare(b.time));
-      // These two original LED lines REPLACE the former "next express" and
-      // "next local" cards. Two consecutive locals must never hide the next
-      // limited express (e.g. Uwakai 31 at 22:00).
-      const nextLimited = upcoming.find(r => r.kind === 'limited') || null;
-      const nextLocal = upcoming.find(r => r.kind === 'local') || null;
-      updateRow(board, 0, nextLimited);
-      updateRow(board, 1, nextLocal);
-      updateStopAnnouncement(board, nextLimited);
+        .sort((a,b) => {
+          const minutes = r => {
+            const m = String(r.time).match(/^(\d{1,2}):(\d{2})$/);
+            return m ? Number(m[1]) * 60 + Number(m[2]) : Infinity;
+          };
+          return minutes(a) - minutes(b);
+        });
+      // The original two-line LED shows the NEXT TWO DEPARTURES by clock time,
+      // with no special priority for limited expresses or ordinary services.
+      [0,1].forEach(slot => updateRow(board, slot, upcoming[slot] || null));
+      // Stopping-station ticker is separate from the displayed departure order.
+      // Keep the next Uwakai / Ishizuchi / Shiokaze announcement available.
+      updateStopAnnouncement(board, upcoming.find(r => r.kind === 'limited') || null);
     });
     if (typeof readForm === 'function') readForm();
   }
