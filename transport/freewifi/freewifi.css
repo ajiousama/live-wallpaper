@@ -2724,3 +2724,16 @@ html.company-pc body.freewifi-tv #panel-rail #rail-rows .rail-detail {
   height:18px!important;
   font-size:11px!important;
 }
+
+
+/* JR LED replaces the old next-express / next-local panels, not adds to them. */
+body.freewifi-tv #panel-rail .rail-summary-panels {
+  display:none!important;
+}
+/* Five real grid tracks after the two removed summary cards. */
+body.freewifi-tv #panel-rail {
+  grid-template-rows:58px 208px 26px minmax(0,1fr) 32px!important;
+}
+html.company-pc body.freewifi-tv #panel-rail {
+  grid-template-rows:44px 216px 26px minmax(0,1fr) 32px!important;
+}
