@@ -125,10 +125,8 @@ html[data-led-direction="north"] #LEDUnitDiv>div>div:nth-child(2){
   font-weight:bold!important;
   text-align:center!important;
 }
-#LEDUnitDiv .led-passage-service{
-  left:0!important;width:112px!important;color:#f8c14b!important;
-  font-size:12px!important;
-}
+/* The ORIGINAL train-type/name sprites render "貨物" + "貨物列車".
+   Never cover them with a hand-made freight label. */
 #LEDUnitDiv .led-passage-status{
   left:176px!important;width:80px!important;color:#ffe34c!important;
 }
@@ -518,9 +516,11 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
       '多度津': ['多度津'],
       '卯之町': ['卯之町']
     };
-    choose('destinationInput' + key, destChoices[dest] || [dest, '----']);
+    // No native "通過" destination bitmap exists. Clear stale destinations
+    // from previous rows and let the small status overlay say 通過/通過予定.
+    choose('destinationInput' + key, r.passStatus ? ['----'] : (destChoices[dest] || [dest, '----']));
     const platform = info.match(/([1-3])番/);
-    choose('trackInput' + key, [platform ? platform[1] + '番線' : '----']);
+    choose('trackInput' + key, [r.passStatus ? '----' : (platform ? platform[1] + '番線' : '----')]);
     choose('soonInput' + key, ['----']);
   }
   // Live/scheduled passage movements from the exact same Matsuyama feed
@@ -556,22 +556,23 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
     });
   }
   function renderPassLabels(units) {
-    // Original sprites have no "pass" destination or four-digit freight number.
-    // Overlay ONLY those passages inside the existing 256x16 native row.
+    // Respect the source site's native "貨物" and "貨物列車" sprites.
+    // Only the PASSAGE STATUS is absent from the original option palette;
+    // show it at the right without obscuring native train name or time.
     units.forEach(unit=>[0,1].forEach(slot=>{
       const line=document.getElementById('lineContents'+unit.board+'_'+slot);
       if(!line)return;
-      line.querySelectorAll('.led-passage-label').forEach(el=>el.remove());
       const row=unit.rows[slot];
-      if(!row || !row.passStatus)return;
-      const label=document.createElement('span');
-      label.className='led-passage-label led-passage-service';
-      label.textContent=row.passLabel;
-      line.appendChild(label);
-      const status=document.createElement('span');
-      status.className='led-passage-label led-passage-status';
-      status.textContent=row.passStatus;
-      line.appendChild(status);
+      const statusText=row?.passStatus || '';
+      line.querySelectorAll('.led-passage-service').forEach(el=>el.remove());
+      let status=line.querySelector('.led-passage-status');
+      if(!statusText){if(status)status.remove();return;}
+      if(!status){
+        status=document.createElement('span');
+        status.className='led-passage-label led-passage-status';
+        line.appendChild(status);
+      }
+      if(status.textContent!==statusText)status.textContent=statusText;
     }));
   }
   window.addEventListener('message',event=>{
