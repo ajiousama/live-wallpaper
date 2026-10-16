@@ -248,6 +248,10 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
     setTimeout(refresh, 800);
     setInterval(refresh, 15000);
   };
+  script.onerror = function () {
+    [0,1].forEach(board => [0,1].forEach(slot => updateRow(board,slot,null)));
+    if (typeof readForm === 'function') readForm();
+  };
   document.head.appendChild(script);
 
   function jst() {
@@ -296,9 +300,15 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
     const service = String(r.service || '');
     const info = String(r.info || '');
     const nameCandidates = [];
+    // Use the exact source sprite where possible. A combined Shiokaze/Ishizuchi
+    // train must not silently become Shiokaze alone, nor 102 by default.
+    const mergedNo = service.match(/しおかぜ(\d+)号/);
+    const ishizuchiNo = info.match(/いしづち(\d+)号/);
+    if (mergedNo && ishizuchiNo && mergedNo[1] === ishizuchiNo[1])
+      nameCandidates.push('しおかぜ' + mergedNo[1] + '号・いしづち' + ishizuchiNo[1] + '号');
+    nameCandidates.push(service);
     if (limited && /しおかぜ/.test(service)) nameCandidates.push('しおかぜ');
     if (limited && /宇和海/.test(service)) nameCandidates.push('宇和海');
-    if (limited && /いしづち/.test(service)) nameCandidates.push('いしづち102号');
     if (r.kind === 'sightseeing') {
       nameCandidates.push('伊予灘ものがたり(青)', '伊予灘ものがたり(赤)');
     }
@@ -308,7 +318,8 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
       if (/伊予長浜/.test(info)) nameCandidates.push('各停(伊予長浜経由ワンマン)');
       nameCandidates.push('各駅停車');
     }
-    nameCandidates.push(service, '普通列車');
+    if (r.kind === 'freight') nameCandidates.push('貨物列車');
+    nameCandidates.push('普通列車', '----');
     choose('trainNameInput' + key, nameCandidates);
 
     const number = service.match(/(\d+)号/);
@@ -329,7 +340,11 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
       '高松': ['高松[Y00]', '高松'],
       '伊予西条': ['伊予西条[Y31]', '伊予西条'],
       '伊予大洲': ['伊予大洲[U14/S18]', '伊予大洲'],
-      '観音寺': ['観音寺[Y19]', '観音寺']
+      '観音寺': ['観音寺[Y19]', '観音寺'],
+      '伊予北条': ['伊予北条[Y48]', '伊予北条'],
+      '新居浜': ['新居浜'],
+      '多度津': ['多度津'],
+      '卯之町': ['卯之町']
     };
     choose('destinationInput' + key, destChoices[dest] || [dest, '----']);
     const platform = info.match(/([1-3])番/);
@@ -340,7 +355,11 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
     const data = window.MATSUYAMA_DATA;
     if (!data || !Array.isArray(data.records)) return;
     const n = jst();
-    if (n.minutes < 270) return; // no next-day advances before 04:30
+    if (n.minutes < 270) {
+      [[0,1],[1,0]].forEach(([board])=>[0,1].forEach(slot=>updateRow(board,slot,null)));
+      if (typeof readForm === 'function') readForm();
+      return; // Before 04:30: do not display next-day services.
+    }
     [[0, 'south'], [1, 'north']].forEach(([board, direction]) => {
       const list = data.records
         .filter(r => r.board === 'rail' && r.direction === direction && available(r, n))
