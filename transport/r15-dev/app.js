@@ -3192,9 +3192,9 @@
       })(),
       data: r
     }));
-    // Five visible rows below the authentic JR LED boards, including deadheads/freight.
-    const fiveRowLedView=FREEWIFI_TV && !!document.getElementById('jr-led-embed');
-    const limit=fiveRowLedView ? 5 : (FREEWIFI_TV ? (document.documentElement.classList.contains('company-pc') ? 9 : 8) : 3);
+    // Six visible rows below the authentic JR LED board, including deadheads/freight.
+    const sixRowLedView=FREEWIFI_TV && !!document.getElementById('jr-led-embed');
+    const limit=sixRowLedView ? 6 : (FREEWIFI_TV ? (document.documentElement.classList.contains('company-pc') ? 9 : 8) : 3);
     const candidates=[...services, ...terminalArrivals, ...deadheads, ...freights, ...observedSpecials]
       .sort((a,b)=>a._sortMinutes-b._sortMinutes);
     // JR departures, arrivals, freight and deadheads use ONE timeline.
@@ -3251,7 +3251,7 @@
           <div class="rail-detail">${tickerHtml(railRowDetailItems(r))}</div>`;
         root.appendChild(row);
       });
-      while (root.children.length < (fiveRowLedView ? 5 : 3)) {
+      while (root.children.length < (sixRowLedView ? 6 : 3)) {
         const row=document.createElement('div'); row.className='row rail-row placeholder blank';
         row.innerHTML=`<div class="rail-primary"><div class="cell"></div><div class="cell time"></div><div class="cell"></div></div><div class="rail-detail"></div>`;
         root.appendChild(row);
