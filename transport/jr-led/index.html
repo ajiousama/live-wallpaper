@@ -304,6 +304,56 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
     const el = document.getElementById(id);
     if (el) el.value = value;
   }
+  // Keep native marquee alive between schedule polls; otherwise it never loops.
+  const telopSignatures = ['', ''];
+  const red = t => '<span style="color:#f00">' + t + '</span>';
+  const yellow = t => '<span style="color:#ff0">' + t + '</span>';
+  function stopAnnouncement(board, limited) {
+    if (!limited) return yellow('この方面の本日の特急案内は終了しました。');
+    const service = String(limited.service || '');
+    const info = String(limited.info || '');
+    const sections = [];
+    const separator = '　　　　　　　　　';
+    if (board === 0 && /宇和海/.test(service)) {
+      const no = (service.match(/宇和海(\d+)号/) || [,''])[1];
+      sections.push(red('特急「宇和海' + no + '号」') + 'の主な停車駅は、' +
+        yellow('伊予市・内子・伊予大洲・八幡浜・卯之町・宇和島') +
+        'です。列車により一部の停車駅が異なります。');
+    }
+    if (board === 1) {
+      const shiokaze = (service + ' ' + info).match(/しおかぜ(\d+)号/);
+      const ishizuchi = (service + ' ' + info).match(/いしづち(\d+)号/);
+      if (shiokaze) sections.push(
+        red('特急「しおかぜ' + shiokaze[1] + '号」') + '岡山方面の主な停車駅は、' +
+        yellow('伊予北条・今治・壬生川・伊予西条・新居浜・観音寺・多度津・丸亀・坂出・児島・岡山') +
+        'です。列車により一部の停車駅が異なります。');
+      if (ishizuchi) sections.push(
+        red('特急「いしづち' + ishizuchi[1] + '号」') + '高松方面の主な停車駅は、' +
+        yellow('伊予北条・今治・壬生川・伊予西条・新居浜・伊予三島・川之江・観音寺・多度津・丸亀・坂出・高松') +
+        'です。列車により一部の停車駅が異なります。');
+    }
+    return (sections.length ? sections.join(separator) :
+      red('特急列車のご案内') + '　停車駅は列車により異なります。') + separator;
+  }
+  function updateStopAnnouncement(board, limited) {
+    const editor = document.getElementById('messageTelopInput' + board);
+    const title = document.getElementById('messageTelopTitleInput' + board);
+    if (!editor || !title || typeof updateStatus !== 'function') return;
+    const message = stopAnnouncement(board, limited);
+    if (telopSignatures[board] === message) return; // No 15-second restart!
+    telopSignatures[board] = message;
+    editor.value = message;
+    choose('messageTelopTitleInput' + board, ['停車駅']);
+    if (Array.isArray(statusDisp)) statusDisp[board] = 1;
+    updateStatus(board); // Original LED engine renders its native marquee.
+    const marquee = document.querySelector('#messageTelopDiv' + board + ' marquee');
+    if (marquee) {
+      marquee.setAttribute('loop','-1'); // Endless leftward loop.
+      marquee.setAttribute('direction','left');
+      marquee.setAttribute('behavior','scroll');
+    }
+  }
+
   function updateRow(board, slot, r) {
     const key = board + '_' + slot;
     if (!r) {
@@ -395,6 +445,7 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
       const nextLocal = upcoming.find(r => r.kind === 'local') || null;
       updateRow(board, 0, nextLimited);
       updateRow(board, 1, nextLocal);
+      updateStopAnnouncement(board, nextLimited);
     });
     if (typeof readForm === 'function') readForm();
   }
