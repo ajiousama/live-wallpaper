@@ -2645,3 +2645,82 @@ body.freewifi-tv.air-board-page:not(.air-board-arrival) #air-rows .air-arrival-s
 html.company-pc body.freewifi-tv.air-board-page:not(.air-board-arrival) #air-rows .air-arrival-scheduled{
   font-size:13px!important;
 }
+
+
+/* JR LED integration: authentic two-direction board with five retained timeline rows */
+/* This layout applies only to the JR screen. Other transport screens retain their geometry. */
+body.freewifi-tv #panel-rail {
+  grid-template-rows:58px 160px 26px 76px minmax(0,1fr) 32px!important;
+}
+body.freewifi-tv #panel-rail .jr-led-strip {
+  display:block!important;
+  min-height:0!important;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:#090b0d;
+  border-block:1px solid #34434b;
+}
+body.freewifi-tv #panel-rail .jr-led-strip iframe {
+  display:block;
+  width:100%;
+  height:100%;
+  border:0;
+  background:#090b0d;
+  overflow:hidden;
+}
+body.freewifi-tv #panel-rail .rail-summary-panels {
+  min-height:0!important;
+  padding:3px 8px!important;
+  align-items:stretch!important;
+}
+body.freewifi-tv #panel-rail .rail-summary-panels .rail-next-limited {
+  height:70px!important;
+}
+body.freewifi-tv #panel-rail #rail-rows {
+  min-height:0!important;
+  height:100%;
+  gap:3px!important;
+  padding:4px 8px 3px!important;
+  overflow:hidden!important;
+}
+body.freewifi-tv #panel-rail #rail-rows .rail-row {
+  min-height:35px!important;
+  height:35px!important;
+  flex:0 0 35px!important;
+  padding:0!important;
+}
+body.freewifi-tv #panel-rail #rail-rows .rail-primary {
+  height:21px!important;
+}
+body.freewifi-tv #panel-rail #rail-rows .rail-detail {
+  height:14px!important;
+  font-size:10px!important;
+}
+
+/* Workplace wallpaper is taller: use native-size, legible 50px timeline rows. */
+html.company-pc body.freewifi-tv #panel-rail {
+  grid-template-rows:44px 216px 26px 84px minmax(0,1fr) 32px!important;
+}
+html.company-pc body.freewifi-tv #panel-rail .rail-summary-panels {
+  padding:4px 8px!important;
+}
+html.company-pc body.freewifi-tv #panel-rail .rail-summary-panels .rail-next-limited {
+  height:76px!important;
+}
+html.company-pc body.freewifi-tv #panel-rail #rail-rows {
+  gap:4px!important;
+  padding:4px 8px!important;
+}
+html.company-pc body.freewifi-tv #panel-rail #rail-rows .rail-row {
+  min-height:50px!important;
+  height:50px!important;
+  flex:0 0 50px!important;
+}
+html.company-pc body.freewifi-tv #panel-rail #rail-rows .rail-primary {
+  height:32px!important;
+}
+html.company-pc body.freewifi-tv #panel-rail #rail-rows .rail-detail {
+  height:18px!important;
+  font-size:11px!important;
+}
