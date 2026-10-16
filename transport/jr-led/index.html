@@ -454,6 +454,47 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
     installSeamlessTicker(board,message);
   }
 
+  // Native original LED destination sprites exist only for these
+  // six "[最終]..." choices. A last train to an intermediate station is
+  // the LAST service reaching it, including trains continuing beyond it.
+  // Do not mark a local as last if a later limited express still calls there.
+  const nativeFinalDestinations = new Set(
+    ['高松','新居浜','今治','伊予北条','八幡浜','宇和島']
+  );
+  function reachableNativeFinals(r) {
+    const dest=String(r.dest||'');
+    if(r.kind==='freight'||r.kind==='pass'||r.passStatus)return [];
+    if(r.direction==='south') {
+      if(dest==='宇和島')return ['八幡浜','宇和島'];
+      if(dest==='八幡浜')return ['八幡浜'];
+      return [];
+    }
+    if(r.direction==='north') {
+      const near=['伊予北条'];
+      if(dest==='伊予北条')return near;
+      const imabari=[...near,'今治'];
+      if(dest==='今治')return imabari;
+      const niihama=[...imabari,'新居浜'];
+      if(dest==='新居浜')return niihama;
+      if(['伊予西条'].includes(dest))return imabari;
+      if(['観音寺','岡山','岡山・高松','高松'].includes(dest)) {
+        const reached=dest==='伊予西条' ? imabari : niihama;
+        return /高松/.test(dest) ? [...reached,'高松'] : reached;
+      }
+    }
+    return [];
+  }
+  function nativeFinalMap(records) {
+    const last=new Map();
+    records.forEach(r=>{
+      const minute=hhmmToMinutes(r.time);
+      if(!Number.isFinite(minute))return;
+      reachableNativeFinals(r).forEach(target=>{
+        if(!last.has(target)||minute>last.get(target))last.set(target,minute);
+      });
+    });
+    return last;
+  }
   function updateRow(board, slot, r) {
     const key = board + '_' + slot;
     if (!r) {
@@ -518,7 +559,13 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
     };
     // No native "通過" destination bitmap exists. Clear stale destinations
     // from previous rows and let the small status overlay say 通過/通過予定.
-    choose('destinationInput' + key, r.passStatus ? ['----'] : (destChoices[dest] || [dest, '----']));
+    // The native [最終] destination bitmap takes precedence only when this
+    // train genuinely is the last same-day service reaching that destination.
+    const standardChoices=destChoices[dest] || [dest,'----'];
+    const finalChoices=r.nativeFinalLabel && nativeFinalDestinations.has(r.nativeFinalLabel)
+      ? ['[最終]'+r.nativeFinalLabel,...standardChoices]
+      : standardChoices;
+    choose('destinationInput' + key, r.passStatus ? ['----'] : finalChoices);
     const platform = info.match(/([1-3])番/);
     choose('trackInput' + key, [r.passStatus ? '----' : (platform ? platform[1] + '番線' : '----')]);
     choose('soonInput' + key, ['----']);
@@ -603,11 +650,22 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
       return; // No next-day train display before 04:30.
     }
     const units = [[0,'south'],[1,'north']].map(([board,direction]) => {
-      const passenger = data.records
+      const todaysTrains = data.records
         .filter(r => r.board === 'rail' && r.direction === direction && available(r,n))
         .map(r => ({...r,time:r.timeByDow?.[String(n.dow)] || r.time}))
-        .filter(r => Number.isFinite(hhmmToMinutes(r.time)) &&
-                     hhmmToMinutes(r.time)>=n.minutes);
+        .filter(r => Number.isFinite(hhmmToMinutes(r.time)));
+      // Compute finals from ALL of today's trips, including those already
+      // departed. The last service is not the last item remaining on screen.
+      const finalTimes=nativeFinalMap(todaysTrains);
+      const passenger=todaysTrains
+        .filter(r => hhmmToMinutes(r.time)>=n.minutes)
+        .map(r => ({
+          ...r,
+          nativeFinalLabel:
+            nativeFinalDestinations.has(r.dest) &&
+            reachableNativeFinals(r).includes(r.dest) &&
+            finalTimes.get(r.dest)===hhmmToMinutes(r.time) ? r.dest : ''
+        }));
       // Time-bearing passenger departures and known freight/other passages
       // share ONE timeline. Train type never determines the LED order.
       const upcoming=[...passenger,...passageRows(direction,n)]
@@ -621,7 +679,7 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
       unit.board,
       [0,1].map(i => {
         const r = unit.rows[i];
-        return r ? [r.id,r.time,r.kind,r.service,r.dest,r.info] : null;
+        return r ? [r.id,r.time,r.kind,r.service,r.dest,r.info,r.nativeFinalLabel] : null;
       })
     ]));
     // Calling readForm every 15s destroys the in-progress LED ticker and
