@@ -175,12 +175,13 @@ html[data-led-direction="north"] #LEDUnitDiv>div>div:nth-child(2){
   display:block!important;
   flex:none!important;
   white-space:nowrap!important;
-  padding-right:80px!important;
+  padding-right:48px!important;
   box-sizing:content-box!important;
 }
 @keyframes led-continuous-ticker{
   from{transform:translate3d(0px,0px,0px)}
-  to{transform:translate3d(var(--led-loop-target,-300px),0px,0px)}
+  /* Track contains two identical halves: -50% is exactly one message. */
+  to{transform:translate3d(-50%,0px,0px)}
 }
 </style></head>
 
@@ -420,7 +421,19 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
     const sign=document.getElementById('LEDUnitDiv'+board);
     if(!sign)return;
     let viewport=sign.querySelector('.led-continuous-ticker-viewport');
-    if(viewport && viewport.dataset.message===message)return;
+    // Keep the same cycle through 15-second data polls. If the original
+    // engine rebuilt the contents, reconstruct a missing animation only.
+    if(viewport && viewport.dataset.message===message){
+      const runningTrack=viewport.querySelector('.led-continuous-ticker-track');
+      if(runningTrack && runningTrack.children.length===2){
+        if(typeof runningTrack.getAnimations==='function'){
+          runningTrack.getAnimations().forEach(a=>{
+            if(a.playState==='paused'||a.playState==='finished')a.play();
+          });
+        }
+        return;
+      }
+    }
     if(!viewport){
       viewport=document.createElement('div');
       viewport.className='led-continuous-ticker-viewport';
@@ -436,9 +449,13 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
     const second=first.cloneNode(true);
     track.append(first,second);
     viewport.appendChild(track);
-    const distance=Math.max(1,first.offsetWidth);
-    track.style.setProperty('--led-loop-target',-distance+'px');
-    track.style.setProperty('--led-loop-seconds',Math.max(8,distance/58).toFixed(2)+'s');
+    // The board for the other direction can be display:none when refreshed.
+    // offsetWidth would be zero there and the marquee would barely move.
+    // Use a content-based duration; the CSS -50% distance self-adjusts when
+    // its 284px LED becomes visible, including after direction switches.
+    const plainLength=(first.textContent||'').length;
+    track.style.setProperty('--led-loop-seconds',
+      Math.min(90,Math.max(9,plainLength*0.42+2)).toFixed(2)+'s');
   }
   function updateStopAnnouncement(board, limited, hasUpcoming=true) {
     const editor=document.getElementById('messageTelopInput'+board);
