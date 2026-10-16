@@ -1,181 +1,370 @@
-<!doctype html>
-<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>JR四国 松山駅 LED電光掲示板再現</title>
-<script src="../r15-dev/schedule.js"></script>
-<style>
-*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#080a0b;color:#e7e7e7;font-family:"Meiryo","Yu Gothic",sans-serif}
-body{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;overflow:hidden}
-#display{display:flex;gap:3px;width:min(96vw,500px);align-items:stretch}
-.board{width:50%;min-width:0;background:#303030;padding:0 7px 7px}
-.heading{height:42px;display:flex;align-items:center;justify-content:center;flex-direction:column;color:#f0f0f0;font-weight:700;text-align:center;white-space:nowrap}
-.heading .jp{font-size:clamp(10px,1.05vw,15px);letter-spacing:.04em;line-height:1.2}
-.heading .en{font-size:clamp(9px,1.05vw,15px);line-height:1.25;font-family:Arial,sans-serif}
-.led{position:relative;background:#070707;border:0;overflow:hidden}
-.led canvas{display:block;width:100%;height:auto;image-rendering:pixelated}
-#controls{margin-top:14px;display:flex;justify-content:center;gap:8px;flex-wrap:wrap;color:#aab0b4}
-button{background:#242b30;border:1px solid #626b71;border-radius:4px;color:#e8ecef;font-size:13px;padding:9px 13px;cursor:pointer}
-button[aria-pressed=true]{background:#39536a;border-color:#8ec7ff}
-#foot{font-size:12px;color:#899198;min-height:20px;margin-top:8px}
-@media(max-width:680px){#display{width:99vw;gap:1px}.board{padding:0 4px 5px}.heading{height:45px}.heading .jp{font-size:9px}.heading .en{font-size:8px}button{font-size:10px;padding:5px 6px}}
-</style></head><body>
-<main id="display">
-  <section class="board"><div class="heading"><span class="jp">八幡浜・宇和島方面 発車時刻</span><span class="en">for Yawatahama, Uwajima</span></div><div class="led"><canvas id="south" width="668" height="185" aria-label="八幡浜・宇和島方面の発車案内"></canvas></div></section>
-  <section class="board"><div class="heading"><span class="jp">今治・高松・岡山方面 発車時刻</span><span class="en">for Imabari, Takamatsu, Okayama</span></div><div class="led"><canvas id="north" width="668" height="185" aria-label="今治・高松・岡山方面の発車案内"></canvas></div></section>
-</main>
-<div id="controls"><button id="lang" aria-pressed="true">日本語・英語切替</button><button id="speed">速度：ふつう</button><button id="scroll">テロップ：左へ</button></div>
-<div id="foot">JR松山駅｜共通時刻表使用｜列車位置未確認時は運行状況を推定しません</div>
-<script>
-(()=>{
-'use strict';
-const W=668,H=185, C={red:'#fd354a',yellow:'#fff01a',white:'#f4f4e9',green:'#63eb4d',blue:'#46dafa',amber:'#ffc300'};
-const canvases={north:document.getElementById('north'),south:document.getElementById('south')};
-const states={north:canvases.north.getContext('2d'),south:canvases.south.getContext('2d')};
-const fclock=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Tokyo',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23',weekday:'short'});
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0062)https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/index.html -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<base href="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-const mem=new Map();let english=true,speed=1,scrollUp=true;
-const sourceSprite=new Image();
-sourceSprite.decoding='async';
-let spriteReady=false;
-sourceSprite.onload=()=>{spriteReady=true;render()};
-sourceSprite.onerror=()=>{spriteReady=false};
-sourceSprite.src='https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png';
-const spriteServices=[
- ['しおかぜ',0,169,79,19],
- ['宇和海',0,187,77,19],
- ['いしづち',0,205,96,19],
- ['普通',0,153,70,18],
- ['特急',0,1,33,18],
- ['伊予灘ものがたり',0,345,125,17]
-];
-const spriteDest=[
- ['岡山',432,14,34,18],['高松',432,35,37,18],
- ['今治',432,91,36,18],['伊予西条',432,148,80,18],
- ['宇和島',432,185,58,18],['八幡浜',432,414,60,18],
- ['観音寺',432,73,58,18],['伊予市',432,129,55,18],
- ['新居浜',432,110,55,18],['伊予大洲',432,168,78,18]
-];
-function drawSpriteText(ctx,label,entries,x,y,maxWidth,size) {
- if(!spriteReady || !sourceSprite.naturalWidth)return false;
- const entry=entries.find(v=>v[0]===label);
- if(!entry)return false;
- const [,sx,sy,sw,sh]=entry;
- if(sx+sw>sourceSprite.naturalWidth||sy+sh>sourceSprite.naturalHeight)return false;
- const w=sw*(size/sh);
- ctx.save();ctx.beginPath();ctx.rect(x,y,maxWidth,size+2);ctx.clip();
- ctx.imageSmoothingEnabled=false;
- ctx.drawImage(sourceSprite,sx,sy,sw,sh,x,y,Math.min(w,maxWidth),size);
- ctx.restore();
- return true;
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta name="author" content="">
+<meta name="description" content="">
+<meta name="keywords" content="">
+<title>JR松山駅 発車標｜元エンジン・元素材による独立プレビュー</title>
+
+<link rel="stylesheet" href="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/style2.css" type="text/css">
+
+<style type="text/css">
+body{
 }
-function now(){let v={};fclock.formatToParts(new Date()).forEach(p=>v[p.type]=p.value);return {iso:v.year+'-'+v.month+'-'+v.day,dow:new Date(v.year+'-'+v.month+'-'+v.day+'T12:00:00+09:00').getDay(),min:+v.hour*60 + +v.minute}}
-function mn(t){const a=/^(\d{1,2}):(\d{2})$/.exec(String(t||''));return a?+a[1]*60 + +a[2]:Infinity}
-function valid(r,d){return !(r.start&&d.iso<r.start)&&!(r.end&&d.iso>r.end)&&!(Array.isArray(r.exclude)&&r.exclude.includes(d.iso))&&!(Array.isArray(r.dates)&&!r.dates.includes(d.iso))&&!(Array.isArray(r.days)&&!r.days.includes(d.dow))}
-function rows(dir,d){
- if(d.min<270)return [];
- let s=window.MATSUYAMA_DATA?.records||[];
- return s.filter(r=>r.board==='rail'&&valid(r,d)&&r.direction===dir)
- .map(r=>({...r,time:r.timeByDow?.[String(d.dow)]||r.time}))
- .filter(r=>mn(r.time)>=d.min&&mn(r.time)<1440)
- .sort((a,b)=>mn(a.time)-mn(b.time));
+.font_scroll_mincho{
+	font-family:'ＭＳ 明朝', 'ヒラギノ明朝 Pro W3','Hiragino Mincho Pro';
 }
-function name(r){return String(r?.service||'普通')}
-function dest(r){return String(r?.dest||'')}
-function platform(r){return String(r?.info||'').match(/(\d+)番/)?.[1]||'－'}
-function klass(r){return r?.kind==='limited'?'特急':r?.kind==='extra'?'臨時':r?.kind==='local'?'普通':r?.kind==='freight'?'貨物':'普通'}
-function roman(r){
- let s=name(r);const dict={'しおかぜ':'SHIOKAZE','いしづち':'ISHIZUCHI','宇和海':'UWAKAI','伊予灘ものがたり':'IYONADA','普通':'LOCAL','特急':'EXPRESS'};
- for(const [ja,en] of Object.entries(dict))if(s.includes(ja))return s.replace(ja,en).replace('号','');
- return s;
+.font_scroll_gothic {
+	font-family:'ＭＳ ゴシック', 'Hiragino Kaku Gothic ProN', 'ヒラギノ角ゴ ProN W3', sans-serif;
 }
-function pixel(ctx,text,x,y,color,size,maxWidth,offset){
- if(!text)return 0;
- const key=text+'|'+color+'|'+size;
- let sp=mem.get(key);
- if(!sp){
-  // Draw the glyph onto a 16-row monochrome bitmap before creating LEDs.
-  // Each illuminated pixel becomes one uniform, crisp dot on the same grid.
-  const low=document.createElement('canvas');
-  let lc=low.getContext('2d',{willReadFrequently:true});
-  const fontPx=15;
-  lc.font='bold '+fontPx+'px "MS Gothic","Yu Gothic",monospace';
-  const tw=Math.min(1800,Math.ceil(lc.measureText(text).width)+3);
-  low.width=Math.max(2,tw);low.height=16;
-  lc=low.getContext('2d',{willReadFrequently:true});
-  lc.clearRect(0,0,low.width,low.height);
-  lc.font='bold '+fontPx+'px "MS Gothic","Yu Gothic",monospace';
-  lc.textBaseline='top';lc.fillStyle='#fff';lc.fillText(text,0,0);
-  const pix=lc.getImageData(0,0,low.width,16).data;
-  // Render at the final dot spacing, without a subsequent smooth rescale.
-  const pitch=2.0, radius=.77;
-  sp=document.createElement('canvas');
-  sp.width=Math.ceil(low.width*pitch);sp.height=32;
-  const pc=sp.getContext('2d');
-  pc.fillStyle=color;
-  for(let yy=0;yy<16;yy++)for(let xx=0;xx<low.width;xx++){
-   if(pix[(yy*low.width+xx)*4+3]<115)continue;
-   pc.beginPath();
-   pc.arc((xx+.5)*pitch,(yy+.5)*pitch,radius,0,Math.PI*2);
-   pc.fill();
+
+/*
+ゴシックにする場合
+	font-family:'ＭＳ ゴシック', 'Hiragino Kaku Gothic ProN', 'ヒラギノ角ゴ ProN W3', sans-serif;
+
+明朝にする場合
+	font-family:'ＭＳ 明朝', 'ヒラギノ明朝 Pro W3','Hiragino Mincho Pro';
+
+jiskanにする場合
+	font-family:'JF Dot jiskan16', 'ＭＳ ゴシック', 'Hiragino Kaku Gothic ProN', 'ヒラギノ角ゴ ProN W3', sans-serif;
+	-webkit-font-smoothing: none;
+	-moz-osx-font-smoothing: none;
+*/
+
+/* 画像のレンダリング設定　拡大した画像がぼやけるのを防ぐ https://www.omohayui.com/entry/2017/08/20/180653  */
+.pixelated {
+  -ms-interpolation-mode: nearest-neighbor;   /* IE8+ */
+  image-rendering: -webkit-optimize-contrast; /* Safari (WebKit) */
+  image-rendering: -moz-crisp-edges;          /* Firefox (Gecko) */
+  image-rendering: -o-crisp-edges;            /* Opera 12.x */
+  image-rendering: pixelated;                 /* Chrome 41+, Opera 29+ (CSS4) */
+}
+
+
+</style>
+<!-- 	font-weight: bold;  -->
+
+
+<script type="text/javascript" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/main.js" charset="UTF-8"></script> <!--javascript読み込み-->
+<script type="text/javascript" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/utility.js" charset="UTF-8"></script> <!--javascript読み込み-->
+<script type="text/javascript" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/setting.js" charset="UTF-8"></script> <!--javascript読み込み-->
+<script type="text/javascript" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/offerSectionWrite.js" charset="UTF-8"></script> <!--javascript読み込み-->
+
+<script type="text/javascript">
+	//OS・ユーザエージェントを判別
+	judgeUA();
+</script>
+
+<style id="wallpaper-adapter">
+html,body{margin:0!important;background:#090b0d!important;color:#eee!important;overflow:hidden!important;height:100%!important}
+body>a,body>hr,body>select,body>input,body>h2,body>p,body>ul,body>table,body>br{display:none!important}
+#inputFormDiv{position:absolute!important;top:-5000px!important;left:-5000px!important;visibility:hidden!important}
+#LEDUnitDiv{position:absolute!important;inset:0!important;width:100vw!important;height:100vh!important;overflow:hidden!important}
+#LEDUnitDiv>div{position:absolute!important;left:50%!important;top:50%!important;transform:translate(-50%,-50%) scale(1)!important;width:599px!important;height:116px!important}
+#LEDUnitDiv img{image-rendering:pixelated!important}
+</style><style id="wallpaper-layout-v2">
+html,body{margin:0!important;padding:0!important;background:#090b0d!important;min-width:0!important;width:100%!important;height:100%!important;overflow:hidden!important}
+body>*:not(#LEDUnitDiv):not(#inputFormDiv):not(script){display:none!important}
+#inputFormDiv{display:block!important;position:fixed!important;top:-20000px!important;left:-20000px!important;visibility:hidden!important;pointer-events:none!important}
+#LEDUnitDiv{display:block!important;position:fixed!important;inset:0!important;width:100vw!important;height:100vh!important;max-width:none!important;overflow:hidden!important}
+#LEDUnitDiv>div{position:absolute!important;left:50%!important;top:50%!important;width:599px!important;height:116px!important;transform:translate(-50%,-50%) scale(var(--led-scale,1))!important;transform-origin:center!important}
+#LEDUnitDiv>div>div{top:0!important}
+#LEDUnitDiv>div>div:first-child{left:0!important}
+#LEDUnitDiv>div>div:nth-child(2){left:285px!important}
+#LEDUnitDiv [id^="LEDUnitDiv"]{background-color:#393939!important}
+/* Preserve the ORIGINAL title/header bitmap layers (not substituted CSS text). */
+#LEDUnitDiv .pixelated img{image-rendering:pixelated!important}
+@media(max-width:610px){#LEDUnitDiv>div{--led-scale:0.8}}
+@media(max-width:500px){#LEDUnitDiv>div{--led-scale:0.6}}
+#LEDUnitDiv [id^="labelTitleImg"], #LEDUnitDiv [id^="labelHeaderImg"]{visibility:visible!important}
+#LEDUnitDiv [id^="labelTitleImg"]{z-index:1}
+#LEDUnitDiv [id^="labelHeaderImg"]{z-index:2;pointer-events:none}
+</style></head>
+
+<body>
+
+<a href="https://r113.sakura.ne.jp/index.htm">TOP</a> &gt; <a href="https://r113.sakura.ne.jp/p/hasshahyo/index.htm">発車標シミュレーター</a> &gt; JR四国 松山駅
+<hr>
+
+<select size="1" id="unitCountInput" style="">
+<option value="1">1台</option>
+<option value="2" selected="">2台</option>
+<option value="3">3台</option>
+<option value="4">4台</option>
+<option value="5">5台</option>
+<option value="6">6台</option>
+<option value="7">7台</option>
+<option value="8">8台</option>
+<option value="9">9台</option>
+<option value="10">10台</option>
+</select>
+×
+<select size="1" id="lineCountInput" style="">
+<option value="1">1本表示</option>
+<option value="2" selected="">2本表示</option>
+<option value="3">3本表示</option>
+<option value="4">4本表示</option>
+<option value="5">5本表示</option>
+<option value="6">6本表示</option>
+<option value="7">7本表示</option>
+<option value="8">8本表示</option>
+<option value="9">9本表示</option>
+<option value="10">10本表示</option>
+<option value="15">15本表示</option>
+<option value="20">20本表示</option>
+<option value="30">30本表示</option>
+<option value="40">40本表示</option>
+<option value="50">50本表示</option>
+<option value="100">100本表示</option>
+</select>
+
+　<input type="button" value="段数変更&amp;サンプル設定" onclick="randomSetFlag = true;  setUnitLine();">
+<input type="button" value="段数変更&amp;ランダム設定" onclick="randomSetFlag = false; setUnitLine();">
+　/
+　日本語<input id="intervalInput0" type="text" value="6.0" size="4" style="text-align:right; " onkeyup="intervalTimeSet()"> 秒
+　英語<input id="intervalInput1" type="text" value="3.0" size="4" style="text-align:right; " onkeyup="intervalTimeSet()"> 秒
+<!--　接近表示切替 <input id='intervalInput1' type='text' value='6.0' size='4' style='text-align:right; ' onkeyup='intervalTimeSet()' /> 秒
+　英語 <input id='intervalInput1' type='text' value='5.0' size='4' style='text-align:right; ' onkeyup='intervalTimeSet()' /> 秒
+　点滅 <input id='switchIntervalInput0' type='text' value='1.2' size='4' style='text-align:right; ' onkeyup='intervalTimeSet()' /> 秒-->
+<!--
+　/
+　現在時刻
+<input id='nowHourInput' type='text' value='12' size='2' maxlength='2' style='text-align:right; ' onkeyup='updateNowTime()' />時
+<input id='nowMinuteInput' type='text' value='34' size='2' maxlength='2' style='text-align:right; ' onkeyup='updateNowTime()' />分
+-->
+　/
+　スクロール縦位置
+　<input type="button" value="上へ" onclick="fontTop[24]-=1; fontTop[16]-=1; updateStatusAll(); " style="">
+　<input type="button" value="下へ" onclick="fontTop[24]+=1; fontTop[16]+=1; updateStatusAll(); " style="">
+　/
+　速度
+　<input type="button" value="おそく" onclick="setScrollSpeed(-1); updateStatusAll(); " style="">
+　<input type="button" value="はやく" onclick="setScrollSpeed(1);  updateStatusAll(); " style="">
+<hr>
+
+<!--発車標描画部-->
+<div id="LEDUnitDiv" style=""><div id="" style="position:relative; top:0px; left:0px; height:196px; ">  <div id="" style="position:absolute; top:30px; left:30px; width:284px; ">    <div id="LEDUnitDiv0" style="position:absolute; top:0px; left:0px; width:284px; height:116px; background-color:#444; overflow:hidden; cursor: move; z-index:0; border: solid #fff 1px; " onmousedown="dragOn('LEDUnitDiv0')">            <img id="labelTitleImg0" style="position:absolute; left:0px; top:0px; width:284px; height:39px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/title-0.png" alt="">            <img id="labelHeaderImg0" style="position:absolute; left:0px; top:0px; width:284px; height:39px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/header.png" alt="">                <div id="ledMainFlameDiv0" class="pixelated" style="position:absolute; left:13px; top:39px; width:256px; height:46px; ">                  <div id="" style="position:absolute; left:0px; top:0px; width:256px; height:16px; background-color:#000; border: solid #222 1px; ">                    <div id="lineContents0_0" style="position:absolute; "><div id="typeDiv0_0" style="position:absolute; left:0px; top:0px; width:32px; height:16px; overflow:hidden; ">  <img id="typeImg0_0" style="position: absolute; top: -68px; left: -33px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="deptSwitchDiv0_0" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg0_0" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="trainNameDiv0_0" style="position:absolute; left:32px; top:0px; width:80px; height:16px; overflow:hidden; ">  <img id="trainNameImg0_0" style="position: absolute; top: -68px; left: -152px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="deptSwitchDiv0_0" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg0_0" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="trainNumDiv0_0" style="position: absolute; left: 80px; top: 0px; width: 32px; height: 16px; overflow: hidden; z-index: -1;"><div id="trainNumBaseDiv0_0" style="position:absolute; left:0px; top:0px; width:32px; height:16px; overflow:hidden;">  <img id="trainNumBaseImg0_0" style="position: absolute; top: -17px; left: -272px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="trainNum1Div0_0" style="position:absolute; left:2px; top:0px; width:8px; height:16px; overflow:hidden;">  <img id="trainNum1Img0_0" style="position: absolute; left: -305px; top: -34px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="trainNum0Div0_0" style="position:absolute; left:11px; top:0px; width:8px; height:16px; overflow:hidden;">  <img id="trainNum0Img0_0" style="position: absolute; left: -305px; top: -102px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div></div><div id="deptSwitchDiv0_0" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg0_0" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="departureTimeDiv0_0" style="position:absolute; left:112px; top:0px; width:64px; height:16px; overflow:hidden;"><div id="departureTimeBaseDiv0_0" style="position:absolute; left:0px; top:0px; width:64px; height:16px; overflow:hidden; ">  <img id="departureTimeBaseImg0_0" style="position: absolute; left: -338px; top: -17px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="departureTime3Div0_0" style="position:absolute; left:5px; top:0px; width:10px; height:16px; overflow:hidden; ">  <img id="departureTime3Img0_0" style="position: absolute; left: -405px; top: -170px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="departureTime2Div0_0" style="position:absolute; left:18px; top:0px; width:10px; height:16px; overflow:hidden; ">  <img id="departureTime2Img0_0" style="position: absolute; left: -405px; top: -119px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="departureTime1Div0_0" style="position:absolute; left:36px; top:0px; width:10px; height:16px; overflow:hidden; ">  <img id="departureTime1Img0_0" style="position: absolute; left: -405px; top: -34px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="departureTime0Div0_0" style="position:absolute; left:49px; top:0px; width:10px; height:16px; overflow:hidden; ">  <img id="departureTime0Img0_0" style="position: absolute; left: -405px; top: -85px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div></div><div id="deptSwitchDiv0_0" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg0_0" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="destinationDiv0_0" style="position:absolute; left:176px; top:0px; width:64px; height:16px; overflow:hidden; ">  <img id="destinationImg0_0" style="position: absolute; top: -374px; left: -496px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="deptSwitchDiv0_0" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg0_0" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="soonDiv0_0" style="position: absolute; left: 112px; top: 0px; width: 128px; height: 16px; overflow: hidden; z-index: -1;">  <img id="soonImg0_0" style="position: absolute; top: -17px; left: -586px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="deptSwitchDiv0_0" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg0_0" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="trackDiv0_0" style="position:absolute; left:240px; top:0px; width:16px; height:16px; overflow:hidden; ">  <img id="trackImg0_0" style="position: absolute; top: 0px; left: -564px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="deptSwitchDiv0_0" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg0_0" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div>                    </div>                  </div>                  <div id="" style="position:absolute; left:0px; top:46px; width:256px; height:16px; background-color:#000; border: solid #222 1px; ">                    <div id="lineContents0_1" style="position:absolute; "><div id="typeDiv0_1" style="position:absolute; left:0px; top:0px; width:32px; height:16px; overflow:hidden; ">  <img id="typeImg0_1" style="position: absolute; top: 0px; left: -33px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="deptSwitchDiv0_1" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg0_1" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="trainNameDiv0_1" style="position:absolute; left:32px; top:0px; width:80px; height:16px; overflow:hidden; ">  <img id="trainNameImg0_1" style="position: absolute; top: -102px; left: -152px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="deptSwitchDiv0_1" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg0_1" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="trainNumDiv0_1" style="position: absolute; left: 80px; top: 0px; width: 32px; height: 16px; overflow: hidden; z-index: -1;"><div id="trainNumBaseDiv0_1" style="position:absolute; left:0px; top:0px; width:32px; height:16px; overflow:hidden;">  <img id="trainNumBaseImg0_1" style="position: absolute; top: -17px; left: -272px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="trainNum1Div0_1" style="position:absolute; left:2px; top:0px; width:8px; height:16px; overflow:hidden;">  <img id="trainNum1Img0_1" style="position: absolute; left: -305px; top: -68px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="trainNum0Div0_1" style="position:absolute; left:11px; top:0px; width:8px; height:16px; overflow:hidden;">  <img id="trainNum0Img0_1" style="position: absolute; left: -305px; top: -17px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div></div><div id="deptSwitchDiv0_1" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg0_1" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="departureTimeDiv0_1" style="position:absolute; left:112px; top:0px; width:64px; height:16px; overflow:hidden;"><div id="departureTimeBaseDiv0_1" style="position:absolute; left:0px; top:0px; width:64px; height:16px; overflow:hidden; ">  <img id="departureTimeBaseImg0_1" style="position: absolute; left: -338px; top: -17px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="departureTime3Div0_1" style="position:absolute; left:5px; top:0px; width:10px; height:16px; overflow:hidden; ">  <img id="departureTime3Img0_1" style="position: absolute; left: -405px; top: -170px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="departureTime2Div0_1" style="position:absolute; left:18px; top:0px; width:10px; height:16px; overflow:hidden; ">  <img id="departureTime2Img0_1" style="position: absolute; left: -405px; top: -119px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="departureTime1Div0_1" style="position:absolute; left:36px; top:0px; width:10px; height:16px; overflow:hidden; ">  <img id="departureTime1Img0_1" style="position: absolute; left: -405px; top: -68px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="departureTime0Div0_1" style="position:absolute; left:49px; top:0px; width:10px; height:16px; overflow:hidden; ">  <img id="departureTime0Img0_1" style="position: absolute; left: -405px; top: -85px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div></div><div id="deptSwitchDiv0_1" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg0_1" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="destinationDiv0_1" style="position:absolute; left:176px; top:0px; width:64px; height:16px; overflow:hidden; ">  <img id="destinationImg0_1" style="position: absolute; top: -425px; left: -496px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="deptSwitchDiv0_1" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg0_1" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="soonDiv0_1" style="position: absolute; left: 112px; top: 0px; width: 128px; height: 16px; overflow: hidden; z-index: -1;">  <img id="soonImg0_1" style="position: absolute; top: 0px; left: -586px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="deptSwitchDiv0_1" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg0_1" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="trackDiv0_1" style="position:absolute; left:240px; top:0px; width:16px; height:16px; overflow:hidden; ">  <img id="trackImg0_1" style="position: absolute; top: 0px; left: -564px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="deptSwitchDiv0_1" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg0_1" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div>                    </div>                  </div>          <div id="messageTelopCoverDiv0" style="position: absolute; left: 0px; top: 23px; width: 256px; height: 16px; background-color: rgb(0, 0, 0); z-index: 1;">          </div>          <div id="messageTelopDiv0" style="position: absolute; left: 0px; top: 23px; width: 256px; height: 16px; z-index: 1;"><div id="" style="position:absolute; left:0px; top:0px; width:64px; height:16px; overflow:hidden; ">  <img id="" style="position:absolute; left:-725px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div>  <div class="font_scroll_gothic" style="position:absolute; top:0px; left:64px; width:192px; height:16px; font-size:16px; letter-spacing:0px; color:#fff; white-space: nowrap; ">    <marquee scrollamount="6.0592592592592585"><span style="color:#f00">この列車の停車駅</span>は、<span style="color:#ff0">伊予北条・今治・壬生川・伊予西条・新居浜・伊予三島・川之江・観音寺・高瀬・詫間・多度津・丸亀・坂出・高松</span>です。　<span style="color:#ff0">坂出</span>で<span style="color:#f00">寝台特急「サンライズ瀬戸」</span><span style="color:#ff0">東京行</span> と、<span style="color:#4af">快速「マリンライナー６８号」</span><span style="color:#ff0">岡山行</span> に接続します。　　　　　　　　　　　　　　　　お客様にお願いします。駅及び車内への<span style="color:#f00">危険物の</span><span style="color:#ff0">持ち込みは</span><span style="color:#f00">禁止</span>されております。<span style="color:#f00">不審物や不審な行為</span>にお気づきの場合は、<span style="color:#ff0">駅係員</span>や<span style="color:#ff0">乗務員</span>までお知らせください。<span style="color:#0f9">Ｉｆ　you notice any suspicious item or behavior, please notify staff.</span>　　　　　　　　　　　　　　　　<span style="color:#f00">この列車の停車駅</span>は、<span style="color:#ff0">伊予市・伊予中山・内子・伊予大洲・八幡浜・伊予吉田・宇和島</span>です。　　　　　　　　　　　　　　　　<span style="color:#f00">お願い：</span>お身体に障がいのあるお客様へのご配慮について、周りにいらっしゃるお客様のご理解とご協力をお願い申し上げます。    </marquee>  </div></div>          </div>  </div></div>  <div id="" style="position:absolute; top:30px; left:315px; width:284px; ">    <div id="LEDUnitDiv1" style="position:absolute; top:0px; left:0px; width:284px; height:116px; background-color:#444; overflow:hidden; cursor: move; z-index:10; border: solid #fff 1px; " onmousedown="dragOn('LEDUnitDiv1')">            <img id="labelTitleImg1" style="position:absolute; left:0px; top:0px; width:284px; height:39px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/title-1.png" alt="">            <img id="labelHeaderImg1" style="position:absolute; left:0px; top:0px; width:284px; height:39px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/header.png" alt="">                <div id="ledMainFlameDiv1" class="pixelated" style="position:absolute; left:13px; top:39px; width:256px; height:46px; ">                  <div id="" style="position:absolute; left:0px; top:0px; width:256px; height:16px; background-color:#000; border: solid #222 1px; ">                    <div id="lineContents1_0" style="position:absolute; "><div id="typeDiv1_0" style="position:absolute; left:0px; top:0px; width:32px; height:16px; overflow:hidden; ">  <img id="typeImg1_0" style="position: absolute; top: -68px; left: -33px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="deptSwitchDiv1_0" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg1_0" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="trainNameDiv1_0" style="position:absolute; left:32px; top:0px; width:80px; height:16px; overflow:hidden; ">  <img id="trainNameImg1_0" style="position: absolute; top: -255px; left: -152px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="deptSwitchDiv1_0" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg1_0" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="trainNumDiv1_0" style="position: absolute; left: 80px; top: 0px; width: 32px; height: 16px; overflow: hidden; z-index: -1;"><div id="trainNumBaseDiv1_0" style="position:absolute; left:0px; top:0px; width:32px; height:16px; overflow:hidden;">  <img id="trainNumBaseImg1_0" style="position: absolute; top: -17px; left: -272px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="trainNum1Div1_0" style="position:absolute; left:2px; top:0px; width:8px; height:16px; overflow:hidden;">  <img id="trainNum1Img1_0" style="position: absolute; left: -305px; top: -68px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="trainNum0Div1_0" style="position:absolute; left:11px; top:0px; width:8px; height:16px; overflow:hidden;">  <img id="trainNum0Img1_0" style="position: absolute; left: -305px; top: -17px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div></div><div id="deptSwitchDiv1_0" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg1_0" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="departureTimeDiv1_0" style="position:absolute; left:112px; top:0px; width:64px; height:16px; overflow:hidden;"><div id="departureTimeBaseDiv1_0" style="position:absolute; left:0px; top:0px; width:64px; height:16px; overflow:hidden; ">  <img id="departureTimeBaseImg1_0" style="position: absolute; left: -338px; top: -17px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="departureTime3Div1_0" style="position:absolute; left:5px; top:0px; width:10px; height:16px; overflow:hidden; ">  <img id="departureTime3Img1_0" style="position: absolute; left: -405px; top: -170px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="departureTime2Div1_0" style="position:absolute; left:18px; top:0px; width:10px; height:16px; overflow:hidden; ">  <img id="departureTime2Img1_0" style="position: absolute; left: -405px; top: -119px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="departureTime1Div1_0" style="position:absolute; left:36px; top:0px; width:10px; height:16px; overflow:hidden; ">  <img id="departureTime1Img1_0" style="position: absolute; left: -405px; top: -34px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="departureTime0Div1_0" style="position:absolute; left:49px; top:0px; width:10px; height:16px; overflow:hidden; ">  <img id="departureTime0Img1_0" style="position: absolute; left: -405px; top: -136px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div></div><div id="deptSwitchDiv1_0" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg1_0" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="destinationDiv1_0" style="position:absolute; left:176px; top:0px; width:64px; height:16px; overflow:hidden; ">  <img id="destinationImg1_0" style="position: absolute; top: -289px; left: -496px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="deptSwitchDiv1_0" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg1_0" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="soonDiv1_0" style="position: absolute; left: 112px; top: 0px; width: 128px; height: 16px; overflow: hidden; z-index: -1;">  <img id="soonImg1_0" style="position: absolute; top: -17px; left: -586px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="deptSwitchDiv1_0" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg1_0" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="trackDiv1_0" style="position:absolute; left:240px; top:0px; width:16px; height:16px; overflow:hidden; ">  <img id="trackImg1_0" style="position: absolute; top: -34px; left: -564px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="deptSwitchDiv1_0" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg1_0" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div>                    </div>                  </div>                  <div id="" style="position:absolute; left:0px; top:46px; width:256px; height:16px; background-color:#000; border: solid #222 1px; ">                    <div id="lineContents1_1" style="position:absolute; "><div id="typeDiv1_1" style="position:absolute; left:0px; top:0px; width:32px; height:16px; overflow:hidden; ">  <img id="typeImg1_1" style="position: absolute; top: 0px; left: -33px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="deptSwitchDiv1_1" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg1_1" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="trainNameDiv1_1" style="position:absolute; left:32px; top:0px; width:80px; height:16px; overflow:hidden; ">  <img id="trainNameImg1_1" style="position: absolute; top: -170px; left: -152px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="deptSwitchDiv1_1" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg1_1" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="trainNumDiv1_1" style="position:absolute; left:80px; top:0px; width:32px; height:16px; overflow:hidden; z-index:1; "><div id="trainNumBaseDiv1_1" style="position:absolute; left:0px; top:0px; width:32px; height:16px; overflow:hidden;">  <img id="trainNumBaseImg1_1" style="position: absolute; top: -17px; left: -272px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="trainNum1Div1_1" style="position:absolute; left:2px; top:0px; width:8px; height:16px; overflow:hidden;">  <img id="trainNum1Img1_1" style="position: absolute; left: -305px; top: -119px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="trainNum0Div1_1" style="position:absolute; left:11px; top:0px; width:8px; height:16px; overflow:hidden;">  <img id="trainNum0Img1_1" style="position: absolute; left: -305px; top: -85px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div></div><div id="deptSwitchDiv1_1" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg1_1" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="departureTimeDiv1_1" style="position:absolute; left:112px; top:0px; width:64px; height:16px; overflow:hidden;"><div id="departureTimeBaseDiv1_1" style="position:absolute; left:0px; top:0px; width:64px; height:16px; overflow:hidden; ">  <img id="departureTimeBaseImg1_1" style="position: absolute; left: -338px; top: -17px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="departureTime3Div1_1" style="position:absolute; left:5px; top:0px; width:10px; height:16px; overflow:hidden; ">  <img id="departureTime3Img1_1" style="position: absolute; left: -405px; top: -170px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="departureTime2Div1_1" style="position:absolute; left:18px; top:0px; width:10px; height:16px; overflow:hidden; ">  <img id="departureTime2Img1_1" style="position: absolute; left: -405px; top: -119px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="departureTime1Div1_1" style="position:absolute; left:36px; top:0px; width:10px; height:16px; overflow:hidden; ">  <img id="departureTime1Img1_1" style="position: absolute; left: -405px; top: -85px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="departureTime0Div1_1" style="position:absolute; left:49px; top:0px; width:10px; height:16px; overflow:hidden; ">  <img id="departureTime0Img1_1" style="position: absolute; left: -405px; top: -119px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div></div><div id="deptSwitchDiv1_1" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg1_1" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="destinationDiv1_1" style="position:absolute; left:176px; top:0px; width:64px; height:16px; overflow:hidden; ">  <img id="destinationImg1_1" style="position: absolute; top: -340px; left: -496px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="deptSwitchDiv1_1" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg1_1" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="soonDiv1_1" style="position: absolute; left: 112px; top: 0px; width: 128px; height: 16px; overflow: hidden; z-index: -1;">  <img id="soonImg1_1" style="position: absolute; top: -17px; left: -586px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="deptSwitchDiv1_1" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg1_1" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="trackDiv1_1" style="position:absolute; left:240px; top:0px; width:16px; height:16px; overflow:hidden; ">  <img id="trackImg1_1" style="position: absolute; top: -17px; left: -564px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="deptSwitchDiv1_1" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg1_1" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div>                    </div>                  </div>          <div id="messageTelopCoverDiv1" style="position: absolute; left: 0px; top: 23px; width: 256px; height: 16px; background-color: rgb(0, 0, 0); z-index: 1;">          </div>          <div id="messageTelopDiv1" style="position: absolute; left: 0px; top: 23px; width: 256px; height: 16px; z-index: 1;"><div id="" style="position:absolute; left:0px; top:0px; width:64px; height:16px; overflow:hidden; ">  <img id="" style="position:absolute; left:-725px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div>  <div class="font_scroll_gothic" style="position:absolute; top:0px; left:64px; width:192px; height:16px; font-size:16px; letter-spacing:0px; color:#fff; white-space: nowrap; ">    <marquee scrollamount="6.0592592592592585"><span style="color:#f00">この列車の停車駅</span>は、<span style="color:#ff0">伊予北条・今治・壬生川・伊予西条・新居浜・伊予三島・川之江・観音寺・高瀬・詫間・多度津・丸亀・坂出・高松</span>です。　<span style="color:#ff0">坂出</span>で<span style="color:#f00">寝台特急「サンライズ瀬戸」</span><span style="color:#ff0">東京行</span> と、<span style="color:#4af">快速「マリンライナー６８号」</span><span style="color:#ff0">岡山行</span> に接続します。　　　　　　　　　　　　　　　　お客様にお願いします。駅及び車内への<span style="color:#f00">危険物の</span><span style="color:#ff0">持ち込みは</span><span style="color:#f00">禁止</span>されております。<span style="color:#f00">不審物や不審な行為</span>にお気づきの場合は、<span style="color:#ff0">駅係員</span>や<span style="color:#ff0">乗務員</span>までお知らせください。<span style="color:#0f9">Ｉｆ　you notice any suspicious item or behavior, please notify staff.</span>　　　　　　　　　　　　　　　　<span style="color:#f00">この列車の停車駅</span>は、<span style="color:#ff0">伊予市・伊予中山・内子・伊予大洲・八幡浜・伊予吉田・宇和島</span>です。　　　　　　　　　　　　　　　　<span style="color:#f00">お願い：</span>お身体に障がいのあるお客様へのご配慮について、周りにいらっしゃるお客様のご理解とご協力をお願い申し上げます。    </marquee>  </div></div>          </div>  </div></div></div></div>
+<hr>
+
+<!--入力部-->
+<div id="inputFormDiv" style=""> <div id="" style=""><div style="float:left; margin:0px; padding:5px; border-right: solid 1px #999; border-bottom: solid 1px #999; ">【1台目】　<select size="1" id="titleLabelInput0" style="" onchange="updateLabel(0)"><option value="">八幡浜・宇和島方面</option><option value="">今治・高松・岡山方面</option><option value="">←1番線</option><option value="">　　　　1番線→</option><option value="">←2番線　3番線→</option><option value="">←3番線　2番線→</option></select> <div style="white-space: nowrap; "> 1本目  <select size="1" id="typeInput0_0" style="" onchange="readForm()"><option value="0">特急</option><option value="1">臨時</option><option value="2">団体</option><option value="3">貨物</option><option value="4">----</option></select>  <select size="1" id="trainNameInput0_0" style="" onchange="readForm()"><option value="0">各駅停車</option><option value="1">各 駅 停 車</option><option value="2">各停(ワンマン)</option><option value="3">各停(内子経由)</option><option value="4">各停(内子経由)(via Uchiko)</option><option value="5">各停(内子経由ワンマン)</option><option value="6">各停(内子経由ワンマン)(via Uchiko)</option><option value="7">各停(伊予長浜経由ワンマン)</option><option value="8">各停(伊予長浜経由ワンマン)(via Iyo-Nagahama)</option><option value="9">普通列車</option><option value="10">しおかぜ</option><option value="11">宇和海</option><option value="12">いしづち102号</option><option value="13">いしづち104号</option><option value="14">いしづち106号</option><option value="15">しおかぜ10号・いしづち10号</option><option value="16">しおかぜ12号・いしづち12号</option><option value="17">しおかぜ20号・いしづち20号</option><option value="18">しおかぜ22号・いしづち22号</option><option value="19">しおかぜ26号・いしづち26号</option><option value="20">しおかぜ30号・いしづち30号</option><option value="21">ミッドナイトEXP松山</option><option value="22">伊予灘ものがたり(青)</option><option value="23">伊予灘ものがたり(赤)</option><option value="24">伊予灘ものがたり(青)(記号付)</option><option value="25">臨時</option><option value="26">伊予灘ものがたり(緑)(記号付)</option><option value="27">8000系30周年ツアー</option><option value="28">貨物列車</option><option value="29">伊予灘ものがたり展示ツアー</option><option value="30">新たなものがたりへ DC185</option><option value="31">復刻いよ</option><option value="32">復刻うわじま</option><option value="33">[L]しおかぜ50周年記念ツアー</option><option value="34">夕焼けビールトロッコ2023</option><option value="35">----</option></select> <input id="trainNumInput0_0" type="text" value="12" size="2" maxlength="2" style="text-align:right; " onkeyup="readForm()" disabled="">号 <input id="departureHourInput0_0" type="text" value="12" size="2" maxlength="2" style="text-align:right; " onkeyup="readForm()"> : <input id="departureMinuteInput0_0" type="text" value="34" size="2" maxlength="2" style="text-align:right; " onkeyup="readForm()">  <select size="1" id="destinationInput0_0" style="" onchange="readForm()"><option value="0">岡山・高松</option><option value="1">岡山</option><option value="2">高松</option><option value="3">多度津</option><option value="4">観音寺</option><option value="5">新居浜</option><option value="6">伊予西条</option><option value="7">今治</option><option value="8">伊予北条</option><option value="9">市坪</option><option value="10">伊予市</option><option value="11">伊予大洲</option><option value="12">八幡浜</option><option value="13">卯之町</option><option value="14">宇和島</option><option value="15">岡山・高松[T00]</option><option value="16">高松[Y00]</option><option value="17">観音寺[Y19]</option><option value="18">伊予西条[Y31]</option><option value="19">今治[Y40]</option><option value="20">伊予北条[Y48]</option><option value="21">市坪[U01]</option><option value="22">伊予市[U05]</option><option value="23">伊予大洲[U14/S18]</option><option value="24">八幡浜[U18]</option><option value="25">宇和島[U28]</option><option value="26">[最終]高松</option><option value="27">[最終]新居浜</option><option value="28">[最終]今治</option><option value="29">[最終]伊予北条</option><option value="30">[最終]八幡浜</option><option value="31">[最終]宇和島</option><option value="32">八幡浜編</option><option value="33">大洲編</option><option value="34">高松(タ)</option><option value="35">松山運転所</option><option value="36">松山基地</option><option value="37">伊予市(団体専用)</option><option value="38">松山基地(団体専用)</option><option value="39">伊予西条(団体専用)</option><option value="40">----</option></select>  <select size="1" id="soonInput0_0" style="" onchange="readForm()"><option value="0">----</option><option value="1">まもなく発車です</option><option value="2">遅れ約50分</option></select>  <select size="1" id="trackInput0_0" style="" onchange="readForm()"><option value="0">1番線</option><option value="1">2番線</option><option value="2">3番線</option><option value="3">----</option></select> </div> <select size="1" id="messageTelopTitleInput0" style="" onchange="updateStatus(0);"><option value="0">列車案内</option><option value="1">停車駅</option><option value="2">お知らせ</option><option value="3">接続案内</option><option value="4">↑列車案内</option><option value="5">↑停車駅</option><option value="6">↑ご案内</option><option value="7">HALOWEEN</option><option value="8"></option></select>  <textarea id="messageTelopInput0" cols="100" rows="4"></textarea> <input type="button" value="更新" onclick="statusDisp[0]=1; updateStatus(0); "><br><div style="white-space: nowrap; "> 2本目  <select size="1" id="typeInput0_1" style="" onchange="readForm()"><option value="0">特急</option><option value="1">臨時</option><option value="2">団体</option><option value="3">貨物</option><option value="4">----</option></select>  <select size="1" id="trainNameInput0_1" style="" onchange="readForm()"><option value="0">各駅停車</option><option value="1">各 駅 停 車</option><option value="2">各停(ワンマン)</option><option value="3">各停(内子経由)</option><option value="4">各停(内子経由)(via Uchiko)</option><option value="5">各停(内子経由ワンマン)</option><option value="6">各停(内子経由ワンマン)(via Uchiko)</option><option value="7">各停(伊予長浜経由ワンマン)</option><option value="8">各停(伊予長浜経由ワンマン)(via Iyo-Nagahama)</option><option value="9">普通列車</option><option value="10">しおかぜ</option><option value="11">宇和海</option><option value="12">いしづち102号</option><option value="13">いしづち104号</option><option value="14">いしづち106号</option><option value="15">しおかぜ10号・いしづち10号</option><option value="16">しおかぜ12号・いしづち12号</option><option value="17">しおかぜ20号・いしづち20号</option><option value="18">しおかぜ22号・いしづち22号</option><option value="19">しおかぜ26号・いしづち26号</option><option value="20">しおかぜ30号・いしづち30号</option><option value="21">ミッドナイトEXP松山</option><option value="22">伊予灘ものがたり(青)</option><option value="23">伊予灘ものがたり(赤)</option><option value="24">伊予灘ものがたり(青)(記号付)</option><option value="25">臨時</option><option value="26">伊予灘ものがたり(緑)(記号付)</option><option value="27">8000系30周年ツアー</option><option value="28">貨物列車</option><option value="29">伊予灘ものがたり展示ツアー</option><option value="30">新たなものがたりへ DC185</option><option value="31">復刻いよ</option><option value="32">復刻うわじま</option><option value="33">[L]しおかぜ50周年記念ツアー</option><option value="34">夕焼けビールトロッコ2023</option><option value="35">----</option></select> <input id="trainNumInput0_1" type="text" value="12" size="2" maxlength="2" style="text-align:right; " onkeyup="readForm()" disabled="">号 <input id="departureHourInput0_1" type="text" value="12" size="2" maxlength="2" style="text-align:right; " onkeyup="readForm()"> : <input id="departureMinuteInput0_1" type="text" value="34" size="2" maxlength="2" style="text-align:right; " onkeyup="readForm()">  <select size="1" id="destinationInput0_1" style="" onchange="readForm()"><option value="0">岡山・高松</option><option value="1">岡山</option><option value="2">高松</option><option value="3">多度津</option><option value="4">観音寺</option><option value="5">新居浜</option><option value="6">伊予西条</option><option value="7">今治</option><option value="8">伊予北条</option><option value="9">市坪</option><option value="10">伊予市</option><option value="11">伊予大洲</option><option value="12">八幡浜</option><option value="13">卯之町</option><option value="14">宇和島</option><option value="15">岡山・高松[T00]</option><option value="16">高松[Y00]</option><option value="17">観音寺[Y19]</option><option value="18">伊予西条[Y31]</option><option value="19">今治[Y40]</option><option value="20">伊予北条[Y48]</option><option value="21">市坪[U01]</option><option value="22">伊予市[U05]</option><option value="23">伊予大洲[U14/S18]</option><option value="24">八幡浜[U18]</option><option value="25">宇和島[U28]</option><option value="26">[最終]高松</option><option value="27">[最終]新居浜</option><option value="28">[最終]今治</option><option value="29">[最終]伊予北条</option><option value="30">[最終]八幡浜</option><option value="31">[最終]宇和島</option><option value="32">八幡浜編</option><option value="33">大洲編</option><option value="34">高松(タ)</option><option value="35">松山運転所</option><option value="36">松山基地</option><option value="37">伊予市(団体専用)</option><option value="38">松山基地(団体専用)</option><option value="39">伊予西条(団体専用)</option><option value="40">----</option></select>  <select size="1" id="soonInput0_1" style="" onchange="readForm()"><option value="0">----</option><option value="1">まもなく発車です</option><option value="2">遅れ約50分</option></select>  <select size="1" id="trackInput0_1" style="" onchange="readForm()"><option value="0">1番線</option><option value="1">2番線</option><option value="2">3番線</option><option value="3">----</option></select> </div></div><div style="float:left; margin:0px; padding:5px; border-right: solid 1px #999; border-bottom: solid 1px #999; ">【2台目】　<select size="1" id="titleLabelInput1" style="" onchange="updateLabel(1)"><option value="">八幡浜・宇和島方面</option><option value="">今治・高松・岡山方面</option><option value="">←1番線</option><option value="">　　　　1番線→</option><option value="">←2番線　3番線→</option><option value="">←3番線　2番線→</option></select> <div style="white-space: nowrap; "> 1本目  <select size="1" id="typeInput1_0" style="" onchange="readForm()"><option value="0">特急</option><option value="1">臨時</option><option value="2">団体</option><option value="3">貨物</option><option value="4">----</option></select>  <select size="1" id="trainNameInput1_0" style="" onchange="readForm()"><option value="0">各駅停車</option><option value="1">各 駅 停 車</option><option value="2">各停(ワンマン)</option><option value="3">各停(内子経由)</option><option value="4">各停(内子経由)(via Uchiko)</option><option value="5">各停(内子経由ワンマン)</option><option value="6">各停(内子経由ワンマン)(via Uchiko)</option><option value="7">各停(伊予長浜経由ワンマン)</option><option value="8">各停(伊予長浜経由ワンマン)(via Iyo-Nagahama)</option><option value="9">普通列車</option><option value="10">しおかぜ</option><option value="11">宇和海</option><option value="12">いしづち102号</option><option value="13">いしづち104号</option><option value="14">いしづち106号</option><option value="15">しおかぜ10号・いしづち10号</option><option value="16">しおかぜ12号・いしづち12号</option><option value="17">しおかぜ20号・いしづち20号</option><option value="18">しおかぜ22号・いしづち22号</option><option value="19">しおかぜ26号・いしづち26号</option><option value="20">しおかぜ30号・いしづち30号</option><option value="21">ミッドナイトEXP松山</option><option value="22">伊予灘ものがたり(青)</option><option value="23">伊予灘ものがたり(赤)</option><option value="24">伊予灘ものがたり(青)(記号付)</option><option value="25">臨時</option><option value="26">伊予灘ものがたり(緑)(記号付)</option><option value="27">8000系30周年ツアー</option><option value="28">貨物列車</option><option value="29">伊予灘ものがたり展示ツアー</option><option value="30">新たなものがたりへ DC185</option><option value="31">復刻いよ</option><option value="32">復刻うわじま</option><option value="33">[L]しおかぜ50周年記念ツアー</option><option value="34">夕焼けビールトロッコ2023</option><option value="35">----</option></select> <input id="trainNumInput1_0" type="text" value="12" size="2" maxlength="2" style="text-align:right; " onkeyup="readForm()" disabled="">号 <input id="departureHourInput1_0" type="text" value="12" size="2" maxlength="2" style="text-align:right; " onkeyup="readForm()"> : <input id="departureMinuteInput1_0" type="text" value="34" size="2" maxlength="2" style="text-align:right; " onkeyup="readForm()">  <select size="1" id="destinationInput1_0" style="" onchange="readForm()"><option value="0">岡山・高松</option><option value="1">岡山</option><option value="2">高松</option><option value="3">多度津</option><option value="4">観音寺</option><option value="5">新居浜</option><option value="6">伊予西条</option><option value="7">今治</option><option value="8">伊予北条</option><option value="9">市坪</option><option value="10">伊予市</option><option value="11">伊予大洲</option><option value="12">八幡浜</option><option value="13">卯之町</option><option value="14">宇和島</option><option value="15">岡山・高松[T00]</option><option value="16">高松[Y00]</option><option value="17">観音寺[Y19]</option><option value="18">伊予西条[Y31]</option><option value="19">今治[Y40]</option><option value="20">伊予北条[Y48]</option><option value="21">市坪[U01]</option><option value="22">伊予市[U05]</option><option value="23">伊予大洲[U14/S18]</option><option value="24">八幡浜[U18]</option><option value="25">宇和島[U28]</option><option value="26">[最終]高松</option><option value="27">[最終]新居浜</option><option value="28">[最終]今治</option><option value="29">[最終]伊予北条</option><option value="30">[最終]八幡浜</option><option value="31">[最終]宇和島</option><option value="32">八幡浜編</option><option value="33">大洲編</option><option value="34">高松(タ)</option><option value="35">松山運転所</option><option value="36">松山基地</option><option value="37">伊予市(団体専用)</option><option value="38">松山基地(団体専用)</option><option value="39">伊予西条(団体専用)</option><option value="40">----</option></select>  <select size="1" id="soonInput1_0" style="" onchange="readForm()"><option value="0">----</option><option value="1">まもなく発車です</option><option value="2">遅れ約50分</option></select>  <select size="1" id="trackInput1_0" style="" onchange="readForm()"><option value="0">1番線</option><option value="1">2番線</option><option value="2">3番線</option><option value="3">----</option></select> </div> <select size="1" id="messageTelopTitleInput1" style="" onchange="updateStatus(1);"><option value="0">列車案内</option><option value="1">停車駅</option><option value="2">お知らせ</option><option value="3">接続案内</option><option value="4">↑列車案内</option><option value="5">↑停車駅</option><option value="6">↑ご案内</option><option value="7">HALOWEEN</option><option value="8"></option></select>  <textarea id="messageTelopInput1" cols="100" rows="4"></textarea> <input type="button" value="更新" onclick="statusDisp[1]=1; updateStatus(1); "><br><div style="white-space: nowrap; "> 2本目  <select size="1" id="typeInput1_1" style="" onchange="readForm()"><option value="0">特急</option><option value="1">臨時</option><option value="2">団体</option><option value="3">貨物</option><option value="4">----</option></select>  <select size="1" id="trainNameInput1_1" style="" onchange="readForm()"><option value="0">各駅停車</option><option value="1">各 駅 停 車</option><option value="2">各停(ワンマン)</option><option value="3">各停(内子経由)</option><option value="4">各停(内子経由)(via Uchiko)</option><option value="5">各停(内子経由ワンマン)</option><option value="6">各停(内子経由ワンマン)(via Uchiko)</option><option value="7">各停(伊予長浜経由ワンマン)</option><option value="8">各停(伊予長浜経由ワンマン)(via Iyo-Nagahama)</option><option value="9">普通列車</option><option value="10">しおかぜ</option><option value="11">宇和海</option><option value="12">いしづち102号</option><option value="13">いしづち104号</option><option value="14">いしづち106号</option><option value="15">しおかぜ10号・いしづち10号</option><option value="16">しおかぜ12号・いしづち12号</option><option value="17">しおかぜ20号・いしづち20号</option><option value="18">しおかぜ22号・いしづち22号</option><option value="19">しおかぜ26号・いしづち26号</option><option value="20">しおかぜ30号・いしづち30号</option><option value="21">ミッドナイトEXP松山</option><option value="22">伊予灘ものがたり(青)</option><option value="23">伊予灘ものがたり(赤)</option><option value="24">伊予灘ものがたり(青)(記号付)</option><option value="25">臨時</option><option value="26">伊予灘ものがたり(緑)(記号付)</option><option value="27">8000系30周年ツアー</option><option value="28">貨物列車</option><option value="29">伊予灘ものがたり展示ツアー</option><option value="30">新たなものがたりへ DC185</option><option value="31">復刻いよ</option><option value="32">復刻うわじま</option><option value="33">[L]しおかぜ50周年記念ツアー</option><option value="34">夕焼けビールトロッコ2023</option><option value="35">----</option></select> <input id="trainNumInput1_1" type="text" value="12" size="2" maxlength="2" style="text-align:right; " onkeyup="readForm()">号 <input id="departureHourInput1_1" type="text" value="12" size="2" maxlength="2" style="text-align:right; " onkeyup="readForm()"> : <input id="departureMinuteInput1_1" type="text" value="34" size="2" maxlength="2" style="text-align:right; " onkeyup="readForm()">  <select size="1" id="destinationInput1_1" style="" onchange="readForm()"><option value="0">岡山・高松</option><option value="1">岡山</option><option value="2">高松</option><option value="3">多度津</option><option value="4">観音寺</option><option value="5">新居浜</option><option value="6">伊予西条</option><option value="7">今治</option><option value="8">伊予北条</option><option value="9">市坪</option><option value="10">伊予市</option><option value="11">伊予大洲</option><option value="12">八幡浜</option><option value="13">卯之町</option><option value="14">宇和島</option><option value="15">岡山・高松[T00]</option><option value="16">高松[Y00]</option><option value="17">観音寺[Y19]</option><option value="18">伊予西条[Y31]</option><option value="19">今治[Y40]</option><option value="20">伊予北条[Y48]</option><option value="21">市坪[U01]</option><option value="22">伊予市[U05]</option><option value="23">伊予大洲[U14/S18]</option><option value="24">八幡浜[U18]</option><option value="25">宇和島[U28]</option><option value="26">[最終]高松</option><option value="27">[最終]新居浜</option><option value="28">[最終]今治</option><option value="29">[最終]伊予北条</option><option value="30">[最終]八幡浜</option><option value="31">[最終]宇和島</option><option value="32">八幡浜編</option><option value="33">大洲編</option><option value="34">高松(タ)</option><option value="35">松山運転所</option><option value="36">松山基地</option><option value="37">伊予市(団体専用)</option><option value="38">松山基地(団体専用)</option><option value="39">伊予西条(団体専用)</option><option value="40">----</option></select>  <select size="1" id="soonInput1_1" style="" onchange="readForm()"><option value="0">----</option><option value="1">まもなく発車です</option><option value="2">遅れ約50分</option></select>  <select size="1" id="trackInput1_1" style="" onchange="readForm()"><option value="0">1番線</option><option value="1">2番線</option><option value="2">3番線</option><option value="3">----</option></select> </div></div><br style="clear:both;"></div></div>
+
+<!--ログ出力部-->
+<div id="log"></div>
+
+<script type="text/javascript">
+main();
+</script>
+
+
+
+
+<h2>このシミュレーターについて</h2>
+<div style="float:right; margin-left:10px; font-size:80%; text-align:center;">
+  <img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/1.jpg" alt="" width="400"><br>
+松山駅<br><br>
+  <img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/2.jpg" alt="" width="400"><br>
+松山駅<br><br>
+</div>
+
+JR四国 松山駅に設置されている16ドットLED電光掲示板(発車標、発車案内)の表示を自由に変更できるシミュレーターを作りました。<br>
+<ul>
+<li>現地で撮影した動画はこちらをご覧ください。 <a href="https://www.youtube.com/watch?v=14W6Oq7S94A" target="_blank">リンク</a> <a href="https://www.youtube.com/@1400yoshi/search?query=%E6%9D%BE%E5%B1%B1%E9%A7%85%E3%80%80%E7%99%BA%E8%BB%8A%E6%A8%99" target="_blank">リンク</a></li>
+<li>スクロール表示を設定した際の文章はお使いのパソコン、スマートフォンに入っているフォントを使って表示されます。環境によって様々なフォントが存在するため、位置が上下に多少ずれることがあります。ずれている場合には微調整ボタンで位置調整も可能です。</li>
+<li>ドロップダウンリストから任意の段数に変更することもできます。ただし、段数を多くすると負荷がかかり処理が遅くなりますのでご注意ください。</li>
+<li>本シミュレーターはJavaScript・CSS等が正常に動作するブラウザでご覧いただけます。JavaScriptが動作しない環境では動きません。</li>
+<li>動作確認はWindows10のGoogle Chromeで行なっています。他のOS・ブラウザでも概ね動作すると思われますが、一部ではレイアウトや挙動が異なったり、エラーで正常に動作しない可能性もあります。</li>
+</ul>
+<br style="clear:both;">
+
+
+<h2>変更履歴</h2>
+2023/4/2 新規制作<br>
+2023/4/25 普通列車、市坪[U01]を追加<br>
+2023/7/20 夕焼けビールトロッコ2023、↑ご案内を追加、遅れ約50分を切り替えで表示する機能を追加<br>
+
+<!--素材提供について--> <script type="text/javascript"> offerSectionHTMLWrite(); </script>
+
+
+
+<!--
+<h2>作業協力</h2>
+下記の方々より作業協力いただきました。この場を借りてお礼を申し上げます。<br />
+<ul>
+<li><a href="https://twitter.com/Nagoya_Liner" target="_blank">新瑞橋様</a> - 素材集(パーツ集)のドット絵再現</li>
+<li><a href="https://twitter.com/Okayu_LED" target="_blank">おかゆ様</a> - 素材集(パーツ集)のドット絵再現</li>
+</ul>
+-->
+
+<h2>素材集(パーツ集)</h2>
+<img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""><br>
+
+
+<h2>デフォルトで設定しているテロップ</h2>
+<script type="text/javascript">
+document.write("<div class='font_scroll_gothic' style='background-color:#000; color:"+baseTextColor+"; font-size:"+LEDBaseHeight+"px; '>"+defaultMessageTelop+"</div>\n<br />");
+</script><div class="font_scroll_gothic" style="background-color:#000; color:#fff; font-size:16px; "><span style="color:#f00">この列車の停車駅</span>は、<span style="color:#ff0">伊予北条・今治・壬生川・伊予西条・新居浜・伊予三島・川之江・観音寺・高瀬・詫間・多度津・丸亀・坂出・高松</span>です。　<span style="color:#ff0">坂出</span>で<span style="color:#f00">寝台特急「サンライズ瀬戸」</span><span style="color:#ff0">東京行</span> と、<span style="color:#4af">快速「マリンライナー６８号」</span><span style="color:#ff0">岡山行</span> に接続します。　　　　　　　　　　　　　　　　お客様にお願いします。駅及び車内への<span style="color:#f00">危険物の</span><span style="color:#ff0">持ち込みは</span><span style="color:#f00">禁止</span>されております。<span style="color:#f00">不審物や不審な行為</span>にお気づきの場合は、<span style="color:#ff0">駅係員</span>や<span style="color:#ff0">乗務員</span>までお知らせください。<span style="color:#0f9">Ｉｆ　you notice any suspicious item or behavior, please notify staff.</span>　　　　　　　　　　　　　　　　<span style="color:#f00">この列車の停車駅</span>は、<span style="color:#ff0">伊予市・伊予中山・内子・伊予大洲・八幡浜・伊予吉田・宇和島</span>です。　　　　　　　　　　　　　　　　<span style="color:#f00">お願い：</span>お身体に障がいのあるお客様へのご配慮について、周りにいらっしゃるお客様のご理解とご協力をお願い申し上げます。</div>
+<br>
+
+
+
+
+
+
+
+
+
+
+<hr>
+
+<!--カウンタータグここから--><table border="0" cellpadding="0" cellspacing="1" style="border:#CCCCCC 1px dotted;"><tbody><tr><td><table border="0" cellspacing="1" cellpadding="0"><tbody><tr><td align="left"><img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/todayt.gif" alt=""></td></tr><tr><td align="left"><a href="http://smart-counter.net/"><img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/saved_resource" alt="アクセスカウンター" border="0"></a></td></tr><tr><td align="left"><img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/yesterdayt.gif" alt=""></td></tr><tr><td align="left"><a href="http://smart-counter.net/"><img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/saved_resource(1)" alt="アクセスカウンター" border="0"></a></td></tr><tr><td align="left"><img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/totalt.gif" alt=""></td></tr><tr><td align="left"><a href="http://smart-counter.net/"><img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/saved_resource(2)" alt="アクセスカウンター" border="0"></a></td></tr></tbody></table><table border="0" align="center" cellpadding="0" cellspacing="0"><tbody><tr><td><a href="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/index.html" target="_blank"><img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/cnt_01.gif" alt="" border="0"></a></td><td><img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/cnt_02.gif" alt="" border="0"></td><td><img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/cnt_03.gif" alt="" border="0"></td><td><img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/cnt_04.gif" alt="" border="0"></td><td><img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/cnt_05.gif" alt="" border="0"></td><td><img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/cnt_06.gif" alt="" border="0"></td><td><img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/cnt_07.gif" alt="" border="0"></td><td><img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/cnt_08.gif" alt="" border="0"></td><td><img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/cnt_09.gif" alt="" border="0"></td></tr></tbody></table></td></tr></tbody></table><!--カウンタータグここまで--><br>
+
+<!--タグはここから--><table border="0" cellspacing="0" cellpadding="0"><tbody><tr><td align="center"><a href="http://www.rays-counter.com/"><img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/saved_resource(3)" alt="アクセスカウンター" border="0"></a></td></tr><tr><td align="center"><img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/counter_01.gif" border="0"><img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/counter_02.gif" border="0"><img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/counter_03.gif" border="0"><img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/counter_04.gif" border="0"><img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/counter_05.gif" border="0"></td></tr></tbody></table><!--ここまで--><br>
+
+
+
+
+
+
+
+
+
+
+
+<script id="wallpaper-data-adapter">
+(function () {
+  'use strict';
+  const src = 'https://ajiousama.github.io/live-wallpaper/transport/r15-dev/schedule.js';
+  const script = document.createElement('script');
+  script.src = src;
+  script.onload = function () {
+    setTimeout(refresh, 800);
+    setInterval(refresh, 15000);
+  };
+  document.head.appendChild(script);
+
+  function jst() {
+    const p = {};
+    new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'Asia/Tokyo', year: 'numeric', month: '2-digit',
+      day: '2-digit', hour: '2-digit', minute: '2-digit',
+      hourCycle: 'h23'
+    }).formatToParts(new Date()).forEach(x => p[x.type] = x.value);
+    const iso = `${p.year}-${p.month}-${p.day}`;
+    return { iso, minutes: +p.hour * 60 + +p.minute,
+      dow: new Date(iso + 'T12:00:00+09:00').getDay() };
   }
-  if(mem.size>250)mem.clear();
-  mem.set(key,sp);
- }
- const targetWidth=sp.width*(size/32);
- ctx.save();
- ctx.beginPath();ctx.rect(x,y,maxWidth,size+4);ctx.clip();
- // Disable texture filtering: it causes the uneven, fuzzy dots seen on v3.
- ctx.imageSmoothingEnabled=false;
- ctx.drawImage(sp,x-(offset||0),y,targetWidth,size);
- ctx.restore();
- return targetWidth;
-}
-function text(ctx,s,x,y,color,size=29,w=400,seconds=0){
- const wide=pixel(ctx,s,x,y,color,size,w,0);
- if(wide>w){
-  ctx.fillStyle='#070707';ctx.fillRect(x,y,w,size+2);
-  const length=wide-w;const frame=seconds*speed*17;const off=frame%(length+90);pixel(ctx,s,x,y,color,size,w,(scrollUp?Math.min(length,Math.max(0,off-45)):length-Math.min(length,Math.max(0,off-45))));
- }
-}
-function drawRow(ctx,r,y,dir,seconds,useEn){
- const cl=klass(r);let typeColor=cl==='特急'?C.red:cl==='普通'?C.white:C.amber;
- if(!r){text(ctx,'本日の列車は終了しました',10,y+6,C.yellow,25,642,seconds);return}
- const service=useEn?roman(r):name(r);
- // Mirror the original signage: class/service on left, departure in the
- // centre, coloured destination to the right, and platform at far right.
- if(!useEn&&!drawSpriteText(ctx,service,spriteServices,8,y+5,275,28))text(ctx,service,8,y+5,typeColor,28,275,seconds);
- text(ctx,r.time,322,y+5,C.white,29,95);
- if(!drawSpriteText(ctx,dest(r),spriteDest,429,y+5,167,26))text(ctx,dest(r),429,y+5,C.yellow,26,167,seconds);
- text(ctx,platform(r),624,y+5,C.white,29,35);
-}
-function ticker(ctx,seconds){
- const announcements=[
-  '列車案内｜高松・岡山・新居浜・今治・伊予西条・八幡浜・宇和島方面の列車は発車時刻をご確認ください。',
-  '列車案内｜指定席・自由席など詳しいご案内は駅係員へおたずねください。'
- ];
- const msg=announcements[Math.floor(seconds/18)%announcements.length];
- text(ctx,msg,5,74,C.yellow,25,658,seconds);
-}
-function draw(dir,sec){
- const ctx=states[dir];const d=now(),list=rows(dir,d);
- ctx.fillStyle='#080808';ctx.fillRect(0,0,W,H);
- ctx.fillStyle='#202020';ctx.fillRect(0,60,W,1);ctx.fillRect(0,122,W,1);
- if(d.min<270){
-  text(ctx,'本日の発車案内は終了しました',12,12,C.yellow,28,640);
-  text(ctx,'次の発車案内は4:30から',12,76,C.yellow,25,640);
-  return;
- }
- const showEnglish=english&&(sec%9>6);
- drawRow(ctx,list[0],0,dir,sec,showEnglish);
- ticker(ctx,sec);
- drawRow(ctx,list[1],124,dir,sec,showEnglish);
- document.getElementById('foot').textContent=
-  'JR松山駅｜'+(list.length?'発車順に時刻表表示':'本日の発車は終了しました')+
-  '｜時刻表 '+(window.MATSUYAMA_DATA?.checked||'取得待ち')+'確認';
-}
-function render(){const sec=Date.now()/1000;draw('north',sec);draw('south',sec)}
-document.getElementById('lang').onclick=function(){english=!english;this.textContent=english?'日本語・英語切替':'日本語固定';this.setAttribute('aria-pressed',String(english))};
-document.getElementById('speed').onclick=function(){speed=speed===1?1.6:speed===1.6?.6:1;this.textContent='速度：'+(speed===1?'ふつう':speed===1.6?'はやく':'おそく')};
-document.getElementById('scroll').onclick=function(){scrollUp=!scrollUp;this.textContent='テロップ：'+(scrollUp?'左へ':'右へ')};
-render();setInterval(render,150);
+  function available(r, n) {
+    return (!r.start || n.iso >= r.start) &&
+      (!r.end || n.iso <= r.end) &&
+      (!r.dates || r.dates.includes(n.iso)) &&
+      (!r.exclude || !r.exclude.includes(n.iso)) &&
+      (!r.days || r.days.includes(n.dow));
+  }
+  function choose(id, candidates) {
+    const el = document.getElementById(id);
+    if (!el) return false;
+    for (const c of candidates) {
+      const match = [...el.options].find(o => o.textContent.trim() === c);
+      if (match) { el.value = match.value; return true; }
+    }
+    return false;
+  }
+  function put(id, value) {
+    const el = document.getElementById(id);
+    if (el) el.value = value;
+  }
+  function updateRow(board, slot, r) {
+    const key = board + '_' + slot;
+    if (!r) {
+      choose('typeInput' + key, ['----']);
+      choose('trainNameInput' + key, ['----']);
+      choose('destinationInput' + key, ['----']);
+      choose('trackInput' + key, ['----']);
+      return;
+    }
+    const limited = r.kind === 'limited';
+    choose('typeInput' + key,
+      [limited ? '特急' : r.kind === 'extra' ? '臨時' : '----']);
+    const service = String(r.service || '');
+    const info = String(r.info || '');
+    const nameCandidates = [];
+    if (limited && /しおかぜ/.test(service)) nameCandidates.push('しおかぜ');
+    if (limited && /宇和海/.test(service)) nameCandidates.push('宇和海');
+    if (limited && /いしづち/.test(service)) nameCandidates.push('いしづち102号');
+    if (r.kind === 'sightseeing') {
+      nameCandidates.push('伊予灘ものがたり(青)', '伊予灘ものがたり(赤)');
+    }
+    if (r.kind === 'extra') nameCandidates.push('臨時');
+    if (r.kind === 'local') {
+      if (/内子/.test(info)) nameCandidates.push('各停(内子経由)');
+      if (/伊予長浜/.test(info)) nameCandidates.push('各停(伊予長浜経由ワンマン)');
+      nameCandidates.push('各駅停車');
+    }
+    nameCandidates.push(service, '普通列車');
+    choose('trainNameInput' + key, nameCandidates);
+
+    const number = service.match(/(\d+)号/);
+    put('trainNumInput' + key, number ? number[1] : '0');
+    const tm = String(r.time).match(/^(\d{1,2}):(\d{2})$/);
+    if (tm) {
+      put('departureHourInput' + key, tm[1].padStart(2, '0'));
+      put('departureMinuteInput' + key, tm[2]);
+    }
+    const dest = String(r.dest || '');
+    const destChoices = {
+      '岡山・高松': ['岡山・高松'],
+      '市坪': ['市坪[U01]', '市坪'],
+      '宇和島': ['宇和島[U28]', '宇和島'],
+      '伊予市': ['伊予市[U05]', '伊予市'],
+      '八幡浜': ['八幡浜[U18]', '八幡浜'],
+      '今治': ['今治[Y40]', '今治'],
+      '高松': ['高松[Y00]', '高松'],
+      '伊予西条': ['伊予西条[Y31]', '伊予西条'],
+      '伊予大洲': ['伊予大洲[U14/S18]', '伊予大洲'],
+      '観音寺': ['観音寺[Y19]', '観音寺']
+    };
+    choose('destinationInput' + key, destChoices[dest] || [dest, '----']);
+    const platform = info.match(/([1-3])番/);
+    choose('trackInput' + key, [platform ? platform[1] + '番線' : '----']);
+    choose('soonInput' + key, ['----']);
+  }
+  function refresh() {
+    const data = window.MATSUYAMA_DATA;
+    if (!data || !Array.isArray(data.records)) return;
+    const n = jst();
+    if (n.minutes < 270) return; // no next-day advances before 04:30
+    [[0, 'south'], [1, 'north']].forEach(([board, direction]) => {
+      const list = data.records
+        .filter(r => r.board === 'rail' && r.direction === direction && available(r, n))
+        .map(r => ({...r, time: r.timeByDow?.[String(n.dow)] || r.time}))
+        .filter(r => {
+          const t = String(r.time).match(/^(\d{1,2}):(\d{2})$/);
+          return t && +t[1] * 60 + +t[2] >= n.minutes;
+        })
+        .sort((a,b) => a.time.localeCompare(b.time))
+        .slice(0,2);
+      [0,1].forEach(slot => updateRow(board, slot, list[slot]));
+    });
+    if (typeof readForm === 'function') readForm();
+  }
 })();
-</script></body></html>
+</script><script id="wallpaper-scale-fidelity">
+(function(){
+  function fit(){
+    var w=window.innerWidth,h=window.innerHeight;
+    var scale=Math.min((w-8)/599,(h-12)/116,Math.max(1.7,window.devicePixelRatio?1.7:1));
+    if(!Number.isFinite(scale))scale=1;
+    document.documentElement.style.setProperty('--led-scale',String(Math.max(.2,scale)));
+  }
+  window.addEventListener('resize',fit);fit();
+})();
+</script>
+</body></html>
