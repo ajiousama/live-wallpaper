@@ -86,6 +86,11 @@ body>*:not(#LEDUnitDiv):not(#inputFormDiv):not(script){display:none!important}
 #LEDUnitDiv [id^="labelTitleImg"], #LEDUnitDiv [id^="labelHeaderImg"]{visibility:visible!important}
 #LEDUnitDiv [id^="labelTitleImg"]{z-index:1}
 #LEDUnitDiv [id^="labelHeaderImg"]{z-index:2;pointer-events:none}
+/* The imported source contains bare instructional text nodes in <body>.
+   Hidden elements alone do not hide text nodes; suppress only the parent text
+   while restoring text rendering inside the authentic display unit. */
+body{font-size:0!important;line-height:0!important}
+#LEDUnitDiv{font-size:16px!important;line-height:normal!important}
 </style></head>
 
 <body>
