@@ -1,5 +1,5 @@
 {
-  "checked_at_utc": "2026-10-15T23:42:14.367961+00:00",
+  "checked_at_utc": "2026-10-16T23:38:55.559871+00:00",
   "source_urls": {
     "jr_shikoku_press": "https://www.jr-shikoku.co.jp/03_news/press/info/",
     "jr_shikoku_home": "https://www.jr-shikoku.co.jp/",
@@ -40,6 +40,11 @@
       "source": "jr_shikoku_home",
       "title": "観光列車「四国まんなか千年ものがたり」のご乗車１３万人達成記念企画について",
       "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/10/15/20261015%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_home",
+      "title": "～鉄道の日記念～「松山駅わくわく鉄道フェスタ」イベントでの「瀬戸内駅弁フェア」開催について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/10/16/20261016%2003.pdf"
     },
     {
       "source": "jr_shikoku_press",
@@ -1020,13 +1025,8 @@
   "new_announcements": [
     {
       "source": "jr_shikoku_home",
-      "title": "観光列車「四国まんなか千年ものがたり」のご乗車１３万人達成記念企画について",
-      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/10/15/20261015%2001.pdf"
-    },
-    {
-      "source": "jr_shikoku_press",
-      "title": "観光列車「四国まんなか千年ものがたり」のご乗車１３万人達成記念企画について",
-      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/10/15/20261015%2001.pdf"
+      "title": "～鉄道の日記念～「松山駅わくわく鉄道フェスタ」イベントでの「瀬戸内駅弁フェア」開催について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/10/16/20261016%2003.pdf"
     }
   ],
   "fetch_errors": [],
