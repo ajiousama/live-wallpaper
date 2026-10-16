@@ -380,16 +380,21 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
       return; // Before 04:30: do not display next-day services.
     }
     [[0, 'south'], [1, 'north']].forEach(([board, direction]) => {
-      const list = data.records
+      const upcoming = data.records
         .filter(r => r.board === 'rail' && r.direction === direction && available(r, n))
         .map(r => ({...r, time: r.timeByDow?.[String(n.dow)] || r.time}))
         .filter(r => {
           const t = String(r.time).match(/^(\d{1,2}):(\d{2})$/);
           return t && +t[1] * 60 + +t[2] >= n.minutes;
         })
-        .sort((a,b) => a.time.localeCompare(b.time))
-        .slice(0,2);
-      [0,1].forEach(slot => updateRow(board, slot, list[slot]));
+        .sort((a,b) => a.time.localeCompare(b.time));
+      // These two original LED lines REPLACE the former "next express" and
+      // "next local" cards. Two consecutive locals must never hide the next
+      // limited express (e.g. Uwakai 31 at 22:00).
+      const nextLimited = upcoming.find(r => r.kind === 'limited') || null;
+      const nextLocal = upcoming.find(r => r.kind === 'local') || null;
+      updateRow(board, 0, nextLimited);
+      updateRow(board, 1, nextLocal);
     });
     if (typeof readForm === 'function') readForm();
   }
