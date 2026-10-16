@@ -2706,7 +2706,7 @@
       // still inbound to Matsuyama. Do not show a phantom arrival.
       !/^(?:松山|松山駅)$/.test(x.position) &&
       // Do not roll a completed morning arrival over to tomorrow.
-      toMinutes(x.arrival)>=now.minutes-2);
+      toMinutes(x.arrival)>=now.minutes);
   }
 
   function matsuyamaFreightPasses(now) {
@@ -2734,7 +2734,7 @@
         !/^\d{2}:\d{2}$/.test(cityTime)) return;
       // A train from this morning must not be presented as tonight's service.
       const upcoming=stationTime||cityTime;
-      if(toMinutes(upcoming)<now.minutes-2)return;
+      if(toMinutes(upcoming)<now.minutes)return;
       byTrain.set(num,{
         ...x,trainNum:num,kind:'freight',direction:directionFor(x),
         scheduled:stationTime,passTime:stationTime,
@@ -2754,7 +2754,7 @@
       const scheduled=padTime(x.scheduledMatsuyama||previous?.scheduled||'');
       const delay=Number(x.delayMinutes)||0;
       const passTime=scheduled ? addMinutes(scheduled,delay) : '';
-      if(passTime && toMinutes(passTime)<now.minutes-2) return;
+      if(passTime && toMinutes(passTime)<now.minutes) return;
       byTrain.set(num,{
         ...previous,...x,trainNum:num,kind:'freight',direction:directionFor(x),
         scheduled,passTime,displayTime:passTime||'時刻確認中',
@@ -2897,7 +2897,7 @@
       return {...x,arrival,diff,position,delay};
     }).filter(x=>x.arrival && x.side===side && Number.isFinite(x.diff) && x.diff>=-1 && x.diff<=180 && (jrPositionUsable(x.position) || !!x.turnback));
     const scheduled=special.map(x=>({...x,diff:toMinutes(x.arrival)-now.minutes,delay:0}))
-      .filter(x=>x.diff>=-1 && x.diff<=180);
+      .filter(x=>x.diff>=0 && x.diff<=180);
     // Never let a generic live arrival at the same minute overwrite the
     // officially named sightseeing train. The live feed has no positive
     // identity match for that train, so do not assign its position either.
@@ -3172,7 +3172,7 @@
         ? toMinutes(padTime(x.stationTime))
         : Number.POSITIVE_INFINITY,
       data:x
-    })).filter(x=>x._sortMinutes>=now.minutes-2);
+    })).filter(x=>x._sortMinutes>=now.minutes);
     const terminalArrivals = matsuyamaTerminatingArrivals(now).map(x => ({
       _deadhead: false,
       _freight: false,
