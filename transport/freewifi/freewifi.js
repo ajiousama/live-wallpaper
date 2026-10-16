@@ -18,7 +18,7 @@
     {id:'panel-port', mode:0, duration:15000, title:'フェリー　出航'},
     {id:'panel-port', mode:1, duration:15000, title:'フェリー　到着'}
   ];
-  const cinemaPage = {id:'cinema-screen', cinema:true, duration:30000, title:'映画上映案内（5館）'};
+  const cinemaPage = {id:'cinema-screen', cinema:true, duration:30000, title:'映画・プラネタリウム（映画6館＋2施設）'};
   const shiftPage = {id:'shift-screen', shift:true, duration:30000, title:'勤務予定・本日／翌日'};
   const rawPages = companyPc
     ? [...transportPages,cinemaPage,shiftPage]
