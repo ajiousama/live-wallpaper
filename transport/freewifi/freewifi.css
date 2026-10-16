@@ -2737,3 +2737,19 @@ body.freewifi-tv #panel-rail {
 html.company-pc body.freewifi-tv #panel-rail {
   grid-template-rows:44px 216px 26px minmax(0,1fr) 32px!important;
 }
+
+
+/* JR: six original timeline rows below ONE direction-specific LED sign. */
+/* Public/mobile Free Wi-Fi board (546px): 58 + 192 + 26 + 238 + 32. */
+body.freewifi-tv #panel-rail{
+  grid-template-rows:58px 192px 26px minmax(0,1fr) 32px!important;
+}
+/* Workplace board (680px): 44 + 216 + 26 + 362 + 32. */
+html.company-pc body.freewifi-tv #panel-rail{
+  grid-template-rows:44px 216px 26px minmax(0,1fr) 32px!important;
+}
+html.company-pc body.freewifi-tv #panel-rail #rail-rows .rail-row{
+  height:54px!important;
+  min-height:54px!important;
+  flex:0 0 54px!important;
+}
