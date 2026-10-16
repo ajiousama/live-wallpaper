@@ -3197,6 +3197,43 @@
     const limit=sixRowLedView ? 6 : (FREEWIFI_TV ? (document.documentElement.classList.contains('company-pc') ? 9 : 8) : 3);
     const candidates=[...services, ...terminalArrivals, ...deadheads, ...freights, ...observedSpecials]
       .sort((a,b)=>a._sortMinutes-b._sortMinutes);
+    // The original LED iframe has the published passenger timetable already.
+    // Share ONLY real, time-bearing pass-through movements verified by the
+    // SAME live feed as this six-row list. No guessed freight passage times.
+    if(FREEWIFI_TV){
+      const frame=document.getElementById('jr-led-frame');
+      if(frame?.contentWindow){
+        const side=currentRailDir();
+        const knownFreight=freights.filter(v=>
+          v.data?.direction===side &&
+          Number.isFinite(v._sortMinutes) &&
+          v._sortMinutes>=now.minutes-2
+        ).map(v=>({
+          kind:'freight',time:v.data.passTime,trainNum:String(v.data.trainNum||''),
+          direction:side, destination:String(v.data.destination||''),
+          timetableOnly:!!v.data.timetableOnly, confirmed:!v.data.timetableOnly
+        }));
+        const observedPasses=observedSpecials.filter(v=>
+          v.data?.stationEvent==='pass' &&
+          v.data?.stationConfirmed===true &&
+          Number.isFinite(v._sortMinutes) &&
+          v._sortMinutes>=now.minutes-2 &&
+          (v.data?.corridor===side || v.data?.corridor==='both')
+        ).map(v=>({
+          kind:'pass',time:padTime(v.data.stationTime),
+          trainNum:String(v.data.trainNum||''),direction:side,
+          destination:String(v.data.destination||''),
+          timetableOnly:false,confirmed:true
+        }));
+        try{
+          frame.contentWindow.postMessage({
+            type:'matsuyama-led-movements',
+            direction:side,iso:now.iso,
+            movements:[...knownFreight,...observedPasses]
+          },location.origin);
+        }catch(e){console.warn('JR LED passage data unavailable',e);}
+      }
+    }
     // JR departures, arrivals, freight and deadheads use ONE timeline.
     // Never reserve priority slots by train category: earlier times always
     // come before later times, including specials/terminal arrivals.
