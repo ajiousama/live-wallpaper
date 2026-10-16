@@ -3184,18 +3184,19 @@
     const services = rows.map(r => ({
       _deadhead: false,
       _freight: false,
-      _sortMinutes: (() => {
-        const t=padTime(r.time||'');
-        let d=toMinutes(t)-now.minutes;
-        if(d < -720) d += 1440;
-        return now.minutes + d;
-      })(),
+      // These are TODAY'S services. Never roll an elapsed time into tomorrow.
+      _sortMinutes: toMinutes(padTime(r.time||'')),
       data: r
     }));
     // Six visible rows below the authentic JR LED board, including deadheads/freight.
     const sixRowLedView=FREEWIFI_TV && !!document.getElementById('jr-led-embed');
     const limit=sixRowLedView ? 6 : (FREEWIFI_TV ? (document.documentElement.classList.contains('company-pc') ? 9 : 8) : 3);
     const candidates=[...services, ...terminalArrivals, ...deadheads, ...freights, ...observedSpecials]
+      // Departures, arrivals and passes are removed as soon as their actual
+      // displayed minute has elapsed. Stale live positions NEVER keep an
+      // already-passed train on the six-row board. Unconfirmed times omitted.
+      .filter(item=>Number.isFinite(item._sortMinutes) &&
+                    item._sortMinutes >= now.minutes)
       .sort((a,b)=>a._sortMinutes-b._sortMinutes);
     // The original LED iframe has the published passenger timetable already.
     // Share ONLY real, time-bearing pass-through movements verified by the
@@ -5182,10 +5183,17 @@
   // for the next slow airport fetch or normal mode rotation.
   let lastArrivalCurfewWindow=japanNow().minutes>=AIRPORT_ARRIVAL_CURFEW_MINUTES;
   let lastAirportArrivalMinute=japanNow().minutes;
+  let lastRailBoardMinute=japanNow().time;
   setInterval(()=>{const now=japanNow();$('date-label').textContent=now.date;$('clock-label').innerHTML=`${now.time}<span>:${now.sec}</span>`;renderDisaster(now);renderTopLiveAlert(now);
     const curfewWindow=now.minutes>=AIRPORT_ARRIVAL_CURFEW_MINUTES;
     const arrivalMinuteChanged=now.minutes!==lastAirportArrivalMinute;
     lastAirportArrivalMinute=now.minutes;
+    // The JR departure/passage board must roll over at the clock minute,
+    // not wait for a possibly failing live feed request.
+    if(now.time!==lastRailBoardMinute){
+      lastRailBoardMinute=now.time;
+      renderRail(nextRows('rail',now));
+    }
     if(curfewWindow!==lastArrivalCurfewWindow || arrivalMinuteChanged){
       lastArrivalCurfewWindow=curfewWindow;
       if(currentDirection()==='arrival'){
