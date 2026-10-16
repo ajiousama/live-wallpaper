@@ -91,6 +91,20 @@ body>*:not(#LEDUnitDiv):not(#inputFormDiv):not(script){display:none!important}
    while restoring text rendering inside the authentic display unit. */
 body{font-size:0!important;line-height:0!important}
 #LEDUnitDiv{font-size:16px!important;line-height:normal!important}
+/* One authentic LED unit per existing JR direction page.
+   Without ?dir=... this standalone preview retains its two units. */
+html[data-led-direction="south"] #LEDUnitDiv>div,
+html[data-led-direction="north"] #LEDUnitDiv>div{
+  width:284px!important;height:116px!important;
+}
+html[data-led-direction="south"] #LEDUnitDiv>div>div:nth-child(2),
+html[data-led-direction="north"] #LEDUnitDiv>div>div:first-child{
+  display:none!important;
+}
+html[data-led-direction="south"] #LEDUnitDiv>div>div:first-child,
+html[data-led-direction="north"] #LEDUnitDiv>div>div:nth-child(2){
+  display:block!important;left:0!important;top:0!important;
+}
 </style></head>
 
 <body>
@@ -382,13 +396,33 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
 })();
 </script><script id="wallpaper-scale-fidelity">
 (function(){
+  function direction(d){
+    if(d !== 'south' && d !== 'north')return;
+    document.documentElement.dataset.ledDirection=d;
+    fit();
+  }
   function fit(){
     var w=window.innerWidth,h=window.innerHeight;
-    var scale=Math.min((w-8)/599,(h-12)/116,Math.max(1.7,window.devicePixelRatio?1.7:1));
+    var single=document.documentElement.dataset.ledDirection==='south'||
+               document.documentElement.dataset.ledDirection==='north';
+    var naturalWidth=single?284:599;
+    var naturalHeight=116;
+    var scale=Math.min((w-16)/naturalWidth,(h-8)/naturalHeight,
+                       single?4:1.7);
     if(!Number.isFinite(scale))scale=1;
     document.documentElement.style.setProperty('--led-scale',String(Math.max(.2,scale)));
   }
-  window.addEventListener('resize',fit);fit();
+  var initial=new URLSearchParams(location.search).get('dir');
+  if(initial==='south'||initial==='north'){
+    document.documentElement.dataset.ledDirection=initial;
+  }
+  window.addEventListener('message',function(event){
+    if(event.origin!==location.origin ||
+       event.data?.type!=='matsuyama-led-direction')return;
+    direction(event.data.dir);
+  });
+  window.addEventListener('resize',fit);
+  fit();
 })();
 </script>
 </body></html>
