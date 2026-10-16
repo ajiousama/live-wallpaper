@@ -2890,12 +2890,13 @@
       }));
     const observed=raw.map(x=>{
       const arrival=padTime(x.arrival||'');
-      let diff=arrival?toMinutes(arrival)-now.minutes:NaN;
-      if(Number.isFinite(diff) && diff < -720) diff += 1440;
+      // Today-only arrival: never roll a train that already arrived today
+      // into the next day. Midnight services require explicit dated records.
+      const diff=arrival?toMinutes(arrival)-now.minutes:NaN;
       const position=cleanStation(x.position||'');
       const delay=Number(x.delayMinutes)||0;
       return {...x,arrival,diff,position,delay};
-    }).filter(x=>x.arrival && x.side===side && Number.isFinite(x.diff) && x.diff>=-1 && x.diff<=180 && (jrPositionUsable(x.position) || !!x.turnback));
+    }).filter(x=>x.arrival && x.side===side && Number.isFinite(x.diff) && x.diff>=0 && x.diff<=180 && (jrPositionUsable(x.position) || !!x.turnback));
     const scheduled=special.map(x=>({...x,diff:toMinutes(x.arrival)-now.minutes,delay:0}))
       .filter(x=>x.diff>=0 && x.diff<=180);
     // Never let a generic live arrival at the same minute overwrite the
