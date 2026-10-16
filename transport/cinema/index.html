@@ -149,37 +149,57 @@ function rowsPerPage(){
  return Math.max(1,Math.floor((list.clientHeight-2)/row));
 }
 // Date-scoped public planetarium programs. Never substitute a group/private slot.
+// Verified 2026 Oct/Nov public screening timetable (source: venue officials).
+// Excludes private/group-only times. DO NOT carry this into December without
+// a newly verified official programme.
 function planetariumShows(date) {
- const day=new Date(date+"T12:00:00+09:00").getDay(),weekend=day===0||day===6;
- const closedMonday=day===1;
- const shows=[];
- const add=(venue,title,time)=>shows.push({title,time,date,venue});
- if(date>="2026-09-01"&&date<="2026-11-29"&&!closedMonday&&date!=="2026-11-15"){
-   if(weekend)add(venues[5],"イナズマデリバリー バイザウェイの地球探査?! −オーロラとの遭遇−","11:00");
-   add(venues[5],"ハナビリウム ～花火って、なんであるの？～","13:00");
-   add(venues[5],"イナズマデリバリー バイザウェイの地球探査?! −オーロラとの遭遇−","14:00");
-   add(venues[5],date>="2026-10-20"&&date<="2026-11-19"?"MMX 火星衛星探査計画":"国際宇宙ステーションからの眺め","15:00");
-   add(venues[5],"今夜の星空（生解説）","16:00");
- }
- // Science Museum weekday general sessions verified for October and November.
- // Exclude days with a published special or weekend timetable until its individual times are confirmed.
- if(date>="2026-10-01"&&date<="2026-11-30"&&!closedMonday&&!weekend){
-   const special=['2026-10-09','2026-10-16','2026-11-06'].includes(date);
-   add(venues[6],"海竜王 モササウルス","12:00");
-   if(special){
-     if(date==="2026-10-16"){
-       add(venues[6],"ほしぞらパレット（生解説）","14:00");
-       add(venues[6],"イナズマデリバリー −オーロラとの遭遇−","16:30");
-     }else if(date==="2026-11-06"){
-       add(venues[6],"ほしぞらパレット（生解説）","14:00");
-       add(venues[6],"チ。―地球の運動について―","16:00");
-     }else add(venues[6],"イナズマデリバリー −オーロラとの遭遇−","16:30");
-   }else{
-     add(venues[6],"チ。―地球の運動について―","14:00");
-     add(venues[6],"イナズマデリバリー −オーロラとの遭遇−","16:00");
-   }
- }
- return shows;
+  const dateObj=new Date(date+"T12:00:00+09:00"),day=dateObj.getDay();
+  const weekend=day===0||day===6;
+  const holidays=new Set(['2026-10-12','2026-11-03','2026-11-23']);
+  const holiday=holidays.has(date);
+  const publicHoliday=weekend||holiday;
+  const shows=[];
+  const add=(venue,title,time)=>shows.push({title,time,date,venue});
+  const cosmosClosed=day===1&&!holiday || date==='2026-11-15';
+  if(date>='2026-09-01'&&date<='2026-11-29'&&!cosmosClosed){
+    if(publicHoliday)add(venues[5],'イナズマデリバリー バイザウェイの地球探査?! −オーロラとの遭遇−','11:00');
+    add(venues[5],'ハナビリウム ～花火って、なんであるの？～','13:00');
+    add(venues[5],'イナズマデリバリー バイザウェイの地球探査?! −オーロラとの遭遇−','14:00');
+    add(venues[5],date>='2026-10-20'&&date<='2026-11-19'?'MMX 火星衛星探査計画':'国際宇宙ステーションからの眺め','15:00');
+    add(venues[5],'今夜の星空（生解説）','16:00');
+  }
+  // Museum: first Monday opens, the following Tuesday generally closes.
+  // A national holiday opens; the following ordinary day closes instead.
+  const museumExtraClosed=new Set([
+    '2026-10-06','2026-10-13','2026-11-04','2026-11-24'
+  ]);
+  const isFirstMonday=day===1&&dateObj.getDate()<=7;
+  const museumClosed=museumExtraClosed.has(date) ||
+    (day===1&&!holiday&&!isFirstMonday);
+  if(date>='2026-10-01'&&date<='2026-11-30'&&!museumClosed){
+    const program='チ。―地球の運動について―';
+    const mosasaurus='海竜王 モササウルス';
+    const inazma='イナズマデリバリー −オーロラとの遭遇−';
+    const live='ほしぞらパレット（生解説）';
+    const paletteWeekends=new Set([
+      '2026-10-10','2026-10-11','2026-10-12','2026-10-17','2026-10-18',
+      '2026-11-07','2026-11-08'
+    ]);
+    const paletteWeekdays=new Set(['2026-10-09','2026-10-16','2026-11-06']);
+    if(publicHoliday){
+      add(venues[6],mosasaurus,'10:30');
+      add(venues[6],program,'12:00');
+      add(venues[6],paletteWeekends.has(date)?live:mosasaurus,'13:30');
+      add(venues[6],date==='2026-11-23'?'熟睡プラ寝たリウム（生解説）':
+        paletteWeekends.has(date)&&date.startsWith('2026-10-')?mosasaurus:program,'15:00');
+      add(venues[6],inazma,'16:30');
+    }else{
+      add(venues[6],mosasaurus,'12:00');
+      add(venues[6],paletteWeekdays.has(date)?live:program,'14:00');
+      add(venues[6],paletteWeekdays.has(date)?program:inazma,'16:00');
+    }
+  }
+  return shows;
 }
 function makeGroups(now){
  if(!snapshot)return {date:"",items:[]};
