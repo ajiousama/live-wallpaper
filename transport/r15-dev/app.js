@@ -3244,9 +3244,12 @@
     if(!newDetail)return;
     if(!oldDetail){oldRow.appendChild(newDetail.cloneNode(true));return;}
     const desired=newDetail.innerHTML;
-    if(oldDetail.innerHTML===desired){
-      // A previous feed update may have been reverted; discard its pending
-      // replacement instead of letting it overwrite a newer, correct detail.
+    // Animation duration is calibrated after mount and necessarily differs
+    // from the temporary off-screen row. Compare CONTENT, not outer HTML:
+    // otherwise every ten-second poll falsely treats the same text as new.
+    const contentOf=element=>element.querySelector('.marquee-track > span:first-child')?.innerHTML ||
+      element.textContent||'';
+    if(contentOf(oldDetail)===contentOf(newDetail)){
       railTickerPending.delete(oldDetail);
       return;
     }
@@ -3261,8 +3264,12 @@
     track.dataset.railDetailUpdateArmed='1';
     track.addEventListener('animationiteration',e=>{
       if(e.animationName!=='ticker-scroll')return;
+      delete track.dataset.railDetailUpdateArmed;
       const upcoming=railTickerPending.get(oldDetail);
-      if(typeof upcoming==='string')oldDetail.innerHTML=upcoming;
+      if(typeof upcoming==='string'){
+        oldDetail.innerHTML=upcoming;
+        calibrateRailTicker(oldRow);
+      }
       railTickerPending.delete(oldDetail);
     },{once:true});
   }
@@ -3272,9 +3279,9 @@
     if(!first)return;
     // Width is measured in actual glyphs, not arbitrary text length. Long
     // station lists and transfers now get enough time for one complete loop.
-    const distance=first.scrollWidth+32;
+    const distance=first.scrollWidth;
     if(distance<=32)return;
-    const duration=Math.max(12,Math.min(200,distance/42)).toFixed(1)+'s';
+    const duration=Math.max(16,Math.min(240,distance/40)).toFixed(1)+'s';
     if(track.style.getPropertyValue('--ticker-duration')!==duration)
       track.style.setProperty('--ticker-duration',duration);
   }
