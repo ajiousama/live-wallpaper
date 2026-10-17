@@ -2144,10 +2144,12 @@
     });
   }
 
-  // Scheduled ordinary-train dwell: an opposite-direction train means a
-  // possible meet; a same-direction limited/pass train means a possible
-  // overtaking/connection. The diagram cannot establish an actual dispatch
-  // hold, track/platform, or a promised passenger connection.
+  // Explain a diagram-confirmed encounter in passenger-facing terms.
+  // The diagram proves that two trains share a station/time; it does NOT
+  // prove that dispatch will hold a train or guarantee a passenger transfer.
+  // Never expose raw operational IDs (e.g. 23M) or speculative "connection?"
+  // messages to passengers. Counter-train destinations come from the same
+  // day's actual route in the approach feed, not from timetable guesswork.
   function railLocalWaitAndMeetItems(record) {
     if(record?.kind!=='local')return [];
     const source=approachLive.ichitsubo;
@@ -2163,34 +2165,50 @@
     const liveNum=String(record.liveTrainNum||'');
     const selected=liveNum?
       matching.filter(x=>String(x.trainNum||'')===liveNum):matching;
-    if(selected.length!==1)return []; // No train-identity guesses.
+    if(selected.length!==1)return []; // Do not guess ambiguous trains.
     const list=Array.isArray(selected[0].meets)?selected[0].meets:[];
     const seen=new Set();
     return list.filter(x=>{
       const station=cleanStation(x?.station||'');
-      const minutes=Number(x?.dwellMinutes);
-      const train=String(x?.counterTrainNum||'');
-      const key=station+'|'+train;
-      if(x?.source!=='today_diagram'||x?.actualHoldConfirmed!==false||
-         !station||!train||seen.has(key)||
-         !Number.isFinite(minutes)||minutes<2||minutes>45 ||
+      const mins=Number(x?.dwellMinutes);
+      const key=station+'|'+padTime(x?.arrival||'')+'|'+padTime(x?.departure||'');
+      if(x?.source!=='today_diagram'||!station||seen.has(key)||
+         !Number.isFinite(mins)||mins<2||mins>45 ||
          !/^\d{2}:\d{2}$/.test(padTime(x.arrival||''))||
          !/^\d{2}:\d{2}$/.test(padTime(x.departure||''))||
          !['same','opposing'].includes(x.movement))return false;
       seen.add(key);return true;
     }).slice(0,3).map(x=>{
       const station=railSpecialText(cleanStation(x.station));
-      const train=railSpecialText(String(x.counterTrainNum));
-      const kind=x.counterTrainClass==='limited'?'特急':
-        x.counterTrainClass==='freight'?'貨物列車':'普通列車';
-      const at=padTime(x.counterTime||'');
-      const duration=Math.round(Number(x.dwellMinutes));
-      const prefix=station+'駅で'+duration+'分停車予定（'+
-        padTime(x.arrival)+'着→'+padTime(x.departure)+'発）';
-      const note=x.movement==='opposing'?'対向'+kind+train+
-        'と列車交換の可能性':kind+train+
-        (x.counterEvent==='pass'?'の通過待ち・待避候補':'との接続・待避候補');
-      return prefix+'｜'+note+' '+at+'頃（当日運行図表／待機・番線未確認）';
+      const stopTime=padTime(x.arrival)+'着→'+padTime(x.departure)+'発';
+      const mins=Math.round(Number(x.dwellMinutes));
+      const simple=station+'駅で'+mins+'分停車（'+stopTime+'）';
+      const rawNum=String(x.counterTrainNum||'').trim();
+      const trainClass=String(x.counterTrainClass||'');
+      const labelled=railLiveTrainLabel({trainNum:rawNum,trainClass});
+      let service='';
+      if(trainClass==='limited' && labelled.kind==='limited' &&
+         labelled.service && labelled.service!=='特急')
+        service='特急'+labelled.service;
+      else if(trainClass==='local')service='普通列車';
+      else if(trainClass==='freight')service='貨物列車';
+      // Include "行" only for an actual destination supplied by the diagram,
+      // never a guessed direction or an unknown/placeholder destination.
+      const dest=cleanStation(x.counterDestination||'');
+      if(!service||!dest||/^(?:不明|未確認|未取得|—|-|0+)$/.test(dest))return simple;
+      const other=railSpecialText(service)+' '+railSpecialText(dest)+'行';
+      const counterTime=padTime(x.counterTime||'');
+      const when=/^\d{2}:\d{2}$/.test(counterTime)
+        ? '（'+counterTime+'・当日運行図）':'（当日運行図）';
+      if(x.actualHoldConfirmed===true && x.movement==='same')
+        return station+'駅で'+other+'の接続待ち｜'+simple+' '+when;
+      if(x.movement==='same' && x.counterEvent==='pass')
+        return station+'駅で'+other+'の通過待ち｜'+simple+' '+when;
+      if(x.movement==='opposing')
+        return station+'駅で'+other+'と列車交換｜'+simple+' '+when;
+      // A same-direction train sharing a station does not itself establish
+      // a hold for passenger connection. Give the known dwell only.
+      return simple;
     });
   }
 
