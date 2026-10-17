@@ -3323,10 +3323,39 @@
       .forEach(calibrateRailTicker);
   }
 
+  function syncJrLedArrivals(now) {
+    if(!FREEWIFI_TV)return;
+    const frame=document.getElementById('jr-led-frame');
+    if(!frame?.contentWindow)return;
+    // Live position + the operating diagram are both required. Never trigger
+    // an approach alert using today's theoretical arrivals by themselves.
+    const fresh=jrPositionFeedFresh();
+    const data=fresh && Array.isArray(approachLive.ichitsubo?.matsuyamaInboundArrivalAlerts)
+      ? approachLive.ichitsubo.matsuyamaInboundArrivalAlerts : [];
+    const arrivals=data.filter(x=>
+      x?.confirmedApproach===true &&
+      x.source==='live_position_and_today_diagram' &&
+      ['south','north'].includes(x.side) &&
+      /^\d{1,2}:\d{2}$/.test(String(x.arrival||'')) &&
+      /^\d{1,5}[MD]$/i.test(String(x.trainNum||'')) &&
+      jrPositionUsable(x.position)
+    ).slice(0,24).map(x=>({
+      side:x.side,arrival:x.arrival,trainNum:x.trainNum,
+      confirmedApproach:true
+    }));
+    try {
+      frame.contentWindow.postMessage({
+        type:'matsuyama-led-arrivals',
+        iso:now.iso,arrivals
+      },location.origin);
+    } catch(e) {console.warn('JR LED arrival notice unavailable',e);}
+  }
+
   function renderRail(rows) {
     const visibleRoot = $('rail-rows');
     const root=document.createElement('div');
     const now = japanNow();
+    syncJrLedArrivals(now);
 
     // Separate next-limited-express indicator for the currently shown direction.
     // Timetable entries remain valid even when live positioning is unavailable.
