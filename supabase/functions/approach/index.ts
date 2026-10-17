@@ -70,7 +70,8 @@ function confirmedVehicleSeries(row: Record<string,unknown>):string {
   for(const key of ["vehicle_series","vehicleSeries","vehicle_type","vehicleType",
     "rolling_stock","rollingStock","car_type","carType","car_series","carSeries",
     "formation_type","formationType","series","vehicle_model","vehicleModel",
-    "train_series","trainSeries","車両形式","車両型式","形式"]){
+    "train_series","trainSeries","vehicle_name","vehicleName","車両形式","車両型式","形式",
+    "Type","TrainType","type"]){
     const value=row[key];
     if(typeof value!=="string")continue;
     const name=value.normalize("NFKC").trim().replace(/\s+/g," ");
