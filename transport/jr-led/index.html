@@ -458,65 +458,121 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
   const escapeLedText=value=>String(value??'').replace(/[&<>"']/g,c=>
     ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const ledStopFeed={iso:'',receivedAt:0,departures:[]};
-  function exactLimitedStops(board,limited,destination){
-    const now=jst(),age=Date.now()-ledStopFeed.receivedAt;
-    if(ledStopFeed.iso!==now.iso || age<0 || age>600000)return null;
+  function diagramRoute(board,record,terminal,expectedNum=''){
+    const n=jst(),age=Date.now()-ledStopFeed.receivedAt;
+    if(ledStopFeed.iso!==n.iso || age<0 || age>90000)return null;
+    const normal=value=>String(value||'').trim().replace(/駅$/,'');
     const direction=board===0?'south':'north';
-    const dep=hhmmToMinutes(limited.time);
-    const normal=s=>String(s||'').trim().replace(/駅$/,'');
-    const matches=ledStopFeed.departures.filter(r=>
-      r.direction===direction && r.trainClass==='limited' &&
-      hhmmToMinutes(r.departure)===dep &&
-      normal(r.destination)===normal(destination) &&
-      r.stops.length>0 &&
-      normal(r.stops[r.stops.length-1].station)===normal(destination));
-    // At a joined departure, use the exact endpoint of each separate portion.
-    // Never choose an arbitrary train in an ambiguous same-minute match.
-    return matches.length===1?matches[0].stops:null;
+    const departure=hhmmToMinutes(record.time);
+    const trainClass=record.kind==='limited'?'limited':'local';
+    if(!Number.isFinite(departure)||!terminal)return null;
+    let matched=ledStopFeed.departures.filter(x=>
+      x.direction===direction && x.trainClass===trainClass &&
+      hhmmToMinutes(x.departure)===departure &&
+      normal(x.destination)===normal(terminal) &&
+      x.stops.length>0 && normal(x.stops[x.stops.length-1].station)===normal(terminal));
+    if(expectedNum)matched=matched.filter(x=>x.trainNum===expectedNum);
+    // Unresolved simultaneous departures must never borrow another train's stops.
+    const unique=[...new Map(matched.map(x=>[
+      JSON.stringify([x.stops,x.transfers]),x
+    ])).values()];
+    return unique.length===1?unique[0]:null;
   }
-  function stopAnnouncement(board,limited,hasUpcoming=true){
-    if(!limited && !hasUpcoming)
-      return yellow('本日の発車案内は終了しました。');
-    if(!limited)return yellow('この方面の本日の特急案内は終了しました。');
-    const service=String(limited.service||''),info=String(limited.info||'');
-    const dest=String(limited.dest||'').trim(),separator='　　　　　　　　　';
-    const parts=[];
-    function describe(trainName,terminal){
-      const stops=exactLimitedStops(board,limited,terminal);
-      const title=red('特急「'+escapeLedText(trainName)+'」');
-      if(!stops)
-        return title+' '+yellow(escapeLedText(terminal)+'行')+
-          '　停車駅の当日運行図を確認できません';
-      return title+' '+escapeLedText(terminal)+'行の停車駅は、'+
-        yellow(stops.map(s=>escapeLedText(s.station)).join('・'))+'です。';
+  function diagramTrainNumber(service){
+    let m=String(service||'').match(/^宇和海(\d+)号$/);
+    if(m)return String(1050+Number(m[1]))+'D';
+    m=String(service||'').match(/^しおかぜ(\d+)号$/);
+    if(m)return String(Number(m[1]))+'M';
+    m=String(service||'').match(/^いしづち(\d+)号$/);
+    if(m){
+      const n=Number(m[1]);
+      return String(n>=102&&n<=106 ? n+940 : 1000+n)+'M';
     }
-    const uwakai=board===0&&service.match(/宇和海\d+号/);
-    if(uwakai)parts.push(describe(uwakai[0],dest||'宇和島'));
-    const shiokaze=board===1&&service.match(/しおかぜ\d+号/);
-    const ishizuchi=board===1&&(service+' '+info).match(/いしづち\d+号/);
-    if(shiokaze)parts.push(describe(shiokaze[0],/岡山/.test(dest)?'岡山':dest));
-    if(ishizuchi)parts.push(describe(ishizuchi[0],
-      /高松/.test(dest)?'高松':(shiokaze?'高松':dest)));
-    return (parts.length?parts.join(separator):
-      red('特急「'+escapeLedText(service)+'」')+' '+yellow(escapeLedText(dest)+'行')+
-      '　停車駅の当日運行図を確認できません')+separator;
+    return '';
   }
-  function installSeamlessTicker(board, message) {
-    // Keep this viewport OUTSIDE the original messageTelopDiv. The original
-    // animation engine rebuilds that internal node at unpredictable intervals.
+  function stopAnnouncement(board,record){
+    const separator='　　　　　　　　　　　';
+    const depart=String(record.time||''),service=String(record.service||'');
+    const info=String(record.info||''),dest=String(record.dest||'');
+    const branches=[];
+    const name=service.match(/^しおかぜ\d+号$/);
+    const partner=info.match(/いしづち\d+号/);
+    if(record.kind==='limited' && name){
+      branches.push({name:service,dest:/岡山/.test(dest)?'岡山':dest});
+      const a=service.match(/(\d+)号/),b=partner?.[0].match(/(\d+)号/);
+      if(partner && a && b && a[1]===b[1])
+        branches.push({name:partner[0],dest:'高松'});
+    }else branches.push({
+      name:record.kind==='limited'?service:
+        record.kind==='local'?'普通列車':(service||'列車'),
+      dest
+    });
+    const pieces=[red(escapeLedText(depart)+'発 '+escapeLedText(branches.map(x=>x.name).join('・')))];
+    for(const branch of branches){
+      const route=diagramRoute(board,record,branch.dest,
+        record.kind==='limited'?diagramTrainNumber(branch.name):'');
+      const title=red('【'+escapeLedText(branch.name)+' '+escapeLedText(branch.dest)+'行】');
+      if(!route){
+        pieces.push(title+yellow('停車駅・到着時刻・接続：当日運行図の照合待ち'));
+        continue;
+      }
+      const stops=route.stops.map(stop=>
+        escapeLedText(stop.station)+' '+escapeLedText(stop.time)+
+        (stop.event==='arrival'?'着':stop.event==='departure'?'発':'（停車時刻）'));
+      pieces.push(title+'当日ダイヤの停車駅・時刻　'+yellow(stops.join(' → ')));
+      const last=route.stops[route.stops.length-1];
+      pieces.push(red('終点 '+escapeLedText(branch.dest)+' '+
+        escapeLedText(last.time)+
+        (last.event==='arrival'?'着':last.event==='departure'?'発':'（時刻表）')));
+      // Transfer pairs come from today's diagram. A shared station or
+      // nearby departure is NOT proof of a guaranteed timed connection.
+      const stopTimes=new Map(route.stops.map(x=>[String(x.station),hhmmToMinutes(x.time)]));
+      const transfers=route.transfers.filter(t=>
+        t.source==='today_diagram' && t.destination!=='松山' &&
+        stopTimes.has(t.station) &&
+        Number.isFinite(hhmmToMinutes(t.arrival)) &&
+        hhmmToMinutes(t.arrival)===stopTimes.get(t.station) &&
+        Number.isFinite(hhmmToMinutes(t.departure)) &&
+        hhmmToMinutes(t.departure)>hhmmToMinutes(t.arrival) &&
+        hhmmToMinutes(t.departure)-hhmmToMinutes(t.arrival)<=45
+      );
+      if(transfers.length){
+        const links=transfers.slice(0,10).map(t=>
+          escapeLedText(t.station)+' '+escapeLedText(t.arrival)+'着→'+
+          escapeLedText(t.departure)+'発　普通 '+escapeLedText(t.destination)+'行');
+        pieces.push(red('接続候補（当日ダイヤ・待ち合わせ未確認）：')+
+          yellow(links.join(' ／ ')));
+      }
+    }
+    return pieces.join(separator)+separator;
+  }
+  function stopAnnouncements(board,rows,nextPassenger,hasUpcoming){
+    const isPassenger=r=>r && !r.passStatus &&
+      ['local','limited','extra','sightseeing'].includes(r.kind);
+    const shown=(Array.isArray(rows)?rows:[]).filter(isPassenger);
+    if(!shown.length&&isPassenger(nextPassenger))shown.push(nextPassenger);
+    if(!shown.length)return [
+      !hasUpcoming?yellow('本日の発車案内は終了しました。'):
+        yellow('この方面の旅客列車案内は終了しました。')
+    ];
+    // Each displayed train gets its own complete, repeating scroll.
+    // Change trains ONLY after one entire ticker cycle, never mid-sentence.
+    return shown.slice(0,2).map(r=>stopAnnouncement(board,r));
+  }
+  function installSeamlessTicker(board,messages){
     const sign=document.getElementById('LEDUnitDiv'+board);
     if(!sign)return;
+    const list=(Array.isArray(messages)?messages:[messages]).filter(Boolean);
+    if(!list.length)return;
+    const signature=JSON.stringify(list);
     let viewport=sign.querySelector('.led-continuous-ticker-viewport');
-    // Keep the same cycle through 15-second data polls. If the original
-    // engine rebuilt the contents, reconstruct a missing animation only.
-    if(viewport && viewport.dataset.message===message){
-      const runningTrack=viewport.querySelector('.led-continuous-ticker-track');
-      if(runningTrack && runningTrack.children.length===2){
-        if(typeof runningTrack.getAnimations==='function'){
-          runningTrack.getAnimations().forEach(a=>{
+    if(viewport && viewport.dataset.message===signature){
+      const track=viewport.querySelector('.led-continuous-ticker-track');
+      if(track && track.children.length===2){
+        if(typeof track.getAnimations==='function')
+          track.getAnimations().forEach(a=>{
             if(a.playState==='paused'||a.playState==='finished')a.play();
           });
-        }
         return;
       }
     }
@@ -525,38 +581,49 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
       viewport.className='led-continuous-ticker-viewport';
       sign.appendChild(viewport);
     }
-    viewport.dataset.message=message;
-    viewport.replaceChildren();
-    const track=document.createElement('div');
-    track.className='led-continuous-ticker-track';
-    const first=document.createElement('span');
-    first.className='led-continuous-ticker-copy';
-    first.innerHTML=message;
-    const second=first.cloneNode(true);
-    track.append(first,second);
-    viewport.appendChild(track);
-    // The board for the other direction can be display:none when refreshed.
-    // offsetWidth would be zero there and the marquee would barely move.
-    // Use a content-based duration; the CSS -50% distance self-adjusts when
-    // its 284px LED becomes visible, including after direction switches.
-    const plainLength=(first.textContent||'').length;
-    track.style.setProperty('--led-loop-seconds',
-      Math.min(90,Math.max(9,plainLength*0.42+2)).toFixed(2)+'s');
+    viewport.dataset.message=signature;
+    function show(index){
+      if(viewport.dataset.message!==signature)return;
+      viewport.replaceChildren();
+      const track=document.createElement('div');
+      track.className='led-continuous-ticker-track';
+      const first=document.createElement('span');
+      first.className='led-continuous-ticker-copy';
+      first.innerHTML=list[index];
+      const second=first.cloneNode(true);
+      track.append(first,second);
+      viewport.appendChild(track);
+      // A hidden direction reports zero width; content length provides a
+      // stable full-cycle speed without interrupting the looping scroll.
+      const length=(first.textContent||'').length;
+      track.style.setProperty('--led-loop-seconds',
+        Math.min(300,Math.max(12,length*0.42+2)).toFixed(2)+'s');
+      if(list.length>1){
+        track.addEventListener('animationiteration',()=>{
+          if(viewport.dataset.message===signature)
+            show((index+1)%list.length);
+        },{once:true});
+      }
+    }
+    show(0);
   }
-  function updateStopAnnouncement(board, limited, hasUpcoming=true) {
+  function updateStopAnnouncement(board,rows,nextPassenger,hasUpcoming=true){
     const editor=document.getElementById('messageTelopInput'+board);
     const title=document.getElementById('messageTelopTitleInput'+board);
-    if(!editor || !title)return;
-    const message=stopAnnouncement(board,limited,hasUpcoming);
-    if(telopSignatures[board]!==message){
-      telopSignatures[board]=message;
-      editor.value=message;
-      choose('messageTelopTitleInput'+board,[hasUpcoming?'停車駅':'お知らせ']);
+    if(!editor||!title)return;
+    const messages=stopAnnouncements(board,rows,nextPassenger,hasUpcoming);
+    const signature=JSON.stringify(messages);
+    if(telopSignatures[board]!==signature){
+      telopSignatures[board]=signature;
+      editor.value=messages.join('　　　　　　　　　');
+      const hasPassenger=(Array.isArray(rows)&&rows.some(r=>
+        r&&!r.passStatus&&['local','limited','extra','sightseeing'].includes(r.kind))) ||
+        (nextPassenger&&!nextPassenger.passStatus);
+      choose('messageTelopTitleInput'+board,[hasPassenger?'停車駅':'お知らせ']);
       if(Array.isArray(statusDisp))statusDisp[board]=1;
       if(typeof updateStatus==='function')updateStatus(board);
     }
-    // Never restart for regular 15-second schedule polls or native redraws.
-    installSeamlessTicker(board,message);
+    installSeamlessTicker(board,messages);
   }
 
   // Native original LED destination sprites exist only for these
@@ -809,15 +876,21 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
     ledStopFeed.iso=iso;
     ledStopFeed.receivedAt=Date.now();
     ledStopFeed.departures=(Array.isArray(departures)?departures:[])
-      .slice(0,100).filter(x=>
+      .slice(0,160).filter(x=>
         x && ['south','north'].includes(x.direction) &&
-        x.trainClass==='limited' &&
+        ['limited','local'].includes(x.trainClass) &&
         /^\d{1,2}:\d{2}$/.test(String(x.departure||'')) &&
         typeof x.destination==='string' && Array.isArray(x.stops)
       ).map(x=>({
-        ...x,stops:x.stops.slice(0,75).filter(s=>s && typeof s.station==='string' &&
-          s.station.length>0 && s.station.length<=24 &&
-          /^\d{1,2}:\d{2}$/.test(String(s.time||'')))
+        ...x,
+        stops:x.stops.slice(0,80).filter(st=>st && typeof st.station==='string' &&
+          st.station.length>0 && st.station.length<=30 &&
+          /^\d{1,2}:\d{2}$/.test(String(st.time||''))),
+        transfers:(Array.isArray(x.transfers)?x.transfers:[])
+          .slice(0,18).filter(t=>t && t.source==='today_diagram' &&
+            typeof t.station==='string' && typeof t.destination==='string' &&
+            /^\d{1,2}:\d{2}$/.test(String(t.arrival||'')) &&
+            /^\d{1,2}:\d{2}$/.test(String(t.departure||'')))
       }));
     ledArrivalFeed.iso=iso;
     ledArrivalFeed.receivedAt=Date.now();
@@ -947,7 +1020,7 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
       setNativeRowVisibility(currentLedUnits);
       updateDepartureSoon(n);
       updateArrivalSoon(n);
-      [0,1].forEach(board => updateStopAnnouncement(board,null,false));
+      [0,1].forEach(board => updateStopAnnouncement(board,[],null,false));
       return; // No next-day train display before 04:30.
     }
     const units = [[0,'south'],[1,'north']].map(([board,direction]) => {
@@ -972,7 +1045,7 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
       const upcoming=[...passenger,...passageRows(direction,n)]
         .sort((a,b)=>hhmmToMinutes(a.time)-hhmmToMinutes(b.time) ||
                       (a.passStatus?1:0)-(b.passStatus?1:0));
-      return {board, rows:upcoming.slice(0,2),
+      return {board, rows:upcoming.slice(0,2),nextPassenger:passenger[0]||null,
         nextLimited:passenger.filter(r=>r.kind==='limited')
           .sort((a,b)=>hhmmToMinutes(a.time)-hhmmToMinutes(b.time))[0] || null};
     });
@@ -995,7 +1068,7 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
     // The ticker is independent of express priority in the two departure rows.
     // Do this AFTER native readForm, so its redraw cannot erase ticker content.
     units.forEach(unit => updateStopAnnouncement(
-      unit.board,unit.nextLimited,unit.rows.length>0
+      unit.board,unit.rows,unit.nextPassenger,unit.rows.length>0
     ));
     renderPassLabels(units);
     renderJoinedServiceNames(units);
