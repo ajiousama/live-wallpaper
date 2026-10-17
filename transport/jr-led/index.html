@@ -432,34 +432,51 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
   const telopSignatures = ['', ''];
   const red = t => '<span style="color:#f00">' + t + '</span>';
   const yellow = t => '<span style="color:#ff0">' + t + '</span>';
-  function stopAnnouncement(board, limited, hasUpcoming=true) {
-    if (!limited && !hasUpcoming)
+  const escapeLedText=value=>String(value??'').replace(/[&<>"']/g,c=>
+    ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const ledStopFeed={iso:'',receivedAt:0,departures:[]};
+  function exactLimitedStops(board,limited,destination){
+    const now=jst(),age=Date.now()-ledStopFeed.receivedAt;
+    if(ledStopFeed.iso!==now.iso || age<0 || age>600000)return null;
+    const direction=board===0?'south':'north';
+    const dep=hhmmToMinutes(limited.time);
+    const normal=s=>String(s||'').trim().replace(/駅$/,'');
+    const matches=ledStopFeed.departures.filter(r=>
+      r.direction===direction && r.trainClass==='limited' &&
+      hhmmToMinutes(r.departure)===dep &&
+      normal(r.destination)===normal(destination) &&
+      r.stops.length>0 &&
+      normal(r.stops[r.stops.length-1].station)===normal(destination));
+    // At a joined departure, use the exact endpoint of each separate portion.
+    // Never choose an arbitrary train in an ambiguous same-minute match.
+    return matches.length===1?matches[0].stops:null;
+  }
+  function stopAnnouncement(board,limited,hasUpcoming=true){
+    if(!limited && !hasUpcoming)
       return yellow('本日の発車案内は終了しました。');
-    if (!limited) return yellow('この方面の本日の特急案内は終了しました。');
-    const service = String(limited.service || '');
-    const info = String(limited.info || '');
-    const sections = [];
-    const separator = '　　　　　　　　　';
-    if (board === 0 && /宇和海/.test(service)) {
-      const no = (service.match(/宇和海(\d+)号/) || [,''])[1];
-      sections.push(red('特急「宇和海' + no + '号」') + 'の主な停車駅は、' +
-        yellow('伊予市・内子・伊予大洲・八幡浜・卯之町・宇和島') +
-        'です。列車により一部の停車駅が異なります。');
+    if(!limited)return yellow('この方面の本日の特急案内は終了しました。');
+    const service=String(limited.service||''),info=String(limited.info||'');
+    const dest=String(limited.dest||'').trim(),separator='　　　　　　　　　';
+    const parts=[];
+    function describe(trainName,terminal){
+      const stops=exactLimitedStops(board,limited,terminal);
+      const title=red('特急「'+escapeLedText(trainName)+'」');
+      if(!stops)
+        return title+' '+yellow(escapeLedText(terminal)+'行')+
+          '　停車駅の当日運行図を確認できません';
+      return title+' '+escapeLedText(terminal)+'行の停車駅は、'+
+        yellow(stops.map(s=>escapeLedText(s.station)).join('・'))+'です。';
     }
-    if (board === 1) {
-      const shiokaze = (service + ' ' + info).match(/しおかぜ(\d+)号/);
-      const ishizuchi = (service + ' ' + info).match(/いしづち(\d+)号/);
-      if (shiokaze) sections.push(
-        red('特急「しおかぜ' + shiokaze[1] + '号」') + '岡山方面の主な停車駅は、' +
-        yellow('伊予北条・今治・壬生川・伊予西条・新居浜・観音寺・多度津・丸亀・坂出・児島・岡山') +
-        'です。列車により一部の停車駅が異なります。');
-      if (ishizuchi) sections.push(
-        red('特急「いしづち' + ishizuchi[1] + '号」') + '高松方面の主な停車駅は、' +
-        yellow('伊予北条・今治・壬生川・伊予西条・新居浜・伊予三島・川之江・観音寺・多度津・丸亀・坂出・高松') +
-        'です。列車により一部の停車駅が異なります。');
-    }
-    return (sections.length ? sections.join(separator) :
-      red('特急列車のご案内') + '　停車駅は列車により異なります。') + separator;
+    const uwakai=board===0&&service.match(/宇和海\d+号/);
+    if(uwakai)parts.push(describe(uwakai[0],dest||'宇和島'));
+    const shiokaze=board===1&&service.match(/しおかぜ\d+号/);
+    const ishizuchi=board===1&&(service+' '+info).match(/いしづち\d+号/);
+    if(shiokaze)parts.push(describe(shiokaze[0],/岡山/.test(dest)?'岡山':dest));
+    if(ishizuchi)parts.push(describe(ishizuchi[0],
+      /高松/.test(dest)?'高松':(shiokaze?'高松':dest)));
+    return (parts.length?parts.join(separator):
+      red('特急「'+escapeLedText(service)+'」')+' '+yellow(escapeLedText(dest)+'行')+
+      '　停車駅の当日運行図を確認できません')+separator;
   }
   function installSeamlessTicker(board, message) {
     // Keep this viewport OUTSIDE the original messageTelopDiv. The original
@@ -706,9 +723,22 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
   window.addEventListener('message',event=>{
     if(event.origin!==location.origin ||
        event.data?.type!=='matsuyama-led-arrivals')return;
-    const {iso,arrivals}=event.data;
+    const {iso,arrivals,departures}=event.data;
     if(!/^\d{4}-\d{2}-\d{2}$/.test(String(iso)) ||
        !Array.isArray(arrivals))return;
+    ledStopFeed.iso=iso;
+    ledStopFeed.receivedAt=Date.now();
+    ledStopFeed.departures=(Array.isArray(departures)?departures:[])
+      .slice(0,100).filter(x=>
+        x && ['south','north'].includes(x.direction) &&
+        x.trainClass==='limited' &&
+        /^\d{1,2}:\d{2}$/.test(String(x.departure||'')) &&
+        typeof x.destination==='string' && Array.isArray(x.stops)
+      ).map(x=>({
+        ...x,stops:x.stops.slice(0,75).filter(s=>s && typeof s.station==='string' &&
+          s.station.length>0 && s.station.length<=24 &&
+          /^\d{1,2}:\d{2}$/.test(String(s.time||'')))
+      }));
     ledArrivalFeed.iso=iso;
     ledArrivalFeed.receivedAt=Date.now();
     ledArrivalFeed.arrivals=arrivals.slice(0,24).filter(r=>
@@ -723,6 +753,8 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
         ? Number(r.delayMinutes):0
     }));
     updateArrivalSoon(jst());
+    // Existing signature checks keep the native LED rows and ticker cycle stable.
+    refresh();
   });
   function updateArrivalSoon(n) {
     const fresh=ledArrivalFeed.iso===n.iso &&
