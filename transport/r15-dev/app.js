@@ -3677,6 +3677,9 @@
       if (el.closest('.panel-port .port-route-main')) return;
       if (el.classList.contains('air-status') && el.querySelector('.overflow-scroll')) return;
       if (el.classList.contains('no-auto-scroll')) return;
+      // The JR limited-express service name must stay fixed. Widen its first
+      // grid column rather than turning the name into a moving ticker.
+      if (el.matches('.rail-primary .rail-service.limited .kindtxt')) return;
       if (el.closest('.bus-mini-logo')) return;
 
       const wrap=document.createElement('span');
