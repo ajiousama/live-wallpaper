@@ -130,6 +130,37 @@ html[data-led-direction="north"] #LEDUnitDiv>div>div:nth-child(2){
 #LEDUnitDiv .led-passage-status{
   left:176px!important;width:80px!important;color:#ffe34c!important;
 }
+</style><style id="led-departure-soon-style">
+/* One minute before the scheduled departure, flash in EACH affected LED row.
+   Overlay the timetable/destination (x112–240), keep service-name sprites
+   (x0–112), independent route/stop ticker, and pass-throughs untouched. */
+#LEDUnitDiv .led-departure-soon{
+  position:absolute!important;
+  left:112px!important;
+  top:0!important;
+  width:128px!important;
+  height:16px!important;
+  box-sizing:border-box!important;
+  display:flex!important;
+  justify-content:center!important;
+  align-items:center!important;
+  overflow:hidden!important;
+  z-index:1100!important;
+  background:#000!important;
+  color:#ffeb32!important;
+  font-family:'ＭＳ ゴシック','Yu Gothic','Meiryo',sans-serif!important;
+  font-size:12px!important;
+  font-weight:900!important;
+  letter-spacing:-.5px!important;
+  line-height:16px!important;
+  white-space:nowrap!important;
+  pointer-events:none!important;
+  animation:led-departure-soon-flash .9s steps(1,end) infinite!important;
+}
+@keyframes led-departure-soon-flash {
+  0%,49.9%{opacity:1}
+  50%,100%{opacity:0}
+}
 </style><style id="led-continuous-ticker-style">
 /* Deterministic seamless station-stop ticker; replaces browser-specific marquee
    behavior. One complete message is followed by its exact duplicate. */
@@ -355,11 +386,11 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
     const p = {};
     new Intl.DateTimeFormat('en-CA', {
       timeZone: 'Asia/Tokyo', year: 'numeric', month: '2-digit',
-      day: '2-digit', hour: '2-digit', minute: '2-digit',
+      day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit',
       hourCycle: 'h23'
     }).formatToParts(new Date()).forEach(x => p[x.type] = x.value);
     const iso = `${p.year}-${p.month}-${p.day}`;
-    return { iso, minutes: +p.hour * 60 + +p.minute,
+    return { iso, minutes: +p.hour * 60 + +p.minute, seconds: +p.second,
       dow: new Date(iso + 'T12:00:00+09:00').getDay() };
   }
   function available(r, n) {
@@ -667,18 +698,65 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
       });
     });
   }
+  // A full timetable rebuild (readForm) is intentionally NOT performed when
+  // the one-minute flag changes; it would reset the stop-announcement loop.
+  let currentLedUnits = [];
+  let lastLedMinuteKey = '';
+  function updateDepartureSoon(n) {
+    for(const unit of currentLedUnits){
+      for(let slot=0;slot<2;slot++){
+        const r=unit.rows[slot];
+        const line=document.getElementById('lineContents'+unit.board+'_'+slot);
+        if(!line)continue;
+        const existing=line.querySelector(':scope > .led-departure-soon');
+        // Passes/freight are NOT scheduled passenger departures.
+        const passenger=!!r && !r.passStatus &&
+          ['local','limited','extra','sightseeing'].includes(r.kind);
+        const departure=passenger?hhmmToMinutes(r.time):NaN;
+        const remaining=departure*60 - (n.minutes*60+n.seconds);
+        const shouldBlink=passenger && Number.isFinite(departure) &&
+          remaining>0 && remaining<=60;
+        if(!shouldBlink){
+          if(existing)existing.remove();
+          continue;
+        }
+        const key=String(r.id||r.service||'')+'|'+r.time;
+        // Never recreate the blinking element on each 1-second check.
+        if(existing && existing.dataset.trainKey===key)continue;
+        if(existing)existing.remove();
+        const warning=document.createElement('div');
+        warning.className='led-departure-soon';
+        warning.dataset.trainKey=key;
+        warning.textContent='まもなく発車します';
+        warning.setAttribute('aria-label','まもなく発車します');
+        line.appendChild(warning);
+      }
+    }
+  }
+  // Update the warning every second and remove expired departures at the
+  // exact minute boundary, without rereading the original LED each second.
+  setInterval(()=>{
+    if(!window.MATSUYAMA_DATA)return;
+    const now=jst(), minuteKey=now.iso+'|'+now.minutes;
+    if(minuteKey!==lastLedMinuteKey)refresh();
+    else updateDepartureSoon(now);
+  },1000);
+
   let lastRenderSignature = '';
   function refresh() {
     const data = window.MATSUYAMA_DATA;
     if (!data || !Array.isArray(data.records)) return;
     const n = jst();
+    lastLedMinuteKey=n.iso+'|'+n.minutes;
     if (n.minutes < 270) {
       if (lastRenderSignature !== 'pre-service') {
         [0,1].forEach(board => [0,1].forEach(slot => updateRow(board,slot,null)));
         if (typeof readForm === 'function') readForm();
         lastRenderSignature = 'pre-service';
       }
-      setNativeRowVisibility([{board:0,rows:[]},{board:1,rows:[]}]);
+      currentLedUnits=[{board:0,rows:[]},{board:1,rows:[]}];
+      setNativeRowVisibility(currentLedUnits);
+      updateDepartureSoon(n);
       [0,1].forEach(board => updateStopAnnouncement(board,null,false));
       return; // No next-day train display before 04:30.
     }
@@ -733,6 +811,8 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
     // Reapply even when no train data changed: source animation can recreate
     // row nodes, and its input fields keep the previous clock time.
     setNativeRowVisibility(units);
+    currentLedUnits=units;
+    updateDepartureSoon(n);
   }
 })();
 </script><script id="wallpaper-scale-fidelity">
