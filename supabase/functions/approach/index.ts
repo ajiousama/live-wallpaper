@@ -944,6 +944,51 @@ async function getIchitsubo(now: { minutes: number }) {
     };
   }).filter(Boolean).sort((a: any, b: any) => toMinutes(a.departure) - toMinutes(b.departure));
 
+  // Shiokaze and Ishizuchi are ONE departure from Matsuyama until Utazu,
+  // then separate service portions to Okayama and Takamatsu. Resolve each
+  // Takamatsu portion against today's independent 10xxM diagram, not an
+  // approximate shared "usual stops" list. Source train IDs must agree.
+  const matsuyamaJoinedPortions = (matsuyamaSchedule as Record<string,any>[])
+    .flatMap(main=>{
+      const id=String(main.trainNum||"");
+      const m=id.match(/^(\d{1,2})M$/);
+      const n=m?Number(m[1]):NaN;
+      if(main.direction!=="north" || main.destination!=="岡山" ||
+         !Number.isInteger(n) || n<4 || n>30 || n%2!==0)return [];
+      const joinedNum="10"+String(n).padStart(2,"0")+"M";
+      const branch=diagram.get(joinedNum);
+      const sharedStops=(main.stops as {station:string,time:string}[])||[];
+      const junctionIndex=sharedStops.findIndex(s=>
+        normalizeStationName(s.station)==="宇多津" &&
+        Number.isFinite(toMinutes(s.time)));
+      if(!branch || branch.destination!=="高松" || junctionIndex<0)return [];
+      const junctionDepartIndex=branch.points.findIndex(p=>
+        normalizeStationName(p.station)==="宇多津" &&
+        /発/.test(p.event) && Number.isFinite(toMinutes(p.time)));
+      if(junctionDepartIndex<0)return [];
+      const diff=toMinutes(branch.points[junctionDepartIndex].time) -
+        toMinutes(sharedStops[junctionIndex].time);
+      if(!Number.isFinite(diff) || diff<0 || diff>8)return [];
+      const branchStops:{station:string,time:string}[]=[];
+      const seen=new Set<string>();
+      for(const point of branch.points.slice(junctionDepartIndex+1)){
+        const station=normalizeStationName(point.station);
+        if(!station || seen.has(station) || /通/.test(point.event) ||
+           !/着|発/.test(point.event) ||
+           !Number.isFinite(toMinutes(point.time)))continue;
+        seen.add(station);
+        branchStops.push({station,time:point.time});
+      }
+      if(!branchStops.length ||
+         branchStops[branchStops.length-1].station!=="高松")return [];
+      return [{
+        trainNum:joinedNum,trunkTrainNum:id,trainClass:"limited",
+        direction:"north",departure:String(main.departure),
+        destination:"高松",junction:"宇多津",
+        stops:[...sharedStops.slice(0,junctionIndex+1),...branchStops]
+      }];
+    });
+
   // Position-confirmed Matsuyama departures only. The diagram gives the
   // schedule, but never makes a train live unless currentPositions contains
   // a matching train number with a real position.
@@ -1095,6 +1140,7 @@ async function getIchitsubo(now: { minutes: number }) {
     matsuyamaSpecialTrains: matsuyamaSpecialTrains.map(x=>withVehicleImage(x as Record<string,any>,vehicleImages)),
     positionFeedOk: positionResult.ok,
     matsuyamaSchedule: matsuyamaSchedule.map(x=>withVehicleImage(x as Record<string,any>,vehicleImages)),
+    matsuyamaJoinedPortions,
     matsuyamaActiveTrains: matsuyamaActiveTrains.map(x=>withVehicleImage(x as Record<string,any>,vehicleImages)),
     matsuyamaTerminatingArrivals: uniqueMatsuyamaTerminatingArrivals.map((x)=>{
       const nums=x.possibleTrainNums as string[];
