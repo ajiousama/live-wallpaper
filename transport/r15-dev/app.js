@@ -2938,7 +2938,13 @@
     if ((String(x?.trainClass||'')==='limited' || inferredLimited) && m) {
       const n=Number(m[1]);
       const suffix=String(m[2]||'').toUpperCase();
-      if (suffix==='M' && n>=1 && n<=40) return {kind:'limited',service:`しおかぜ${n}号`};
+      if (suffix==='M' && n>=1 && n<=40) {
+        const name=`しおかぜ${n}号`;
+        const joined=Array.isArray(data.records) && data.records.some(r=>
+          r.board==='rail' && r.service===name &&
+          String(r.info||'').includes(`いしづち${n}号`));
+        return {kind:'limited',service:joined?name+`・いしづち${n}号`:name};
+      }
       if (suffix==='D' && n>=1051 && n<=1099) return {kind:'limited',service:`宇和海${n-1050}号`};
       // Matsuyama-originating Ishizuchi 102/104/106 have 1042M/1044M/1046M
       // in the actual operating diagram, not 1102M/1104M/1106M.
