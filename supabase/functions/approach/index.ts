@@ -717,13 +717,13 @@ async function getIchitsubo(now: { minutes: number }) {
   // will hold a train. Only a timed arrival and timed later LOCAL departure at
   // the same station produce a connection candidate. Platform numbers are
   // deliberately omitted: today's diagram has no confirmed platform data.
-  function timetableLocalTransfers(source: Route, allRoutes: Route[]) {
-    const home=source.matsuyamaDepartureIndex;
-    if(home<0)return [];
+  // Build this station index ONCE per invocation rather than once for every
+  // Matsuyama train. The live API is polled every 10 seconds.
+  const localTransfersByStation = (()=>{
     const byStation=new Map<string,Array<{
       route:Route,departure:number,arrival:number,departureText:string
     }>>();
-    for(const route of allRoutes){
+    for(const route of diagram.values()){
       const number=String(route.trainNum||"");
       if(!/^\d{1,5}[MD]$/i.test(number)||
          Number(number.replace(/\D/g,""))>=8000 ||
@@ -748,6 +748,12 @@ async function getIchitsubo(now: { minutes: number }) {
         byStation.set(station,list);
       });
     }
+    return byStation;
+  })();
+  function timetableLocalTransfers(source: Route) {
+    const home=source.matsuyamaDepartureIndex;
+    if(home<0)return [];
+    const byStation=localTransfersByStation;
     const earlierStations=new Set(source.points.slice(0,home+1)
       .map(x=>normalizeStationName(x.station)));
     const results:Array<Record<string,unknown>>=[];
@@ -758,7 +764,10 @@ async function getIchitsubo(now: { minutes: number }) {
       if(!station||!/着/.test(p.event)||/通/.test(p.event))continue;
       const arrival=toMinutes(p.time);
       if(!Number.isFinite(arrival)||station==="松山基地")continue;
+      // A passing train doesn't serve the skipped station: a local train
+      // stopping there is a useful onward connection.
       const sourceAfter=source.points.slice(i+1)
+        .filter(x=>!/通/.test(x.event)&&/着|発/.test(x.event))
         .map(x=>normalizeStationName(x.station)).filter(Boolean);
       const through=new Set(sourceAfter);
       const viable=(byStation.get(station)||[]).filter(candidate=>{
@@ -809,7 +818,6 @@ async function getIchitsubo(now: { minutes: number }) {
     return String(Math.floor(minutes/60)).padStart(2,"0")+":"+
       String(minutes%60).padStart(2,"0");
   }
-  const diagramRoutes=[...diagram.values()];
   const matsuyamaSchedule = [...diagram.values()].map((route) => {
     if (route.matsuyamaDepartureIndex < 0 || !/^\d{1,2}:\d{2}$/.test(route.matsuyamaDepartureTime)) return null;
     const num = String(route.trainNum || "").trim();
@@ -836,7 +844,7 @@ async function getIchitsubo(now: { minutes: number }) {
       stops,
       terminal,
       // Diagram-based local connections, no unverified platform or hold claims.
-      transfers: timetableLocalTransfers(route,diagramRoutes),
+      transfers: timetableLocalTransfers(route),
     };
   }).filter(Boolean).sort((a: any, b: any) => toMinutes(a.departure) - toMinutes(b.departure));
 
