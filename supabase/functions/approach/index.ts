@@ -964,6 +964,42 @@ async function getIchitsubo(now: { minutes: number }) {
     };
   }).filter(Boolean);
 
+  // Arrival warning for the embedded JR LED. Unlike a diagram timetable,
+  // this requires a CURRENT matching train-position observation, a verified
+  // station-arrival event (NOT a passing point), and a nearby approach on the
+  // correct side. It includes both terminating and through passenger trains.
+  const matsuyamaInboundArrivalAlerts = [...diagram.values()].flatMap(route => {
+    const num=String(route.trainNum||"").trim();
+    if(!/^\d{1,5}[MD]$/i.test(num) ||
+       Number(num.replace(/\D/g,""))>=8000)return [];
+    const side=matsuyamaInboundSide(route);
+    if(!side)return [];
+    const arrivalPoint=route.points.find((p,i)=>
+      i>=route.matsuyamaIndex &&
+      normalizeStationName(p.station)==="松山" &&
+      /着/.test(p.event)&&!/通/.test(p.event) &&
+      /^\d{1,2}:\d{2}$/.test(p.time));
+    if(!arrivalPoint)return [];
+    const live=positionByTrain.get(num);
+    if(!live)return [];
+    const raw=String(live.Pos??"").trim();
+    const position=normalizeStationName(raw);
+    if(!position || /^(?:松山|松山駅|松山基地|—|-|不明|未取得|取得中|確認中)$/.test(position))
+      return [];
+    // A same-day observed train must be within the final one/two stations
+    // of Matsuyama; a train merely somewhere on the line is insufficient.
+    const nearSouth=/(?:市坪|北伊予|南伊予)/.test(position);
+    const nearNorth=/(?:三津浜|伊予和気)/.test(position);
+    if(!(side==="south"?nearSouth:nearNorth))return [];
+    // Do not treat movements from Matsuyama toward the outer stations as
+    // inbound. The operating diagram itself established inbound direction.
+    return [{
+      trainNum:num,side,arrival:arrivalPoint.time,
+      position,trainClass:matsuyamaTrainClass(num),
+      source:"live_position_and_today_diagram",
+      confirmedApproach:true
+    }];
+  });
   const matsuyamaTerminatingArrivals = [...diagram.values()].map((route) => {
     const num = String(route.trainNum || "").trim();
     if (!routeTerminatesAtMatsuyama(route)) return null;
@@ -1048,6 +1084,7 @@ async function getIchitsubo(now: { minutes: number }) {
     matsuyamaDeadheads: matsuyamaDeadheads.map(x=>withVehicleImage(x as Record<string,any>,vehicleImages)),
     matsuyamaFreights: matsuyamaFreights.map(x=>withVehicleImage(x as Record<string,any>,vehicleImages)),
     matsuyamaFreightSchedules,
+    matsuyamaInboundArrivalAlerts,
     matsuyamaSpecialTrains: matsuyamaSpecialTrains.map(x=>withVehicleImage(x as Record<string,any>,vehicleImages)),
     positionFeedOk: positionResult.ok,
     matsuyamaSchedule: matsuyamaSchedule.map(x=>withVehicleImage(x as Record<string,any>,vehicleImages)),
