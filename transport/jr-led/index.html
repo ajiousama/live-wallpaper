@@ -716,7 +716,12 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
       ['north','south'].includes(r.side) &&
       /^\d{1,2}:\d{2}$/.test(String(r.arrival)) &&
       /^\d{1,5}[MD]$/i.test(String(r.trainNum||''))
-    );
+    ).map(r=>({
+      ...r,plannedTurnback:r.plannedTurnback===true,
+      delayMinutes:Number.isFinite(Number(r.delayMinutes)) &&
+        Number(r.delayMinutes)>=0 && Number(r.delayMinutes)<=60
+        ? Number(r.delayMinutes):0
+    }));
     updateArrivalSoon(jst());
   });
   function updateArrivalSoon(n) {
@@ -728,23 +733,30 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
       if(!sign)continue;
       const arrival=fresh?ledArrivalFeed.arrivals
         .filter(r=>r.side===direction && Number.isFinite(hhmmToMinutes(r.arrival)))
-        .map(r=>({...r,remaining:hhmmToMinutes(r.arrival)*60-(n.minutes*60+n.seconds)}))
+        // Apply ONLY observed, bounded delay; don't guess a fresh ETA.
+        .map(r=>({...r,remaining:
+          (hhmmToMinutes(r.arrival)+r.delayMinutes)*60 -
+          (n.minutes*60+n.seconds)}))
         .filter(r=>r.remaining>0 && r.remaining<=60)
-        .sort((a,b)=>a.remaining-b.remaining)[0] : null;
+        // First prefer an observed train with an unambiguous planned
+        // Matsuyama turnback, then the nearest arrival.
+        .sort((a,b)=>Number(b.plannedTurnback)-Number(a.plannedTurnback) ||
+          a.remaining-b.remaining)[0] : null;
       let banner=sign.querySelector(':scope > .led-arrival-soon');
       if(!arrival){
         if(banner)banner.remove();
         continue;
       }
-      const key=arrival.trainNum+'|'+arrival.arrival;
+      const key=arrival.trainNum+'|'+arrival.arrival+'|'+arrival.delayMinutes;
       if(banner && banner.dataset.trainKey===key)continue;
       if(banner)banner.remove();
       banner=document.createElement('div');
       banner.className='led-arrival-soon';
       banner.dataset.trainKey=key;
-      banner.textContent='まもなく電車が到着します';
+      // "列車" covers both electric and diesel rolling stock at Matsuyama.
+      banner.textContent='まもなく到着します';
       banner.setAttribute('aria-label',
-        'まもなく電車が到着します（'+arrival.trainNum+'）');
+        'まもなく到着します（'+arrival.trainNum+'）');
       sign.appendChild(banner);
     }
   }
