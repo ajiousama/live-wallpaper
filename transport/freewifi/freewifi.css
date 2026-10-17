@@ -2797,3 +2797,33 @@ body.freewifi-tv #panel-rail #rail-rows .rail-service.limited .rail-name-badge{
 html.company-pc body.freewifi-tv #panel-rail #rail-rows .rail-service.limited .rail-name-badge{
   font-size:12.5px!important;
 }
+
+
+/* JR SIX-ROW TICKERS: seamless text-to-text loops, not reset by live polls. */
+/* Exactly TWO copies, with zero inter-item gap and equal trailing padding.
+   Translate half the track: the next copy lands at the original x position.
+   Old gap:32px + translate(-50%) caused a jump every lap. */
+body.freewifi-tv #panel-rail #rail-rows .rail-detail .marquee{
+  overflow:hidden!important;
+  white-space:nowrap!important;
+}
+body.freewifi-tv #panel-rail #rail-rows .rail-detail .marquee-track{
+  display:flex!important;
+  width:max-content!important;
+  gap:0!important;
+  column-gap:0!important;
+  animation-name:ticker-scroll!important;
+  animation-duration:var(--ticker-duration,40s)!important;
+  animation-timing-function:linear!important;
+  animation-iteration-count:infinite!important;
+  animation-direction:normal!important;
+  animation-play-state:running!important;
+}
+body.freewifi-tv #panel-rail #rail-rows .rail-detail .marquee-track>span{
+  display:inline-flex!important;
+  flex:0 0 auto!important;
+  min-width:max-content!important;
+  white-space:nowrap!important;
+  padding-right:48px!important;
+  box-sizing:content-box!important;
+}
