@@ -2142,6 +2142,56 @@
     });
   }
 
+  // Scheduled ordinary-train dwell: an opposite-direction train means a
+  // possible meet; a same-direction limited/pass train means a possible
+  // overtaking/connection. The diagram cannot establish an actual dispatch
+  // hold, track/platform, or a promised passenger connection.
+  function railLocalWaitAndMeetItems(record) {
+    if(record?.kind!=='local')return [];
+    const source=approachLive.ichitsubo;
+    if(!source?.ok||!Array.isArray(source.matsuyamaSchedule))return [];
+    const fetched=Date.parse(String(approachLive.generatedAtJst||''));
+    const now=japanNow();
+    if(!Number.isFinite(fetched)||Date.now()-fetched>120000 ||
+       Date.now()-fetched < -15000 ||
+       (record.displayIso&&record.displayIso!==now.iso))return [];
+    const matching=source.matsuyamaSchedule.filter(x=>
+      x?.trainClass==='local'&&x?.direction===record.direction&&
+      padTime(x?.departure||'')===padTime(record.time||''));
+    const liveNum=String(record.liveTrainNum||'');
+    const selected=liveNum?
+      matching.filter(x=>String(x.trainNum||'')===liveNum):matching;
+    if(selected.length!==1)return []; // No train-identity guesses.
+    const list=Array.isArray(selected[0].meets)?selected[0].meets:[];
+    const seen=new Set();
+    return list.filter(x=>{
+      const station=cleanStation(x?.station||'');
+      const minutes=Number(x?.dwellMinutes);
+      const train=String(x?.counterTrainNum||'');
+      const key=station+'|'+train;
+      if(x?.source!=='today_diagram'||x?.actualHoldConfirmed!==false||
+         !station||!train||seen.has(key)||
+         !Number.isFinite(minutes)||minutes<2||minutes>45 ||
+         !/^\d{2}:\d{2}$/.test(padTime(x.arrival||''))||
+         !/^\d{2}:\d{2}$/.test(padTime(x.departure||''))||
+         !['same','opposing'].includes(x.movement))return false;
+      seen.add(key);return true;
+    }).slice(0,3).map(x=>{
+      const station=railSpecialText(cleanStation(x.station));
+      const train=railSpecialText(String(x.counterTrainNum));
+      const kind=x.counterTrainClass==='limited'?'特急':
+        x.counterTrainClass==='freight'?'貨物列車':'普通列車';
+      const at=padTime(x.counterTime||'');
+      const duration=Math.round(Number(x.dwellMinutes));
+      const prefix=station+'駅で'+duration+'分停車予定（'+
+        padTime(x.arrival)+'着→'+padTime(x.departure)+'発）';
+      const note=x.movement==='opposing'?'対向'+kind+train+
+        'と列車交換の可能性':kind+train+
+        (x.counterEvent==='pass'?'の通過待ち・待避候補':'との接続・待避候補');
+      return prefix+'｜'+note+' '+at+'頃（当日運行図表／待機・番線未確認）';
+    });
+  }
+
   function railRowDetailItems(record) {
     const items = [];
     const route=railSouthRoute(record);
@@ -2189,6 +2239,7 @@
     // Each of the six JR detail tickers can show connections without
     // moving the fixed service name, time, or destination columns.
     items.push(...railLocalConnectionItems(record));
+    items.push(...railLocalWaitAndMeetItems(record));
     if (record.isFinal) items.push('この方面の最終列車です');
     if (record.isNextDayStart) items.push('翌日始発列車');
     return items.length ? items : ['運行案内'];
