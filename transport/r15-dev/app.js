@@ -2426,9 +2426,10 @@
     for(const x of matsuyamaObservedSpecialRows(now)){
       const badge=railServiceBadgeHtml(x.kind);
       const destination=x.destination?'｜'+railSpecialText(x.destination)+'方面':'';
+      const vehicle=x.vehicleSeries?'｜車両形式 '+railSpecialText(x.vehicleSeries)+'（非公式で確認）':'';
       const event=x.stationConfirmed?'｜松山駅 当日ダイヤ照合':'｜松山駅発着未確認';
       out.push('<span class="rail-position-live">📍'+badge+' '+railSpecialText(x.trainNum)+
-        '｜現在位置 '+railSpecialText(x.position)+destination+event+'</span>');
+        '｜現在位置 '+railSpecialText(x.position)+vehicle+destination+event+'</span>');
     }
 
     const approaching=Array.isArray(approachLive.ichitsubo?.approaching)
@@ -3057,6 +3058,7 @@
       ? x.stationTime : '時刻未確認';
     const details=[
       '列車番号 '+railSpecialText(x.trainNum),
+      ...(x.vehicleSeries?['車両形式 '+railSpecialText(x.vehicleSeries)+'（非公式情報で確認）']:[]),
       '📍現在位置 '+railSpecialText(x.position),
       x.destination?'行先 '+railSpecialText(x.destination):'行先未確認',
       x.stationConfirmed?'松山駅の情報は当日ダイヤ照合':'松山駅の停車・通過は未確認'
@@ -3168,8 +3170,10 @@
     }));
     const observedSpecials=matsuyamaObservedSpecialRows(now).map(x=>({
       _special:true,
-      // Actual schedule if known, never pretend "now + 2" is the train time.
-      _sortMinutes:/^[0-9]{1,2}:[0-9]{2}$/.test(String(x.stationTime||''))
+      // Only the actual Matsuyama station diagram gives a board time.
+      // A live vehicle fix alone is NEVER an estimated Matsuyama stop time.
+      _sortMinutes:x.stationConfirmed===true &&
+        /^[0-9]{1,2}:[0-9]{2}$/.test(String(x.stationTime||''))
         ? toMinutes(padTime(x.stationTime))
         : Number.POSITIVE_INFINITY,
       data:x
@@ -3199,6 +3203,15 @@
       .filter(item=>Number.isFinite(item._sortMinutes) &&
                     item._sortMinutes >= now.minutes)
       .sort((a,b)=>a._sortMinutes-b._sortMinutes);
+    // A live special train without a Matsuyama diagram time must NOT vanish.
+    // Place it in a spare sixth-row slot AFTER time-ordered trains, with the
+    // honest "時刻未確認" label. Do not displace known departures.
+    const untimedLiveExtras=observedSpecials
+      .filter(item=>!Number.isFinite(item._sortMinutes) &&
+                    item.data?.kind==='extra' &&
+                    jrPositionUsable(item.data?.position))
+      .sort((a,b)=>String(a.data.trainNum||'').localeCompare(
+        String(b.data.trainNum||''),'ja'));
     // The original LED iframe has the published passenger timetable already.
     // Share ONLY real, time-bearing pass-through movements verified by the
     // SAME live feed as this six-row list. No guessed freight passage times.
@@ -3239,7 +3252,7 @@
     // JR departures, arrivals, freight and deadheads use ONE timeline.
     // Never reserve priority slots by train category: earlier times always
     // come before later times, including specials/terminal arrivals.
-    const visible=candidates.slice(0,limit);
+    const visible=[...candidates,...untimedLiveExtras].slice(0,limit);
     // Departure order is independent of train type and the upper summary cards.
     // Use the full future passenger departure list, not just visible rows:
     // arrivals, freight and deadheads never receive departure-order marks.
@@ -5169,6 +5182,8 @@
 
   // FINAL polling: fast approach 15s / disaster 10s / slower service status 60s.
   Promise.all([loadApproach(),loadSlowLive(),loadDisasterLive()]).then(()=>renderAll());
+  // Fast unofficial-train detection: visible boards refresh on every live
+  // result (roughly 10s). Source/CDN latency may add further delay.
   setInterval(()=>{loadApproach().then(()=>{
     // Refresh visible JR rows on every success/failure, not just the ticker.
     const now=japanNow();
@@ -5176,7 +5191,7 @@
     cachedNotes.rail=railTickerItems(now);
     cachedNotes.bus=busTickerItems(now);
     updateNotes();
-  });},15000);
+  });},10000);
   setInterval(()=>{loadSlowLive().then(()=>renderAll());},60000);
   setInterval(()=>{loadDisasterLive().then(()=>renderDisaster(japanNow()));},10000);
   renderAll(); setupMonthlyUpdatePrompt();
