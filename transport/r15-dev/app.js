@@ -5264,55 +5264,77 @@
     wrap.style.cssText='position:absolute;right:12px;top:7px;z-index:350;display:flex;align-items:center;gap:6px;padding:5px 8px;background:#141414;border:2px solid #ffe15e;border-radius:7px;box-shadow:0 2px 10px #000;color:#ffe15e;font:900 13px/1.3 sans-serif;max-width:95%;flex-wrap:wrap';
     const note=document.createElement('span');
     note.textContent='訓練・テスト（実際の災害ではありません）';
-    // NTT DOCOMO itself embeds this YouTube clip on its official emergency
-    // earthquake bulletin page. Standard iframe playback only: no copying,
-    // extraction, hotlinking of audio streams, or claim of offline availability.
-    const docomoButton=document.createElement('button');
-    docomoButton.type='button';
-    docomoButton.id='disaster-preview-docomo-official';
-    docomoButton.textContent='▶ ドコモ公式音を試聴';
-    docomoButton.style.cssText='cursor:pointer;background:#ffe15e;color:#151000;border:0;border-radius:5px;padding:7px 10px;font:900 14px/1.25 sans-serif;white-space:nowrap';
-    docomoButton.addEventListener('click',()=>{
+    // NTT DOCOMO publishes two DIFFERENT Area Mail sounds, and its
+    // own pages link to separate official YouTube demonstration videos.
+    // Only embed the official video, never extract/re-host copyrighted audio.
+    const docomoClips=[
+      {
+        id:'4gZW7HRHJmM',
+        label:'地震速報：ブザー音',
+        heading:'ドコモ公式｜エリアメール 緊急地震速報（ブザー音）',
+        page:'https://www.docomo.ne.jp/service/areamail/earthquake_warning/'
+      },
+      {
+        id:'UoHTQ7b0yNg',
+        label:'避難情報：チャイム音',
+        heading:'ドコモ公式｜エリアメール 災害・避難情報（チャイム音）',
+        page:'https://www.docomo.ne.jp/service/areamail/disaster_evacuation/'
+      }
+    ];
+    const clipButtons=[];
+    function openDocomoClip(clip,sourceButton){
       const existing=document.getElementById('disaster-docomo-official-sample');
       if(existing){
+        const same=existing.dataset.videoId===clip.id;
         existing.remove();
-        docomoButton.textContent='▶ ドコモ公式音を試聴';
-        return;
+        clipButtons.forEach(b=>b.textContent=b.dataset.originalLabel);
+        if(same)return;
       }
       const player=document.createElement('section');
       player.id='disaster-docomo-official-sample';
+      player.dataset.videoId=clip.id;
       player.style.cssText='position:absolute;left:50%;top:55%;transform:translate(-50%,-50%);z-index:360;width:min(94%,720px);max-height:calc(100% - 100px);overflow:auto;background:#111820;border:3px solid #ffe15e;box-shadow:0 12px 48px #000;border-radius:10px;padding:12px;color:#fff;box-sizing:border-box';
       const top=document.createElement('div');
       top.style.cssText='display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;font:900 18px sans-serif';
       const title=document.createElement('span');
-      title.textContent='ドコモ公式｜エリアメール 緊急地震速報（試聴）';
+      title.textContent=clip.heading;
       const close=document.createElement('button');
       close.type='button';
       close.textContent='閉じる ✕';
       close.style.cssText='cursor:pointer;background:#ffe15e;border:0;border-radius:4px;padding:8px;color:#16120b;font:900 14px sans-serif';
       close.addEventListener('click',()=>{
         player.remove();
-        docomoButton.textContent='▶ ドコモ公式音を試聴';
+        clipButtons.forEach(b=>b.textContent=b.dataset.originalLabel);
       });
       top.append(title,close);
       const movie=document.createElement('iframe');
-      movie.title='NTTドコモ公式 エリアメール 緊急地震速報 試聴動画';
-      movie.src='https://www.youtube.com/embed/4gZW7HRHJmM?autoplay=1&rel=0';
+      movie.title=clip.heading+' 公式動画';
+      movie.src='https://www.youtube.com/embed/'+clip.id+'?autoplay=1&rel=0';
       movie.allow='autoplay; encrypted-media; picture-in-picture';
       movie.referrerPolicy='strict-origin-when-cross-origin';
       movie.style.cssText='display:block;width:100%;aspect-ratio:16/9;height:auto;border:0;background:#000';
       const help=document.createElement('div');
       help.style.cssText='padding:8px 0 2px;font:700 13px/1.45 sans-serif';
-      help.textContent='音が鳴らない場合は動画中央の再生ボタンを押してください。これは公式動画の試聴で、壁紙の自動警報音ではありません。';
+      help.textContent='音が出ない場合は動画中央の再生ボタンを押してください。公式紹介動画の試聴であり、音だけを自動警報に組み込んだものではありません。';
       const direct=document.createElement('a');
-      direct.href='https://www.docomo.ne.jp/service/areamail/earthquake_warning/';
+      direct.href=clip.page;
       direct.target='_blank';
       direct.rel='noopener noreferrer';
-      direct.textContent='ドコモ公式案内を開く ↗';
+      direct.textContent='ドコモ公式の説明を開く ↗';
       direct.style.cssText='color:#ffe15e;font:700 13px sans-serif';
       player.append(top,movie,help,direct);
       overlay.appendChild(player);
-      docomoButton.textContent='▶ 試聴動画を閉じる';
+      sourceButton.textContent='▶ 試聴を閉じる';
+    }
+    docomoClips.forEach(clip=>{
+      const b=document.createElement('button');
+      b.type='button';
+      b.className='disaster-preview-docomo-clip';
+      b.dataset.originalLabel='▶ '+clip.label;
+      b.textContent=b.dataset.originalLabel;
+      b.style.cssText='cursor:pointer;background:#ffe15e;color:#151000;border:0;border-radius:5px;padding:7px 10px;font:900 14px/1.25 sans-serif;white-space:nowrap';
+      b.addEventListener('click',()=>openDocomoClip(clip,b));
+      clipButtons.push(b);
     });
     // Keep the locally synthesized emergency cue separately, clearly marked
     // as NON-DOCOMO. It remains a fallback test, not a substituted official tone.
@@ -5345,7 +5367,7 @@
         button.disabled=false;
       }
     });
-    wrap.append(note,docomoButton,button);
+    wrap.append(note,...clipButtons,button);
     overlay.appendChild(wrap);
   }
 
