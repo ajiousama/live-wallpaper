@@ -5251,6 +5251,51 @@
     playUrgentDisasterAlarm();
   }
 
+  // Only ?disasterTest=1 gets this manual sound test. No normal wallpaper
+  // page, disaster feed, or automatic page rotation behavior is changed.
+  // Browsers generally block audio started without a real user gesture:
+  // explicitly unlock the AudioContext from a click before playing.
+  function installDisasterPreviewAudioControl(overlay) {
+    if(document.getElementById('disaster-preview-audio-control'))return;
+    const wrap=document.createElement('div');
+    wrap.id='disaster-preview-audio-control';
+    wrap.style.cssText='position:absolute;right:12px;top:7px;z-index:350;display:flex;align-items:center;gap:8px;padding:5px 8px;background:#141414;border:2px solid #ffe15e;border-radius:7px;box-shadow:0 2px 10px #000;color:#ffe15e;font:900 13px/1.3 sans-serif;max-width:95%';
+    const note=document.createElement('span');
+    note.textContent='訓練・テスト';
+    const button=document.createElement('button');
+    button.type='button';
+    button.id='disaster-preview-play-audio';
+    button.textContent='🔊 警報音を鳴らす';
+    button.style.cssText='cursor:pointer;background:#ffe15e;color:#151000;border:0;border-radius:5px;padding:7px 12px;font:900 14px/1.25 sans-serif;white-space:nowrap';
+    button.addEventListener('click',async()=>{
+      const Ctx=window.AudioContext||window.webkitAudioContext;
+      if(!Ctx){
+        button.textContent='音声非対応のブラウザです';
+        return;
+      }
+      button.disabled=true;
+      button.textContent='🔊 音声を開始中…';
+      try {
+        // Instantiate and resume *inside* the user's actual click handler.
+        if(!disasterAudioContext || disasterAudioContext.state==='closed')
+          disasterAudioContext=new Ctx();
+        if(disasterAudioContext.state!=='running')
+          await disasterAudioContext.resume();
+        if(disasterAudioContext.state!=='running')
+          throw new Error('ブラウザが音声を許可していません');
+        playUrgentDisasterAlarm();
+        button.textContent='🔊 再生中・もう一度鳴らす';
+      } catch(e) {
+        button.textContent='音声開始失敗・再試行';
+        console.warn('Disaster preview audio blocked:',e);
+      } finally {
+        button.disabled=false;
+      }
+    });
+    wrap.append(note,button);
+    overlay.appendChild(wrap);
+  }
+
   const DISASTER_ROTATE_MS=20000;
   let disasterRotationSignature='';
   let disasterRotationStartedAt=0;
@@ -5314,6 +5359,7 @@
     const recentActive=!!recent && !recentAcknowledged && Number.isFinite(recentMs) && Date.now()-recentMs<20*60*1000;
     const weatherActive=Array.isArray(d.weather?.active)&&d.weather.active.length>0; const eewActive=!!(d.eew?.active&&d.eew?.local); const tsunamiActive=!!d.tsunami?.active;
     const active=test||eewActive||tsunamiActive||weatherActive||recentActive; const overlay=$('disaster-overlay'); overlay.hidden=!active;
+    if(test) installDisasterPreviewAudioControl(overlay);
     maybePlayDisasterAlarm(d,test);
     if(!active){
       disasterRotationSignature='';
