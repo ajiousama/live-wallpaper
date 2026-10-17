@@ -3341,7 +3341,13 @@
       jrPositionUsable(x.position)
     ).slice(0,24).map(x=>({
       side:x.side,arrival:x.arrival,trainNum:x.trainNum,
-      confirmedApproach:true
+      confirmedApproach:true,
+      // Prefer inbound sets scheduled to reverse at Matsuyama. This is
+      // today's diagram, NOT proof of a vehicle's actual next assignment.
+      plannedTurnback:x.plannedTurnback===true,
+      delayMinutes:Number.isFinite(Number(x.delayMinutes)) &&
+        Number(x.delayMinutes)>=0&&Number(x.delayMinutes)<=60
+        ? Number(x.delayMinutes):0
     }));
     try {
       frame.contentWindow.postMessage({
