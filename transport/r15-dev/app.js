@@ -3349,10 +3349,26 @@
         Number(x.delayMinutes)>=0&&Number(x.delayMinutes)<=60
         ? Number(x.delayMinutes):0
     }));
+    // Exact station calls are supplied by today's diagram, not a generic stop pattern.
+    const scheduled=fresh && Array.isArray(approachLive.ichitsubo?.matsuyamaSchedule)
+      ? approachLive.ichitsubo.matsuyamaSchedule : [];
+    const departures=scheduled.filter(x=>
+      x?.trainClass==='limited' &&
+      ['south','north'].includes(x.direction) &&
+      /^\d{1,2}:\d{2}$/.test(String(x.departure||'')) &&
+      /^\d{1,5}[MD]$/i.test(String(x.trainNum||'')) &&
+      Array.isArray(x.stops) && x.stops.length>0
+    ).slice(0,100).map(x=>({
+      direction:x.direction,departure:x.departure,trainNum:String(x.trainNum),
+      trainClass:'limited',destination:String(x.destination||'').trim(),
+      stops:x.stops.filter(s=>s && typeof s.station==='string' &&
+        /^\d{1,2}:\d{2}$/.test(String(s.time||''))).slice(0,75)
+        .map(s=>({station:String(s.station).trim(),time:String(s.time)}))
+    })).filter(x=>x.stops.length>0);
     try {
       frame.contentWindow.postMessage({
         type:'matsuyama-led-arrivals',
-        iso:now.iso,arrivals
+        iso:now.iso,arrivals,departures
       },location.origin);
     } catch(e) {console.warn('JR LED arrival notice unavailable',e);}
   }
