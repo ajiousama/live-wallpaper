@@ -5336,38 +5336,114 @@
       b.addEventListener('click',()=>openDocomoClip(clip,b));
       clipButtons.push(b);
     });
-    // Keep the locally synthesized emergency cue separately, clearly marked
-    // as NON-DOCOMO. It remains a fallback test, not a substituted official tone.
-    const button=document.createElement('button');
-    button.type='button';
-    button.id='disaster-preview-play-audio';
-    button.textContent='🔊 仮の警報音';
-    button.style.cssText='cursor:pointer;background:#424242;color:#fff;border:1px solid #aeb2b5;border-radius:5px;padding:7px 10px;font:800 13px/1.25 sans-serif;white-space:nowrap';
-    button.addEventListener('click',async()=>{
-      const Ctx=window.AudioContext||window.webkitAudioContext;
-      if(!Ctx){
-        button.textContent='音声非対応のブラウザです';
-        return;
+    // Preview only: decide which of the TWO Docomo alert types a hypothetical
+    // officially sent Area Mail notification would use.
+    // 2023-02 JMA threshold: nationwide >=5-lower (or LP3) AND this alert
+    // area >=4 (or LP3). An ordinary quake update is not an EEW Area Mail.
+    // Tsunami Advisory alone does NOT trigger JMA's tsunami Area Mail.
+    // Weather warning alone is not proof that a municipality actually sent
+    // its own Area Mail message. Never infer one from a hazard label.
+    function previewDocomoAlertKind(event) {
+      if(!event || event.inServiceArea!==true)return null;
+      if(event.type==='eew'){
+        if(event.jmaPublicWarning!==true)return null;
+        const nationwide=Number(event.nationalMaxIntensity)>=5 ||
+          Number(event.nationalLongPeriod)>=3;
+        const local=Number(event.localIntensity)>=4 ||
+          Number(event.localLongPeriod)>=3;
+        return nationwide&&local?'eew':null;
       }
-      button.disabled=true;
-      button.textContent='🔊 音声を開始中…';
-      try {
-        if(!disasterAudioContext || disasterAudioContext.state==='closed')
-          disasterAudioContext=new Ctx();
-        if(disasterAudioContext.state!=='running')
-          await disasterAudioContext.resume();
-        if(disasterAudioContext.state!=='running')
-          throw new Error('ブラウザが音声を許可していません');
-        playUrgentDisasterAlarm();
-        button.textContent='🔊 仮の警報音・再試聴';
-      } catch(e) {
-        button.textContent='仮音の再生失敗・再試行';
-        console.warn('Disaster preview audio blocked:',e);
-      } finally {
-        button.disabled=false;
+      if(event.type==='tsunami')
+        return ['TsunamiWarning','MajorTsunamiWarning'].includes(event.grade)
+          ?'chime':null;
+      if(event.type==='government'){
+        // Actual authority-issued cell-broadcast message only.
+        return event.areaMailConfirmed===true?'chime':null;
       }
+      return null;
+    }
+    // These are ORIGINAL, SYNTHESIZED DEMONSTRATION SOUNDS.
+    // NTT's authentic copyrighted samples are embedded as their official
+    // YouTube video players above, and are NEVER downloaded/re-hosted.
+    function previewPlaySound(kind,ctx){
+      const now=ctx.currentTime+0.035;
+      const out=ctx.createGain();
+      out.gain.value=0.18;
+      out.connect(ctx.destination);
+      function ping(start,duration,frequency,endFrequency,wave,volume){
+        const oscillator=ctx.createOscillator(),gain=ctx.createGain();
+        oscillator.type=wave;
+        oscillator.frequency.setValueAtTime(frequency,start);
+        if(endFrequency!==frequency)
+          oscillator.frequency.exponentialRampToValueAtTime(endFrequency,start+duration);
+        gain.gain.setValueAtTime(0.0001,start);
+        gain.gain.exponentialRampToValueAtTime(volume,start+0.012);
+        gain.gain.setValueAtTime(volume,Math.max(start+0.013,start+duration-0.065));
+        gain.gain.exponentialRampToValueAtTime(0.0001,start+duration);
+        oscillator.connect(gain).connect(out);
+        oscillator.start(start);
+        oscillator.stop(start+duration+0.01);
+      }
+      if(kind==='eew'){
+        // Repeated harsh 2-note warning buzz, distinct from the chime.
+        for(let i=0;i<4;i++){
+          const t=now+i*0.63;
+          ping(t,0.23,820,790,'sawtooth',0.45);
+          ping(t+0.26,0.25,1160,1120,'sawtooth',0.40);
+        }
+      } else if(kind==='chime'){
+        // Two repeating melodic chime phrases, not the earthquake buzzer.
+        const notes=[784,988,1175,988,784,988,1175,1568];
+        notes.forEach((hz,i)=>{
+          ping(now+i*0.28,0.42,hz,hz,'sine',0.85);
+          ping(now+i*0.28,0.31,hz*2,hz*2,'sine',0.12);
+        });
+      }
+    }
+    const scenarios=[
+      {label:'🔊 地震速報',event:{type:'eew',inServiceArea:true,
+        jmaPublicWarning:true,nationalMaxIntensity:5,localIntensity:4},focus:'eew'},
+      {label:'🔊 津波警報',event:{type:'tsunami',inServiceArea:true,
+        grade:'TsunamiWarning'},focus:'tsunami'},
+      {label:'🔊 避難指示',event:{type:'government',inServiceArea:true,
+        areaMailConfirmed:true},focus:'weather'},
+      {label:'🔇 対象外',event:{type:'tsunami',inServiceArea:true,
+        grade:'TsunamiAdvisory'},focus:'summary'}
+    ];
+    const result=document.createElement('div');
+    result.id='disaster-preview-docomo-rule-result';
+    result.style.cssText='width:100%;font:800 11px/1.35 sans-serif;color:#f4e4a4;text-align:right';
+    result.textContent='黄色ボタン＝ドコモ公式動画の試聴 ／ 下の模擬音＝配信基準別テスト';
+    const mockButtons=scenarios.map(scenario=>{
+      const btn=document.createElement('button');
+      btn.type='button';
+      btn.textContent=scenario.label;
+      btn.title='ドコモの通知種別と配信基準を再現した模擬音です。公式音源ではありません。';
+      btn.style.cssText='cursor:pointer;background:#424242;color:#fff;border:1px solid #aeb2b5;border-radius:5px;padding:7px 10px;font:800 13px/1.25 sans-serif;white-space:nowrap';
+      btn.addEventListener('click',async()=>{
+        const kind=previewDocomoAlertKind(scenario.event);
+        if(!kind){
+          result.textContent='配信基準外：音は鳴らしません（津波注意報・通常の気象警報など）';
+          return;
+        }
+        const Ctx=window.AudioContext||window.webkitAudioContext;
+        if(!Ctx){result.textContent='このブラウザでは音声を再生できません';return;}
+        try{
+          if(!disasterAudioContext||disasterAudioContext.state==='closed')
+            disasterAudioContext=new Ctx();
+          if(disasterAudioContext.state!=='running')await disasterAudioContext.resume();
+          if(disasterAudioContext.state!=='running')throw new Error('AudioContext blocked');
+          previewPlaySound(kind,disasterAudioContext);
+          const name=kind==='eew'?'緊急地震速報：ブザー系':'津波・避難情報：チャイム系';
+          result.textContent='配信基準に該当 → '+name+'の模擬音を再生（公式音そのものではありません）';
+        }catch(err){
+          result.textContent='音を出せません。ブラウザの音声設定を確認してください。';
+          console.warn('Area Mail preview audio:',err);
+        }
+      });
+      return btn;
     });
-    wrap.append(note,...clipButtons,button);
+    wrap.append(note,...clipButtons,...mockButtons,result);
     overlay.appendChild(wrap);
   }
 
