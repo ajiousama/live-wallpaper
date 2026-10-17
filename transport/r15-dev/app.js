@@ -3359,7 +3359,9 @@
     // Exact station calls are supplied by today's diagram, not a generic stop pattern.
     const scheduled=fresh && Array.isArray(approachLive.ichitsubo?.matsuyamaSchedule)
       ? approachLive.ichitsubo.matsuyamaSchedule : [];
-    const departures=scheduled.filter(x=>
+    const joined=fresh && Array.isArray(approachLive.ichitsubo?.matsuyamaJoinedPortions)
+      ? approachLive.ichitsubo.matsuyamaJoinedPortions : [];
+    const departures=[...scheduled,...joined].filter(x=>
       x?.trainClass==='limited' &&
       ['south','north'].includes(x.direction) &&
       /^\d{1,2}:\d{2}$/.test(String(x.departure||'')) &&
