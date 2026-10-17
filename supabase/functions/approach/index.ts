@@ -430,6 +430,10 @@ function liveSpecialKind(pos: Record<string, unknown>, route: Route | null) {
   if (/回送|deadhead|out.of.service|入換|入れ換え|入替/i.test(type) ||
       /^[0-9]{1,4}[AE]$/i.test(num) || /^回[0-9]/.test(num)) return "deadhead";
   if (/貨物|freight/i.test(type) || /^(3072|3073)$/.test(num)) return "freight";
+  // Screenshot-confirmed 2026-10-17 RE:MEDIA special 9635M is explicitly
+  // labelled 臨時 / 市坪行 even if today's raw position Type says 普通.
+  if (num==="9635M" && jstNow().iso.startsWith("2026-10-17"))
+    return "extra";
   if (/臨時|extra|special/i.test(type)) return "extra";
   // 明示的な旅客種別は優先。末尾記号の意味は非公式アプリ開発者公開仕様に準拠。
   if (/^(?:普通|各停|各駅停車|local|regional|rapid)(?:$|[:：])/i.test(type)) return "";
@@ -508,7 +512,12 @@ function collectMatsuyamaSpecialTrains(positions: Record<string, unknown>[], dia
       trainNum: num, kind, position, corridor: corridor || "unknown",
       direction: route ? matsuyamaRouteDirection(route) : "",
       vehicleSeries: confirmedVehicleSeries(pos),
-      destination: liveSpecialDestination(pos, route),
+      // Keep date-scoped screenshot evidence separate from live-confirmed
+      // arrival/departure times; never fabricate a time or platform.
+      eventName: num==="9635M" && jstNow().iso.startsWith("2026-10-17")
+        ? "RE:MEDIA FESTIVAL 2026" : "",
+      destination: num==="9635M" && jstNow().iso.startsWith("2026-10-17")
+        ? "市坪" : liveSpecialDestination(pos, route),
       origin: route?.origin ?? "",
       stationEvent, stationTime: time,
       operationLabel: yardShunt ? "松山駅構内入換" : "",
