@@ -310,7 +310,7 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
         if(seen.has(key))return false;seen.add(key);return true;
       });
       if(transfers.length){
-        addPart(segments,'connection','当日ダイヤの接続候補（接続待ち・番線未確認）　'+
+        addPart(segments,'connection','同じ駅から発車する列車（当日運行図）　'+
           transfers.slice(0,10).map(function(t){
             return t.station+' '+t.arrival+'着 → '+t.departure+'発　'+
               (t.trainNum?t.trainNum+'列車 ':'')+t.destination+'行';
