@@ -2753,3 +2753,47 @@ html.company-pc body.freewifi-tv #panel-rail #rail-rows .rail-row{
   min-height:54px!important;
   flex:0 0 54px!important;
 }
+
+/* JR fixed limited-express names: reserve first-column width instead of scrolling. */
+/* Shift the TIME and DESTINATION columns together to the right. The original
+   grid content is retained and the bottom six JR rows keep their dimensions. */
+body.freewifi-tv #panel-rail .rail-head,
+body.freewifi-tv #panel-rail #rail-rows .rail-primary{
+  grid-template-columns:320px 100px minmax(0,1fr)!important;
+}
+html.company-pc body.freewifi-tv #panel-rail .rail-head,
+html.company-pc body.freewifi-tv #panel-rail #rail-rows .rail-primary{
+  grid-template-columns:320px 94px minmax(0,1fr)!important;
+}
+body.freewifi-tv #panel-rail #rail-rows .rail-service.limited{
+  min-width:0!important;
+  overflow:visible!important;
+}
+body.freewifi-tv #panel-rail #rail-rows .rail-service.limited .kindtxt{
+  display:flex!important;
+  width:max-content!important;
+  min-width:max-content!important;
+  max-width:none!important;
+  overflow:visible!important;
+  white-space:nowrap!important;
+  gap:4px!important;
+  animation:none!important;
+  transform:none!important;
+}
+body.freewifi-tv #panel-rail #rail-rows .rail-service.limited .rail-name-badge{
+  display:inline-flex!important;
+  flex:0 0 auto!important;
+  width:max-content!important;
+  max-width:none!important;
+  min-width:0!important;
+  white-space:nowrap!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+  animation:none!important;
+  transform:none!important;
+  padding-inline:7px!important;
+  font-size:12px!important;
+}
+html.company-pc body.freewifi-tv #panel-rail #rail-rows .rail-service.limited .rail-name-badge{
+  font-size:12.5px!important;
+}
