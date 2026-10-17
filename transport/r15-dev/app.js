@@ -3173,9 +3173,92 @@
     root.appendChild(row);
   }
 
+  // Preserve the active six independent JR ticker DOMs between each
+  // ten-second train-location poll. No whole-board innerHTML clearing.
+  const railTickerPending = new WeakMap();
+  function railRowIdentity(row) {
+    if(!row?.classList?.contains('rail-row')) return '';
+    if(row.classList.contains('placeholder'))return 'blank';
+    const type=row.classList.contains('special-movement-row')?'special':
+      row.classList.contains('terminal-arrival-row')?'arrival':
+      row.classList.contains('deadhead-row')?'deadhead':
+      row.classList.contains('freight-row')?'freight':'passenger';
+    const time=row.querySelector('.rail-primary .cell.time')?.textContent?.trim()||'';
+    const name=row.querySelector('.rail-primary .rail-service')?.textContent?.trim()||'';
+    return type+'|'+time+'|'+name;
+  }
+  function updateRailTickerAtCycleEnd(oldRow,newRow) {
+    const oldDetail=oldRow.querySelector(':scope > .rail-detail');
+    const newDetail=newRow.querySelector(':scope > .rail-detail');
+    if(!newDetail)return;
+    if(!oldDetail){oldRow.appendChild(newDetail.cloneNode(true));return;}
+    const desired=newDetail.innerHTML;
+    if(oldDetail.innerHTML===desired){
+      // A previous feed update may have been reverted; discard its pending
+      // replacement instead of letting it overwrite a newer, correct detail.
+      railTickerPending.delete(oldDetail);
+      return;
+    }
+    railTickerPending.set(oldDetail,desired);
+    const track=oldDetail.querySelector('.marquee-track');
+    if(!track || !getComputedStyle(track).animationName.includes('ticker-scroll')){
+      oldDetail.innerHTML=desired;
+      railTickerPending.delete(oldDetail);
+      return;
+    }
+    if(track.dataset.railDetailUpdateArmed==='1')return;
+    track.dataset.railDetailUpdateArmed='1';
+    track.addEventListener('animationiteration',e=>{
+      if(e.animationName!=='ticker-scroll')return;
+      const upcoming=railTickerPending.get(oldDetail);
+      if(typeof upcoming==='string')oldDetail.innerHTML=upcoming;
+      railTickerPending.delete(oldDetail);
+    },{once:true});
+  }
+  function calibrateRailTicker(row) {
+    const track=row.querySelector('.rail-detail .marquee-track');
+    const first=track?.firstElementChild;
+    if(!first)return;
+    // Width is measured in actual glyphs, not arbitrary text length. Long
+    // station lists and transfers now get enough time for one complete loop.
+    const distance=first.scrollWidth+32;
+    if(distance<=32)return;
+    const duration=Math.max(12,Math.min(200,distance/42)).toFixed(1)+'s';
+    if(track.style.getPropertyValue('--ticker-duration')!==duration)
+      track.style.setProperty('--ticker-duration',duration);
+  }
+  function reconcileRailRows(visibleRoot,renderedRoot) {
+    visibleRoot.classList.toggle('rail-end',renderedRoot.classList.contains('rail-end'));
+    const next=[...renderedRoot.children];
+    for(let i=0;i<next.length;i++){
+      const upcoming=next[i];
+      const existing=visibleRoot.children[i];
+      if(existing && railRowIdentity(existing) &&
+         railRowIdentity(existing)===railRowIdentity(upcoming)){
+        // A position or final-service badge may update, but never replace
+        // its adjacent scrolling detail element.
+        if(existing.className!==upcoming.className)
+          existing.className=upcoming.className;
+        const oldPrimary=existing.querySelector(':scope > .rail-primary');
+        const newPrimary=upcoming.querySelector(':scope > .rail-primary');
+        if(oldPrimary&&newPrimary&&oldPrimary.innerHTML!==newPrimary.innerHTML)
+          oldPrimary.innerHTML=newPrimary.innerHTML;
+        updateRailTickerAtCycleEnd(existing,upcoming);
+      }else if(existing){
+        visibleRoot.replaceChild(upcoming,existing);
+      }else {
+        visibleRoot.appendChild(upcoming);
+      }
+    }
+    while(visibleRoot.children.length>next.length)visibleRoot.lastElementChild.remove();
+    activatePanelOverflow(visibleRoot);
+    [...visibleRoot.querySelectorAll(':scope > .rail-row')]
+      .forEach(calibrateRailTicker);
+  }
+
   function renderRail(rows) {
-    const root = $('rail-rows'); root.innerHTML = '';
-    root.classList.remove('rail-end');
+    const visibleRoot = $('rail-rows');
+    const root=document.createElement('div');
     const now = japanNow();
 
     // Separate next-limited-express indicator for the currently shown direction.
@@ -3366,8 +3449,8 @@
         row.innerHTML=`<div class="rail-primary"><div class="cell"></div><div class="cell time"></div><div class="cell"></div></div><div class="rail-detail"></div>`;
         root.appendChild(row);
       }
-      activatePanelOverflow(root);
     }
+    reconcileRailRows(visibleRoot,root);
   }
 
   function lastAirMovement(now, dep) {
