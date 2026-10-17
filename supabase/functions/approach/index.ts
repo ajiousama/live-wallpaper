@@ -713,6 +713,103 @@ async function getIchitsubo(now: { minutes: number }) {
   }).filter(Boolean).sort((a:any,b:any)=>
     (a.minutesToMatsuyama ?? 9999)-(b.minutesToMatsuyama ?? 9999));
 
+  // Actual diagram-based transfers, NOT a claim that the connecting operator
+  // will hold a train. Only a timed arrival and timed later LOCAL departure at
+  // the same station produce a connection candidate. Platform numbers are
+  // deliberately omitted: today's diagram has no confirmed platform data.
+  function timetableLocalTransfers(source: Route, allRoutes: Route[]) {
+    const home=source.matsuyamaDepartureIndex;
+    if(home<0)return [];
+    const byStation=new Map<string,Array<{
+      route:Route,departure:number,arrival:number,departureText:string
+    }>>();
+    for(const route of allRoutes){
+      const number=String(route.trainNum||"");
+      if(!/^\d{1,5}[MD]$/i.test(number)||
+         Number(number.replace(/\D/g,""))>=8000 ||
+         matsuyamaTrainClass(number)!=="local")continue;
+      route.points.forEach((p,i)=>{
+        if(!/発/.test(p.event)||/通/.test(p.event))return;
+        const station=normalizeStationName(p.station);
+        const departure=toMinutes(p.time);
+        if(!station||!Number.isFinite(departure))return;
+        const later=route.points.slice(i+1).find(q=>
+          normalizeStationName(q.station)!==station &&
+          normalizeStationName(q.station)!=="松山基地");
+        if(!later)return;
+        // Use a same-station arrival when the local stops BEFORE this train.
+        // This establishes its scheduled dwell, never a guaranteed hold.
+        const previous=route.points.slice(0,i).reverse()
+          .find(q=>normalizeStationName(q.station)===station &&
+            /着/.test(q.event)&&Number.isFinite(toMinutes(q.time)));
+        const arrival=previous?toMinutes(previous.time):NaN;
+        const list=byStation.get(station)||[];
+        list.push({route,departure,arrival,departureText:p.time});
+        byStation.set(station,list);
+      });
+    }
+    const earlierStations=new Set(source.points.slice(0,home+1)
+      .map(x=>normalizeStationName(x.station)));
+    const results:Array<Record<string,unknown>>=[];
+    const seen=new Set<string>();
+    for(let i=home+1;i<source.points.length;i++){
+      const p=source.points[i];
+      const station=normalizeStationName(p.station);
+      if(!station||!/着/.test(p.event)||/通/.test(p.event))continue;
+      const arrival=toMinutes(p.time);
+      if(!Number.isFinite(arrival)||station==="松山基地")continue;
+      const sourceAfter=source.points.slice(i+1)
+        .map(x=>normalizeStationName(x.station)).filter(Boolean);
+      const through=new Set(sourceAfter);
+      const viable=(byStation.get(station)||[]).filter(candidate=>{
+        if(candidate.route.trainNum===source.trainNum)return false;
+        const gap=candidate.departure-arrival;
+        if(gap<4||gap>40)return false;
+        const r=candidate.route,depPoint=r.points.findIndex(q=>
+          normalizeStationName(q.station)===station &&
+          /発/.test(q.event)&&toMinutes(q.time)===candidate.departure);
+        const onward=r.points.slice(depPoint+1)
+          .map(x=>normalizeStationName(x.station))
+          .filter(x=>x&&x!==station&&x!=="松山基地");
+        if(!onward.length)return false;
+        if(earlierStations.has(onward[0]))return false;
+        // A transfer is useful only if the new service reaches somewhere the
+        // current train won't, or if the incoming train terminates here.
+        return sourceAfter.length===0 || onward.some(x=>!through.has(x));
+      }).sort((a,b)=>{
+        const aw=Number.isFinite(a.arrival)&&a.arrival<=arrival &&
+            a.departure>=arrival?0:1;
+        const bw=Number.isFinite(b.arrival)&&b.arrival<=arrival &&
+            b.departure>=arrival?0:1;
+        return aw-bw || a.departure-b.departure;
+      });
+      for(const cand of viable.slice(0,2)){
+        const key=station+"|"+cand.route.trainNum+"|"+cand.departure;
+        if(seen.has(key))continue;seen.add(key);
+        const waiting=Number.isFinite(cand.arrival)&&
+          cand.arrival<=arrival&&cand.arrival>=arrival-60;
+        const localDestination=normalizeStationName(cand.route.destination);
+        results.push({
+          station,arrival:padHHMM(arrival),trainNum:cand.route.trainNum,
+          destination:localDestination,departure:cand.departureText,
+          minutes:cand.departure-arrival,
+          scheduledLocalArrival:waiting?padHHMM(cand.arrival):"",
+          localArrivesFirst:waiting,
+          source:"today_diagram",platformConfirmed:false
+        });
+      }
+      earlierStations.add(station);
+    }
+    return results.sort((a:any,b:any)=>
+      toMinutes(a.arrival)-toMinutes(b.arrival) ||
+      Number(b.localArrivesFirst)-Number(a.localArrivesFirst))
+      .slice(0,6);
+  }
+  function padHHMM(minutes:number) {
+    return String(Math.floor(minutes/60)).padStart(2,"0")+":"+
+      String(minutes%60).padStart(2,"0");
+  }
+  const diagramRoutes=[...diagram.values()];
   const matsuyamaSchedule = [...diagram.values()].map((route) => {
     if (route.matsuyamaDepartureIndex < 0 || !/^\d{1,2}:\d{2}$/.test(route.matsuyamaDepartureTime)) return null;
     const num = String(route.trainNum || "").trim();
@@ -738,6 +835,8 @@ async function getIchitsubo(now: { minutes: number }) {
       destination: route.destination || terminal?.station || "",
       stops,
       terminal,
+      // Diagram-based local connections, no unverified platform or hold claims.
+      transfers: timetableLocalTransfers(route,diagramRoutes),
     };
   }).filter(Boolean).sort((a: any, b: any) => toMinutes(a.departure) - toMinutes(b.departure));
 
