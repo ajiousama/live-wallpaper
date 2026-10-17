@@ -2441,8 +2441,8 @@
       .map(x=>x.row);
   }
 
-  function railTickerServiceHtml(kind,service='') {
-    return `<span class="rail-ticker-service">${railServiceBadgeHtml(kind,service)}</span>`;
+  function railTickerServiceHtml(kind,service='',info='') {
+    return `<span class="rail-ticker-service">${railServiceBadgeHtml(kind,service,info)}</span>`;
   }
 
   function railApproachBadgeHtml(x) {
@@ -2467,7 +2467,7 @@
     const label=(r)=>{
       const kind=r.kind==='local'?'local':r.kind==='sightseeing'?'tourist':'limited';
       const service=kind==='local'?'':String(r.service||'');
-      return `${railTickerServiceHtml(kind,service)} <span class="rail-ticker-dest">${r.dest}行</span>`;
+      return `${railTickerServiceHtml(kind,service,r.info)} <span class="rail-ticker-dest">${r.dest}行</span>`;
     };
 
     if(s.imabariFinal && isVisible(s.imabariFinal)){
@@ -2903,8 +2903,15 @@
       '</span>';
   }
 
-  function railServiceBadgeHtml(kind, service='') {
+  function railPassengerServiceName(service,info=''){
     const svc=String(service||'').trim();
+    const match=svc.match(/^しおかぜ(\d+)号$/);
+    const partner=String(info||'').match(/いしづち(\d+)号/);
+    return match && partner && match[1]===partner[1]
+      ? svc+'・いしづち'+partner[1]+'号' : svc;
+  }
+  function railServiceBadgeHtml(kind, service='', info='') {
+    const svc=railPassengerServiceName(service,info);
     if(kind==='limited'){
       const name=svc||'特急';
       return `<span class="rail-kind-badge rail-kind-limited">特急</span><span class="rail-name-badge">${name}</span>`;
@@ -3389,7 +3396,7 @@
         const confirmed=nextLimited.railPositionConfirmed && nextLimited.livePosition;
         const status=confirmed?'現在位置 '+nextLimited.livePosition:'時刻表予定・位置未確認';
         const details=railRowDetailItems(nextLimited);
-        nextCard.innerHTML=`<div class="rail-next-main"><span class="rail-next-label">次の特急は？</span><span class="rail-next-service">${railVehicleIconHtml(nextLimited)}${railServiceBadgeHtml('limited',nextLimited.service)}</span><span class="rail-next-time">${nextLimited.time}発</span><span class="rail-next-dest">${railDestLabel(nextLimited)}行</span></div><div class="rail-next-details">${tickerHtml(details.length?details:[status])}</div>`;
+        nextCard.innerHTML=`<div class="rail-next-main"><span class="rail-next-label">次の特急は？</span><span class="rail-next-service">${railVehicleIconHtml(nextLimited)}${railServiceBadgeHtml('limited',nextLimited.service,nextLimited.info)}</span><span class="rail-next-time">${nextLimited.time}発</span><span class="rail-next-dest">${railDestLabel(nextLimited)}行</span></div><div class="rail-next-details">${tickerHtml(details.length?details:[status])}</div>`;
       } else {
         nextCard.innerHTML='<span class="rail-next-label">次の特急は？</span><span class="rail-next-status">この方面の本日の特急は終了しました</span>';
       }
@@ -3545,7 +3552,7 @@
         const r=item.data;
         const row = document.createElement('div'); row.className = `row rail-row${r.kind==='extra'?' rail-event-extra-row':''}${r.isFinal ? ' is-final' : ''}${isDepartSoon(r, now) ? ' depart-soon' : ''}`;
         const kind = r.kind === 'limited' ? 'limited' : r.kind === 'sightseeing' ? 'tourist' : r.kind === 'extra' ? 'extra' : 'local';
-        const serviceBadge = railVehicleIconHtml(r)+railServiceBadgeHtml(kind,r.service);
+        const serviceBadge = railVehicleIconHtml(r)+railServiceBadgeHtml(kind,r.service,r.info);
         const departureRank=departureRanks.get(r);
         const departureMark=departureRank===1
           ? '<span class="rail-order-badge rail-order-next" aria-label="発車順一番目">次発</span>'
