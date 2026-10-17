@@ -843,11 +843,11 @@ async function getIchitsubo(now: { minutes: number }) {
     }
     return index;
   })();
-  function opposingStationPaths(a:Route,b:Route,station:string) {
+  function stationPathRelation(a:Route,b:Route,station:string) {
     const aNames=a.points.map(p=>normalizeStationName(p.station));
     const bNames=b.points.map(p=>normalizeStationName(p.station));
     const aAt=aNames.indexOf(station),bAt=bNames.indexOf(station);
-    if(aAt<0||bAt<0)return false;
+    if(aAt<0||bAt<0)return '';
     // Two common stations, encountered in inverse order, establish opposing
     // travel. A mere shared platform at one junction cannot establish it.
     let reverse=0,forward=0;
@@ -859,7 +859,8 @@ async function getIchitsubo(now: { minutes: number }) {
       if(sign<0)reverse++;
       if(sign>0)forward++;
     }
-    return reverse>0&&forward===0;
+    return reverse>0&&forward===0?'opposing':
+      forward>0&&reverse===0?'same':'';
   }
   function timetableLocalOpposingMeets(route:Route) {
     if(matsuyamaTrainClass(String(route.trainNum||""))!=="local"||
@@ -880,8 +881,12 @@ async function getIchitsubo(now: { minutes: number }) {
       if(dwell<2||dwell>45)continue; // Real dwell, not a terminal layover.
       const choices=(meetingEventsByStation.get(station)||[])
         .filter(other=>other.trainNum!==route.trainNum &&
-          other.time>=arrival && other.time<=departure &&
-          opposingStationPaths(route,other.route,station))
+          other.time>=arrival && other.time<=departure)
+        .map(other=>({...other,relation:
+          stationPathRelation(route,other.route,station)}))
+        .filter(other=>other.relation==='opposing' ||
+          (other.relation==='same' &&
+            (other.kind==='limited'||other.event==='pass')))
         .sort((a,b)=>a.time-b.time||a.trainNum.localeCompare(b.trainNum));
       for(const candidate of choices){
         const key=station+"|"+candidate.trainNum;
@@ -892,7 +897,7 @@ async function getIchitsubo(now: { minutes: number }) {
           dwellMinutes:dwell,counterTrainNum:candidate.trainNum,
           counterTrainClass:candidate.kind,
           counterEvent:candidate.event,counterTime:padHHMM(candidate.time),
-          movement:"opposing",source:"today_diagram",
+          movement:candidate.relation,source:"today_diagram",
           platformConfirmed:false,actualHoldConfirmed:false
         });
       }
