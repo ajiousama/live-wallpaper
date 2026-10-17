@@ -7,130 +7,90 @@
 <title>JR松山駅｜独立型LED発車案内</title>
 <style>
 
-:root{color-scheme:dark;--amber:#ffcf32;--white:#f5f5e9;--cyan:#75e7f1;--green:#93ed82;--red:#ff5454}
+/* Original Matsuyama LED geometry, reproduced with text/CSS, no external sprite atlas.
+   The source uses 284x116 units, title at y=0..39 and 16px rows at y=39,62,85.
+   Keep the user's established 415x142px embedded footprint unchanged. */
+:root{color-scheme:dark}
 *{box-sizing:border-box}
-html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#101417;font-family:"Yu Gothic","Noto Sans JP",Meiryo,sans-serif;color:var(--white);font-variant-numeric:tabular-nums}
-.board{position:relative;width:100%;height:100%;padding:4px 8px 5px;display:grid;grid-template-rows:18px minmax(0,1fr) 29px;gap:3px;overflow:hidden;background:#303235;border:2px solid #c4c5c7;box-shadow:inset 0 0 0 2px #101214}
-.board>*{min-width:0}
-.heading{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 5px;color:#f1f1ef;background:#393d40;border-bottom:1px solid #4a4d4f}
-.station{font-size:12px;line-height:1;font-weight:900;letter-spacing:.09em;white-space:nowrap}
-.station small{margin-left:5px;font-size:10px;letter-spacing:.06em;color:#c0d0d1}
-.heading-right{display:flex;align-items:center;justify-content:flex-end;gap:5px;min-width:0}
-.direction{font-size:12px;font-weight:900;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#090d11;color:#fff;
+  font-family:'ＭＳ ゴシック','MS Gothic','Yu Gothic',Meiryo,monospace}
+body{display:flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums}
+.board{position:relative;flex:none;width:415px;height:142px;max-width:none;max-height:none;
+  border:2px solid #e0e0e0;background:#363636;box-shadow:inset 0 0 0 1px #555;color:#fff;
+  overflow:hidden;transform:scale(var(--led-scale,1));transform-origin:center}
+.heading{height:56px;position:absolute;top:0;left:0;right:0;
+  text-align:center;display:flex;flex-direction:column;justify-content:center;gap:0;padding-bottom:3px}
+.direction{font-size:23px;font-weight:900;line-height:1.05;letter-spacing:0;
+  white-space:nowrap;text-shadow:1px 0 currentColor;overflow:visible}
+.english-direction{font-size:16px;line-height:1.05;font-weight:800;letter-spacing:.02em;white-space:nowrap}
+.track-head{position:absolute;font-size:11px;right:11px;top:42px;color:#fff;font-weight:900}
 .clock{display:none}
-.rows{display:grid;grid-template-rows:repeat(2,minmax(0,1fr));gap:3px;min-height:0;overflow:hidden}
-.train{display:grid;grid-template-columns:57px minmax(135px,1.7fr) 86px minmax(123px,1.22fr) 52px minmax(115px,.95fr);
- gap:5px;align-items:center;min-height:0;min-width:0;padding:2px 6px;border:1px solid #51565a;background:#000}
-.train.limited{border-left:4px solid #f74337}
-.train.local{border-left:4px solid #e8e85d}
-.train.extra,.train.sightseeing{border-left:4px solid #c58bf0}
-.train.pass,.train.freight{border-left:4px solid #85c7d0}
-.kind{min-width:0;white-space:nowrap;text-align:center;font-size:13px;font-weight:950;line-height:1.3;color:#181800;background:#ffff60;padding:2px 0}
-.limited .kind{background:#f4453c;color:white}
-.local .kind{background:#ddec55;color:#070a02}
-.extra .kind,.sightseeing .kind{background:#a98bdd;color:#090611}
-.pass .kind,.freight .kind{background:#75cde4;color:#020f14}
-.service{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#ffdc35;font-size:20px;line-height:1.08;font-weight:950;letter-spacing:-.06em}
-.service.pair{display:flex;flex-direction:column;justify-content:center;gap:1px;letter-spacing:-.035em;font-size:16px;line-height:1.02}
-.service.pair span{display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.dep{font:900 27px/1 Consolas,"Arial Narrow",monospace;white-space:nowrap;color:#fff8f0;letter-spacing:-.045em}
-.dest{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#f3f5eb;font-size:19px;font-weight:950}
-.platform{font-size:13px;color:#ffca41;text-align:center;white-space:nowrap;font-weight:950}
-.status{font-size:12px;line-height:1.25;color:#7fe4ee;font-weight:900;min-width:0;text-align:center;white-space:normal;overflow:hidden;max-height:3em}
-.status.final{color:#ffdf51}.status.warning{color:#f74541}
+.rows{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.train,.ticker{position:absolute;left:19px;width:377px;height:23px;
+  background:#000;outline:1px solid #1b1b1b;overflow:hidden}
+.rows>.train:nth-child(1){top:57px}
+.rows>.train:nth-child(2){top:111px}
+.train{display:grid;grid-template-columns:48px 116px 88px 103px 22px;
+  align-items:center;gap:0;min-width:0;min-height:0;padding:0;border:0}
+.kind{color:#f90000;font-size:20px;text-align:center;white-space:nowrap;line-height:21px;
+  overflow:hidden;font-weight:900;min-width:0}
+.limited .kind{border:2px solid #f00000}
+.local .kind{border:0;color:#fff}
+.extra .kind,.sightseeing .kind{color:#f4db6a}
+.freight .kind,.pass .kind{color:#8cd2dd}
+.service{min-width:0;overflow:hidden;white-space:nowrap;font-size:14px;line-height:1.05;
+  color:#ff2121;font-weight:900;letter-spacing:-.035em;text-overflow:clip}
+.service.pair{display:flex;flex-direction:column;justify-content:center;
+  font-size:12px;line-height:10px;letter-spacing:-.025em;gap:1px}
+.service.pair span{white-space:nowrap;overflow:hidden;text-overflow:clip}
+.local .service{color:#fff;font-size:16px;letter-spacing:-.05em}
+.freight .service,.pass .service{color:#f5e15c}
+.dep{font-family:'ＭＳ ゴシック','MS Gothic',monospace;font-size:28px;color:#fff;
+  letter-spacing:-.065em;white-space:nowrap;font-weight:900;line-height:1}
+.dest{font-size:15px;color:#faf019;font-weight:900;line-height:1.0;
+  white-space:nowrap;overflow:hidden;letter-spacing:-.015em;min-width:0}
+.dest.pair{font-size:13px;display:flex;flex-direction:column;line-height:10px}
+.dest.pair span{white-space:nowrap;overflow:hidden}
+.platform{font-size:21px;text-align:center;color:#fff;font-weight:900}
+.status{position:absolute;left:164px;right:16px;top:0;height:23px;
+  display:none!important;align-items:center;justify-content:center;text-align:center;
+  white-space:nowrap;overflow:hidden;background:#000;color:#ffeb34;font-size:16px;font-weight:900;z-index:3}
+.status.warning{display:flex!important}
+.status.final{display:none!important}
 .flash{animation:led-blink .9s steps(1,end) infinite}
 @keyframes led-blink{0%,49%{opacity:1}50%,100%{opacity:0}}
-.train.empty{border-left:4px solid #59616b}
-.train.empty .service{color:#879ea7;font-size:16px}
-.train.empty .kind{color:#adb9c0;background:#242d31}
-.ticker{display:grid;grid-template-columns:92px minmax(0,1fr);gap:0;position:relative;overflow:hidden;isolation:isolate;align-items:stretch;min-height:0;background:#000;border:1px solid #59616b}
-.ticker-label{position:relative;z-index:3;display:flex;align-items:center;justify-content:center;width:92px;max-width:92px;min-width:0;overflow:hidden;white-space:nowrap;background:#fff52b;color:#101000;font-weight:950;font-size:13px}
-.ticker-window{position:relative;isolation:isolate;min-width:0;min-height:0;overflow:hidden;clip-path:inset(0);background:#000;display:flex;align-items:center}
-.ticker-track{position:absolute;left:0;top:0;height:100%;width:max-content;min-width:max-content;display:inline-flex;align-items:center;white-space:nowrap;color:#f9efdc;font-size:16px;line-height:1;font-weight:950;will-change:transform;pointer-events:none}
+.train.empty .service{color:#a1a1a1;font-size:14px}
+.train.empty .kind{color:#a9a9a9;border:0}
+.ticker{top:84px;display:grid;grid-template-columns:96px minmax(0,1fr);align-items:center;
+  isolation:isolate;background:#000;min-width:0;min-height:0}
+.ticker-label{position:relative;z-index:3;color:#ffff00;font-size:21px;white-space:nowrap;
+  font-weight:900;line-height:23px;padding-left:0;overflow:hidden}
+.ticker-window{position:relative;z-index:1;display:flex;align-items:center;overflow:hidden;
+  clip-path:inset(0);height:23px;min-width:0;isolation:isolate}
+.ticker-track{position:absolute;left:0;top:0;width:max-content;min-width:max-content;height:23px;
+  display:inline-flex;align-items:center;white-space:nowrap;color:#ff2727;font-size:17px;
+  line-height:1;font-weight:900;will-change:transform;pointer-events:none}
 .segment{display:inline-block;white-space:nowrap;padding-right:32px}
-.segment.title{color:#ffca29}.segment.stop{color:#f4edda}.segment.connection{color:#5de2ff}.segment.note{color:#adbfc8}
+.segment.title{color:#ff3333}.segment.stop{color:#fff138}
+.segment.connection{color:#75deff}.segment.note{color:#ccc}
 .ticker-note{display:none}
-.arrival-alert{position:absolute;z-index:8;right:5px;bottom:37px;padding:4px 8px;background:#000;color:#ffeb39;border:1px solid #ffde39;font-weight:950;font-size:15px;white-space:nowrap}
+.arrival-alert{position:absolute;z-index:8;left:19px;top:84px;width:377px;height:23px;
+  display:flex;align-items:center;justify-content:center;background:#000;
+  color:#ffe52a;font-size:18px;font-weight:900;white-space:nowrap}
 .arrival-alert[hidden]{display:none}
-@media(max-width:800px){
- .board{padding:3px 5px 4px;grid-template-rows:16px minmax(0,1fr) 27px;gap:2px}
- .heading{padding:0 3px}.station,.direction{font-size:11px}.station small{display:none}
- .train{grid-template-columns:43px minmax(96px,1.6fr) 69px minmax(88px,1fr) 41px;gap:4px;padding:1px 4px}
- .kind{font-size:10px}.service{font-size:15px}.service.pair{font-size:12px}.dep{font-size:21px}.dest{font-size:13px}.platform{font-size:11px}.status{display:none}
- .ticker{grid-template-columns:76px minmax(0,1fr)}.ticker-label{width:76px;max-width:76px;font-size:11px}.ticker-track{font-size:13px}
- .arrival-alert{font-size:12px;bottom:32px}
-}
-@media(max-width:500px){.train{grid-template-columns:38px minmax(82px,1fr) 62px minmax(67px,.8fr)}.platform{display:none}.station small{display:none}}
 
-
-/* Original mounting footprint: centered compact LED, NOT a full-width
-   replacement. Only presentation is corrected; parent screen and data
-   handlers remain unchanged. */
-.board{
- width:min(415px,100%)!important;
- max-width:415px!important;
- height:100%!important;
- margin-inline:auto!important;
- padding:4px 5px!important;
- grid-template-rows:19px minmax(0,1fr) 26px!important;
- gap:3px!important;
- border:2px solid #aeb4b6!important;
- background:#333638!important;
-}
-.heading{padding:0 3px!important;gap:4px!important}
-.station{font-size:11px!important;letter-spacing:0!important}
-.station small{display:none!important}
-.direction{font-size:10px!important;max-width:230px!important}
-.rows{gap:3px!important;min-height:0!important}
-.train{
- grid-template-columns:37px minmax(0,115px) 61px minmax(0,79px) 27px minmax(0,53px)!important;
- gap:3px!important;padding:2px 4px!important;
- border-left-width:2px!important;
-}
-.kind{font-size:10px!important;padding:2px 0!important}
-.service{font-size:13px!important;letter-spacing:-.045em!important}
-.service.pair{font-size:10px!important;gap:1px!important;letter-spacing:0!important}
-.dep{font-size:18px!important;letter-spacing:-.04em!important}
-.dest{font-size:12px!important}
-.platform{display:block!important;font-size:9px!important;text-align:center!important}
-.status{
- display:block!important;font-size:9px!important;line-height:1.08!important;
- text-align:center!important;max-height:3.2em!important;
-}
-.ticker{grid-template-columns:69px minmax(0,1fr)!important;isolation:isolate!important}
-.ticker-label{
- width:69px!important;max-width:69px!important;
- font-size:10px!important;z-index:3!important;
-}
-.ticker-window{
- position:relative!important;overflow:hidden!important;
- min-width:0!important;isolation:isolate!important;
-}
-.ticker-track{font-size:12px!important;z-index:1!important}
-.ticker-note{display:none!important}
-.arrival-alert{font-size:11px!important;bottom:32px!important}
-@media(max-width:430px){
- .board{padding:3px!important}
- .train{
-   grid-template-columns:33px minmax(0,1.5fr) 57px minmax(0,1fr) 25px!important;
-   gap:2px!important;
- }
- .platform{font-size:8px!important}
- .status{display:none!important}
- .service{font-size:11px!important}.service.pair{font-size:9px!important}
- .dep{font-size:16px!important}.dest{font-size:10px!important}
-}
 </style>
 </head>
 <body>
-<main class="board" aria-label="JR松山駅 LED発車案内">
- <div class="heading"><div class="station">発車時刻 <small>DEPARTURES</small></div><div class="heading-right"><span class="direction" id="direction">八幡浜・宇和島方面</span><span class="clock" id="clock">--:--:--</span></div></div>
+<main class="board" aria-label="JR松山駅 発車標">
+ <header class="heading"><div class="direction" id="direction">八幡浜・宇和島方面 発車時刻</div><div class="english-direction" id="english-direction">for Yawatahama, Uwajima</div><span class="track-head">のりば</span></header>
  <section class="rows" id="rows" aria-live="off">
-  <div class="train empty"><span class="kind">--</span><span class="service">列車情報を取得中</span></div>
-  <div class="train empty"><span class="kind">--</span><span class="service">Please wait</span></div>
+   <article class="train empty"><span class="kind"></span><span class="service">列車情報取得中</span></article>
+   <article class="train empty"><span class="kind"></span><span class="service">運行図を確認中</span></article>
  </section>
- <div class="ticker"><div class="ticker-label" id="ticker-label">停車駅・接続</div><div class="ticker-window" id="ticker-window"><div class="ticker-track" id="ticker-track">列車の運行図を確認中</div></div><div class="ticker-note">当日ダイヤに基づくご案内</div></div>
+ <div class="ticker"><div class="ticker-label" id="ticker-label">停車駅</div><div class="ticker-window" id="ticker-window"><div class="ticker-track" id="ticker-track">停車駅・接続を確認しています</div></div></div>
  <div class="arrival-alert flash" id="arrival-alert" hidden>まもなく列車が到着します</div>
+ <span class="clock" id="clock" hidden></span>
 </main>
 <script>
 (function(){
@@ -213,15 +173,15 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#101417;fon
     var a=svc.match(/^しおかぜ(\d+)号$/),b=info.match(/いしづち(\d+)号/);
     if(a&&b&&a[1]===b[1]){
       return {pair:true,ja:['しおかぜ'+a[1]+'号','いしづち'+a[1]+'号'],
-        en:['SHIOKAZE '+a[1],'ISHIZUCHI '+a[1]]};
+        en:['Shiokaze '+a[1],'Ishizuchi '+a[1]]};
     }
     var m=svc.match(/^宇和海(\d+)号$/);
-    if(m)return {pair:false,ja:[svc],en:['UWAKAI '+m[1]]};
+    if(m)return {pair:false,ja:[svc],en:['Uwakai '+m[1]]};
     m=svc.match(/^しおかぜ(\d+)号$/);
-    if(m)return {pair:false,ja:[svc],en:['SHIOKAZE '+m[1]]};
+    if(m)return {pair:false,ja:[svc],en:['Shiokaze '+m[1]]};
     m=svc.match(/^いしづち(\d+)号$/);
-    if(m)return {pair:false,ja:[svc],en:['ISHIZUCHI '+m[1]]};
-    if(row.kind==='local')return {pair:false,ja:['普通列車'],en:['LOCAL TRAIN']};
+    if(m)return {pair:false,ja:[svc],en:['Ishizuchi '+m[1]]};
+    if(row.kind==='local')return {pair:false,ja:['普通列車'],en:['Local Train']};
     if(row.kind==='freight')return {pair:false,ja:['貨物 '+String(row.trainNum||'')+'レ'],en:['FREIGHT '+String(row.trainNum||'')]};
     if(row.kind==='pass')return {pair:false,ja:['通過 '+String(row.trainNum||'')],en:['PASSING '+String(row.trainNum||'')]};
     if(row.kind==='sightseeing')return {pair:false,ja:[svc||'観光列車'],en:['SIGHTSEEING TRAIN']};
@@ -233,10 +193,10 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#101417;fon
   function trainRow(row,n){
     var kind=row.kind||'local',pass=!!row.passStatus;
     var name=splitService(row),box=el('article','train '+kind);
-    var kindJP=pass?(kind==='freight'?'貨物':'通過'):
+    var kindJP=kind==='local'?'':pass?(kind==='freight'?'貨物':'通過'):
       ({limited:'特急',local:'普通',extra:'臨時',sightseeing:'観光',freight:'貨物',pass:'通過'}[kind]||'列車');
-    var kindEN=pass?(kind==='freight'?'FRT':'PASS'):
-      ({limited:'LTD',local:'LOCAL',extra:'EXTRA',sightseeing:'TOUR',freight:'FRT',pass:'PASS'}[kind]||'TRAIN');
+    var kindEN=kind==='local'?'':pass?(kind==='freight'?'Freight':'Pass'):
+      ({limited:'Ltd.',local:'',extra:'Extra',sightseeing:'Tour',freight:'Frt.',pass:'Pass'}[kind]||'Train');
     box.appendChild(el('span','kind',lang==='en'?kindEN:kindJP));
     var nameEl=el('div','service'+(name.pair?' pair':''));
     (lang==='en'?name.en:name.ja).forEach(function(label){
@@ -246,9 +206,20 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#101417;fon
     box.appendChild(el('span','dep',String(row.time||'--:--').padStart(5,'0')));
     var dest=pass?(lang==='en'?'PASS':'通過'):
       (lang==='en'?englishDest(row.dest):String(row.dest||''));
-    box.appendChild(el('span','dest',dest));
+    var destEl=el('span','dest');
+    if(!pass && /岡山・高松/.test(String(row.dest||''))){
+      destEl.classList.add('pair');
+      (lang==='en'?['Okayama','Takamatsu']:['岡山','高松']).forEach(function(text){
+        destEl.appendChild(el('span','',text));
+      });
+    }else if(lang==='en'&&dest==='Iyo-Saijo'){
+      destEl.classList.add('pair');
+      destEl.appendChild(el('span','','Iyo-'));
+      destEl.appendChild(el('span','','Saijo'));
+    }else destEl.textContent=dest;
+    box.appendChild(destEl);
     var pm=String(row.info||'').match(/([1-3])番/);
-    box.appendChild(el('span','platform',pass?'—':(pm?pm[1]+(lang==='en'?' TRACK':'番線'):'—')));
+    box.appendChild(el('span','platform',pass?'':(pm?pm[1]:'')));
     var dep=timeNumber(row.time),rem=dep*60-n.minutes*60-n.seconds;
     var urgent=!pass&&rem>0&&rem<=60;
     var st=urgent?(lang==='en'?'DEPARTING SOON':'まもなく発車'):
@@ -402,10 +373,11 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#101417;fon
         fragment.appendChild(emp);
       }
       rowsEl.replaceChildren(fragment);
-      document.getElementById('direction').textContent=lang==='en'?
-        (direction==='north'?'IMABARI / TAKAMATSU / OKAYAMA':'YAWATAHAMA / UWAJIMA'):
-        (direction==='north'?'今治・高松・岡山方面':'八幡浜・宇和島方面');
-      tickerLabel.textContent='停車駅・接続'; // Fixed compact title never overflows in English
+      document.getElementById('direction').textContent=
+        (direction==='north'?'今治・高松・岡山方面':'八幡浜・宇和島方面')+' 発車時刻';
+      document.getElementById('english-direction').textContent=
+        direction==='north'?'for Imabari, Takamatsu, Okayama':'for Yawatahama, Uwajima';
+      tickerLabel.textContent='停車駅';
     }
     syncTicker(tickerItems(rows.slice(0,2),n));
     updateAlerts(n,rows);
