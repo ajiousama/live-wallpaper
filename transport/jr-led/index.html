@@ -1,1114 +1,434 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<!-- saved from url=(0062)https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/index.html -->
-<html xmlns="http://www.w3.org/1999/xhtml"><head>
-<base href="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
-<meta name="referrer" content="no-referrer">
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
-<meta http-equiv="Content-Style-Type" content="text/css">
-<meta http-equiv="Content-Script-Type" content="text/javascript">
-<meta name="author" content="">
-<meta name="description" content="">
-<meta name="keywords" content="">
-<title>JR松山駅 発車標｜元エンジン・元素材による独立プレビュー</title>
-
-<link rel="stylesheet" href="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/style2.css" type="text/css">
-
-<style type="text/css">
-body{
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="color-scheme" content="dark">
+<title>JR松山駅｜独立型LED発車案内</title>
+<style>
+:root{color-scheme:dark;--amber:#ffbd56;--soft:#fdd58b;--white:#eaf3f6;--cyan:#7fe7f2;--red:#ff7773;--green:#86f9b7}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#080e14;font-family:"Noto Sans JP","Yu Gothic",Meiryo,sans-serif}
+body{color:var(--white);font-variant-numeric:tabular-nums}
+.board{position:relative;max-width:1420px;height:100%;margin:0 auto;padding:7px 12px 7px;display:grid;grid-template-rows:23px minmax(0,1fr) 33px;gap:4px;
+ background:linear-gradient(180deg,#172936 0%,#0b1824 28%,#07131d 100%);border:1px solid #425667;box-shadow:inset 0 0 0 2px #0b1922,0 0 12px #000}
+.board:before{content:"";position:absolute;inset:0;pointer-events:none;z-index:10;opacity:.1;background-image:radial-gradient(#aec2ba .45px,transparent .65px);background-size:4px 4px}
+.board>*{position:relative;z-index:1;min-width:0}
+.heading{display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid #334956;padding:0 6px 3px}
+.station{font-size:15px;font-weight:900;letter-spacing:.08em;color:var(--white);white-space:nowrap}
+.station small{font-size:10px;color:#8bb7c9;letter-spacing:.13em;margin-left:6px}
+.heading-right{display:flex;gap:12px;align-items:center;justify-content:flex-end;min-width:0}
+.direction{font-size:12px;color:var(--cyan);font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.clock{font:700 12px/1 Consolas,monospace;color:#a9c4d2;white-space:nowrap}
+.rows{display:grid;grid-template-rows:repeat(2,minmax(0,1fr));gap:4px;min-height:0}
+.train{display:grid;grid-template-columns:59px minmax(155px,1.75fr) 86px minmax(125px,1.15fr) 60px minmax(109px,.77fr);
+ align-items:center;min-width:0;gap:7px;border:1px solid #263844;border-left:3px solid #ff9f3d;padding:2px 9px;
+ background:linear-gradient(90deg,#03080d,#050d12 72%,#0a1820)}
+.train.local{border-left-color:#76e6b1}.train.freight,.train.pass{border-left-color:#9db2bd}.train.extra{border-left-color:#b7afff}
+.kind{font-weight:900;letter-spacing:.08em;border-radius:2px;font-size:12px;text-align:center;padding:3px 1px;border:1px solid currentColor;white-space:nowrap}
+.limited .kind{color:#ff8d79}.local .kind{color:var(--green)}.freight .kind,.pass .kind{color:#a8bac3}.extra .kind{color:#b7afff}
+.service{color:var(--amber);font-size:17px;line-height:1.17;font-weight:900;overflow:hidden;min-width:0;white-space:nowrap;text-overflow:ellipsis;letter-spacing:-.035em}
+.service.pair{display:flex;flex-direction:column;gap:0;font-size:13px;line-height:1.07;letter-spacing:0}
+.service.pair span{display:block;overflow:hidden;text-overflow:ellipsis}
+.dep{color:#fff4c6;font:900 25px/1 Consolas,"Arial Narrow",monospace;letter-spacing:-.045em;white-space:nowrap}
+.dest{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:16px;font-weight:900;color:#f6f6e5}
+.platform{font-size:12px;text-align:center;white-space:nowrap;color:var(--soft);font-weight:800}
+.status{min-width:0;font-size:12px;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#8fb3c3;font-weight:800}
+.status.final{color:#f8df7c}.status.warning{color:var(--red)}
+.flash{animation:blink .85s steps(1,end) infinite}
+@keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+.train.empty{border-left-color:#344757}
+.train.empty .service{font-size:15px;color:#8aa2af}
+.train.empty .kind{color:#718996}
+.ticker{position:relative;display:grid;grid-template-columns:84px 1fr 184px;min-height:0;border:1px solid #395362;background:#01090c;align-items:stretch}
+.ticker-label{z-index:2;display:flex;align-items:center;justify-content:center;color:#081b20;background:#7fd6d9;font-size:13px;font-weight:900;white-space:nowrap;letter-spacing:.04em}
+.ticker-window{min-width:0;min-height:0;overflow:hidden;position:relative;display:flex;align-items:center}
+.ticker-track{position:absolute;display:inline-flex;flex-wrap:nowrap;align-items:center;white-space:nowrap;width:max-content;
+ font-size:15px;font-weight:900;line-height:1;will-change:transform;color:#e6f2e5}
+.segment{display:inline-block;padding-right:30px;white-space:nowrap}
+.segment.title{color:var(--amber)}.segment.stop{color:var(--soft)}.segment.connection{color:var(--cyan)}.segment.note{color:#91b5c6}
+.ticker-note{display:flex;align-items:center;justify-content:flex-end;padding-right:8px;color:#88aabc;font-size:10px;white-space:nowrap;z-index:1;border-left:1px solid #263c48}
+.arrival-alert{position:absolute;z-index:6;right:9px;bottom:39px;padding:5px 15px;background:#161103;color:#ffdc60;border:1px solid #ffca59;
+ font-weight:900;font-size:15px;box-shadow:0 0 12px #000;pointer-events:none}
+.arrival-alert[hidden]{display:none}
+@media(max-width:800px){
+ .board{padding:5px 6px;gap:3px;grid-template-rows:20px minmax(0,1fr) 32px}
+ .station{font-size:13px}.direction{font-size:11px}
+ .train{grid-template-columns:46px minmax(115px,1.6fr) 68px minmax(85px,1fr) 44px;gap:4px;padding:2px 5px}
+ .kind{font-size:10px}.service{font-size:13px}.service.pair{font-size:10px}.dest{font-size:12px}.dep{font-size:20px}.platform{font-size:10px}
+ .status{display:none}.ticker{grid-template-columns:66px 1fr}.ticker-note{display:none}.ticker-label{font-size:11px}.ticker-track{font-size:13px}
+ .arrival-alert{font-size:12px;bottom:36px}
 }
-.font_scroll_mincho{
-	font-family:'ＭＳ 明朝', 'ヒラギノ明朝 Pro W3','Hiragino Mincho Pro';
-}
-.font_scroll_gothic {
-	font-family:'ＭＳ ゴシック', 'Hiragino Kaku Gothic ProN', 'ヒラギノ角ゴ ProN W3', sans-serif;
-}
-
-/*
-ゴシックにする場合
-	font-family:'ＭＳ ゴシック', 'Hiragino Kaku Gothic ProN', 'ヒラギノ角ゴ ProN W3', sans-serif;
-
-明朝にする場合
-	font-family:'ＭＳ 明朝', 'ヒラギノ明朝 Pro W3','Hiragino Mincho Pro';
-
-jiskanにする場合
-	font-family:'JF Dot jiskan16', 'ＭＳ ゴシック', 'Hiragino Kaku Gothic ProN', 'ヒラギノ角ゴ ProN W3', sans-serif;
-	-webkit-font-smoothing: none;
-	-moz-osx-font-smoothing: none;
-*/
-
-/* 画像のレンダリング設定　拡大した画像がぼやけるのを防ぐ https://www.omohayui.com/entry/2017/08/20/180653  */
-.pixelated {
-  -ms-interpolation-mode: nearest-neighbor;   /* IE8+ */
-  image-rendering: -webkit-optimize-contrast; /* Safari (WebKit) */
-  image-rendering: -moz-crisp-edges;          /* Firefox (Gecko) */
-  image-rendering: -o-crisp-edges;            /* Opera 12.x */
-  image-rendering: pixelated;                 /* Chrome 41+, Opera 29+ (CSS4) */
-}
-
-
+@media(max-width:530px){.station small{display:none}.clock{display:none}.train{grid-template-columns:38px minmax(90px,1fr) 63px minmax(74px,.8fr)}.platform{display:none}}
 </style>
-<!-- 	font-weight: bold;  -->
-
-
-<script type="text/javascript" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/main.js" charset="UTF-8"></script> <!--javascript読み込み-->
-<script type="text/javascript" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/utility.js" charset="UTF-8"></script> <!--javascript読み込み-->
-<script type="text/javascript" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/setting.js" charset="UTF-8"></script> <!--javascript読み込み-->
-<script type="text/javascript" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/offerSectionWrite.js" charset="UTF-8"></script> <!--javascript読み込み-->
-
-<script type="text/javascript">
-	//OS・ユーザエージェントを判別
-	judgeUA();
-</script>
-
-<style id="wallpaper-adapter">
-html,body{margin:0!important;background:#090b0d!important;color:#eee!important;overflow:hidden!important;height:100%!important}
-body>a,body>hr,body>select,body>input,body>h2,body>p,body>ul,body>table,body>br{display:none!important}
-#inputFormDiv{position:absolute!important;top:-5000px!important;left:-5000px!important;visibility:hidden!important}
-#LEDUnitDiv{position:absolute!important;inset:0!important;width:100vw!important;height:100vh!important;overflow:hidden!important}
-#LEDUnitDiv>div{position:absolute!important;left:50%!important;top:50%!important;transform:translate(-50%,-50%) scale(1)!important;width:599px!important;height:116px!important}
-#LEDUnitDiv img{image-rendering:pixelated!important}
-</style><style id="wallpaper-layout-v2">
-html,body{margin:0!important;padding:0!important;background:#090b0d!important;min-width:0!important;width:100%!important;height:100%!important;overflow:hidden!important}
-body>*:not(#LEDUnitDiv):not(#inputFormDiv):not(script){display:none!important}
-#inputFormDiv{display:block!important;position:fixed!important;top:-20000px!important;left:-20000px!important;visibility:hidden!important;pointer-events:none!important}
-#LEDUnitDiv{display:block!important;position:fixed!important;inset:0!important;width:100vw!important;height:100vh!important;max-width:none!important;overflow:hidden!important}
-#LEDUnitDiv>div{position:absolute!important;left:50%!important;top:50%!important;width:599px!important;height:116px!important;transform:translate(-50%,-50%) scale(var(--led-scale,1))!important;transform-origin:center!important}
-#LEDUnitDiv>div>div{top:0!important}
-#LEDUnitDiv>div>div:first-child{left:0!important}
-#LEDUnitDiv>div>div:nth-child(2){left:285px!important}
-#LEDUnitDiv [id^="LEDUnitDiv"]{background-color:#393939!important}
-/* Preserve the ORIGINAL title/header bitmap layers (not substituted CSS text). */
-#LEDUnitDiv .pixelated img{image-rendering:pixelated!important}
-@media(max-width:610px){#LEDUnitDiv>div{--led-scale:0.8}}
-@media(max-width:500px){#LEDUnitDiv>div{--led-scale:0.6}}
-#LEDUnitDiv [id^="labelTitleImg"], #LEDUnitDiv [id^="labelHeaderImg"]{visibility:visible!important}
-#LEDUnitDiv [id^="labelTitleImg"]{z-index:1}
-#LEDUnitDiv [id^="labelHeaderImg"]{z-index:2;pointer-events:none}
-/* The imported source contains bare instructional text nodes in <body>.
-   Hidden elements alone do not hide text nodes; suppress only the parent text
-   while restoring text rendering inside the authentic display unit. */
-body{font-size:0!important;line-height:0!important}
-#LEDUnitDiv{font-size:16px!important;line-height:normal!important}
-/* One authentic LED unit per existing JR direction page.
-   Without ?dir=... this standalone preview retains its two units. */
-html[data-led-direction="south"] #LEDUnitDiv>div,
-html[data-led-direction="north"] #LEDUnitDiv>div{
-  width:284px!important;height:116px!important;
-}
-html[data-led-direction="south"] #LEDUnitDiv>div>div:nth-child(2),
-html[data-led-direction="north"] #LEDUnitDiv>div>div:first-child{
-  display:none!important;
-}
-html[data-led-direction="south"] #LEDUnitDiv>div>div:first-child,
-html[data-led-direction="north"] #LEDUnitDiv>div>div:nth-child(2){
-  display:block!important;left:0!important;top:0!important;
-}
-</style><style id="led-passage-labels">
-/* Status added ONLY for feed-confirmed/scheduled pass-throughs; native time
-   digits remain intact at x112-176. Distinguish unconfirmed "通過予定". */
-#LEDUnitDiv .led-passage-label{
-  position:absolute!important;
-  top:0!important;
-  height:16px!important;
-  line-height:16px!important;
-  display:block!important;
-  overflow:hidden!important;
-  white-space:nowrap!important;
-  box-sizing:border-box!important;
-  background:#000!important;
-  z-index:1000!important;
-  pointer-events:none!important;
-  font-family:'Yu Gothic','Meiryo',sans-serif!important;
-  font-size:13px!important;
-  font-weight:bold!important;
-  text-align:center!important;
-}
-/* The ORIGINAL train-type/name sprites render "貨物" + "貨物列車".
-   Never cover them with a hand-made freight label. */
-#LEDUnitDiv .led-passage-status{
-  left:176px!important;width:80px!important;color:#ffe34c!important;
-}
-</style><style id="led-joined-name-style">
-/* Prefer the original combined bitmap when it exists. For missing numbers,
-   the complete two-part name fits inside the original 80x16 name field. */
-#LEDUnitDiv .led-joined-service{
- position:absolute!important;left:32px!important;top:0!important;
- width:80px!important;height:16px!important;z-index:650!important;
- display:flex!important;flex-direction:column!important;justify-content:center!important;
- align-items:center!important;overflow:hidden!important;pointer-events:none!important;
- background:#000!important;color:#ffdc46!important;
- font-family:'ＭＳ ゴシック','Yu Gothic','Meiryo',sans-serif!important;
- font-size:8px!important;font-weight:900!important;line-height:8px!important;
- letter-spacing:-.3px!important;white-space:nowrap!important;
-}
-#LEDUnitDiv .led-joined-service>span{
- display:block!important;height:8px!important;line-height:8px!important;
-}
-
-/* Keep the genuine original bilingual bitmap whenever Japanese frame exists. */
-#LEDUnitDiv .led-joined-service[data-mode="native"]{display:none!important}
-#LEDUnitDiv .led-joined-service[data-mode="english"]{
- font-family:Arial,'Arial Narrow',sans-serif!important;
- font-size:8px!important;letter-spacing:-.15px!important;color:#ffdd43!important;
-}
-</style><style id="led-departure-soon-style">
-/* One minute before the scheduled departure, flash in EACH affected LED row.
-   Overlay the timetable/destination (x112–240), keep service-name sprites
-   (x0–112), independent route/stop ticker, and pass-throughs untouched. */
-#LEDUnitDiv .led-departure-soon{
-  position:absolute!important;
-  left:112px!important;
-  top:0!important;
-  width:128px!important;
-  height:16px!important;
-  box-sizing:border-box!important;
-  display:flex!important;
-  justify-content:center!important;
-  align-items:center!important;
-  overflow:hidden!important;
-  z-index:1100!important;
-  background:#000!important;
-  color:#ffeb32!important;
-  font-family:'ＭＳ ゴシック','Yu Gothic','Meiryo',sans-serif!important;
-  font-size:12px!important;
-  font-weight:900!important;
-  letter-spacing:-.5px!important;
-  line-height:16px!important;
-  white-space:nowrap!important;
-  pointer-events:none!important;
-  animation:led-departure-soon-flash .9s steps(1,end) infinite!important;
-}
-@keyframes led-departure-soon-flash {
-  0%,49.9%{opacity:1}
-  50%,100%{opacity:0}
-}
-/* Arrival notice occupies the BOTTOM ticker field, not either departure row.
-   Existing station-stop marquee keeps its animation behind this notice. */
-#LEDUnitDiv .led-arrival-soon{
-  position:absolute!important;
-  left:77px!important;top:62px!important;
-  width:192px!important;height:16px!important;
-  box-sizing:border-box!important;
-  display:flex!important;align-items:center!important;justify-content:center!important;
-  overflow:hidden!important;z-index:1200!important;
-  background:#000!important;color:#ffeb32!important;
-  font-family:'ＭＳ ゴシック','Yu Gothic','Meiryo',sans-serif!important;
-  font-size:12px!important;font-weight:900!important;letter-spacing:-.4px!important;
-  line-height:16px!important;white-space:nowrap!important;pointer-events:none!important;
-  animation:led-departure-soon-flash .9s steps(1,end) infinite!important;
-}
-</style><style id="led-continuous-ticker-style">
-/* Deterministic seamless station-stop ticker; replaces browser-specific marquee
-   behavior. One complete message is followed by its exact duplicate. */
-/* Native marquee had no clipping after conversion and spilled across the
-   left-side "停車駅" indicator. Keep the original indicator, but render the
-   endlessly looping message in an independent 192px-wide viewport. */
-#LEDUnitDiv [id^="messageTelopDiv"] .font_scroll_gothic{
-  overflow:hidden!important;
-  clip-path:inset(0)!important;
-}
-#LEDUnitDiv [id^="messageTelopDiv"] marquee,
-#LEDUnitDiv [id^="messageTelopDiv"] .led-continuous-ticker-track{
-  visibility:hidden!important;
-}
-#LEDUnitDiv .led-continuous-ticker-viewport{
-  position:absolute!important;
-  left:77px!important;
-  top:62px!important;
-  width:192px!important;
-  height:16px!important;
-  overflow:hidden!important;
-  clip-path:inset(0)!important;
-  background:#000!important;
-  z-index:50!important;
-  pointer-events:none!important;
-  white-space:nowrap!important;
-  font-size:16px!important;
-  line-height:16px!important;
-}
-#LEDUnitDiv .led-continuous-ticker-track{
-  display:flex!important;
-  flex-wrap:nowrap!important;
-  align-items:center!important;
-  width:max-content!important;
-  min-width:max-content!important;
-  height:16px!important;
-  position:relative!important;
-  white-space:nowrap!important;
-  will-change:transform;
-  animation:led-continuous-ticker var(--led-loop-seconds, 35s) linear infinite!important;
-}
-#LEDUnitDiv .led-continuous-ticker-copy{
-  display:block!important;
-  flex:none!important;
-  white-space:nowrap!important;
-  padding-right:48px!important;
-  box-sizing:content-box!important;
-}
-@keyframes led-continuous-ticker{
-  from{transform:translate3d(0px,0px,0px)}
-  /* Track contains two identical halves: -50% is exactly one message. */
-  to{transform:translate3d(-50%,0px,0px)}
-}
-</style></head>
-
+</head>
 <body>
-
-<a href="https://r113.sakura.ne.jp/index.htm">TOP</a> &gt; <a href="https://r113.sakura.ne.jp/p/hasshahyo/index.htm">発車標シミュレーター</a> &gt; JR四国 松山駅
-<hr>
-
-<select size="1" id="unitCountInput" style="">
-<option value="1">1台</option>
-<option value="2" selected="">2台</option>
-<option value="3">3台</option>
-<option value="4">4台</option>
-<option value="5">5台</option>
-<option value="6">6台</option>
-<option value="7">7台</option>
-<option value="8">8台</option>
-<option value="9">9台</option>
-<option value="10">10台</option>
-</select>
-×
-<select size="1" id="lineCountInput" style="">
-<option value="1">1本表示</option>
-<option value="2" selected="">2本表示</option>
-<option value="3">3本表示</option>
-<option value="4">4本表示</option>
-<option value="5">5本表示</option>
-<option value="6">6本表示</option>
-<option value="7">7本表示</option>
-<option value="8">8本表示</option>
-<option value="9">9本表示</option>
-<option value="10">10本表示</option>
-<option value="15">15本表示</option>
-<option value="20">20本表示</option>
-<option value="30">30本表示</option>
-<option value="40">40本表示</option>
-<option value="50">50本表示</option>
-<option value="100">100本表示</option>
-</select>
-
-　<input type="button" value="段数変更&amp;サンプル設定" onclick="randomSetFlag = true;  setUnitLine();">
-<input type="button" value="段数変更&amp;ランダム設定" onclick="randomSetFlag = false; setUnitLine();">
-　/
-　日本語<input id="intervalInput0" type="text" value="6.0" size="4" style="text-align:right; " onkeyup="intervalTimeSet()"> 秒
-　英語<input id="intervalInput1" type="text" value="3.0" size="4" style="text-align:right; " onkeyup="intervalTimeSet()"> 秒
-<!--　接近表示切替 <input id='intervalInput1' type='text' value='6.0' size='4' style='text-align:right; ' onkeyup='intervalTimeSet()' /> 秒
-　英語 <input id='intervalInput1' type='text' value='5.0' size='4' style='text-align:right; ' onkeyup='intervalTimeSet()' /> 秒
-　点滅 <input id='switchIntervalInput0' type='text' value='1.2' size='4' style='text-align:right; ' onkeyup='intervalTimeSet()' /> 秒-->
-<!--
-　/
-　現在時刻
-<input id='nowHourInput' type='text' value='12' size='2' maxlength='2' style='text-align:right; ' onkeyup='updateNowTime()' />時
-<input id='nowMinuteInput' type='text' value='34' size='2' maxlength='2' style='text-align:right; ' onkeyup='updateNowTime()' />分
--->
-　/
-　スクロール縦位置
-　<input type="button" value="上へ" onclick="fontTop[24]-=1; fontTop[16]-=1; updateStatusAll(); " style="">
-　<input type="button" value="下へ" onclick="fontTop[24]+=1; fontTop[16]+=1; updateStatusAll(); " style="">
-　/
-　速度
-　<input type="button" value="おそく" onclick="setScrollSpeed(-1); updateStatusAll(); " style="">
-　<input type="button" value="はやく" onclick="setScrollSpeed(1);  updateStatusAll(); " style="">
-<hr>
-
-<!--発車標描画部-->
-<div id="LEDUnitDiv" style=""><div id="" style="position:relative; top:0px; left:0px; height:196px; ">  <div id="" style="position:absolute; top:30px; left:30px; width:284px; ">    <div id="LEDUnitDiv0" style="position:absolute; top:0px; left:0px; width:284px; height:116px; background-color:#444; overflow:hidden; cursor: move; z-index:0; border: solid #fff 1px; " onmousedown="dragOn('LEDUnitDiv0')">            <img id="labelTitleImg0" style="position:absolute; left:0px; top:0px; width:284px; height:39px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/title-0.png" alt="">            <img id="labelHeaderImg0" style="position:absolute; left:0px; top:0px; width:284px; height:39px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/header.png" alt="">                <div id="ledMainFlameDiv0" class="pixelated" style="position:absolute; left:13px; top:39px; width:256px; height:46px; ">                  <div id="" style="position:absolute; left:0px; top:0px; width:256px; height:16px; background-color:#000; border: solid #222 1px; ">                    <div id="lineContents0_0" style="position:absolute; "><div id="typeDiv0_0" style="position:absolute; left:0px; top:0px; width:32px; height:16px; overflow:hidden; ">  <img id="typeImg0_0" style="position: absolute; top: -68px; left: -33px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="deptSwitchDiv0_0" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg0_0" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="trainNameDiv0_0" style="position:absolute; left:32px; top:0px; width:80px; height:16px; overflow:hidden; ">  <img id="trainNameImg0_0" style="position: absolute; top: -68px; left: -152px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="deptSwitchDiv0_0" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg0_0" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="trainNumDiv0_0" style="position: absolute; left: 80px; top: 0px; width: 32px; height: 16px; overflow: hidden; z-index: -1;"><div id="trainNumBaseDiv0_0" style="position:absolute; left:0px; top:0px; width:32px; height:16px; overflow:hidden;">  <img id="trainNumBaseImg0_0" style="position: absolute; top: -17px; left: -272px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="trainNum1Div0_0" style="position:absolute; left:2px; top:0px; width:8px; height:16px; overflow:hidden;">  <img id="trainNum1Img0_0" style="position: absolute; left: -305px; top: -34px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="trainNum0Div0_0" style="position:absolute; left:11px; top:0px; width:8px; height:16px; overflow:hidden;">  <img id="trainNum0Img0_0" style="position: absolute; left: -305px; top: -102px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div></div><div id="deptSwitchDiv0_0" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg0_0" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="departureTimeDiv0_0" style="position:absolute; left:112px; top:0px; width:64px; height:16px; overflow:hidden;"><div id="departureTimeBaseDiv0_0" style="position:absolute; left:0px; top:0px; width:64px; height:16px; overflow:hidden; ">  <img id="departureTimeBaseImg0_0" style="position: absolute; left: -338px; top: -17px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="departureTime3Div0_0" style="position:absolute; left:5px; top:0px; width:10px; height:16px; overflow:hidden; ">  <img id="departureTime3Img0_0" style="position: absolute; left: -405px; top: -170px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="departureTime2Div0_0" style="position:absolute; left:18px; top:0px; width:10px; height:16px; overflow:hidden; ">  <img id="departureTime2Img0_0" style="position: absolute; left: -405px; top: -119px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="departureTime1Div0_0" style="position:absolute; left:36px; top:0px; width:10px; height:16px; overflow:hidden; ">  <img id="departureTime1Img0_0" style="position: absolute; left: -405px; top: -34px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="departureTime0Div0_0" style="position:absolute; left:49px; top:0px; width:10px; height:16px; overflow:hidden; ">  <img id="departureTime0Img0_0" style="position: absolute; left: -405px; top: -85px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div></div><div id="deptSwitchDiv0_0" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg0_0" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="destinationDiv0_0" style="position:absolute; left:176px; top:0px; width:64px; height:16px; overflow:hidden; ">  <img id="destinationImg0_0" style="position: absolute; top: -374px; left: -496px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="deptSwitchDiv0_0" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg0_0" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="soonDiv0_0" style="position: absolute; left: 112px; top: 0px; width: 128px; height: 16px; overflow: hidden; z-index: -1;">  <img id="soonImg0_0" style="position: absolute; top: -17px; left: -586px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="deptSwitchDiv0_0" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg0_0" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="trackDiv0_0" style="position:absolute; left:240px; top:0px; width:16px; height:16px; overflow:hidden; ">  <img id="trackImg0_0" style="position: absolute; top: 0px; left: -564px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="deptSwitchDiv0_0" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg0_0" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div>                    </div>                  </div>                  <div id="" style="position:absolute; left:0px; top:46px; width:256px; height:16px; background-color:#000; border: solid #222 1px; ">                    <div id="lineContents0_1" style="position:absolute; "><div id="typeDiv0_1" style="position:absolute; left:0px; top:0px; width:32px; height:16px; overflow:hidden; ">  <img id="typeImg0_1" style="position: absolute; top: 0px; left: -33px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="deptSwitchDiv0_1" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg0_1" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="trainNameDiv0_1" style="position:absolute; left:32px; top:0px; width:80px; height:16px; overflow:hidden; ">  <img id="trainNameImg0_1" style="position: absolute; top: -102px; left: -152px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="deptSwitchDiv0_1" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg0_1" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="trainNumDiv0_1" style="position: absolute; left: 80px; top: 0px; width: 32px; height: 16px; overflow: hidden; z-index: -1;"><div id="trainNumBaseDiv0_1" style="position:absolute; left:0px; top:0px; width:32px; height:16px; overflow:hidden;">  <img id="trainNumBaseImg0_1" style="position: absolute; top: -17px; left: -272px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="trainNum1Div0_1" style="position:absolute; left:2px; top:0px; width:8px; height:16px; overflow:hidden;">  <img id="trainNum1Img0_1" style="position: absolute; left: -305px; top: -68px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="trainNum0Div0_1" style="position:absolute; left:11px; top:0px; width:8px; height:16px; overflow:hidden;">  <img id="trainNum0Img0_1" style="position: absolute; left: -305px; top: -17px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div></div><div id="deptSwitchDiv0_1" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg0_1" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="departureTimeDiv0_1" style="position:absolute; left:112px; top:0px; width:64px; height:16px; overflow:hidden;"><div id="departureTimeBaseDiv0_1" style="position:absolute; left:0px; top:0px; width:64px; height:16px; overflow:hidden; ">  <img id="departureTimeBaseImg0_1" style="position: absolute; left: -338px; top: -17px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="departureTime3Div0_1" style="position:absolute; left:5px; top:0px; width:10px; height:16px; overflow:hidden; ">  <img id="departureTime3Img0_1" style="position: absolute; left: -405px; top: -170px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="departureTime2Div0_1" style="position:absolute; left:18px; top:0px; width:10px; height:16px; overflow:hidden; ">  <img id="departureTime2Img0_1" style="position: absolute; left: -405px; top: -119px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="departureTime1Div0_1" style="position:absolute; left:36px; top:0px; width:10px; height:16px; overflow:hidden; ">  <img id="departureTime1Img0_1" style="position: absolute; left: -405px; top: -68px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="departureTime0Div0_1" style="position:absolute; left:49px; top:0px; width:10px; height:16px; overflow:hidden; ">  <img id="departureTime0Img0_1" style="position: absolute; left: -405px; top: -85px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div></div><div id="deptSwitchDiv0_1" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg0_1" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="destinationDiv0_1" style="position:absolute; left:176px; top:0px; width:64px; height:16px; overflow:hidden; ">  <img id="destinationImg0_1" style="position: absolute; top: -425px; left: -496px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="deptSwitchDiv0_1" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg0_1" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="soonDiv0_1" style="position: absolute; left: 112px; top: 0px; width: 128px; height: 16px; overflow: hidden; z-index: -1;">  <img id="soonImg0_1" style="position: absolute; top: 0px; left: -586px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="deptSwitchDiv0_1" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg0_1" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="trackDiv0_1" style="position:absolute; left:240px; top:0px; width:16px; height:16px; overflow:hidden; ">  <img id="trackImg0_1" style="position: absolute; top: 0px; left: -564px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="deptSwitchDiv0_1" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg0_1" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div>                    </div>                  </div>          <div id="messageTelopCoverDiv0" style="position: absolute; left: 0px; top: 23px; width: 256px; height: 16px; background-color: rgb(0, 0, 0); z-index: 1;">          </div>          <div id="messageTelopDiv0" style="position: absolute; left: 0px; top: 23px; width: 256px; height: 16px; z-index: 1;"><div id="" style="position:absolute; left:0px; top:0px; width:64px; height:16px; overflow:hidden; ">  <img id="" style="position:absolute; left:-725px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div>  <div class="font_scroll_gothic" style="position:absolute; top:0px; left:64px; width:192px; height:16px; font-size:16px; letter-spacing:0px; color:#fff; white-space: nowrap; ">    <marquee scrollamount="6.0592592592592585"><span style="color:#f00">この列車の停車駅</span>は、<span style="color:#ff0">伊予北条・今治・壬生川・伊予西条・新居浜・伊予三島・川之江・観音寺・高瀬・詫間・多度津・丸亀・坂出・高松</span>です。　<span style="color:#ff0">坂出</span>で<span style="color:#f00">寝台特急「サンライズ瀬戸」</span><span style="color:#ff0">東京行</span> と、<span style="color:#4af">快速「マリンライナー６８号」</span><span style="color:#ff0">岡山行</span> に接続します。　　　　　　　　　　　　　　　　お客様にお願いします。駅及び車内への<span style="color:#f00">危険物の</span><span style="color:#ff0">持ち込みは</span><span style="color:#f00">禁止</span>されております。<span style="color:#f00">不審物や不審な行為</span>にお気づきの場合は、<span style="color:#ff0">駅係員</span>や<span style="color:#ff0">乗務員</span>までお知らせください。<span style="color:#0f9">Ｉｆ　you notice any suspicious item or behavior, please notify staff.</span>　　　　　　　　　　　　　　　　<span style="color:#f00">この列車の停車駅</span>は、<span style="color:#ff0">伊予市・伊予中山・内子・伊予大洲・八幡浜・伊予吉田・宇和島</span>です。　　　　　　　　　　　　　　　　<span style="color:#f00">お願い：</span>お身体に障がいのあるお客様へのご配慮について、周りにいらっしゃるお客様のご理解とご協力をお願い申し上げます。    </marquee>  </div></div>          </div>  </div></div>  <div id="" style="position:absolute; top:30px; left:315px; width:284px; ">    <div id="LEDUnitDiv1" style="position:absolute; top:0px; left:0px; width:284px; height:116px; background-color:#444; overflow:hidden; cursor: move; z-index:10; border: solid #fff 1px; " onmousedown="dragOn('LEDUnitDiv1')">            <img id="labelTitleImg1" style="position:absolute; left:0px; top:0px; width:284px; height:39px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/title-1.png" alt="">            <img id="labelHeaderImg1" style="position:absolute; left:0px; top:0px; width:284px; height:39px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/header.png" alt="">                <div id="ledMainFlameDiv1" class="pixelated" style="position:absolute; left:13px; top:39px; width:256px; height:46px; ">                  <div id="" style="position:absolute; left:0px; top:0px; width:256px; height:16px; background-color:#000; border: solid #222 1px; ">                    <div id="lineContents1_0" style="position:absolute; "><div id="typeDiv1_0" style="position:absolute; left:0px; top:0px; width:32px; height:16px; overflow:hidden; ">  <img id="typeImg1_0" style="position: absolute; top: -68px; left: -33px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="deptSwitchDiv1_0" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg1_0" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="trainNameDiv1_0" style="position:absolute; left:32px; top:0px; width:80px; height:16px; overflow:hidden; ">  <img id="trainNameImg1_0" style="position: absolute; top: -255px; left: -152px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="deptSwitchDiv1_0" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg1_0" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="trainNumDiv1_0" style="position: absolute; left: 80px; top: 0px; width: 32px; height: 16px; overflow: hidden; z-index: -1;"><div id="trainNumBaseDiv1_0" style="position:absolute; left:0px; top:0px; width:32px; height:16px; overflow:hidden;">  <img id="trainNumBaseImg1_0" style="position: absolute; top: -17px; left: -272px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="trainNum1Div1_0" style="position:absolute; left:2px; top:0px; width:8px; height:16px; overflow:hidden;">  <img id="trainNum1Img1_0" style="position: absolute; left: -305px; top: -68px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="trainNum0Div1_0" style="position:absolute; left:11px; top:0px; width:8px; height:16px; overflow:hidden;">  <img id="trainNum0Img1_0" style="position: absolute; left: -305px; top: -17px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div></div><div id="deptSwitchDiv1_0" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg1_0" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="departureTimeDiv1_0" style="position:absolute; left:112px; top:0px; width:64px; height:16px; overflow:hidden;"><div id="departureTimeBaseDiv1_0" style="position:absolute; left:0px; top:0px; width:64px; height:16px; overflow:hidden; ">  <img id="departureTimeBaseImg1_0" style="position: absolute; left: -338px; top: -17px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="departureTime3Div1_0" style="position:absolute; left:5px; top:0px; width:10px; height:16px; overflow:hidden; ">  <img id="departureTime3Img1_0" style="position: absolute; left: -405px; top: -170px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="departureTime2Div1_0" style="position:absolute; left:18px; top:0px; width:10px; height:16px; overflow:hidden; ">  <img id="departureTime2Img1_0" style="position: absolute; left: -405px; top: -119px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="departureTime1Div1_0" style="position:absolute; left:36px; top:0px; width:10px; height:16px; overflow:hidden; ">  <img id="departureTime1Img1_0" style="position: absolute; left: -405px; top: -34px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="departureTime0Div1_0" style="position:absolute; left:49px; top:0px; width:10px; height:16px; overflow:hidden; ">  <img id="departureTime0Img1_0" style="position: absolute; left: -405px; top: -136px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div></div><div id="deptSwitchDiv1_0" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg1_0" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="destinationDiv1_0" style="position:absolute; left:176px; top:0px; width:64px; height:16px; overflow:hidden; ">  <img id="destinationImg1_0" style="position: absolute; top: -289px; left: -496px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="deptSwitchDiv1_0" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg1_0" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="soonDiv1_0" style="position: absolute; left: 112px; top: 0px; width: 128px; height: 16px; overflow: hidden; z-index: -1;">  <img id="soonImg1_0" style="position: absolute; top: -17px; left: -586px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="deptSwitchDiv1_0" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg1_0" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="trackDiv1_0" style="position:absolute; left:240px; top:0px; width:16px; height:16px; overflow:hidden; ">  <img id="trackImg1_0" style="position: absolute; top: -34px; left: -564px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="deptSwitchDiv1_0" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg1_0" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div>                    </div>                  </div>                  <div id="" style="position:absolute; left:0px; top:46px; width:256px; height:16px; background-color:#000; border: solid #222 1px; ">                    <div id="lineContents1_1" style="position:absolute; "><div id="typeDiv1_1" style="position:absolute; left:0px; top:0px; width:32px; height:16px; overflow:hidden; ">  <img id="typeImg1_1" style="position: absolute; top: 0px; left: -33px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="deptSwitchDiv1_1" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg1_1" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="trainNameDiv1_1" style="position:absolute; left:32px; top:0px; width:80px; height:16px; overflow:hidden; ">  <img id="trainNameImg1_1" style="position: absolute; top: -170px; left: -152px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="deptSwitchDiv1_1" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg1_1" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="trainNumDiv1_1" style="position:absolute; left:80px; top:0px; width:32px; height:16px; overflow:hidden; z-index:1; "><div id="trainNumBaseDiv1_1" style="position:absolute; left:0px; top:0px; width:32px; height:16px; overflow:hidden;">  <img id="trainNumBaseImg1_1" style="position: absolute; top: -17px; left: -272px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="trainNum1Div1_1" style="position:absolute; left:2px; top:0px; width:8px; height:16px; overflow:hidden;">  <img id="trainNum1Img1_1" style="position: absolute; left: -305px; top: -119px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="trainNum0Div1_1" style="position:absolute; left:11px; top:0px; width:8px; height:16px; overflow:hidden;">  <img id="trainNum0Img1_1" style="position: absolute; left: -305px; top: -85px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div></div><div id="deptSwitchDiv1_1" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg1_1" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="departureTimeDiv1_1" style="position:absolute; left:112px; top:0px; width:64px; height:16px; overflow:hidden;"><div id="departureTimeBaseDiv1_1" style="position:absolute; left:0px; top:0px; width:64px; height:16px; overflow:hidden; ">  <img id="departureTimeBaseImg1_1" style="position: absolute; left: -338px; top: -17px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="departureTime3Div1_1" style="position:absolute; left:5px; top:0px; width:10px; height:16px; overflow:hidden; ">  <img id="departureTime3Img1_1" style="position: absolute; left: -405px; top: -170px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="departureTime2Div1_1" style="position:absolute; left:18px; top:0px; width:10px; height:16px; overflow:hidden; ">  <img id="departureTime2Img1_1" style="position: absolute; left: -405px; top: -119px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="departureTime1Div1_1" style="position:absolute; left:36px; top:0px; width:10px; height:16px; overflow:hidden; ">  <img id="departureTime1Img1_1" style="position: absolute; left: -405px; top: -85px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="departureTime0Div1_1" style="position:absolute; left:49px; top:0px; width:10px; height:16px; overflow:hidden; ">  <img id="departureTime0Img1_1" style="position: absolute; left: -405px; top: -119px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div></div><div id="deptSwitchDiv1_1" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg1_1" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="destinationDiv1_1" style="position:absolute; left:176px; top:0px; width:64px; height:16px; overflow:hidden; ">  <img id="destinationImg1_1" style="position: absolute; top: -340px; left: -496px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="deptSwitchDiv1_1" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg1_1" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="soonDiv1_1" style="position: absolute; left: 112px; top: 0px; width: 128px; height: 16px; overflow: hidden; z-index: -1;">  <img id="soonImg1_1" style="position: absolute; top: -17px; left: -586px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="deptSwitchDiv1_1" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg1_1" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="trackDiv1_1" style="position:absolute; left:240px; top:0px; width:16px; height:16px; overflow:hidden; ">  <img id="trackImg1_1" style="position: absolute; top: -17px; left: -564px;" src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div><div id="deptSwitchDiv1_1" style="position:absolute; left:112px; top:0px; width:128px; height:16px; overflow:hidden; z-index:-1; ">  <img id="deptSwitchImg1_1" style="position:absolute; left:-586px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div>                    </div>                  </div>          <div id="messageTelopCoverDiv1" style="position: absolute; left: 0px; top: 23px; width: 256px; height: 16px; background-color: rgb(0, 0, 0); z-index: 1;">          </div>          <div id="messageTelopDiv1" style="position: absolute; left: 0px; top: 23px; width: 256px; height: 16px; z-index: 1;"><div id="" style="position:absolute; left:0px; top:0px; width:64px; height:16px; overflow:hidden; ">  <img id="" style="position:absolute; left:-725px; top:-0px; " src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""></div>  <div class="font_scroll_gothic" style="position:absolute; top:0px; left:64px; width:192px; height:16px; font-size:16px; letter-spacing:0px; color:#fff; white-space: nowrap; ">    <marquee scrollamount="6.0592592592592585"><span style="color:#f00">この列車の停車駅</span>は、<span style="color:#ff0">伊予北条・今治・壬生川・伊予西条・新居浜・伊予三島・川之江・観音寺・高瀬・詫間・多度津・丸亀・坂出・高松</span>です。　<span style="color:#ff0">坂出</span>で<span style="color:#f00">寝台特急「サンライズ瀬戸」</span><span style="color:#ff0">東京行</span> と、<span style="color:#4af">快速「マリンライナー６８号」</span><span style="color:#ff0">岡山行</span> に接続します。　　　　　　　　　　　　　　　　お客様にお願いします。駅及び車内への<span style="color:#f00">危険物の</span><span style="color:#ff0">持ち込みは</span><span style="color:#f00">禁止</span>されております。<span style="color:#f00">不審物や不審な行為</span>にお気づきの場合は、<span style="color:#ff0">駅係員</span>や<span style="color:#ff0">乗務員</span>までお知らせください。<span style="color:#0f9">Ｉｆ　you notice any suspicious item or behavior, please notify staff.</span>　　　　　　　　　　　　　　　　<span style="color:#f00">この列車の停車駅</span>は、<span style="color:#ff0">伊予市・伊予中山・内子・伊予大洲・八幡浜・伊予吉田・宇和島</span>です。　　　　　　　　　　　　　　　　<span style="color:#f00">お願い：</span>お身体に障がいのあるお客様へのご配慮について、周りにいらっしゃるお客様のご理解とご協力をお願い申し上げます。    </marquee>  </div></div>          </div>  </div></div></div></div>
-<hr>
-
-<!--入力部-->
-<div id="inputFormDiv" style=""> <div id="" style=""><div style="float:left; margin:0px; padding:5px; border-right: solid 1px #999; border-bottom: solid 1px #999; ">【1台目】　<select size="1" id="titleLabelInput0" style="" onchange="updateLabel(0)"><option value="">八幡浜・宇和島方面</option><option value="">今治・高松・岡山方面</option><option value="">←1番線</option><option value="">　　　　1番線→</option><option value="">←2番線　3番線→</option><option value="">←3番線　2番線→</option></select> <div style="white-space: nowrap; "> 1本目  <select size="1" id="typeInput0_0" style="" onchange="readForm()"><option value="0">特急</option><option value="1">臨時</option><option value="2">団体</option><option value="3">貨物</option><option value="4">----</option></select>  <select size="1" id="trainNameInput0_0" style="" onchange="readForm()"><option value="0">各駅停車</option><option value="1">各 駅 停 車</option><option value="2">各停(ワンマン)</option><option value="3">各停(内子経由)</option><option value="4">各停(内子経由)(via Uchiko)</option><option value="5">各停(内子経由ワンマン)</option><option value="6">各停(内子経由ワンマン)(via Uchiko)</option><option value="7">各停(伊予長浜経由ワンマン)</option><option value="8">各停(伊予長浜経由ワンマン)(via Iyo-Nagahama)</option><option value="9">普通列車</option><option value="10">しおかぜ</option><option value="11">宇和海</option><option value="12">いしづち102号</option><option value="13">いしづち104号</option><option value="14">いしづち106号</option><option value="15">しおかぜ10号・いしづち10号</option><option value="16">しおかぜ12号・いしづち12号</option><option value="17">しおかぜ20号・いしづち20号</option><option value="18">しおかぜ22号・いしづち22号</option><option value="19">しおかぜ26号・いしづち26号</option><option value="20">しおかぜ30号・いしづち30号</option><option value="21">ミッドナイトEXP松山</option><option value="22">伊予灘ものがたり(青)</option><option value="23">伊予灘ものがたり(赤)</option><option value="24">伊予灘ものがたり(青)(記号付)</option><option value="25">臨時</option><option value="26">伊予灘ものがたり(緑)(記号付)</option><option value="27">8000系30周年ツアー</option><option value="28">貨物列車</option><option value="29">伊予灘ものがたり展示ツアー</option><option value="30">新たなものがたりへ DC185</option><option value="31">復刻いよ</option><option value="32">復刻うわじま</option><option value="33">[L]しおかぜ50周年記念ツアー</option><option value="34">夕焼けビールトロッコ2023</option><option value="35">----</option></select> <input id="trainNumInput0_0" type="text" value="12" size="2" maxlength="2" style="text-align:right; " onkeyup="readForm()" disabled="">号 <input id="departureHourInput0_0" type="text" value="12" size="2" maxlength="2" style="text-align:right; " onkeyup="readForm()"> : <input id="departureMinuteInput0_0" type="text" value="34" size="2" maxlength="2" style="text-align:right; " onkeyup="readForm()">  <select size="1" id="destinationInput0_0" style="" onchange="readForm()"><option value="0">岡山・高松</option><option value="1">岡山</option><option value="2">高松</option><option value="3">多度津</option><option value="4">観音寺</option><option value="5">新居浜</option><option value="6">伊予西条</option><option value="7">今治</option><option value="8">伊予北条</option><option value="9">市坪</option><option value="10">伊予市</option><option value="11">伊予大洲</option><option value="12">八幡浜</option><option value="13">卯之町</option><option value="14">宇和島</option><option value="15">岡山・高松[T00]</option><option value="16">高松[Y00]</option><option value="17">観音寺[Y19]</option><option value="18">伊予西条[Y31]</option><option value="19">今治[Y40]</option><option value="20">伊予北条[Y48]</option><option value="21">市坪[U01]</option><option value="22">伊予市[U05]</option><option value="23">伊予大洲[U14/S18]</option><option value="24">八幡浜[U18]</option><option value="25">宇和島[U28]</option><option value="26">[最終]高松</option><option value="27">[最終]新居浜</option><option value="28">[最終]今治</option><option value="29">[最終]伊予北条</option><option value="30">[最終]八幡浜</option><option value="31">[最終]宇和島</option><option value="32">八幡浜編</option><option value="33">大洲編</option><option value="34">高松(タ)</option><option value="35">松山運転所</option><option value="36">松山基地</option><option value="37">伊予市(団体専用)</option><option value="38">松山基地(団体専用)</option><option value="39">伊予西条(団体専用)</option><option value="40">----</option></select>  <select size="1" id="soonInput0_0" style="" onchange="readForm()"><option value="0">----</option><option value="1">まもなく発車です</option><option value="2">遅れ約50分</option></select>  <select size="1" id="trackInput0_0" style="" onchange="readForm()"><option value="0">1番線</option><option value="1">2番線</option><option value="2">3番線</option><option value="3">----</option></select> </div> <select size="1" id="messageTelopTitleInput0" style="" onchange="updateStatus(0);"><option value="0">列車案内</option><option value="1">停車駅</option><option value="2">お知らせ</option><option value="3">接続案内</option><option value="4">↑列車案内</option><option value="5">↑停車駅</option><option value="6">↑ご案内</option><option value="7">HALOWEEN</option><option value="8"></option></select>  <textarea id="messageTelopInput0" cols="100" rows="4"></textarea> <input type="button" value="更新" onclick="statusDisp[0]=1; updateStatus(0); "><br><div style="white-space: nowrap; "> 2本目  <select size="1" id="typeInput0_1" style="" onchange="readForm()"><option value="0">特急</option><option value="1">臨時</option><option value="2">団体</option><option value="3">貨物</option><option value="4">----</option></select>  <select size="1" id="trainNameInput0_1" style="" onchange="readForm()"><option value="0">各駅停車</option><option value="1">各 駅 停 車</option><option value="2">各停(ワンマン)</option><option value="3">各停(内子経由)</option><option value="4">各停(内子経由)(via Uchiko)</option><option value="5">各停(内子経由ワンマン)</option><option value="6">各停(内子経由ワンマン)(via Uchiko)</option><option value="7">各停(伊予長浜経由ワンマン)</option><option value="8">各停(伊予長浜経由ワンマン)(via Iyo-Nagahama)</option><option value="9">普通列車</option><option value="10">しおかぜ</option><option value="11">宇和海</option><option value="12">いしづち102号</option><option value="13">いしづち104号</option><option value="14">いしづち106号</option><option value="15">しおかぜ10号・いしづち10号</option><option value="16">しおかぜ12号・いしづち12号</option><option value="17">しおかぜ20号・いしづち20号</option><option value="18">しおかぜ22号・いしづち22号</option><option value="19">しおかぜ26号・いしづち26号</option><option value="20">しおかぜ30号・いしづち30号</option><option value="21">ミッドナイトEXP松山</option><option value="22">伊予灘ものがたり(青)</option><option value="23">伊予灘ものがたり(赤)</option><option value="24">伊予灘ものがたり(青)(記号付)</option><option value="25">臨時</option><option value="26">伊予灘ものがたり(緑)(記号付)</option><option value="27">8000系30周年ツアー</option><option value="28">貨物列車</option><option value="29">伊予灘ものがたり展示ツアー</option><option value="30">新たなものがたりへ DC185</option><option value="31">復刻いよ</option><option value="32">復刻うわじま</option><option value="33">[L]しおかぜ50周年記念ツアー</option><option value="34">夕焼けビールトロッコ2023</option><option value="35">----</option></select> <input id="trainNumInput0_1" type="text" value="12" size="2" maxlength="2" style="text-align:right; " onkeyup="readForm()" disabled="">号 <input id="departureHourInput0_1" type="text" value="12" size="2" maxlength="2" style="text-align:right; " onkeyup="readForm()"> : <input id="departureMinuteInput0_1" type="text" value="34" size="2" maxlength="2" style="text-align:right; " onkeyup="readForm()">  <select size="1" id="destinationInput0_1" style="" onchange="readForm()"><option value="0">岡山・高松</option><option value="1">岡山</option><option value="2">高松</option><option value="3">多度津</option><option value="4">観音寺</option><option value="5">新居浜</option><option value="6">伊予西条</option><option value="7">今治</option><option value="8">伊予北条</option><option value="9">市坪</option><option value="10">伊予市</option><option value="11">伊予大洲</option><option value="12">八幡浜</option><option value="13">卯之町</option><option value="14">宇和島</option><option value="15">岡山・高松[T00]</option><option value="16">高松[Y00]</option><option value="17">観音寺[Y19]</option><option value="18">伊予西条[Y31]</option><option value="19">今治[Y40]</option><option value="20">伊予北条[Y48]</option><option value="21">市坪[U01]</option><option value="22">伊予市[U05]</option><option value="23">伊予大洲[U14/S18]</option><option value="24">八幡浜[U18]</option><option value="25">宇和島[U28]</option><option value="26">[最終]高松</option><option value="27">[最終]新居浜</option><option value="28">[最終]今治</option><option value="29">[最終]伊予北条</option><option value="30">[最終]八幡浜</option><option value="31">[最終]宇和島</option><option value="32">八幡浜編</option><option value="33">大洲編</option><option value="34">高松(タ)</option><option value="35">松山運転所</option><option value="36">松山基地</option><option value="37">伊予市(団体専用)</option><option value="38">松山基地(団体専用)</option><option value="39">伊予西条(団体専用)</option><option value="40">----</option></select>  <select size="1" id="soonInput0_1" style="" onchange="readForm()"><option value="0">----</option><option value="1">まもなく発車です</option><option value="2">遅れ約50分</option></select>  <select size="1" id="trackInput0_1" style="" onchange="readForm()"><option value="0">1番線</option><option value="1">2番線</option><option value="2">3番線</option><option value="3">----</option></select> </div></div><div style="float:left; margin:0px; padding:5px; border-right: solid 1px #999; border-bottom: solid 1px #999; ">【2台目】　<select size="1" id="titleLabelInput1" style="" onchange="updateLabel(1)"><option value="">八幡浜・宇和島方面</option><option value="">今治・高松・岡山方面</option><option value="">←1番線</option><option value="">　　　　1番線→</option><option value="">←2番線　3番線→</option><option value="">←3番線　2番線→</option></select> <div style="white-space: nowrap; "> 1本目  <select size="1" id="typeInput1_0" style="" onchange="readForm()"><option value="0">特急</option><option value="1">臨時</option><option value="2">団体</option><option value="3">貨物</option><option value="4">----</option></select>  <select size="1" id="trainNameInput1_0" style="" onchange="readForm()"><option value="0">各駅停車</option><option value="1">各 駅 停 車</option><option value="2">各停(ワンマン)</option><option value="3">各停(内子経由)</option><option value="4">各停(内子経由)(via Uchiko)</option><option value="5">各停(内子経由ワンマン)</option><option value="6">各停(内子経由ワンマン)(via Uchiko)</option><option value="7">各停(伊予長浜経由ワンマン)</option><option value="8">各停(伊予長浜経由ワンマン)(via Iyo-Nagahama)</option><option value="9">普通列車</option><option value="10">しおかぜ</option><option value="11">宇和海</option><option value="12">いしづち102号</option><option value="13">いしづち104号</option><option value="14">いしづち106号</option><option value="15">しおかぜ10号・いしづち10号</option><option value="16">しおかぜ12号・いしづち12号</option><option value="17">しおかぜ20号・いしづち20号</option><option value="18">しおかぜ22号・いしづち22号</option><option value="19">しおかぜ26号・いしづち26号</option><option value="20">しおかぜ30号・いしづち30号</option><option value="21">ミッドナイトEXP松山</option><option value="22">伊予灘ものがたり(青)</option><option value="23">伊予灘ものがたり(赤)</option><option value="24">伊予灘ものがたり(青)(記号付)</option><option value="25">臨時</option><option value="26">伊予灘ものがたり(緑)(記号付)</option><option value="27">8000系30周年ツアー</option><option value="28">貨物列車</option><option value="29">伊予灘ものがたり展示ツアー</option><option value="30">新たなものがたりへ DC185</option><option value="31">復刻いよ</option><option value="32">復刻うわじま</option><option value="33">[L]しおかぜ50周年記念ツアー</option><option value="34">夕焼けビールトロッコ2023</option><option value="35">----</option></select> <input id="trainNumInput1_0" type="text" value="12" size="2" maxlength="2" style="text-align:right; " onkeyup="readForm()" disabled="">号 <input id="departureHourInput1_0" type="text" value="12" size="2" maxlength="2" style="text-align:right; " onkeyup="readForm()"> : <input id="departureMinuteInput1_0" type="text" value="34" size="2" maxlength="2" style="text-align:right; " onkeyup="readForm()">  <select size="1" id="destinationInput1_0" style="" onchange="readForm()"><option value="0">岡山・高松</option><option value="1">岡山</option><option value="2">高松</option><option value="3">多度津</option><option value="4">観音寺</option><option value="5">新居浜</option><option value="6">伊予西条</option><option value="7">今治</option><option value="8">伊予北条</option><option value="9">市坪</option><option value="10">伊予市</option><option value="11">伊予大洲</option><option value="12">八幡浜</option><option value="13">卯之町</option><option value="14">宇和島</option><option value="15">岡山・高松[T00]</option><option value="16">高松[Y00]</option><option value="17">観音寺[Y19]</option><option value="18">伊予西条[Y31]</option><option value="19">今治[Y40]</option><option value="20">伊予北条[Y48]</option><option value="21">市坪[U01]</option><option value="22">伊予市[U05]</option><option value="23">伊予大洲[U14/S18]</option><option value="24">八幡浜[U18]</option><option value="25">宇和島[U28]</option><option value="26">[最終]高松</option><option value="27">[最終]新居浜</option><option value="28">[最終]今治</option><option value="29">[最終]伊予北条</option><option value="30">[最終]八幡浜</option><option value="31">[最終]宇和島</option><option value="32">八幡浜編</option><option value="33">大洲編</option><option value="34">高松(タ)</option><option value="35">松山運転所</option><option value="36">松山基地</option><option value="37">伊予市(団体専用)</option><option value="38">松山基地(団体専用)</option><option value="39">伊予西条(団体専用)</option><option value="40">----</option></select>  <select size="1" id="soonInput1_0" style="" onchange="readForm()"><option value="0">----</option><option value="1">まもなく発車です</option><option value="2">遅れ約50分</option></select>  <select size="1" id="trackInput1_0" style="" onchange="readForm()"><option value="0">1番線</option><option value="1">2番線</option><option value="2">3番線</option><option value="3">----</option></select> </div> <select size="1" id="messageTelopTitleInput1" style="" onchange="updateStatus(1);"><option value="0">列車案内</option><option value="1">停車駅</option><option value="2">お知らせ</option><option value="3">接続案内</option><option value="4">↑列車案内</option><option value="5">↑停車駅</option><option value="6">↑ご案内</option><option value="7">HALOWEEN</option><option value="8"></option></select>  <textarea id="messageTelopInput1" cols="100" rows="4"></textarea> <input type="button" value="更新" onclick="statusDisp[1]=1; updateStatus(1); "><br><div style="white-space: nowrap; "> 2本目  <select size="1" id="typeInput1_1" style="" onchange="readForm()"><option value="0">特急</option><option value="1">臨時</option><option value="2">団体</option><option value="3">貨物</option><option value="4">----</option></select>  <select size="1" id="trainNameInput1_1" style="" onchange="readForm()"><option value="0">各駅停車</option><option value="1">各 駅 停 車</option><option value="2">各停(ワンマン)</option><option value="3">各停(内子経由)</option><option value="4">各停(内子経由)(via Uchiko)</option><option value="5">各停(内子経由ワンマン)</option><option value="6">各停(内子経由ワンマン)(via Uchiko)</option><option value="7">各停(伊予長浜経由ワンマン)</option><option value="8">各停(伊予長浜経由ワンマン)(via Iyo-Nagahama)</option><option value="9">普通列車</option><option value="10">しおかぜ</option><option value="11">宇和海</option><option value="12">いしづち102号</option><option value="13">いしづち104号</option><option value="14">いしづち106号</option><option value="15">しおかぜ10号・いしづち10号</option><option value="16">しおかぜ12号・いしづち12号</option><option value="17">しおかぜ20号・いしづち20号</option><option value="18">しおかぜ22号・いしづち22号</option><option value="19">しおかぜ26号・いしづち26号</option><option value="20">しおかぜ30号・いしづち30号</option><option value="21">ミッドナイトEXP松山</option><option value="22">伊予灘ものがたり(青)</option><option value="23">伊予灘ものがたり(赤)</option><option value="24">伊予灘ものがたり(青)(記号付)</option><option value="25">臨時</option><option value="26">伊予灘ものがたり(緑)(記号付)</option><option value="27">8000系30周年ツアー</option><option value="28">貨物列車</option><option value="29">伊予灘ものがたり展示ツアー</option><option value="30">新たなものがたりへ DC185</option><option value="31">復刻いよ</option><option value="32">復刻うわじま</option><option value="33">[L]しおかぜ50周年記念ツアー</option><option value="34">夕焼けビールトロッコ2023</option><option value="35">----</option></select> <input id="trainNumInput1_1" type="text" value="12" size="2" maxlength="2" style="text-align:right; " onkeyup="readForm()">号 <input id="departureHourInput1_1" type="text" value="12" size="2" maxlength="2" style="text-align:right; " onkeyup="readForm()"> : <input id="departureMinuteInput1_1" type="text" value="34" size="2" maxlength="2" style="text-align:right; " onkeyup="readForm()">  <select size="1" id="destinationInput1_1" style="" onchange="readForm()"><option value="0">岡山・高松</option><option value="1">岡山</option><option value="2">高松</option><option value="3">多度津</option><option value="4">観音寺</option><option value="5">新居浜</option><option value="6">伊予西条</option><option value="7">今治</option><option value="8">伊予北条</option><option value="9">市坪</option><option value="10">伊予市</option><option value="11">伊予大洲</option><option value="12">八幡浜</option><option value="13">卯之町</option><option value="14">宇和島</option><option value="15">岡山・高松[T00]</option><option value="16">高松[Y00]</option><option value="17">観音寺[Y19]</option><option value="18">伊予西条[Y31]</option><option value="19">今治[Y40]</option><option value="20">伊予北条[Y48]</option><option value="21">市坪[U01]</option><option value="22">伊予市[U05]</option><option value="23">伊予大洲[U14/S18]</option><option value="24">八幡浜[U18]</option><option value="25">宇和島[U28]</option><option value="26">[最終]高松</option><option value="27">[最終]新居浜</option><option value="28">[最終]今治</option><option value="29">[最終]伊予北条</option><option value="30">[最終]八幡浜</option><option value="31">[最終]宇和島</option><option value="32">八幡浜編</option><option value="33">大洲編</option><option value="34">高松(タ)</option><option value="35">松山運転所</option><option value="36">松山基地</option><option value="37">伊予市(団体専用)</option><option value="38">松山基地(団体専用)</option><option value="39">伊予西条(団体専用)</option><option value="40">----</option></select>  <select size="1" id="soonInput1_1" style="" onchange="readForm()"><option value="0">----</option><option value="1">まもなく発車です</option><option value="2">遅れ約50分</option></select>  <select size="1" id="trackInput1_1" style="" onchange="readForm()"><option value="0">1番線</option><option value="1">2番線</option><option value="2">3番線</option><option value="3">----</option></select> </div></div><br style="clear:both;"></div></div>
-
-<!--ログ出力部-->
-<div id="log"></div>
-
-<script type="text/javascript">
-main();
-</script>
-
-
-
-
-<h2>このシミュレーターについて</h2>
-<div style="float:right; margin-left:10px; font-size:80%; text-align:center;">
-  <img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/1.jpg" alt="" width="400"><br>
-松山駅<br><br>
-  <img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/2.jpg" alt="" width="400"><br>
-松山駅<br><br>
-</div>
-
-JR四国 松山駅に設置されている16ドットLED電光掲示板(発車標、発車案内)の表示を自由に変更できるシミュレーターを作りました。<br>
-<ul>
-<li>現地で撮影した動画はこちらをご覧ください。 <a href="https://www.youtube.com/watch?v=14W6Oq7S94A" target="_blank">リンク</a> <a href="https://www.youtube.com/@1400yoshi/search?query=%E6%9D%BE%E5%B1%B1%E9%A7%85%E3%80%80%E7%99%BA%E8%BB%8A%E6%A8%99" target="_blank">リンク</a></li>
-<li>スクロール表示を設定した際の文章はお使いのパソコン、スマートフォンに入っているフォントを使って表示されます。環境によって様々なフォントが存在するため、位置が上下に多少ずれることがあります。ずれている場合には微調整ボタンで位置調整も可能です。</li>
-<li>ドロップダウンリストから任意の段数に変更することもできます。ただし、段数を多くすると負荷がかかり処理が遅くなりますのでご注意ください。</li>
-<li>本シミュレーターはJavaScript・CSS等が正常に動作するブラウザでご覧いただけます。JavaScriptが動作しない環境では動きません。</li>
-<li>動作確認はWindows10のGoogle Chromeで行なっています。他のOS・ブラウザでも概ね動作すると思われますが、一部ではレイアウトや挙動が異なったり、エラーで正常に動作しない可能性もあります。</li>
-</ul>
-<br style="clear:both;">
-
-
-<h2>変更履歴</h2>
-2023/4/2 新規制作<br>
-2023/4/25 普通列車、市坪[U01]を追加<br>
-2023/7/20 夕焼けビールトロッコ2023、↑ご案内を追加、遅れ約50分を切り替えで表示する機能を追加<br>
-
-<!--素材提供について--> <script type="text/javascript"> offerSectionHTMLWrite(); </script>
-
-
-
-<!--
-<h2>作業協力</h2>
-下記の方々より作業協力いただきました。この場を借りてお礼を申し上げます。<br />
-<ul>
-<li><a href="https://twitter.com/Nagoya_Liner" target="_blank">新瑞橋様</a> - 素材集(パーツ集)のドット絵再現</li>
-<li><a href="https://twitter.com/Okayu_LED" target="_blank">おかゆ様</a> - 素材集(パーツ集)のドット絵再現</li>
-</ul>
--->
-
-<h2>素材集(パーツ集)</h2>
-<img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/main.png" alt=""><br>
-
-
-<h2>デフォルトで設定しているテロップ</h2>
-<script type="text/javascript">
-document.write("<div class='font_scroll_gothic' style='background-color:#000; color:"+baseTextColor+"; font-size:"+LEDBaseHeight+"px; '>"+defaultMessageTelop+"</div>\n<br />");
-</script><div class="font_scroll_gothic" style="background-color:#000; color:#fff; font-size:16px; "><span style="color:#f00">この列車の停車駅</span>は、<span style="color:#ff0">伊予北条・今治・壬生川・伊予西条・新居浜・伊予三島・川之江・観音寺・高瀬・詫間・多度津・丸亀・坂出・高松</span>です。　<span style="color:#ff0">坂出</span>で<span style="color:#f00">寝台特急「サンライズ瀬戸」</span><span style="color:#ff0">東京行</span> と、<span style="color:#4af">快速「マリンライナー６８号」</span><span style="color:#ff0">岡山行</span> に接続します。　　　　　　　　　　　　　　　　お客様にお願いします。駅及び車内への<span style="color:#f00">危険物の</span><span style="color:#ff0">持ち込みは</span><span style="color:#f00">禁止</span>されております。<span style="color:#f00">不審物や不審な行為</span>にお気づきの場合は、<span style="color:#ff0">駅係員</span>や<span style="color:#ff0">乗務員</span>までお知らせください。<span style="color:#0f9">Ｉｆ　you notice any suspicious item or behavior, please notify staff.</span>　　　　　　　　　　　　　　　　<span style="color:#f00">この列車の停車駅</span>は、<span style="color:#ff0">伊予市・伊予中山・内子・伊予大洲・八幡浜・伊予吉田・宇和島</span>です。　　　　　　　　　　　　　　　　<span style="color:#f00">お願い：</span>お身体に障がいのあるお客様へのご配慮について、周りにいらっしゃるお客様のご理解とご協力をお願い申し上げます。</div>
-<br>
-
-
-
-
-
-
-
-
-
-
-<hr>
-
-<!--カウンタータグここから--><table border="0" cellpadding="0" cellspacing="1" style="border:#CCCCCC 1px dotted;"><tbody><tr><td><table border="0" cellspacing="1" cellpadding="0"><tbody><tr><td align="left"><img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/todayt.gif" alt=""></td></tr><tr><td align="left"><a href="http://smart-counter.net/"><img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/saved_resource" alt="アクセスカウンター" border="0"></a></td></tr><tr><td align="left"><img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/yesterdayt.gif" alt=""></td></tr><tr><td align="left"><a href="http://smart-counter.net/"><img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/saved_resource(1)" alt="アクセスカウンター" border="0"></a></td></tr><tr><td align="left"><img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/totalt.gif" alt=""></td></tr><tr><td align="left"><a href="http://smart-counter.net/"><img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/saved_resource(2)" alt="アクセスカウンター" border="0"></a></td></tr></tbody></table><table border="0" align="center" cellpadding="0" cellspacing="0"><tbody><tr><td><a href="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/index.html" target="_blank"><img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/cnt_01.gif" alt="" border="0"></a></td><td><img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/cnt_02.gif" alt="" border="0"></td><td><img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/cnt_03.gif" alt="" border="0"></td><td><img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/cnt_04.gif" alt="" border="0"></td><td><img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/cnt_05.gif" alt="" border="0"></td><td><img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/cnt_06.gif" alt="" border="0"></td><td><img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/cnt_07.gif" alt="" border="0"></td><td><img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/cnt_08.gif" alt="" border="0"></td><td><img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/cnt_09.gif" alt="" border="0"></td></tr></tbody></table></td></tr></tbody></table><!--カウンタータグここまで--><br>
-
-<!--タグはここから--><table border="0" cellspacing="0" cellpadding="0"><tbody><tr><td align="center"><a href="http://www.rays-counter.com/"><img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/saved_resource(3)" alt="アクセスカウンター" border="0"></a></td></tr><tr><td align="center"><img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/counter_01.gif" border="0"><img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/counter_02.gif" border="0"><img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/counter_03.gif" border="0"><img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/counter_04.gif" border="0"><img src="https://r113.sakura.ne.jp/p/hasshahyo/jrs-matsuyama/img/counter_05.gif" border="0"></td></tr></tbody></table><!--ここまで--><br>
-
-
-
-
-
-
-
-
-
-
-
-<script id="wallpaper-data-adapter">
-(function () {
-  'use strict';
-  const src = 'https://ajiousama.github.io/live-wallpaper/transport/r15-dev/schedule.js';
-  const script = document.createElement('script');
-  script.src = src;
-  script.onload = function () {
-    setTimeout(refresh, 800);
-    setInterval(refresh, 15000);
-  };
-  script.onerror = function () {
-    [0,1].forEach(board => [0,1].forEach(slot => updateRow(board,slot,null)));
-    if (typeof readForm === 'function') readForm();
-  };
-  document.head.appendChild(script);
-
-  function jst() {
-    const p = {};
-    new Intl.DateTimeFormat('en-CA', {
-      timeZone: 'Asia/Tokyo', year: 'numeric', month: '2-digit',
-      day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit',
-      hourCycle: 'h23'
-    }).formatToParts(new Date()).forEach(x => p[x.type] = x.value);
-    const iso = `${p.year}-${p.month}-${p.day}`;
-    return { iso, minutes: +p.hour * 60 + +p.minute, seconds: +p.second,
-      dow: new Date(iso + 'T12:00:00+09:00').getDay() };
-  }
-  function available(r, n) {
-    return (!r.start || n.iso >= r.start) &&
-      (!r.end || n.iso <= r.end) &&
-      (!r.dates || r.dates.includes(n.iso)) &&
-      (!r.exclude || !r.exclude.includes(n.iso)) &&
-      (!r.days || r.days.includes(n.dow));
-  }
-  function choose(id, candidates) {
-    const el = document.getElementById(id);
-    if (!el) return false;
-    for (const c of candidates) {
-      const match = [...el.options].find(o => o.textContent.trim() === c);
-      if (match) { el.value = match.value; return true; }
-    }
-    return false;
-  }
-  function put(id, value) {
-    const el = document.getElementById(id);
-    if (el) el.value = value;
-  }
-  // Keep native marquee alive between schedule polls; otherwise it never loops.
-  const telopSignatures = ['', ''];
-  const red = t => '<span style="color:#f00">' + t + '</span>';
-  const yellow = t => '<span style="color:#ff0">' + t + '</span>';
-  const escapeLedText=value=>String(value??'').replace(/[&<>"']/g,c=>
-    ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const ledStopFeed={iso:'',receivedAt:0,departures:[]};
-  function diagramRoute(board,record,terminal,expectedNum=''){
-    const n=jst(),age=Date.now()-ledStopFeed.receivedAt;
-    if(ledStopFeed.iso!==n.iso || age<0 || age>90000)return null;
-    const normal=value=>String(value||'').trim().replace(/駅$/,'');
-    const direction=board===0?'south':'north';
-    const departure=hhmmToMinutes(record.time);
-    const trainClass=record.kind==='limited'?'limited':'local';
-    if(!Number.isFinite(departure)||!terminal)return null;
-    let matched=ledStopFeed.departures.filter(x=>
-      x.direction===direction && x.trainClass===trainClass &&
-      hhmmToMinutes(x.departure)===departure &&
-      normal(x.destination)===normal(terminal) &&
-      x.stops.length>0 && normal(x.stops[x.stops.length-1].station)===normal(terminal));
-    if(expectedNum)matched=matched.filter(x=>x.trainNum===expectedNum);
-    // Unresolved simultaneous departures must never borrow another train's stops.
-    const unique=[...new Map(matched.map(x=>[
-      JSON.stringify([x.stops,x.transfers]),x
-    ])).values()];
-    return unique.length===1?unique[0]:null;
-  }
-  function diagramTrainNumber(service){
-    let m=String(service||'').match(/^宇和海(\d+)号$/);
-    if(m)return String(1050+Number(m[1]))+'D';
-    m=String(service||'').match(/^しおかぜ(\d+)号$/);
-    if(m)return String(Number(m[1]))+'M';
-    m=String(service||'').match(/^いしづち(\d+)号$/);
-    if(m){
-      const n=Number(m[1]);
-      return String(n>=102&&n<=106 ? n+940 : 1000+n)+'M';
-    }
-    return '';
-  }
-  function stopAnnouncement(board,record){
-    const separator='　　　　　　　　　　　';
-    const depart=String(record.time||''),service=String(record.service||'');
-    const info=String(record.info||''),dest=String(record.dest||'');
-    const branches=[];
-    const name=service.match(/^しおかぜ\d+号$/);
-    const partner=info.match(/いしづち\d+号/);
-    if(record.kind==='limited' && name){
-      branches.push({name:service,dest:/岡山/.test(dest)?'岡山':dest});
-      const a=service.match(/(\d+)号/),b=partner?.[0].match(/(\d+)号/);
-      if(partner && a && b && a[1]===b[1])
-        branches.push({name:partner[0],dest:'高松'});
-    }else branches.push({
-      name:record.kind==='limited'?service:
-        record.kind==='local'?'普通列車':(service||'列車'),
-      dest
-    });
-    const pieces=[red(escapeLedText(depart)+'発 '+escapeLedText(branches.map(x=>x.name).join('・')))];
-    for(const branch of branches){
-      const route=diagramRoute(board,record,branch.dest,
-        record.kind==='limited'?diagramTrainNumber(branch.name):'');
-      const title=red('【'+escapeLedText(branch.name)+' '+escapeLedText(branch.dest)+'行】');
-      if(!route){
-        pieces.push(title+yellow('停車駅・到着時刻・接続：当日運行図の照合待ち'));
-        continue;
-      }
-      const stops=route.stops.map(stop=>
-        escapeLedText(stop.station)+' '+escapeLedText(stop.time)+
-        (stop.event==='arrival'?'着':stop.event==='departure'?'発':'（停車時刻）'));
-      pieces.push(title+'当日ダイヤの停車駅・時刻　'+yellow(stops.join(' → ')));
-      const last=route.stops[route.stops.length-1];
-      pieces.push(red('終点 '+escapeLedText(branch.dest)+' '+
-        escapeLedText(last.time)+
-        (last.event==='arrival'?'着':last.event==='departure'?'発':'（時刻表）')));
-      // Transfer pairs come from today's diagram. A shared station or
-      // nearby departure is NOT proof of a guaranteed timed connection.
-      const stopTimes=new Map(route.stops.map(x=>[String(x.station),hhmmToMinutes(x.time)]));
-      const transfers=route.transfers.filter(t=>
-        t.source==='today_diagram' && t.destination!=='松山' &&
-        stopTimes.has(t.station) &&
-        Number.isFinite(hhmmToMinutes(t.arrival)) &&
-        hhmmToMinutes(t.arrival)===stopTimes.get(t.station) &&
-        Number.isFinite(hhmmToMinutes(t.departure)) &&
-        hhmmToMinutes(t.departure)>hhmmToMinutes(t.arrival) &&
-        hhmmToMinutes(t.departure)-hhmmToMinutes(t.arrival)<=45
-      );
-      if(transfers.length){
-        const links=transfers.slice(0,10).map(t=>
-          escapeLedText(t.station)+' '+escapeLedText(t.arrival)+'着→'+
-          escapeLedText(t.departure)+'発　普通 '+escapeLedText(t.destination)+'行');
-        pieces.push(red('接続候補（当日ダイヤ・待ち合わせ未確認）：')+
-          yellow(links.join(' ／ ')));
-      }
-    }
-    return pieces.join(separator)+separator;
-  }
-  function stopAnnouncements(board,rows,nextPassenger,hasUpcoming){
-    const isPassenger=r=>r && !r.passStatus &&
-      ['local','limited','extra','sightseeing'].includes(r.kind);
-    const shown=(Array.isArray(rows)?rows:[]).filter(isPassenger);
-    if(!shown.length&&isPassenger(nextPassenger))shown.push(nextPassenger);
-    if(!shown.length)return [
-      !hasUpcoming?yellow('本日の発車案内は終了しました。'):
-        yellow('この方面の旅客列車案内は終了しました。')
-    ];
-    // Each displayed train gets its own complete, repeating scroll.
-    // Change trains ONLY after one entire ticker cycle, never mid-sentence.
-    return shown.slice(0,2).map(r=>stopAnnouncement(board,r));
-  }
-  function installSeamlessTicker(board,messages){
-    const sign=document.getElementById('LEDUnitDiv'+board);
-    if(!sign)return;
-    const list=(Array.isArray(messages)?messages:[messages]).filter(Boolean);
-    if(!list.length)return;
-    const signature=JSON.stringify(list);
-    let viewport=sign.querySelector('.led-continuous-ticker-viewport');
-    if(viewport && viewport.dataset.message===signature){
-      const track=viewport.querySelector('.led-continuous-ticker-track');
-      if(track && track.children.length===2){
-        if(typeof track.getAnimations==='function')
-          track.getAnimations().forEach(a=>{
-            if(a.playState==='paused'||a.playState==='finished')a.play();
-          });
-        return;
-      }
-    }
-    if(!viewport){
-      viewport=document.createElement('div');
-      viewport.className='led-continuous-ticker-viewport';
-      sign.appendChild(viewport);
-    }
-    viewport.dataset.message=signature;
-    function show(index){
-      if(viewport.dataset.message!==signature)return;
-      viewport.replaceChildren();
-      const track=document.createElement('div');
-      track.className='led-continuous-ticker-track';
-      const first=document.createElement('span');
-      first.className='led-continuous-ticker-copy';
-      first.innerHTML=list[index];
-      const second=first.cloneNode(true);
-      track.append(first,second);
-      viewport.appendChild(track);
-      // A hidden direction reports zero width; content length provides a
-      // stable full-cycle speed without interrupting the looping scroll.
-      const length=(first.textContent||'').length;
-      track.style.setProperty('--led-loop-seconds',
-        Math.min(300,Math.max(12,length*0.42+2)).toFixed(2)+'s');
-      if(list.length>1){
-        track.addEventListener('animationiteration',()=>{
-          if(viewport.dataset.message===signature)
-            show((index+1)%list.length);
-        },{once:true});
-      }
-    }
-    show(0);
-  }
-  function updateStopAnnouncement(board,rows,nextPassenger,hasUpcoming=true){
-    const editor=document.getElementById('messageTelopInput'+board);
-    const title=document.getElementById('messageTelopTitleInput'+board);
-    if(!editor||!title)return;
-    const messages=stopAnnouncements(board,rows,nextPassenger,hasUpcoming);
-    const signature=JSON.stringify(messages);
-    if(telopSignatures[board]!==signature){
-      telopSignatures[board]=signature;
-      editor.value=messages.join('　　　　　　　　　');
-      const hasPassenger=(Array.isArray(rows)&&rows.some(r=>
-        r&&!r.passStatus&&['local','limited','extra','sightseeing'].includes(r.kind))) ||
-        (nextPassenger&&!nextPassenger.passStatus);
-      choose('messageTelopTitleInput'+board,[hasPassenger?'停車駅':'お知らせ']);
-      if(Array.isArray(statusDisp))statusDisp[board]=1;
-      if(typeof updateStatus==='function')updateStatus(board);
-    }
-    installSeamlessTicker(board,messages);
-  }
-
-  // Native original LED destination sprites exist only for these
-  // six "[最終]..." choices. A last train to an intermediate station is
-  // the LAST service reaching it, including trains continuing beyond it.
-  // Do not mark a local as last if a later limited express still calls there.
-  const nativeFinalDestinations = new Set(
-    ['高松','新居浜','今治','伊予北条','八幡浜','宇和島']
-  );
-  function reachableNativeFinals(r) {
-    const dest=String(r.dest||'');
-    if(r.kind==='freight'||r.kind==='pass'||r.passStatus)return [];
-    if(r.direction==='south') {
-      if(dest==='宇和島')return ['八幡浜','宇和島'];
-      if(dest==='八幡浜')return ['八幡浜'];
-      return [];
-    }
-    if(r.direction==='north') {
-      const near=['伊予北条'];
-      if(dest==='伊予北条')return near;
-      const imabari=[...near,'今治'];
-      if(dest==='今治')return imabari;
-      const niihama=[...imabari,'新居浜'];
-      if(dest==='新居浜')return niihama;
-      if(['伊予西条'].includes(dest))return imabari;
-      if(['観音寺','岡山','岡山・高松','高松'].includes(dest)) {
-        const reached=dest==='伊予西条' ? imabari : niihama;
-        return /高松/.test(dest) ? [...reached,'高松'] : reached;
-      }
-    }
-    return [];
-  }
-  function nativeFinalMap(records) {
-    const last=new Map();
-    records.forEach(r=>{
-      const minute=hhmmToMinutes(r.time);
-      if(!Number.isFinite(minute))return;
-      reachableNativeFinals(r).forEach(target=>{
-        if(!last.has(target)||minute>last.get(target))last.set(target,minute);
-      });
-    });
-    return last;
-  }
-  function updateRow(board, slot, r) {
-    const key = board + '_' + slot;
-    if (!r) {
-      choose('typeInput' + key, ['----']);
-      choose('trainNameInput' + key, ['----']);
-      choose('destinationInput' + key, ['----']);
-      choose('trackInput' + key, ['----']);
-      return;
-    }
-    const limited = r.kind === 'limited';
-    choose('typeInput' + key,
-      [r.kind === 'freight' ? '貨物' :
-       limited ? '特急' : r.kind === 'extra' ? '臨時' : '----']);
-    const service = String(r.service || '');
-    const info = String(r.info || '');
-    const nameCandidates = [];
-    // Use the exact source sprite where possible. A combined Shiokaze/Ishizuchi
-    // train must not silently become Shiokaze alone, nor 102 by default.
-    const mergedNo = service.match(/しおかぜ(\d+)号/);
-    const ishizuchiNo = info.match(/いしづち(\d+)号/);
-    if (mergedNo && ishizuchiNo && mergedNo[1] === ishizuchiNo[1])
-      nameCandidates.push('しおかぜ' + mergedNo[1] + '号・いしづち' + ishizuchiNo[1] + '号');
-    nameCandidates.push(service);
-    if (limited && /しおかぜ/.test(service)) nameCandidates.push('しおかぜ');
-    if (limited && /宇和海/.test(service)) nameCandidates.push('宇和海');
-    if (r.kind === 'sightseeing') {
-      nameCandidates.push('伊予灘ものがたり(青)', '伊予灘ものがたり(赤)');
-    }
-    if (r.kind === 'extra') nameCandidates.push('臨時');
-    if (r.kind === 'local') {
-      if (/内子/.test(info)) nameCandidates.push('各停(内子経由)');
-      if (/伊予長浜/.test(info)) nameCandidates.push('各停(伊予長浜経由ワンマン)');
-      nameCandidates.push('各駅停車');
-    }
-    if (r.kind === 'freight') nameCandidates.push('貨物列車');
-    nameCandidates.push('普通列車', '----');
-    choose('trainNameInput' + key, nameCandidates);
-
-    const number = service.match(/(\d+)号/);
-    put('trainNumInput' + key, number ? number[1] : '0');
-    const tm = String(r.time).match(/^(\d{1,2}):(\d{2})$/);
-    if (tm) {
-      put('departureHourInput' + key, tm[1].padStart(2, '0'));
-      put('departureMinuteInput' + key, tm[2]);
-    }
-    const dest = String(r.dest || '');
-    const destChoices = {
-      '岡山・高松': ['岡山・高松'],
-      '市坪': ['市坪[U01]', '市坪'],
-      '宇和島': ['宇和島[U28]', '宇和島'],
-      '伊予市': ['伊予市[U05]', '伊予市'],
-      '八幡浜': ['八幡浜[U18]', '八幡浜'],
-      '今治': ['今治[Y40]', '今治'],
-      '高松': ['高松[Y00]', '高松'],
-      '伊予西条': ['伊予西条[Y31]', '伊予西条'],
-      '伊予大洲': ['伊予大洲[U14/S18]', '伊予大洲'],
-      '観音寺': ['観音寺[Y19]', '観音寺'],
-      '伊予北条': ['伊予北条[Y48]', '伊予北条'],
-      '新居浜': ['新居浜'],
-      '多度津': ['多度津'],
-      '卯之町': ['卯之町']
-    };
-    // No native "通過" destination bitmap exists. Clear stale destinations
-    // from previous rows and let the small status overlay say 通過/通過予定.
-    // The native [最終] destination bitmap takes precedence only when this
-    // train genuinely is the last same-day service reaching that destination.
-    const standardChoices=destChoices[dest] || [dest,'----'];
-    const finalChoices=r.nativeFinalLabel && nativeFinalDestinations.has(r.nativeFinalLabel)
-      ? ['[最終]'+r.nativeFinalLabel,...standardChoices]
-      : standardChoices;
-    choose('destinationInput' + key, r.passStatus ? ['----'] : finalChoices);
-    const platform = info.match(/([1-3])番/);
-    choose('trackInput' + key, [r.passStatus ? '----' : (platform ? platform[1] + '番線' : '----')]);
-    choose('soonInput' + key, ['----']);
-  }
-  // Live/scheduled passage movements from the exact same Matsuyama feed
-  // used by the detailed six-row timeline. The source timetable has
-  // passenger departures only: NEVER fabricate freight passage minutes.
-  const ledPassageFeed = {south:{iso:'',movements:[]},north:{iso:'',movements:[]}};
-  function hhmmToMinutes(value) {
-    const m=String(value||'').match(/^([01]?\d|2[0-3]):([0-5]\d)$/);
-    return m ? +m[1]*60 + +m[2] : NaN;
-  }
-  function passageRows(direction,n) {
-    const feed=ledPassageFeed[direction];
-    if(!feed || feed.iso!==n.iso)return [];
-    const seen=new Set();
-    return feed.movements.flatMap(item=>{
-      const t=hhmmToMinutes(item.time);
-      const trainNum=String(item.trainNum||'').trim();
-      if(!Number.isFinite(t) || t<n.minutes ||
-         (item.kind!=='freight' && item.kind!=='pass') ||
-         item.direction!==direction || !trainNum)return [];
-      const key=item.kind+'|'+trainNum+'|'+t;
-      if(seen.has(key))return [];
-      seen.add(key);
-      const time=String(Math.floor(t/60)).padStart(2,'0')+':'+String(t%60).padStart(2,'0');
-      return [{
-        id:'passage-'+key,board:'rail',direction,time,
-        kind:item.kind,trainNum,
-        service:item.kind==='freight'?trainNum+'レ':trainNum,
-        dest:'通過',info:item.timetableOnly?'松山通過予定':'松山通過',
-        passLabel:item.kind==='freight'?'貨物 '+trainNum+'レ':'通過 '+trainNum,
-        passStatus:item.timetableOnly?'通過予定':'通過'
-      }];
-    });
-  }
-  function renderPassLabels(units) {
-    // Respect the source site's native "貨物" and "貨物列車" sprites.
-    // Only the PASSAGE STATUS is absent from the original option palette;
-    // show it at the right without obscuring native train name or time.
-    units.forEach(unit=>[0,1].forEach(slot=>{
-      const line=document.getElementById('lineContents'+unit.board+'_'+slot);
-      if(!line)return;
-      const row=unit.rows[slot];
-      const statusText=row?.passStatus || '';
-      line.querySelectorAll('.led-passage-service').forEach(el=>el.remove());
-      let status=line.querySelector('.led-passage-status');
-      if(!statusText){if(status)status.remove();return;}
-      if(!status){
-        status=document.createElement('span');
-        status.className='led-passage-label led-passage-status';
-        line.appendChild(status);
-      }
-      if(status.textContent!==statusText)status.textContent=statusText;
-    }));
-  }
-  // A few original sprite choices cover only selected numbered
-  // Shiokaze-Ishizuchi pairs; never fall back to an unpaired "しおかぜ".
-  // The original sprite engine cycles language: trainName x=-71 (JP), -152 (EN).
-  // Keep native graphics in JP mode when available; English must show BOTH
-  // portions even if the original sprite contains only the Shiokaze portion.
-  const joinedNameObservers=new Map();
-  function renderJoinedServiceNames(units){
-    units.forEach(unit=>[0,1].forEach(slot=>{
-      const key=unit.board+'_'+slot,row=unit.rows[slot];
-      const line=document.getElementById('lineContents'+key);
-      if(!line)return;
-      let label=line.querySelector(':scope > .led-joined-service');
-      const match=String(row?.service||'').match(/^しおかぜ(\d+)号$/);
-      const partner=String(row?.info||'').match(/いしづち(\d+)号/);
-      const num=match&&partner&&match[1]===partner[1]?match[1]:'';
-      const prior=joinedNameObservers.get(key);
-      if(!num){
-        if(label)label.remove();
-        if(prior){prior.observer.disconnect();joinedNameObservers.delete(key);}
-        return;
-      }
-      const native='しおかぜ'+num+'号・いしづち'+num+'号';
-      const select=document.getElementById('trainNameInput'+key);
-      const hasNative=!!select&&[...select.options].some(o=>o.textContent.trim()===native);
-      const image=document.getElementById('trainNameImg'+key);
-      if(!label||label.dataset.trainNo!==num){
-        if(label)label.remove();
-        label=document.createElement('div');
-        label.className='led-joined-service';
-        label.dataset.trainNo=num;
-        for(let i=0;i<2;i++)label.appendChild(document.createElement('span'));
-        line.appendChild(label);
-      }
-      const sync=()=>{
-        if(!label.isConnected)return;
-        const left=Number.parseInt(image?.style.left||'',10);
-        const english=Number.isFinite(left)&&Math.abs(left+152)<=3;
-        const mode=english?'english':(hasNative?'native':'japanese');
-        if(label.dataset.mode===mode)return;
-        label.dataset.mode=mode;
-        const names=english
-          ? ['Shiokaze '+num,'Ishizuchi '+num]
-          : ['しおかぜ'+num+'号','いしづち'+num+'号'];
-        [...label.children].forEach((span,i)=>{span.textContent=names[i]});
-        label.setAttribute('aria-label',names.join(' / '));
-      };
-      if(prior?.image!==image){
-        if(prior)prior.observer.disconnect();
-        if(image){
-          const observer=new MutationObserver(sync);
-          observer.observe(image,{attributes:true,attributeFilter:['style','src']});
-          joinedNameObservers.set(key,{image,observer});
-        }else joinedNameObservers.delete(key);
-      }
-      sync();
-    }));
-  }
-  window.addEventListener('message',event=>{
-    if(event.origin!==location.origin ||
-       event.data?.type!=='matsuyama-led-movements')return;
-    const {direction,iso,movements}=event.data;
-    if(!['south','north'].includes(direction) ||
-       !/^\d{4}-\d{2}-\d{2}$/.test(String(iso)) ||
-       !Array.isArray(movements))return;
-    ledPassageFeed[direction]={
-      iso,movements:movements.slice(0,30).filter(v=>v && v.direction===direction)
-    };
-    refresh();
-  });
-
-  // Same-origin parent supplies live-approaching, diagram-confirmed arrivals
-  // for BOTH incoming corridors. A timetable alone never flashes this notice.
-  const ledArrivalFeed={iso:'',receivedAt:0,arrivals:[]};
-  window.addEventListener('message',event=>{
-    if(event.origin!==location.origin ||
-       event.data?.type!=='matsuyama-led-arrivals')return;
-    const {iso,arrivals,departures}=event.data;
-    if(!/^\d{4}-\d{2}-\d{2}$/.test(String(iso)) ||
-       !Array.isArray(arrivals))return;
-    ledStopFeed.iso=iso;
-    ledStopFeed.receivedAt=Date.now();
-    ledStopFeed.departures=(Array.isArray(departures)?departures:[])
-      .slice(0,160).filter(x=>
-        x && ['south','north'].includes(x.direction) &&
-        ['limited','local'].includes(x.trainClass) &&
-        /^\d{1,2}:\d{2}$/.test(String(x.departure||'')) &&
-        typeof x.destination==='string' && Array.isArray(x.stops)
-      ).map(x=>({
-        ...x,
-        stops:x.stops.slice(0,80).filter(st=>st && typeof st.station==='string' &&
-          st.station.length>0 && st.station.length<=30 &&
-          /^\d{1,2}:\d{2}$/.test(String(st.time||''))),
-        transfers:(Array.isArray(x.transfers)?x.transfers:[])
-          .slice(0,18).filter(t=>t && t.source==='today_diagram' &&
-            typeof t.station==='string' && typeof t.destination==='string' &&
-            /^\d{1,2}:\d{2}$/.test(String(t.arrival||'')) &&
-            /^\d{1,2}:\d{2}$/.test(String(t.departure||'')))
-      }));
-    ledArrivalFeed.iso=iso;
-    ledArrivalFeed.receivedAt=Date.now();
-    ledArrivalFeed.arrivals=arrivals.slice(0,24).filter(r=>
-      r?.confirmedApproach===true &&
-      ['north','south'].includes(r.side) &&
-      /^\d{1,2}:\d{2}$/.test(String(r.arrival)) &&
-      /^\d{1,5}[MD]$/i.test(String(r.trainNum||''))
-    ).map(r=>({
-      ...r,plannedTurnback:r.plannedTurnback===true,
-      delayMinutes:Number.isFinite(Number(r.delayMinutes)) &&
-        Number(r.delayMinutes)>=0 && Number(r.delayMinutes)<=60
-        ? Number(r.delayMinutes):0
-    }));
-    updateArrivalSoon(jst());
-    // Existing signature checks keep the native LED rows and ticker cycle stable.
-    refresh();
-  });
-  function updateArrivalSoon(n) {
-    const fresh=ledArrivalFeed.iso===n.iso &&
-      Date.now()-ledArrivalFeed.receivedAt>=0 &&
-      Date.now()-ledArrivalFeed.receivedAt<=30000;
-    for(const [board,direction] of [[0,'south'],[1,'north']]){
-      const sign=document.getElementById('LEDUnitDiv'+board);
-      if(!sign)continue;
-      const arrival=fresh?ledArrivalFeed.arrivals
-        .filter(r=>r.side===direction && Number.isFinite(hhmmToMinutes(r.arrival)))
-        // Apply ONLY observed, bounded delay; don't guess a fresh ETA.
-        .map(r=>({...r,remaining:
-          (hhmmToMinutes(r.arrival)+r.delayMinutes)*60 -
-          (n.minutes*60+n.seconds)}))
-        .filter(r=>r.remaining>0 && r.remaining<=60)
-        // First prefer an observed train with an unambiguous planned
-        // Matsuyama turnback, then the nearest arrival.
-        .sort((a,b)=>Number(b.plannedTurnback)-Number(a.plannedTurnback) ||
-          a.remaining-b.remaining)[0] : null;
-      let banner=sign.querySelector(':scope > .led-arrival-soon');
-      if(!arrival){
-        if(banner)banner.remove();
-        continue;
-      }
-      const key=arrival.trainNum+'|'+arrival.arrival+'|'+arrival.delayMinutes;
-      if(banner && banner.dataset.trainKey===key)continue;
-      if(banner)banner.remove();
-      banner=document.createElement('div');
-      banner.className='led-arrival-soon';
-      banner.dataset.trainKey=key;
-      // "列車" covers both electric and diesel rolling stock at Matsuyama.
-      banner.textContent='まもなく到着します';
-      banner.setAttribute('aria-label',
-        'まもなく到着します（'+arrival.trainNum+'）');
-      sign.appendChild(banner);
-    }
-  }
-
-  // The original LED engine retains the last entered hour/minute even when
-  // the train type/name is cleared. Hide each EMPTY native row after readForm
-  // so a completed 22:59/22:50 service can never stay visible overnight.
-  function setNativeRowVisibility(units) {
-    units.forEach(unit => {
-      [0,1].forEach(slot => {
-        const contents=document.getElementById('lineContents'+unit.board+'_'+slot);
-        const wrapper=contents?.parentElement;
-        if(!wrapper)return;
-        wrapper.style.visibility=unit.rows[slot] ? 'visible' : 'hidden';
-      });
-    });
-  }
-  // A full timetable rebuild (readForm) is intentionally NOT performed when
-  // the one-minute flag changes; it would reset the stop-announcement loop.
-  let currentLedUnits = [];
-  let lastLedMinuteKey = '';
-  function updateDepartureSoon(n) {
-    for(const unit of currentLedUnits){
-      for(let slot=0;slot<2;slot++){
-        const r=unit.rows[slot];
-        const line=document.getElementById('lineContents'+unit.board+'_'+slot);
-        if(!line)continue;
-        const existing=line.querySelector(':scope > .led-departure-soon');
-        // Passes/freight are NOT scheduled passenger departures.
-        const passenger=!!r && !r.passStatus &&
-          ['local','limited','extra','sightseeing'].includes(r.kind);
-        const departure=passenger?hhmmToMinutes(r.time):NaN;
-        const remaining=departure*60 - (n.minutes*60+n.seconds);
-        const shouldBlink=passenger && Number.isFinite(departure) &&
-          remaining>0 && remaining<=60;
-        if(!shouldBlink){
-          if(existing)existing.remove();
-          continue;
-        }
-        const key=String(r.id||r.service||'')+'|'+r.time;
-        // Never recreate the blinking element on each 1-second check.
-        if(existing && existing.dataset.trainKey===key)continue;
-        if(existing)existing.remove();
-        const warning=document.createElement('div');
-        warning.className='led-departure-soon';
-        warning.dataset.trainKey=key;
-        warning.textContent='まもなく発車します';
-        warning.setAttribute('aria-label','まもなく発車します');
-        line.appendChild(warning);
-      }
-    }
-  }
-  // Update the warning every second and remove expired departures at the
-  // exact minute boundary, without rereading the original LED each second.
-  setInterval(()=>{
-    if(!window.MATSUYAMA_DATA)return;
-    const now=jst(), minuteKey=now.iso+'|'+now.minutes;
-    if(minuteKey!==lastLedMinuteKey)refresh();
-    else updateDepartureSoon(now);
-    updateArrivalSoon(now);
-  },1000);
-
-  let lastRenderSignature = '';
-  function refresh() {
-    const data = window.MATSUYAMA_DATA;
-    if (!data || !Array.isArray(data.records)) return;
-    const n = jst();
-    lastLedMinuteKey=n.iso+'|'+n.minutes;
-    if (n.minutes < 270) {
-      if (lastRenderSignature !== 'pre-service') {
-        [0,1].forEach(board => [0,1].forEach(slot => updateRow(board,slot,null)));
-        if (typeof readForm === 'function') readForm();
-        lastRenderSignature = 'pre-service';
-      }
-      currentLedUnits=[{board:0,rows:[]},{board:1,rows:[]}];
-      setNativeRowVisibility(currentLedUnits);
-      updateDepartureSoon(n);
-      updateArrivalSoon(n);
-      [0,1].forEach(board => updateStopAnnouncement(board,[],null,false));
-      return; // No next-day train display before 04:30.
-    }
-    const units = [[0,'south'],[1,'north']].map(([board,direction]) => {
-      const todaysTrains = data.records
-        .filter(r => r.board === 'rail' && r.direction === direction && available(r,n))
-        .map(r => ({...r,time:r.timeByDow?.[String(n.dow)] || r.time}))
-        .filter(r => Number.isFinite(hhmmToMinutes(r.time)));
-      // Compute finals from ALL of today's trips, including those already
-      // departed. The last service is not the last item remaining on screen.
-      const finalTimes=nativeFinalMap(todaysTrains);
-      const passenger=todaysTrains
-        .filter(r => hhmmToMinutes(r.time)>=n.minutes)
-        .map(r => ({
-          ...r,
-          nativeFinalLabel:
-            nativeFinalDestinations.has(r.dest) &&
-            reachableNativeFinals(r).includes(r.dest) &&
-            finalTimes.get(r.dest)===hhmmToMinutes(r.time) ? r.dest : ''
-        }));
-      // Time-bearing passenger departures and known freight/other passages
-      // share ONE timeline. Train type never determines the LED order.
-      const upcoming=[...passenger,...passageRows(direction,n)]
-        .sort((a,b)=>hhmmToMinutes(a.time)-hhmmToMinutes(b.time) ||
-                      (a.passStatus?1:0)-(b.passStatus?1:0));
-      return {board, rows:upcoming.slice(0,2),nextPassenger:passenger[0]||null,
-        nextLimited:passenger.filter(r=>r.kind==='limited')
-          .sort((a,b)=>hhmmToMinutes(a.time)-hhmmToMinutes(b.time))[0] || null};
-    });
-    const signature = JSON.stringify(units.map(unit => [
-      unit.board,
-      [0,1].map(i => {
-        const r = unit.rows[i];
-        return r ? [r.id,r.time,r.kind,r.service,r.dest,r.info,r.nativeFinalLabel] : null;
-      })
-    ]));
-    // Calling readForm every 15s destroys the in-progress LED ticker and
-    // stops long announcements completing even one pass. Render on changes ONLY.
-    if (signature !== lastRenderSignature) {
-      units.forEach(unit =>
-        [0,1].forEach(slot => updateRow(unit.board,slot,unit.rows[slot] || null))
-      );
-      if (typeof readForm === 'function') readForm();
-      lastRenderSignature = signature;
-    }
-    // The ticker is independent of express priority in the two departure rows.
-    // Do this AFTER native readForm, so its redraw cannot erase ticker content.
-    units.forEach(unit => updateStopAnnouncement(
-      unit.board,unit.rows,unit.nextPassenger,unit.rows.length>0
-    ));
-    renderPassLabels(units);
-    renderJoinedServiceNames(units);
-    // Reapply even when no train data changed: source animation can recreate
-    // row nodes, and its input fields keep the previous clock time.
-    setNativeRowVisibility(units);
-    currentLedUnits=units;
-    updateDepartureSoon(n);
-    updateArrivalSoon(n);
-  }
-})();
-</script><script id="wallpaper-scale-fidelity">
+<main class="board" aria-label="JR松山駅 LED発車案内">
+ <div class="heading"><div class="station">JR 松山駅 <small>MATSUYAMA STATION</small></div><div class="heading-right"><span class="direction" id="direction">八幡浜・宇和島方面</span><span class="clock" id="clock">--:--:--</span></div></div>
+ <section class="rows" id="rows" aria-live="off">
+  <div class="train empty"><span class="kind">--</span><span class="service">列車情報を取得中</span></div>
+  <div class="train empty"><span class="kind">--</span><span class="service">Please wait</span></div>
+ </section>
+ <div class="ticker"><div class="ticker-label" id="ticker-label">停車駅・接続</div><div class="ticker-window" id="ticker-window"><div class="ticker-track" id="ticker-track">列車の運行図を確認中</div></div><div class="ticker-note">当日ダイヤに基づくご案内</div></div>
+ <div class="arrival-alert flash" id="arrival-alert" hidden>まもなく列車が到着します</div>
+</main>
+<script>
 (function(){
-  function direction(d){
-    if(d !== 'south' && d !== 'north')return;
-    document.documentElement.dataset.ledDirection=d;
-    fit();
+  'use strict';
+  // Standalone display: no external image atlas, simulator JS or font dependency.
+  // Parent messages retain their existing names and same-origin validation.
+  var direction=new URLSearchParams(location.search).get('dir')==='north'?'north':'south';
+  var timetable={};
+  var live={iso:'',at:0,departures:[],arrivals:[]};
+  var movements={north:{iso:'',rows:[]},south:{iso:'',rows:[]}};
+  var rendered='',cycleLanguages=0,lastMinute='';
+  var ticker={desiredKey:'',items:[],index:0,animation:null,currentKey:''};
+  var rowsEl=document.getElementById('rows');
+  var tickerWindow=document.getElementById('ticker-window');
+  var tickerTrack=document.getElementById('ticker-track');
+  var tickerLabel=document.getElementById('ticker-label');
+  var alertEl=document.getElementById('arrival-alert');
+  var lang='ja';
+  var EN_DEST={'岡山':'Okayama','高松':'Takamatsu','宇和島':'Uwajima','八幡浜':'Yawatahama',
+    '今治':'Imabari','伊予北条':'Iyo-Hojo','伊予西条':'Iyo-Saijo','新居浜':'Niihama',
+    '伊予市':'Iyo-shi','観音寺':'Kan-onji','伊予大洲':'Iyo-Ozu','卯之町':'Unomachi',
+    '市坪':'Ichitsubo','松山':'Matsuyama','多度津':'Tadotsu'};
+  function el(name,cls,txt){
+    var node=document.createElement(name);
+    if(cls)node.className=cls;
+    if(txt!==undefined)node.textContent=String(txt);
+    return node;
   }
-  function fit(){
-    var w=window.innerWidth,h=window.innerHeight;
-    var single=document.documentElement.dataset.ledDirection==='south'||
-               document.documentElement.dataset.ledDirection==='north';
-    var naturalWidth=single?284:599;
-    var naturalHeight=116;
-    var scale=Math.min((w-16)/naturalWidth,(h-8)/naturalHeight,
-                       single?4:1.7);
-    if(!Number.isFinite(scale))scale=1;
-    document.documentElement.style.setProperty('--led-scale',String(Math.max(.2,scale)));
+  function timeNumber(v){
+    var m=String(v||'').match(/^([01]?\d|2[0-3]):([0-5]\d)$/);
+    return m?Number(m[1])*60+Number(m[2]):NaN;
   }
-  var initial=new URLSearchParams(location.search).get('dir');
-  if(initial==='south'||initial==='north'){
-    document.documentElement.dataset.ledDirection=initial;
+  function jst(){
+    var p={};
+    new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Tokyo',year:'numeric',
+      month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',
+      hourCycle:'h23'}).formatToParts(new Date()).forEach(function(x){p[x.type]=x.value;});
+    var iso=p.year+'-'+p.month+'-'+p.day;
+    return {iso:iso,minutes:Number(p.hour)*60+Number(p.minute),seconds:Number(p.second),
+      dow:new Date(iso+'T12:00:00+09:00').getDay(),clock:p.hour+':'+p.minute+':'+p.second};
+  }
+  function available(r,n){
+    return (!r.start||n.iso>=r.start)&&(!r.end||n.iso<=r.end)&&
+      (!r.dates||r.dates.includes(n.iso))&&(!r.exclude||!r.exclude.includes(n.iso))&&
+      (!r.days||r.days.includes(n.dow));
+  }
+  function depRecord(r,n){
+    var t=r.timeByDow&&r.timeByDow[String(n.dow)]||r.time;
+    return Object.assign({},r,{time:t});
+  }
+  function readMovements(n){
+    var src=movements[direction];
+    if(src.iso!==n.iso)return [];
+    var seen=new Set();
+    return src.rows.filter(function(r){
+      var t=timeNumber(r.time),num=String(r.trainNum||'');
+      var key=r.kind+'|'+num+'|'+r.time;
+      if(!Number.isFinite(t)||t<n.minutes||t>1440||!num||
+        (r.kind!=='freight'&&r.kind!=='pass')||r.direction!==direction||seen.has(key))return false;
+      seen.add(key);return true;
+    }).map(function(r){
+      return {id:'movement-'+r.kind+'-'+r.trainNum+'-'+r.time,time:r.time,
+        kind:r.kind,service:String(r.trainNum)+(r.kind==='freight'?'レ':''),
+        dest:r.kind==='freight'?'貨物列車':'通過列車',trainNum:r.trainNum,
+        passStatus:r.timetableOnly?'通過予定':'通過',info:''};
+    });
+  }
+  function todayRecords(n){
+    if(n.minutes<270||!Array.isArray(window.MATSUYAMA_DATA&&window.MATSUYAMA_DATA.records))return [];
+    var scheduled=window.MATSUYAMA_DATA.records.filter(function(r){
+      return r.board==='rail'&&r.direction===direction&&available(r,n);
+    }).map(function(r){return depRecord(r,n);})
+    .filter(function(r){return Number.isFinite(timeNumber(r.time))&&timeNumber(r.time)>=n.minutes;});
+    return scheduled.concat(readMovements(n)).sort(function(a,b){
+      return timeNumber(a.time)-timeNumber(b.time)||(a.passStatus?1:0)-(b.passStatus?1:0);
+    });
+  }
+  function splitService(row){
+    var svc=String(row.service||''),info=String(row.info||'');
+    var a=svc.match(/^しおかぜ(\d+)号$/),b=info.match(/いしづち(\d+)号/);
+    if(a&&b&&a[1]===b[1]){
+      return {pair:true,ja:['しおかぜ'+a[1]+'号','いしづち'+a[1]+'号'],
+        en:['SHIOKAZE '+a[1],'ISHIZUCHI '+a[1]]};
+    }
+    var m=svc.match(/^宇和海(\d+)号$/);
+    if(m)return {pair:false,ja:[svc],en:['UWAKAI '+m[1]]};
+    m=svc.match(/^しおかぜ(\d+)号$/);
+    if(m)return {pair:false,ja:[svc],en:['SHIOKAZE '+m[1]]};
+    m=svc.match(/^いしづち(\d+)号$/);
+    if(m)return {pair:false,ja:[svc],en:['ISHIZUCHI '+m[1]]};
+    if(row.kind==='local')return {pair:false,ja:['普通列車'],en:['LOCAL TRAIN']};
+    if(row.kind==='freight')return {pair:false,ja:['貨物 '+String(row.trainNum||'')+'レ'],en:['FREIGHT '+String(row.trainNum||'')]};
+    if(row.kind==='pass')return {pair:false,ja:['通過 '+String(row.trainNum||'')],en:['PASSING '+String(row.trainNum||'')]};
+    if(row.kind==='sightseeing')return {pair:false,ja:[svc||'観光列車'],en:['SIGHTSEEING TRAIN']};
+    return {pair:false,ja:[svc||'列車'],en:[svc||'TRAIN']};
+  }
+  function englishDest(s){
+    return String(s||'').split(/[・／/]/).map(function(x){return EN_DEST[x.trim()]||x.trim();}).join(' / ');
+  }
+  function trainRow(row,n){
+    var kind=row.kind||'local',pass=!!row.passStatus;
+    var name=splitService(row),box=el('article','train '+kind);
+    var kindJP=pass?(kind==='freight'?'貨物':'通過'):
+      ({limited:'特急',local:'普通',extra:'臨時',sightseeing:'観光',freight:'貨物',pass:'通過'}[kind]||'列車');
+    var kindEN=pass?(kind==='freight'?'FRT':'PASS'):
+      ({limited:'LTD',local:'LOCAL',extra:'EXTRA',sightseeing:'TOUR',freight:'FRT',pass:'PASS'}[kind]||'TRAIN');
+    box.appendChild(el('span','kind',lang==='en'?kindEN:kindJP));
+    var nameEl=el('div','service'+(name.pair?' pair':''));
+    (lang==='en'?name.en:name.ja).forEach(function(label){
+      if(name.pair)nameEl.appendChild(el('span','',label));
+      else nameEl.textContent=label;
+    });box.appendChild(nameEl);
+    box.appendChild(el('span','dep',String(row.time||'--:--').padStart(5,'0')));
+    var dest=pass?(lang==='en'?'PASS':'通過'):
+      (lang==='en'?englishDest(row.dest):String(row.dest||''));
+    box.appendChild(el('span','dest',dest));
+    var pm=String(row.info||'').match(/([1-3])番/);
+    box.appendChild(el('span','platform',pass?'—':(pm?pm[1]+(lang==='en'?' TRACK':'番線'):'—')));
+    var dep=timeNumber(row.time),rem=dep*60-n.minutes*60-n.seconds;
+    var urgent=!pass&&rem>0&&rem<=60;
+    var st=urgent?(lang==='en'?'DEPARTING SOON':'まもなく発車'):
+      row.passStatus?(lang==='en'?'PASS SCHEDULE':row.passStatus):
+      (row.kind==='limited'&&/岡山・高松/.test(String(row.dest||''))?
+        (lang==='en'?'SPLITS AT UTAZU':'宇多津で分割'):'');
+    var last=!!row._isFinal;
+    if(!st&&last)st=lang==='en'?'LAST TRAIN':'最終';
+    box.appendChild(el('span','status'+(urgent?' flash warning':last?' final':''),st));
+    return box;
+  }
+  function exactRoute(row,dest,trainNumber,n){
+    if(live.iso!==n.iso||Date.now()-live.at>90000)return null;
+    var normal=function(v){return String(v||'').trim().replace(/駅$/,'');};
+    var candidates=live.departures.filter(function(v){
+      return v.direction===direction&&v.trainClass===(row.kind==='limited'?'limited':'local')&&
+        timeNumber(v.departure)===timeNumber(row.time)&&
+        normal(v.destination)===normal(dest)&&Array.isArray(v.stops)&&v.stops.length>0&&
+        normal(v.stops[v.stops.length-1].station)===normal(dest)&&
+        (!trainNumber||v.trainNum===trainNumber);
+    });
+    if(candidates.length===0)return null;
+    // Same-minute alternatives must agree exactly; no guessed station patterns.
+    var unique=new Map(candidates.map(function(c){return [JSON.stringify(c.stops),c];}));
+    return unique.size===1?candidates[0]:null;
+  }
+  function portions(row){
+    var service=String(row.service||''),info=String(row.info||''),dest=String(row.dest||'');
+    var pair=splitService(row);
+    var name=service.match(/^しおかぜ(\d+)号$/);
+    if(name){
+      var out=[{name:service,destination:dest.includes('岡山')?'岡山':dest,num:String(Number(name[1]))+'M'}];
+      if(pair.pair)out.push({name:'いしづち'+name[1]+'号',destination:'高松',
+        num:'10'+String(Number(name[1])).padStart(2,'0')+'M'});
+      return out;
+    }
+    var uwakai=service.match(/^宇和海(\d+)号$/);
+    if(uwakai)return [{name:service,destination:dest,num:String(1050+Number(uwakai[1]))+'D'}];
+    var ish=service.match(/^いしづち(\d+)号$/);
+    if(ish){var no=Number(ish[1]);return [{name:service,destination:dest,num:String(no>=102&&no<=106?no+940:1000+no)+'M'}];}
+    return [{name:service||'普通列車',destination:dest,num:''}];
+  }
+  function addPart(arr,type,text){if(text)arr.push({type:type,text:text});}
+  function displayParts(row,n){
+    if(!row||row.passStatus)return [{type:'note',text:'通過列車・貨物列車は旅客停車駅の案内対象外'}];
+    var segments=[];
+    portions(row).forEach(function(p){
+      var route=exactRoute(row,p.destination,p.num,n);
+      addPart(segments,'title',String(row.time)+'発　'+p.name+'　'+p.destination+'行');
+      if(!route){
+        addPart(segments,'note','当日運行図の停車駅・時刻・接続を確認中');
+        return;
+      }
+      var calls=route.stops.map(function(s){
+        var event=s.event==='arrival'?'着':s.event==='departure'?'発':'時刻';
+        return s.station+' '+s.time+event;
+      });
+      addPart(segments,'stop','停車駅と時刻　'+calls.join(' → '));
+      var end=route.stops[route.stops.length-1];
+      if(end){
+        addPart(segments,'title','終点 '+end.station+' '+end.time+
+          (end.event==='arrival'?'着':end.event==='departure'?'発':'（時刻表）'));
+      }
+      var stations=new Map(route.stops.map(function(s){return [s.station,timeNumber(s.time)];}));
+      var seen=new Set();
+      var transfers=(Array.isArray(route.transfers)?route.transfers:[]).filter(function(t){
+        var ar=timeNumber(t.arrival),dep=timeNumber(t.departure);
+        if(!stations.has(t.station)||ar!==stations.get(t.station)||t.destination==='松山'||
+          !Number.isFinite(ar)||!Number.isFinite(dep)||dep<=ar||dep-ar>45||
+          t.source!=='today_diagram')return false;
+        var key=t.station+'|'+t.trainNum+'|'+t.departure;
+        if(seen.has(key))return false;seen.add(key);return true;
+      });
+      if(transfers.length){
+        addPart(segments,'connection','当日ダイヤの接続候補（接続待ち・番線未確認）　'+
+          transfers.slice(0,10).map(function(t){
+            return t.station+' '+t.arrival+'着 → '+t.departure+'発　'+
+              (t.trainNum?t.trainNum+'列車 ':'')+t.destination+'行';
+          }).join(' ／ '));
+      }
+    });
+    return segments;
+  }
+  function tickerItems(rows,n){
+    var passengers=rows.filter(function(r){return !r.passStatus&&
+      ['limited','local','extra','sightseeing'].includes(r.kind);});
+    if(!passengers.length)return [{key:'empty',segments:[{type:'note',text:rows.length?
+        '通過列車の案内中　旅客列車の停車駅案内はありません':
+        'この方面の本日の旅客列車案内は終了しました'}]}];
+    return passengers.slice(0,2).map(function(r){
+      return {key:String(r.id||r.service||'')+'|'+r.time,segments:displayParts(r,n)};
+    });
+  }
+  function makeTickerItem(item){
+    tickerTrack.replaceChildren();
+    item.segments.forEach(function(s){
+      tickerTrack.appendChild(el('span','segment '+s.type,s.text));
+    });
+  }
+  function playTickerCycle(){
+    if(ticker.animation){ticker.animation.onfinish=null;ticker.animation.cancel();}
+    if(!ticker.items.length)return;
+    var item=ticker.items[ticker.index%ticker.items.length];
+    makeTickerItem(item);
+    var width=tickerTrack.scrollWidth,view=tickerWindow.clientWidth;
+    // Iframe may be temporarily hidden during another wallpaper page.
+    // Keep one complete cycle instead of restarting on every polling update.
+    if(width<20)width=tickerTrack.textContent.length*15;
+    if(view<100)view=Math.max(window.innerWidth-120,300);
+    var duration=Math.max(8000,Math.min(220000,1000*(width+view)/90));
+    var anim=tickerTrack.animate([{transform:'translateX('+view+'px)'},
+      {transform:'translateX(-'+width+'px)'}],
+      {duration:duration,iterations:1,easing:'linear',fill:'forwards'});
+    ticker.animation=anim;
+    anim.onfinish=function(){
+      if(ticker.animation!==anim)return;
+      ticker.items=ticker.nextItems||ticker.items;
+      ticker.nextItems=null;
+      ticker.index=(ticker.index+1)%ticker.items.length;
+      playTickerCycle();
+    };
+  }
+  function syncTicker(items){
+    var sig=JSON.stringify(items);
+    if(sig===ticker.desiredKey)return;
+    ticker.desiredKey=sig;
+    // New departure list: change immediately. Merely refreshed stop/transfer
+    // data for the same trains: finish the running sentence first.
+    var keys=items.map(function(x){return x.key;}).join('|');
+    if(keys===ticker.currentKey&&ticker.animation){
+      ticker.nextItems=items;return;
+    }
+    ticker.currentKey=keys;ticker.nextItems=null;
+    ticker.items=items;ticker.index=0;
+    playTickerCycle();
+  }
+  function render(n,force){
+    var rows=todayRecords(n);
+    var identity=direction+'|'+lang+'|'+rows.slice(0,2).map(function(r){
+      return [r.id,r.time,r.kind,r.dest,r.info].join(':');
+    }).join('|');
+    if(force||identity!==rendered){
+      rendered=identity;
+      var fragment=document.createDocumentFragment();
+      rows.slice(0,2).forEach(function(r){fragment.appendChild(trainRow(r,n));});
+      while(fragment.childNodes.length<2){
+        var emp=el('article','train empty');
+        emp.appendChild(el('span','kind','--'));
+        emp.appendChild(el('span','service',rows.length===0?
+          (lang==='en'?'NO MORE DEPARTURES':'本日の発車案内は終了しました'):''));
+        fragment.appendChild(emp);
+      }
+      rowsEl.replaceChildren(fragment);
+      document.getElementById('direction').textContent=lang==='en'?
+        (direction==='north'?'IMABARI / TAKAMATSU / OKAYAMA':'YAWATAHAMA / UWAJIMA'):
+        (direction==='north'?'今治・高松・岡山方面':'八幡浜・宇和島方面');
+      tickerLabel.textContent=lang==='en'?'STOPS / TRANSFERS':'停車駅・接続';
+    }
+    syncTicker(tickerItems(rows.slice(0,2),n));
+    updateAlerts(n,rows);
+  }
+  function updateAlerts(n,rows){
+    var alert=null;
+    if(live.iso===n.iso&&Date.now()-live.at<=90000){
+      alert=live.arrivals.filter(function(x){
+        var arr=timeNumber(x.arrival),delay=Number(x.delayMinutes)||0;
+        var secs=(arr+delay)*60-n.minutes*60-n.seconds;
+        return x.side===direction&&x.confirmedApproach===true&&
+          Number.isFinite(arr)&&secs>0&&secs<=60;
+      }).sort(function(a,b){
+        return Number(b.plannedTurnback)-Number(a.plannedTurnback)||
+          timeNumber(a.arrival)-timeNumber(b.arrival);
+      })[0]||null;
+    }
+    alertEl.hidden=!alert;
+    if(alert)alertEl.textContent=lang==='en'?'TRAIN ARRIVING SHORTLY':'まもなく列車が到着します';
+    rows.slice(0,2).forEach(function(row,i){
+      var node=rowsEl.children[i];if(!node||row.passStatus)return;
+      var cell=node.querySelector('.status');if(!cell)return;
+      var seconds=timeNumber(row.time)*60-n.minutes*60-n.seconds;
+      var urgent=seconds>0&&seconds<=60;
+      var value=urgent?(lang==='en'?'DEPARTING SOON':'まもなく発車'):'';
+      if(urgent){if(cell.textContent!==value)cell.textContent=value;cell.classList.add('flash','warning');}
+      else{
+        cell.classList.remove('flash','warning');
+        if(cell.textContent===('まもなく発車')||cell.textContent==='DEPARTING SOON')
+          cell.textContent='';
+      }
+    });
   }
   window.addEventListener('message',function(event){
-    if(event.origin!==location.origin ||
-       event.data?.type!=='matsuyama-led-direction')return;
-    direction(event.data.dir);
+    if(event.origin!==location.origin||!event.data||typeof event.data!=='object')return;
+    var d=event.data,n=jst();
+    if(d.type==='matsuyama-led-direction'){
+      if(d.dir!=='north'&&d.dir!=='south')return;
+      if(direction!==d.dir){direction=d.dir;rendered='';render(n,true);}
+      return;
+    }
+    if(d.type==='matsuyama-led-movements'){
+      if(!['south','north'].includes(d.direction)||d.iso!==n.iso||
+        !Array.isArray(d.movements))return;
+      movements[d.direction]={iso:d.iso,rows:d.movements.slice(0,40)};
+      render(n);
+      return;
+    }
+    if(d.type==='matsuyama-led-arrivals'){
+      if(d.iso!==n.iso||!Array.isArray(d.arrivals))return;
+      live.iso=d.iso;live.at=Date.now();
+      live.arrivals=d.arrivals.slice(0,24).filter(function(x){
+        return x&&x.confirmedApproach===true&&['south','north'].includes(x.side);
+      });
+      live.departures=(Array.isArray(d.departures)?d.departures:[]).slice(0,170)
+        .filter(function(x){
+          return x&&['south','north'].includes(x.direction)&&
+            ['limited','local'].includes(x.trainClass)&&Array.isArray(x.stops);
+        });
+      render(n);
+    }
   });
-  window.addEventListener('resize',fit);
-  fit();
+  function loadSchedule(){
+    var node=document.createElement('script');
+    node.src='../r15-dev/schedule.js?v='+Date.now();
+    node.onload=function(){render(jst(),true);node.remove();};
+    node.onerror=function(){render(jst(),true);node.remove();};
+    document.head.appendChild(node);
+  }
+  function heartbeat(){
+    var n=jst();
+    document.getElementById('clock').textContent=n.clock;
+    var minute=n.iso+'|'+n.minutes;
+    var language=(Date.now()%9000)<6000?'ja':'en';
+    var changed=language!==lang||minute!==lastMinute;
+    if(changed){lang=language;lastMinute=minute;render(n,true);}
+    else updateAlerts(n,todayRecords(n));
+  }
+  loadSchedule();
+  heartbeat();
+  setInterval(heartbeat,1000);
+  setInterval(loadSchedule,300000);
 })();
 </script>
-</body></html>
+</body>
+</html>
