@@ -189,11 +189,12 @@ function withVehicleImage<T extends Record<string,any>>(row:T, icons:Record<stri
 }
 
 function normalizeStationName(name: unknown) {
-  return String(name ?? "")
+  const station=String(name ?? "")
     .replace(/（.*?）/g, "")
     .replace(/予告窓/g, "")
-    .replace(/方$/g, "")
     .trim();
+  // 波方 is a real station. Do not treat the trailing 方 as a directional suffix.
+  return station==="波方" ? station : station.replace(/方$/g, "").trim();
 }
 
 function toMinutes(t: unknown) {
