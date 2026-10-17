@@ -964,42 +964,6 @@ async function getIchitsubo(now: { minutes: number }) {
     };
   }).filter(Boolean);
 
-  // Arrival warning for the embedded JR LED. Unlike a diagram timetable,
-  // this requires a CURRENT matching train-position observation, a verified
-  // station-arrival event (NOT a passing point), and a nearby approach on the
-  // correct side. It includes both terminating and through passenger trains.
-  const matsuyamaInboundArrivalAlerts = [...diagram.values()].flatMap(route => {
-    const num=String(route.trainNum||"").trim();
-    if(!/^\d{1,5}[MD]$/i.test(num) ||
-       Number(num.replace(/\D/g,""))>=8000)return [];
-    const side=matsuyamaInboundSide(route);
-    if(!side)return [];
-    const arrivalPoint=route.points.find((p,i)=>
-      i>=route.matsuyamaIndex &&
-      normalizeStationName(p.station)==="松山" &&
-      /着/.test(p.event)&&!/通/.test(p.event) &&
-      /^\d{1,2}:\d{2}$/.test(p.time));
-    if(!arrivalPoint)return [];
-    const live=positionByTrain.get(num);
-    if(!live)return [];
-    const raw=String(live.Pos??"").trim();
-    const position=normalizeStationName(raw);
-    if(!position || /^(?:松山|松山駅|松山基地|—|-|不明|未取得|取得中|確認中)$/.test(position))
-      return [];
-    // A same-day observed train must be within the final one/two stations
-    // of Matsuyama; a train merely somewhere on the line is insufficient.
-    const nearSouth=/(?:市坪|北伊予|南伊予)/.test(position);
-    const nearNorth=/(?:三津浜|伊予和気)/.test(position);
-    if(!(side==="south"?nearSouth:nearNorth))return [];
-    // Do not treat movements from Matsuyama toward the outer stations as
-    // inbound. The operating diagram itself established inbound direction.
-    return [{
-      trainNum:num,side,arrival:arrivalPoint.time,
-      position,trainClass:matsuyamaTrainClass(num),
-      source:"live_position_and_today_diagram",
-      confirmedApproach:true
-    }];
-  });
   const matsuyamaTerminatingArrivals = [...diagram.values()].map((route) => {
     const num = String(route.trainNum || "").trim();
     if (!routeTerminatesAtMatsuyama(route)) return null;
@@ -1049,6 +1013,49 @@ async function getIchitsubo(now: { minutes: number }) {
     };
   }).filter(Boolean).sort((a: any, b: any) => toMinutes(a.arrival) - toMinutes(b.arrival));
 
+  // Matsuyama is a major turnback terminal. Prefer a train known from today's
+  // operating diagram to terminate and have ONE plausible subsequent departure.
+  // This is a planned turnback only: the app cannot promise a specific set
+  // or that the service is actually still using that rolling stock.
+  const mappedInboundTurnbacks=new Map(matsuyamaTerminatingArrivals
+    .filter(x=>x.turnback).map(x=>[x.trainNum,x.turnback]));
+  // Live-confirmed approach only. Timetable-only services are never announced
+  // as "まもなく到着します", and a train already at Matsuyama is excluded.
+  const matsuyamaInboundArrivalAlerts=[...diagram.values()].flatMap(route=>{
+    const num=String(route.trainNum||"").trim();
+    if(!/^\d{1,5}[MD]$/i.test(num))return [];
+    // Some valid terminating train numbers begin with 8 or 9. They must not
+    // be thrown out merely because they are 8000-series diagram variants.
+    const isTerminator=routeTerminatesAtMatsuyama(route);
+    if(Number(num.replace(/\D/g,""))>=8000&&!isTerminator)return [];
+    const side=matsuyamaInboundSide(route);
+    if(!side)return [];
+    const arrivalPoint=route.points.find((p,i)=>
+      i>=route.matsuyamaIndex &&
+      normalizeStationName(p.station)==="松山" &&
+      /着/.test(p.event)&&!/通/.test(p.event) &&
+      /^\d{1,2}:\d{2}$/.test(p.time));
+    if(!arrivalPoint)return [];
+    const live=positionByTrain.get(num);
+    if(!live||isDeadhead(live,route)||isFreight(live,route))return [];
+    const position=normalizeStationName(String(live.Pos??"").trim());
+    if(!position||/^(?:松山|松山駅|松山基地|—|-|不明|未取得|取得中|確認中)$/.test(position))
+      return [];
+    const nearSouth=/(?:市坪|北伊予|南伊予)/.test(position);
+    const nearNorth=/(?:三津浜|伊予和気)/.test(position);
+    if(!(side==="south"?nearSouth:nearNorth))return [];
+    // Delay is meaningful only when reported as a finite, bounded number.
+    const delay=Number(live.delay);
+    const delayMinutes=Number.isFinite(delay)&&delay>=0&&delay<=60?delay:0;
+    return [{
+      trainNum:num,side,arrival:arrivalPoint.time,
+      position,trainClass:matsuyamaTrainClass(num),
+      delayMinutes,plannedTurnback:mappedInboundTurnbacks.has(num),
+      turnbackDeparture:mappedInboundTurnbacks.get(num)?.departure||"",
+      source:"live_position_and_today_diagram",
+      confirmedApproach:true
+    }];
+  });
   // The daily diagram may include multiple unconfirmed train-number variants
   // for the SAME terminating service (e.g. 8094D and 9094D, both 18:30
   // Yawatahama -> Matsuyama and both linked to 4655D). Do not render
