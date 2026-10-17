@@ -161,6 +161,21 @@ html[data-led-direction="north"] #LEDUnitDiv>div>div:nth-child(2){
   0%,49.9%{opacity:1}
   50%,100%{opacity:0}
 }
+/* Arrival notice occupies the BOTTOM ticker field, not either departure row.
+   Existing station-stop marquee keeps its animation behind this notice. */
+#LEDUnitDiv .led-arrival-soon{
+  position:absolute!important;
+  left:77px!important;top:62px!important;
+  width:192px!important;height:16px!important;
+  box-sizing:border-box!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  overflow:hidden!important;z-index:1200!important;
+  background:#000!important;color:#ffeb32!important;
+  font-family:'ＭＳ ゴシック','Yu Gothic','Meiryo',sans-serif!important;
+  font-size:12px!important;font-weight:900!important;letter-spacing:-.4px!important;
+  line-height:16px!important;white-space:nowrap!important;pointer-events:none!important;
+  animation:led-departure-soon-flash .9s steps(1,end) infinite!important;
+}
 </style><style id="led-continuous-ticker-style">
 /* Deterministic seamless station-stop ticker; replaces browser-specific marquee
    behavior. One complete message is followed by its exact duplicate. */
@@ -685,6 +700,55 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
     refresh();
   });
 
+  // Same-origin parent supplies live-approaching, diagram-confirmed arrivals
+  // for BOTH incoming corridors. A timetable alone never flashes this notice.
+  const ledArrivalFeed={iso:'',receivedAt:0,arrivals:[]};
+  window.addEventListener('message',event=>{
+    if(event.origin!==location.origin ||
+       event.data?.type!=='matsuyama-led-arrivals')return;
+    const {iso,arrivals}=event.data;
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(String(iso)) ||
+       !Array.isArray(arrivals))return;
+    ledArrivalFeed.iso=iso;
+    ledArrivalFeed.receivedAt=Date.now();
+    ledArrivalFeed.arrivals=arrivals.slice(0,24).filter(r=>
+      r?.confirmedApproach===true &&
+      ['north','south'].includes(r.side) &&
+      /^\d{1,2}:\d{2}$/.test(String(r.arrival)) &&
+      /^\d{1,5}[MD]$/i.test(String(r.trainNum||''))
+    );
+    updateArrivalSoon(jst());
+  });
+  function updateArrivalSoon(n) {
+    const fresh=ledArrivalFeed.iso===n.iso &&
+      Date.now()-ledArrivalFeed.receivedAt>=0 &&
+      Date.now()-ledArrivalFeed.receivedAt<=30000;
+    for(const [board,direction] of [[0,'south'],[1,'north']]){
+      const sign=document.getElementById('LEDUnitDiv'+board);
+      if(!sign)continue;
+      const arrival=fresh?ledArrivalFeed.arrivals
+        .filter(r=>r.side===direction && Number.isFinite(hhmmToMinutes(r.arrival)))
+        .map(r=>({...r,remaining:hhmmToMinutes(r.arrival)*60-(n.minutes*60+n.seconds)}))
+        .filter(r=>r.remaining>0 && r.remaining<=60)
+        .sort((a,b)=>a.remaining-b.remaining)[0] : null;
+      let banner=sign.querySelector(':scope > .led-arrival-soon');
+      if(!arrival){
+        if(banner)banner.remove();
+        continue;
+      }
+      const key=arrival.trainNum+'|'+arrival.arrival;
+      if(banner && banner.dataset.trainKey===key)continue;
+      if(banner)banner.remove();
+      banner=document.createElement('div');
+      banner.className='led-arrival-soon';
+      banner.dataset.trainKey=key;
+      banner.textContent='まもなく電車が到着します';
+      banner.setAttribute('aria-label',
+        'まもなく電車が到着します（'+arrival.trainNum+'）');
+      sign.appendChild(banner);
+    }
+  }
+
   // The original LED engine retains the last entered hour/minute even when
   // the train type/name is cleared. Hide each EMPTY native row after readForm
   // so a completed 22:59/22:50 service can never stay visible overnight.
@@ -740,6 +804,7 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
     const now=jst(), minuteKey=now.iso+'|'+now.minutes;
     if(minuteKey!==lastLedMinuteKey)refresh();
     else updateDepartureSoon(now);
+    updateArrivalSoon(now);
   },1000);
 
   let lastRenderSignature = '';
@@ -757,6 +822,7 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
       currentLedUnits=[{board:0,rows:[]},{board:1,rows:[]}];
       setNativeRowVisibility(currentLedUnits);
       updateDepartureSoon(n);
+      updateArrivalSoon(n);
       [0,1].forEach(board => updateStopAnnouncement(board,null,false));
       return; // No next-day train display before 04:30.
     }
@@ -813,6 +879,7 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
     setNativeRowVisibility(units);
     currentLedUnits=units;
     updateDepartureSoon(n);
+    updateArrivalSoon(n);
   }
 })();
 </script><script id="wallpaper-scale-fidelity">
