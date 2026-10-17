@@ -5365,7 +5365,7 @@
     const result=document.createElement('div');
     result.id='disaster-preview-docomo-rule-result';
     result.style.cssText='width:100%;font:800 12px/1.45 sans-serif;color:#f4e4a4;text-align:right';
-    result.textContent='実音ファイルは未登録です。ドコモ公式動画なら黄色ボタンから試聴できます。';
+    result.textContent='ファイル登録のほか、Chrome/Edgeの「タブ音声を直接録音」でも取り込めます。権利を持つ音源のみ利用してください。';
     function openSoundDb(){
       return new Promise((resolve,reject)=>{
         if(!window.indexedDB){reject(new Error('IndexedDB unsupported'));return;}
@@ -5413,6 +5413,97 @@
       if(soundStatus[kind])soundStatus[kind].textContent=
         '登録済：'+(name.length>26?name.slice(0,25)+'…':name);
     }
+    // User-initiated, LOCAL-ONLY capture helper. A Chrome/Edge tab can
+    // grant capture of its OWN audio via the browser sharing picker. No URL
+    // scraping, DRM circumvention, server upload or public asset commit.
+    // The user must have permission to record the sound for their intended use.
+    let captureSession=null;
+    async function toggleCapture(kind,button){
+      if(captureSession){
+        if(captureSession.kind!==kind){
+          result.textContent='先に現在の録音を終了してください。';
+          return;
+        }
+        const running=captureSession;
+        captureSession=null;
+        if(running.recorder.state==='recording')
+          running.recorder.stop();
+        running.stream.getTracks().forEach(t=>t.stop());
+        button.textContent=running.defaultLabel;
+        return;
+      }
+      if(!navigator.mediaDevices?.getDisplayMedia || !window.MediaRecorder){
+        result.textContent='このブラウザではタブ音声録音が使えません。Chrome・Edgeのデスクトップ版をご利用ください。';
+        return;
+      }
+      const originalLabel=button.textContent;
+      let stream=null;
+      try {
+        // Must be called synchronously during the real click gesture.
+        stream=await navigator.mediaDevices.getDisplayMedia({
+          video:true,
+          audio:true,
+          preferCurrentTab:true,
+          selfBrowserSurface:'include',
+          systemAudio:'include',
+          surfaceSwitching:'include'
+        });
+        const audioTracks=stream.getAudioTracks();
+        if(!audioTracks.length){
+          result.textContent='録音できる音声がありません。共有画面で「タブの音声も共有」をオンにしてください。';
+          stream.getTracks().forEach(t=>t.stop());
+          return;
+        }
+        const type=MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
+          ?'audio/webm;codecs=opus'
+          :MediaRecorder.isTypeSupported('audio/webm')?'audio/webm':'';
+        const onlyAudio=new MediaStream(audioTracks);
+        const recorder=type?new MediaRecorder(onlyAudio,{mimeType:type})
+          :new MediaRecorder(onlyAudio);
+        const chunks=[];
+        recorder.addEventListener('dataavailable',e=>{
+          if(e.data&&e.data.size)chunks.push(e.data);
+        });
+        recorder.addEventListener('stop',async()=>{
+          stream.getTracks().forEach(t=>t.stop());
+          if(captureSession?.recorder===recorder)captureSession=null;
+          button.textContent=originalLabel;
+          if(!chunks.length){
+            result.textContent='音声を録音できませんでした。音声共有のチェックを確認してください。';
+            return;
+          }
+          const blob=new Blob(chunks,{type:recorder.mimeType||'audio/webm'});
+          if(blob.size>15*1024*1024){
+            result.textContent='録音データが15MBを超えました。短い警報音だけ録音してください。';
+            return;
+          }
+          const named=new File([blob],
+            (kind==='eew'?'jishin-':'hinan-')+'local-recording.webm',
+            {type:blob.type});
+          registerSound(kind,named);
+          try{
+            await saveSound(kind,named);
+            result.textContent='録音音声をこのPCのブラウザに保存しました。試聴ボタンで確認してください。外部送信なし。';
+          }catch(e){
+            result.textContent='録音音声は使用できますが、ブラウザ内に保存できませんでした。';
+          }
+        });
+        recorder.addEventListener('error',e=>{
+          result.textContent='録音エラー。ブラウザの音声権限を確認してください。';
+        });
+        audioTracks[0].addEventListener('ended',()=>{
+          if(recorder.state==='recording')recorder.stop();
+        },{once:true});
+        captureSession={kind,stream,recorder,defaultLabel:originalLabel};
+        recorder.start(500);
+        button.textContent='■ '+(kind==='eew'?'地震':'津波・避難')+'音の録音終了';
+        result.textContent='録音中。共有したタブで許諾のある音を再生し、終わったら「録音終了」を押してください。';
+      } catch(err) {
+        if(stream)stream.getTracks().forEach(t=>t.stop());
+        result.textContent='録音を開始できませんでした。Chrome/Edgeでタブを選び、音声共有を許可してください。';
+        console.info('Optional local sound capture:',err);
+      }
+    }
     const soundFileButtons=[];
     const soundLabels={
       eew:'地震速報用・ブザー実音',
@@ -5453,6 +5544,13 @@
       attach.style.cssText='cursor:pointer;background:#285a64;color:white;border:1px solid #a1dbd6;border-radius:5px;padding:7px 8px;font:800 12px sans-serif';
       attach.onclick=()=>input.click();
       soundFileButtons.push(attach);
+      const capture=document.createElement('button');
+      capture.type='button';
+      capture.textContent='● '+(kind==='eew'?'地震音を直接録音':'津波・避難音を直接録音');
+      capture.title='Chrome/Edgeの共有ダイアログから音声共有を許可したタブの音を、このブラウザだけに録音します。利用権限のある音源に限ってください。';
+      capture.style.cssText='cursor:pointer;background:#7c2534;color:#fff;border:1px solid #f7abb7;border-radius:5px;padding:7px 9px;font:800 12px sans-serif';
+      capture.onclick=()=>toggleCapture(kind,capture);
+      soundFileButtons.push(capture);
       const status=document.createElement('span');
       status.textContent='未登録';
       status.style.cssText='color:#eee;font:750 11px sans-serif';
