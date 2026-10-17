@@ -365,7 +365,7 @@ function routeTerminatesAtMatsuyama(route: Route) {
 function exactStopsAfterMatsuyama(route: Route) {
   const idx = route.matsuyamaDepartureIndex;
   if (idx < 0) return [];
-  const out: { station: string; time: string }[] = [];
+  const out: { station: string; time: string; event: string }[] = [];
   const seen = new Set<string>();
   for (const p of route.points.slice(idx + 1)) {
     const station = normalizeStationName(p.station);
@@ -379,7 +379,7 @@ function exactStopsAfterMatsuyama(route: Route) {
       /^\d{1,2}:\d{2}$/.test(q.time)
     );
     const t = same[0]?.time || p.time;
-    out.push({ station, time: String(t) });
+    out.push({ station, time: String(t), event: same.length ? "arrival" : "departure" });
     seen.add(station);
   }
   return out;
@@ -969,7 +969,7 @@ async function getIchitsubo(now: { minutes: number }) {
       const diff=toMinutes(branch.points[junctionDepartIndex].time) -
         toMinutes(sharedStops[junctionIndex].time);
       if(!Number.isFinite(diff) || diff<0 || diff>8)return [];
-      const branchStops:{station:string,time:string}[]=[];
+      const branchStops:{station:string,time:string,event:string}[]=[];
       const seen=new Set<string>();
       for(const point of branch.points.slice(junctionDepartIndex+1)){
         const station=normalizeStationName(point.station);
@@ -977,7 +977,7 @@ async function getIchitsubo(now: { minutes: number }) {
            !/着|発/.test(point.event) ||
            !Number.isFinite(toMinutes(point.time)))continue;
         seen.add(station);
-        branchStops.push({station,time:point.time});
+        branchStops.push({station,time:point.time,event:/着/.test(point.event)?"arrival":"departure"});
       }
       if(!branchStops.length ||
          branchStops[branchStops.length-1].station!=="高松")return [];
