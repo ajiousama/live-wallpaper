@@ -33,6 +33,160 @@ function corsHeaders() {
   };
 }
 
+
+// RAIL_VEHICLE_IMAGE_PIPELINE_20261015
+// Optional, best-effort vehicle images from the same public feeds as the JR Shikoku
+// unofficial app. A failed request must not block the train-position board.
+const VEHICLE_OPERATION_API = "https://jr-shikoku-backend-api-v1.haruk.in/operation-logs";
+const VEHICLE_TRAIN_DATA_API = "https://jr-shikoku-backend-api-v1.haruk.in/train-data";
+let vehicleImageCache: {until:number, map:Record<string,any>, available:boolean} | null = null;
+const vehicleImageUrl = (raw:unknown):string => {
+  if (typeof raw !== "string" || raw.length > 1600) return "";
+  try {
+    const u=new URL(raw);
+    // Only remote train-image hosts documented in upstream public code.
+    if(u.protocol!=="https:" || !/(^|\.)haruk\.in$/i.test(u.hostname)) return "";
+    if(!/\.(?:png|webp|gif|jpe?g)(?:$|\?)/i.test(u.href) &&
+       !/\/webhook\/anpanman-pictures(?:-hub)?\.png/i.test(u.pathname)) return "";
+    return u.href;
+  } catch {return "";}
+};
+const vehicleRows = (raw:unknown):Record<string,any>[] => {
+  if(Array.isArray(raw)) return raw.filter(x=>x&&typeof x==="object");
+  if(!raw || typeof raw!=="object") return [];
+  const x=raw as Record<string,any>;
+  for(const candidate of [x.data,x.results,x.items,x.logs,x.train_data,x.operation_logs]){
+    if(Array.isArray(candidate)) return candidate.filter(v=>v&&typeof v==="object");
+  }
+  return [];
+};
+const imageTrainKey=(v:unknown):string=>{
+  const raw=String(v??"").trim().split(",")[0].trim();
+  return /^(?:回)?\d{1,6}[A-Z]?$/i.test(raw) ? raw.replace(/^回/,"").toUpperCase() : "";
+};
+// Read rolling-stock series ONLY when the public feed explicitly reports a
+// model/form, never from the train number or a generic image filename.
+function confirmedVehicleSeries(row: Record<string,unknown>):string {
+  for(const key of ["vehicle_series","vehicleSeries","vehicle_type","vehicleType",
+    "rolling_stock","rollingStock","car_type","carType","car_series","carSeries",
+    "formation_type","formationType","series","vehicle_model","vehicleModel",
+    "train_series","trainSeries","車両形式","車両型式","形式"]){
+    const value=row[key];
+    if(typeof value!=="string")continue;
+    const name=value.normalize("NFKC").trim().replace(/\s+/g," ");
+    if(name.length>0&&name.length<=64&&
+      /(?:\d{2,4}\s*(?:系|形|型)|[NE]2000|キハ\s*\d{2,4}|キロ\s*\d{2,4})/i.test(name))
+      return name;
+  }
+  return "";
+}
+
+async function fetchVehicleImages():Promise<Record<string,any>>{
+  if(vehicleImageCache && Date.now()<vehicleImageCache.until)return vehicleImageCache.map;
+  const [ops,trains] = await Promise.allSettled([
+    fetchTimeout(VEHICLE_OPERATION_API,false,10000),
+    fetchTimeout(VEHICLE_TRAIN_DATA_API,false,10000)
+  ]);
+  const result:Record<string,any>={};
+  // Exact train-number fallback from the source application's train-data.
+  const trainDefaults:Record<string,any>={};
+  const today=jstNow().iso.slice(0,10);
+  const knownSeries:Record<string,{name:string,source:string}>={};
+  const seriesConflicts=new Set<string>();
+  const recordSeries=(id:string,name:string,source:string)=>{
+    if(!id||!name||seriesConflicts.has(id))return;
+    if(knownSeries[id]&&knownSeries[id].name!==name){
+      delete knownSeries[id];seriesConflicts.add(id);return;
+    }
+    // When both sources agree, the same-day operating log wins.
+    if(!knownSeries[id]||source==="operation-logs")
+      knownSeries[id]={name,source};
+  };
+  // Baseline icon: exact train_id only, never infer vehicle type from M/D suffix.
+  if(trains.status==="fulfilled"){
+    for(const row of vehicleRows(trains.value)){
+      const id=imageTrainKey(row.train_id??row.trainId??row.train_num);
+      recordSeries(id,confirmedVehicleSeries(row),"train-data");
+      const url=vehicleImageUrl(row.train_info_img_hub)||vehicleImageUrl(row.train_info_img);
+      if(id&&url){
+        const fallback={north:url,south:url,source:"train-data"};
+        result[id]=fallback;
+        trainDefaults[id]=fallback;
+      }
+    }
+  }
+  if(ops.status==="fulfilled"){
+    for(const row of vehicleRows(ops.value)){
+      const rowDate=String(row.date??row.operation_date??"").slice(0,10);
+      if(rowDate && rowDate!==today)continue;
+      if(Number(row.state)===100)continue; // mirrors upstream WebView filtering
+      const north=vehicleImageUrl(row.vehicle_img_hub)||vehicleImageUrl(row.vehicle_img);
+      const south=vehicleImageUrl(row.vehicle_img_right_hub)||vehicleImageUrl(row.vehicle_img_right);
+      const explicitModel=confirmedVehicleSeries(row);
+      const ids=[...(Array.isArray(row.train_ids)?row.train_ids:[]),
+        ...(Array.isArray(row.related_train_ids)?row.related_train_ids:[])];
+      if(typeof row.train_id==="string")ids.push(row.train_id);
+      for(const rawId of ids){
+        const id=imageTrainKey(rawId);
+        if(!id)continue;
+        recordSeries(id,explicitModel,"operation-logs");
+        if(!north&&!south)continue;
+        const existing=result[id];
+        if(existing?.source==="operation-logs" &&
+          (existing.north!==(north||south) || existing.south!==(south||north))){
+          // Multiple consists/rolling-stock images exist for the same train.
+          // Do NOT discard the known exact-number base image: use the source
+          // application's train-data image as an honest generic-for-that-train
+          // fallback, including its live Anpanman picture endpoint.
+          const base=trainDefaults[id];
+          result[id]=base ? {...base,source:"train-data-conflicting-operation-logs"}
+            : {north:"",south:"",source:"ambiguous-operation-logs"};
+          continue;
+        }
+        if(existing?.source==="ambiguous-operation-logs" ||
+           existing?.source==="train-data-conflicting-operation-logs")continue;
+        result[id]={north:north||south,south:south||north,source:"operation-logs"};
+      }
+    }
+  }
+  // JR Shikoku app's published historical icon table and today's user-confirmed
+  // Ishizuchi 21 identification. Not a live rolling-stock confirmation.
+  // Never override the same-day operation record or exact train-data image.
+  if(!result["1021M"] || result["1021M"].source==="ambiguous"){
+    if(result["1021M"]?.source!=="ambiguous"){
+      result["1021M"]={
+        north:"https://storage.haruk.in/s8000ap.png",
+        south:"https://storage.haruk.in/s8000ap.png",
+        source:"published-icon-fallback"
+      };
+    }
+  }
+  for(const [id,model] of Object.entries(knownSeries)){
+    result[id]={...(result[id]||{}),vehicleSeries:model.name,
+      vehicleSeriesSource:model.source};
+  }
+  const available=ops.status==="fulfilled"||trains.status==="fulfilled";
+  // Keep series updates reasonably prompt while avoiding repeated requests.
+  vehicleImageCache={until:Date.now()+(available?25000:15000),map:result,available};
+  return result;
+}
+function withVehicleImage<T extends Record<string,any>>(row:T, icons:Record<string,any>):T{
+  const id=imageTrainKey(row.trainNum);
+  const found=id?icons[id]:null;
+  const direct=confirmedVehicleSeries(row);
+  const model=direct||String(found?.vehicleSeries||"");
+  let decorated:Record<string,any>={...row};
+  if(found?.north||found?.south){
+    decorated={...decorated,vehicleImageNorth:found.north||"",
+      vehicleImageSouth:found.south||"",vehicleImageSource:found.source};
+  }
+  if(model){
+    decorated.vehicleSeries=model;
+    decorated.vehicleSeriesSource=direct?"live-position":found?.vehicleSeriesSource||"";
+  }
+  return decorated as T;
+}
+
 function normalizeStationName(name: unknown) {
   return String(name ?? "")
     .replace(/（.*?）/g, "")
@@ -251,8 +405,11 @@ function isDeadhead(pos: Record<string, unknown>, route: Route) {
   const num = String(pos.TrainNum ?? route.trainNum ?? "").trim();
   const type = String(pos.Type ?? pos.type ?? pos.TrainType ?? "").trim();
   // A trailing R alone is not positive evidence of a deadhead.
+  // 非公式アプリの列番仕様: R/E=通常回送、A/B/L=基地回送、T=単機回送。
+  // 明示的な旅客列車の種別が優先される。
+  if (/^(?:普通|各停|各駅停車|local|regional|rapid)(?:$|[:：])/i.test(type)) return false;
   return /回送|deadhead|out.of.service|入換|入れ換え|入替/i.test(type) ||
-    /^[0-9]{1,4}[AE]$/i.test(num) || /^回[0-9]/.test(num);
+    /^[0-9]{1,5}[REABLT]$/i.test(num) || /^回[0-9]/.test(num);
 }
 
 function isFreight(pos: Record<string, unknown>, route: Route) {
@@ -273,12 +430,14 @@ function liveSpecialKind(pos: Record<string, unknown>, route: Route | null) {
       /^[0-9]{1,4}[AE]$/i.test(num) || /^回[0-9]/.test(num)) return "deadhead";
   if (/貨物|freight/i.test(type) || /^(3072|3073)$/.test(num)) return "freight";
   if (/臨時|extra|special/i.test(type)) return "extra";
-  // An R suffix does NOT imply 回送. If the source explicitly identifies a
-  // passenger service, let the timetable/live-passenger path handle it.
+  // 明示的な旅客種別は優先。末尾記号の意味は非公式アプリ開発者公開仕様に準拠。
   if (/^(?:普通|各停|各駅停車|local|regional|rapid)(?:$|[:：])/i.test(type)) return "";
-  // Unknown R and 9xxx trains should still appear when their live position
-  // is confirmed, but with a truthful "unclassified" badge.
-  if (/^[0-9]{1,4}R$/i.test(num) || /^9[0-9]{3,4}[A-Z]$/i.test(num)) return "unknown";
+  if (/^[0-9]{1,5}[REABLT]$/i.test(num)) return "deadhead";
+  if (/^[0-9]{1,5}H$/i.test(num)) return "test";
+  // 9xxxD/M は通常「臨時」系統。実際の位置が確認された場合にのみ案内する。
+  if (/^9[0-9]{3,4}[DMS]$/i.test(num)) return "extra";
+  // 認識できない特殊列番だけ、引き続き種別未確認とする。
+  if (/^9[0-9]{3,4}[A-Z]$/i.test(num)) return "unknown";
   return "";
 }
 
@@ -346,6 +505,8 @@ function collectMatsuyamaSpecialTrains(positions: Record<string, unknown>[], dia
     const delay = Number(pos.delay);
     return {
       trainNum: num, kind, position, corridor: corridor || "unknown",
+      direction: route ? matsuyamaRouteDirection(route) : "",
+      vehicleSeries: confirmedVehicleSeries(pos),
       destination: liveSpecialDestination(pos, route),
       origin: route?.origin ?? "",
       stationEvent, stationTime: time,
@@ -417,11 +578,12 @@ function approachingIchitsubo(pos: Record<string, unknown>, route: Route, nowMin
 async function getIchitsubo(now: { minutes: number }) {
   // Daily diagram remains usable for *scheduled* freight notices even
   // when the separate live-position endpoint has no data or times out.
-  const [diagram, positionResult] = await Promise.all([
+  const [diagram, positionResult, vehicleImages] = await Promise.all([
     loadDiagram(),
     fetchTimeout(JR_POSITIONS_URL)
       .then((data) => ({ ok:true, data }))
       .catch(() => ({ ok:false, data:null })),
+    fetchVehicleImages().catch(() => ({} as Record<string,any>)),
   ]);
 
   const pjson = (positionResult.data ?? {}) as Record<string, unknown>;
@@ -647,21 +809,58 @@ async function getIchitsubo(now: { minutes: number }) {
     };
   }).filter(Boolean).sort((a: any, b: any) => toMinutes(a.arrival) - toMinutes(b.arrival));
 
+  // The daily diagram may include multiple unconfirmed train-number variants
+  // for the SAME terminating service (e.g. 8094D and 9094D, both 18:30
+  // Yawatahama -> Matsuyama and both linked to 4655D). Do not render
+  // duplicate identical arrivals while neither variant has a live position.
+  // Position-confirmed trains are kept as distinct observations.
+  const uniqueMatsuyamaTerminatingArrivals: Record<string,any>[] = [];
+  const unconfirmedArrivalKeys = new Map<string, Record<string,any>>();
+  for (const raw of matsuyamaTerminatingArrivals) {
+    const x = raw as Record<string,any>;
+    const pos=String(x.position??"").trim();
+    const positionConfirmed=pos!=="" && !/^(?:-|—|不明|未取得|取得中|確認中|データなし|位置情報なし)$/.test(pos);
+    const turn=x.turnback || {};
+    const identity=[
+      x.side,x.arrival,x.trainClass,x.origin,
+      turn.trainNum || "",turn.departure || "",turn.destination || ""
+    ].join("|");
+    const matched = !positionConfirmed ? unconfirmedArrivalKeys.get(identity) : null;
+    if (matched) {
+      if(!matched.possibleTrainNums.includes(x.trainNum))matched.possibleTrainNums.push(x.trainNum);
+      continue;
+    }
+    const entry={...x,possibleTrainNums:[x.trainNum]};
+    uniqueMatsuyamaTerminatingArrivals.push(entry);
+    if(!positionConfirmed)unconfirmedArrivalKeys.set(identity,entry);
+  }
   const matsuyamaSpecialTrains = collectMatsuyamaSpecialTrains(positions, diagram);
 
   return {
     ok: true,
     source: "JR四国非公式アプリ系公開データ",
     fetchedAt: pjson?.fetchedAt ?? null,
-    approaching,
-    matsuyamaDeadheads,
-    matsuyamaFreights,
+    approaching: approaching.map(x=>withVehicleImage(x as Record<string,any>,vehicleImages)),
+    matsuyamaDeadheads: matsuyamaDeadheads.map(x=>withVehicleImage(x as Record<string,any>,vehicleImages)),
+    matsuyamaFreights: matsuyamaFreights.map(x=>withVehicleImage(x as Record<string,any>,vehicleImages)),
     matsuyamaFreightSchedules,
-    matsuyamaSpecialTrains,
+    matsuyamaSpecialTrains: matsuyamaSpecialTrains.map(x=>withVehicleImage(x as Record<string,any>,vehicleImages)),
     positionFeedOk: positionResult.ok,
-    matsuyamaSchedule,
-    matsuyamaActiveTrains,
-    matsuyamaTerminatingArrivals,
+    matsuyamaSchedule: matsuyamaSchedule.map(x=>withVehicleImage(x as Record<string,any>,vehicleImages)),
+    matsuyamaActiveTrains: matsuyamaActiveTrains.map(x=>withVehicleImage(x as Record<string,any>,vehicleImages)),
+    matsuyamaTerminatingArrivals: uniqueMatsuyamaTerminatingArrivals.map((x)=>{
+      const nums=x.possibleTrainNums as string[];
+      if(nums.length<=1)return withVehicleImage(x,vehicleImages);
+      const candidates=nums.map(num=>vehicleImages[imageTrainKey(num)]);
+      const first=candidates[0];
+      // A merged, unconfirmed service may show a real icon only if all
+      // possible train numbers independently have the SAME vehicle image.
+      const same=first && first.north && first.south &&
+        candidates.every(c=>c?.north===first.north && c?.south===first.south);
+      return same ? {...x,vehicleImageNorth:first.north,vehicleImageSouth:first.south,
+                       vehicleImageSource:"merged-identical-operation-images"}
+        : {...x,vehicleImageNorth:"",vehicleImageSouth:"",vehicleImageSource:"ambiguous-variant"};
+    }),
     alert: approaching.length > 0,
     message: (approaching[0] as any)?.message ?? "",
   };
@@ -791,6 +990,12 @@ const airportRouteScheduleCache: {
   at: number;
   map: Map<string, { departure: string; arrival: string; place: string }>;
 } = { at: 0, map: new Map() };
+// Reverse lookup for MYJ departures. Do not substitute inbound arrival
+// schedules: outbound arrivals must be matched by route + flight number +
+// exactly published Matsuyama departure time.
+const airportDepartureArrivalCache:{
+  map: Map<string, string>;
+}={map:new Map()};
 const ORANGE_FERRY_URL = "https://www.orange-ferry.co.jp/";
 const BOYO_FERRY_URL = "https://www.boyoferry.co.jp/smp/status.html";
 const KOKU94_URL = "https://www.koku94.jp/";
@@ -809,6 +1014,12 @@ function minuteDelta(from: string, to: string) {
   if (d < -720) d += 1440;
   if (d > 720) d -= 1440;
   return d;
+}
+
+function airportScheduleClock(raw:unknown):string {
+  const match=String(raw??"").trim().match(/^(\d{1,2}):(\d{2})$/);
+  if(!match||Number(match[1])>=24||Number(match[2])>=60)return "";
+  return String(Number(match[1])).padStart(2,"0")+":"+match[2];
 }
 
 function parseAirportFlights(html: string) {
@@ -890,18 +1101,26 @@ async function loadAirportRouteSchedules() {
   );
 
   const map = new Map<string, { departure: string; arrival: string; place: string }>();
+  const depMap = new Map<string,string>();
+  const conflictingDepartureKeys = new Set<string>();
   settled.forEach((result, index) => {
     if (result.status !== "fulfilled") return;
     const [place] = entries[index];
     for (const row of result.value) {
-      const key = `${place}|${row.number}|${row.arrival}`;
+      const key = `${place}|${row.number}|${airportScheduleClock(row.arrival)}`;
       map.set(key, { departure: row.departure, arrival: row.arrival, place });
+      const departureKey = `${place}|${row.number}|${airportScheduleClock(row.departure)}`;
+      const previous = depMap.get(departureKey);
+      if(previous && previous!==row.arrival) conflictingDepartureKeys.add(departureKey);
+      else if(!previous) depMap.set(departureKey,row.arrival);
     }
   });
+  for(const key of conflictingDepartureKeys)depMap.delete(key);
 
   if (map.size) {
     airportRouteScheduleCache.map = map;
     airportRouteScheduleCache.at = now;
+    airportDepartureArrivalCache.map=depMap;
   }
   return airportRouteScheduleCache.map;
 }
@@ -1060,7 +1279,7 @@ async function enrichArrivalsWithAdsb(arrivals:any[]) {
     if(atOrigin<=5 && onGround && before>=0){
       return {...item,aircraftFlightPhase:"waiting",aircraftPositionConfirmed:true,
         aircraftObservedAt:adsb.observedAt,aircraftCallsign:spec.callsign,
-        aircraftPositionText:spec.name+"にて出発待ち",aircraftDataSource:sourceText};
+        aircraftPositionText:spec.name+"地上（離陸未確認）",aircraftDataSource:sourceText};
     }
     if(!Number.isFinite(alt)||alt<500||!Number.isFinite(speed)||speed<85||atMatsuyama>1650)return item;
     if(!Number.isFinite(a.track))return item;
@@ -1352,9 +1571,46 @@ async function getAirportLive() {
     ? getGimhaeDepartures():Promise.resolve(new Map<string,any>());
   try {
     const schedules = await loadAirportRouteSchedules();
+    const outboundArrivals=airportDepartureArrivalCache.map;
+    parsed.departures=parsed.departures.map((item:any)=>{
+      const place=String(item?.place||"").trim();
+      const departure=airportScheduleClock(item?.scheduled);
+      const numbers=Array.isArray(item?.numbers)?item.numbers.map(String):[];
+      const matched=[...new Set(numbers.map((number:string)=>
+        outboundArrivals.get(`${place}|${number}|${departure}`)).filter(Boolean))];
+      // Share an ETA only when all matching flight numbers resolve to a
+      // single, official scheduled destination arrival time.
+      if(matched.length!==1)return item;
+      return {...item,destinationArrivalScheduled:matched[0],
+        destinationArrivalSource:"松山空港公式月間時刻表"};
+    });
+    // 2026 summer timetable published by the Matsuyama International
+    // Airport promotion council. Local times at the DESTINATION airport.
+    // Exact flight number + departure time + date only; do not guess when
+    // a live flight differs from the published schedule.
+    const intlSummer=[
+      {place:"ソウル",flight:"1702",dep:"09:35",arrival:"11:15"},
+      {place:"ソウル",flight:"1704",dep:"15:50",arrival:"17:30"},
+      {place:"釜山",flight:"133",dep:"18:35",arrival:"19:55"},
+      {place:"台北",flight:"109",dep:"11:25",arrival:"13:05"},
+    ];
+    const today=jstNow().iso.slice(0,10);
+    if(today>="2026-03-29"&&today<="2026-10-24"){
+      parsed.departures=parsed.departures.map((item:any)=>{
+        if(item.destinationArrivalScheduled)return item;
+        const dep=airportScheduleClock(item.scheduled);
+        const numbers=Array.isArray(item.numbers)?item.numbers.map(String):[];
+        const matches=intlSummer.filter(v=>v.place===item.place &&
+          v.dep===dep && numbers.includes(v.flight));
+        return matches.length===1?{...item,
+          destinationArrivalScheduled:matches[0].arrival,
+          destinationArrivalSource:"松山空港国際線運航ダイヤ（2026夏季）",
+          destinationArrivalTimezone:"現地時刻"}:item;
+      });
+    }
     parsed.arrivals = parsed.arrivals.map((item: any) => {
       const place = String(item?.place || "").trim();
-      const scheduled = String(item?.scheduled || "");
+      const scheduled = airportScheduleClock(item?.scheduled);
       const numbers = Array.isArray(item?.numbers) ? item.numbers.map(String) : [];
       let match: { departure: string; arrival: string; place: string } | undefined;
       for (const n of numbers) {
