@@ -3362,23 +3362,47 @@
         Number(x.delayMinutes)>=0&&Number(x.delayMinutes)<=60
         ? Number(x.delayMinutes):0
     }));
-    // Exact station calls are supplied by today's diagram, not a generic stop pattern.
-    const scheduled=fresh && Array.isArray(approachLive.ichitsubo?.matsuyamaSchedule)
+    // Keep stop/connection diagrams separate from live train positioning:
+    // timetable data is valid even when positioning is temporarily unavailable.
+    const fetched=Date.parse(String(approachLive.generatedAtJst||''));
+    const scheduleFresh=approachLive.ok && approachLive.ichitsubo?.ok===true &&
+      boardDisplayIso('rail',now)===now.iso && Number.isFinite(fetched) &&
+      Date.now()-fetched>=-15000 && Date.now()-fetched<=90000;
+    const scheduled=scheduleFresh && Array.isArray(approachLive.ichitsubo?.matsuyamaSchedule)
       ? approachLive.ichitsubo.matsuyamaSchedule : [];
-    const joined=fresh && Array.isArray(approachLive.ichitsubo?.matsuyamaJoinedPortions)
+    const joined=scheduleFresh && Array.isArray(approachLive.ichitsubo?.matsuyamaJoinedPortions)
       ? approachLive.ichitsubo.matsuyamaJoinedPortions : [];
     const departures=[...scheduled,...joined].filter(x=>
-      x?.trainClass==='limited' &&
+      ['limited','local'].includes(x?.trainClass) &&
       ['south','north'].includes(x.direction) &&
       /^\d{1,2}:\d{2}$/.test(String(x.departure||'')) &&
       /^\d{1,5}[MD]$/i.test(String(x.trainNum||'')) &&
       Array.isArray(x.stops) && x.stops.length>0
-    ).slice(0,100).map(x=>({
-      direction:x.direction,departure:x.departure,trainNum:String(x.trainNum),
-      trainClass:'limited',destination:String(x.destination||'').trim(),
-      stops:x.stops.filter(s=>s && typeof s.station==='string' &&
-        /^\d{1,2}:\d{2}$/.test(String(s.time||''))).slice(0,75)
-        .map(s=>({station:String(s.station).trim(),time:String(s.time)}))
+    ).slice(0,160).map(x=>({
+      direction:x.direction,departure:String(x.departure),trainNum:String(x.trainNum),
+      trunkTrainNum:String(x.trunkTrainNum||''),
+      trainClass:x.trainClass,destination:String(x.destination||'').trim(),
+      junction:String(x.junction||'').trim(),
+      stops:x.stops.filter(st=>st && typeof st.station==='string' &&
+        /^\d{1,2}:\d{2}$/.test(String(st.time||''))).slice(0,80)
+        .map(st=>({
+          station:String(st.station).trim().slice(0,30),
+          time:String(st.time),
+          event:['arrival','departure'].includes(st.event)?st.event:'timetable'
+        })),
+      // These are diagram-matched transfer opportunities, NOT a promise to
+      // hold a connecting train or a platform assignment.
+      transfers:(Array.isArray(x.transfers)?x.transfers:[]).filter(t=>
+        t?.source==='today_diagram' &&
+        /^\d{1,2}:\d{2}$/.test(String(t.arrival||'')) &&
+        /^\d{1,2}:\d{2}$/.test(String(t.departure||'')) &&
+        typeof t.station==='string' && typeof t.destination==='string'
+      ).slice(0,18).map(t=>({
+        station:String(t.station).trim().slice(0,30),
+        arrival:String(t.arrival),departure:String(t.departure),
+        destination:String(t.destination).trim().slice(0,30),
+        trainNum:String(t.trainNum||'').slice(0,12),source:'today_diagram'
+      }))
     })).filter(x=>x.stops.length>0);
     try {
       frame.contentWindow.postMessage({
