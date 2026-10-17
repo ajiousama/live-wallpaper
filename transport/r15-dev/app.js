@@ -2138,8 +2138,8 @@
         /^\d{2}:\d{2}$/.test(padTime(t.scheduledLocalArrival||''))
         ? '・普通は'+padTime(t.scheduledLocalArrival)+'着予定' : '';
       // "先着" describes the diagram, not a live platform/dispatch check.
-      return '乗継候補（当日ダイヤ）：'+station+' '+arrival+
-        '着 → 普通 '+dest+'行 '+departure2+'発（乗換'+
+      return '当日運行図の乗換案内：'+station+' '+arrival+
+        '着 → 普通 '+dest+'行 '+departure2+'発（乗換時間'+
         Math.round(Number(t.minutes))+'分'+waiting+'）';
     });
   }
