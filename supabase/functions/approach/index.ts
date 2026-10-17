@@ -818,6 +818,87 @@ async function getIchitsubo(now: { minutes: number }) {
     return String(Math.floor(minutes/60)).padStart(2,"0")+":"+
       String(minutes%60).padStart(2,"0");
   }
+  // Detect potential meets during a local's scheduled station dwell.
+  // A 2-platform/4-track station can involve opposite-direction trains, but
+  // timetable coincidence is NOT proof of dispatch hold or platform assignment.
+  const meetingEventsByStation=(()=>{
+    const index=new Map<string,Array<{
+      route:Route,trainNum:string,kind:string,event:string,time:number
+    }>>();
+    for(const route of diagram.values()){
+      const trainNum=String(route.trainNum||"").trim();
+      if(!/^(?:\d{1,5}[MD]|\d{4})$/i.test(trainNum))continue;
+      const kind=/^(?:3072|3073)$/.test(trainNum)?"freight":
+        matsuyamaTrainClass(trainNum);
+      for(const p of route.points){
+        if(!/着|発|通/.test(p.event))continue;
+        const station=normalizeStationName(p.station),minute=toMinutes(p.time);
+        if(!station||!Number.isFinite(minute))continue;
+        const records=index.get(station)||[];
+        records.push({route,trainNum,kind,
+          event:/通/.test(p.event)?"pass":/着/.test(p.event)?"arrival":"departure",
+          time:minute});
+        index.set(station,records);
+      }
+    }
+    return index;
+  })();
+  function opposingStationPaths(a:Route,b:Route,station:string) {
+    const aNames=a.points.map(p=>normalizeStationName(p.station));
+    const bNames=b.points.map(p=>normalizeStationName(p.station));
+    const aAt=aNames.indexOf(station),bAt=bNames.indexOf(station);
+    if(aAt<0||bAt<0)return false;
+    // Two common stations, encountered in inverse order, establish opposing
+    // travel. A mere shared platform at one junction cannot establish it.
+    let reverse=0,forward=0;
+    for(const name of new Set(aNames)){
+      if(!name||name===station)continue;
+      const ia=aNames.indexOf(name),ib=bNames.indexOf(name);
+      if(ia<0||ib<0)continue;
+      const sign=(ia-aAt)*(ib-bAt);
+      if(sign<0)reverse++;
+      if(sign>0)forward++;
+    }
+    return reverse>0&&forward===0;
+  }
+  function timetableLocalOpposingMeets(route:Route) {
+    if(matsuyamaTrainClass(String(route.trainNum||""))!=="local"||
+       route.matsuyamaDepartureIndex<0)return [];
+    const points=route.points.slice(route.matsuyamaDepartureIndex+1);
+    const list:Array<Record<string,unknown>>=[];
+    const seen=new Set<string>();
+    for(let i=0;i<points.length;i++){
+      const p=points[i],station=normalizeStationName(p.station);
+      if(!station||!/着/.test(p.event)||/通/.test(p.event))continue;
+      const arrival=toMinutes(p.time);
+      if(!Number.isFinite(arrival))continue;
+      const end=points.slice(i+1).find(q=>
+        normalizeStationName(q.station)===station&&
+        /発/.test(q.event)&&Number.isFinite(toMinutes(q.time)));
+      if(!end)continue;
+      const departure=toMinutes(end.time),dwell=departure-arrival;
+      if(dwell<2||dwell>45)continue; // Real dwell, not a terminal layover.
+      const choices=(meetingEventsByStation.get(station)||[])
+        .filter(other=>other.trainNum!==route.trainNum &&
+          other.time>=arrival && other.time<=departure &&
+          opposingStationPaths(route,other.route,station))
+        .sort((a,b)=>a.time-b.time||a.trainNum.localeCompare(b.trainNum));
+      for(const candidate of choices){
+        const key=station+"|"+candidate.trainNum;
+        if(seen.has(key))continue;
+        seen.add(key);
+        list.push({
+          station,arrival:padHHMM(arrival),departure:padHHMM(departure),
+          dwellMinutes:dwell,counterTrainNum:candidate.trainNum,
+          counterTrainClass:candidate.kind,
+          counterEvent:candidate.event,counterTime:padHHMM(candidate.time),
+          movement:"opposing",source:"today_diagram",
+          platformConfirmed:false,actualHoldConfirmed:false
+        });
+      }
+    }
+    return list.slice(0,5);
+  }
   const matsuyamaSchedule = [...diagram.values()].map((route) => {
     if (route.matsuyamaDepartureIndex < 0 || !/^\d{1,2}:\d{2}$/.test(route.matsuyamaDepartureTime)) return null;
     const num = String(route.trainNum || "").trim();
@@ -845,6 +926,7 @@ async function getIchitsubo(now: { minutes: number }) {
       terminal,
       // Diagram-based local connections, no unverified platform or hold claims.
       transfers: timetableLocalTransfers(route),
+      meets: timetableLocalOpposingMeets(route),
     };
   }).filter(Boolean).sort((a: any, b: any) => toMinutes(a.departure) - toMinutes(b.departure));
 
