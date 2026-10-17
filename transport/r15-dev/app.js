@@ -81,7 +81,9 @@
   }
 
   function cleanStation(name) {
-    return String(name||'').replace(/（.*?）/g,'').replace(/予告窓/g,'').replace(/方$/g,'').trim();
+    const station=String(name||'').replace(/（.*?）/g,'').replace(/予告窓/g,'').trim();
+    // 波方 is a station name, not the generic directional suffix 「方」.
+    return station==='波方'?station:station.replace(/方$/g,'').trim();
   }
 
   function japanNow() {
