@@ -130,6 +130,22 @@ html[data-led-direction="north"] #LEDUnitDiv>div>div:nth-child(2){
 #LEDUnitDiv .led-passage-status{
   left:176px!important;width:80px!important;color:#ffe34c!important;
 }
+</style><style id="led-joined-name-style">
+/* Prefer the original combined bitmap when it exists. For missing numbers,
+   the complete two-part name fits inside the original 80x16 name field. */
+#LEDUnitDiv .led-joined-service{
+ position:absolute!important;left:32px!important;top:0!important;
+ width:80px!important;height:16px!important;z-index:650!important;
+ display:flex!important;flex-direction:column!important;justify-content:center!important;
+ align-items:center!important;overflow:hidden!important;pointer-events:none!important;
+ background:#000!important;color:#ffdc46!important;
+ font-family:'ＭＳ ゴシック','Yu Gothic','Meiryo',sans-serif!important;
+ font-size:8px!important;font-weight:900!important;line-height:8px!important;
+ letter-spacing:-.3px!important;white-space:nowrap!important;
+}
+#LEDUnitDiv .led-joined-service>span{
+ display:block!important;height:8px!important;line-height:8px!important;
+}
 </style><style id="led-departure-soon-style">
 /* One minute before the scheduled departure, flash in EACH affected LED row.
    Overlay the timetable/destination (x112–240), keep service-name sprites
@@ -704,6 +720,34 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
       if(status.textContent!==statusText)status.textContent=statusText;
     }));
   }
+  // A few original sprite choices cover only selected numbered
+  // Shiokaze-Ishizuchi pairs; never fall back to an unpaired "しおかぜ".
+  function renderJoinedServiceNames(units){
+    units.forEach(unit=>[0,1].forEach(slot=>{
+      const row=unit.rows[slot];
+      const line=document.getElementById('lineContents'+unit.board+'_'+slot);
+      if(!line)return;
+      const previous=line.querySelector(':scope > .led-joined-service');
+      const service=String(row?.service||'');
+      const match=service.match(/^しおかぜ(\d+)号$/);
+      const partner=String(row?.info||'').match(/いしづち(\d+)号/);
+      const num=match && partner && match[1]===partner[1] ? match[1] : '';
+      const select=document.getElementById('trainNameInput'+unit.board+'_'+slot);
+      const native='しおかぜ'+num+'号・いしづち'+num+'号';
+      const hasExact=!!num && !!select && [...select.options].some(o=>o.textContent.trim()===native);
+      if(!num || hasExact){if(previous)previous.remove();return;}
+      if(previous && previous.dataset.trainNo===num)return;
+      if(previous)previous.remove();
+      const label=document.createElement('div');
+      label.className='led-joined-service';
+      label.dataset.trainNo=num;
+      for(const text of ['しおかぜ'+num+'号','いしづち'+num+'号']){
+        const span=document.createElement('span');span.textContent=text;label.appendChild(span);
+      }
+      label.setAttribute('aria-label',native);
+      line.appendChild(label);
+    }));
+  }
   window.addEventListener('message',event=>{
     if(event.origin!==location.origin ||
        event.data?.type!=='matsuyama-led-movements')return;
@@ -918,6 +962,7 @@ document.write("<div class='font_scroll_gothic' style='background-color:#000; co
       unit.board,unit.nextLimited,unit.rows.length>0
     ));
     renderPassLabels(units);
+    renderJoinedServiceNames(units);
     // Reapply even when no train data changed: source animation can recreate
     // row nodes, and its input fields keep the previous clock time.
     setNativeRowVisibility(units);
