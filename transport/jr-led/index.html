@@ -62,6 +62,64 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#101417;fon
 }
 @media(max-width:500px){.train{grid-template-columns:38px minmax(82px,1fr) 62px minmax(67px,.8fr)}.platform{display:none}.station small{display:none}}
 
+
+/* Original mounting footprint: centered compact LED, NOT a full-width
+   replacement. Only presentation is corrected; parent screen and data
+   handlers remain unchanged. */
+.board{
+ width:min(415px,100%)!important;
+ max-width:415px!important;
+ height:100%!important;
+ margin-inline:auto!important;
+ padding:4px 5px!important;
+ grid-template-rows:19px minmax(0,1fr) 26px!important;
+ gap:3px!important;
+ border:2px solid #aeb4b6!important;
+ background:#333638!important;
+}
+.heading{padding:0 3px!important;gap:4px!important}
+.station{font-size:11px!important;letter-spacing:0!important}
+.station small{display:none!important}
+.direction{font-size:10px!important;max-width:230px!important}
+.rows{gap:3px!important;min-height:0!important}
+.train{
+ grid-template-columns:37px minmax(0,115px) 61px minmax(0,79px) 27px minmax(0,53px)!important;
+ gap:3px!important;padding:2px 4px!important;
+ border-left-width:2px!important;
+}
+.kind{font-size:10px!important;padding:2px 0!important}
+.service{font-size:13px!important;letter-spacing:-.045em!important}
+.service.pair{font-size:10px!important;gap:1px!important;letter-spacing:0!important}
+.dep{font-size:18px!important;letter-spacing:-.04em!important}
+.dest{font-size:12px!important}
+.platform{display:block!important;font-size:9px!important;text-align:center!important}
+.status{
+ display:block!important;font-size:9px!important;line-height:1.08!important;
+ text-align:center!important;max-height:3.2em!important;
+}
+.ticker{grid-template-columns:69px minmax(0,1fr)!important;isolation:isolate!important}
+.ticker-label{
+ width:69px!important;max-width:69px!important;
+ font-size:10px!important;z-index:3!important;
+}
+.ticker-window{
+ position:relative!important;overflow:hidden!important;
+ min-width:0!important;isolation:isolate!important;
+}
+.ticker-track{font-size:12px!important;z-index:1!important}
+.ticker-note{display:none!important}
+.arrival-alert{font-size:11px!important;bottom:32px!important}
+@media(max-width:430px){
+ .board{padding:3px!important}
+ .train{
+   grid-template-columns:33px minmax(0,1.5fr) 57px minmax(0,1fr) 25px!important;
+   gap:2px!important;
+ }
+ .platform{font-size:8px!important}
+ .status{display:none!important}
+ .service{font-size:11px!important}.service.pair{font-size:9px!important}
+ .dep{font-size:16px!important}.dest{font-size:10px!important}
+}
 </style>
 </head>
 <body>
