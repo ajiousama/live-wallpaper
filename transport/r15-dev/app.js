@@ -3127,9 +3127,17 @@
         .map(x=>String(x.trainNum||''))
     ]);
     const side=currentRailDir();
-    return all.filter(x=>x && jrPositionUsable(x.position) &&
-      !alreadyShown.has(String(x.trainNum||'')) &&
-      (x.corridor===side || x.corridor==='both' || x.corridor==='unknown'));
+    return all.filter(x=>{
+      if(!x||!jrPositionUsable(x.position)||
+         alreadyShown.has(String(x.trainNum||'')))return false;
+      const direction=['north','south'].includes(x.direction)?x.direction:
+        railDirectionByDestination(x.destination);
+      // A train at Matsuyama is not northbound AND southbound. Route direction
+      // or confirmed destination wins; location is only a fallback away from
+      // the station. Unknown-direction station movements stay in the global
+      // ticker rather than appearing on the wrong directional page.
+      return direction ? direction===side : x.corridor===side;
+    });
   }
   function railSpecialText(value) {
     return String(value??'').replace(/[&<>"']/g, c=>({
@@ -3167,6 +3175,7 @@
       ? x.stationTime : '時刻未確認';
     const details=[
       '列車番号 '+railSpecialText(x.trainNum),
+      ...(x.eventName?['臨時列車 '+railSpecialText(x.eventName)]:[]),
       ...(x.vehicleSeries?['車両形式 '+railSpecialText(x.vehicleSeries)+'（非公式情報で確認）']:[]),
       '📍現在位置 '+railSpecialText(x.position),
       x.destination?'行先 '+railSpecialText(x.destination):'行先未確認',
