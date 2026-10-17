@@ -6,65 +6,67 @@
 <meta name="color-scheme" content="dark">
 <title>JR松山駅｜独立型LED発車案内</title>
 <style>
-:root{color-scheme:dark;--amber:#ffbd56;--soft:#fdd58b;--white:#eaf3f6;--cyan:#7fe7f2;--red:#ff7773;--green:#86f9b7}
+
+:root{color-scheme:dark;--amber:#ffcf32;--white:#f5f5e9;--cyan:#75e7f1;--green:#93ed82;--red:#ff5454}
 *{box-sizing:border-box}
-html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#080e14;font-family:"Noto Sans JP","Yu Gothic",Meiryo,sans-serif}
-body{color:var(--white);font-variant-numeric:tabular-nums}
-.board{position:relative;max-width:1420px;height:100%;margin:0 auto;padding:7px 12px 7px;display:grid;grid-template-rows:23px minmax(0,1fr) 33px;gap:4px;
- background:linear-gradient(180deg,#172936 0%,#0b1824 28%,#07131d 100%);border:1px solid #425667;box-shadow:inset 0 0 0 2px #0b1922,0 0 12px #000}
-.board:before{content:"";position:absolute;inset:0;pointer-events:none;z-index:10;opacity:.1;background-image:radial-gradient(#aec2ba .45px,transparent .65px);background-size:4px 4px}
-.board>*{position:relative;z-index:1;min-width:0}
-.heading{display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid #334956;padding:0 6px 3px}
-.station{font-size:15px;font-weight:900;letter-spacing:.08em;color:var(--white);white-space:nowrap}
-.station small{font-size:10px;color:#8bb7c9;letter-spacing:.13em;margin-left:6px}
-.heading-right{display:flex;gap:12px;align-items:center;justify-content:flex-end;min-width:0}
-.direction{font-size:12px;color:var(--cyan);font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.clock{font:700 12px/1 Consolas,monospace;color:#a9c4d2;white-space:nowrap}
-.rows{display:grid;grid-template-rows:repeat(2,minmax(0,1fr));gap:4px;min-height:0}
-.train{display:grid;grid-template-columns:59px minmax(155px,1.75fr) 86px minmax(125px,1.15fr) 60px minmax(109px,.77fr);
- align-items:center;min-width:0;gap:7px;border:1px solid #263844;border-left:3px solid #ff9f3d;padding:2px 9px;
- background:linear-gradient(90deg,#03080d,#050d12 72%,#0a1820)}
-.train.local{border-left-color:#76e6b1}.train.freight,.train.pass{border-left-color:#9db2bd}.train.extra{border-left-color:#b7afff}
-.kind{font-weight:900;letter-spacing:.08em;border-radius:2px;font-size:12px;text-align:center;padding:3px 1px;border:1px solid currentColor;white-space:nowrap}
-.limited .kind{color:#ff8d79}.local .kind{color:var(--green)}.freight .kind,.pass .kind{color:#a8bac3}.extra .kind{color:#b7afff}
-.service{color:var(--amber);font-size:17px;line-height:1.17;font-weight:900;overflow:hidden;min-width:0;white-space:nowrap;text-overflow:ellipsis;letter-spacing:-.035em}
-.service.pair{display:flex;flex-direction:column;gap:0;font-size:13px;line-height:1.07;letter-spacing:0}
-.service.pair span{display:block;overflow:hidden;text-overflow:ellipsis}
-.dep{color:#fff4c6;font:900 25px/1 Consolas,"Arial Narrow",monospace;letter-spacing:-.045em;white-space:nowrap}
-.dest{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:16px;font-weight:900;color:#f6f6e5}
-.platform{font-size:12px;text-align:center;white-space:nowrap;color:var(--soft);font-weight:800}
-.status{min-width:0;font-size:12px;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#8fb3c3;font-weight:800}
-.status.final{color:#f8df7c}.status.warning{color:var(--red)}
-.flash{animation:blink .85s steps(1,end) infinite}
-@keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
-.train.empty{border-left-color:#344757}
-.train.empty .service{font-size:15px;color:#8aa2af}
-.train.empty .kind{color:#718996}
-.ticker{position:relative;display:grid;grid-template-columns:84px 1fr 184px;min-height:0;border:1px solid #395362;background:#01090c;align-items:stretch}
-.ticker-label{z-index:2;display:flex;align-items:center;justify-content:center;color:#081b20;background:#7fd6d9;font-size:13px;font-weight:900;white-space:nowrap;letter-spacing:.04em}
-.ticker-window{min-width:0;min-height:0;overflow:hidden;position:relative;display:flex;align-items:center}
-.ticker-track{position:absolute;display:inline-flex;flex-wrap:nowrap;align-items:center;white-space:nowrap;width:max-content;
- font-size:15px;font-weight:900;line-height:1;will-change:transform;color:#e6f2e5}
-.segment{display:inline-block;padding-right:30px;white-space:nowrap}
-.segment.title{color:var(--amber)}.segment.stop{color:var(--soft)}.segment.connection{color:var(--cyan)}.segment.note{color:#91b5c6}
-.ticker-note{display:flex;align-items:center;justify-content:flex-end;padding-right:8px;color:#88aabc;font-size:10px;white-space:nowrap;z-index:1;border-left:1px solid #263c48}
-.arrival-alert{position:absolute;z-index:6;right:9px;bottom:39px;padding:5px 15px;background:#161103;color:#ffdc60;border:1px solid #ffca59;
- font-weight:900;font-size:15px;box-shadow:0 0 12px #000;pointer-events:none}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#101417;font-family:"Yu Gothic","Noto Sans JP",Meiryo,sans-serif;color:var(--white);font-variant-numeric:tabular-nums}
+.board{position:relative;width:100%;height:100%;padding:4px 8px 5px;display:grid;grid-template-rows:18px minmax(0,1fr) 29px;gap:3px;overflow:hidden;background:#303235;border:2px solid #c4c5c7;box-shadow:inset 0 0 0 2px #101214}
+.board>*{min-width:0}
+.heading{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 5px;color:#f1f1ef;background:#393d40;border-bottom:1px solid #4a4d4f}
+.station{font-size:12px;line-height:1;font-weight:900;letter-spacing:.09em;white-space:nowrap}
+.station small{margin-left:5px;font-size:10px;letter-spacing:.06em;color:#c0d0d1}
+.heading-right{display:flex;align-items:center;justify-content:flex-end;gap:5px;min-width:0}
+.direction{font-size:12px;font-weight:900;color:var(--white);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.clock{display:none}
+.rows{display:grid;grid-template-rows:repeat(2,minmax(0,1fr));gap:3px;min-height:0;overflow:hidden}
+.train{display:grid;grid-template-columns:57px minmax(135px,1.7fr) 86px minmax(123px,1.22fr) 52px minmax(115px,.95fr);
+ gap:5px;align-items:center;min-height:0;min-width:0;padding:2px 6px;border:1px solid #51565a;background:#000}
+.train.limited{border-left:4px solid #f74337}
+.train.local{border-left:4px solid #e8e85d}
+.train.extra,.train.sightseeing{border-left:4px solid #c58bf0}
+.train.pass,.train.freight{border-left:4px solid #85c7d0}
+.kind{min-width:0;white-space:nowrap;text-align:center;font-size:13px;font-weight:950;line-height:1.3;color:#181800;background:#ffff60;padding:2px 0}
+.limited .kind{background:#f4453c;color:white}
+.local .kind{background:#ddec55;color:#070a02}
+.extra .kind,.sightseeing .kind{background:#a98bdd;color:#090611}
+.pass .kind,.freight .kind{background:#75cde4;color:#020f14}
+.service{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#ffdc35;font-size:20px;line-height:1.08;font-weight:950;letter-spacing:-.06em}
+.service.pair{display:flex;flex-direction:column;justify-content:center;gap:1px;letter-spacing:-.035em;font-size:16px;line-height:1.02}
+.service.pair span{display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dep{font:900 27px/1 Consolas,"Arial Narrow",monospace;white-space:nowrap;color:#fff8f0;letter-spacing:-.045em}
+.dest{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#f3f5eb;font-size:19px;font-weight:950}
+.platform{font-size:13px;color:#ffca41;text-align:center;white-space:nowrap;font-weight:950}
+.status{font-size:12px;line-height:1.25;color:#7fe4ee;font-weight:900;min-width:0;text-align:center;white-space:normal;overflow:hidden;max-height:3em}
+.status.final{color:#ffdf51}.status.warning{color:#f74541}
+.flash{animation:led-blink .9s steps(1,end) infinite}
+@keyframes led-blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+.train.empty{border-left:4px solid #59616b}
+.train.empty .service{color:#879ea7;font-size:16px}
+.train.empty .kind{color:#adb9c0;background:#242d31}
+.ticker{display:grid;grid-template-columns:92px minmax(0,1fr);gap:0;position:relative;overflow:hidden;isolation:isolate;align-items:stretch;min-height:0;background:#000;border:1px solid #59616b}
+.ticker-label{position:relative;z-index:3;display:flex;align-items:center;justify-content:center;width:92px;max-width:92px;min-width:0;overflow:hidden;white-space:nowrap;background:#fff52b;color:#101000;font-weight:950;font-size:13px}
+.ticker-window{position:relative;isolation:isolate;min-width:0;min-height:0;overflow:hidden;clip-path:inset(0);background:#000;display:flex;align-items:center}
+.ticker-track{position:absolute;left:0;top:0;height:100%;width:max-content;min-width:max-content;display:inline-flex;align-items:center;white-space:nowrap;color:#f9efdc;font-size:16px;line-height:1;font-weight:950;will-change:transform;pointer-events:none}
+.segment{display:inline-block;white-space:nowrap;padding-right:32px}
+.segment.title{color:#ffca29}.segment.stop{color:#f4edda}.segment.connection{color:#5de2ff}.segment.note{color:#adbfc8}
+.ticker-note{display:none}
+.arrival-alert{position:absolute;z-index:8;right:5px;bottom:37px;padding:4px 8px;background:#000;color:#ffeb39;border:1px solid #ffde39;font-weight:950;font-size:15px;white-space:nowrap}
 .arrival-alert[hidden]{display:none}
 @media(max-width:800px){
- .board{padding:5px 6px;gap:3px;grid-template-rows:20px minmax(0,1fr) 32px}
- .station{font-size:13px}.direction{font-size:11px}
- .train{grid-template-columns:46px minmax(115px,1.6fr) 68px minmax(85px,1fr) 44px;gap:4px;padding:2px 5px}
- .kind{font-size:10px}.service{font-size:13px}.service.pair{font-size:10px}.dest{font-size:12px}.dep{font-size:20px}.platform{font-size:10px}
- .status{display:none}.ticker{grid-template-columns:66px 1fr}.ticker-note{display:none}.ticker-label{font-size:11px}.ticker-track{font-size:13px}
- .arrival-alert{font-size:12px;bottom:36px}
+ .board{padding:3px 5px 4px;grid-template-rows:16px minmax(0,1fr) 27px;gap:2px}
+ .heading{padding:0 3px}.station,.direction{font-size:11px}.station small{display:none}
+ .train{grid-template-columns:43px minmax(96px,1.6fr) 69px minmax(88px,1fr) 41px;gap:4px;padding:1px 4px}
+ .kind{font-size:10px}.service{font-size:15px}.service.pair{font-size:12px}.dep{font-size:21px}.dest{font-size:13px}.platform{font-size:11px}.status{display:none}
+ .ticker{grid-template-columns:76px minmax(0,1fr)}.ticker-label{width:76px;max-width:76px;font-size:11px}.ticker-track{font-size:13px}
+ .arrival-alert{font-size:12px;bottom:32px}
 }
-@media(max-width:530px){.station small{display:none}.clock{display:none}.train{grid-template-columns:38px minmax(90px,1fr) 63px minmax(74px,.8fr)}.platform{display:none}}
+@media(max-width:500px){.train{grid-template-columns:38px minmax(82px,1fr) 62px minmax(67px,.8fr)}.platform{display:none}.station small{display:none}}
+
 </style>
 </head>
 <body>
 <main class="board" aria-label="JR松山駅 LED発車案内">
- <div class="heading"><div class="station">JR 松山駅 <small>MATSUYAMA STATION</small></div><div class="heading-right"><span class="direction" id="direction">八幡浜・宇和島方面</span><span class="clock" id="clock">--:--:--</span></div></div>
+ <div class="heading"><div class="station">発車時刻 <small>DEPARTURES</small></div><div class="heading-right"><span class="direction" id="direction">八幡浜・宇和島方面</span><span class="clock" id="clock">--:--:--</span></div></div>
  <section class="rows" id="rows" aria-live="off">
   <div class="train empty"><span class="kind">--</span><span class="service">列車情報を取得中</span></div>
   <div class="train empty"><span class="kind">--</span><span class="service">Please wait</span></div>
@@ -345,7 +347,7 @@ body{color:var(--white);font-variant-numeric:tabular-nums}
       document.getElementById('direction').textContent=lang==='en'?
         (direction==='north'?'IMABARI / TAKAMATSU / OKAYAMA':'YAWATAHAMA / UWAJIMA'):
         (direction==='north'?'今治・高松・岡山方面':'八幡浜・宇和島方面');
-      tickerLabel.textContent=lang==='en'?'STOPS / TRANSFERS':'停車駅・接続';
+      tickerLabel.textContent='停車駅・接続'; // Fixed compact title never overflows in English
     }
     syncTicker(tickerItems(rows.slice(0,2),n));
     updateAlerts(n,rows);
