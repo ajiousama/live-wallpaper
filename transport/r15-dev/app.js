@@ -2087,6 +2087,61 @@
     return `<div class="marquee"><div class="marquee-track" style="--ticker-duration:${dur}s"><span>${content}</span><span aria-hidden="true">${content}</span></div></div>`;
   }
 
+  // Live-feed diagram connections. Never claim a platform, guaranteed
+  // connecting hold, or "same-platform change" from timetable data alone.
+  function railLocalConnectionItems(record) {
+    if(!record||!['limited','local'].includes(String(record.kind||'')))return [];
+    const feed=approachLive.ichitsubo;
+    if(!feed?.ok||!Array.isArray(feed.matsuyamaSchedule))return [];
+    const fetched=Date.parse(String(approachLive.generatedAtJst||''));
+    const now=japanNow();
+    if(!Number.isFinite(fetched)||Date.now()-fetched>120000 ||
+       Date.now()-fetched < -15000 || record.displayIso && record.displayIso!==now.iso)return [];
+    const departure=padTime(record.time||'');
+    const matches=feed.matsuyamaSchedule.filter(x=>
+      padTime(x?.departure||'')===departure &&
+      x?.direction===record.direction &&
+      x?.trainClass===record.kind
+    );
+    const numbered=String(record.liveTrainNum||'');
+    let selected=numbered
+      ? matches.filter(x=>String(x.trainNum||'')===numbered)
+      : [];
+    if(selected.length!==1 && record.kind==='limited') {
+      selected=matches.filter(x=>railLiveTrainLabel(x).service===
+        String(record.service||''));
+    }
+    if(selected.length!==1 && matches.length===1)selected=matches;
+    if(selected.length!==1)return []; // Avoid ambiguous same-minute services.
+    const transfers=Array.isArray(selected[0].transfers)?selected[0].transfers:[];
+    const seen=new Set();
+    return transfers.filter(t=>{
+      const station=cleanStation(t?.station||'');
+      const arrival=padTime(t?.arrival||'');
+      const departure2=padTime(t?.departure||'');
+      const transferMinutes=Number(t?.minutes);
+      const key=station+'|'+departure2+'|'+String(t?.trainNum||'');
+      if(t?.source!=='today_diagram'||
+         !station||!/^\d{2}:\d{2}$/.test(arrival)||
+         !/^\d{2}:\d{2}$/.test(departure2)||
+         !Number.isFinite(transferMinutes)||
+         transferMinutes<4||transferMinutes>40||seen.has(key))return false;
+      seen.add(key);return true;
+    }).slice(0,3).map(t=>{
+      const station=railSpecialText(cleanStation(t.station||''));
+      const dest=railSpecialText(cleanStation(t.destination||'')||'行先確認中');
+      const arrival=padTime(t.arrival);
+      const departure2=padTime(t.departure);
+      const waiting=t.localArrivesFirst===true &&
+        /^\d{2}:\d{2}$/.test(padTime(t.scheduledLocalArrival||''))
+        ? '・普通は'+padTime(t.scheduledLocalArrival)+'着予定' : '';
+      // "先着" describes the diagram, not a live platform/dispatch check.
+      return '乗継候補（当日ダイヤ）：'+station+' '+arrival+
+        '着 → 普通 '+dest+'行 '+departure2+'発（乗換'+
+        Math.round(Number(t.minutes))+'分'+waiting+'）';
+    });
+  }
+
   function railRowDetailItems(record) {
     const items = [];
     const route=railSouthRoute(record);
@@ -2131,6 +2186,9 @@
       if (record.dest) items.push(`終点 ${record.dest}`);
       if (terminalArrival) items.push(`終点着 ${terminalArrival}`);
     }
+    // Each of the six JR detail tickers can show connections without
+    // moving the fixed service name, time, or destination columns.
+    items.push(...railLocalConnectionItems(record));
     if (record.isFinal) items.push('この方面の最終列車です');
     if (record.isNextDayStart) items.push('翌日始発列車');
     return items.length ? items : ['運行案内'];
