@@ -6,7 +6,7 @@
   // Flip to false to restore automatic page rotation later.
   const PAUSE_WORKPLACE_PAGE_ROTATION = true;
   const autoRotationPaused = companyPc && (PAUSE_WORKPLACE_PAGE_ROTATION || testMode);
-  const pausedPageKey = 'matsuyama-workplace-paused-page';
+  const pausedPageKey = testMode ? 'matsuyama-workplace-test-page' : 'matsuyama-workplace-paused-page';
 
   // Web/FreeWiFi: eight transport screens + cinema + gamble.
   // Workplace PC: transport and cinema only; do not load or rotate into gamble.
