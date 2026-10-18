@@ -52,6 +52,7 @@
   let pageIndex = 0;
   let nextPageAt = Date.now() + pages[0].duration;
   let pageTimer = null;
+  let testPagePicker = null;
 
   function ui(){
     return window.MATSUYAMA_TRANSPORT_UI || null;
@@ -76,6 +77,7 @@
   function showPage(index){
     pageIndex = (index + pages.length) % pages.length;
     const page = pages[pageIndex];
+    if(testPagePicker) testPagePicker.value = String(pageIndex);
     if(autoRotationPaused && !testMode){
       try { sessionStorage.setItem(pausedPageKey, String(pageIndex)); } catch(e) {}
     }
@@ -164,7 +166,7 @@
     if(!status) return;
     const page = pages[pageIndex];
     if(autoRotationPaused){
-      status.textContent = `${page.label}　｜　自動切替停止中`;
+      status.textContent = testMode ? `${page.label}　｜　TEST MODE・手動切替` : `${page.label}　｜　自動切替停止中`;
       return;
     }
     const left = Math.max(0, Math.ceil((nextPageAt - Date.now()) / 1000));
@@ -206,6 +208,39 @@
       const saved = Number(sessionStorage.getItem(pausedPageKey));
       if(Number.isInteger(saved) && saved >= 0 && saved < pages.length) initialPage = saved;
     } catch(e) {}
+  }
+  // Workplace test controls are an opt-in overlay. No production data is changed.
+  if(testMode){
+    const panel=document.createElement('aside');
+    panel.id='workplace-test-panel';
+    panel.setAttribute('aria-label','職場壁紙テスト操作');
+    panel.style.cssText='position:fixed;z-index:99999;left:12px;top:12px;max-width:340px;max-height:90vh;overflow:auto;background:#071923;color:white;padding:12px;border:2px solid #ffcf55;border-radius:10px;font:14px sans-serif;box-shadow:0 5px 30px #000b';
+    const heading=document.createElement('strong');
+    heading.textContent='職場壁紙 TEST MODE（本番データ変更なし）';
+    panel.append(heading,document.createElement('hr'));
+    const picker=document.createElement('select');
+    picker.setAttribute('aria-label','表示する画面');
+    picker.style.cssText='width:100%;padding:8px;background:#fff;color:#111';
+    pages.forEach((p,i)=>{const o=document.createElement('option');o.value=String(i);o.textContent=p.title;picker.append(o);});
+    picker.value=String(initialPage);
+    testPagePicker=picker;
+    picker.addEventListener('change',()=>showPage(Number(picker.value)));
+    panel.append(picker);
+    const makeButton=(label,fn)=>{const b=document.createElement('button');b.type='button';b.textContent=label;b.style.cssText='margin:7px 4px 0 0;padding:7px;cursor:pointer';b.addEventListener('click',fn);panel.append(b);return b;};
+    makeButton('前の画面',()=>showPage(pageIndex-1));
+    makeButton('次の画面',()=>showPage(pageIndex+1));
+    makeButton('本番へ戻る',()=>{
+      const u=new URL(location.href);
+      u.searchParams.delete('test');
+      u.searchParams.delete('testPage');
+      location.assign(u.href);
+    });
+    const note=document.createElement('div');
+    note.style.cssText='margin-top:8px;font-size:12px;color:#ffdf92';
+    note.textContent='テスト中は手動切替。実際の緊急速報は発信しません。';
+    panel.append(note);
+    document.body.append(panel);
+    document.documentElement.dataset.workplaceTestMode='1';
   }
   showPage(initialPage);
   setInterval(updatePageCountdown, 1000);
