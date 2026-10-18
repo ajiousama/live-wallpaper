@@ -5173,442 +5173,155 @@
     return {eew:{active:true,serial:'第3報',issuedAt:'2026/09/27 15:10:00',hypocenter:'豊後水道',magnitude:6.1,depth:40,local:{area:'愛媛県中予',scaleTo:'4',arrivalTime:new Date(Date.now()+18000).toISOString()}},recentEarthquake:{active:true,time:'2026/09/27 15:09:40',hypocenter:'豊後水道',magnitude:6.1,depth:40,maxScale:'5弱',distanceKm:70,ehimeScale:'4',tsunami:'None'},weather:{active:[{name:'レベル4土砂災害危険警報',status:'発表'}],headlineText:'松山市 土砂災害の危険度が高まっています',reportDatetime:'2026-09-27T15:05:00+09:00'},tsunami:{active:true,issuedAt:'2026/09/27 15:10:10',areas:[{name:'愛媛県瀬戸内海沿岸',grade:'Warning',arrivalTime:'まもなく',maxHeight:'3m'}]}};
   }
 
-  let disasterAudioContext=null;
+
+  // The user-supplied Docomo Area Mail audio files are served from the site's
+  // own static assets. No synthesized substitution and no audio scraping.
+  const DISASTER_AUDIO_URLS=Object.freeze({
+    eew:new URL('../disaster-audio/areamail-earthquake.mp3',location.href).href,
+    chime:new URL('../disaster-audio/areamail-evacuation.mp3',location.href).href
+  });
   let lastDisasterSoundKey='';
+  let disasterAudioPlayer=null;
 
-  function playUrgentDisasterAlarm() {
-    try {
-      const Ctx=window.AudioContext||window.webkitAudioContext;
-      if(!Ctx) return;
-      if(!disasterAudioContext) disasterAudioContext=new Ctx();
-      const ctx=disasterAudioContext;
-      if(ctx.state==='suspended') ctx.resume().catch(()=>{});
-      const start=ctx.currentTime+0.03;
-      const master=ctx.createGain();
-      master.gain.setValueAtTime(0.82,start);
-      master.connect(ctx.destination);
-
-      const tone=(at,dur,freq,amp=0.18,freqEnd=null)=>{
-        const osc=ctx.createOscillator();
-        const gain=ctx.createGain();
-        osc.type='sine';
-        osc.frequency.setValueAtTime(freq,at);
-        if(freqEnd!=null) osc.frequency.linearRampToValueAtTime(freqEnd,at+dur);
-        gain.gain.setValueAtTime(0.0001,at);
-        gain.gain.linearRampToValueAtTime(amp,at+Math.min(0.012,dur*0.2));
-        gain.gain.setValueAtTime(amp,Math.max(at+0.015,at+dur-0.04));
-        gain.gain.exponentialRampToValueAtTime(0.0001,at+dur);
-        osc.connect(gain).connect(master);
-        osc.start(at); osc.stop(at+dur+0.02);
-      };
-
-      let t=start;
-      // low urgent double pulse
-      for(let n=0;n<2;n++){
-        tone(t,0.18,220,0.26); tone(t,0.18,440,0.10);
-        t+=0.23;
-      }
-      // three rising danger sweeps
-      for(let n=0;n<3;n++){
-        tone(t,0.22,700,0.24,1500); tone(t,0.22,350,0.10,750);
-        t+=0.22;
-        tone(t,0.12,1500,0.21,900); tone(t,0.12,1800,0.07);
-        t+=0.155;
-      }
-      // rapid alarm pulses
-      for(let n=0;n<6;n++){
-        tone(t,0.095,1250,0.21); tone(t,0.095,1875,0.09);
-        t+=0.13;
-      }
-      // strong warning hit
-      tone(t,0.45,880,0.22); tone(t,0.45,1320,0.16); tone(t,0.45,1760,0.11); tone(t,0.45,220,0.07);
-      t+=0.65;
-      // compact repeat
-      for(let n=0;n<2;n++){
-        tone(t,0.18,850,0.25,1550); tone(t,0.18,300,0.07);
-        t+=0.18;
-        tone(t,0.10,1550,0.20,950);
-        t+=0.14;
-      }
-      tone(t,0.50,990,0.23); tone(t,0.50,1485,0.15); tone(t,0.50,1980,0.09);
-    } catch(e) {}
+  // P2P Earthquake Info (code 556) is JMA's EEW warning feed. Its "local"
+  // record describes an alert region in Ehime. Category 10/11/19 is a
+  // public EEW warning for that region, not a generic earthquake notice.
+  // P2P code 552 uses grade Warning / MajorWarning / Watch. Only the former
+  // two are Area Mail tsunami alerts, and only the Seto Inland Sea coast
+  // warning region concerns Matsuyama. Advisory "Watch" is deliberately mute.
+  function qualifyingDisasterSound(d,test,nowMs=Date.now()) {
+    if(test||!d)return null;
+    const e=d.eew;
+    const local=e?.local;
+    const issue=local ? parseJstClient(e.issuedAt) : NaN;
+    const eewAge=nowMs-issue;
+    if(e?.active&&local&&['10','11','19'].includes(String(local.kindCode||'')) &&
+       Number.isFinite(issue)&&eewAge>=-60000&&eewAge<=5*60*1000) {
+      return {kind:'eew',key:'eew|'+(e.originTime||e.issuedAt||'')+'|'+(e.hypocenter||'')};
+    }
+    const t=d.tsunami;
+    const coast=Array.isArray(t?.areas) ? t.areas.some(a=>
+      ['Warning','MajorWarning'].includes(String(a?.grade||'')) &&
+      /愛媛/.test(String(a?.name||'')) &&
+      /瀬戸内海|松山/.test(String(a?.name||''))) : false;
+    const issued=coast ? parseJstClient(t?.issuedAt) : NaN;
+    const age=nowMs-issued;
+    if(t?.active&&coast&&Number.isFinite(issued)&&age>=-60000&&age<=30*60*1000) {
+      return {kind:'chime',key:'tsunami|'+String(t.issuedAt||'')};
+    }
+    // A JMA weather warning is NOT proof that any municipality transmitted
+    // an Area Mail evacuation notice. Do not trigger the alarm from weather.
+    return null;
   }
 
-  function disasterSoundKey(d,test) {
-    if(test) return 'disaster-test';
-    if(d?.eew?.active&&d?.eew?.local) return `eew|${d.eew.issuedAt||''}|${d.eew.hypocenter||''}`;
-    if(d?.tsunami?.active) return `tsunami|${d.tsunami.issuedAt||''}`;
-    const severe=(d?.weather?.active||[]).find(x=>/特別警報/.test(String(x?.name||'')));
-    if(severe) return `weather|${d.weather?.reportDatetime||''}|${severe.name||''}`;
-    return '';
+  function disasterSoundStatusButton() {
+    const overlay=$('disaster-overlay');
+    if(!overlay)return null;
+    let btn=$('disaster-sound-enable');
+    if(btn)return btn;
+    btn=document.createElement('button');
+    btn.id='disaster-sound-enable';
+    btn.type='button';
+    btn.textContent='🔊 警報音を有効にする';
+    btn.style.cssText='position:absolute;right:16px;top:18px;z-index:400;cursor:pointer;border:3px solid #ffe17a;border-radius:8px;background:#971b1b;color:#fff;padding:12px 18px;font:900 18px sans-serif;box-shadow:0 0 20px #000';
+    overlay.appendChild(btn);
+    return btn;
+  }
+
+  async function playUrgentDisasterAlarm(kind,key) {
+    if(!DISASTER_AUDIO_URLS[kind])return;
+    try{
+      if(disasterAudioPlayer){
+        disasterAudioPlayer.pause();
+        disasterAudioPlayer.currentTime=0;
+      }
+      const player=new Audio(DISASTER_AUDIO_URLS[kind]);
+      disasterAudioPlayer=player;
+      player.volume=1;
+      player.preload='auto';
+      await player.play();
+      try{
+        localStorage.setItem('matsuyama.areaMailPlayed.'+kind,key);
+      }catch(e){}
+      const btn=$('disaster-sound-enable');
+      if(btn)btn.remove();
+    }catch(err){
+      // Desktop browsers may block sound until an actual click. A visible
+      // emergency-screen button lets the user explicitly start exact audio.
+      const btn=disasterSoundStatusButton();
+      if(btn){
+        btn.textContent='🔊 警報音を鳴らす（クリック）';
+        btn.onclick=()=>{playUrgentDisasterAlarm(kind,key);};
+      }
+      console.warn('Emergency sound playback prevented:',err);
+    }
   }
 
   function maybePlayDisasterAlarm(d,test) {
-    // Only explicit button presses can sound in simulation mode.
-    if(test)return;
-    const key=disasterSoundKey(d,test);
-    if(!key) return;
-    if(key===lastDisasterSoundKey) return;
-    lastDisasterSoundKey=key;
-    playUrgentDisasterAlarm();
+    if(test||!disasterLive.ok)return;
+    // Do not trust a retained stale feed (e.g. after losing connectivity).
+    const fetched=Date.parse(String(disasterLive.generatedAtJst||''));
+    if(!Number.isFinite(fetched)||Math.abs(Date.now()-fetched)>120000)return;
+    const alert=qualifyingDisasterSound(d,false);
+    if(!alert||lastDisasterSoundKey===alert.key)return;
+    lastDisasterSoundKey=alert.key;
+    try{
+      if(localStorage.getItem('matsuyama.areaMailPlayed.'+alert.kind)===alert.key)
+        return;
+    }catch(e){}
+    playUrgentDisasterAlarm(alert.kind,alert.key);
   }
 
-  // Only ?disasterTest=1 gets this manual sound test. No normal wallpaper
-  // page, disaster feed, or automatic page rotation behavior is changed.
-  // Browsers generally block audio started without a real user gesture:
-  // explicitly unlock the AudioContext from a click before playing.
+  // TEST mode: user clicks to hear the actual embedded alert MP3s.
+  // No fake/synthesized notes and no automatic test playback.
   function installDisasterPreviewAudioControl(overlay) {
-    if(document.getElementById('disaster-preview-audio-control'))return;
-    const wrap=document.createElement('div');
-    wrap.id='disaster-preview-audio-control';
-    wrap.style.cssText='position:absolute;right:12px;top:7px;z-index:350;display:flex;align-items:center;gap:6px;padding:5px 8px;background:#141414;border:2px solid #ffe15e;border-radius:7px;box-shadow:0 2px 10px #000;color:#ffe15e;font:900 13px/1.3 sans-serif;max-width:95%;flex-wrap:wrap';
+    if($('disaster-preview-audio-control'))return;
+    const bar=document.createElement('div');
+    bar.id='disaster-preview-audio-control';
+    bar.style.cssText='position:absolute;right:12px;top:9px;z-index:350;display:flex;align-items:center;gap:7px;flex-wrap:wrap;max-width:97%;padding:8px;background:#121b22;border:2px solid #ffe075;border-radius:8px;color:#ffe075;font:900 14px sans-serif';
     const note=document.createElement('span');
     note.textContent='訓練・テスト（実際の災害ではありません）';
-    // NTT DOCOMO publishes two DIFFERENT Area Mail sounds, and its
-    // own pages link to separate official YouTube demonstration videos.
-    // Only embed the official video, never extract/re-host copyrighted audio.
-    const docomoClips=[
-      {
-        id:'4gZW7HRHJmM',
-        label:'地震速報：ブザー音',
-        heading:'ドコモ公式｜エリアメール 緊急地震速報（ブザー音）',
-        page:'https://www.docomo.ne.jp/service/areamail/earthquake_warning/'
-      },
-      {
-        id:'UoHTQ7b0yNg',
-        label:'避難情報：チャイム音',
-        heading:'ドコモ公式｜エリアメール 災害・避難情報（チャイム音）',
-        page:'https://www.docomo.ne.jp/service/areamail/disaster_evacuation/'
-      }
-    ];
-    const clipButtons=[];
-    function openDocomoClip(clip,sourceButton){
-      const existing=document.getElementById('disaster-docomo-official-sample');
-      if(existing){
-        const same=existing.dataset.videoId===clip.id;
-        existing.remove();
-        clipButtons.forEach(b=>b.textContent=b.dataset.originalLabel);
-        if(same)return;
-      }
-      const player=document.createElement('section');
-      player.id='disaster-docomo-official-sample';
-      player.dataset.videoId=clip.id;
-      player.style.cssText='position:absolute;left:50%;top:55%;transform:translate(-50%,-50%);z-index:360;width:min(94%,720px);max-height:calc(100% - 100px);overflow:auto;background:#111820;border:3px solid #ffe15e;box-shadow:0 12px 48px #000;border-radius:10px;padding:12px;color:#fff;box-sizing:border-box';
-      const top=document.createElement('div');
-      top.style.cssText='display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;font:900 18px sans-serif';
-      const title=document.createElement('span');
-      title.textContent=clip.heading;
-      const close=document.createElement('button');
-      close.type='button';
-      close.textContent='閉じる ✕';
-      close.style.cssText='cursor:pointer;background:#ffe15e;border:0;border-radius:4px;padding:8px;color:#16120b;font:900 14px sans-serif';
-      close.addEventListener('click',()=>{
-        player.remove();
-        clipButtons.forEach(b=>b.textContent=b.dataset.originalLabel);
-      });
-      top.append(title,close);
-      const movie=document.createElement('iframe');
-      movie.title=clip.heading+' 公式動画';
-      movie.src='https://www.youtube.com/embed/'+clip.id+'?autoplay=1&rel=0';
-      movie.allow='autoplay; encrypted-media; picture-in-picture';
-      movie.referrerPolicy='strict-origin-when-cross-origin';
-      movie.style.cssText='display:block;width:100%;aspect-ratio:16/9;height:auto;border:0;background:#000';
-      const help=document.createElement('div');
-      help.style.cssText='padding:8px 0 2px;font:700 13px/1.45 sans-serif';
-      help.textContent='音が出ない場合は動画中央の再生ボタンを押してください。公式紹介動画の試聴であり、音だけを自動警報に組み込んだものではありません。';
-      const direct=document.createElement('a');
-      direct.href=clip.page;
-      direct.target='_blank';
-      direct.rel='noopener noreferrer';
-      direct.textContent='ドコモ公式の説明を開く ↗';
-      direct.style.cssText='color:#ffe15e;font:700 13px sans-serif';
-      player.append(top,movie,help,direct);
-      overlay.appendChild(player);
-      sourceButton.textContent='▶ 試聴を閉じる';
+    const result=document.createElement('span');
+    result.id='disaster-preview-sound-result';
+    result.textContent='ドコモの実音2種類を内蔵';
+    result.style.cssText='font:700 12px sans-serif;color:#f7e4a5';
+    let playing=null;
+    function stop(){
+      if(playing){playing.pause();playing.currentTime=0;playing=null;}
     }
-    docomoClips.forEach(clip=>{
+    function makeButton(label,kind) {
       const b=document.createElement('button');
-      b.type='button';
-      b.className='disaster-preview-docomo-clip';
-      b.dataset.originalLabel='▶ '+clip.label;
-      b.textContent=b.dataset.originalLabel;
-      b.style.cssText='cursor:pointer;background:#ffe15e;color:#151000;border:0;border-radius:5px;padding:7px 10px;font:900 14px/1.25 sans-serif;white-space:nowrap';
-      b.addEventListener('click',()=>openDocomoClip(clip,b));
-      clipButtons.push(b);
-    });
-    // These preview triggers follow the Docomo Area Mail notification
-    // categories, but the browser never claims to receive a real Area Mail.
-    function previewDocomoAlertKind(event) {
-      if(!event || event.inServiceArea!==true)return null;
-      if(event.type==='eew') {
-        if(event.jmaPublicWarning!==true)return null;
-        return ((Number(event.nationalMaxIntensity)>=5 ||
-          Number(event.nationalLongPeriod)>=3) &&
-          (Number(event.localIntensity)>=4 ||
-          Number(event.localLongPeriod)>=3))?'eew':null;
-      }
-      if(event.type==='tsunami')
-        return ['TsunamiWarning','MajorTsunamiWarning'].includes(event.grade)
-          ?'chime':null;
-      if(event.type==='government')
-        return event.areaMailConfirmed===true?'chime':null;
-      return null;
-    }
-    // Actual tones can only be played when the operator provides a genuine
-    // audio file they are entitled to use. Store it in the local browser's
-    // IndexedDB; never upload to the PUBLIC GitHub repository or a server.
-    // No synthetic placeholder is ever played in its place.
-    const SOUND_DB='matsuyama-areamail-preview-audio-v1';
-    const localClips={eew:null,chime:null};
-    let localPlayback=null;
-    const soundStatus={};
-    const result=document.createElement('div');
-    result.id='disaster-preview-docomo-rule-result';
-    result.style.cssText='width:100%;font:800 12px/1.45 sans-serif;color:#f4e4a4;text-align:right';
-    result.textContent='ファイル登録のほか、Chrome/Edgeの「タブ音声を直接録音」でも取り込めます。権利を持つ音源のみ利用してください。';
-    function openSoundDb(){
-      return new Promise((resolve,reject)=>{
-        if(!window.indexedDB){reject(new Error('IndexedDB unsupported'));return;}
-        const req=indexedDB.open(SOUND_DB,1);
-        req.onupgradeneeded=()=>{
-          const db=req.result;
-          if(!db.objectStoreNames.contains('clips'))
-            db.createObjectStore('clips');
-        };
-        req.onsuccess=()=>resolve(req.result);
-        req.onerror=()=>reject(req.error||new Error('DB open failed'));
-      });
-    }
-    async function saveSound(kind,file) {
-      const db=await openSoundDb();
-      try{
-        await new Promise((resolve,reject)=>{
-          const tx=db.transaction('clips','readwrite');
-          tx.objectStore('clips').put(file,kind);
-          tx.oncomplete=resolve;
-          tx.onerror=()=>reject(tx.error||new Error('DB store failed'));
-        });
-      } finally {db.close();}
-    }
-    async function loadSounds(){
-      try{
-        const db=await openSoundDb();
+      b.type='button';b.textContent=label;
+      b.style.cssText='cursor:pointer;background:#ffe075;color:#211700;padding:8px 10px;border:0;border-radius:5px;font:900 13px sans-serif';
+      b.onclick=async()=>{
+        stop();
+        if(!kind){
+          result.textContent='津波注意報ではエリアメール音を鳴らしません';
+          return;
+        }
+        const player=new Audio(DISASTER_AUDIO_URLS[kind]);
+        playing=player;player.volume=1;
         try{
-          await Promise.all(['eew','chime'].map(kind=>new Promise((resolve,reject)=>{
-            const tx=db.transaction('clips','readonly');
-            const req=tx.objectStore('clips').get(kind);
-            req.onsuccess=()=>{
-              if(req.result instanceof Blob)registerSound(kind,req.result);
-              resolve();
-            };
-            req.onerror=()=>reject(req.error);
-          })));
-        }finally{db.close();}
-      }catch(err){console.info('Optional local area-mail audio store not available:',err);}
-    }
-    function registerSound(kind,blob){
-      if(localClips[kind]) URL.revokeObjectURL(localClips[kind].url);
-      const name=String(blob.name||'保存済み音源');
-      localClips[kind]={url:URL.createObjectURL(blob),name};
-      if(soundStatus[kind])soundStatus[kind].textContent=
-        '登録済：'+(name.length>26?name.slice(0,25)+'…':name);
-    }
-    // User-initiated, LOCAL-ONLY capture helper. A Chrome/Edge tab can
-    // grant capture of its OWN audio via the browser sharing picker. No URL
-    // scraping, DRM circumvention, server upload or public asset commit.
-    // The user must have permission to record the sound for their intended use.
-    let captureSession=null;
-    async function toggleCapture(kind,button){
-      if(captureSession){
-        if(captureSession.kind!==kind){
-          result.textContent='先に現在の録音を終了してください。';
-          return;
-        }
-        const running=captureSession;
-        captureSession=null;
-        if(running.recorder.state==='recording')
-          running.recorder.stop();
-        running.stream.getTracks().forEach(t=>t.stop());
-        button.textContent=running.defaultLabel;
-        return;
-      }
-      if(!navigator.mediaDevices?.getDisplayMedia || !window.MediaRecorder){
-        result.textContent='このブラウザではタブ音声録音が使えません。Chrome・Edgeのデスクトップ版をご利用ください。';
-        return;
-      }
-      const originalLabel=button.textContent;
-      let stream=null;
-      try {
-        // Must be called synchronously during the real click gesture.
-        stream=await navigator.mediaDevices.getDisplayMedia({
-          video:true,
-          audio:true,
-          preferCurrentTab:true,
-          selfBrowserSurface:'include',
-          systemAudio:'include',
-          surfaceSwitching:'include'
-        });
-        const audioTracks=stream.getAudioTracks();
-        if(!audioTracks.length){
-          result.textContent='録音できる音声がありません。共有画面で「タブの音声も共有」をオンにしてください。';
-          stream.getTracks().forEach(t=>t.stop());
-          return;
-        }
-        const type=MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
-          ?'audio/webm;codecs=opus'
-          :MediaRecorder.isTypeSupported('audio/webm')?'audio/webm':'';
-        const onlyAudio=new MediaStream(audioTracks);
-        const recorder=type?new MediaRecorder(onlyAudio,{mimeType:type})
-          :new MediaRecorder(onlyAudio);
-        const chunks=[];
-        recorder.addEventListener('dataavailable',e=>{
-          if(e.data&&e.data.size)chunks.push(e.data);
-        });
-        recorder.addEventListener('stop',async()=>{
-          stream.getTracks().forEach(t=>t.stop());
-          if(captureSession?.recorder===recorder)captureSession=null;
-          button.textContent=originalLabel;
-          if(!chunks.length){
-            result.textContent='音声を録音できませんでした。音声共有のチェックを確認してください。';
-            return;
-          }
-          const blob=new Blob(chunks,{type:recorder.mimeType||'audio/webm'});
-          if(blob.size>15*1024*1024){
-            result.textContent='録音データが15MBを超えました。短い警報音だけ録音してください。';
-            return;
-          }
-          const named=new File([blob],
-            (kind==='eew'?'jishin-':'hinan-')+'local-recording.webm',
-            {type:blob.type});
-          registerSound(kind,named);
-          try{
-            await saveSound(kind,named);
-            result.textContent='録音音声をこのPCのブラウザに保存しました。試聴ボタンで確認してください。外部送信なし。';
-          }catch(e){
-            result.textContent='録音音声は使用できますが、ブラウザ内に保存できませんでした。';
-          }
-        });
-        recorder.addEventListener('error',e=>{
-          result.textContent='録音エラー。ブラウザの音声権限を確認してください。';
-        });
-        audioTracks[0].addEventListener('ended',()=>{
-          if(recorder.state==='recording')recorder.stop();
-        },{once:true});
-        captureSession={kind,stream,recorder,defaultLabel:originalLabel};
-        recorder.start(500);
-        button.textContent='■ '+(kind==='eew'?'地震':'津波・避難')+'音の録音終了';
-        result.textContent='録音中。共有したタブで許諾のある音を再生し、終わったら「録音終了」を押してください。';
-      } catch(err) {
-        if(stream)stream.getTracks().forEach(t=>t.stop());
-        result.textContent='録音を開始できませんでした。Chrome/Edgeでタブを選び、音声共有を許可してください。';
-        console.info('Optional local sound capture:',err);
-      }
-    }
-    const soundFileButtons=[];
-    const soundLabels={
-      eew:'地震速報用・ブザー実音',
-      chime:'津波／避難情報用・チャイム実音'
-    };
-    for(const kind of ['eew','chime']){
-      const input=document.createElement('input');
-      input.type='file';
-      input.accept='audio/*,.mp3,.wav,.m4a,.ogg,.aac';
-      input.style.display='none';
-      input.setAttribute('aria-label',soundLabels[kind]+'ファイル');
-      input.onchange=async()=>{
-        const file=input.files&&input.files[0];
-        if(!file)return;
-        const name=String(file.name||'');
-        if(!/\.(mp3|wav|ogg|m4a|aac|opus)$/i.test(name)&&
-           !String(file.type||'').startsWith('audio/')){
-          result.textContent='音声ファイル（MP3/WAV/M4A/OGG等）を指定してください。';
-          return;
-        }
-        if(file.size>15*1024*1024){
-          result.textContent='音声ファイルは15MB以下にしてください。';
-          return;
-        }
-        registerSound(kind,file);
-        try{
-          await saveSound(kind,file);
-          result.textContent=soundLabels[kind]+'をこのブラウザに保存しました（外部送信なし）。';
+          await player.play();
+          result.textContent=(kind==='eew'?'緊急地震速報':'津波警報・避難情報')+'の実音を再生中';
         }catch(err){
-          result.textContent=soundLabels[kind]+'を読み込みました。ただし保存できなかったため、この画面を閉じると再登録が必要です。';
+          result.textContent='再生できません。ブラウザの音声・スピーカー設定を確認してください';
+          console.warn('Disaster test sound:',err);
         }
       };
-      wrap.appendChild(input);
-      const attach=document.createElement('button');
-      attach.type='button';
-      attach.textContent='📁 '+(kind==='eew'?'地震実音を設定':'津波・避難実音を設定');
-      attach.title='このPCの音声ファイルを選択します。外部にはアップロードされません。';
-      attach.style.cssText='cursor:pointer;background:#285a64;color:white;border:1px solid #a1dbd6;border-radius:5px;padding:7px 8px;font:800 12px sans-serif';
-      attach.onclick=()=>input.click();
-      soundFileButtons.push(attach);
-      const capture=document.createElement('button');
-      capture.type='button';
-      capture.textContent='● '+(kind==='eew'?'地震音を直接録音':'津波・避難音を直接録音');
-      capture.title='Chrome/Edgeの共有ダイアログから音声共有を許可したタブの音を、このブラウザだけに録音します。利用権限のある音源に限ってください。';
-      capture.style.cssText='cursor:pointer;background:#7c2534;color:#fff;border:1px solid #f7abb7;border-radius:5px;padding:7px 9px;font:800 12px sans-serif';
-      capture.onclick=()=>toggleCapture(kind,capture);
-      soundFileButtons.push(capture);
-      const status=document.createElement('span');
-      status.textContent='未登録';
-      status.style.cssText='color:#eee;font:750 11px sans-serif';
-      soundStatus[kind]=status;
-      soundFileButtons.push(status);
+      return b;
     }
-    const scenarios=[
-      {label:'🔊 地震速報の実音',event:{type:'eew',inServiceArea:true,jmaPublicWarning:true,nationalMaxIntensity:5,localIntensity:4}},
-      {label:'🔊 津波警報の実音',event:{type:'tsunami',inServiceArea:true,grade:'TsunamiWarning'}},
-      {label:'🔊 避難指示の実音',event:{type:'government',inServiceArea:true,areaMailConfirmed:true}},
-      {label:'🔇 対象外（無音）',event:{type:'tsunami',inServiceArea:true,grade:'TsunamiAdvisory'}}
-    ];
-    const mockButtons=scenarios.map(scenario=>{
-      const btn=document.createElement('button');
-      btn.type='button';
-      btn.textContent=scenario.label;
-      btn.style.cssText='cursor:pointer;background:#424242;color:#fff;border:1px solid #aeb2b5;border-radius:5px;padding:7px 10px;font:800 12px/1.25 sans-serif;white-space:nowrap';
-      btn.addEventListener('click',async()=>{
-        const kind=previewDocomoAlertKind(scenario.event);
-        if(!kind){
-          result.textContent='このテスト条件ではエリアメール音を鳴らしません。';
-          return;
-        }
-        const clip=localClips[kind];
-        if(!clip){
-          result.textContent=soundLabels[kind]+'はまだ登録されていません。模擬音は鳴らしません。公式動画の試聴か音声ファイル登録をご利用ください。';
-          return;
-        }
-        try{
-          if(localPlayback){localPlayback.pause();localPlayback.currentTime=0;}
-          const el=new Audio(clip.url);
-          el.preload='auto';
-          el.volume=1;
-          localPlayback=el;
-          await el.play();
-          result.textContent=soundLabels[kind]+'を再生しています（'+clip.name+'）。';
-        }catch(err){
-          result.textContent='ブラウザの音声再生がブロックされました。音量・音声権限を確認してください。';
-          console.warn('Area Mail preview playback:',err);
-        }
-      });
-      return btn;
-    });
     const stopButton=document.createElement('button');
-    stopButton.type='button';
-    stopButton.textContent='■ 音を止める';
-    stopButton.style.cssText='cursor:pointer;border:1px solid #b8b8b8;color:#fff;background:#5c2121;border-radius:4px;padding:6px 10px;font:800 12px sans-serif';
-    stopButton.onclick=()=>{
-      if(localPlayback){localPlayback.pause();localPlayback.currentTime=0;}
-      const demo=document.getElementById('disaster-docomo-official-sample');
-      if(demo)demo.remove();
-      clipButtons.forEach(b=>b.textContent=b.dataset.originalLabel);
-      result.textContent='音を停止しました。';
-    };
-    wrap.append(note,...clipButtons,...soundFileButtons,...mockButtons,stopButton,result);
-    loadSounds();
-
-    overlay.appendChild(wrap);
+    stopButton.type='button';stopButton.textContent='■ 停止';
+    stopButton.style.cssText='cursor:pointer;background:#692d31;color:#fff;border:1px solid #ffa5a5;border-radius:5px;padding:8px 10px;font:900 13px sans-serif';
+    stopButton.onclick=()=>{stop();result.textContent='停止しました';};
+    bar.append(note,
+      makeButton('🔊 地震速報', 'eew'),
+      makeButton('🔊 津波警報', 'chime'),
+      makeButton('🔊 避難情報', 'chime'),
+      makeButton('🔇 津波注意報（無音）', null),
+      stopButton,result);
+    overlay.appendChild(bar);
   }
 
   const DISASTER_ROTATE_MS=20000;
