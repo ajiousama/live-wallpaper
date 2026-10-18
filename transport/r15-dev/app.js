@@ -1808,12 +1808,30 @@
     return HIROSHIMA_FERRY_SHIP_NAMES[shipCode]||'';
   }
 
+  // Linear-jet coloured sailing assignment on the operator's normal timetable:
+  // https://www.setonaikaikisen.co.jp/kouro/jet/
+  // Inbound blue rows are services 1/3/5/7; outbound blue rows are 2/4/6/8.
+  // The regular assignment is only applied to the verified October dates
+  // before the announced 2026-10-31 docking timetable begins.
+  function hiroshimaJetScheduledVessel(record) {
+    if(record.source!=='port_highspeed' || String(record.service||'')!=='高速船')return '';
+    const iso=String(record._serviceIso||record.displayIso||japanNow().iso);
+    if(!/^2026-10-(?:0[1-9]|[12]\d|30)$/.test(iso))return '';
+    const inbound=record.direction==='arrival';
+    const times=['07:30','09:05','10:50','12:25','15:15','16:45','18:30','20:00'];
+    const departure=padTime(inbound?record.originDepartureTime:record.time);
+    const index=times.indexOf(departure);
+    if(index<0)return '';
+    const aivint=inbound ? index%2===0 : index%2===1;
+    return aivint?'アイヴィント':'シーマックス';
+  }
+
   // Hiroshima/Kure–Matsuyama is shared by two companies.
   // An individual operator must come from an explicitly identified vessel or
   // operator field; the departure clock alone cannot establish the vessel,
   // because published rosters change by day and operational substitutions occur.
   function hiroshimaPortOperator(record, type) {
-    const scheduled=hiroshimaFerryScheduledVessel(record);
+    const scheduled=type==='高速船' ? hiroshimaJetScheduledVessel(record) : hiroshimaFerryScheduledVessel(record);
     const explicitlyNamed=record.confirmedShipName||record.shipName||record.vesselName||record.vessel||'';
     const vessel=String(explicitlyNamed||scheduled).trim();
     const stated=String(record.confirmedOperator||record.operatingCompany||'').trim();
