@@ -1766,12 +1766,56 @@
     if (/福岡/.test(d)) return '余戸南インター → 松山インター口 → 川内インター → 今治 → 小倉 → 博多';
     return record.info || '主要経由地の案内はありません';
   }
+  // Published ferry ship roster. Add a new month only after checking its
+  // official dated roster; never carry October's alternating pattern forward.
+  // Source: https://setonaikaikisen.co.jp/wp-content/uploads/2026/06/202610seapaseo.pdf
+  // Timings below are lookup keys, not a substitute for the operator timetable.
+  const HIROSHIMA_FERRY_SHIPS={
+    '2026-10':{
+      fromHiroshima:{
+        times:['05:45','06:45','08:05','09:15','11:20','12:35','13:40','15:05','17:15','19:30'],
+        odd: ['P','P2','S','A','P','P2','S','A','P','S'],
+        even:['P2','P','A','S','P2','P','A','S','P2','A']
+      },
+      fromMatsuyama:{
+        times:['06:20','08:25','09:40','11:00','12:10','14:15','15:30','16:35','18:00','20:10'],
+        odd: ['A','P','P2','S','A','P','P2','S','A','P'],
+        even:['S','P2','P','A','S','P2','P','A','S','P2']
+      }
+    }
+  };
+  const HIROSHIMA_FERRY_SHIP_NAMES={
+    P:'シーパセオ',P2:'シーパセオ2',S:'翔洋丸',A:'旭洋丸'
+  };
+  function hiroshimaFerryScheduledVessel(record) {
+    if(!/クルーズフェリー/.test(String(record.service||'')))return '';
+    // Use the service date rather than the display's current date: the port
+    // board includes tomorrow's departures and arrivals in a 24-hour window.
+    const iso=String(record._serviceIso||record.displayIso||japanNow().iso);
+    const match=/^(\d{4}-\d{2})-(\d{2})$/.exec(iso);
+    if(!match)return '';
+    const roster=HIROSHIMA_FERRY_SHIPS[match[1]];
+    const day=Number(match[2]);
+    if(!roster || day<1 || day>31)return '';
+    const inbound=record.direction==='arrival';
+    if(inbound && record.source!=='port_cruise_official_in')return '';
+    if(!inbound && record.source!=='port')return '';
+    const series=inbound?roster.fromHiroshima:roster.fromMatsuyama;
+    const departure=padTime(inbound?record.originDepartureTime:record.time);
+    const slot=series.times.indexOf(departure);
+    if(slot<0)return '';
+    const shipCode=(day%2?series.odd:series.even)[slot];
+    return HIROSHIMA_FERRY_SHIP_NAMES[shipCode]||'';
+  }
+
   // Hiroshima/Kure–Matsuyama is shared by two companies.
   // An individual operator must come from an explicitly identified vessel or
   // operator field; the departure clock alone cannot establish the vessel,
   // because published rosters change by day and operational substitutions occur.
   function hiroshimaPortOperator(record, type) {
-    const vessel=String(record.confirmedShipName||record.shipName||record.vesselName||record.vessel||'').trim();
+    const scheduled=hiroshimaFerryScheduledVessel(record);
+    const explicitlyNamed=record.confirmedShipName||record.shipName||record.vesselName||record.vessel||'';
+    const vessel=String(explicitlyNamed||scheduled).trim();
     const stated=String(record.confirmedOperator||record.operatingCompany||'').trim();
     const byVessel=/^(?:シーパセオ(?:2|２)?|SEA\s*PASEO(?:\s*2)?|AIVINT|アイヴィント)$/i.test(vessel)
       ? '瀬戸内海汽船'
@@ -1780,7 +1824,8 @@
     const byOperator=/^(?:瀬戸内海汽船|石崎汽船)$/.test(stated)?stated:'';
     if ((byVessel&&byOperator&&byVessel!==byOperator) || (!byVessel&&!byOperator))
       return {name:'船社未確認',type:type+'・共同運航'};
-    return {name:byVessel||byOperator,type:vessel?type+'・'+vessel:type};
+    return {name:byVessel||byOperator,
+      type:vessel?vessel+(scheduled&&!explicitlyNamed?'（予定）':''):type};
   }
 
   function portOperator(record) {
