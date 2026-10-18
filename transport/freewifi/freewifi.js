@@ -3,8 +3,9 @@
   // Temporary pause requested for the workplace R15 wallpaper only.
   // Flip to false to restore automatic page rotation later.
   const PAUSE_WORKPLACE_PAGE_ROTATION = true;
-  const autoRotationPaused = companyPc && PAUSE_WORKPLACE_PAGE_ROTATION;
-  const pausedPageKey = 'matsuyama-workplace-paused-page';
+  const testMode = companyPc && new URLSearchParams(location.search).get('test') === '1';
+  const autoRotationPaused = companyPc && (PAUSE_WORKPLACE_PAGE_ROTATION || testMode);
+  const pausedPageKey = testMode ? 'matsuyama-workplace-test-page' : 'matsuyama-workplace-paused-page';
 
   // Web/FreeWiFi: eight transport screens + cinema + gamble.
   // Workplace PC: transport and cinema only; do not load or rotate into gamble.
@@ -50,6 +51,7 @@
   let pageIndex = 0;
   let nextPageAt = Date.now() + pages[0].duration;
   let pageTimer = null;
+  let testPagePicker = null;
 
   function ui(){
     return window.MATSUYAMA_TRANSPORT_UI || null;
@@ -74,6 +76,7 @@
   function showPage(index){
     pageIndex = (index + pages.length) % pages.length;
     const page = pages[pageIndex];
+    if(testPagePicker) testPagePicker.value = String(pageIndex);
     if(autoRotationPaused){
       try { sessionStorage.setItem(pausedPageKey, String(pageIndex)); } catch(e) {}
     }
@@ -162,7 +165,7 @@
     if(!status) return;
     const page = pages[pageIndex];
     if(autoRotationPaused){
-      status.textContent = `${page.label}　｜　自動切替停止中`;
+      status.textContent = testMode ? `${page.label}　｜　TEST MODE・手動切替` : `${page.label}　｜　自動切替停止中`;
       return;
     }
     const left = Math.max(0, Math.ceil((nextPageAt - Date.now()) / 1000));
@@ -201,7 +204,6 @@
     } catch(e) {}
   }
   // Test mode is opt-in and never changes production defaults.
-  const testMode = companyPc && new URLSearchParams(location.search).get('test') === '1';
   if(testMode){
     const panel=document.createElement('aside');
     panel.id='workplace-test-panel';
@@ -213,18 +215,17 @@
     picker.style.cssText='width:100%;padding:8px;background:#fff;color:#111';
     pages.forEach((p,i)=>{const o=document.createElement('option');o.value=String(i);o.textContent=p.title;picker.append(o);});
     picker.value=String(initialPage);
+    testPagePicker=picker;
     picker.addEventListener('change',()=>showPage(Number(picker.value)));
     panel.append(picker);
     const makeButton=(label,fn)=>{const b=document.createElement('button');b.textContent=label;b.style.cssText='margin:7px 4px 0 0;padding:7px;cursor:pointer';b.onclick=fn;panel.append(b);return b;};
-    makeButton('前の画面',()=>{showPage(pageIndex-1);picker.value=String(pageIndex);});
-    makeButton('次の画面',()=>{showPage(pageIndex+1);picker.value=String(pageIndex);});
+    makeButton('前の画面',()=>showPage(pageIndex-1));
+    makeButton('次の画面',()=>showPage(pageIndex+1));
     makeButton('本番へ戻る',()=>{const u=new URL(location.href);u.searchParams.delete('test');location.assign(u.href);});
     const note=document.createElement('div');note.style.cssText='margin-top:8px;font-size:12px;color:#ffdf92';note.textContent='テスト中は手動切替。実際の緊急速報は発信しません。';panel.append(note);
     document.body.append(panel);
     document.documentElement.dataset.workplaceTestMode='1';
-    // Explicitly preserve the current production pause setting.
-    const originalShowPage=showPage;
-    picker.addEventListener('change',()=>{picker.value=String(pageIndex);});
+    // Test-page selection is stored separately from the production paused page.
   }
   showPage(initialPage);
   setInterval(updatePageCountdown, 1000);
