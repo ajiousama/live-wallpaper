@@ -3821,6 +3821,11 @@
     const representative=BUS_REPRESENTATIVE_OPERATOR[r.source];
     if (representative) return representative;
     const raw=String(r.service||'').trim();
+    // Operator badges show the company name only. The Imabari service name
+    // includes its route description, which exceeds the fixed operator column.
+    // Keep 今治桟橋 / 宮浦港 and the via-route in the destination cells.
+    if (r.source==='setouchi_omishima' && raw==='せとうちバス（今治・松山特急）')
+      return 'せとうちバス';
     // Last safety net: never render a row of multiple operator logos.
     if (/\s*\/\s*/.test(raw)) {
       const first=raw.split(/\s*\/\s*/).filter(Boolean)[0]||'';
