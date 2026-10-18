@@ -209,8 +209,9 @@
       if(Number.isInteger(saved) && saved >= 0 && saved < pages.length) initialPage = saved;
     } catch(e) {}
   }
-  // Workplace test controls are an opt-in overlay. No production data is changed.
-  if(testMode){
+  // Embedded dedicated test dashboard provides its own toolbar; do not duplicate it.
+  // This compact control remains available when ?pc=1&test=1 is opened directly.
+  if(testMode && window.parent === window){
     const panel=document.createElement('aside');
     panel.id='workplace-test-panel';
     panel.setAttribute('aria-label','職場壁紙テスト操作');
