@@ -2827,3 +2827,20 @@ body.freewifi-tv #panel-rail #rail-rows .rail-detail .marquee-track>span{
   padding-right:48px!important;
   box-sizing:content-box!important;
 }
+
+/* RE:MEDIA extra-train badge vertical clipping fix */
+/* Reset the 3px vertical padding from style.css inside the fixed-height JR row.
+   Only the orange extra-train badge is affected; row/columns and other badges stay as-is. */
+body.freewifi-tv #panel-rail #rail-rows .rail-event-extra{
+  box-sizing:border-box!important;
+  height:20px!important;
+  min-height:0!important;
+  padding:0 7px!important;
+  line-height:1.15!important;
+  align-items:center!important;
+  justify-content:center!important;
+  overflow:visible!important;
+}
+html.company-pc body.freewifi-tv #panel-rail #rail-rows .rail-event-extra{
+  height:24px!important;
+}
