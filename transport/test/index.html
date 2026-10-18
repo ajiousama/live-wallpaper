@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>松山 職場用壁紙｜テストモード</title>
+<style>
+  :root { color-scheme:dark; font-family:"Yu Gothic","Meiryo",system-ui,sans-serif; }
+  * { box-sizing:border-box; }
+  html,body { margin:0; width:100%; height:100%; overflow:hidden; background:#061018; color:#e8f5ff; }
+  #preview { position:absolute; inset:0; width:100%; height:100%; border:0; background:#071217; }
+  .rail { position:fixed; z-index:1000; top:10px; left:10px; width:280px; max-height:calc(100dvh - 20px); overflow-y:auto;
+    background:rgba(9,20,32,.97); box-shadow:0 9px 38px #000b; border:1px solid #456178; border-radius:12px; padding:13px; }
+  .rail h1 { font-size:18px; line-height:1.3; margin:0 0 5px; }
+  .warning { color:#ffda85; font-weight:800; font-size:12px; border-left:3px solid #ffc04a; padding-left:8px; }
+  .hint { color:#bfd0dd; font-size:12px; line-height:1.5; }
+  .hint strong { color:#fff; }
+  .sub { font-size:12px; font-weight:800; color:#8fd0ff; margin:14px 0 7px; }
+  .pages { display:grid; grid-template-columns:1fr; gap:5px; }
+  button, a.action { display:block; width:100%; border:1px solid #46647e; border-radius:7px; padding:10px 9px;
+    text-align:left; background:#142b40; color:#eef6ff; font:700 13px/1.3 inherit; cursor:pointer; text-decoration:none; }
+  button:hover,a.action:hover { background:#254b68; }
+  button[aria-pressed="true"] { background:#23634f; border-color:#67d8a4; color:#fff; }
+  .pair { display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:8px; }
+  .pair button { text-align:center; }
+  .danger { background:#5d271d; border-color:#b95840; font-weight:900; }
+  .danger[aria-pressed="true"] { background:#983b2a; border-color:#ffc16b; }
+  .safe { background:#205448; border-color:#409b86; text-align:center; margin-top:6px; }
+  .status { font-size:12px; margin-top:10px; padding:8px; background:#102234; border-radius:5px; color:#aee5ff; }
+  .mode-flag { position:fixed; z-index:900; right:14px; top:10px; background:#ffd063; color:#2b1a00;
+    border-radius:6px; padding:8px 12px; font:900 13px/1.2 sans-serif; box-shadow:0 2px 10px #0009; pointer-events:none; }
+  #panel-toggle { position:fixed; z-index:1010; bottom:12px; left:12px; display:none; width:auto; padding:10px 14px;
+    background:#c9e9ff; color:#071827; border-color:#fff; font-weight:900; }
+  body.panel-hidden .rail { display:none; }
+  body.panel-hidden #panel-toggle { display:block; }
+  @media (max-width:720px) {
+    .rail { width:min(290px,calc(100vw - 20px)); max-height:calc(100dvh - 70px); }
+    .mode-flag { top:auto; bottom:10px; right:10px; font-size:11px; }
+    #panel-toggle { display:block; }
+  }
+</style>
+</head>
+<body>
+<iframe id="preview" title="職場用壁紙 実表示プレビュー" src="about:blank" allow="autoplay"></iframe>
+<div class="mode-flag">訓練・テスト中／実際の災害情報ではありません</div>
+<aside class="rail" id="rail" aria-label="テスト操作パネル">
+  <h1>🧪 職場用壁紙 テストモード</h1>
+  <p class="warning">本番の壁紙とは別のプレビューです。訓練表示を実際の災害と間違えないでください。</p>
+  <p class="hint">本番と同じ表示エンジンで確認。<strong>自動ページ切替は停止</strong>し、画面を直接指定できます。</p>
+  <div class="sub">表示したい画面を選択</div>
+  <div class="pages" id="pages"></div>
+  <div class="pair">
+    <button id="previous" type="button">◀ 前の画面</button>
+    <button id="next" type="button">次の画面 ▶</button>
+  </div>
+  <div class="sub">災害画面の表示・警報音テスト</div>
+  <button type="button" class="danger" id="disaster" aria-pressed="false">⚠ 緊急モードを表示する</button>
+  <button type="button" class="safe" id="normal" hidden>✓ 緊急モードを終了する</button>
+  <p class="hint">緊急モードには地震・津波・気象警報の<strong>訓練用データ</strong>を表示します。音声は画面内のボタンを自分で押した時だけ再生します。既存の実音MP3を使用します。</p>
+  <div class="status" id="status" role="status" aria-live="polite">準備中…</div>
+  <p class="hint">元の職場壁紙には切り替え設定を保存しません。ページを閉じれば終了です。</p>
+  <a class="action" href="../freewifi/?pc=1" target="_blank" rel="noopener noreferrer">通常の職場用壁紙を別タブで開く ↗</a>
+  <button type="button" id="hide-panel" style="margin-top:7px">操作パネルを隠す</button>
+</aside>
+<button id="panel-toggle" type="button" aria-controls="rail">☰ テスト操作</button>
+<script>
+(function(){
+  'use strict';
+  // These indices match transport/freewifi/freewifi.js (workplace-only list).
+  var labels=[
+    '01　JR松山駅・宇和島方面',
+    '02　JR松山駅・今治方面',
+    '03　松山空港・出発',
+    '04　松山空港・到着',
+    '05　高速・中距離バス・出発',
+    '06　高速・中距離バス・到着',
+    '07　フェリー・出航',
+    '08　フェリー・到着',
+    '09　映画・プラネタリウム',
+    '10　勤務予定・本日／翌日'
+  ];
+  var current=0, disaster=false;
+  var frame=document.getElementById('preview');
+  var pages=document.getElementById('pages');
+  var status=document.getElementById('status');
+  var btnDisaster=document.getElementById('disaster');
+  var btnNormal=document.getElementById('normal');
+  var pageButtons=[];
+  function syncButtons(){
+    pageButtons.forEach(function(button,i){
+      button.setAttribute('aria-pressed', String(i===current));
+      button.setAttribute('aria-current', i===current?'page':'false');
+    });
+    btnDisaster.setAttribute('aria-pressed',String(disaster));
+    btnDisaster.textContent=disaster?'⚠ 緊急モード表示中':'⚠ 緊急モードを表示する';
+    btnNormal.hidden=!disaster;
+  }
+  function refresh(){
+    // No localStorage or sessionStorage writes: this mode must not alter
+    // the workplace's remembered page in the ordinary wallpaper.
+    var url=new URL('../freewifi/',location.href);
+    url.searchParams.set('pc','1');
+    url.searchParams.set('test','1');
+    url.searchParams.set('testPage',String(current));
+    if(disaster) url.searchParams.set('disasterTest','1');
+    status.textContent=(disaster?'災害訓練表示':'画面切替')+'を読み込み中…';
+    syncButtons();
+    frame.src=url.href;
+  }
+  function choose(index){
+    current=(index+labels.length)%labels.length;
+    disaster=false;
+    refresh();
+  }
+  labels.forEach(function(label,i){
+    var button=document.createElement('button');
+    button.type='button';
+    button.textContent=label;
+    button.setAttribute('aria-pressed','false');
+    button.addEventListener('click',function(){choose(i);});
+    pages.appendChild(button);
+    pageButtons.push(button);
+  });
+  document.getElementById('previous').addEventListener('click',function(){choose(current-1);});
+  document.getElementById('next').addEventListener('click',function(){choose(current+1);});
+  btnDisaster.addEventListener('click',function(){disaster=!disaster;refresh();});
+  btnNormal.addEventListener('click',function(){disaster=false;refresh();});
+  document.getElementById('hide-panel').addEventListener('click',function(){
+    document.body.classList.add('panel-hidden');
+  });
+  document.getElementById('panel-toggle').addEventListener('click',function(){
+    document.body.classList.toggle('panel-hidden');
+  });
+  frame.addEventListener('load',function(){
+    // Report the selected page only when the actual wallpaper script
+    // has initialized. This is a status check, not a forced success claim.
+    setTimeout(function(){
+      try {
+        var doc=frame.contentDocument;
+        var active=doc.documentElement.dataset.companyPageIndex;
+        var warning=doc.getElementById('disaster-overlay');
+        if(active!==String(current)){
+          status.textContent='画面の初期化を確認できません（表示状態：'+String(active||'未取得')+'）';
+          return;
+        }
+        if(disaster && warning && warning.hidden){
+          status.textContent='緊急モードを確認できません。表示を再確認してください。';
+          return;
+        }
+        status.textContent=disaster?'緊急モード表示中（訓練用データ・音声は手動）':'表示中：'+labels[current];
+      } catch(e){
+        status.textContent='プレビューの状態取得に失敗しました。ページを再読み込みしてください。';
+      }
+    },1000);
+  });
+  refresh();
+})();
+</script>
+</body>
+</html>
