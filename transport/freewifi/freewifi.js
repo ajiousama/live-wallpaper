@@ -1,9 +1,11 @@
 (() => {
   const companyPc = document.documentElement.classList.contains('company-pc');
+  // Isolated workplace preview: only enabled with the explicit ?test=1 flag.
+  const testMode = companyPc && new URLSearchParams(location.search).get('test') === '1';
   // Temporary pause requested for the workplace R15 wallpaper only.
   // Flip to false to restore automatic page rotation later.
   const PAUSE_WORKPLACE_PAGE_ROTATION = true;
-  const autoRotationPaused = companyPc && PAUSE_WORKPLACE_PAGE_ROTATION;
+  const autoRotationPaused = companyPc && (PAUSE_WORKPLACE_PAGE_ROTATION || testMode);
   const pausedPageKey = 'matsuyama-workplace-paused-page';
 
   // Web/FreeWiFi: eight transport screens + cinema + gamble.
@@ -74,7 +76,7 @@
   function showPage(index){
     pageIndex = (index + pages.length) % pages.length;
     const page = pages[pageIndex];
-    if(autoRotationPaused){
+    if(autoRotationPaused && !testMode){
       try { sessionStorage.setItem(pausedPageKey, String(pageIndex)); } catch(e) {}
     }
 
@@ -194,7 +196,12 @@
   if(webNext) webNext.addEventListener('click', ()=>sharedPageStep(1));
 
   let initialPage = 0;
-  if(autoRotationPaused){
+  if(testMode){
+    const requested = Number(new URLSearchParams(location.search).get('testPage'));
+    if(Number.isInteger(requested) && requested >= 0 && requested < pages.length){
+      initialPage = requested;
+    }
+  } else if(autoRotationPaused){
     try {
       const saved = Number(sessionStorage.getItem(pausedPageKey));
       if(Number.isInteger(saved) && saved >= 0 && saved < pages.length) initialPage = saved;
