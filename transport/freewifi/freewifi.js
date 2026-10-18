@@ -200,6 +200,32 @@
       if(Number.isInteger(saved) && saved >= 0 && saved < pages.length) initialPage = saved;
     } catch(e) {}
   }
+  // Test mode is opt-in and never changes production defaults.
+  const testMode = companyPc && new URLSearchParams(location.search).get('test') === '1';
+  if(testMode){
+    const panel=document.createElement('aside');
+    panel.id='workplace-test-panel';
+    panel.style.cssText='position:fixed;z-index:99999;left:12px;top:12px;max-width:340px;max-height:90vh;overflow:auto;background:#071923;color:white;padding:12px;border:2px solid #ffcf55;border-radius:10px;font:14px sans-serif;box-shadow:0 5px 30px #000b';
+    const heading=document.createElement('strong');
+    heading.textContent='職場壁紙 TEST MODE（本番データ変更なし）';
+    panel.append(heading,document.createElement('hr'));
+    const picker=document.createElement('select');
+    picker.style.cssText='width:100%;padding:8px;background:#fff;color:#111';
+    pages.forEach((p,i)=>{const o=document.createElement('option');o.value=String(i);o.textContent=p.title;picker.append(o);});
+    picker.value=String(initialPage);
+    picker.addEventListener('change',()=>showPage(Number(picker.value)));
+    panel.append(picker);
+    const makeButton=(label,fn)=>{const b=document.createElement('button');b.textContent=label;b.style.cssText='margin:7px 4px 0 0;padding:7px;cursor:pointer';b.onclick=fn;panel.append(b);return b;};
+    makeButton('前の画面',()=>{showPage(pageIndex-1);picker.value=String(pageIndex);});
+    makeButton('次の画面',()=>{showPage(pageIndex+1);picker.value=String(pageIndex);});
+    makeButton('本番へ戻る',()=>{const u=new URL(location.href);u.searchParams.delete('test');location.assign(u.href);});
+    const note=document.createElement('div');note.style.cssText='margin-top:8px;font-size:12px;color:#ffdf92';note.textContent='テスト中は手動切替。実際の緊急速報は発信しません。';panel.append(note);
+    document.body.append(panel);
+    document.documentElement.dataset.workplaceTestMode='1';
+    // Explicitly preserve the current production pause setting.
+    const originalShowPage=showPage;
+    picker.addEventListener('change',()=>{picker.value=String(pageIndex);});
+  }
   showPage(initialPage);
   setInterval(updatePageCountdown, 1000);
   // Lively's WebView may throttle or drop a long setTimeout after sleeping.
