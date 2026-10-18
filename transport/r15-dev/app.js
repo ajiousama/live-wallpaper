@@ -1766,6 +1766,23 @@
     if (/福岡/.test(d)) return '余戸南インター → 松山インター口 → 川内インター → 今治 → 小倉 → 博多';
     return record.info || '主要経由地の案内はありません';
   }
+  // Hiroshima/Kure–Matsuyama is shared by two companies.
+  // An individual operator must come from an explicitly identified vessel or
+  // operator field; the departure clock alone cannot establish the vessel,
+  // because published rosters change by day and operational substitutions occur.
+  function hiroshimaPortOperator(record, type) {
+    const vessel=String(record.confirmedShipName||record.shipName||record.vesselName||record.vessel||'').trim();
+    const stated=String(record.confirmedOperator||record.operatingCompany||'').trim();
+    const byVessel=/^(?:シーパセオ(?:2|２)?|SEA\s*PASEO(?:\s*2)?|AIVINT|アイヴィント)$/i.test(vessel)
+      ? '瀬戸内海汽船'
+      : /^(?:旭洋丸|翔洋丸|シーマックス|SEA\s*MAX)$/i.test(vessel)
+      ? '石崎汽船' : '';
+    const byOperator=/^(?:瀬戸内海汽船|石崎汽船)$/.test(stated)?stated:'';
+    if ((byVessel&&byOperator&&byVessel!==byOperator) || (!byVessel&&!byOperator))
+      return {name:'船社未確認',type:type+'・共同運航'};
+    return {name:byVessel||byOperator,type:vessel?type+'・'+vessel:type};
+  }
+
   function portOperator(record) {
     const svc = String(record.service || '');
     if (record.source==='matsuyama_city_cruise') return { name:svc, type:'大型クルーズ船' };
@@ -1775,8 +1792,8 @@
     if (/大三島ブルーライン/.test(svc)) return { name:'大三島ブルーライン', type:'フェリー' };
     if (/青島海運|あおしま/.test(svc)) return { name:'青島海運', type:'旅客船 あおしま' };
     if (/新居浜市営/.test(svc)) return { name:'新居浜市営', type:'渡海船' };
-    if (/クルーズフェリー/.test(svc)) return { name:'瀬戸内海汽船・石崎汽船', type:'フェリー' };
-    if (/^高速船$/.test(svc)) return { name:'瀬戸内海汽船・石崎汽船', type:'高速船' };
+    if (/クルーズフェリー/.test(svc)) return hiroshimaPortOperator(record,'フェリー');
+    if (/^高速船$/.test(svc) && record.source==='port_highspeed') return hiroshimaPortOperator(record,'高速船');
     if (/中島/.test(svc)) return { name:'中島汽船', type:/西線/.test(svc)?'フェリー 西線':'フェリー' };
     if (/防予フェリー/.test(svc)) return { name:'防予フェリー', type:'フェリー' };
     if (/国道九四フェリー/.test(svc)) return { name:'国道九四フェリー', type:'フェリー' };
@@ -1800,7 +1817,9 @@
     if(n==='今治市営') return '<span class="ferry-mini-logo ferry-logo-imabari">今治市営</span>';
     if(n==='大三島ブルーライン') return '<span class="ferry-mini-logo ferry-logo-blue">大三島ブルーライン</span>';
     if(n==='芸予汽船') return '<span class="ferry-mini-logo ferry-logo-geiyo">芸予汽船</span>';
-    if(n==='瀬戸内海汽船・石崎汽船') return '<span class="ferry-logo-pair"><span class="ferry-mini-logo ferry-logo-setouchi">瀬戸内海汽船</span><span class="ferry-mini-logo ferry-logo-ishizaki">石崎汽船</span></span>';
+    if(n==='瀬戸内海汽船') return '<span class="ferry-mini-logo ferry-logo-setouchi">瀬戸内海汽船</span>';
+    if(n==='石崎汽船') return '<span class="ferry-mini-logo ferry-logo-ishizaki">石崎汽船</span>';
+    if(n==='船社未確認') return '<span class="ferry-mini-logo ferry-logo-unknown">船社未確認</span>';
     if(n==='青島海運') return '<span class="ferry-mini-logo ferry-logo-aoshima">青島海運</span>';
     if(n==='新居浜市営') return '<span class="ferry-mini-logo ferry-logo-niihama">新居浜市営</span>';
     return '';
