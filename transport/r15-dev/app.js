@@ -5558,7 +5558,22 @@
     const recentAcknowledged=!test && recentKey && acknowledgedEarthquakeKey()===recentKey;
     const recentActive=test ? testDisasterKind==='summary' : !!recent && !recentAcknowledged && Number.isFinite(recentMs) && Date.now()-recentMs<20*60*1000;
     const weatherActive=Array.isArray(d.weather?.active)&&d.weather.active.length>0; const eewActive=!!(d.eew?.active&&d.eew?.local); const tsunamiActive=!!d.tsunami?.active;
-    const active=test||eewActive||tsunamiActive||weatherActive||recentActive; const overlay=$('disaster-overlay'); overlay.hidden=!active;
+    const active=test||eewActive||tsunamiActive||weatherActive||recentActive;
+    const overlay=$('disaster-overlay');
+    if(!overlay)return;
+    overlay.hidden=!active;
+    // Lively and multiple FreeWiFi layers sometimes keep an old display rule.
+    // Force the original alert overlay above the transport/cinema/shift boards
+    // in TRAINING only, but always below the interactive test toolbar.
+    if(test){
+      overlay.dataset.workplaceTraining='1';
+      overlay.style.setProperty('display','block','important');
+      overlay.style.setProperty('z-index','1000','important');
+    }else{
+      delete overlay.dataset.workplaceTraining;
+      overlay.style.removeProperty('display');
+      overlay.style.removeProperty('z-index');
+    }
     if(test) installDisasterPreviewAudioControl(overlay);
     maybePlayDisasterAlarm(d,test);
     if(!active){
