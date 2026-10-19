@@ -211,7 +211,11 @@
   }
   // Embedded dedicated test dashboard provides its own toolbar; do not duplicate it.
   // This compact control remains available when ?pc=1&test=1 is opened directly.
-  if(testMode && window.parent === window){
+  // Only the dedicated test dashboard has its own outer toolbar.
+  // Lively can embed the workplace wallpaper in an iframe, too; its controls
+  // must still appear when test=1 is selected from the actual wallpaper.
+  const dedicatedTestShell = new URLSearchParams(location.search).get('testShell') === '1';
+  if(testMode && !dedicatedTestShell){
     const panel=document.createElement('aside');
     panel.id='workplace-test-panel';
     panel.setAttribute('aria-label','職場壁紙テスト操作');
@@ -242,6 +246,33 @@
     panel.append(note);
     document.body.append(panel);
     document.documentElement.dataset.workplaceTestMode='1';
+  }
+  // Make the live build ID the entry/exit point, without a separate site.
+  const versionToggle = document.getElementById('company-pc-test-toggle');
+  if(companyPc && versionToggle){
+    const actionLabel = versionToggle.querySelector('.company-pc-test-action');
+    if(actionLabel) actionLabel.textContent = testMode ? (dedicatedTestShell ? '[訓練中]' : '[本番へ]') : '[テスト]';
+    versionToggle.title = testMode ? '通常の職場壁紙へ戻る' : 'この職場壁紙でテストモードを開始';
+    if(!dedicatedTestShell){
+      versionToggle.addEventListener('click',()=>{
+        const url = new URL(location.href);
+        if(testMode){
+          url.searchParams.delete('test');
+          url.searchParams.delete('testPage');
+          url.searchParams.delete('disasterTest');
+        }else{
+          url.searchParams.set('pc','1');
+          url.searchParams.set('test','1');
+          url.searchParams.set('testPage',String(pageIndex));
+          url.searchParams.delete('testShell');
+        }
+        // A fresh navigation also works through the legacy R15 Lively wrapper.
+        url.searchParams.set('_mode_switch',String(Date.now()));
+        location.replace(url.href);
+      });
+    }else{
+      versionToggle.disabled = true;
+    }
   }
   showPage(initialPage);
   setInterval(updatePageCountdown, 1000);
