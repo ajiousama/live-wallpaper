@@ -5148,9 +5148,10 @@
         const arrivalDay=toMinutes(arrivalClock)<toMinutes(r.time)?'翌日':'';
         const arrivalPort=String(lastCall?.[0]||r.dest||'目的港').trim();
         const arrivalGuide=`${arrivalPort} ${arrivalDay}${arrivalClock}${arrivalIsEstimate?'頃着（見込）':'着予定'}`;
+        const detailTimetable=ferryDetailTimetable(r);
         const departureGuidance=r.source==='matsuyama_city_cruise'
           ? `大型クルーズ船 ${r.shipName}｜${r.info||'松山市公式の出港予定'}`
-          : [routeGuidance==='—'?'':routeGuidance,arrivalGuide].filter(Boolean).join(' ｜ ');
+          : [detailTimetable || (routeGuidance==='—'?'':routeGuidance),arrivalGuide].filter(Boolean).join(' ｜ ');
         row.innerHTML = `
           <div class="cell main port-route port-route-main">${portDepartureDestinationHtml(r,`${firstBadge}${finalBadge}`)}</div>
           <div class="cell sub port-route-guidance">${overflowScrollHtml(departureGuidance,'port-guidance-scroll')}</div>
@@ -5164,7 +5165,8 @@
         const arrivalDepartureLabel=/^\d{2}:\d{2}$/.test(departureTime)
           ? `${String(r.origin||'出発港')} ${departureTime}発` : '';
         const baseGuidance=ferryRouteGuidance(r,'arrival',japanNow());
-        const routeGuidance=[arrivalDepartureLabel,baseGuidance==='—'?'':baseGuidance].filter(Boolean).join(' ｜ ')||'—';
+        const detailTimetable=ferryDetailTimetable(r);
+        const routeGuidance=detailTimetable || [arrivalDepartureLabel,baseGuidance==='—'?'':baseGuidance].filter(Boolean).join(' ｜ ')||'—';
         row.innerHTML = `
           <div class="cell main port-route port-route-main"><span class="port-arrival-route-line">${arrivalRoute}</span></div>
           <div class="cell sub port-route-guidance">${overflowScrollHtml(routeGuidance,'port-guidance-scroll')}</div>
@@ -5306,24 +5308,18 @@
         && now.minutes<toMinutes(e.end))
       .map(e=>'<span class="special-vessel-event">'+e.text+'</span>');
   }
-  function ferryCallingTimetableTickerItems(now=japanNow()) {
+  function ferryDetailTimetable(record) {
     // Cover all published stop-by-stop schedules, including explicitly inbound services.
     // Do not invent times for stops whose timetable is absent.
-    const all=[...recordsForDay('port',now.iso),
-      ...jumboInboundPortRows(now.iso),...geiyoInboundPortRows(now.iso),
-      ...nakajimaTakahamaCalls(now.iso)];
-    const seen=new Set();
-    return all.flatMap(r=>{
-      if(r.source==='nakajima_takahama_call'||r.source==='nakajima_takahama_departure')return [];
+    const r=record;
+    {
+      if(r.source==='nakajima_takahama_call'||r.source==='nakajima_takahama_departure')return '';
       const direction=r.direction==='arrival'?'到着':'出発';
       const calls=Array.isArray(r.calls)?r.calls:portDepartureCalls(r);
       const namedStops=calls.filter(c=>Array.isArray(c)&&c[0]&&/^\d{1,2}:\d{2}$/.test(String(c[1]||'')));
       const viaText=String(r.info||'')+' '+String(r.dest||'');
       const hasVia=namedStops.length>1||/経由|寄港/.test(viaText);
-      if(!hasVia)return [];
-      const lastTime=namedStops.length?String(namedStops[namedStops.length-1][1]):r.time;
-      const checkTime=direction==='到着'?r.time:lastTime;
-      if(now.minutes>toMinutes(checkTime))return [];
+      if(!hasVia)return '';
       const service=String(r.service||'フェリー');
       const label=/中島/.test(service)
         ? (/西線|西便|nakajima_west/.test(service+' '+r.source)?'中島汽船 西便':'中島汽船 東便')
@@ -5350,17 +5346,13 @@
         route+=' → '+dest+' '+r.time+'着予定';
         if(!estimated)route+='（途中寄港時刻は未確認）';
       }
-      const key=[r.id,r.time,direction].join('|');
-      if(seen.has(key))return [];
-      seen.add(key);
       const text=label+' '+direction+'便｜'+route+(estimated?'（時刻表推定）':'（時刻表予定）');
-      return ['<span class="ferry-normal">'+text.replace(/&/g,'&amp;').replace(/</g,'&lt;')+'</span>'];
-    });
+      return text;
+    }
   }
   function ferryTickerItems(now=japanNow()) {
     const rows=slowLive.ferry?.items; const items=[];
     if(Array.isArray(rows)&&rows.length){rows.forEach(x=>{const st=String(x.status||'');const cls=/欠航|休航/.test(st)?'ferry-cancel':/減便|一部/.test(st)?'ferry-reduced':'ferry-normal';items.push(`<span class="${cls}">フェリーLIVE｜${x.name}｜${st}</span>`);});}
-    items.unshift(...ferryCallingTimetableTickerItems(now));
     items.unshift(...specialVesselEventNotices(now));
     items.unshift(...berthedCruiseNotices(now));
     if(!items.length)items.push('フェリーLIVE｜公式運航情報を取得中');
