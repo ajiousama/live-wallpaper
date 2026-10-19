@@ -237,6 +237,85 @@
     const makeButton=(label,fn)=>{const b=document.createElement('button');b.type='button';b.textContent=label;b.style.cssText='margin:7px 4px 0 0;padding:7px;cursor:pointer';b.addEventListener('click',fn);panel.append(b);return b;};
     makeButton('前の画面',()=>showPage(pageIndex-1));
     makeButton('次の画面',()=>showPage(pageIndex+1));
+
+    const section=(caption)=>{
+      const h=document.createElement('div');
+      h.textContent=caption;
+      h.style.cssText='font-weight:900;border-top:1px solid #516a7b;padding-top:9px;margin-top:12px;color:#ffdf92';
+      panel.append(h);
+    };
+    const testStatus=document.createElement('div');
+    testStatus.style.cssText='font-size:12px;line-height:1.5;margin:5px 0;padding:5px;background:#173044;border-radius:5px;color:#b8edff';
+    const testClock=window.MATSUYAMA_TEST_CLOCK;
+    section('🕒 日付・時刻シミュレーション（日本時間）');
+    const clockInput=document.createElement('input');
+    clockInput.id='workplace-test-datetime';
+    clockInput.type='datetime-local';
+    clockInput.step='60';
+    clockInput.setAttribute('aria-label','テスト用の日時（日本時間）');
+    clockInput.style.cssText='display:block;width:100%;min-width:0;padding:8px;margin-top:8px;box-sizing:border-box;background:white;color:#141923;font:700 16px sans-serif';
+    clockInput.value=testClock?.input?.()||'';
+    panel.append(clockInput);
+    const speedSelect=document.createElement('select');
+    speedSelect.id='workplace-test-speed';
+    speedSelect.style.cssText='width:100%;margin-top:7px;padding:7px;background:white;color:#141923;font:700 13px sans-serif';
+    [[0,'時刻を固定（停止）'],[1,'実時間と同じ速さ'],[60,'60倍速（1秒で1分）'],[3600,'3600倍速（1秒で1時間）']].forEach(([value,label])=>{
+      const option=document.createElement('option');option.value=String(value);option.textContent=label;speedSelect.append(option);
+    });
+    speedSelect.value=String(testClock?.speed?.()??0);
+    panel.append(speedSelect);
+    panel.append(testStatus);
+    function showClockStatus(message){
+      const current=testClock?.input?.()?.replace('T',' ')||'取得不可';
+      const rate=testClock?.hasOverride?.() ? testClock.speed() : '現在';
+      testStatus.textContent=(message?message+' ｜ ':'')+'模擬日時：'+current+'（'+rate+(rate==='現在'?'':'倍速')+'）';
+    }
+    function syncClockInput(message){
+      if(testClock?.input) clockInput.value=testClock.input();
+      showClockStatus(message);
+    }
+    makeButton('指定日時を反映',()=>{
+      if(!testClock?.set?.(clockInput.value,Number(speedSelect.value))){
+        showClockStatus('日時が正しくありません');return;
+      }
+      syncClockInput('適用済み');
+    });
+    for(const [label,mins] of [['−1日',-1440],['＋1日',1440],['−1時間',-60],['＋1時間',60],['−10分',-10],['＋10分',10],['−1分',-1],['＋1分',1]]){
+      makeButton(label,()=>{
+        if(testClock?.step?.(mins))syncClockInput('変更済み');
+      });
+    }
+    speedSelect.addEventListener('change',()=>{
+      if(testClock?.rate?.(Number(speedSelect.value)))syncClockInput('再生速度を変更');
+    });
+    makeButton('現在の日時に戻す',()=>{
+      if(testClock?.reset?.()){
+        speedSelect.value='1';
+        syncClockInput('実際の現在時刻');
+      }
+    });
+    showClockStatus();
+
+    section('⚠ 緊急モード（訓練専用）');
+    const disasterStatus=document.createElement('div');
+    disasterStatus.style.cssText='font-size:12px;padding:5px;color:#ffe2a3';
+    disasterStatus.textContent='下のボタンで訓練画面を直接表示';
+    panel.append(disasterStatus);
+    function setDisaster(kind){
+      const currentController=ui();
+      if(currentController?.setTestDisaster?.(kind)){
+        disasterStatus.textContent=kind ? '【訓練中】'+({eew:'緊急地震速報',tsunami:'津波警報',weather:'気象警報',summary:'地震情報',all:'全画面ローテーション'}[kind]||kind)
+          +'／警報音は緊急画面内のボタンを押すと再生':'緊急訓練を終了';
+      }else{
+        disasterStatus.textContent='表示できません。画面を再読み込みしてください。';
+      }
+    }
+    makeButton('🚨 緊急地震速報を表示',()=>setDisaster('eew'));
+    makeButton('🌊 津波警報を表示',()=>setDisaster('tsunami'));
+    makeButton('☔ 気象警報を表示',()=>setDisaster('weather'));
+    makeButton('⚠ 地震情報を表示',()=>setDisaster('summary'));
+    makeButton('全種類を20秒ごとに切替',()=>setDisaster('all'));
+    makeButton('緊急モードを終了',()=>setDisaster(''));
     makeButton('本番へ戻る',()=>{
       const u=new URL(location.href);
       u.searchParams.delete('test');
@@ -261,7 +340,7 @@
     });
     const note=document.createElement('div');
     note.style.cssText='margin-top:8px;font-size:12px;color:#ffdf92';
-    note.textContent='テスト中は手動切替。実際の緊急速報は発信しません。';
+    note.textContent='日時変更はこのテスト画面のみ。警報表示は訓練で、本番の防災情報やPC時計を変更しません。';
     panel.append(note);
     // Both surfaces belong to #wall, not the OS desktop background.
     (wall || document.body).append(panel,reveal);
