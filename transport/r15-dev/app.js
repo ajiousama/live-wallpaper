@@ -5328,7 +5328,7 @@
       const r=nextByRoute.get(route);
       if(!r)return [];
       const stops=portDepartureCalls(r)
-        .filter(c=>Array.isArray(c) && c[0] && /^\\d{2}:\\d{2}$/.test(String(c[1]||'')))
+        .filter(c=>Array.isArray(c) && c[0] && /^\d{2}:\d{2}$/.test(String(c[1]||'')))
         .map(([name,time])=>`${String(name).replace(/港$/,'')} ${time}着予定`);
       if(!stops.length)return [];
       const text=`中島汽船 ${route}｜三津浜 ${r.time}発 → ${stops.join(' → ')}（時刻表予定）`;
