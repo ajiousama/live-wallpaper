@@ -226,6 +226,19 @@
     const heading=document.createElement('strong');
     heading.textContent='職場壁紙 TEST MODE（本番データ変更なし）';
     panel.append(heading,document.createElement('hr'));
+    // Primary earthquake control stays at the top; users should not need to
+    // scroll the 350px-wide panel before reaching the emergency test.
+    const emergencyQuick=document.createElement('button');
+    emergencyQuick.id='workplace-test-emergency-quick';
+    emergencyQuick.type='button';
+    emergencyQuick.textContent='🚨 緊急地震速報の訓練を表示';
+    emergencyQuick.style.cssText='display:block;width:100%;margin:4px 0 8px;padding:12px 8px;background:#a52b31;color:#fff;border:2px solid #ffda87;border-radius:7px;font:bold 15px sans-serif;cursor:pointer';
+    emergencyQuick.addEventListener('click',()=>{
+      const current=ui()?.getTestDisaster?.();
+      setDisaster(current?'':'eew');
+      emergencyQuick.textContent=current?'🚨 緊急地震速報の訓練を表示':'■ 緊急訓練を終了';
+    });
+    panel.append(emergencyQuick);
     const picker=document.createElement('select');
     picker.setAttribute('aria-label','表示する画面');
     picker.style.cssText='width:100%;padding:8px;background:#fff;color:#111';
@@ -303,12 +316,29 @@
     panel.append(disasterStatus);
     function setDisaster(kind){
       const currentController=ui();
-      if(currentController?.setTestDisaster?.(kind)){
-        disasterStatus.textContent=kind ? '【訓練中】'+({eew:'緊急地震速報',tsunami:'津波警報',weather:'気象警報',summary:'地震情報',all:'全画面ローテーション'}[kind]||kind)
-          +'／警報音は緊急画面内のボタンを押すと再生':'緊急訓練を終了';
-      }else{
-        disasterStatus.textContent='表示できません。画面を再読み込みしてください。';
+      let changed=false;
+      try{changed=!!currentController?.setTestDisaster?.(kind);}
+      catch(err){console.error('Training emergency display failed',err);}
+      const overlay=document.getElementById('disaster-overlay');
+      if(changed && overlay){
+        // Extra protection for embedded Lively and delayed CSS: a training
+        // overlay may not remain behind other pages or hidden by old CSS.
+        if(kind){
+          overlay.hidden=false;
+          overlay.style.setProperty('display','block','important');
+          overlay.style.setProperty('z-index','1000','important');
+        }else{
+          overlay.style.removeProperty('display');
+          overlay.style.removeProperty('z-index');
+        }
       }
+      emergencyQuick.textContent=kind?'■ 緊急訓練を終了':'🚨 緊急地震速報の訓練を表示';
+      if(!changed||!overlay || (kind && (overlay.hidden || getComputedStyle(overlay).display==='none'))){
+        disasterStatus.textContent='表示を確認できません。もう一度押すか再読み込みしてください。';
+        return;
+      }
+      disasterStatus.textContent=kind ? '【訓練表示中】'+({eew:'緊急地震速報',tsunami:'津波警報',weather:'気象警報',summary:'地震情報',all:'全画面ローテーション'}[kind]||kind)
+        +'／警報音は緊急画面内のボタンを押すと再生':'緊急訓練を終了';
     }
     makeButton('🚨 緊急地震速報を表示',()=>setDisaster('eew'));
     makeButton('🌊 津波警報を表示',()=>setDisaster('tsunami'));
