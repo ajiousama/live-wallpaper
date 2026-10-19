@@ -28,6 +28,9 @@
   .danger[aria-pressed="true"] { background:#983b2a; border-color:#ffc16b; }
   .safe { background:#205448; border-color:#409b86; text-align:center; margin-top:6px; }
   .status { font-size:12px; margin-top:10px; padding:8px; background:#102234; border-radius:5px; color:#aee5ff; }
+  .build-stamp { margin:8px 0 11px; padding:9px; background:#112b3a; border:1px solid #42677d; border-radius:6px; color:#dff2ff; font:700 12px/1.65 monospace; white-space:pre-line; overflow-wrap:anywhere; }
+  .build-stamp.is-mismatch { color:#ffe6b2; border-color:#e7a557; background:#382a1c; }
+  .build-stamp.is-match { color:#b4f4d4; border-color:#438b74; }
   .mode-flag { position:fixed; z-index:900; right:14px; top:10px; background:#ffd063; color:#2b1a00;
     border-radius:6px; padding:8px 12px; font:900 13px/1.2 sans-serif; box-shadow:0 2px 10px #0009; pointer-events:none; }
   #panel-toggle { position:fixed; z-index:1010; bottom:12px; left:12px; display:none; width:auto; padding:10px 14px;
@@ -46,6 +49,7 @@
 <div class="mode-flag">訓練・テスト中／実際の災害情報ではありません</div>
 <aside class="rail" id="rail" aria-label="テスト操作パネル">
   <h1>🧪 職場用壁紙 テストモード</h1>
+  <div id="build-stamp" class="build-stamp" aria-live="polite">表示版 確認中…</div>
   <p class="warning">本番の壁紙とは別のプレビューです。訓練表示を実際の災害と間違えないでください。</p>
   <p class="hint">本番と同じ表示エンジンで確認。<strong>自動ページ切替は停止</strong>し、画面を直接指定できます。</p>
   <div class="sub">表示したい画面を選択</div>
@@ -84,6 +88,35 @@
   var frame=document.getElementById('preview');
   var pages=document.getElementById('pages');
   var status=document.getElementById('status');
+  var buildStamp=document.getElementById('build-stamp');
+  var publishedBuild='';
+  var frameBuild='';
+  function renderBuildStamp(){
+    var expected=publishedBuild||'取得中…';
+    var actual=frameBuild||'読み込み中…';
+    var known=Boolean(publishedBuild&&frameBuild);
+    var match=known&&publishedBuild===frameBuild;
+    buildStamp.classList.toggle('is-match',match);
+    buildStamp.classList.toggle('is-mismatch',known&&!match);
+    buildStamp.textContent='本番表示版 '+expected+'\nテスト表示版 '+actual+
+      (known?(match?'\n✓ 同一の表示版':'\n⚠ 表示版が不一致（キャッシュ・更新待ちの可能性）'):'');
+  }
+  async function loadPublishedBuild(){
+    try{
+      var u=new URL('../../deploy-version.json',location.href);
+      u.searchParams.set('t',String(Date.now()));
+      var response=await fetch(u.href,{cache:'no-store'});
+      if(!response.ok)throw Error('HTTP '+response.status);
+      var json=await response.json();
+      publishedBuild=String(json.build||'').trim();
+      if(!/^[0-9a-f]{16}$/i.test(publishedBuild))throw Error('invalid build id');
+    }catch(e){
+      publishedBuild='';
+      console.warn('Could not verify published build',e);
+    }
+    renderBuildStamp();
+  }
+  loadPublishedBuild();
   var btnDisaster=document.getElementById('disaster');
   var btnNormal=document.getElementById('normal');
   var pageButtons=[];
@@ -106,6 +139,8 @@
     if(disaster) url.searchParams.set('disasterTest','1');
     status.textContent=(disaster?'災害訓練表示':'画面切替')+'を読み込み中…';
     syncButtons();
+    frameBuild='';
+    renderBuildStamp();
     frame.src=url.href;
   }
   function choose(index){
@@ -138,6 +173,12 @@
     setTimeout(function(){
       try {
         var doc=frame.contentDocument;
+        frameBuild=String(doc.documentElement.dataset.build||'').trim();
+        renderBuildStamp();
+        if(publishedBuild&&frameBuild&&publishedBuild!==frameBuild){
+          status.textContent='表示版が一致していません。公開更新後に再読み込みしてください。';
+          return;
+        }
         var active=doc.documentElement.dataset.companyPageIndex;
         var warning=doc.getElementById('disaster-overlay');
         if(active!==String(current)){
