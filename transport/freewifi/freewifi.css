@@ -2407,14 +2407,18 @@ html.company-pc body.freewifi-tv #bus-rows.freewifi-bus-grouped .freewifi-bus-gr
 body.freewifi-tv .company-pc-version{display:none}
 html.company-pc body.freewifi-tv .company-pc-version{
   display:block;
-  color:#93b2c7;
+  color:#c6dfef;
   font-size:11px;
   font-weight:800;
   line-height:1.15;
   letter-spacing:.02em;
   white-space:nowrap;
   text-align:right;
-  margin-top:3px;
+  margin-top:0;
+  /* Keep the existing build label legible above the shift/cinema panel. */
+  position:relative;
+  top:-10px;
+  z-index:80;
 }
 
 /* 2026-10-11: Never discard later medium-distance/highway services.
