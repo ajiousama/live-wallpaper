@@ -134,8 +134,33 @@
       transform: translateY(-50%) !important;
     }
   </style>
+  <!-- Workplace test control: outside the zoomed wall and its clipped header.
+       Keep this visible even with stale external CSS or an embedded Lively view. -->
+  <style id="workplace-test-entry-style">
+    body.freewifi-tv #company-pc-test-toggle{display:none}
+    html.company-pc body.freewifi-tv #company-pc-test-toggle{
+      display:flex!important;position:fixed!important;top:12px!important;
+      right:16px!important;bottom:auto!important;left:auto!important;
+      z-index:2147483000!important;align-items:center!important;
+      justify-content:center!important;gap:7px!important;
+      padding:9px 17px!important;margin:0!important;
+      min-width:150px!important;min-height:38px!important;
+      background:#19384e!important;border:2px solid #ffc663!important;
+      border-radius:9px!important;color:#fff!important;
+      font:900 15px/1.15 'Yu Gothic','Meiryo',sans-serif!important;
+      letter-spacing:0!important;white-space:nowrap!important;
+      opacity:1!important;visibility:visible!important;
+      box-shadow:0 3px 14px rgba(0,0,0,.65)!important;
+      cursor:pointer!important;pointer-events:auto!important;
+      transform:none!important;zoom:1!important;
+    }
+    html.company-pc body.freewifi-tv #company-pc-test-toggle:focus-visible{
+      outline:3px solid #fff!important;outline-offset:3px!important;
+    }
+  </style>
 </head>
 <body class="freewifi-tv">
+  <button type="button" id="company-pc-test-toggle" aria-label="職場壁紙のテストモードを起動">🧪 テストモード</button>
   <main id="wall" aria-label="松山総合交通ダッシュボード">
     <header class="hero">
       <div class="hero-left transport-hero-title">
@@ -164,7 +189,7 @@
         <div class="date" id="date-label">0000.00.00 月</div>
         <div class="clock" id="clock-label">00:00<span>:00</span></div>
         <div class="tz">JAPAN STANDARD TIME</div>
-        <button type="button" id="company-pc-test-toggle" class="company-pc-version" aria-label="表示版 __BUILD_ID__・テストモードを開く" title="クリックで職場壁紙のテストモードへ">表示版 __BUILD_ID__ <span class="company-pc-test-action">[テスト]</span></button>
+        <div class="company-pc-version" aria-label="公開版">表示版 __BUILD_ID__</div>
       </div>
     </header>
 
