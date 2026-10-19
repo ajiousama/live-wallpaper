@@ -5335,10 +5335,26 @@
       return [`<span class="ferry-normal">${text.replace(/&/g,"&amp;").replace(/</g,"&lt;")}</span>`];
     });
   }
+  function tobushimaTimetableTickerItems(now=japanNow()) {
+    const rows=recordsForDay('port',now.iso)
+      .filter(r=>r.source==='imabari_tobishima' && r.port==='今治港')
+      .sort((a,b)=>toMinutes(a.time)-toMinutes(b.time));
+    const r=rows.find(r=>{
+      const calls=portDepartureCalls(r);
+      const last=calls.length?calls[calls.length-1][1]:r.time;
+      return now.minutes<=toMinutes(last);
+    });
+    if(!r)return [];
+    const calls=portDepartureCalls(r).filter(c=>Array.isArray(c)&&c[0]&&/^\d{2}:\d{2}$/.test(String(c[1]||'')));
+    if(!calls.length)return [];
+    const text=`今治市営旅客船 とびしま｜今治 ${r.time}発 → ${calls.map(([port,time])=>`${String(port).replace(/港$/,'')} ${time}着予定`).join(' → ')}（時刻表予定）`;
+    return [`<span class="ferry-normal">${text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</span>`];
+  }
   function ferryTickerItems(now=japanNow()) {
     const rows=slowLive.ferry?.items; const items=[];
     if(Array.isArray(rows)&&rows.length){rows.forEach(x=>{const st=String(x.status||'');const cls=/欠航|休航/.test(st)?'ferry-cancel':/減便|一部/.test(st)?'ferry-reduced':'ferry-normal';items.push(`<span class="${cls}">フェリーLIVE｜${x.name}｜${st}</span>`);});}
     items.unshift(...nakajimaTimetableTickerItems(now));
+    items.unshift(...tobushimaTimetableTickerItems(now));
     items.unshift(...specialVesselEventNotices(now));
     items.unshift(...berthedCruiseNotices(now));
     if(!items.length)items.push('フェリーLIVE｜公式運航情報を取得中');
