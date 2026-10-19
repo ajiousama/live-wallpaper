@@ -134,17 +134,17 @@
       transform: translateY(-50%) !important;
     }
   </style>
-  <!-- Workplace test control: outside the zoomed wall and its clipped header.
-       Keep this visible even with stale external CSS or an embedded Lively view. -->
+  <!-- Workplace test control lives INSIDE #wall, never on top of desktop icons.
+       Keep the controls separate from the clock/build stamp. -->
   <style id="workplace-test-entry-style">
     body.freewifi-tv #company-pc-test-toggle{display:none}
-    html.company-pc body.freewifi-tv #company-pc-test-toggle{
-      display:flex!important;position:fixed!important;top:12px!important;
-      right:16px!important;bottom:auto!important;left:auto!important;
-      z-index:2147483000!important;align-items:center!important;
+    html.company-pc body.freewifi-tv #wall > #company-pc-test-toggle{
+      display:flex!important;position:absolute!important;top:auto!important;
+      right:14px!important;bottom:12px!important;left:auto!important;
+      z-index:1001000!important;align-items:center!important;
       justify-content:center!important;gap:7px!important;
-      padding:9px 17px!important;margin:0!important;
-      min-width:150px!important;min-height:38px!important;
+      padding:9px 13px!important;margin:0!important;
+      min-width:132px!important;min-height:40px!important;
       background:#19384e!important;border:2px solid #ffc663!important;
       border-radius:9px!important;color:#fff!important;
       font:900 15px/1.15 'Yu Gothic','Meiryo',sans-serif!important;
@@ -154,14 +154,14 @@
       cursor:pointer!important;pointer-events:auto!important;
       transform:none!important;zoom:1!important;
     }
-    html.company-pc body.freewifi-tv #company-pc-test-toggle:focus-visible{
+    html.company-pc body.freewifi-tv #wall > #company-pc-test-toggle:focus-visible{
       outline:3px solid #fff!important;outline-offset:3px!important;
     }
   </style>
 </head>
 <body class="freewifi-tv">
-  <button type="button" id="company-pc-test-toggle" aria-label="職場壁紙のテストモードを起動">🧪 テストモード</button>
   <main id="wall" aria-label="松山総合交通ダッシュボード">
+    <button type="button" id="company-pc-test-toggle" aria-label="職場壁紙のテストモードを起動">🧪 テストモード</button>
     <header class="hero">
       <div class="hero-left transport-hero-title">
         <div class="eyebrow">EHIME ・ JAPAN ・ TRANSPORT DASHBOARD</div>
