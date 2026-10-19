@@ -78,7 +78,11 @@
     }
   });
   window.MATSUYAMA_TEST_CLOCK=workplaceTestClock;
-  let testDisasterKind = workplaceTestEnabled && clockQuery.get('disasterTest')==='1' ? 'eew' : '';
+  const requestedTestDisasterKind=clockQuery.get('disasterKind')||'';
+  let testDisasterKind = workplaceTestEnabled
+    ? (['eew','tsunami','weather','summary','all'].includes(requestedTestDisasterKind)
+        ? requestedTestDisasterKind
+        : (clockQuery.get('disasterTest')==='1'?'eew':'')) : '';
   let testDisasterArrivalMs = effectiveClockMs()+18000;
   const CURRENT_BUILD = document.documentElement.dataset.build || '';
   const DEPLOY_CHECK_MS = document.documentElement.classList.contains('company-pc') ? 10000 : 60000;
