@@ -28,6 +28,8 @@
   .danger[aria-pressed="true"] { background:#983b2a; border-color:#ffc16b; }
   .safe { background:#205448; border-color:#409b86; text-align:center; margin-top:6px; }
   .status { font-size:12px; margin-top:10px; padding:8px; background:#102234; border-radius:5px; color:#aee5ff; }
+  .test-datetime,.test-speed,.disaster-kind{width:100%;min-width:0;padding:8px;margin:4px 0;border:1px solid #6998b4;border-radius:5px;background:#f6fbff;color:#0c1926;font:800 14px sans-serif;}
+  .clock-note{font-size:12px;line-height:1.35;color:#b8ecff;margin:4px 0 8px;}
   .build-stamp { margin:8px 0 11px; padding:9px; background:#112b3a; border:1px solid #42677d; border-radius:6px; color:#dff2ff; font:700 12px/1.65 monospace; white-space:pre-line; overflow-wrap:anywhere; }
   .build-stamp.is-mismatch { color:#ffe6b2; border-color:#e7a557; background:#382a1c; }
   .build-stamp.is-match { color:#b4f4d4; border-color:#438b74; }
@@ -52,16 +54,31 @@
   <div id="build-stamp" class="build-stamp" aria-live="polite">表示版 確認中…</div>
   <p class="warning">本番の壁紙とは別のプレビューです。訓練表示を実際の災害と間違えないでください。</p>
   <p class="hint">本番と同じ表示エンジンで確認。<strong>自動ページ切替は停止</strong>し、画面を直接指定できます。</p>
+  <div class="sub">日時シミュレーション（日本時間）</div>
+  <input type="datetime-local" step="60" class="test-datetime" id="test-datetime" aria-label="指定する日時（日本時間）">
+  <select class="test-speed" id="test-speed" aria-label="仮日時の進行速度">
+    <option value="0">時刻を停止</option>
+    <option value="1">実時間と同じ速さ</option>
+    <option value="60">60倍速（1秒で1分）</option>
+    <option value="3600">3600倍速（1秒で1時間）</option>
+  </select>
+  <div class="pair"><button id="clock-apply" type="button">指定日時を反映</button><button id="clock-reset" type="button">実時間へ戻す</button></div>
+  <div class="pair"><button id="clock-minus-day" type="button">−1日</button><button id="clock-plus-day" type="button">＋1日</button></div>
+  <div class="pair"><button id="clock-minus-hour" type="button">−1時間</button><button id="clock-plus-hour" type="button">＋1時間</button></div>
+  <p class="clock-note" id="test-clock-note">時刻シミュレーションは画面内だけに適用します。</p>
+  <div class="sub">災害画面の表示・警報音テスト</div>
+  <select id="disaster-kind" class="disaster-kind" aria-label="訓練画面の種類">
+    <option value="eew">緊急地震速報</option><option value="tsunami">津波警報</option><option value="weather">気象警報</option><option value="summary">地震情報</option><option value="all">全種類を20秒ずつ表示</option>
+  </select>
+  <button type="button" class="danger" id="disaster" aria-pressed="false">⚠ 緊急モードを表示する</button>
+  <button type="button" class="safe" id="normal" hidden>✓ 緊急モードを終了する</button>
+  <p class="hint">選択した種類の<strong>訓練用データ</strong>を表示します。音声は画面内のボタンを自分で押した時だけ再生します。既存の実音MP3を使用します。</p>
   <div class="sub">表示したい画面を選択</div>
   <div class="pages" id="pages"></div>
   <div class="pair">
     <button id="previous" type="button">◀ 前の画面</button>
     <button id="next" type="button">次の画面 ▶</button>
   </div>
-  <div class="sub">災害画面の表示・警報音テスト</div>
-  <button type="button" class="danger" id="disaster" aria-pressed="false">⚠ 緊急モードを表示する</button>
-  <button type="button" class="safe" id="normal" hidden>✓ 緊急モードを終了する</button>
-  <p class="hint">緊急モードには地震・津波・気象警報の<strong>訓練用データ</strong>を表示します。音声は画面内のボタンを自分で押した時だけ再生します。既存の実音MP3を使用します。</p>
   <div class="status" id="status" role="status" aria-live="polite">準備中…</div>
   <p class="hint">元の職場壁紙には切り替え設定を保存しません。ページを閉じれば終了です。</p>
   <a class="action" href="../freewifi/?pc=1" target="_blank" rel="noopener noreferrer">通常の職場用壁紙を別タブで開く ↗</a>
@@ -85,6 +102,60 @@
     '10　勤務予定・本日／翌日'
   ];
   var current=0, disaster=false;
+  var virtualMs=null,virtualStartedAt=Date.now(),virtualSpeed=0;
+  var datetimeInput=document.getElementById('test-datetime');
+  var speedInput=document.getElementById('test-speed');
+  var disasterKindInput=document.getElementById('disaster-kind');
+  var clockNote=document.getElementById('test-clock-note');
+  function virtualNowMs(){
+    return virtualMs===null?Date.now():virtualMs+(Date.now()-virtualStartedAt)*virtualSpeed;
+  }
+  function jstInput(ms){
+    var d=new Date(ms+32400000);
+    var pad=n=>String(n).padStart(2,'0');
+    return d.getUTCFullYear()+'-'+pad(d.getUTCMonth()+1)+'-'+pad(d.getUTCDate())+
+      'T'+pad(d.getUTCHours())+':'+pad(d.getUTCMinutes());
+  }
+  function timeNote(){
+    clockNote.textContent='模擬日時：'+jstInput(virtualNowMs()).replace('T',' ')+
+      (virtualMs===null?'（実時間）':'（'+virtualSpeed+'倍速）')+
+      ' ／ PC本体の時計は変更しません';
+  }
+  function setVirtualFromInput(){
+    var input=String(datetimeInput.value||'');
+    if(!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(input))return;
+    var ms=Date.parse(input+':00+09:00');
+    if(!Number.isFinite(ms)||jstInput(ms)!==input)return;
+    virtualMs=ms;virtualStartedAt=Date.now();virtualSpeed=Number(speedInput.value);
+    timeNote();refresh();
+  }
+  function shiftVirtual(minutes){
+    virtualMs=virtualNowMs()+minutes*60000;
+    virtualStartedAt=Date.now();virtualSpeed=Number(speedInput.value);
+    datetimeInput.value=jstInput(virtualMs);
+    timeNote();refresh();
+  }
+  datetimeInput.value=jstInput(Date.now());
+  speedInput.value='0';
+  document.getElementById('clock-apply').addEventListener('click',setVirtualFromInput);
+  document.getElementById('clock-reset').addEventListener('click',function(){
+    virtualMs=null;virtualStartedAt=Date.now();virtualSpeed=0;
+    speedInput.value='0';datetimeInput.value=jstInput(Date.now());
+    timeNote();refresh();
+  });
+  [['clock-minus-day',-1440],['clock-plus-day',1440],['clock-minus-hour',-60],['clock-plus-hour',60]]
+    .forEach(function(entry){
+      document.getElementById(entry[0]).addEventListener('click',function(){shiftVirtual(entry[1]);});
+    });
+  speedInput.addEventListener('change',function(){
+    if(virtualMs!==null){
+      virtualMs=virtualNowMs();virtualStartedAt=Date.now();virtualSpeed=Number(speedInput.value);
+      datetimeInput.value=jstInput(virtualMs);timeNote();refresh();
+    }
+  });
+  disasterKindInput.addEventListener('change',function(){if(disaster)refresh();});
+  timeNote();setInterval(timeNote,1000);
+
   var frame=document.getElementById('preview');
   var pages=document.getElementById('pages');
   var status=document.getElementById('status');
@@ -137,7 +208,14 @@
     url.searchParams.set('test','1');
     url.searchParams.set('testShell','1'); // dedicated outer panel already exists
     url.searchParams.set('testPage',String(current));
-    if(disaster) url.searchParams.set('disasterTest','1');
+    if(virtualMs!==null){
+      url.searchParams.set('testAt',jstInput(virtualNowMs()));
+      url.searchParams.set('testSpeed',String(virtualSpeed));
+    }
+    if(disaster){
+      url.searchParams.set('disasterTest','1');
+      url.searchParams.set('disasterKind',disasterKindInput.value);
+    }
     status.textContent=(disaster?'災害訓練表示':'画面切替')+'を読み込み中…';
     syncButtons();
     frameBuild='';
