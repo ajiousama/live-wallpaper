@@ -2421,6 +2421,33 @@ html.company-pc body.freewifi-tv .company-pc-version{
   z-index:80;
 }
 
+/* Live workplace entry point: show test controls without changing the
+   automatic 16-character build stamp or the existing wallpaper geometry. */
+html.company-pc body.freewifi-tv button.company-pc-version{
+  appearance:none;
+  -webkit-appearance:none;
+  background:transparent!important;
+  border:0!important;
+  padding:0!important;
+  margin-left:auto;
+  font-family:inherit;
+  cursor:pointer;
+  user-select:none;
+  text-align:right;
+  max-width:100%;
+}
+html.company-pc body.freewifi-tv .company-pc-test-action{
+  color:#ffe1a1;
+  font-weight:950;
+}
+html.company-pc body.freewifi-tv button.company-pc-version:focus-visible{
+  outline:2px solid #ffe1a1;
+  outline-offset:3px;
+}
+html.company-pc body.freewifi-tv button.company-pc-version:disabled{
+  cursor:default;
+}
+
 /* 2026-10-11: Never discard later medium-distance/highway services.
    The four/five-row grids are viewports, not record-count limits.
    Each group can scroll independently through chronological departures. */
