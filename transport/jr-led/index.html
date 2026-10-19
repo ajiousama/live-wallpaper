@@ -139,11 +139,22 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
     var m=String(v||'').match(/^([01]?\d|2[0-3]):([0-5]\d)$/);
     return m?Number(m[1])*60+Number(m[2]):NaN;
   }
+  // Use the parent workplace test clock only during explicit simulations.
+  function ledTestClock(){
+    try{
+      var ctrl=window.parent.MATSUYAMA_TEST_CLOCK;
+      return ctrl&&ctrl.enabled&&ctrl.hasOverride()?ctrl:null;
+    }catch(e){return null;}
+  }
+  function ledNow(){
+    var ctrl=ledTestClock();
+    return ctrl?new Date(ctrl.nowMs()):new Date();
+  }
   function jst(){
     var p={};
     new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Tokyo',year:'numeric',
       month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',
-      hourCycle:'h23'}).formatToParts(new Date()).forEach(function(x){p[x.type]=x.value;});
+      hourCycle:'h23'}).formatToParts(ledNow()).forEach(function(x){p[x.type]=x.value;});
     var iso=p.year+'-'+p.month+'-'+p.day;
     return {iso:iso,minutes:Number(p.hour)*60+Number(p.minute),seconds:Number(p.second),
       dow:new Date(iso+'T12:00:00+09:00').getDay(),clock:p.hour+':'+p.minute+':'+p.second};
@@ -158,6 +169,7 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
     return Object.assign({},r,{time:t});
   }
   function readMovements(n){
+    if(ledTestClock())return []; // Real movements cannot be replayed as simulated movements.
     var src=movements[direction];
     if(src.iso!==n.iso)return [];
     var seen=new Set();
@@ -248,6 +260,7 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
     return box;
   }
   function exactRoute(row,dest,trainNumber,n){
+    if(ledTestClock())return null;
     if(live.iso!==n.iso||Date.now()-live.at>90000)return null;
     var normal=function(v){return String(v||'').trim().replace(/駅$/,'');};
     var candidates=live.departures.filter(function(v){
@@ -400,7 +413,7 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
   }
   function updateAlerts(n,rows){
     var alert=null;
-    if(live.iso===n.iso&&Date.now()-live.at<=90000){
+    if(!ledTestClock()&&live.iso===n.iso&&Date.now()-live.at<=90000){
       alert=live.arrivals.filter(function(x){
         var arr=timeNumber(x.arrival),delay=Number(x.delayMinutes)||0;
         var secs=(arr+delay)*60-n.minutes*60-n.seconds;
