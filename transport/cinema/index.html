@@ -137,6 +137,13 @@ const venues=[
   {id:"niihama",label:"TOHO新居浜",color:"#ffbd8c"}
 ];
 const JST=32400000,DURATION=30000,PAGE_MS=7500,SCROLL_SPEED=34;
+// Cinema time follows the parent workplace virtual clock while testing.
+// Showtime freshness checks and official source timestamps remain real.
+function cinemaTestClock(){
+ try{const c=window.parent.MATSUYAMA_TEST_CLOCK;
+     return c?.enabled&&c.hasOverride?.()?c:null;}catch(e){return null;}
+}
+const cinemaNowMs=()=>cinemaTestClock()?.nowMs()??Date.now();
 const two=n=>String(n).padStart(2,"0");
 const dateJst=ms=>{const d=new Date(ms+JST);return d.getUTCFullYear()+"-"+two(d.getUTCMonth()+1)+"-"+two(d.getUTCDate())};
 const startMs=(date,time)=>Date.parse(date+"T"+time+":00+09:00");
@@ -293,7 +300,7 @@ function renderPage(force=false){
  requestAnimationFrame(measure);
 }
 function render(){
- const now=Date.now(),next=makeGroups(now);
+ const now=cinemaNowMs(),next=makeGroups(now);
  const sig=JSON.stringify([next.date,next.items.map(g=>[g.title,g.priority,...g.sessions.map(x=>x.time+x.venue.id)])]);
  const size=rowsPerPage(),changed=sig!==signature||size!==pageSize;
  if(changed){groups=next.items;activeDate=next.date;signature=sig;pageSize=size;displayed=-1;manualPage=null;}
@@ -326,7 +333,7 @@ async function load(){
 }
 function tick(nowPerf){
  renderPage();
- const now=Date.now();
+ const now=cinemaNowMs();
  for(const p of pills){const left=Number(p.dataset.start)-now;p.classList.toggle("blink",left>0&&left<=180000);}
  for(const t of tickers){
    if(!t.overflow||!t.width)continue;
@@ -373,6 +380,7 @@ window.addEventListener("message",e=>{
 window.addEventListener("resize",()=>{render();requestAnimationFrame(measure)});
 setInterval(load,5*60000);
 setInterval(render,60000);
+setInterval(()=>{if(cinemaTestClock())render();},1000);
 load();requestAnimationFrame(tick);
 })();
 </script></body></html>
