@@ -5306,9 +5306,39 @@
         && now.minutes<toMinutes(e.end))
       .map(e=>'<span class="special-vessel-event">'+e.text+'</span>');
   }
+  function nakajimaTimetableTickerItems(now=japanNow()) {
+    // Published schedule only; no inferred times. Include both east and west sailings.
+    const rows=recordsForDay('port',now.iso)
+      .filter(r=>String(r.port||'')==='三津浜港' &&
+        (/中島汽船/.test(String(r.service||'')) || /^nakajima_/.test(String(r.source||''))))
+      .filter(r=>Array.isArray(portDepartureCalls(r)) && portDepartureCalls(r).length);
+    const nextByRoute=new Map();
+    for(const r of rows){
+      const calls=portDepartureCalls(r);
+      const departure=toMinutes(r.time);
+      const end=toMinutes(String(calls[calls.length-1][1]||''));
+      // Show current voyage and the next departure, not completed voyages.
+      if(!Number.isFinite(departure) || !Number.isFinite(end) ||
+         now.minutes>Math.max(departure,end))continue;
+      const route=/西線|西便|nakajima_west/.test(String(r.service||'')+' '+String(r.source||''))?'西便':'東便';
+      const prev=nextByRoute.get(route);
+      if(!prev || departure<toMinutes(prev.time))nextByRoute.set(route,r);
+    }
+    return ['東便','西便'].flatMap(route=>{
+      const r=nextByRoute.get(route);
+      if(!r)return [];
+      const stops=portDepartureCalls(r)
+        .filter(c=>Array.isArray(c) && c[0] && /^\\d{2}:\\d{2}$/.test(String(c[1]||'')))
+        .map(([name,time])=>`${String(name).replace(/港$/,'')} ${time}着予定`);
+      if(!stops.length)return [];
+      const text=`中島汽船 ${route}｜三津浜 ${r.time}発 → ${stops.join(' → ')}（時刻表予定）`;
+      return [`<span class="ferry-normal">${esc(text)}</span>`];
+    });
+  }
   function ferryTickerItems(now=japanNow()) {
     const rows=slowLive.ferry?.items; const items=[];
     if(Array.isArray(rows)&&rows.length){rows.forEach(x=>{const st=String(x.status||'');const cls=/欠航|休航/.test(st)?'ferry-cancel':/減便|一部/.test(st)?'ferry-reduced':'ferry-normal';items.push(`<span class="${cls}">フェリーLIVE｜${x.name}｜${st}</span>`);});}
+    items.unshift(...nakajimaTimetableTickerItems(now));
     items.unshift(...specialVesselEventNotices(now));
     items.unshift(...berthedCruiseNotices(now));
     if(!items.length)items.push('フェリーLIVE｜公式運航情報を取得中');
