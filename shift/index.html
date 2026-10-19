@@ -64,7 +64,16 @@ function dateAdd(iso,n){const p=iso.split('-').map(Number);return new Date(Date.
 function dow(iso){return new Date(iso+'T12:00:00Z').getUTCDay()}
 function dateLabel(iso){const p=iso.split('-').map(Number);return p[1]+'/'+p[2]+'（'+weekdays[dow(iso)]+'）'}
 function part(iso){const p=iso.split('-').map(Number);return p[1]+'/'+p[2]}
-function shiftToday(){const p={};fmt.formatToParts(new Date()).forEach(x=>p[x.type]=x.value);const day=p.year+'-'+p.month+'-'+p.day;return Number(p.hour)*60+Number(p.minute)<510?dateAdd(day,-1):day}
+function shiftToday(){
+ const p={};
+ let current=new Date();
+ // Test only: the parent wallpaper defines the virtual JST clock.
+ try{const clock=window.parent.MATSUYAMA_TEST_CLOCK;
+     if(clock?.enabled&&clock?.hasOverride?.())current=new Date(clock.nowMs());}catch(e){}
+ fmt.formatToParts(current).forEach(x=>p[x.type]=x.value);
+ const day=p.year+'-'+p.month+'-'+p.day;
+ return Number(p.hour)*60+Number(p.minute)<510?dateAdd(day,-1):day;
+}
 function staff(name,full){const x=(data.people||{})[name];const e=document.createElement('span');e.className=full?'name':'tile';e.textContent=x?(full?x.full:name):name;e.style.backgroundColor=x?x.color:'#eef0f2';e.style.color=x?x.text:'#111';return e}
 function renderCalendar(today,tomorrow){
  const el=$('calendar');el.replaceChildren();
