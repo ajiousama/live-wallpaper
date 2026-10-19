@@ -5331,17 +5331,29 @@
       const origin=direction==='到着'?String(r.origin||'出発港'):String(r.port||'出発港');
       const start=String(r.originDepartureTime||r.time);
       let route=origin.replace(/港$/,'')+' '+start+'発';
+      let estimated=false;
       if(namedStops.length){
         route+=' → '+namedStops.map(([p,t])=>String(p).replace(/港$/,'')+' '+t+'着予定').join(' → ');
       }else{
         const dest=String(r.dest||r.arrivalPort||r.port||'到着港').replace(/港$/,'');
+        const via=/土生・生名・弓削・佐島・岩城・木浦・友浦経由/.test(viaText)
+          ? ['生名','弓削','佐島','岩城','木浦','友浦'] : /呉経由/.test(viaText)?['呉'] : [];
+        const originMin=toMinutes(start),arrivalMin=toMinutes(r.time);
+        const duration=arrivalMin-originMin;
+        if(direction==='到着' && via.length && Number.isFinite(duration) && duration>0 && duration<=720){
+          const clock=m=>String(Math.floor(m/60)%24).padStart(2,'0')+':'+String(m%60).padStart(2,'0');
+          via.forEach((p,i)=>{
+            route+=' → '+p+' '+clock(originMin+Math.round(duration*(i+1)/(via.length+1)))+'頃着';
+          });
+          estimated=true;
+        }
         route+=' → '+dest+' '+r.time+'着予定';
-        route+='（途中寄港時刻は未確認）';
+        if(!estimated)route+='（途中寄港時刻は未確認）';
       }
       const key=[r.id,r.time,direction].join('|');
       if(seen.has(key))return [];
       seen.add(key);
-      const text=label+' '+direction+'便｜'+route+'（時刻表予定）';
+      const text=label+' '+direction+'便｜'+route+(estimated?'（時刻表推定）':'（時刻表予定）');
       return ['<span class="ferry-normal">'+text.replace(/&/g,'&amp;').replace(/</g,'&lt;')+'</span>'];
     });
   }
