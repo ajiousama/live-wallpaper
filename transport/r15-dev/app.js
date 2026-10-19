@@ -257,7 +257,7 @@
         if((r.kind==='limited')!==limited)return false;
         if(limited){
           const label=railLiveTrainLabel(x);
-          if(label.kind!=='limited'||label.service!==r.service)return false;
+          if(label.kind!=='limited'||!railScheduledServiceMatches(label.service,r.service))return false;
         }
         return true;
       });
@@ -1314,10 +1314,28 @@
             if(String(x.direction||'')!==correctedDirection ||
                padTime(x.departure||'')!==padTime(r.time||''))return false;
             const named=railLiveTrainLabel(x);
-            if(r.kind==='limited')return named.kind==='limited' && named.service===String(r.service||'');
+            if(r.kind==='limited')return named.kind==='limited' &&
+              railScheduledServiceMatches(named.service,r.service);
+            if(r.kind==='sightseeing'){
+              // Iyo Nada Monogatari entries are classed as local in the
+              // operating diagram. Only its verified train numbers/destination
+              // may supply a vehicle image; do not repurpose regular locals.
+              return r.service==='伊予灘ものがたり' &&
+                /^(?:8091|8093|9093)D$/i.test(String(x.trainNum||'')) &&
+                cleanStation(x.destination)===cleanStation(r.dest);
+            }
             return r.kind==='local' && named.kind==='local';
           });
-          const iconMatch=iconMatches.length===1?iconMatches[0]:null;
+          const identicalSightseeingImages=r.kind==='sightseeing' &&
+            iconMatches.length>1 && iconMatches.every(x=>
+              x.vehicleImageNorth && x.vehicleImageSouth &&
+              x.vehicleImageNorth===iconMatches[0].vehicleImageNorth &&
+              x.vehicleImageSouth===iconMatches[0].vehicleImageSouth);
+          // 8093D/9093D both represent the same Iyo-Nada picture on this
+          // timetable. Share their unanimously identical vehicle graphic
+          // only; do NOT infer a unique train identity or current position.
+          const iconMatch=iconMatches.length===1 || identicalSightseeingImages
+            ? iconMatches[0] : null;
           return { ...r, direction: correctedDirection, minutes: toMinutes(r.time), displayIso,
             // Image-only evidence: retain the existing timetable-only flag
             // unless the independent live-position matcher confirms position.
@@ -2264,8 +2282,8 @@
       ? matches.filter(x=>String(x.trainNum||'')===numbered)
       : [];
     if(selected.length!==1 && record.kind==='limited') {
-      selected=matches.filter(x=>railLiveTrainLabel(x).service===
-        String(record.service||''));
+      selected=matches.filter(x=>railScheduledServiceMatches(
+        railLiveTrainLabel(x).service, record.service));
     }
     if(selected.length!==1 && matches.length===1)selected=matches;
     if(selected.length!==1)return []; // Avoid ambiguous same-minute services.
@@ -3106,6 +3124,18 @@
     if(kind==='extra') return '<span class="rail-kind-badge rail-kind-extra rail-event-extra">臨時列車</span>';
     if(kind==='unknown') return ''; // Unresolved service: show a neutral train illustration instead.
     return '<span class="rail-kind-badge rail-kind-local">普通</span>';
+  }
+
+  // Compare the scheduled train identity with the unofficial operation data.
+  // The departure table stores the main Shiokaze name, while the operational
+  // label includes the correctly numbered coupled Ishizuchi service.
+  // Only strip that verified matching partner; never match another train.
+  function railScheduledServiceMatches(operationService='',scheduledService='') {
+    const live=String(operationService||'').trim();
+    const planned=String(scheduledService||'').trim();
+    if(live===planned)return true;
+    const pair=live.match(/^しおかぜ(\d+)号・いしづち(\d+)号$/);
+    return !!pair && pair[1]===pair[2] && planned==='しおかぜ'+pair[1]+'号';
   }
 
   function railLiveTrainLabel(x) {
