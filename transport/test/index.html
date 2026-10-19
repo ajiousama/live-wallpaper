@@ -135,6 +135,7 @@
     var url=new URL('../freewifi/',location.href);
     url.searchParams.set('pc','1');
     url.searchParams.set('test','1');
+    url.searchParams.set('testShell','1'); // dedicated outer panel already exists
     url.searchParams.set('testPage',String(current));
     if(disaster) url.searchParams.set('disasterTest','1');
     status.textContent=(disaster?'災害訓練表示':'画面切替')+'を読み込み中…';
