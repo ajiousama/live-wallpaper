@@ -216,10 +216,13 @@
   // must still appear when test=1 is selected from the actual wallpaper.
   const dedicatedTestShell = new URLSearchParams(location.search).get('testShell') === '1';
   if(testMode && !dedicatedTestShell){
+    const wall=document.getElementById('wall');
     const panel=document.createElement('aside');
     panel.id='workplace-test-panel';
     panel.setAttribute('aria-label','職場壁紙テスト操作');
-    panel.style.cssText='position:fixed;z-index:99999;left:12px;top:12px;max-width:340px;max-height:90vh;overflow:auto;background:#071923;color:white;padding:12px;border:2px solid #ffcf55;border-radius:10px;font:14px sans-serif;box-shadow:0 5px 30px #000b';
+    // The original position:fixed on <body> landed OVER desktop icons in Lively.
+    // Position the tools relative to the real zoomed #wall, not the desktop.
+    panel.style.cssText='position:absolute;z-index:1002000;left:14px;top:90px;width:350px;max-width:calc(100% - 28px);max-height:calc(100% - 112px);overflow:auto;background:#071923;color:white;padding:12px;border:2px solid #ffcf55;border-radius:10px;font:14px sans-serif;box-shadow:0 5px 30px #000b;pointer-events:auto';
     const heading=document.createElement('strong');
     heading.textContent='職場壁紙 TEST MODE（本番データ変更なし）';
     panel.append(heading,document.createElement('hr'));
@@ -238,13 +241,30 @@
       const u=new URL(location.href);
       u.searchParams.delete('test');
       u.searchParams.delete('testPage');
+      u.searchParams.delete('disasterTest');
+      u.searchParams.delete('testShell');
       location.assign(u.href);
+    });
+    const reveal=document.createElement('button');
+    reveal.type='button';
+    reveal.id='workplace-test-panel-reveal';
+    reveal.textContent='☰ テスト操作を表示';
+    reveal.setAttribute('aria-label','テスト操作パネルを再表示');
+    reveal.style.cssText='position:absolute;top:90px;left:14px;z-index:1002000;padding:10px 15px;background:#19384e;color:#fff;border:2px solid #ffcf55;border-radius:8px;display:none;cursor:pointer;pointer-events:auto;font:bold 15px sans-serif';
+    makeButton('操作パネルを隠す',()=>{
+      panel.style.display='none';
+      reveal.style.display='block';
+    });
+    reveal.addEventListener('click',()=>{
+      panel.style.display='block';
+      reveal.style.display='none';
     });
     const note=document.createElement('div');
     note.style.cssText='margin-top:8px;font-size:12px;color:#ffdf92';
     note.textContent='テスト中は手動切替。実際の緊急速報は発信しません。';
     panel.append(note);
-    document.body.append(panel);
+    // Both surfaces belong to #wall, not the OS desktop background.
+    (wall || document.body).append(panel,reveal);
     document.documentElement.dataset.workplaceTestMode='1';
   }
   // Make the live build ID the entry/exit point, without a separate site.
