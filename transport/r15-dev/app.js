@@ -5332,7 +5332,7 @@
         .map(([name,time])=>`${String(name).replace(/港$/,'')} ${time}着予定`);
       if(!stops.length)return [];
       const text=`中島汽船 ${route}｜三津浜 ${r.time}発 → ${stops.join(' → ')}（時刻表予定）`;
-      return [`<span class="ferry-normal">${esc(text)}</span>`];
+      return [`<span class="ferry-normal">${text.replace(/&/g,"&amp;").replace(/</g,"&lt;")}</span>`];
     });
   }
   function ferryTickerItems(now=japanNow()) {
