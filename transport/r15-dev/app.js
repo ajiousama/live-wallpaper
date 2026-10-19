@@ -14,6 +14,72 @@
   const data = window.MATSUYAMA_DATA;
   const $ = (id) => document.getElementById(id);
   const FREEWIFI_TV = document.body.classList.contains('freewifi-tv');
+
+  // A per-view virtual clock. Only enabled by explicit workplace ?test=1.
+  // No system clock, live feeds, browser storage, or normal-wallpaper state is altered.
+  const workplaceTestEnabled = FREEWIFI_TV &&
+    document.documentElement.classList.contains('company-pc') &&
+    new URLSearchParams(location.search).get('test') === '1';
+  const clockQuery = new URLSearchParams(location.search);
+  const realClockNow = () => Date.now();
+  const clockPad = value => String(value).padStart(2,'0');
+  const clockInputFromMs = ms => {
+    const date=new Date(ms+9*3600000);
+    return date.getUTCFullYear()+'-'+clockPad(date.getUTCMonth()+1)+'-'+
+      clockPad(date.getUTCDate())+'T'+clockPad(date.getUTCHours())+':'+
+      clockPad(date.getUTCMinutes());
+  };
+  function parseTestClockInput(raw) {
+    const str=String(raw||'').trim();
+    if(!/^\d{4}-\d{2}-\d{2}T(?:[01]\d|2[0-3]):[0-5]\d$/.test(str))return null;
+    const ms=Date.parse(str+':00+09:00');
+    return Number.isFinite(ms) && clockInputFromMs(ms)===str ? ms : null;
+  }
+  const testClockSpeeds = new Set([0,1,60,3600]);
+  let testClockAnchor = workplaceTestEnabled ? parseTestClockInput(clockQuery.get('testAt')) : null;
+  let testClockRealAnchor = realClockNow();
+  let testClockSpeed = testClockAnchor!==null && testClockSpeeds.has(Number(clockQuery.get('testSpeed')))
+    ? Number(clockQuery.get('testSpeed')) : 0;
+  function effectiveClockMs() {
+    return workplaceTestEnabled && testClockAnchor!==null
+      ? testClockAnchor+(realClockNow()-testClockRealAnchor)*testClockSpeed
+      : realClockNow();
+  }
+  const testClockChanged=()=>window.dispatchEvent(new Event('matsuyama-test-clock-changed'));
+  const workplaceTestClock = Object.freeze({
+    enabled:workplaceTestEnabled,
+    nowMs:effectiveClockMs,
+    hasOverride:()=>workplaceTestEnabled && testClockAnchor!==null,
+    input:()=>clockInputFromMs(effectiveClockMs()),
+    speed:()=>testClockAnchor===null?1:testClockSpeed,
+    set(raw,speed=0){
+      if(!workplaceTestEnabled)return false;
+      const ms=parseTestClockInput(raw),rate=Number(speed);
+      if(ms===null||!testClockSpeeds.has(rate))return false;
+      testClockAnchor=ms;testClockRealAnchor=realClockNow();testClockSpeed=rate;
+      testClockChanged();return true;
+    },
+    step(minutes){
+      if(!workplaceTestEnabled||!Number.isFinite(minutes)||Math.abs(minutes)>525600)return false;
+      testClockAnchor=effectiveClockMs()+Math.round(minutes)*60000;
+      testClockRealAnchor=realClockNow();
+      testClockChanged();return true;
+    },
+    rate(speed){
+      if(!workplaceTestEnabled||!testClockSpeeds.has(Number(speed)))return false;
+      testClockAnchor=effectiveClockMs();
+      testClockRealAnchor=realClockNow();testClockSpeed=Number(speed);
+      testClockChanged();return true;
+    },
+    reset(){
+      if(!workplaceTestEnabled)return false;
+      testClockAnchor=null;testClockRealAnchor=realClockNow();testClockSpeed=0;
+      testClockChanged();return true;
+    }
+  });
+  window.MATSUYAMA_TEST_CLOCK=workplaceTestClock;
+  let testDisasterKind = workplaceTestEnabled && clockQuery.get('disasterTest')==='1' ? 'eew' : '';
+  let testDisasterArrivalMs = effectiveClockMs()+18000;
   const CURRENT_BUILD = document.documentElement.dataset.build || '';
   const DEPLOY_CHECK_MS = document.documentElement.classList.contains('company-pc') ? 10000 : 60000;
 
@@ -87,7 +153,7 @@
   }
 
   function japanNow() {
-    const now = new Date();
+    const now = new Date(effectiveClockMs());
     const jst = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Tokyo' }));
     const y = jst.getFullYear();
     const m = String(jst.getMonth() + 1).padStart(2, '0');
@@ -171,6 +237,7 @@
       Number.isFinite(ts) && age>=-15000 && age<=45000;
   }
   function liveRailPassengerRows(rows,now) {
+    if(workplaceTestClock.hasOverride())return []; // Never label a virtual departure as live.
     if(!jrPositionFeedFresh() || boardDisplayIso('rail',now)!==now.iso) return [];
     const specialNums=new Set((approachLive.ichitsubo?.matsuyamaSpecialTrains||[]).map(x=>String(x.trainNum||'')));
     const active=Array.isArray(approachLive.ichitsubo?.matsuyamaActiveTrains)
@@ -536,6 +603,7 @@
     return ap.arrivals.some(x=>airportOfficialArrivalState(x,now).unfinished)?'pending':'complete';
   }
   function liveFlightRows(now) {
+    if(workplaceTestClock.hasOverride())return null; // Simulated clock uses the published timetable.
     const dep=currentDirection()==='departure';
     if (boardDisplayIso('air', now) !== now.iso) return dep?null:[];
     const live=dep ? slowLive.airport?.departures : slowLive.airport?.arrivals;
@@ -2418,6 +2486,12 @@
   function renderTopLiveAlert(now) {
     const el=$('top-live-alert');
     if(!el)return;
+    if(workplaceTestClock.hasOverride()){
+      el.className='hero-alert top-live-alert';
+      el.replaceChildren();
+      el.dataset.alertClass='';el.dataset.alertHtml='';
+      return;
+    }
 
     let cls='hero-alert top-live-alert';
     let html='';
@@ -5257,7 +5331,7 @@
     const t=String(s||'').trim(); if(!t)return NaN; return Date.parse(t.replace(/\//g,'-').replace(' ','T')+(t.includes('+')?'':'+09:00'));
   }
   function disasterTestData() {
-    return {eew:{active:true,serial:'第3報',issuedAt:'2026/09/27 15:10:00',hypocenter:'豊後水道',magnitude:6.1,depth:40,local:{area:'愛媛県中予',scaleTo:'4',arrivalTime:new Date(Date.now()+18000).toISOString()}},recentEarthquake:{active:true,time:'2026/09/27 15:09:40',hypocenter:'豊後水道',magnitude:6.1,depth:40,maxScale:'5弱',distanceKm:70,ehimeScale:'4',tsunami:'None'},weather:{active:[{name:'レベル4土砂災害危険警報',status:'発表'}],headlineText:'松山市 土砂災害の危険度が高まっています',reportDatetime:'2026-09-27T15:05:00+09:00'},tsunami:{active:true,issuedAt:'2026/09/27 15:10:10',areas:[{name:'愛媛県瀬戸内海沿岸',grade:'Warning',arrivalTime:'まもなく',maxHeight:'3m'}]}};
+    return {eew:{active:true,serial:'第3報',issuedAt:'2026/09/27 15:10:00',hypocenter:'豊後水道',magnitude:6.1,depth:40,local:{area:'愛媛県中予',scaleTo:'4',arrivalTime:new Date(testDisasterArrivalMs).toISOString()}},recentEarthquake:{active:true,time:'2026/09/27 15:09:40',hypocenter:'豊後水道',magnitude:6.1,depth:40,maxScale:'5弱',distanceKm:70,ehimeScale:'4',tsunami:'None'},weather:{active:[{name:'レベル4土砂災害危険警報',status:'発表'}],headlineText:'松山市 土砂災害の危険度が高まっています',reportDatetime:'2026-09-27T15:05:00+09:00'},tsunami:{active:true,issuedAt:'2026/09/27 15:10:10',areas:[{name:'愛媛県瀬戸内海沿岸',grade:'Warning',arrivalTime:'まもなく',maxHeight:'3m'}]}};
   }
 
 
@@ -5467,11 +5541,18 @@
   }
 
   function renderDisaster(now) {
-    const test=new URLSearchParams(location.search).get('disasterTest')==='1'; const d=test?disasterTestData():(disasterLive.data||{});
+    const test=workplaceTestEnabled && !!testDisasterKind;
+    const d=test?disasterTestData():(disasterLive.data||{});
+    if(test && testDisasterKind!=='all'){
+      if(testDisasterKind!=='eew')d.eew=null;
+      if(testDisasterKind!=='tsunami')d.tsunami=null;
+      if(testDisasterKind!=='weather')d.weather=null;
+      if(testDisasterKind!=='summary')d.recentEarthquake=null;
+    }
     const recent=d.recentEarthquake; const recentMs=parseJstClient(recent?.time);
     const recentKey=earthquakeNoticeKey(recent);
     const recentAcknowledged=!test && recentKey && acknowledgedEarthquakeKey()===recentKey;
-    const recentActive=!!recent && !recentAcknowledged && Number.isFinite(recentMs) && Date.now()-recentMs<20*60*1000;
+    const recentActive=test ? testDisasterKind==='summary' : !!recent && !recentAcknowledged && Number.isFinite(recentMs) && Date.now()-recentMs<20*60*1000;
     const weatherActive=Array.isArray(d.weather?.active)&&d.weather.active.length>0; const eewActive=!!(d.eew?.active&&d.eew?.local); const tsunamiActive=!!d.tsunami?.active;
     const active=test||eewActive||tsunamiActive||weatherActive||recentActive; const overlay=$('disaster-overlay'); overlay.hidden=!active;
     if(test) installDisasterPreviewAudioControl(overlay);
@@ -5495,10 +5576,10 @@
       };
     }
     $('disaster-time').textContent=now.time;
-    $('disaster-mainline').textContent=eewActive||test?'緊急地震速報を受信しています':tsunamiActive?'津波情報が発表されています':weatherActive?'松山市に気象警報・注意報が発表されています':'近隣で地震が発生しました';
+    $('disaster-mainline').textContent=test?'【訓練】表示確認中（実際の災害情報ではありません）':eewActive?'緊急地震速報を受信しています':tsunamiActive?'津波情報が発表されています':weatherActive?'松山市に気象警報・注意報が発表されています':'近隣で地震が発生しました';
     $('quake-summary').textContent=recent?`震源 ${recent.hypocenter}　M${recent.magnitude}　深さ ${recent.depth}km　最大震度 ${recent.maxScale}${recent.ehimeScale?`　愛媛 ${recent.ehimeScale}`:''}`:'地震情報を確認中';
     const e=d.eew; $('eew-serial').textContent=e?.serial?`第${String(e.serial).replace(/[^0-9]/g,'')}報`:'—'; $('eew-scale').textContent=e?.local?.scaleTo||e?.local?.scaleFrom||'—';
-    let sec=null; const arr=parseJstClient(e?.local?.arrivalTime); if(Number.isFinite(arr))sec=Math.round((arr-Date.now())/1000); $('eew-countdown').textContent=sec==null?'—':sec>0?`あと ${sec} 秒`:'到達予想時刻';
+    let sec=null; const arr=parseJstClient(e?.local?.arrivalTime); if(Number.isFinite(arr))sec=Math.round((arr-(test?effectiveClockMs():Date.now()))/1000); $('eew-countdown').textContent=sec==null?'—':sec>0?`あと ${sec} 秒`:'到達予想時刻';
     $('eew-detail').textContent=e?`震源地 ${e.hypocenter||'—'}　M${e.magnitude??'—'}　深さ ${e.depth??'—'}km　${e.local?.area||''}`:'現在、緊急地震速報はありません';
     const w=d.weather; $('weather-title').textContent=weatherActive?(w.headlineText||'松山市に警報・注意報発表'):'発表中の警報・注意報はありません'; $('weather-list').textContent=weatherActive?w.active.map(x=>`${x.name||x.code} ${x.status||''}`).join('　'):'—'; $('weather-issued').textContent=`${w?.reportDatetime||''}　松山地方気象台`;
     const t=d.tsunami; const areas=Array.isArray(t?.areas)?t.areas:[]; $('tsunami-grade').textContent=areas[0]?.grade||'—'; $('tsunami-main').textContent=tsunamiActive||test?'愛媛県沿岸の津波情報に注意してください':'現在、愛媛県沿岸への津波警報等はありません'; $('tsunami-detail').textContent=areas.length?areas.map(a=>`${a.name}　${a.maxHeight||''}　${a.arrivalTime||a.condition||''}`).join(' ／ '):'—';
@@ -5512,6 +5593,7 @@
     return `ダイヤ確認 ${formatted}${continuing ? '（継続使用）' : '（要更新）'}`;
   }
   function setupMonthlyUpdatePrompt() {
+    if(workplaceTestEnabled)return; // Never modify real monthly acknowledgement in tests.
     const now = japanNow();
     $('data-status').textContent = verifiedMonthLabel(now);
     const modal = $('update-modal');
@@ -5656,8 +5738,21 @@
     },
     getMode() {
       return state.modeIndex % 2;
-    }
+    },
+    setTestDisaster(kind){
+      if(!workplaceTestEnabled)return false;
+      if(!['','eew','tsunami','weather','summary','all'].includes(kind))return false;
+      testDisasterKind=kind;
+      if(kind==='eew'||kind==='all')testDisasterArrivalMs=effectiveClockMs()+18000;
+      disasterRotationSignature='';
+      renderDisaster(japanNow());
+      return true;
+    },
+    getTestDisaster(){return workplaceTestEnabled?testDisasterKind:'';}
   };
+  if(workplaceTestEnabled){
+    window.addEventListener('matsuyama-test-clock-changed',()=>renderAll());
+  }
 
   // FINAL polling: fast approach 15s / disaster 10s / slower service status 60s.
   Promise.all([loadApproach(),loadSlowLive(),loadDisasterLive()]).then(()=>renderAll());
@@ -5682,7 +5777,15 @@
   let lastArrivalCurfewWindow=japanNow().minutes>=AIRPORT_ARRIVAL_CURFEW_MINUTES;
   let lastAirportArrivalMinute=japanNow().minutes;
   let lastRailBoardMinute=japanNow().time;
-  setInterval(()=>{const now=japanNow();$('date-label').textContent=now.date;$('clock-label').innerHTML=`${now.time}<span>:${now.sec}</span>`;renderDisaster(now);renderTopLiveAlert(now);
+  let lastSimulatedMinute=japanNow().iso+'|'+japanNow().time;
+  setInterval(()=>{const now=japanNow();
+    if(workplaceTestClock.hasOverride()){
+      const virtualMinute=now.iso+'|'+now.time;
+      if(virtualMinute!==lastSimulatedMinute){
+        lastSimulatedMinute=virtualMinute;
+        renderAll();
+      }
+    }$('date-label').textContent=now.date;$('clock-label').innerHTML=`${now.time}<span>:${now.sec}</span>`;renderDisaster(now);renderTopLiveAlert(now);
     const curfewWindow=now.minutes>=AIRPORT_ARRIVAL_CURFEW_MINUTES;
     const arrivalMinuteChanged=now.minutes!==lastAirportArrivalMinute;
     lastAirportArrivalMinute=now.minutes;
