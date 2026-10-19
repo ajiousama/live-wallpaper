@@ -250,8 +250,9 @@
   // Make the live build ID the entry/exit point, without a separate site.
   const versionToggle = document.getElementById('company-pc-test-toggle');
   if(companyPc && versionToggle){
-    const actionLabel = versionToggle.querySelector('.company-pc-test-action');
-    if(actionLabel) actionLabel.textContent = testMode ? (dedicatedTestShell ? '[訓練中]' : '[本番へ]') : '[テスト]';
+    versionToggle.textContent = testMode ? '↩ 通常表示へ' : '🧪 テストモード';
+    versionToggle.setAttribute('aria-label',
+      testMode ? 'テストモードを終了して職場壁紙へ戻る' : '職場壁紙のテストモードを起動');
     versionToggle.title = testMode ? '通常の職場壁紙へ戻る' : 'この職場壁紙でテストモードを開始';
     if(!dedicatedTestShell){
       versionToggle.addEventListener('click',()=>{
@@ -271,7 +272,9 @@
         location.replace(url.href);
       });
     }else{
-      versionToggle.disabled = true;
+      // The dedicated test dashboard already owns the control panel.
+      versionToggle.hidden = true;
+      versionToggle.style.setProperty('display','none','important');
     }
   }
   showPage(initialPage);
