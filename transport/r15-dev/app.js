@@ -191,8 +191,10 @@
     if (r.end && iso > r.end && !staleAirFallback) return false;
     if (Array.isArray(r.exclude) && r.exclude.includes(iso)) return false;
     if (Array.isArray(r.dates) && !r.dates.includes(iso)) return false;
-    if (Array.isArray(r.days)) {
-      const dow = new Date(`${iso}T12:00:00+09:00`).getDay();
+    if (r.board==='port' && !ferryCalendarAllows(r,iso)) return false;
+    if (Array.isArray(r.days) && !['weekday','holiday'].includes(r.ferryCalendar)) {
+      const dow = r.board==='port' ? new Date(iso+'T12:00:00Z').getUTCDay()
+        : new Date(`${iso}T12:00:00+09:00`).getDay();
       if (!r.days.includes(dow)) return false;
     }
     return true;
@@ -208,6 +210,55 @@
   }
   function dayContext(iso) {
     return { iso, dow:new Date(`${iso}T12:00:00+09:00`).getDay() };
+  }
+  // Public-holiday and operator-specific calendars checked 2026-10-21.
+  function ferryHoliday(iso) {
+    return new Set(['2026-01-01','2026-01-12','2026-02-11','2026-02-23','2026-03-20',
+      '2026-04-29','2026-05-03','2026-05-04','2026-05-05','2026-05-06','2026-07-20',
+      '2026-08-11','2026-09-21','2026-09-22','2026-09-23','2026-10-12','2026-11-03','2026-11-23',
+      '2027-01-01','2027-01-11','2027-02-11','2027-02-23','2027-03-21','2027-03-22']).has(iso);
+  }
+  function ferryWeekend(iso) {
+    return [0,6].includes(new Date(iso+'T12:00:00Z').getUTCDay()) || ferryHoliday(iso);
+  }
+  function ferryCalendarAllows(r,iso) {
+    const inward=r.direction==='arrival';
+    const departure=inward?r.originDepartureTime:r.time;
+    // Operator notice 2026-10-14; the entry/exit days have exceptions.
+    if(r.source==='port_highspeed') {
+      let allowed=null;
+      if(iso>='2026-10-31'&&iso<='2026-11-13') {
+        allowed=inward?['07:30','10:50','15:15','18:30']:['09:05','12:25','16:45','20:00'];
+        if(iso==='2026-10-31')allowed.push(...(inward?['09:05']:['07:30','10:50']));
+        if(iso==='2026-11-13')allowed.push(...(inward?['16:45','20:00']:['18:30']));
+      } else if(iso>='2026-11-30'&&iso<='2026-12-05') {
+        allowed=inward?['09:05','12:25','16:45','20:00']:['07:30','10:50','15:15','18:30'];
+        if(iso==='2026-11-30')allowed.push(...(inward?['07:30']:['09:05']));
+        if(iso==='2026-12-05')allowed.push(...(inward?['15:15','18:30']:['16:45','20:00']));
+      }
+      if(allowed&&!allowed.includes(departure))return false;
+    }
+    if(['port','port_cruise_official_in'].includes(r.source)&&iso>='2026-12-01'&&iso<='2026-12-25'&&
+      !ferryWeekend(iso)&&(inward?['08:05','13:40']:['11:00','15:30']).includes(departure))return false;
+    if(r.source==='uwajima_usuki') {
+      const dock=(iso>='2026-11-30'&&iso<='2026-12-09') || (iso>='2027-01-12'&&iso<='2027-01-20');
+      if(dock) {
+        const allowed=inward?['02:40','08:50','14:40','20:40']:['05:50','11:45','17:40','23:50'];
+        if(inward&&iso==='2027-01-12')allowed.push('00:55');
+        if(!inward&&['2026-12-09','2027-01-20'].includes(iso))allowed.push('22:00');
+        if(!allowed.includes(departure))return false;
+      }
+    }
+    if(r.source==='boyo'&&iso>='2026-12-08'&&iso<='2026-12-23'&&
+      (r.calls||[]).some(c=>c[0]==='伊保田港'))return false;
+    const cal=r.ferryCalendar;
+    if(cal==='weekday'||cal==='holiday') {
+      const special=/-(?:08-(?:1[2-6])|12-(?:29|30|31)|01-0[1-4])$/.test(iso);
+      return (ferryWeekend(iso)||special)===(cal==='holiday');
+    }
+    if(cal==='niihama-out' && (ferryHoliday(iso)||ferryHoliday(shiftIso(iso,1))))return false;
+    if(cal==='niihama-in' && (ferryHoliday(iso)||ferryHoliday(shiftIso(iso,-1))))return false;
+    return true;
   }
   function firstServiceMinuteFor(board, iso, predicate) {
     const ctx = dayContext(iso);
@@ -1450,6 +1501,9 @@
             travelMinutes:route.travel,
             direction,noSyntheticArrival:true,
             estimatedArrival:true,
+            calls:[[direction==='arrival'?'高浜港':landing,addMinutes(time,route.travel),'着']],
+            terminalArrivalTime:addMinutes(time,route.travel),
+            timetableReference:'https://gogoshima-ferry.com/timetable_faretable/',timetableChecked:'2026-10-21',
             _gogoshima:true,_gogoshimaDock:dock});
         });
       }
@@ -1463,10 +1517,6 @@
     // Prefecture-published High-Port boarding times: East/West ferry and fast boats.
     // Use the published High-Port time, not the departure at Mitsuhama.
     const highPortDepartures=[
-      ['07:10','大浦港','中島汽船フェリー（東線）'],
-      ['13:15','大浦港','中島汽船フェリー（東線）'],
-      ['16:05','大浦港','中島汽船フェリー（東線）'],
-      ['16:55','西中港','中島汽船フェリー（西線）'],
       ['07:40','神浦港','中島汽船高速船（西線）'],
       ['11:40','神浦港','中島汽船高速船（西線）'],
       ['15:15','神浦港','中島汽船高速船（西線）'],
@@ -1486,27 +1536,33 @@
         .map((call,index)=>({
           ...r,id:`takahama-nakajima-${r.id||r.time}-${index}`,
           source:'nakajima_takahama_call',port:'高浜港',arrivalPort:'高浜港',
-          direction:'arrival',time:padTime(call[1]),origin:'三津浜港',
-          originDepartureTime:r.time,dest:'高浜港',noSyntheticArrival:true,
+          direction:'arrival',time:padTime(call[1]),origin:r.direction==='arrival'?r.origin:'三津浜港',
+          originDepartureTime:r.originDepartureTime||r.time,dest:'高浜港',noSyntheticArrival:true,
+          calls:calls.slice(0,calls.indexOf(call)+1),
           info:`中島汽船・高浜港寄港（${r.dest||'中島方面'}）`,
           _nakajimaTakahama:true
         }));
     });
-    return [...highPortDepartures,...highPortArrivals];
+    const ferryDepartures=recordsForDay('port',iso).filter(r=>r.direction!=='arrival' && /nakajima/.test(r.source||''))
+      .flatMap(r=>{
+        const cs=Array.isArray(r.calls)?r.calls:[],i=cs.findIndex(c=>c[0]==='高浜港');
+        if(i<0)return [];
+        return [{...r,id:'takahama-departure-'+r.id,source:'nakajima_takahama_departure',port:'高浜港',
+          time:cs[i][1],calls:cs.slice(i+1),direction:'departure',info:'中島航路・公式高浜時刻',noSyntheticArrival:true}];
+      });
+    return [...highPortDepartures,...ferryDepartures,...highPortArrivals];
   }
   // Actual inbound Jumbo Ferry sailings from Kobe to Takamatsu.
   // Timetable: https://ferry.co.jp/home/kobe-takamatsu/
   function jumboInboundPortRows(iso) {
-    const dow=new Date(iso+'T12:00:00+09:00').getDay();
-    const weekend=dow===0||dow===6;
+    const weekend=jumboHoliday(iso);
     const runs=weekend
       ? [['01:00','05:15','直行'],['08:15','13:00','小豆島経由'],['11:20','16:05','小豆島経由']]
       : [['01:00','05:15','直行'],['08:15','13:00','小豆島経由'],['13:00','17:45','小豆島経由']];
     // The last Kobe departure of the previous day reaches Takamatsu
     // just after midnight of this arrival-board day.
     const prev=shiftIso(iso,-1);
-    const prevDow=new Date(prev+'T12:00:00+09:00').getDay();
-    const prevWeekend=prevDow===0||prevDow===6;
+    const prevWeekend=jumboHoliday(prev);
     runs.unshift(prevWeekend?['19:20','00:05','小豆島経由']:['19:45','00:00','直行']);
     return runs.map(([departure,arrival,via],i)=>({
       id:`jumbo-kobe-arrival-${iso}-${i}`,board:'port',kind:'ferry',
@@ -1514,7 +1570,26 @@
       port:'高松東港',arrivalPort:'高松東港',direction:'arrival',
       origin:'神戸港',dest:'高松東港',time:arrival,originDepartureTime:departure,
       ...(i===0?{originDepartureDay:'前日'}:{}),
-      info:via,noSyntheticArrival:true,reference:false
+      info:via,noSyntheticArrival:true,reference:false,
+      calls:[...(/小豆島/.test(via)?[['小豆島（坂手）',departure==='08:15'?'11:35':departure==='11:20'?'14:40':departure==='13:00'?'16:20':'22:40','寄港']]:[]),['高松東港',arrival,'着']],
+      timetableReference:'https://ferry.co.jp/home/kobe-takamatsu/',timetableChecked:'2026-10-21'
+    }));
+  }
+  function jumboHoliday(iso) {
+    return ferryWeekend(iso)||['2026-01-02','2026-08-10','2026-08-12','2026-08-13','2026-08-14',
+      '2026-12-28','2026-12-29','2026-12-30','2026-12-31'].includes(iso);
+  }
+  function jumboDeparturePortRows(iso) {
+    const holiday=jumboHoliday(iso);
+    const runs=holiday
+      ? [['01:00','-','05:15'],['06:00','07:15','10:40'],['14:00','15:15','18:40'],['16:30','17:45','21:00']]
+      : [['01:00','-','05:15'],['06:15','07:30','11:00'],['14:00','15:15','18:45'],['19:15','20:30','00:00']];
+    return runs.map(([departure,via,arrival],i)=>({
+      id:'jumbo-takamatsu-dep-'+iso+'-'+i,board:'port',kind:'ferry',source:'jumbo_ferry_reference',
+      service:'ジャンボフェリー',port:'高松東港',dest:'神戸港',time:departure,direction:'departure',
+      calls:[...(via==='-'?[]:[['小豆島（坂手）',via,'寄港']]),['神戸港',arrival,'着']],
+      terminalArrivalTime:arrival,noSyntheticArrival:true,info:via==='-'?'直行':'小豆島（坂手）経由',
+      timetableReference:'https://ferry.co.jp/home/kobe-takamatsu/',timetableChecked:'2026-10-21'
     }));
   }
   // Saga-no-seki -> Misaki, 70 minutes: official scheduled arrivals.
@@ -1546,8 +1621,7 @@
   // Geiyo Kisen published Hab u -> Imabari inbound timetable,
   // 2024-04-01 revision: weekdays and weekends have different morning services.
   function geiyoInboundPortRows(iso) {
-    const date=new Date(iso+'T12:00:00+09:00');
-    const weekend=date.getDay()===0||date.getDay()===6 ||
+    const weekend=ferryWeekend(iso) ||
       /-(?:08-(?:1[2-6])|12-(?:29|30|31)|01-0[1-4])$/.test(iso);
     const runs=weekend
       ? [['07:45','09:05'],['12:20','13:40'],['16:00','17:15'],['18:40','19:55']]
@@ -1558,15 +1632,27 @@
       port:'今治港',arrivalPort:'今治港',direction:'arrival',
       origin:'土生港（因島）',dest:'今治港',time:arrival,
       originDepartureTime:departure,noSyntheticArrival:true,
-      info:'土生・生名・弓削・佐島・岩城・木浦・友浦経由'
+      info:departure==='06:22'?'岩城06:44着・06:51発に乗継（委託便は自転車・荷物不可）':'土生・生名・弓削・佐島・岩城・木浦・友浦経由',
+      calls:(()=>{
+        const clocks={
+          '06:22':['06:27','06:32','06:37','06:44','06:51','07:03','07:18','07:38'],
+          '07:45':['07:52','07:58','08:05','08:12','08:25','08:45','09:05'],
+          '12:20':['12:27','12:33','12:40','12:47','13:00','13:20','13:40'],
+          '16:00':['16:05','16:10','16:16','16:23','16:35','16:55','17:15'],
+          '18:40':['18:45','18:50','18:56','19:03','19:15','19:35','19:55']};
+        const ports=departure==='06:22'?['生名港','弓削港','佐島港','岩城港（乗継）','岩城港（乗継）','木浦港','友浦港','今治港']:
+          ['生名港','弓削港','佐島港','岩城港','木浦港','友浦港','今治港'];
+        return clocks[departure].map((t,j)=>[ports[j],t,j===ports.length-1?'着':'寄港']);
+      })(),
+      timetableReference:'https://geiyokisen.com/',timetableChecked:'2026-10-21'
     }));
   }
   function portRolling24Rows(now) {
     const dep=currentDirection()==='departure';
     const prevIso=shiftIso(now.iso,-1);
     const nextIso=shiftIso(now.iso,1);
-    const today=[...recordsForDay('port',now.iso),...gogoshimaPortRecords(now.iso),...nakajimaTakahamaCalls(now.iso),...jumboInboundPortRows(now.iso),...koku94InboundPortRows(now.iso),...geiyoInboundPortRows(now.iso)];
-    const tomorrow=[...recordsForDay('port',nextIso),...gogoshimaPortRecords(nextIso),...nakajimaTakahamaCalls(nextIso),...jumboInboundPortRows(nextIso),...koku94InboundPortRows(nextIso),...geiyoInboundPortRows(nextIso)];
+    const dayRows=iso=>[...recordsForDay('port',iso).filter(r=>r.source!=='jumbo_ferry_reference'),...gogoshimaPortRecords(iso),...nakajimaTakahamaCalls(iso),...jumboDeparturePortRows(iso),...jumboInboundPortRows(iso),...koku94InboundPortRows(iso),...geiyoInboundPortRows(iso)];
+    const today=dayRows(now.iso),tomorrow=dayRows(nextIso);
     const out=[];
 
     if(dep){
@@ -2051,6 +2137,10 @@
   }
 
   function portRouteParts(record, direction = 'departure') {
+    if(direction==='arrival' && record.origin && (record.arrivalPort||record.port)) {
+      const via=/ジャンボフェリー/.test(record.service||'')&&/小豆島/.test(record.info||'')?['小豆島（坂手）']:[];
+      return [record.origin,...via,record.arrivalPort||record.port];
+    }
     // Explicit Takahama inbound calls already contain their actual origin.
     // Do not reverse a destination of Takahama back into "Takahama → Takahama".
     if(direction==='arrival' && record.source==='koku94_verified_arrival') return ['佐賀関港','三崎港'];
@@ -2105,13 +2195,17 @@
     '20:00': [['広島港','21:20']]
   };
   const NAKAJIMA_DEPARTURE_CALLS = {
-    '06:55': [['高浜港','07:10'],['大浦港','08:15']],
+    '06:55': [['高浜港','07:10'],['睦月港','07:40'],['野忽那港','07:57'],['大浦港','08:15']],
     '10:10': [['松山観光港','10:30'],['睦月港','10:55'],['野忽那港','11:12'],['大浦港','11:30']],
     '13:00': [['高浜港','13:15'],['大浦港','13:55']],
     '15:50': [['高浜港','16:05'],['睦月港','16:35'],['野忽那港','16:52'],['大浦港','17:10']],
-    '19:05': [['松山観光港','19:30'],['睦月港','19:55'],['大浦港','20:14']]
+    '19:05': [['松山観光港','19:30'],['睦月港','19:55'],['大浦港','20:14']],
+    '19:10': [['松山観光港','19:30'],['睦月港','19:55'],['大浦港','20:14']]
   };
   function portDepartureCalls(record) {
+    // An arrival time is never a departure anchor. Inbound calls must be
+    // stored explicitly in their real direction by the official timetable.
+    if(record.direction==='arrival')return Array.isArray(record.calls)?record.calls:[];
     if(record.source==='matsuyama_city_cruise') return []; // The next port's arrival time is not published here.
     if (Array.isArray(record.calls) && record.calls.length) return record.calls;
     if (record.arrivalTime) return [[portDestinationName(record.dest), record.arrivalTime]];
@@ -4140,7 +4234,8 @@
       }
       const gap=32;
       const distance=Math.ceil(copyWidth+gap);
-      const duration=Math.max(9,Math.min(22,distance/28));
+      const duration=box.classList.contains('port-guidance-scroll')
+        ? Math.max(12,distance/28) : Math.max(9,Math.min(22,distance/28));
       if(box.style.getPropertyValue('--overflow-distance')!==`${distance}px`) {
         box.style.setProperty('--overflow-distance',`${distance}px`);
       }
@@ -4207,6 +4302,7 @@
       // grid column rather than turning the name into a moving ticker.
       if (el.matches('.rail-primary .rail-service.limited .kindtxt')) return;
       if (el.closest('.bus-mini-logo')) return;
+      if (el.closest('.ferry-service-wrap')) return;
 
       const wrap=document.createElement('span');
       wrap.className='overflow-scroll auto-overflow';
@@ -5136,7 +5232,7 @@
       const route = portRouteHtml(r, dep ? 'departure' : 'arrival');
       const ferryLogo=ferryMiniLogo(op.name);
       const operatorHtml=ferryLogo||`<span class="name">${op.name}</span>`;
-      const service = `<div class="service-wrap ferry-service-wrap">${operatorHtml}<span class="code">${op.type}</span></div>`;
+      const service = `<div class="service-wrap ferry-service-wrap">${operatorHtml}<span class="code no-auto-scroll">${op.type}</span></div>`;
       if (dep) {
         const routeGuidance=ferryRouteGuidance(r,'departure',japanNow());
         const departureCalls=portDepartureCalls(r);
@@ -5151,12 +5247,12 @@
         const detailTimetable=ferryDetailTimetable(r);
         const departureGuidance=r.source==='matsuyama_city_cruise'
           ? `大型クルーズ船 ${r.shipName}｜${r.info||'松山市公式の出港予定'}`
-          : [detailTimetable || (routeGuidance==='—'?'':routeGuidance),arrivalGuide].filter(Boolean).join(' ｜ ');
+          : detailTimetable || [routeGuidance==='—'?'':routeGuidance,arrivalGuide].filter(Boolean).join(' ｜ ');
         row.innerHTML = `
           <div class="cell main port-route port-route-main">${portDepartureDestinationHtml(r,`${firstBadge}${finalBadge}`)}</div>
           <div class="cell sub port-route-guidance">${overflowScrollHtml(departureGuidance,'port-guidance-scroll')}</div>
           <div class="cell service">${service}</div>
-          <div class="cell time port-departure-time">${r.time}発</div>`;
+          <div class="cell time port-departure-time">${r.time}発${r.departureTimeUnconfirmed?' ※':''}</div>`;
       } else {
         const arrivalRoute = isHiroshimaKureVia(r)
           ? portKureUnifiedHtml(r,'arrival',`${firstBadge}${finalBadge}`)
@@ -5171,7 +5267,7 @@
           <div class="cell main port-route port-route-main"><span class="port-arrival-route-line">${arrivalRoute}</span></div>
           <div class="cell sub port-route-guidance">${overflowScrollHtml(routeGuidance,'port-guidance-scroll')}</div>
           <div class="cell service">${service}</div>
-          <div class="cell time port-arrival-time">${rMinutes(r)>=1440 ? '翌日 ' : ''}${r.time}頃予定</div>`;
+          <div class="cell time port-arrival-time">${rMinutes(r)>=1440 ? '翌日 ' : ''}${r.time}${r.estimatedArrival?'頃（推定）':'着予定'}</div>`;
       }
       return row;
     };
@@ -5309,46 +5405,47 @@
       .map(e=>'<span class="special-vessel-event">'+e.text+'</span>');
   }
   function ferryDetailTimetable(record) {
-    // Cover all published stop-by-stop schedules, including explicitly inbound services.
-    // Do not invent times for stops whose timetable is absent.
-    const r=record;
-    {
-      if(r.source==='nakajima_takahama_call'||r.source==='nakajima_takahama_departure')return '';
-      const direction=r.direction==='arrival'?'到着':'出発';
-      const calls=Array.isArray(r.calls)?r.calls:portDepartureCalls(r);
-      const namedStops=calls.filter(c=>Array.isArray(c)&&c[0]&&/^\d{1,2}:\d{2}$/.test(String(c[1]||'')));
-      const viaText=String(r.info||'')+' '+String(r.dest||'');
-      const hasVia=namedStops.length>1||/経由|寄港/.test(viaText);
-      if(!hasVia)return '';
-      const service=String(r.service||'フェリー');
-      const label=/中島/.test(service)
-        ? (/西線|西便|nakajima_west/.test(service+' '+r.source)?'中島汽船 西便':'中島汽船 東便')
-        : service;
-      const origin=direction==='到着'?String(r.origin||'出発港'):String(r.port||'出発港');
-      const start=String(r.originDepartureTime||r.time);
-      let route=origin.replace(/港$/,'')+' '+start+'発';
-      let estimated=false;
-      if(namedStops.length){
-        route+=' → '+namedStops.map(([p,t])=>String(p).replace(/港$/,'')+' '+t+'着予定').join(' → ');
-      }else{
-        const dest=String(r.dest||r.arrivalPort||r.port||'到着港').replace(/港$/,'');
-        const via=/土生・生名・弓削・佐島・岩城・木浦・友浦経由/.test(viaText)
-          ? ['生名','弓削','佐島','岩城','木浦','友浦'] : /呉経由/.test(viaText)?['呉'] : [];
-        const originMin=toMinutes(start),arrivalMin=toMinutes(r.time);
-        const duration=arrivalMin-originMin;
-        if(direction==='到着' && via.length && Number.isFinite(duration) && duration>0 && duration<=720){
-          const clock=m=>String(Math.floor(m/60)%24).padStart(2,'0')+':'+String(m%60).padStart(2,'0');
-          via.forEach((p,i)=>{
-            route+=' → '+p+' '+clock(originMin+Math.round(duration*(i+1)/(via.length+1)))+'頃着';
-          });
-          estimated=true;
-        }
-        route+=' → '+dest+' '+r.time+'着予定';
-        if(!estimated)route+='（途中寄港時刻は未確認）';
-      }
-      const text=label+' '+direction+'便｜'+route+(estimated?'（時刻表推定）':'（時刻表予定）');
-      return text;
-    }
+    const r=record,inbound=r.direction==='arrival';
+    if(r.source==='matsuyama_city_cruise')return '';
+    // Only explicit published calls can supply intermediate clocks. Do not
+    // apply an outbound duration or interpolate equal intervals on arrivals.
+    const stops=(Array.isArray(r.calls)?r.calls:[])
+      .filter(c=>Array.isArray(c)&&c[0]&&/^\d{1,2}:\d{2}$/.test(String(c[1]||'')))
+      .map(c=>c.slice());
+    const service=String(r.service||'フェリー');
+    const label=/中島/.test(service)
+      ? (/西線|西便|nakajima_west/.test(service+' '+r.source)?'中島汽船 西便':'中島汽船 東便') : service;
+    const origin=inbound?String(r.origin||'出発港'):String(r.port||'出発港');
+    const start=inbound?String(r.originDepartureTime||''):String(r.time||'');
+    if(!/^\d{1,2}:\d{2}$/.test(start))return '';
+    const terminal=inbound?String(r.arrivalPort||r.port||r.dest||'到着港'):
+      String(stops.at(-1)?.[0]||r.dest||'到着港');
+    const arrival=inbound?r.time:(r.terminalArrivalTime||r.arrivalTime||stops.at(-1)?.[1]||'');
+    if(inbound) {
+      // The table's right-hand clock and the detailed endpoint use the same
+      // authoritative arrival field even when an old call was inconsistent.
+      if(stops.length && stops.at(-1)[0]===terminal)stops.pop();
+      stops.push([terminal,arrival,'着']);
+    } else if(!stops.length && /^\d{1,2}:\d{2}$/.test(arrival))stops.push([terminal,arrival,'着']);
+    if(!stops.length)return '';
+    const compact=p=>String(p).replace(/港$/,'');
+    let previous=toMinutes(start),day=inbound&&r.originDepartureDay==='前日'?-1:0;
+    const parts=stops.map(([p,t,type],i)=>{
+      const minute=toMinutes(t);
+      if(minute<previous)day++;
+      previous=minute;
+      const suffix=i===stops.length-1?'着予定':type==='発'?'発予定':type==='着'?'着予定':'寄港予定';
+      return compact(p)+' '+(day>0?'翌日 ':day<0?'前日 ':'')+t+suffix;
+    });
+    const estimated=!!r.estimatedArrival||r.timetableEstimated===true;
+    const unknown=/経由|寄港/.test(String(r.info||'')) && stops.length===1 && !r.timetableReference;
+    let text=label+' '+(inbound?'到着':'出発')+'便｜'+compact(origin)+' '+
+      (r.originDepartureDay||'')+start+'発 → '+parts.join(' → ')+
+      (estimated?'（時刻表推定）':'（時刻表予定）');
+    if(unknown)text+='｜途中寄港時刻は未確認';
+    if(r.departureTimeUnconfirmed)text+='｜※'+r.timetableCaution;
+    if(/乗継|委託/.test(String(r.info||'')))text+='｜'+r.info;
+    return text;
   }
   function ferryTickerItems(now=japanNow()) {
     const rows=slowLive.ferry?.items; const items=[];

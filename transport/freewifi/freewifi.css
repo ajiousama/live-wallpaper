@@ -2886,3 +2886,31 @@ html.company-pc body.freewifi-tv #panel-rail #rail-rows .rail-event-extra{
   box-shadow:none!important;
   transform:translateY(-1px)!important;
 }
+/* 2026-10-21: keep ferry ship/operator text inside its own column.
+   Only the per-sailing timetable scrolls; static labels have no cloned copy. */
+body.freewifi-tv #panel-port .cell.service,
+body.freewifi-tv #panel-port .ferry-service-wrap,
+body.freewifi-tv #panel-port .ferry-service-wrap .code {
+  min-width:0!important;
+  max-width:100%!important;
+  overflow:hidden!important;
+  box-sizing:border-box!important;
+}
+body.freewifi-tv #panel-port .ferry-service-wrap .code {
+  display:block!important;
+  white-space:nowrap!important;
+  text-overflow:ellipsis!important;
+  line-height:1.2!important;
+}
+body.freewifi-tv #panel-port .port-route-guidance .port-guidance-scroll {
+  display:block!important;
+  width:100%!important;
+  max-width:100%!important;
+  overflow:hidden!important;
+}
+body.freewifi-tv #panel-port .port-departure-time,
+body.freewifi-tv #panel-port .port-arrival-time {
+  line-height:1.2!important;
+  padding-top:2px!important;
+  padding-bottom:2px!important;
+}

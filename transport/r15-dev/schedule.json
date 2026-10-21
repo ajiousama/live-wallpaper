@@ -1881,7 +1881,22 @@
       "kind": "ferry",
       "source": "port",
       "id": "port-100",
-      "port": "松山観光港"
+      "port": "松山観光港",
+      "calls": [
+        [
+          "呉港",
+          "08:17",
+          "寄港"
+        ],
+        [
+          "広島港",
+          "09:02",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.kankoko.com/contents/timetable.html",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "09:02"
     },
     {
       "board": "port",
@@ -1892,7 +1907,22 @@
       "kind": "ferry",
       "source": "port",
       "id": "port-101",
-      "port": "松山観光港"
+      "port": "松山観光港",
+      "calls": [
+        [
+          "呉港",
+          "10:22",
+          "寄港"
+        ],
+        [
+          "広島港",
+          "11:07",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.kankoko.com/contents/timetable.html",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "11:07"
     },
     {
       "board": "port",
@@ -1903,7 +1933,22 @@
       "kind": "ferry",
       "source": "port",
       "id": "port-102",
-      "port": "松山観光港"
+      "port": "松山観光港",
+      "calls": [
+        [
+          "呉港",
+          "11:37",
+          "寄港"
+        ],
+        [
+          "広島港",
+          "12:22",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.kankoko.com/contents/timetable.html",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "12:22"
     },
     {
       "board": "port",
@@ -1932,7 +1977,17 @@
         "2026-09-30"
       ],
       "id": "port-104",
-      "port": "松山観光港"
+      "port": "松山観光港",
+      "calls": [
+        [
+          "広島港",
+          "13:27",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.kankoko.com/contents/timetable.html",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "13:27"
     },
     {
       "board": "port",
@@ -1943,7 +1998,22 @@
       "kind": "ferry",
       "source": "port",
       "id": "port-105",
-      "port": "松山観光港"
+      "port": "松山観光港",
+      "calls": [
+        [
+          "呉港",
+          "14:07",
+          "寄港"
+        ],
+        [
+          "広島港",
+          "14:52",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.kankoko.com/contents/timetable.html",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "14:52"
     },
     {
       "board": "port",
@@ -1954,7 +2024,22 @@
       "kind": "ferry",
       "source": "port",
       "id": "port-106",
-      "port": "松山観光港"
+      "port": "松山観光港",
+      "calls": [
+        [
+          "呉港",
+          "16:12",
+          "寄港"
+        ],
+        [
+          "広島港",
+          "16:57",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.kankoko.com/contents/timetable.html",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "16:57"
     },
     {
       "board": "port",
@@ -1984,7 +2069,22 @@
         "2026-10-14"
       ],
       "id": "port-107",
-      "port": "松山観光港"
+      "port": "松山観光港",
+      "calls": [
+        [
+          "呉港",
+          "17:27",
+          "寄港"
+        ],
+        [
+          "広島港",
+          "18:12",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.kankoko.com/contents/timetable.html",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "18:12"
     },
     {
       "board": "port",
@@ -1995,7 +2095,22 @@
       "kind": "ferry",
       "source": "port",
       "id": "port-108",
-      "port": "松山観光港"
+      "port": "松山観光港",
+      "calls": [
+        [
+          "呉港",
+          "18:32",
+          "寄港"
+        ],
+        [
+          "広島港",
+          "19:17",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.kankoko.com/contents/timetable.html",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "19:17"
     },
     {
       "board": "port",
@@ -2006,7 +2121,22 @@
       "kind": "ferry",
       "source": "port",
       "id": "port-109",
-      "port": "松山観光港"
+      "port": "松山観光港",
+      "calls": [
+        [
+          "呉港",
+          "19:57",
+          "寄港"
+        ],
+        [
+          "広島港",
+          "20:42",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.kankoko.com/contents/timetable.html",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "20:42"
     },
     {
       "board": "port",
@@ -2017,7 +2147,22 @@
       "kind": "ferry",
       "source": "port",
       "id": "port-111",
-      "port": "松山観光港"
+      "port": "松山観光港",
+      "calls": [
+        [
+          "呉港",
+          "22:07",
+          "寄港"
+        ],
+        [
+          "広島港",
+          "22:52",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.kankoko.com/contents/timetable.html",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "22:52"
     },
     {
       "board": "rail",
@@ -3686,7 +3831,32 @@
       "kind": "ferry",
       "source": "nakajima_mitsuhama",
       "id": "extra-port-001",
-      "port": "三津浜港"
+      "port": "三津浜港",
+      "calls": [
+        [
+          "高浜港",
+          "07:10",
+          "寄港"
+        ],
+        [
+          "睦月港",
+          "07:40",
+          "寄港"
+        ],
+        [
+          "野忽那港",
+          "07:57",
+          "寄港"
+        ],
+        [
+          "大浦港",
+          "08:15",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.pref.ehime.jp/uploaded/attachment/183017.pdf#page=18",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "08:15"
     },
     {
       "board": "port",
@@ -3697,7 +3867,32 @@
       "kind": "ferry",
       "source": "nakajima_mitsuhama",
       "id": "extra-port-002",
-      "port": "三津浜港"
+      "port": "三津浜港",
+      "calls": [
+        [
+          "松山観光港",
+          "10:30",
+          "寄港"
+        ],
+        [
+          "睦月港",
+          "10:55",
+          "寄港"
+        ],
+        [
+          "野忽那港",
+          "11:12",
+          "寄港"
+        ],
+        [
+          "大浦港",
+          "11:30",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.pref.ehime.jp/uploaded/attachment/183017.pdf#page=18",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "11:30"
     },
     {
       "board": "port",
@@ -3708,7 +3903,22 @@
       "kind": "ferry",
       "source": "nakajima_mitsuhama",
       "id": "extra-port-003",
-      "port": "三津浜港"
+      "port": "三津浜港",
+      "calls": [
+        [
+          "高浜港",
+          "13:15",
+          "寄港"
+        ],
+        [
+          "大浦港",
+          "13:55",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.pref.ehime.jp/uploaded/attachment/183017.pdf#page=18",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "13:55"
     },
     {
       "board": "port",
@@ -3719,7 +3929,32 @@
       "kind": "ferry",
       "source": "nakajima_mitsuhama",
       "id": "extra-port-004",
-      "port": "三津浜港"
+      "port": "三津浜港",
+      "calls": [
+        [
+          "高浜港",
+          "16:05",
+          "寄港"
+        ],
+        [
+          "睦月港",
+          "16:35",
+          "寄港"
+        ],
+        [
+          "野忽那港",
+          "16:52",
+          "寄港"
+        ],
+        [
+          "大浦港",
+          "17:10",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.pref.ehime.jp/uploaded/attachment/183017.pdf#page=18",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "17:10"
     },
     {
       "board": "port",
@@ -3730,160 +3965,29 @@
       "kind": "ferry",
       "source": "nakajima_mitsuhama",
       "id": "extra-port-005",
-      "port": "三津浜港"
-    },
-    {
-      "board": "port",
-      "time": "01:40",
-      "service": "防予フェリー",
-      "dest": "柳井",
-      "info": "三津浜港発・柳井港行",
-      "kind": "ferry",
-      "source": "boyo",
-      "id": "boyo-official-202610-01",
       "port": "三津浜港",
-      "days": [
-        2,
-        3,
-        4,
-        5,
-        6
-      ]
-    },
-    {
-      "board": "port",
-      "time": "03:35",
-      "service": "防予フェリー",
-      "dest": "柳井",
-      "info": "三津浜港発・柳井港行",
-      "kind": "ferry",
-      "source": "boyo",
-      "id": "boyo-official-202610-02",
-      "port": "三津浜港",
-      "days": [
-        2,
-        3,
-        4,
-        5,
-        6
-      ]
-    },
-    {
-      "board": "port",
-      "time": "04:50",
-      "service": "防予フェリー",
-      "dest": "柳井",
-      "info": "三津浜港発・柳井港行",
-      "kind": "ferry",
-      "source": "boyo",
-      "id": "boyo-official-202610-03",
-      "port": "三津浜港"
-    },
-    {
-      "board": "port",
-      "time": "07:30",
-      "service": "防予フェリー",
-      "dest": "柳井",
-      "info": "三津浜港発・柳井港行",
-      "kind": "ferry",
-      "source": "boyo",
-      "id": "boyo-official-202610-04",
-      "port": "三津浜港"
-    },
-    {
-      "board": "port",
-      "time": "09:40",
-      "service": "防予フェリー",
-      "dest": "柳井",
-      "info": "伊保田港経由",
-      "kind": "ferry",
-      "source": "boyo",
-      "id": "boyo-official-202610-05",
-      "port": "三津浜港"
-    },
-    {
-      "board": "port",
-      "time": "11:40",
-      "service": "防予フェリー",
-      "dest": "柳井",
-      "info": "三津浜港発・柳井港行",
-      "kind": "ferry",
-      "source": "boyo",
-      "id": "boyo-official-202610-06",
-      "port": "三津浜港"
-    },
-    {
-      "board": "port",
-      "time": "13:45",
-      "service": "防予フェリー",
-      "dest": "柳井",
-      "info": "三津浜港発・柳井港行",
-      "kind": "ferry",
-      "source": "boyo",
-      "id": "boyo-official-202610-07",
-      "port": "三津浜港"
-    },
-    {
-      "board": "port",
-      "time": "15:05",
-      "service": "防予フェリー",
-      "dest": "柳井",
-      "info": "伊保田港経由",
-      "kind": "ferry",
-      "source": "boyo",
-      "id": "boyo-official-202610-08",
-      "port": "三津浜港"
-    },
-    {
-      "board": "port",
-      "time": "17:35",
-      "service": "防予フェリー",
-      "dest": "柳井",
-      "info": "三津浜港発・柳井港行",
-      "kind": "ferry",
-      "source": "boyo",
-      "id": "boyo-official-202610-09",
-      "port": "三津浜港"
-    },
-    {
-      "board": "port",
-      "time": "19:20",
-      "service": "防予フェリー",
-      "dest": "柳井",
-      "info": "三津浜港発・柳井港行",
-      "kind": "ferry",
-      "source": "boyo",
-      "id": "boyo-official-202610-10",
-      "port": "三津浜港"
-    },
-    {
-      "board": "port",
-      "time": "20:30",
-      "service": "防予フェリー",
-      "dest": "柳井",
-      "info": "伊保田港経由",
-      "kind": "ferry",
-      "source": "boyo",
-      "id": "boyo-official-202610-11",
-      "port": "三津浜港"
-    },
-    {
-      "board": "port",
-      "time": "23:10",
-      "service": "防予フェリー",
-      "dest": "柳井",
-      "info": "三津浜港発・柳井港行",
-      "kind": "ferry",
-      "source": "boyo",
-      "id": "boyo-official-202610-12",
-      "port": "三津浜港",
-      "days": [
-        1,
-        2,
-        3,
-        4,
-        5
-      ]
+      "calls": [
+        [
+          "松山観光港",
+          "19:30",
+          "寄港"
+        ],
+        [
+          "睦月港",
+          "19:55",
+          "寄港"
+        ],
+        [
+          "大浦港",
+          "20:14",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.pref.ehime.jp/uploaded/attachment/183017.pdf#page=18",
+      "timetableChecked": "2026-10-21",
+      "timetableCaution": "公式資料で三津浜発19:05／19:10の差異あり・出発時刻要確認",
+      "departureTimeUnconfirmed": true,
+      "terminalArrivalTime": "20:14"
     },
     {
       "board": "port",
@@ -3894,7 +3998,17 @@
       "kind": "ferry",
       "source": "orange_toyo",
       "id": "extra-port-017",
-      "port": "東予港"
+      "port": "東予港",
+      "calls": [
+        [
+          "大阪南港",
+          "06:00",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.orange-ferry.co.jp/6488.html",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "06:00"
     },
     {
       "board": "port",
@@ -3905,7 +4019,17 @@
       "kind": "ferry",
       "source": "uwajima_beppu",
       "id": "extra-port-018",
-      "port": "八幡浜港"
+      "port": "八幡浜港",
+      "timetableReference": "https://www.uwajimaunyu.co.jp/timetable/",
+      "timetableChecked": "2026-10-21",
+      "calls": [
+        [
+          "別府港",
+          "03:10",
+          "着"
+        ]
+      ],
+      "terminalArrivalTime": "03:10"
     },
     {
       "board": "port",
@@ -3916,7 +4040,17 @@
       "kind": "ferry",
       "source": "uwajima_beppu",
       "id": "extra-port-019",
-      "port": "八幡浜港"
+      "port": "八幡浜港",
+      "timetableReference": "https://www.uwajimaunyu.co.jp/timetable/",
+      "timetableChecked": "2026-10-21",
+      "calls": [
+        [
+          "別府港",
+          "09:10",
+          "着"
+        ]
+      ],
+      "terminalArrivalTime": "09:10"
     },
     {
       "board": "port",
@@ -3927,7 +4061,17 @@
       "kind": "ferry",
       "source": "uwajima_beppu",
       "id": "extra-port-020",
-      "port": "八幡浜港"
+      "port": "八幡浜港",
+      "timetableReference": "https://www.uwajimaunyu.co.jp/timetable/",
+      "timetableChecked": "2026-10-21",
+      "calls": [
+        [
+          "別府港",
+          "13:05",
+          "着"
+        ]
+      ],
+      "terminalArrivalTime": "13:05"
     },
     {
       "board": "port",
@@ -3938,7 +4082,17 @@
       "kind": "ferry",
       "source": "uwajima_beppu",
       "id": "extra-port-021",
-      "port": "八幡浜港"
+      "port": "八幡浜港",
+      "timetableReference": "https://www.uwajimaunyu.co.jp/timetable/",
+      "timetableChecked": "2026-10-21",
+      "calls": [
+        [
+          "別府港",
+          "15:50",
+          "着"
+        ]
+      ],
+      "terminalArrivalTime": "15:50"
     },
     {
       "board": "port",
@@ -3949,7 +4103,17 @@
       "kind": "ferry",
       "source": "uwajima_beppu",
       "id": "extra-port-022",
-      "port": "八幡浜港"
+      "port": "八幡浜港",
+      "timetableReference": "https://www.uwajimaunyu.co.jp/timetable/",
+      "timetableChecked": "2026-10-21",
+      "calls": [
+        [
+          "別府港",
+          "20:15",
+          "着"
+        ]
+      ],
+      "terminalArrivalTime": "20:15"
     },
     {
       "board": "port",
@@ -3960,7 +4124,17 @@
       "kind": "ferry",
       "source": "uwajima_beppu",
       "id": "extra-port-023",
-      "port": "八幡浜港"
+      "port": "八幡浜港",
+      "timetableReference": "https://www.uwajimaunyu.co.jp/timetable/",
+      "timetableChecked": "2026-10-21",
+      "calls": [
+        [
+          "別府港",
+          "23:20",
+          "着"
+        ]
+      ],
+      "terminalArrivalTime": "23:20"
     },
     {
       "board": "port",
@@ -3971,7 +4145,17 @@
       "kind": "ferry",
       "source": "uwajima_usuki",
       "id": "extra-port-024",
-      "port": "八幡浜港"
+      "port": "八幡浜港",
+      "timetableReference": "https://www.uwajimaunyu.co.jp/timetable/",
+      "timetableChecked": "2026-10-21",
+      "calls": [
+        [
+          "臼杵港",
+          "08:15",
+          "着"
+        ]
+      ],
+      "terminalArrivalTime": "08:15"
     },
     {
       "board": "port",
@@ -3982,7 +4166,17 @@
       "kind": "ferry",
       "source": "uwajima_usuki",
       "id": "extra-port-025",
-      "port": "八幡浜港"
+      "port": "八幡浜港",
+      "timetableReference": "https://www.uwajimaunyu.co.jp/timetable/",
+      "timetableChecked": "2026-10-21",
+      "calls": [
+        [
+          "臼杵港",
+          "12:05",
+          "着"
+        ]
+      ],
+      "terminalArrivalTime": "12:05"
     },
     {
       "board": "port",
@@ -3993,7 +4187,17 @@
       "kind": "ferry",
       "source": "uwajima_usuki",
       "id": "extra-port-026",
-      "port": "八幡浜港"
+      "port": "八幡浜港",
+      "timetableReference": "https://www.uwajimaunyu.co.jp/timetable/",
+      "timetableChecked": "2026-10-21",
+      "calls": [
+        [
+          "臼杵港",
+          "14:10",
+          "着"
+        ]
+      ],
+      "terminalArrivalTime": "14:10"
     },
     {
       "board": "port",
@@ -4004,7 +4208,17 @@
       "kind": "ferry",
       "source": "uwajima_usuki",
       "id": "extra-port-027",
-      "port": "八幡浜港"
+      "port": "八幡浜港",
+      "timetableReference": "https://www.uwajimaunyu.co.jp/timetable/",
+      "timetableChecked": "2026-10-21",
+      "calls": [
+        [
+          "臼杵港",
+          "18:00",
+          "着"
+        ]
+      ],
+      "terminalArrivalTime": "18:00"
     },
     {
       "board": "port",
@@ -4015,7 +4229,17 @@
       "kind": "ferry",
       "source": "uwajima_usuki",
       "id": "extra-port-028",
-      "port": "八幡浜港"
+      "port": "八幡浜港",
+      "timetableReference": "https://www.uwajimaunyu.co.jp/timetable/",
+      "timetableChecked": "2026-10-21",
+      "calls": [
+        [
+          "臼杵港",
+          "20:05",
+          "着"
+        ]
+      ],
+      "terminalArrivalTime": "20:05"
     },
     {
       "board": "port",
@@ -4027,7 +4251,7 @@
       "source": "uwajima_usuki",
       "id": "extra-port-029",
       "port": "八幡浜港",
-      "end": "2026-09-28",
+      "end": "2027-03-29",
       "days": [
         0,
         1,
@@ -4035,7 +4259,17 @@
         3,
         4,
         5
-      ]
+      ],
+      "timetableReference": "https://www.uwajimaunyu.co.jp/timetable/",
+      "timetableChecked": "2026-10-21",
+      "calls": [
+        [
+          "臼杵港",
+          "00:25",
+          "着"
+        ]
+      ],
+      "terminalArrivalTime": "00:25"
     },
     {
       "board": "port",
@@ -4047,7 +4281,7 @@
       "source": "uwajima_usuki",
       "id": "extra-port-030",
       "port": "八幡浜港",
-      "end": "2026-09-28",
+      "end": "2027-03-29",
       "days": [
         1,
         2,
@@ -4055,7 +4289,17 @@
         4,
         5,
         6
-      ]
+      ],
+      "timetableReference": "https://www.uwajimaunyu.co.jp/timetable/",
+      "timetableChecked": "2026-10-21",
+      "calls": [
+        [
+          "臼杵港",
+          "02:15",
+          "着"
+        ]
+      ],
+      "terminalArrivalTime": "02:15"
     },
     {
       "board": "port",
@@ -4066,7 +4310,17 @@
       "kind": "ferry",
       "source": "koku94",
       "id": "extra-port-031",
-      "port": "三崎港"
+      "port": "三崎港",
+      "calls": [
+        [
+          "佐賀関港",
+          "08:40",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.koku94.jp/operation",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "08:40"
     },
     {
       "board": "port",
@@ -4077,7 +4331,17 @@
       "kind": "ferry",
       "source": "koku94",
       "id": "extra-port-032",
-      "port": "三崎港"
+      "port": "三崎港",
+      "calls": [
+        [
+          "佐賀関港",
+          "09:40",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.koku94.jp/operation",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "09:40"
     },
     {
       "board": "port",
@@ -4088,7 +4352,17 @@
       "kind": "ferry",
       "source": "koku94",
       "id": "extra-port-033",
-      "port": "三崎港"
+      "port": "三崎港",
+      "calls": [
+        [
+          "佐賀関港",
+          "10:40",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.koku94.jp/operation",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "10:40"
     },
     {
       "board": "port",
@@ -4099,7 +4373,17 @@
       "kind": "ferry",
       "source": "koku94",
       "id": "extra-port-034",
-      "port": "三崎港"
+      "port": "三崎港",
+      "calls": [
+        [
+          "佐賀関港",
+          "11:40",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.koku94.jp/operation",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "11:40"
     },
     {
       "board": "port",
@@ -4110,7 +4394,17 @@
       "kind": "ferry",
       "source": "koku94",
       "id": "extra-port-035",
-      "port": "三崎港"
+      "port": "三崎港",
+      "calls": [
+        [
+          "佐賀関港",
+          "12:40",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.koku94.jp/operation",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "12:40"
     },
     {
       "board": "port",
@@ -4121,7 +4415,17 @@
       "kind": "ferry",
       "source": "koku94",
       "id": "extra-port-036",
-      "port": "三崎港"
+      "port": "三崎港",
+      "calls": [
+        [
+          "佐賀関港",
+          "13:40",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.koku94.jp/operation",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "13:40"
     },
     {
       "board": "port",
@@ -4143,7 +4447,17 @@
         "2026-10-12",
         "2026-11-21",
         "2026-11-23"
-      ]
+      ],
+      "calls": [
+        [
+          "佐賀関港",
+          "14:40",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.koku94.jp/operation",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "14:40"
     },
     {
       "board": "port",
@@ -4154,7 +4468,17 @@
       "kind": "ferry",
       "source": "koku94",
       "id": "extra-port-038",
-      "port": "三崎港"
+      "port": "三崎港",
+      "calls": [
+        [
+          "佐賀関港",
+          "15:40",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.koku94.jp/operation",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "15:40"
     },
     {
       "board": "port",
@@ -4165,7 +4489,17 @@
       "kind": "ferry",
       "source": "koku94",
       "id": "extra-port-039",
-      "port": "三崎港"
+      "port": "三崎港",
+      "calls": [
+        [
+          "佐賀関港",
+          "16:40",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.koku94.jp/operation",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "16:40"
     },
     {
       "board": "port",
@@ -4176,7 +4510,17 @@
       "kind": "ferry",
       "source": "koku94",
       "id": "extra-port-040",
-      "port": "三崎港"
+      "port": "三崎港",
+      "calls": [
+        [
+          "佐賀関港",
+          "17:40",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.koku94.jp/operation",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "17:40"
     },
     {
       "board": "port",
@@ -4187,7 +4531,17 @@
       "kind": "ferry",
       "source": "koku94",
       "id": "extra-port-041",
-      "port": "三崎港"
+      "port": "三崎港",
+      "calls": [
+        [
+          "佐賀関港",
+          "18:40",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.koku94.jp/operation",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "18:40"
     },
     {
       "board": "port",
@@ -4198,7 +4552,17 @@
       "kind": "ferry",
       "source": "koku94",
       "id": "extra-port-042",
-      "port": "三崎港"
+      "port": "三崎港",
+      "calls": [
+        [
+          "佐賀関港",
+          "19:40",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.koku94.jp/operation",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "19:40"
     },
     {
       "board": "port",
@@ -4209,7 +4573,17 @@
       "kind": "ferry",
       "source": "koku94",
       "id": "extra-port-043",
-      "port": "三崎港"
+      "port": "三崎港",
+      "calls": [
+        [
+          "佐賀関港",
+          "20:40",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.koku94.jp/operation",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "20:40"
     },
     {
       "board": "port",
@@ -4220,7 +4594,17 @@
       "kind": "ferry",
       "source": "koku94",
       "id": "extra-port-044",
-      "port": "三崎港"
+      "port": "三崎港",
+      "calls": [
+        [
+          "佐賀関港",
+          "21:40",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.koku94.jp/operation",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "21:40"
     },
     {
       "board": "port",
@@ -4231,7 +4615,17 @@
       "kind": "ferry",
       "source": "koku94",
       "id": "extra-port-045",
-      "port": "三崎港"
+      "port": "三崎港",
+      "calls": [
+        [
+          "佐賀関港",
+          "22:40",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.koku94.jp/operation",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "22:40"
     },
     {
       "board": "port",
@@ -4242,7 +4636,17 @@
       "kind": "ferry",
       "source": "koku94",
       "id": "extra-port-046",
-      "port": "三崎港"
+      "port": "三崎港",
+      "calls": [
+        [
+          "佐賀関港",
+          "23:40",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.koku94.jp/operation",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "23:40"
     },
     {
       "board": "port",
@@ -4253,7 +4657,17 @@
       "kind": "ferry",
       "source": "koku94",
       "id": "extra-port-047",
-      "port": "三崎港"
+      "port": "三崎港",
+      "calls": [
+        [
+          "佐賀関港",
+          "00:40",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.koku94.jp/operation",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "00:40"
     },
     {
       "id": "stadium-00",
@@ -4354,7 +4768,17 @@
       "kind": "highspeed",
       "source": "port_highspeed",
       "id": "port-hs-01",
-      "port": "松山観光港"
+      "port": "松山観光港",
+      "calls": [
+        [
+          "広島港",
+          "08:50",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://setonaikaikisen.co.jp/kouro/jet/",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "08:50"
     },
     {
       "board": "port",
@@ -4365,7 +4789,22 @@
       "kind": "highspeed",
       "source": "port_highspeed",
       "id": "port-hs-02",
-      "port": "松山観光港"
+      "port": "松山観光港",
+      "calls": [
+        [
+          "呉港",
+          "10:10",
+          "寄港"
+        ],
+        [
+          "広島港",
+          "10:35",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://setonaikaikisen.co.jp/kouro/jet/",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "10:35"
     },
     {
       "board": "port",
@@ -4376,7 +4815,17 @@
       "kind": "highspeed",
       "source": "port_highspeed",
       "id": "port-hs-03",
-      "port": "松山観光港"
+      "port": "松山観光港",
+      "calls": [
+        [
+          "広島港",
+          "12:10",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://setonaikaikisen.co.jp/kouro/jet/",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "12:10"
     },
     {
       "board": "port",
@@ -4387,7 +4836,22 @@
       "kind": "highspeed",
       "source": "port_highspeed",
       "id": "port-hs-04",
-      "port": "松山観光港"
+      "port": "松山観光港",
+      "calls": [
+        [
+          "呉港",
+          "13:30",
+          "寄港"
+        ],
+        [
+          "広島港",
+          "13:55",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://setonaikaikisen.co.jp/kouro/jet/",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "13:55"
     },
     {
       "board": "port",
@@ -4398,7 +4862,17 @@
       "kind": "highspeed",
       "source": "port_highspeed",
       "id": "port-hs-05",
-      "port": "松山観光港"
+      "port": "松山観光港",
+      "calls": [
+        [
+          "広島港",
+          "16:35",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://setonaikaikisen.co.jp/kouro/jet/",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "16:35"
     },
     {
       "board": "port",
@@ -4409,7 +4883,22 @@
       "kind": "highspeed",
       "source": "port_highspeed",
       "id": "port-hs-06",
-      "port": "松山観光港"
+      "port": "松山観光港",
+      "calls": [
+        [
+          "呉港",
+          "17:50",
+          "寄港"
+        ],
+        [
+          "広島港",
+          "18:15",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://setonaikaikisen.co.jp/kouro/jet/",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "18:15"
     },
     {
       "board": "port",
@@ -4420,7 +4909,17 @@
       "kind": "highspeed",
       "source": "port_highspeed",
       "id": "port-hs-07",
-      "port": "松山観光港"
+      "port": "松山観光港",
+      "calls": [
+        [
+          "広島港",
+          "19:50",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://setonaikaikisen.co.jp/kouro/jet/",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "19:50"
     },
     {
       "board": "port",
@@ -4431,7 +4930,17 @@
       "kind": "highspeed",
       "source": "port_highspeed",
       "id": "port-hs-08",
-      "port": "松山観光港"
+      "port": "松山観光港",
+      "calls": [
+        [
+          "広島港",
+          "21:20",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://setonaikaikisen.co.jp/kouro/jet/",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "21:20"
     },
     {
       "board": "bus",
@@ -5552,58 +6061,6 @@
       "continueNextDay": false
     },
     {
-      "id": "ref-port-jumbo-001",
-      "board": "port",
-      "time": "01:00",
-      "service": "ジャンボフェリー",
-      "dest": "神戸",
-      "info": "京阪神連絡・参考／直行",
-      "kind": "ferry",
-      "source": "jumbo_ferry_reference",
-      "port": "高松東港",
-      "travelMinutes": 255,
-      "reference": true
-    },
-    {
-      "id": "ref-port-jumbo-002",
-      "board": "port",
-      "time": "06:15",
-      "service": "ジャンボフェリー",
-      "dest": "神戸",
-      "info": "京阪神連絡・参考／小豆島（坂手）経由",
-      "kind": "ferry",
-      "source": "jumbo_ferry_reference",
-      "port": "高松東港",
-      "travelMinutes": 285,
-      "reference": true
-    },
-    {
-      "id": "ref-port-jumbo-003",
-      "board": "port",
-      "time": "14:00",
-      "service": "ジャンボフェリー",
-      "dest": "神戸",
-      "info": "京阪神連絡・参考／小豆島（坂手）経由",
-      "kind": "ferry",
-      "source": "jumbo_ferry_reference",
-      "port": "高松東港",
-      "travelMinutes": 285,
-      "reference": true
-    },
-    {
-      "id": "ref-port-jumbo-004",
-      "board": "port",
-      "time": "19:15",
-      "service": "ジャンボフェリー",
-      "dest": "神戸",
-      "info": "京阪神連絡・参考／小豆島（坂手）経由",
-      "kind": "ferry",
-      "source": "jumbo_ferry_reference",
-      "port": "高松東港",
-      "travelMinutes": 285,
-      "reference": true
-    },
-    {
       "id": "tf-port-nakajima-west-0910",
       "board": "port",
       "time": "09:10",
@@ -5643,7 +6100,10 @@
           "11:37"
         ]
       ],
-      "noSyntheticArrival": true
+      "noSyntheticArrival": true,
+      "timetableReference": "https://www.pref.ehime.jp/uploaded/attachment/183017.pdf#page=18",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "11:37"
     },
     {
       "id": "tf-port-nakajima-west-1640",
@@ -5689,7 +6149,10 @@
           "19:22"
         ]
       ],
-      "noSyntheticArrival": true
+      "noSyntheticArrival": true,
+      "timetableReference": "https://www.pref.ehime.jp/uploaded/attachment/183017.pdf#page=18",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "19:22"
     },
     {
       "id": "tf-port-imabari-geiyo-we-1",
@@ -5707,11 +6170,46 @@
       ],
       "calls": [
         [
+          "友浦港",
+          "06:40",
+          "寄港"
+        ],
+        [
+          "木浦港",
+          "07:00",
+          "寄港"
+        ],
+        [
+          "岩城港",
+          "07:13",
+          "寄港"
+        ],
+        [
+          "佐島港",
+          "07:20",
+          "寄港"
+        ],
+        [
+          "弓削港",
+          "07:27",
+          "寄港"
+        ],
+        [
+          "生名港",
+          "07:33",
+          "寄港"
+        ],
+        [
           "土生港（因島）",
-          "07:40"
+          "07:40",
+          "着"
         ]
       ],
-      "noSyntheticArrival": true
+      "noSyntheticArrival": true,
+      "timetableReference": "https://geiyokisen.com/",
+      "timetableChecked": "2026-10-21",
+      "ferryCalendar": "holiday",
+      "terminalArrivalTime": "07:40"
     },
     {
       "id": "tf-port-imabari-geiyo-we-2",
@@ -5729,11 +6227,46 @@
       ],
       "calls": [
         [
+          "友浦港",
+          "09:35",
+          "寄港"
+        ],
+        [
+          "木浦港",
+          "09:55",
+          "寄港"
+        ],
+        [
+          "岩城港",
+          "10:08",
+          "寄港"
+        ],
+        [
+          "佐島港",
+          "10:15",
+          "寄港"
+        ],
+        [
+          "弓削港",
+          "10:22",
+          "寄港"
+        ],
+        [
+          "生名港",
+          "10:28",
+          "寄港"
+        ],
+        [
           "土生港（因島）",
-          "10:35"
+          "10:35",
+          "着"
         ]
       ],
-      "noSyntheticArrival": true
+      "noSyntheticArrival": true,
+      "timetableReference": "https://geiyokisen.com/",
+      "timetableChecked": "2026-10-21",
+      "ferryCalendar": "holiday",
+      "terminalArrivalTime": "10:35"
     },
     {
       "id": "tf-port-imabari-geiyo-we-3",
@@ -5751,11 +6284,46 @@
       ],
       "calls": [
         [
+          "友浦港",
+          "14:50",
+          "寄港"
+        ],
+        [
+          "木浦港",
+          "15:10",
+          "寄港"
+        ],
+        [
+          "岩城港",
+          "15:23",
+          "寄港"
+        ],
+        [
+          "佐島港",
+          "15:30",
+          "寄港"
+        ],
+        [
+          "弓削港",
+          "15:37",
+          "寄港"
+        ],
+        [
+          "生名港",
+          "15:43",
+          "寄港"
+        ],
+        [
           "土生港（因島）",
-          "15:50"
+          "15:50",
+          "着"
         ]
       ],
-      "noSyntheticArrival": true
+      "noSyntheticArrival": true,
+      "timetableReference": "https://geiyokisen.com/",
+      "timetableChecked": "2026-10-21",
+      "ferryCalendar": "all",
+      "terminalArrivalTime": "15:50"
     },
     {
       "id": "tf-port-imabari-geiyo-we-4",
@@ -5773,11 +6341,46 @@
       ],
       "calls": [
         [
+          "友浦港",
+          "17:40",
+          "寄港"
+        ],
+        [
+          "木浦港",
+          "17:55",
+          "寄港"
+        ],
+        [
+          "岩城港",
+          "18:08",
+          "寄港"
+        ],
+        [
+          "佐島港",
+          "18:15",
+          "寄港"
+        ],
+        [
+          "弓削港",
+          "18:22",
+          "寄港"
+        ],
+        [
+          "生名港",
+          "18:28",
+          "寄港"
+        ],
+        [
           "土生港（因島）",
-          "18:35"
+          "18:35",
+          "着"
         ]
       ],
-      "noSyntheticArrival": true
+      "noSyntheticArrival": true,
+      "timetableReference": "https://geiyokisen.com/",
+      "timetableChecked": "2026-10-21",
+      "ferryCalendar": "all",
+      "terminalArrivalTime": "18:35"
     },
     {
       "id": "tf-port-imabari-geiyo-wd-1",
@@ -5785,7 +6388,7 @@
       "time": "06:00",
       "service": "芸予汽船 高速船",
       "dest": "土生港（因島）",
-      "info": "今治港",
+      "info": "岩城06:47着・06:48発委託便に乗継（自転車・荷物不可）",
       "kind": "highspeed",
       "source": "imabari_geiyo",
       "port": "今治港",
@@ -5798,11 +6401,46 @@
       ],
       "calls": [
         [
+          "友浦港",
+          "06:20",
+          "寄港"
+        ],
+        [
+          "木浦港",
+          "06:35",
+          "寄港"
+        ],
+        [
+          "岩城港",
+          "06:47",
+          "寄港"
+        ],
+        [
+          "佐島港",
+          "06:55",
+          "寄港"
+        ],
+        [
+          "弓削港",
+          "07:00",
+          "寄港"
+        ],
+        [
+          "生名港",
+          "07:05",
+          "寄港"
+        ],
+        [
           "土生港（因島）",
-          "07:20"
+          "07:10",
+          "着"
         ]
       ],
-      "noSyntheticArrival": true
+      "noSyntheticArrival": true,
+      "timetableReference": "https://geiyokisen.com/",
+      "timetableChecked": "2026-10-21",
+      "ferryCalendar": "weekday",
+      "terminalArrivalTime": "07:10"
     },
     {
       "id": "tf-port-imabari-geiyo-wd-2",
@@ -5823,11 +6461,46 @@
       ],
       "calls": [
         [
+          "友浦港",
+          "08:20",
+          "寄港"
+        ],
+        [
+          "木浦港",
+          "08:40",
+          "寄港"
+        ],
+        [
+          "岩城港",
+          "08:53",
+          "寄港"
+        ],
+        [
+          "佐島港",
+          "09:00",
+          "寄港"
+        ],
+        [
+          "弓削港",
+          "09:07",
+          "寄港"
+        ],
+        [
+          "生名港",
+          "09:13",
+          "寄港"
+        ],
+        [
           "土生港（因島）",
-          "09:20"
+          "09:20",
+          "着"
         ]
       ],
-      "noSyntheticArrival": true
+      "noSyntheticArrival": true,
+      "timetableReference": "https://geiyokisen.com/",
+      "timetableChecked": "2026-10-21",
+      "ferryCalendar": "weekday",
+      "terminalArrivalTime": "09:20"
     },
     {
       "id": "tf-port-imabari-geiyo-wd-3",
@@ -5848,11 +6521,46 @@
       ],
       "calls": [
         [
+          "友浦港",
+          "14:50",
+          "寄港"
+        ],
+        [
+          "木浦港",
+          "15:10",
+          "寄港"
+        ],
+        [
+          "岩城港",
+          "15:23",
+          "寄港"
+        ],
+        [
+          "佐島港",
+          "15:30",
+          "寄港"
+        ],
+        [
+          "弓削港",
+          "15:37",
+          "寄港"
+        ],
+        [
+          "生名港",
+          "15:43",
+          "寄港"
+        ],
+        [
           "土生港（因島）",
-          "15:50"
+          "15:50",
+          "着"
         ]
       ],
-      "noSyntheticArrival": true
+      "noSyntheticArrival": true,
+      "timetableReference": "https://geiyokisen.com/",
+      "timetableChecked": "2026-10-21",
+      "ferryCalendar": "all",
+      "terminalArrivalTime": "15:50"
     },
     {
       "id": "tf-port-imabari-geiyo-wd-4",
@@ -5873,11 +6581,46 @@
       ],
       "calls": [
         [
+          "友浦港",
+          "17:40",
+          "寄港"
+        ],
+        [
+          "木浦港",
+          "17:55",
+          "寄港"
+        ],
+        [
+          "岩城港",
+          "18:08",
+          "寄港"
+        ],
+        [
+          "佐島港",
+          "18:15",
+          "寄港"
+        ],
+        [
+          "弓削港",
+          "18:22",
+          "寄港"
+        ],
+        [
+          "生名港",
+          "18:28",
+          "寄港"
+        ],
+        [
           "土生港（因島）",
-          "18:35"
+          "18:35",
+          "着"
         ]
       ],
-      "noSyntheticArrival": true
+      "noSyntheticArrival": true,
+      "timetableReference": "https://geiyokisen.com/",
+      "timetableChecked": "2026-10-21",
+      "ferryCalendar": "all",
+      "terminalArrivalTime": "18:35"
     },
     {
       "id": "tf-port-imabari-sekizen-1",
@@ -5899,10 +6642,14 @@
       "calls": [
         [
           "岡村港",
-          "09:25"
+          "09:25",
+          "着"
         ]
       ],
-      "noSyntheticArrival": true
+      "noSyntheticArrival": true,
+      "timetableReference": "https://www.city.imabari.ehime.jp/kotsus/tosen/sekizen/sekizen-r804.pdf",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "09:25"
     },
     {
       "id": "tf-port-imabari-sekizen-2",
@@ -5923,11 +6670,25 @@
       ],
       "calls": [
         [
+          "大下港",
+          "12:55",
+          "寄港"
+        ],
+        [
+          "小大下港",
+          "13:07",
+          "寄港"
+        ],
+        [
           "岡村港",
-          "13:20"
+          "13:20",
+          "着"
         ]
       ],
-      "noSyntheticArrival": true
+      "noSyntheticArrival": true,
+      "timetableReference": "https://www.city.imabari.ehime.jp/kotsus/tosen/sekizen/sekizen-r804.pdf",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "13:20"
     },
     {
       "id": "tf-port-imabari-sekizen-3",
@@ -5948,11 +6709,25 @@
       ],
       "calls": [
         [
+          "大下港",
+          "15:40",
+          "寄港"
+        ],
+        [
+          "小大下港",
+          "15:53",
+          "寄港"
+        ],
+        [
           "岡村港",
-          "16:05"
+          "16:05",
+          "着"
         ]
       ],
-      "noSyntheticArrival": true
+      "noSyntheticArrival": true,
+      "timetableReference": "https://www.city.imabari.ehime.jp/kotsus/tosen/sekizen/sekizen-r804.pdf",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "16:05"
     },
     {
       "id": "tf-port-imabari-sekizen-4",
@@ -5973,11 +6748,25 @@
       ],
       "calls": [
         [
+          "大下港",
+          "18:45",
+          "寄港"
+        ],
+        [
+          "小大下港",
+          "18:57",
+          "寄港"
+        ],
+        [
           "岡村港",
-          "19:10"
+          "19:10",
+          "着"
         ]
       ],
-      "noSyntheticArrival": true
+      "noSyntheticArrival": true,
+      "timetableReference": "https://www.city.imabari.ehime.jp/kotsus/tosen/sekizen/sekizen-r804.pdf",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "19:10"
     },
     {
       "id": "tf-port-imabari-blue-1",
@@ -5999,7 +6788,10 @@
           "07:38"
         ]
       ],
-      "noSyntheticArrival": true
+      "noSyntheticArrival": true,
+      "timetableReference": "https://omishima-bl.net/",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "07:38"
     },
     {
       "id": "tf-port-imabari-blue-2",
@@ -6021,7 +6813,10 @@
           "14:13"
         ]
       ],
-      "noSyntheticArrival": true
+      "noSyntheticArrival": true,
+      "timetableReference": "https://omishima-bl.net/",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "14:13"
     },
     {
       "id": "tf-port-imabari-tobishima-1",
@@ -6051,7 +6846,10 @@
           "08:18"
         ]
       ],
-      "noSyntheticArrival": true
+      "noSyntheticArrival": true,
+      "timetableReference": "https://www.city.imabari.ehime.jp/kotsus/tosen/sekizen/sekizen-r804.pdf",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "08:18"
     },
     {
       "id": "tf-port-imabari-tobishima-2",
@@ -6081,7 +6879,10 @@
           "10:28"
         ]
       ],
-      "noSyntheticArrival": true
+      "noSyntheticArrival": true,
+      "timetableReference": "https://www.city.imabari.ehime.jp/kotsus/tosen/sekizen/sekizen-r804.pdf",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "10:28"
     },
     {
       "id": "tf-port-imabari-tobishima-3",
@@ -6111,7 +6912,10 @@
           "16:28"
         ]
       ],
-      "noSyntheticArrival": true
+      "noSyntheticArrival": true,
+      "timetableReference": "https://www.city.imabari.ehime.jp/kotsus/tosen/sekizen/sekizen-r804.pdf",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "16:28"
     },
     {
       "id": "tf-port-imabari-tobishima-4",
@@ -6141,7 +6945,10 @@
           "19:58"
         ]
       ],
-      "noSyntheticArrival": true
+      "noSyntheticArrival": true,
+      "timetableReference": "https://www.city.imabari.ehime.jp/kotsus/tosen/sekizen/sekizen-r804.pdf",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "19:58"
     },
     {
       "id": "tf-port-niihama-orange",
@@ -6170,12 +6977,23 @@
         "2026-10-20",
         "2026-10-21",
         "2026-10-22",
+        "2026-10-23",
+        "2026-10-24",
+        "2026-10-25",
         "2026-10-26",
         "2026-10-27",
         "2026-10-28",
         "2026-10-29",
-        "2026-11-02"
-      ]
+        "2026-10-30",
+        "2026-10-31",
+        "2026-11-01",
+        "2026-11-02",
+        "2026-11-03"
+      ],
+      "ferryCalendar": "niihama-out",
+      "timetableReference": "https://www.orange-ferry.co.jp/6488.html",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "23:40"
     },
     {
       "board": "bus",
@@ -6452,226 +7270,17 @@
         "2026-10-20",
         "2026-10-21",
         "2026-10-22",
+        "2026-10-23",
         "2026-10-26",
         "2026-10-27",
         "2026-10-28",
         "2026-10-29",
+        "2026-10-30",
         "2026-11-02"
-      ]
-    },
-    {
-      "id": "official-inbound-boyo-1",
-      "board": "port",
-      "source": "boyo",
-      "kind": "ferry",
-      "service": "防予フェリー",
-      "port": "三津浜港",
-      "arrivalPort": "三津浜港",
-      "origin": "柳井港",
-      "dest": "三津浜港",
-      "direction": "arrival",
-      "time": "03:25",
-      "originDepartureTime": "01:00",
-      "noSyntheticArrival": true,
-      "info": "事業者時刻表・到着便",
-      "days": [
-        2,
-        3,
-        4,
-        5,
-        6
-      ]
-    },
-    {
-      "id": "official-inbound-boyo-2",
-      "board": "port",
-      "source": "boyo",
-      "kind": "ferry",
-      "service": "防予フェリー",
-      "port": "三津浜港",
-      "arrivalPort": "三津浜港",
-      "origin": "柳井港",
-      "dest": "三津浜港",
-      "direction": "arrival",
-      "time": "04:35",
-      "originDepartureTime": "02:00",
-      "noSyntheticArrival": true,
-      "info": "事業者時刻表・到着便",
-      "days": [
-        2,
-        3,
-        4,
-        5,
-        6
-      ]
-    },
-    {
-      "id": "official-inbound-boyo-3",
-      "board": "port",
-      "source": "boyo",
-      "kind": "ferry",
-      "service": "防予フェリー",
-      "port": "三津浜港",
-      "arrivalPort": "三津浜港",
-      "origin": "柳井港",
-      "dest": "三津浜港",
-      "direction": "arrival",
-      "time": "06:30",
-      "originDepartureTime": "04:00",
-      "noSyntheticArrival": true,
-      "info": "事業者時刻表・到着便"
-    },
-    {
-      "id": "official-inbound-boyo-4",
-      "board": "port",
-      "source": "boyo",
-      "kind": "ferry",
-      "service": "防予フェリー",
-      "port": "三津浜港",
-      "arrivalPort": "三津浜港",
-      "origin": "柳井港",
-      "dest": "三津浜港",
-      "direction": "arrival",
-      "time": "09:30",
-      "originDepartureTime": "07:00",
-      "noSyntheticArrival": true,
-      "info": "伊保田港経由・到着便"
-    },
-    {
-      "id": "official-inbound-boyo-5",
-      "board": "port",
-      "source": "boyo",
-      "kind": "ferry",
-      "service": "防予フェリー",
-      "port": "三津浜港",
-      "arrivalPort": "三津浜港",
-      "origin": "柳井港",
-      "dest": "三津浜港",
-      "direction": "arrival",
-      "time": "11:25",
-      "originDepartureTime": "08:50",
-      "noSyntheticArrival": true,
-      "info": "事業者時刻表・到着便"
-    },
-    {
-      "id": "official-inbound-boyo-6",
-      "board": "port",
-      "source": "boyo",
-      "kind": "ferry",
-      "service": "防予フェリー",
-      "port": "三津浜港",
-      "arrivalPort": "三津浜港",
-      "origin": "柳井港",
-      "dest": "三津浜港",
-      "direction": "arrival",
-      "time": "13:30",
-      "originDepartureTime": "10:55",
-      "noSyntheticArrival": true,
-      "info": "事業者時刻表・到着便"
-    },
-    {
-      "id": "official-inbound-boyo-7",
-      "board": "port",
-      "source": "boyo",
-      "kind": "ferry",
-      "service": "防予フェリー",
-      "port": "三津浜港",
-      "arrivalPort": "三津浜港",
-      "origin": "柳井港",
-      "dest": "三津浜港",
-      "direction": "arrival",
-      "time": "14:55",
-      "originDepartureTime": "12:25",
-      "noSyntheticArrival": true,
-      "info": "伊保田港経由・到着便"
-    },
-    {
-      "id": "official-inbound-boyo-8",
-      "board": "port",
-      "source": "boyo",
-      "kind": "ferry",
-      "service": "防予フェリー",
-      "port": "三津浜港",
-      "arrivalPort": "三津浜港",
-      "origin": "柳井港",
-      "dest": "三津浜港",
-      "direction": "arrival",
-      "time": "17:20",
-      "originDepartureTime": "14:45",
-      "noSyntheticArrival": true,
-      "info": "事業者時刻表・到着便"
-    },
-    {
-      "id": "official-inbound-boyo-9",
-      "board": "port",
-      "source": "boyo",
-      "kind": "ferry",
-      "service": "防予フェリー",
-      "port": "三津浜港",
-      "arrivalPort": "三津浜港",
-      "origin": "柳井港",
-      "dest": "三津浜港",
-      "direction": "arrival",
-      "time": "18:40",
-      "originDepartureTime": "16:05",
-      "noSyntheticArrival": true,
-      "info": "事業者時刻表・到着便"
-    },
-    {
-      "id": "official-inbound-boyo-10",
-      "board": "port",
-      "source": "boyo",
-      "kind": "ferry",
-      "service": "防予フェリー",
-      "port": "三津浜港",
-      "arrivalPort": "三津浜港",
-      "origin": "柳井港",
-      "dest": "三津浜港",
-      "direction": "arrival",
-      "time": "20:20",
-      "originDepartureTime": "17:50",
-      "noSyntheticArrival": true,
-      "info": "伊保田港経由・到着便"
-    },
-    {
-      "id": "official-inbound-boyo-11",
-      "board": "port",
-      "source": "boyo",
-      "kind": "ferry",
-      "service": "防予フェリー",
-      "port": "三津浜港",
-      "arrivalPort": "三津浜港",
-      "origin": "柳井港",
-      "dest": "三津浜港",
-      "direction": "arrival",
-      "time": "23:00",
-      "originDepartureTime": "20:25",
-      "noSyntheticArrival": true,
-      "info": "事業者時刻表・到着便"
-    },
-    {
-      "id": "official-inbound-boyo-12",
-      "board": "port",
-      "source": "boyo",
-      "kind": "ferry",
-      "service": "防予フェリー",
-      "port": "三津浜港",
-      "arrivalPort": "三津浜港",
-      "origin": "柳井港",
-      "dest": "三津浜港",
-      "direction": "arrival",
-      "time": "01:15",
-      "originDepartureTime": "22:40",
-      "noSyntheticArrival": true,
-      "info": "事業者時刻表・到着便",
-      "days": [
-        1,
-        2,
-        3,
-        4,
-        5
       ],
-      "originDepartureDay": "前日"
+      "timetableReference": "https://www.orange-ferry.co.jp/6488.html",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "21:40"
     },
     {
       "id": "official-inbound-port_highspeed-1",
@@ -6687,7 +7296,16 @@
       "time": "08:50",
       "originDepartureTime": "07:30",
       "noSyntheticArrival": true,
-      "info": "事業者時刻表・到着便"
+      "info": "事業者時刻表・到着便",
+      "calls": [
+        [
+          "松山観光港",
+          "08:50",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://setonaikaikisen.co.jp/kouro/jet/",
+      "timetableChecked": "2026-10-21"
     },
     {
       "id": "official-inbound-port_highspeed-2",
@@ -6703,7 +7321,21 @@
       "time": "10:35",
       "originDepartureTime": "09:05",
       "noSyntheticArrival": true,
-      "info": "事業者時刻表・到着便"
+      "info": "事業者時刻表・到着便",
+      "calls": [
+        [
+          "呉港",
+          "09:30",
+          "寄港"
+        ],
+        [
+          "松山観光港",
+          "10:35",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://setonaikaikisen.co.jp/kouro/jet/",
+      "timetableChecked": "2026-10-21"
     },
     {
       "id": "official-inbound-port_highspeed-3",
@@ -6719,7 +7351,16 @@
       "time": "12:10",
       "originDepartureTime": "10:50",
       "noSyntheticArrival": true,
-      "info": "事業者時刻表・到着便"
+      "info": "事業者時刻表・到着便",
+      "calls": [
+        [
+          "松山観光港",
+          "12:10",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://setonaikaikisen.co.jp/kouro/jet/",
+      "timetableChecked": "2026-10-21"
     },
     {
       "id": "official-inbound-port_highspeed-4",
@@ -6735,7 +7376,21 @@
       "time": "13:55",
       "originDepartureTime": "12:25",
       "noSyntheticArrival": true,
-      "info": "事業者時刻表・到着便"
+      "info": "事業者時刻表・到着便",
+      "calls": [
+        [
+          "呉港",
+          "12:50",
+          "寄港"
+        ],
+        [
+          "松山観光港",
+          "13:55",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://setonaikaikisen.co.jp/kouro/jet/",
+      "timetableChecked": "2026-10-21"
     },
     {
       "id": "official-inbound-port_highspeed-5",
@@ -6751,7 +7406,16 @@
       "time": "16:35",
       "originDepartureTime": "15:15",
       "noSyntheticArrival": true,
-      "info": "事業者時刻表・到着便"
+      "info": "事業者時刻表・到着便",
+      "calls": [
+        [
+          "松山観光港",
+          "16:35",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://setonaikaikisen.co.jp/kouro/jet/",
+      "timetableChecked": "2026-10-21"
     },
     {
       "id": "official-inbound-port_highspeed-6",
@@ -6767,7 +7431,21 @@
       "time": "18:15",
       "originDepartureTime": "16:45",
       "noSyntheticArrival": true,
-      "info": "事業者時刻表・到着便"
+      "info": "事業者時刻表・到着便",
+      "calls": [
+        [
+          "呉港",
+          "17:10",
+          "寄港"
+        ],
+        [
+          "松山観光港",
+          "18:15",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://setonaikaikisen.co.jp/kouro/jet/",
+      "timetableChecked": "2026-10-21"
     },
     {
       "id": "official-inbound-port_highspeed-7",
@@ -6783,7 +7461,16 @@
       "time": "19:50",
       "originDepartureTime": "18:30",
       "noSyntheticArrival": true,
-      "info": "事業者時刻表・到着便"
+      "info": "事業者時刻表・到着便",
+      "calls": [
+        [
+          "松山観光港",
+          "19:50",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://setonaikaikisen.co.jp/kouro/jet/",
+      "timetableChecked": "2026-10-21"
     },
     {
       "id": "official-inbound-port_highspeed-8",
@@ -6799,7 +7486,16 @@
       "time": "21:20",
       "originDepartureTime": "20:00",
       "noSyntheticArrival": true,
-      "info": "事業者時刻表・到着便"
+      "info": "事業者時刻表・到着便",
+      "calls": [
+        [
+          "松山観光港",
+          "21:20",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://setonaikaikisen.co.jp/kouro/jet/",
+      "timetableChecked": "2026-10-21"
     },
     {
       "id": "official-cruise-in-01",
@@ -6815,7 +7511,16 @@
       "time": "08:12",
       "originDepartureTime": "05:45",
       "noSyntheticArrival": true,
-      "info": "広島港から直行"
+      "info": "広島港から直行",
+      "calls": [
+        [
+          "松山観光港",
+          "08:12",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.kankoko.com/contents/timetable.html",
+      "timetableChecked": "2026-10-21"
     },
     {
       "id": "official-cruise-in-02",
@@ -6831,7 +7536,21 @@
       "time": "09:27",
       "originDepartureTime": "06:45",
       "noSyntheticArrival": true,
-      "info": "呉港 07:30発経由"
+      "info": "呉港 07:30発経由",
+      "calls": [
+        [
+          "呉港",
+          "07:30",
+          "寄港"
+        ],
+        [
+          "松山観光港",
+          "09:27",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.kankoko.com/contents/timetable.html",
+      "timetableChecked": "2026-10-21"
     },
     {
       "id": "official-cruise-in-03",
@@ -6847,7 +7566,21 @@
       "time": "10:47",
       "originDepartureTime": "08:05",
       "noSyntheticArrival": true,
-      "info": "呉港 08:50発経由"
+      "info": "呉港 08:50発経由",
+      "calls": [
+        [
+          "呉港",
+          "08:50",
+          "寄港"
+        ],
+        [
+          "松山観光港",
+          "10:47",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.kankoko.com/contents/timetable.html",
+      "timetableChecked": "2026-10-21"
     },
     {
       "id": "official-cruise-in-04",
@@ -6863,7 +7596,21 @@
       "time": "11:57",
       "originDepartureTime": "09:15",
       "noSyntheticArrival": true,
-      "info": "呉港 10:00発経由"
+      "info": "呉港 10:00発経由",
+      "calls": [
+        [
+          "呉港",
+          "10:00",
+          "寄港"
+        ],
+        [
+          "松山観光港",
+          "11:57",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.kankoko.com/contents/timetable.html",
+      "timetableChecked": "2026-10-21"
     },
     {
       "id": "official-cruise-in-05",
@@ -6879,7 +7626,21 @@
       "time": "14:02",
       "originDepartureTime": "11:20",
       "noSyntheticArrival": true,
-      "info": "呉港 12:05発経由"
+      "info": "呉港 12:05発経由",
+      "calls": [
+        [
+          "呉港",
+          "12:05",
+          "寄港"
+        ],
+        [
+          "松山観光港",
+          "14:02",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.kankoko.com/contents/timetable.html",
+      "timetableChecked": "2026-10-21"
     },
     {
       "id": "official-cruise-in-06",
@@ -6898,7 +7659,21 @@
       "info": "呉港 13:20発経由",
       "exclude": [
         "2026-10-14"
-      ]
+      ],
+      "calls": [
+        [
+          "呉港",
+          "13:20",
+          "寄港"
+        ],
+        [
+          "松山観光港",
+          "15:17",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.kankoko.com/contents/timetable.html",
+      "timetableChecked": "2026-10-21"
     },
     {
       "id": "official-cruise-in-07",
@@ -6914,7 +7689,21 @@
       "time": "16:22",
       "originDepartureTime": "13:40",
       "noSyntheticArrival": true,
-      "info": "呉港 14:25発経由"
+      "info": "呉港 14:25発経由",
+      "calls": [
+        [
+          "呉港",
+          "14:25",
+          "寄港"
+        ],
+        [
+          "松山観光港",
+          "16:22",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.kankoko.com/contents/timetable.html",
+      "timetableChecked": "2026-10-21"
     },
     {
       "id": "official-cruise-in-08",
@@ -6930,7 +7719,21 @@
       "time": "17:47",
       "originDepartureTime": "15:05",
       "noSyntheticArrival": true,
-      "info": "呉港 15:50発経由"
+      "info": "呉港 15:50発経由",
+      "calls": [
+        [
+          "呉港",
+          "15:50",
+          "寄港"
+        ],
+        [
+          "松山観光港",
+          "17:47",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.kankoko.com/contents/timetable.html",
+      "timetableChecked": "2026-10-21"
     },
     {
       "id": "official-cruise-in-09",
@@ -6946,7 +7749,21 @@
       "time": "19:57",
       "originDepartureTime": "17:15",
       "noSyntheticArrival": true,
-      "info": "呉港 18:00発経由"
+      "info": "呉港 18:00発経由",
+      "calls": [
+        [
+          "呉港",
+          "18:00",
+          "寄港"
+        ],
+        [
+          "松山観光港",
+          "19:57",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.kankoko.com/contents/timetable.html",
+      "timetableChecked": "2026-10-21"
     },
     {
       "id": "official-cruise-in-10",
@@ -6962,7 +7779,21 @@
       "time": "22:12",
       "originDepartureTime": "19:30",
       "noSyntheticArrival": true,
-      "info": "呉港 20:15発経由"
+      "info": "呉港 20:15発経由",
+      "calls": [
+        [
+          "呉港",
+          "20:15",
+          "寄港"
+        ],
+        [
+          "松山観光港",
+          "22:12",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.kankoko.com/contents/timetable.html",
+      "timetableChecked": "2026-10-21"
     },
     {
       "id": "official-audit-inbound-uwajima_beppu-1",
@@ -6979,7 +7810,9 @@
       "originDepartureTime": "06:25",
       "originDepartureDay": "",
       "noSyntheticArrival": true,
-      "info": "公式逆方向時刻表（到着便）"
+      "info": "公式逆方向時刻表（到着便）",
+      "timetableReference": "https://www.uwajimaunyu.co.jp/timetable/",
+      "timetableChecked": "2026-10-21"
     },
     {
       "id": "official-audit-inbound-uwajima_beppu-2",
@@ -6996,7 +7829,9 @@
       "originDepartureTime": "09:45",
       "originDepartureDay": "",
       "noSyntheticArrival": true,
-      "info": "公式逆方向時刻表（到着便）"
+      "info": "公式逆方向時刻表（到着便）",
+      "timetableReference": "https://www.uwajimaunyu.co.jp/timetable/",
+      "timetableChecked": "2026-10-21"
     },
     {
       "id": "official-audit-inbound-uwajima_beppu-3",
@@ -7013,7 +7848,9 @@
       "originDepartureTime": "14:00",
       "originDepartureDay": "",
       "noSyntheticArrival": true,
-      "info": "公式逆方向時刻表（到着便）"
+      "info": "公式逆方向時刻表（到着便）",
+      "timetableReference": "https://www.uwajimaunyu.co.jp/timetable/",
+      "timetableChecked": "2026-10-21"
     },
     {
       "id": "official-audit-inbound-uwajima_beppu-4",
@@ -7030,7 +7867,9 @@
       "originDepartureTime": "16:45",
       "originDepartureDay": "",
       "noSyntheticArrival": true,
-      "info": "公式逆方向時刻表（到着便）"
+      "info": "公式逆方向時刻表（到着便）",
+      "timetableReference": "https://www.uwajimaunyu.co.jp/timetable/",
+      "timetableChecked": "2026-10-21"
     },
     {
       "id": "official-audit-inbound-uwajima_beppu-5",
@@ -7047,7 +7886,9 @@
       "originDepartureTime": "20:50",
       "originDepartureDay": "",
       "noSyntheticArrival": true,
-      "info": "公式逆方向時刻表（到着便）"
+      "info": "公式逆方向時刻表（到着便）",
+      "timetableReference": "https://www.uwajimaunyu.co.jp/timetable/",
+      "timetableChecked": "2026-10-21"
     },
     {
       "id": "official-audit-inbound-uwajima_beppu-6",
@@ -7064,7 +7905,9 @@
       "originDepartureTime": "23:50",
       "originDepartureDay": "前日",
       "noSyntheticArrival": true,
-      "info": "公式逆方向時刻表（到着便）"
+      "info": "公式逆方向時刻表（到着便）",
+      "timetableReference": "https://www.uwajimaunyu.co.jp/timetable/",
+      "timetableChecked": "2026-10-21"
     },
     {
       "id": "official-audit-inbound-uwajima_usuki-1",
@@ -7081,7 +7924,16 @@
       "originDepartureTime": "00:55",
       "originDepartureDay": "",
       "noSyntheticArrival": true,
-      "info": "公式逆方向時刻表（到着便）"
+      "info": "公式逆方向時刻表（到着便）",
+      "timetableReference": "https://www.uwajimaunyu.co.jp/timetable/",
+      "timetableChecked": "2026-10-21",
+      "days": [
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
     },
     {
       "id": "official-audit-inbound-uwajima_usuki-2",
@@ -7098,7 +7950,9 @@
       "originDepartureTime": "02:40",
       "originDepartureDay": "",
       "noSyntheticArrival": true,
-      "info": "公式逆方向時刻表（到着便）"
+      "info": "公式逆方向時刻表（到着便）",
+      "timetableReference": "https://www.uwajimaunyu.co.jp/timetable/",
+      "timetableChecked": "2026-10-21"
     },
     {
       "id": "official-audit-inbound-uwajima_usuki-3",
@@ -7115,7 +7969,9 @@
       "originDepartureTime": "08:50",
       "originDepartureDay": "",
       "noSyntheticArrival": true,
-      "info": "公式逆方向時刻表（到着便）"
+      "info": "公式逆方向時刻表（到着便）",
+      "timetableReference": "https://www.uwajimaunyu.co.jp/timetable/",
+      "timetableChecked": "2026-10-21"
     },
     {
       "id": "official-audit-inbound-uwajima_usuki-4",
@@ -7132,7 +7988,9 @@
       "originDepartureTime": "12:40",
       "originDepartureDay": "",
       "noSyntheticArrival": true,
-      "info": "公式逆方向時刻表（到着便）"
+      "info": "公式逆方向時刻表（到着便）",
+      "timetableReference": "https://www.uwajimaunyu.co.jp/timetable/",
+      "timetableChecked": "2026-10-21"
     },
     {
       "id": "official-audit-inbound-uwajima_usuki-5",
@@ -7149,7 +8007,9 @@
       "originDepartureTime": "14:40",
       "originDepartureDay": "",
       "noSyntheticArrival": true,
-      "info": "公式逆方向時刻表（到着便）"
+      "info": "公式逆方向時刻表（到着便）",
+      "timetableReference": "https://www.uwajimaunyu.co.jp/timetable/",
+      "timetableChecked": "2026-10-21"
     },
     {
       "id": "official-audit-inbound-uwajima_usuki-6",
@@ -7166,7 +8026,9 @@
       "originDepartureTime": "18:30",
       "originDepartureDay": "",
       "noSyntheticArrival": true,
-      "info": "公式逆方向時刻表（到着便）"
+      "info": "公式逆方向時刻表（到着便）",
+      "timetableReference": "https://www.uwajimaunyu.co.jp/timetable/",
+      "timetableChecked": "2026-10-21"
     },
     {
       "id": "official-audit-inbound-uwajima_usuki-7",
@@ -7183,7 +8045,9 @@
       "originDepartureTime": "20:40",
       "originDepartureDay": "",
       "noSyntheticArrival": true,
-      "info": "公式逆方向時刻表（到着便）"
+      "info": "公式逆方向時刻表（到着便）",
+      "timetableReference": "https://www.uwajimaunyu.co.jp/timetable/",
+      "timetableChecked": "2026-10-21"
     },
     {
       "id": "official-audit-inbound-orange_toyo-1",
@@ -7200,7 +8064,25 @@
       "originDepartureTime": "22:00",
       "originDepartureDay": "前日",
       "noSyntheticArrival": true,
-      "info": "公式逆方向時刻表（到着便）"
+      "info": "公式逆方向時刻表（到着便）",
+      "exclude": [
+        "2026-10-21",
+        "2026-10-22",
+        "2026-10-23",
+        "2026-10-24",
+        "2026-10-25",
+        "2026-10-26",
+        "2026-10-27",
+        "2026-10-28",
+        "2026-10-29",
+        "2026-10-30",
+        "2026-10-31",
+        "2026-11-01",
+        "2026-11-02",
+        "2026-11-03"
+      ],
+      "timetableReference": "https://www.orange-ferry.co.jp/6488.html",
+      "timetableChecked": "2026-10-21"
     },
     {
       "id": "official-202610-in-imabari_blue_official_in-0740",
@@ -7213,10 +8095,24 @@
       "origin": "木江港",
       "dest": "今治港",
       "direction": "arrival",
-      "time": "08:10",
-      "originDepartureTime": "07:40",
+      "time": "12:05",
+      "originDepartureTime": "10:50",
       "noSyntheticArrival": true,
-      "info": "木江07:40発→宗方07:53→今治08:10着"
+      "info": "宗方11:05寄港・今治12:05着",
+      "calls": [
+        [
+          "宗方港",
+          "11:05",
+          "寄港"
+        ],
+        [
+          "今治港",
+          "12:05",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://omishima-bl.net/",
+      "timetableChecked": "2026-10-21"
     },
     {
       "id": "official-202610-in-imabari_blue_official_in-1845",
@@ -7232,7 +8128,21 @@
       "time": "19:55",
       "originDepartureTime": "18:45",
       "noSyntheticArrival": true,
-      "info": "宗方港19:00経由"
+      "info": "宗方港19:00経由",
+      "calls": [
+        [
+          "宗方港",
+          "19:00",
+          "寄港"
+        ],
+        [
+          "今治港",
+          "19:55",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://omishima-bl.net/",
+      "timetableChecked": "2026-10-21"
     },
     {
       "id": "official-202610-in-orange_niihama_official_in-0120",
@@ -7254,55 +8164,26 @@
         3,
         4,
         5
-      ]
-    },
-    {
-      "id": "official-202610-in-jumbo_ferry_official_arrival-0100",
-      "board": "port",
-      "kind": "ferry",
-      "source": "jumbo_ferry_official_arrival",
-      "service": "ジャンボフェリー",
-      "port": "高松東港",
-      "arrivalPort": "高松東港",
-      "origin": "神戸港",
-      "dest": "高松東港",
-      "direction": "arrival",
-      "time": "05:15",
-      "originDepartureTime": "01:00",
-      "noSyntheticArrival": true,
-      "info": "直行"
-    },
-    {
-      "id": "official-202610-in-jumbo_ferry_official_arrival-0815",
-      "board": "port",
-      "kind": "ferry",
-      "source": "jumbo_ferry_official_arrival",
-      "service": "ジャンボフェリー",
-      "port": "高松東港",
-      "arrivalPort": "高松東港",
-      "origin": "神戸港",
-      "dest": "高松東港",
-      "direction": "arrival",
-      "time": "13:00",
-      "originDepartureTime": "08:15",
-      "noSyntheticArrival": true,
-      "info": "小豆島（坂手）経由"
-    },
-    {
-      "id": "official-202610-in-jumbo_ferry_official_arrival-1300",
-      "board": "port",
-      "kind": "ferry",
-      "source": "jumbo_ferry_official_arrival",
-      "service": "ジャンボフェリー",
-      "port": "高松東港",
-      "arrivalPort": "高松東港",
-      "origin": "神戸港",
-      "dest": "高松東港",
-      "direction": "arrival",
-      "time": "17:45",
-      "originDepartureTime": "13:00",
-      "noSyntheticArrival": true,
-      "info": "小豆島（坂手）経由"
+      ],
+      "exclude": [
+        "2026-10-21",
+        "2026-10-22",
+        "2026-10-23",
+        "2026-10-24",
+        "2026-10-25",
+        "2026-10-26",
+        "2026-10-27",
+        "2026-10-28",
+        "2026-10-29",
+        "2026-10-30",
+        "2026-10-31",
+        "2026-11-01",
+        "2026-11-02",
+        "2026-11-03"
+      ],
+      "ferryCalendar": "niihama-in",
+      "timetableReference": "https://www.orange-ferry.co.jp/6488.html",
+      "timetableChecked": "2026-10-21"
     },
     {
       "id": "verified-imabari-in-imabari_tobishima_official_in-0620",
@@ -7318,7 +8199,31 @@
       "time": "07:18",
       "originDepartureTime": "06:20",
       "noSyntheticArrival": true,
-      "info": "小大下・大下・宗方経由"
+      "info": "小大下・大下・宗方経由",
+      "calls": [
+        [
+          "小大下港",
+          "06:27",
+          "寄港"
+        ],
+        [
+          "大下港",
+          "06:34",
+          "寄港"
+        ],
+        [
+          "宗方港",
+          "06:44",
+          "寄港"
+        ],
+        [
+          "今治港",
+          "07:18",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.city.imabari.ehime.jp/kotsus/tosen/sekizen/sekizen-r804.pdf",
+      "timetableChecked": "2026-10-21"
     },
     {
       "id": "verified-imabari-in-imabari_tobishima_official_in-0830",
@@ -7334,7 +8239,31 @@
       "time": "09:28",
       "originDepartureTime": "08:30",
       "noSyntheticArrival": true,
-      "info": "小大下・大下・宗方経由"
+      "info": "小大下・大下・宗方経由",
+      "calls": [
+        [
+          "小大下港",
+          "08:37",
+          "寄港"
+        ],
+        [
+          "大下港",
+          "08:44",
+          "寄港"
+        ],
+        [
+          "宗方港",
+          "08:54",
+          "寄港"
+        ],
+        [
+          "今治港",
+          "09:28",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.city.imabari.ehime.jp/kotsus/tosen/sekizen/sekizen-r804.pdf",
+      "timetableChecked": "2026-10-21"
     },
     {
       "id": "verified-imabari-in-imabari_tobishima_official_in-1230",
@@ -7350,7 +8279,31 @@
       "time": "13:28",
       "originDepartureTime": "12:30",
       "noSyntheticArrival": true,
-      "info": "小大下・大下・宗方経由"
+      "info": "小大下・大下・宗方経由",
+      "calls": [
+        [
+          "小大下港",
+          "12:37",
+          "寄港"
+        ],
+        [
+          "大下港",
+          "12:44",
+          "寄港"
+        ],
+        [
+          "宗方港",
+          "12:54",
+          "寄港"
+        ],
+        [
+          "今治港",
+          "13:28",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.city.imabari.ehime.jp/kotsus/tosen/sekizen/sekizen-r804.pdf",
+      "timetableChecked": "2026-10-21"
     },
     {
       "id": "verified-imabari-in-imabari_tobishima_official_in-1735",
@@ -7366,7 +8319,31 @@
       "time": "18:33",
       "originDepartureTime": "17:35",
       "noSyntheticArrival": true,
-      "info": "小大下・大下・宗方経由"
+      "info": "小大下・大下・宗方経由",
+      "calls": [
+        [
+          "小大下港",
+          "17:42",
+          "寄港"
+        ],
+        [
+          "大下港",
+          "17:49",
+          "寄港"
+        ],
+        [
+          "宗方港",
+          "17:59",
+          "寄港"
+        ],
+        [
+          "今治港",
+          "18:33",
+          "着"
+        ]
+      ],
+      "timetableReference": "https://www.city.imabari.ehime.jp/kotsus/tosen/sekizen/sekizen-r804.pdf",
+      "timetableChecked": "2026-10-21"
     },
     {
       "board": "port",
@@ -7591,6 +8568,1128 @@
       "dates": [
         "2026-10-18"
       ]
+    },
+    {
+      "id": "boyo-official-20261021-False-03:35",
+      "board": "port",
+      "kind": "ferry",
+      "source": "boyo",
+      "service": "防予フェリー",
+      "port": "三津浜港",
+      "dest": "柳井港",
+      "time": "03:35",
+      "direction": "departure",
+      "calls": [
+        [
+          "柳井港",
+          "06:00",
+          "着"
+        ]
+      ],
+      "noSyntheticArrival": true,
+      "info": "直行",
+      "days": [
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "timetableReference": "https://www.boyoferry.co.jp/c_timetable.html",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "06:00"
+    },
+    {
+      "id": "boyo-official-20261021-False-04:50",
+      "board": "port",
+      "kind": "ferry",
+      "source": "boyo",
+      "service": "防予フェリー",
+      "port": "三津浜港",
+      "dest": "柳井港",
+      "time": "04:50",
+      "direction": "departure",
+      "calls": [
+        [
+          "柳井港",
+          "07:25",
+          "着"
+        ]
+      ],
+      "noSyntheticArrival": true,
+      "info": "直行",
+      "days": [
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "timetableReference": "https://www.boyoferry.co.jp/c_timetable.html",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "07:25"
+    },
+    {
+      "id": "boyo-official-20261021-False-07:30",
+      "board": "port",
+      "kind": "ferry",
+      "source": "boyo",
+      "service": "防予フェリー",
+      "port": "三津浜港",
+      "dest": "柳井港",
+      "time": "07:30",
+      "direction": "departure",
+      "calls": [
+        [
+          "柳井港",
+          "10:05",
+          "着"
+        ]
+      ],
+      "noSyntheticArrival": true,
+      "info": "直行",
+      "timetableReference": "https://www.boyoferry.co.jp/c_timetable.html",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "10:05"
+    },
+    {
+      "id": "boyo-official-20261021-False-09:40",
+      "board": "port",
+      "kind": "ferry",
+      "source": "boyo",
+      "service": "防予フェリー",
+      "port": "三津浜港",
+      "dest": "柳井港",
+      "time": "09:40",
+      "direction": "departure",
+      "calls": [
+        [
+          "伊保田港",
+          "10:47",
+          "着"
+        ],
+        [
+          "伊保田港",
+          "10:52",
+          "発"
+        ],
+        [
+          "柳井港",
+          "12:15",
+          "着"
+        ]
+      ],
+      "noSyntheticArrival": true,
+      "info": "伊保田港経由",
+      "timetableReference": "https://www.boyoferry.co.jp/c_timetable.html",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "12:15"
+    },
+    {
+      "id": "boyo-official-20261021-False-11:50",
+      "board": "port",
+      "kind": "ferry",
+      "source": "boyo",
+      "service": "防予フェリー",
+      "port": "三津浜港",
+      "dest": "柳井港",
+      "time": "11:50",
+      "direction": "departure",
+      "calls": [
+        [
+          "柳井港",
+          "14:25",
+          "着"
+        ]
+      ],
+      "noSyntheticArrival": true,
+      "info": "直行",
+      "timetableReference": "https://www.boyoferry.co.jp/c_timetable.html",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "14:25"
+    },
+    {
+      "id": "boyo-official-20261021-False-13:35",
+      "board": "port",
+      "kind": "ferry",
+      "source": "boyo",
+      "service": "防予フェリー",
+      "port": "三津浜港",
+      "dest": "柳井港",
+      "time": "13:35",
+      "direction": "departure",
+      "calls": [
+        [
+          "柳井港",
+          "16:05",
+          "着"
+        ]
+      ],
+      "noSyntheticArrival": true,
+      "info": "直行",
+      "timetableReference": "https://www.boyoferry.co.jp/c_timetable.html",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "16:05"
+    },
+    {
+      "id": "boyo-official-20261021-False-15:05",
+      "board": "port",
+      "kind": "ferry",
+      "source": "boyo",
+      "service": "防予フェリー",
+      "port": "三津浜港",
+      "dest": "柳井港",
+      "time": "15:05",
+      "direction": "departure",
+      "calls": [
+        [
+          "伊保田港",
+          "16:12",
+          "着"
+        ],
+        [
+          "伊保田港",
+          "16:17",
+          "発"
+        ],
+        [
+          "柳井港",
+          "17:40",
+          "着"
+        ]
+      ],
+      "noSyntheticArrival": true,
+      "info": "伊保田港経由",
+      "timetableReference": "https://www.boyoferry.co.jp/c_timetable.html",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "17:40"
+    },
+    {
+      "id": "boyo-official-20261021-False-17:35",
+      "board": "port",
+      "kind": "ferry",
+      "source": "boyo",
+      "service": "防予フェリー",
+      "port": "三津浜港",
+      "dest": "柳井港",
+      "time": "17:35",
+      "direction": "departure",
+      "calls": [
+        [
+          "柳井港",
+          "20:10",
+          "着"
+        ]
+      ],
+      "noSyntheticArrival": true,
+      "info": "直行",
+      "timetableReference": "https://www.boyoferry.co.jp/c_timetable.html",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "20:10"
+    },
+    {
+      "id": "boyo-official-20261021-False-19:20",
+      "board": "port",
+      "kind": "ferry",
+      "source": "boyo",
+      "service": "防予フェリー",
+      "port": "三津浜港",
+      "dest": "柳井港",
+      "time": "19:20",
+      "direction": "departure",
+      "calls": [
+        [
+          "柳井港",
+          "21:55",
+          "着"
+        ]
+      ],
+      "noSyntheticArrival": true,
+      "info": "直行",
+      "timetableReference": "https://www.boyoferry.co.jp/c_timetable.html",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "21:55"
+    },
+    {
+      "id": "boyo-official-20261021-False-20:30",
+      "board": "port",
+      "kind": "ferry",
+      "source": "boyo",
+      "service": "防予フェリー",
+      "port": "三津浜港",
+      "dest": "柳井港",
+      "time": "20:30",
+      "direction": "departure",
+      "calls": [
+        [
+          "伊保田港",
+          "21:37",
+          "着"
+        ],
+        [
+          "伊保田港",
+          "21:42",
+          "発"
+        ],
+        [
+          "柳井港",
+          "23:05",
+          "着"
+        ]
+      ],
+      "noSyntheticArrival": true,
+      "info": "伊保田港経由",
+      "timetableReference": "https://www.boyoferry.co.jp/c_timetable.html",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "23:05"
+    },
+    {
+      "id": "boyo-official-20261021-False-23:10",
+      "board": "port",
+      "kind": "ferry",
+      "source": "boyo",
+      "service": "防予フェリー",
+      "port": "三津浜港",
+      "dest": "柳井港",
+      "time": "23:10",
+      "direction": "departure",
+      "calls": [
+        [
+          "柳井港",
+          "01:45",
+          "着"
+        ]
+      ],
+      "noSyntheticArrival": true,
+      "info": "直行",
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "timetableReference": "https://www.boyoferry.co.jp/c_timetable.html",
+      "timetableChecked": "2026-10-21",
+      "terminalArrivalTime": "01:45"
+    },
+    {
+      "id": "boyo-official-20261021-True-01:00",
+      "board": "port",
+      "kind": "ferry",
+      "source": "boyo",
+      "service": "防予フェリー",
+      "port": "三津浜港",
+      "dest": "三津浜港",
+      "time": "03:25",
+      "direction": "arrival",
+      "calls": [
+        [
+          "三津浜港",
+          "03:25",
+          "着"
+        ]
+      ],
+      "noSyntheticArrival": true,
+      "info": "直行",
+      "origin": "柳井港",
+      "arrivalPort": "三津浜港",
+      "originDepartureTime": "01:00",
+      "days": [
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "timetableReference": "https://www.boyoferry.co.jp/c_timetable.html",
+      "timetableChecked": "2026-10-21"
+    },
+    {
+      "id": "boyo-official-20261021-True-02:00",
+      "board": "port",
+      "kind": "ferry",
+      "source": "boyo",
+      "service": "防予フェリー",
+      "port": "三津浜港",
+      "dest": "三津浜港",
+      "time": "04:35",
+      "direction": "arrival",
+      "calls": [
+        [
+          "三津浜港",
+          "04:35",
+          "着"
+        ]
+      ],
+      "noSyntheticArrival": true,
+      "info": "直行",
+      "origin": "柳井港",
+      "arrivalPort": "三津浜港",
+      "originDepartureTime": "02:00",
+      "days": [
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "timetableReference": "https://www.boyoferry.co.jp/c_timetable.html",
+      "timetableChecked": "2026-10-21"
+    },
+    {
+      "id": "boyo-official-20261021-True-07:00",
+      "board": "port",
+      "kind": "ferry",
+      "source": "boyo",
+      "service": "防予フェリー",
+      "port": "三津浜港",
+      "dest": "三津浜港",
+      "time": "09:30",
+      "direction": "arrival",
+      "calls": [
+        [
+          "伊保田港",
+          "08:10",
+          "着"
+        ],
+        [
+          "伊保田港",
+          "08:15",
+          "発"
+        ],
+        [
+          "三津浜港",
+          "09:30",
+          "着"
+        ]
+      ],
+      "noSyntheticArrival": true,
+      "info": "伊保田港経由",
+      "origin": "柳井港",
+      "arrivalPort": "三津浜港",
+      "originDepartureTime": "07:00",
+      "timetableReference": "https://www.boyoferry.co.jp/c_timetable.html",
+      "timetableChecked": "2026-10-21"
+    },
+    {
+      "id": "boyo-official-20261021-True-09:00",
+      "board": "port",
+      "kind": "ferry",
+      "source": "boyo",
+      "service": "防予フェリー",
+      "port": "三津浜港",
+      "dest": "三津浜港",
+      "time": "11:35",
+      "direction": "arrival",
+      "calls": [
+        [
+          "三津浜港",
+          "11:35",
+          "着"
+        ]
+      ],
+      "noSyntheticArrival": true,
+      "info": "直行",
+      "origin": "柳井港",
+      "arrivalPort": "三津浜港",
+      "originDepartureTime": "09:00",
+      "timetableReference": "https://www.boyoferry.co.jp/c_timetable.html",
+      "timetableChecked": "2026-10-21"
+    },
+    {
+      "id": "boyo-official-20261021-True-10:50",
+      "board": "port",
+      "kind": "ferry",
+      "source": "boyo",
+      "service": "防予フェリー",
+      "port": "三津浜港",
+      "dest": "三津浜港",
+      "time": "13:25",
+      "direction": "arrival",
+      "calls": [
+        [
+          "三津浜港",
+          "13:25",
+          "着"
+        ]
+      ],
+      "noSyntheticArrival": true,
+      "info": "直行",
+      "origin": "柳井港",
+      "arrivalPort": "三津浜港",
+      "originDepartureTime": "10:50",
+      "timetableReference": "https://www.boyoferry.co.jp/c_timetable.html",
+      "timetableChecked": "2026-10-21"
+    },
+    {
+      "id": "boyo-official-20261021-True-12:25",
+      "board": "port",
+      "kind": "ferry",
+      "source": "boyo",
+      "service": "防予フェリー",
+      "port": "三津浜港",
+      "dest": "三津浜港",
+      "time": "14:55",
+      "direction": "arrival",
+      "calls": [
+        [
+          "伊保田港",
+          "13:40",
+          "着"
+        ],
+        [
+          "伊保田港",
+          "13:45",
+          "発"
+        ],
+        [
+          "三津浜港",
+          "14:55",
+          "着"
+        ]
+      ],
+      "noSyntheticArrival": true,
+      "info": "伊保田港経由",
+      "origin": "柳井港",
+      "arrivalPort": "三津浜港",
+      "originDepartureTime": "12:25",
+      "timetableReference": "https://www.boyoferry.co.jp/c_timetable.html",
+      "timetableChecked": "2026-10-21"
+    },
+    {
+      "id": "boyo-official-20261021-True-14:45",
+      "board": "port",
+      "kind": "ferry",
+      "source": "boyo",
+      "service": "防予フェリー",
+      "port": "三津浜港",
+      "dest": "三津浜港",
+      "time": "17:20",
+      "direction": "arrival",
+      "calls": [
+        [
+          "三津浜港",
+          "17:20",
+          "着"
+        ]
+      ],
+      "noSyntheticArrival": true,
+      "info": "直行",
+      "origin": "柳井港",
+      "arrivalPort": "三津浜港",
+      "originDepartureTime": "14:45",
+      "timetableReference": "https://www.boyoferry.co.jp/c_timetable.html",
+      "timetableChecked": "2026-10-21"
+    },
+    {
+      "id": "boyo-official-20261021-True-16:15",
+      "board": "port",
+      "kind": "ferry",
+      "source": "boyo",
+      "service": "防予フェリー",
+      "port": "三津浜港",
+      "dest": "三津浜港",
+      "time": "18:40",
+      "direction": "arrival",
+      "calls": [
+        [
+          "三津浜港",
+          "18:40",
+          "着"
+        ]
+      ],
+      "noSyntheticArrival": true,
+      "info": "直行",
+      "origin": "柳井港",
+      "arrivalPort": "三津浜港",
+      "originDepartureTime": "16:15",
+      "timetableReference": "https://www.boyoferry.co.jp/c_timetable.html",
+      "timetableChecked": "2026-10-21"
+    },
+    {
+      "id": "boyo-official-20261021-True-17:50",
+      "board": "port",
+      "kind": "ferry",
+      "source": "boyo",
+      "service": "防予フェリー",
+      "port": "三津浜港",
+      "dest": "三津浜港",
+      "time": "20:20",
+      "direction": "arrival",
+      "calls": [
+        [
+          "伊保田港",
+          "19:05",
+          "着"
+        ],
+        [
+          "伊保田港",
+          "19:10",
+          "発"
+        ],
+        [
+          "三津浜港",
+          "20:20",
+          "着"
+        ]
+      ],
+      "noSyntheticArrival": true,
+      "info": "伊保田港経由",
+      "origin": "柳井港",
+      "arrivalPort": "三津浜港",
+      "originDepartureTime": "17:50",
+      "timetableReference": "https://www.boyoferry.co.jp/c_timetable.html",
+      "timetableChecked": "2026-10-21"
+    },
+    {
+      "id": "boyo-official-20261021-True-20:25",
+      "board": "port",
+      "kind": "ferry",
+      "source": "boyo",
+      "service": "防予フェリー",
+      "port": "三津浜港",
+      "dest": "三津浜港",
+      "time": "23:00",
+      "direction": "arrival",
+      "calls": [
+        [
+          "三津浜港",
+          "23:00",
+          "着"
+        ]
+      ],
+      "noSyntheticArrival": true,
+      "info": "直行",
+      "origin": "柳井港",
+      "arrivalPort": "三津浜港",
+      "originDepartureTime": "20:25",
+      "timetableReference": "https://www.boyoferry.co.jp/c_timetable.html",
+      "timetableChecked": "2026-10-21"
+    },
+    {
+      "id": "boyo-official-20261021-True-22:10",
+      "board": "port",
+      "kind": "ferry",
+      "source": "boyo",
+      "service": "防予フェリー",
+      "port": "三津浜港",
+      "dest": "三津浜港",
+      "time": "00:45",
+      "direction": "arrival",
+      "calls": [
+        [
+          "三津浜港",
+          "00:45",
+          "着"
+        ]
+      ],
+      "noSyntheticArrival": true,
+      "info": "直行",
+      "origin": "柳井港",
+      "arrivalPort": "三津浜港",
+      "originDepartureTime": "22:10",
+      "originDepartureDay": "前日",
+      "days": [
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "timetableReference": "https://www.boyoferry.co.jp/c_timetable.html",
+      "timetableChecked": "2026-10-21"
+    },
+    {
+      "id": "official-20261021-nakajima_east_official_in-05:40",
+      "board": "port",
+      "source": "nakajima_east_official_in",
+      "service": "中島汽船フェリー（東線）",
+      "kind": "ferry",
+      "port": "三津浜港",
+      "arrivalPort": "三津浜港",
+      "origin": "大浦港",
+      "dest": "三津浜港",
+      "direction": "arrival",
+      "time": "06:40",
+      "originDepartureTime": "05:40",
+      "calls": [
+        [
+          "睦月港",
+          "05:59",
+          "寄港"
+        ],
+        [
+          "三津浜港",
+          "06:40",
+          "着"
+        ]
+      ],
+      "noSyntheticArrival": true,
+      "info": "公式時刻表・寄港便",
+      "timetableReference": "https://www.pref.ehime.jp/uploaded/attachment/183017.pdf#page=18",
+      "timetableChecked": "2026-10-21"
+    },
+    {
+      "id": "official-20261021-nakajima_east_official_in-08:35",
+      "board": "port",
+      "source": "nakajima_east_official_in",
+      "service": "中島汽船フェリー（東線）",
+      "kind": "ferry",
+      "port": "三津浜港",
+      "arrivalPort": "三津浜港",
+      "origin": "大浦港",
+      "dest": "三津浜港",
+      "direction": "arrival",
+      "time": "09:57",
+      "originDepartureTime": "08:35",
+      "calls": [
+        [
+          "野忽那港",
+          "08:56",
+          "寄港"
+        ],
+        [
+          "睦月港",
+          "09:13",
+          "寄港"
+        ],
+        [
+          "高浜港",
+          "09:45",
+          "寄港"
+        ],
+        [
+          "三津浜港",
+          "09:57",
+          "着"
+        ]
+      ],
+      "noSyntheticArrival": true,
+      "info": "公式時刻表・寄港便",
+      "timetableReference": "https://www.pref.ehime.jp/uploaded/attachment/183017.pdf#page=18",
+      "timetableChecked": "2026-10-21"
+    },
+    {
+      "id": "official-20261021-nakajima_east_official_in-11:40",
+      "board": "port",
+      "source": "nakajima_east_official_in",
+      "service": "中島汽船フェリー（東線）",
+      "kind": "ferry",
+      "port": "三津浜港",
+      "arrivalPort": "三津浜港",
+      "origin": "大浦港",
+      "dest": "三津浜港",
+      "direction": "arrival",
+      "time": "12:34",
+      "originDepartureTime": "11:40",
+      "calls": [
+        [
+          "高浜港",
+          "12:21",
+          "寄港"
+        ],
+        [
+          "三津浜港",
+          "12:34",
+          "着"
+        ]
+      ],
+      "noSyntheticArrival": true,
+      "info": "公式時刻表・寄港便",
+      "timetableReference": "https://www.pref.ehime.jp/uploaded/attachment/183017.pdf#page=18",
+      "timetableChecked": "2026-10-21"
+    },
+    {
+      "id": "official-20261021-nakajima_east_official_in-14:10",
+      "board": "port",
+      "source": "nakajima_east_official_in",
+      "service": "中島汽船フェリー（東線）",
+      "kind": "ferry",
+      "port": "三津浜港",
+      "arrivalPort": "三津浜港",
+      "origin": "大浦港",
+      "dest": "三津浜港",
+      "direction": "arrival",
+      "time": "15:32",
+      "originDepartureTime": "14:10",
+      "calls": [
+        [
+          "野忽那港",
+          "14:31",
+          "寄港"
+        ],
+        [
+          "睦月港",
+          "14:48",
+          "寄港"
+        ],
+        [
+          "高浜港",
+          "15:20",
+          "寄港"
+        ],
+        [
+          "三津浜港",
+          "15:32",
+          "着"
+        ]
+      ],
+      "noSyntheticArrival": true,
+      "info": "公式時刻表・寄港便",
+      "timetableReference": "https://www.pref.ehime.jp/uploaded/attachment/183017.pdf#page=18",
+      "timetableChecked": "2026-10-21"
+    },
+    {
+      "id": "official-20261021-nakajima_east_official_in-17:30",
+      "board": "port",
+      "source": "nakajima_east_official_in",
+      "service": "中島汽船フェリー（東線）",
+      "kind": "ferry",
+      "port": "三津浜港",
+      "arrivalPort": "三津浜港",
+      "origin": "大浦港",
+      "dest": "三津浜港",
+      "direction": "arrival",
+      "time": "18:55",
+      "originDepartureTime": "17:30",
+      "calls": [
+        [
+          "野忽那港",
+          "17:51",
+          "寄港"
+        ],
+        [
+          "睦月港",
+          "18:08",
+          "寄港"
+        ],
+        [
+          "高浜港",
+          "18:40",
+          "寄港"
+        ],
+        [
+          "三津浜港",
+          "18:55",
+          "着"
+        ]
+      ],
+      "noSyntheticArrival": true,
+      "info": "公式時刻表・寄港便",
+      "timetableReference": "https://www.pref.ehime.jp/uploaded/attachment/183017.pdf#page=18",
+      "timetableChecked": "2026-10-21"
+    },
+    {
+      "id": "official-20261021-nakajima_west_official_in-06:06",
+      "board": "port",
+      "source": "nakajima_west_official_in",
+      "service": "中島汽船フェリー（西線）",
+      "kind": "ferry",
+      "port": "三津浜港",
+      "arrivalPort": "三津浜港",
+      "origin": "西中港",
+      "dest": "三津浜港",
+      "direction": "arrival",
+      "time": "08:50",
+      "originDepartureTime": "06:06",
+      "calls": [
+        [
+          "上怒和港",
+          "06:23",
+          "寄港"
+        ],
+        [
+          "元怒和港",
+          "06:45",
+          "寄港"
+        ],
+        [
+          "津和地港",
+          "06:56",
+          "寄港"
+        ],
+        [
+          "二神港",
+          "07:16",
+          "寄港"
+        ],
+        [
+          "神浦港",
+          "07:45",
+          "寄港"
+        ],
+        [
+          "釣島港",
+          "08:08",
+          "寄港"
+        ],
+        [
+          "高浜港",
+          "08:38",
+          "寄港"
+        ],
+        [
+          "三津浜港",
+          "08:50",
+          "着"
+        ]
+      ],
+      "noSyntheticArrival": true,
+      "info": "公式時刻表・寄港便",
+      "timetableReference": "https://www.pref.ehime.jp/uploaded/attachment/183017.pdf#page=18",
+      "timetableChecked": "2026-10-21"
+    },
+    {
+      "id": "official-20261021-nakajima_west_official_in-13:59",
+      "board": "port",
+      "source": "nakajima_west_official_in",
+      "service": "中島汽船フェリー（西線）",
+      "kind": "ferry",
+      "port": "三津浜港",
+      "arrivalPort": "三津浜港",
+      "origin": "西中港",
+      "dest": "三津浜港",
+      "direction": "arrival",
+      "time": "16:25",
+      "originDepartureTime": "13:59",
+      "calls": [
+        [
+          "上怒和港",
+          "14:16",
+          "寄港"
+        ],
+        [
+          "元怒和港",
+          "14:38",
+          "寄港"
+        ],
+        [
+          "津和地港",
+          "14:49",
+          "寄港"
+        ],
+        [
+          "二神港",
+          "15:09",
+          "寄港"
+        ],
+        [
+          "神浦港",
+          "15:39",
+          "寄港"
+        ],
+        [
+          "釣島港",
+          "16:02",
+          "寄港"
+        ],
+        [
+          "三津浜港",
+          "16:25",
+          "着"
+        ]
+      ],
+      "noSyntheticArrival": true,
+      "info": "公式時刻表・寄港便",
+      "timetableReference": "https://www.pref.ehime.jp/uploaded/attachment/183017.pdf#page=18",
+      "timetableChecked": "2026-10-21"
+    },
+    {
+      "id": "official-20261021-imabari_sekizen_official_in-06:50",
+      "board": "port",
+      "source": "imabari_sekizen_official_in",
+      "service": "今治市営フェリー 第二せきぜん",
+      "kind": "ferry",
+      "port": "今治港",
+      "arrivalPort": "今治港",
+      "origin": "岡村港",
+      "dest": "今治港",
+      "direction": "arrival",
+      "time": "08:10",
+      "originDepartureTime": "06:50",
+      "calls": [
+        [
+          "小大下港",
+          "07:02",
+          "寄港"
+        ],
+        [
+          "大下港",
+          "07:15",
+          "寄港"
+        ],
+        [
+          "今治港",
+          "08:10",
+          "着"
+        ]
+      ],
+      "noSyntheticArrival": true,
+      "info": "公式時刻表・寄港便",
+      "days": [
+        0,
+        2,
+        3,
+        5,
+        6
+      ],
+      "timetableReference": "https://www.city.imabari.ehime.jp/kotsus/tosen/sekizen/sekizen-r804.pdf",
+      "timetableChecked": "2026-10-21"
+    },
+    {
+      "id": "official-20261021-imabari_sekizen_official_in-09:35",
+      "board": "port",
+      "source": "imabari_sekizen_official_in",
+      "service": "今治市営フェリー 第二せきぜん",
+      "kind": "ferry",
+      "port": "今治港",
+      "arrivalPort": "今治港",
+      "origin": "岡村港",
+      "dest": "今治港",
+      "direction": "arrival",
+      "time": "10:55",
+      "originDepartureTime": "09:35",
+      "calls": [
+        [
+          "小大下港",
+          "09:47",
+          "寄港"
+        ],
+        [
+          "大下港",
+          "10:00",
+          "寄港"
+        ],
+        [
+          "今治港",
+          "10:55",
+          "着"
+        ]
+      ],
+      "noSyntheticArrival": true,
+      "info": "公式時刻表・寄港便",
+      "days": [
+        0,
+        2,
+        3,
+        5,
+        6
+      ],
+      "timetableReference": "https://www.city.imabari.ehime.jp/kotsus/tosen/sekizen/sekizen-r804.pdf",
+      "timetableChecked": "2026-10-21"
+    },
+    {
+      "id": "official-20261021-imabari_sekizen_official_in-13:30",
+      "board": "port",
+      "source": "imabari_sekizen_official_in",
+      "service": "今治市営フェリー 第二せきぜん",
+      "kind": "ferry",
+      "port": "今治港",
+      "arrivalPort": "今治港",
+      "origin": "岡村港",
+      "dest": "今治港",
+      "direction": "arrival",
+      "time": "14:30",
+      "originDepartureTime": "13:30",
+      "calls": [
+        [
+          "今治港",
+          "14:30",
+          "着"
+        ]
+      ],
+      "noSyntheticArrival": true,
+      "info": "公式時刻表・寄港便",
+      "days": [
+        0,
+        2,
+        3,
+        5,
+        6
+      ],
+      "timetableReference": "https://www.city.imabari.ehime.jp/kotsus/tosen/sekizen/sekizen-r804.pdf",
+      "timetableChecked": "2026-10-21"
+    },
+    {
+      "id": "official-20261021-imabari_sekizen_official_in-16:15",
+      "board": "port",
+      "source": "imabari_sekizen_official_in",
+      "service": "今治市営フェリー 第二せきぜん",
+      "kind": "ferry",
+      "port": "今治港",
+      "arrivalPort": "今治港",
+      "origin": "岡村港",
+      "dest": "今治港",
+      "direction": "arrival",
+      "time": "17:35",
+      "originDepartureTime": "16:15",
+      "calls": [
+        [
+          "小大下港",
+          "16:27",
+          "寄港"
+        ],
+        [
+          "大下港",
+          "16:40",
+          "寄港"
+        ],
+        [
+          "今治港",
+          "17:35",
+          "着"
+        ]
+      ],
+      "noSyntheticArrival": true,
+      "info": "公式時刻表・寄港便",
+      "days": [
+        0,
+        2,
+        3,
+        5,
+        6
+      ],
+      "timetableReference": "https://www.city.imabari.ehime.jp/kotsus/tosen/sekizen/sekizen-r804.pdf",
+      "timetableChecked": "2026-10-21"
+    },
+    {
+      "id": "official-20261021-orange_niihama_dock_official_in-23:10",
+      "board": "port",
+      "source": "orange_niihama_dock_official_in",
+      "service": "オレンジフェリー",
+      "kind": "ferry",
+      "port": "新居浜東港",
+      "arrivalPort": "新居浜東港",
+      "origin": "神戸六甲港",
+      "dest": "新居浜東港",
+      "direction": "arrival",
+      "time": "06:00",
+      "originDepartureTime": "23:10",
+      "calls": [
+        [
+          "新居浜東港",
+          "06:00",
+          "着"
+        ]
+      ],
+      "noSyntheticArrival": true,
+      "info": "ドック期間臨時ダイヤ・神戸前日23:10発",
+      "dates": [
+        "2026-10-21",
+        "2026-10-22",
+        "2026-10-23",
+        "2026-10-24",
+        "2026-10-27",
+        "2026-10-28",
+        "2026-10-29",
+        "2026-10-30",
+        "2026-10-31",
+        "2026-11-03"
+      ],
+      "originDepartureDay": "前日",
+      "timetableReference": "https://www.orange-ferry.co.jp/6488.html",
+      "timetableChecked": "2026-10-21"
     }
   ],
   "sources": {
@@ -7632,7 +9731,19 @@
     "nagahama_aoshima": "https://www.city.ozu.ehime.jp/soshiki/nagahamash/0375.html",
     "orange_niihama": "https://www.orange-ferry.co.jp/time-table/kansai/niihama-kobe/",
     "niihama_oshima": "https://www.city.niihama.lg.jp/soshiki/kouwan/tokaiseen.html",
-    "jrshikoku_kumakogen": "https://www.jr-shikokubus.co.jp/businfo/rosen/kumakogen.html"
+    "jrshikoku_kumakogen": "https://www.jr-shikokubus.co.jp/businfo/rosen/kumakogen.html",
+    "ferry_nakajima": "https://www.pref.ehime.jp/uploaded/attachment/183017.pdf#page=18",
+    "ferry_tobishima": "https://www.city.imabari.ehime.jp/kotsus/tosen/sekizen/sekizen-r804.pdf",
+    "ferry_cruise": "https://www.kankoko.com/contents/timetable.html",
+    "ferry_jet": "https://setonaikaikisen.co.jp/kouro/jet/",
+    "ferry_geiyo": "https://geiyokisen.com/",
+    "ferry_blue": "https://omishima-bl.net/",
+    "ferry_boyo": "https://www.boyoferry.co.jp/c_timetable.html",
+    "ferry_uwajima": "https://www.uwajimaunyu.co.jp/timetable/",
+    "ferry_orange": "https://www.orange-ferry.co.jp/6488.html",
+    "ferry_jumbo": "https://ferry.co.jp/home/kobe-takamatsu/",
+    "ferry_koku94": "https://www.koku94.jp/operation"
   },
-  "verifiedMonth": "2026-10"
+  "verifiedMonth": "2026-10",
+  "ferryChecked": "2026-10-21"
 }
