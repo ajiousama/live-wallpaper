@@ -5404,48 +5404,41 @@
         && now.minutes<toMinutes(e.end))
       .map(e=>'<span class="special-vessel-event">'+e.text+'</span>');
   }
-  function ferryDetailTimetable(record) {
-    const r=record,inbound=r.direction==='arrival';
+  function ferryDetailTimetable(r) {
     if(r.source==='matsuyama_city_cruise')return '';
-    // Only explicit published calls can supply intermediate clocks. Do not
-    // apply an outbound duration or interpolate equal intervals on arrivals.
-    const stops=(Array.isArray(r.calls)?r.calls:[])
-      .filter(c=>Array.isArray(c)&&c[0]&&/^\d{1,2}:\d{2}$/.test(String(c[1]||'')))
-      .map(c=>c.slice());
-    const service=String(r.service||'フェリー');
-    const label=/中島/.test(service)
-      ? (/西線|西便|nakajima_west/.test(service+' '+r.source)?'中島汽船 西便':'中島汽船 東便') : service;
+    const inbound=r.direction==='arrival';
+    const compact=p=>String(p||'').replace(/港$/,'');
     const origin=inbound?String(r.origin||'出発港'):String(r.port||'出発港');
     const start=inbound?String(r.originDepartureTime||''):String(r.time||'');
     if(!/^\d{1,2}:\d{2}$/.test(start))return '';
+    const stops=(Array.isArray(r.calls)?r.calls:[])
+      .filter(c=>Array.isArray(c)&&c[0]&&/^\d{1,2}:\d{2}$/.test(String(c[1]||'')))
+      .map(c=>c.slice());
     const terminal=inbound?String(r.arrivalPort||r.port||r.dest||'到着港'):
       String(stops.at(-1)?.[0]||r.dest||'到着港');
-    const arrival=inbound?r.time:(r.terminalArrivalTime||r.arrivalTime||stops.at(-1)?.[1]||'');
-    if(inbound) {
-      // The table's right-hand clock and the detailed endpoint use the same
-      // authoritative arrival field even when an old call was inconsistent.
-      if(stops.length && stops.at(-1)[0]===terminal)stops.pop();
+    const arrival=inbound?String(r.time||''):String(r.terminalArrivalTime||r.arrivalTime||stops.at(-1)?.[1]||'');
+    if(inbound && /^\d{1,2}:\d{2}$/.test(arrival)){
+      if(stops.length && compact(stops.at(-1)[0])===compact(terminal))stops.pop();
       stops.push([terminal,arrival,'着']);
-    } else if(!stops.length && /^\d{1,2}:\d{2}$/.test(arrival))stops.push([terminal,arrival,'着']);
+    }else if(!stops.length && /^\d{1,2}:\d{2}$/.test(arrival))stops.push([terminal,arrival,'着']);
     if(!stops.length)return '';
-    const compact=p=>String(p).replace(/港$/,'');
-    let previous=toMinutes(start),day=inbound&&r.originDepartureDay==='前日'?-1:0;
-    const parts=stops.map(([p,t,type],i)=>{
-      const minute=toMinutes(t);
+    const estimated=!!r.estimatedArrival||r.timetableEstimated===true;
+    const hasIntermediate=stops.some((c,i)=>i<stops.length-1);
+    let day=r.originDepartureDay==='前日'?-1:0,previous=toMinutes(start);
+    const parts=stops.map(([port,time,type],i)=>{
+      const minute=toMinutes(time);
       if(minute<previous)day++;
       previous=minute;
-      const suffix=i===stops.length-1?'着予定':type==='発'?'発予定':type==='着'?'着予定':'寄港予定';
-      return compact(p)+' '+(day>0?'翌日 ':day<0?'前日 ':'')+t+suffix;
+      const dateTag=day>0?'翌':day<0?'前日':'';
+      const action=type==='発'?'発':i===stops.length-1?'着':type==='寄港'?'寄港':'着';
+      return compact(port)+' '+dateTag+time+action;
     });
-    const estimated=!!r.estimatedArrival||r.timetableEstimated===true;
-    const unknown=/経由|寄港/.test(String(r.info||'')) && stops.length===1 && !r.timetableReference;
-    let text=label+' '+(inbound?'到着':'出発')+'便｜'+compact(origin)+' '+
-      (r.originDepartureDay||'')+start+'発 → '+parts.join(' → ')+
-      (estimated?'（時刻表推定）':'（時刻表予定）');
-    if(unknown)text+='｜途中寄港時刻は未確認';
-    if(r.departureTimeUnconfirmed)text+='｜※'+r.timetableCaution;
-    if(/乗継|委託/.test(String(r.info||'')))text+='｜'+r.info;
-    return text;
+    const startTag=r.originDepartureDay==='前日'?'前日':'';
+    const route=compact(origin)+' '+startTag+start+'発 → '+parts.join(' → ');
+    const status=estimated?'（時刻表推定）':hasIntermediate?'（時刻表予定）':'';
+    const missing=/経由|寄港/.test(String(r.info||'')) && !hasIntermediate?'（途中寄港時刻未確認）':'';
+    const caution=r.departureTimeUnconfirmed?' ※'+String(r.timetableCaution||'出港時刻未確認'):'';
+    return route+status+missing+caution;
   }
   function ferryTickerItems(now=japanNow()) {
     const rows=slowLive.ferry?.items; const items=[];
