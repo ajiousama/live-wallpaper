@@ -323,7 +323,7 @@ async function load(){
    for(const url of urls)try{
      const response=await fetch(url,{cache:"no-store"});if(!response.ok)continue;
      const data=await response.json(),age=Date.now()-Date.parse(data.generatedAt);
-     if(data.theaters&&Number.isFinite(age)&&age>=-300000&&age<18*3600000){found=data;break}
+     if(data.theaters&&Number.isFinite(age)&&age>=-300000&&age<72*3600000 && Object.values(data.theaters).some(v=>Array.isArray(v.shows)&&v.shows.some(show=>show.date===dateJst(Date.now())))){found=data;break}
    }catch(_){}
    if(!found||!venues.filter(v=>v.id!=="cosmo"&&v.id!=="kahaku"&&v.id!=="niihama").every(v=>(v.until&&dateJst(Date.now())>v.until)||
       Array.isArray(found.theaters[v.id]?.shows)))throw Error("Showtime listing unavailable");
