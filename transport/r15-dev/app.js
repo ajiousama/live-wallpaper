@@ -2404,7 +2404,7 @@
         /^\d{2}:\d{2}$/.test(padTime(t.scheduledLocalArrival||''))
         ? '・普通は'+padTime(t.scheduledLocalArrival)+'着予定' : '';
       // "先着" describes the diagram, not a live platform/dispatch check.
-      return '当日運行図の乗換案内：'+station+' '+arrival+
+      return '乗換案内：'+station+' '+arrival+
         '着 → 普通 '+dest+'行 '+departure2+'発（乗換時間'+
         Math.round(Number(t.minutes))+'分'+waiting+'）';
     });
@@ -2465,7 +2465,7 @@
       const other=railSpecialText(service)+' '+railSpecialText(dest)+'行';
       const counterTime=padTime(x.counterTime||'');
       const when=/^\d{2}:\d{2}$/.test(counterTime)
-        ? '（'+counterTime+'・当日運行図）':'（当日運行図）';
+        ? '（'+counterTime+'）':'';
       if(x.actualHoldConfirmed===true && x.movement==='same')
         return station+'駅で'+other+'の接続待ち｜'+simple+' '+when;
       if(x.movement==='same' && x.counterEvent==='pass')
