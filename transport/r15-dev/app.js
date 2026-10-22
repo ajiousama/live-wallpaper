@@ -5424,7 +5424,7 @@
     if(!stops.length)return '';
     const estimated=!!r.estimatedArrival||r.timetableEstimated===true;
     const hasIntermediate=stops.some((c,i)=>i<stops.length-1);
-    let day=r.originDepartureDay==='前日'?-1:0,previous=toMinutes(start);
+    let day=0,previous=toMinutes(start);
     const parts=stops.map(([port,time,type],i)=>{
       const minute=toMinutes(time);
       if(minute<previous)day++;
