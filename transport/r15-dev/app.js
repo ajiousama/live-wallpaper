@@ -5158,7 +5158,7 @@
       const selected=rows.filter(r=>!visible||visible.has(r))
         .sort((a,b)=>rMinutes(a)-rMinutes(b));
       selected.forEach(r => {
-      const row = document.createElement('div'); row.className = `row${r.isFinal?' is-final':''}${dep && isDepartSoon(r, japanNow()) ? ' depart-soon' : ''}`;
+      const row = document.createElement('div'); row.className = `row${dep && isDepartSoon(r, japanNow()) ? ' depart-soon' : ''}`;
       const firstBadge = r.isNextDayStart ? badgeHtml('first','翌日') : '';
       const finalBadge = r.isFinal ? badgeHtml('final','最終バス') : '';
       if (dep) {
@@ -5228,7 +5228,7 @@
       row.className = `row${r.isFinal?' is-final':''}${dep && isDepartSoon(r, japanNow()) ? ' depart-soon' : ''}`;
       const op = portOperator(r);
       const firstBadge = '';
-      const finalBadge = dep && r.isFinal ? badgeHtml('final','最終便') : '';
+      const finalBadge = ''; // Ferry departures have no final-service badge.
       const route = portRouteHtml(r, dep ? 'departure' : 'arrival');
       const ferryLogo=ferryMiniLogo(op.name);
       const operatorHtml=ferryLogo||`<span class="name">${op.name}</span>`;
