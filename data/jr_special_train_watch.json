@@ -1,5 +1,5 @@
 {
-  "checked_at_utc": "2026-10-22T00:01:34.004673+00:00",
+  "checked_at_utc": "2026-10-23T00:00:14.591738+00:00",
   "source_urls": {
     "jr_shikoku_press": "https://www.jr-shikoku.co.jp/03_news/press/info/",
     "jr_shikoku_home": "https://www.jr-shikoku.co.jp/",
@@ -38,13 +38,13 @@
     },
     {
       "source": "jr_shikoku_home",
-      "title": "観光列車「四国まんなか千年ものがたり」のご乗車１３万人達成記念企画について",
-      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/10/15/20261015%2001.pdf"
+      "title": "～鉄道の日記念～「松山駅わくわく鉄道フェスタ」イベントでの「瀬戸内駅弁フェア」開催について",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/10/16/20261016%2003.pdf"
     },
     {
       "source": "jr_shikoku_home",
-      "title": "～鉄道の日記念～「松山駅わくわく鉄道フェスタ」イベントでの「瀬戸内駅弁フェア」開催について",
-      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/10/16/20261016%2003.pdf"
+      "title": "冬の臨時列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/10/22/20261022%2001.pdf"
     },
     {
       "source": "jr_shikoku_press",
@@ -55,16 +55,6 @@
       "source": "jr_shikoku_press",
       "title": "観光列車の 空席情報",
       "url": "https://www.jr-shikoku.co.jp/01_trainbus/event_train/seat_info/"
-    },
-    {
-      "source": "jr_shikoku_press",
-      "title": "冬の臨時列車運転のお知らせ",
-      "url": "https://www.jr-shikoku.co.jp/03_news/press/2021%2010%2015%2002.pdf"
-    },
-    {
-      "source": "jr_shikoku_press",
-      "title": "２０２２年春デビュー！新たな「伊予灘ものがたり」について",
-      "url": "https://www.jr-shikoku.co.jp/03_news/press/2021%2010%2018.pdf"
     },
     {
       "source": "jr_shikoku_press",
@@ -1013,6 +1003,11 @@
     },
     {
       "source": "jr_shikoku_press",
+      "title": "冬の臨時列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/10/22/20261022%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
       "title": "秋の臨時列車運転のお知らせ",
       "url": "https://www.jr-shikoku.co.jp/03_news/press/b0098b93f9135d5ad20efd86480f75f7651a6bbd.pdf"
     },
@@ -1022,7 +1017,23 @@
       "url": "https://www.jr-shikoku.co.jp/03_news/press/ec892776475f77919205413ed13987427003fc89.pdf"
     }
   ],
-  "new_announcements": [],
-  "fetch_errors": [],
+  "new_announcements": [
+    {
+      "source": "jr_shikoku_home",
+      "title": "冬の臨時列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/10/22/20261022%2001.pdf"
+    },
+    {
+      "source": "jr_shikoku_press",
+      "title": "冬の臨時列車運転のお知らせ",
+      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/10/22/20261022%2001.pdf"
+    }
+  ],
+  "fetch_errors": [
+    {
+      "source": "iyonada_calendar",
+      "reason": "503 Server Error: Service Unavailable for url: https://iyonadamonogatari.com/timetable/"
+    }
+  ],
   "note": "候補発見のみ。松山駅の発着時刻・運転日・経路を確認できるまで列車としては表示しない。"
 }
