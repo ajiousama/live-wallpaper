@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-23T00:37:50.392122+00:00",
+  "generatedAt": "2026-10-23T07:25:10.044664+00:00",
   "timezone": "Asia/Tokyo",
   "date": "2026-10-23",
   "source": "crank-in.net (third-party listing; verify with the theater)",
@@ -3874,7 +3874,7 @@
           "date": "2026-10-24",
           "time": "19:35",
           "title": "もしもの愛",
-          "durationMinutes": null,
+          "durationMinutes": 164,
           "releaseDate": null
         },
         {
@@ -3923,7 +3923,7 @@
           "date": "2026-10-25",
           "time": "19:00",
           "title": "もしもの愛",
-          "durationMinutes": null,
+          "durationMinutes": 164,
           "releaseDate": null
         },
         {
@@ -3972,7 +3972,7 @@
           "date": "2026-10-26",
           "time": "18:30",
           "title": "もしもの愛",
-          "durationMinutes": null,
+          "durationMinutes": 164,
           "releaseDate": null
         }
       ],
