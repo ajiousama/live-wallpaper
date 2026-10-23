@@ -1,5 +1,5 @@
 {
-  "checked_at_utc": "2026-10-23T00:00:14.591738+00:00",
+  "checked_at_utc": "2026-10-23T23:52:34.349561+00:00",
   "source_urls": {
     "jr_shikoku_press": "https://www.jr-shikoku.co.jp/03_news/press/info/",
     "jr_shikoku_home": "https://www.jr-shikoku.co.jp/",
@@ -1017,18 +1017,7 @@
       "url": "https://www.jr-shikoku.co.jp/03_news/press/ec892776475f77919205413ed13987427003fc89.pdf"
     }
   ],
-  "new_announcements": [
-    {
-      "source": "jr_shikoku_home",
-      "title": "冬の臨時列車運転のお知らせ",
-      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/10/22/20261022%2001.pdf"
-    },
-    {
-      "source": "jr_shikoku_press",
-      "title": "冬の臨時列車運転のお知らせ",
-      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/10/22/20261022%2001.pdf"
-    }
-  ],
+  "new_announcements": [],
   "fetch_errors": [
     {
       "source": "iyonada_calendar",
