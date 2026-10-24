@@ -722,7 +722,27 @@
       const nums=Array.isArray(x.numbers)?x.numbers.map(String):[];
       let r=staticRows.find(s=>nums.includes(String(parseAirService(s.service).number)) && padTime(s.time)===padTime(x.scheduled));
       if (!r) r=staticRows.find(s=>nums.includes(String(parseAirService(s.service).number)));
-      if (!r) return;
+      // The monthly timetable may end (e.g. summer -> winter on Oct 25).
+      // Do not silently discard a flight reported on today's official board.
+      // Old records may identify a carrier, but NEVER supply today's time/place.
+      if (!r) {
+        const officialTime=padTime(x.scheduled||'');
+        const officialPlace=String(x.place||'').trim().replace(/[<>&"'\x60]/g,'');
+        const officialNumbers=nums.filter(n=>/^\\d{1,5}$/.test(n));
+        if(!/^([01]\\d|2[0-3]):[0-5]\\d$/.test(officialTime) ||
+           !officialPlace || !officialNumbers.length)return;
+        const previous=data.records.filter(s=>s.board==='air' &&
+          s.direction===(dep?'departure':'arrival') &&
+          officialNumbers.includes(String(parseAirService(s.service).number)));
+        const services=[...new Set(previous.map(s=>String(s.service||'')).filter(Boolean))];
+        r={
+          board:'air',direction:dep?'departure':'arrival',kind:'flight',
+          time:officialTime,dest:officialPlace,
+          service:services.length===1?services[0]:('便名 '+officialNumbers[0]),
+          info:'松山空港公式・当日運航情報',source:'matsuyama_airport_live',
+          id:'air-live-'+(dep?'dep-':'arr-')+officialTime+'-'+officialNumbers[0]
+        };
+      }
       const eventTime=padTime(x.changed||x.scheduled);
       // Delayed flights can move to after midnight; use the same effective
       // revised ETA for row visibility and the one-hour expiration timer.
@@ -3979,7 +3999,14 @@
       root.classList.add('air-end');
       const mode=dep?'DEPARTURES — 出発便 —':'ARRIVALS — 到着便 —';
       const arrivalBoardState=dep?'':airportArrivalBoardState(now);
-      const msg=dep?'本日の出発便は終了しました'
+      const officialLiveAvailable=slowLive.ok && slowLive.airport?.ok &&
+        Array.isArray(slowLive.airport?.departures) &&
+        !airportLiveHasPreviousDayStatuses(now);
+      const timetableAvailable=data.records.some(r=>r.board==='air' &&
+        r.direction===(dep?'departure':'arrival') &&
+        validRecord(r,boardDisplayIso('air',now)));
+      const msg=dep?(!officialLiveAvailable && !timetableAvailable
+        ?'公式出発情報を取得・確認中':'本日の出発便は終了しました')
         :arrivalBoardState==='unverified'?'公式到着情報を取得・確認中'
         :arrivalBoardState==='pending'?'公式到着情報を確認中（終了未確定）'
         :now.minutes>=AIRPORT_ARRIVAL_CURFEW_MINUTES?'本日の到着便は終了しました'
