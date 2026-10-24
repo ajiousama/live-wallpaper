@@ -728,8 +728,8 @@
       if (!r) {
         const officialTime=padTime(x.scheduled||'');
         const officialPlace=String(x.place||'').trim().replace(/[<>&"'\x60]/g,'');
-        const officialNumbers=nums.filter(n=>/^\\d{1,5}$/.test(n));
-        if(!/^([01]\\d|2[0-3]):[0-5]\\d$/.test(officialTime) ||
+        const officialNumbers=nums.filter(n=>/^\d{1,5}$/.test(n));
+        if(!/^([01]\d|2[0-3]):[0-5]\d$/.test(officialTime) ||
            !officialPlace || !officialNumbers.length)return;
         const previous=data.records.filter(s=>s.board==='air' &&
           s.direction===(dep?'departure':'arrival') &&
