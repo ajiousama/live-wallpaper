@@ -2261,6 +2261,7 @@ html.company-pc body.freewifi-tv .panel-bus .bus-logo-willer .willer-express-wor
   0%,46%,100%{color:#fff;background:#c71524;border-color:#ff9196}
   47%,85%{color:#ffc2c2;background:#4d0811;border-color:#d74450}
 }
+.transport-delay-global[hidden]{display:none!important}
 .live-system-status .transport-delay-global{font-size:12px!important;margin-left:9px!important;padding:4px 7px!important;max-width:245px;overflow:hidden;text-overflow:ellipsis}
 #rail-rows .transport-delay-badge{font-size:12px!important;padding:2px 5px!important}
 #rail-next-express .transport-delay-badge,#rail-next-local .transport-delay-badge{font-size:11px!important;padding:2px 5px!important}
