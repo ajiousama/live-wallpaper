@@ -416,8 +416,9 @@
       if(/^61(?:0\d|1\d)$/.test(n))return 'JAL';
     }
     if(/ソウル|仁川/.test(route)&&/^17\d{2}$/.test(n))return 'チェジュ航空';
+    if(/チョンジュ|清州/.test(route)&&/^(3853|3863)$/.test(n))return 'エアロK';
     if(/釜山|プサン/.test(route)){
-      if(/^13[34]$/.test(n))return 'エアプサン';
+      if(/^(133|134|703|704)$/.test(n))return 'エアプサン';
       if(/^959[34]$/.test(n))return 'アシアナ航空';
     }
     if(/台北|桃園/.test(route)&&/^(109|110)$/.test(n))return 'エバー航空';
