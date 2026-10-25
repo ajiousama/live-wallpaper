@@ -380,7 +380,64 @@
       airLogoAsset('asiana.svg'),'ASIANA');
     if(/エバー|EVA/.test(raw)) return logo('air-mini-logo-eva','エバー航空',
       airLogoAsset('eva.svg'),'EVA AIR');
+    if(/^FDA$|フジドリーム/.test(raw))return airportOfficialExtraLogo('FDA','FDA');
+    if(/AERO.?K|エアロK|^EOK$/i.test(raw))return airportOfficialExtraLogo('EOK','Aero K');
     return '';
+  }
+
+
+  // Live airport rows publish flight numbers, not their operator names.
+  // Match the winter timetable's known flights without guessing unknown routes.
+  function airportCarrierByFlight(number,place=''){
+    const n=String(number||'').trim().replace(/^[A-Z]{2,4}/i,'');
+    if(!/^\d{1,5}$/.test(n))return '';
+    const route=String(place||'').replace(/[\s（()）]/g,'');
+    const known=[...new Set(data.records.filter(x=>x.board==='air' &&
+      String(parseAirService(x.service).number)===n)
+      .map(x=>parseAirService(x.service).airline))];
+    if(known.length===1)return known[0];
+    if(/青森/.test(route)&&/^(8593|8594)$/.test(n))return 'FDA';
+    if(/名古屋|中部/.test(route)){
+      if(/^3[3-8]$/.test(n))return 'IBEXエアラインズ';
+      if(/^313[3-8]$/.test(n))return 'ANA';
+    }
+    if(/東京|羽田/.test(route)){
+      if(/^4(?:3\d|4[0-3])$/.test(n))return 'JAL';
+      if(/^5(?:8\d|9\d)$/.test(n))return 'ANA';
+    }
+    if(/大阪|伊丹/.test(route)){
+      if(/^16(?:3\d|4\d|50)$/.test(n))return 'ANA';
+      if(/^23(?:0\d|10)$/.test(n))return 'JAL';
+    }
+    if(/福岡|鹿児島/.test(route)&&/^3(?:5[8-9]\d|6[0-8]\d)$/.test(n))return 'JAL';
+    if(/沖縄|那覇/.test(route)&&/^188[34]$/.test(n))return 'ANA';
+    if(/成田/.test(route)){
+      if(/^40[0-9]$/.test(n))return 'Jetstar';
+      if(/^61(?:0\d|1\d)$/.test(n))return 'JAL';
+    }
+    if(/ソウル|仁川/.test(route)&&/^17\d{2}$/.test(n))return 'チェジュ航空';
+    if(/釜山|プサン/.test(route)){
+      if(/^13[34]$/.test(n))return 'エアプサン';
+      if(/^959[34]$/.test(n))return 'アシアナ航空';
+    }
+    if(/台北|桃園/.test(route)&&/^(109|110)$/.test(n))return 'エバー航空';
+    return '';
+  }
+  // Added official logos; all pre-approved GitHub artwork stays untouched.
+  const AIRPORT_OFFICIAL_EXTRA_LOGOS=Object.freeze({
+    FDA:'FDA.png',EOK:'EOK.png',
+    '6610':'6610.png','6611':'6610.png',
+    '4942':'4943.png','4943':'4943.png',
+    '6294':'6295.png','6295':'6295.png',
+    '9544':'9544.png'
+  });
+  const airportOfficialExtraLogo=(key,label)=>{
+    const file=AIRPORT_OFFICIAL_EXTRA_LOGOS[String(key||'')];
+    if(!file)return '';
+    const caption=String(label||'共同運航').replace(/[<>"'&]/g,'');
+    return '<span class="air-mini-logo air-mini-logo-official" aria-label="'+caption+
+      '"><span class="air-logo-fallback">'+caption+'</span><img src="https://www.matsuyama-airport.co.jp/img/logo/'+file+
+      '" alt="'+caption+'" loading="eager" referrerpolicy="no-referrer" onerror="this.remove()"></span>';
   }
 
   const JETSTAR_JAL_CODESHARE = {
@@ -402,14 +459,16 @@
       if(/エアプサン|AIR BUSAN/i.test(p.airline) && n==='134') nums.push('9594');
     }
 
+    const place=String(r?.liveRaw?.place||r?.dest||'');
+    const recognized=airportCarrierByFlight(nums[0]||p.number,place);
+    const primary=/^(?:便名|航空会社確認中)$/i.test(String(p.airline||'').trim())
+      ?(recognized||'航空会社確認中'):p.airline;
     return nums.map((number,index)=>{
-      let airline=p.airline;
-      if(index>0){
-        if(/^313[3-8]$/.test(number)) airline='ANA';
-        else if(/^611\d$/.test(number)) airline='JAL';
-        else if(/^959[34]$/.test(number)) airline='アシアナ航空';
-      }
-      return {airline,number};
+      const airline=index===0?primary:
+        (airportCarrierByFlight(number,place)||primary);
+      const extraLogo=index>0&&AIRPORT_OFFICIAL_EXTRA_LOGOS[number]
+        ?airportOfficialExtraLogo(number,'共同運航 '+number):'';
+      return {airline,number,extraLogo};
     });
   }
 
@@ -417,7 +476,7 @@
     // Keep the board readable: show the operating flight + at most one codeshare.
     const items=airServiceItems(r,p).slice(0,2);
     return items.map((item,index)=>{
-      const logo=airlineMiniLogo(item.airline) || `<span class="airline-text-logo">${item.airline}</span>`;
+      const logo=item.extraLogo||airlineMiniLogo(item.airline) || `<span class="airline-text-logo">${item.airline}</span>`;
       return `<span class="air-service-brand${index?' codeshare-brand':''}">${logo}<span class="air-flight-no">${item.number||'—'}</span></span>`;
     }).join('<span class="air-codeshare-sep">/</span>');
   }
