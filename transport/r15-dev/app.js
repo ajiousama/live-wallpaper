@@ -3803,6 +3803,30 @@
       ? approachLive.ichitsubo.matsuyamaSchedule : [];
     const joined=scheduleFresh && Array.isArray(approachLive.ichitsubo?.matsuyamaJoinedPortions)
       ? approachLive.ichitsubo.matsuyamaJoinedPortions : [];
+    // The existing JR operating diagram already supplies actual Matsuyama
+    // arrival times, origin/destination and tentative turnbacks. Forward them
+    // to the replica LED without guessing any platform number.
+    const inbound=scheduleFresh && Array.isArray(approachLive.ichitsubo?.matsuyamaPassengerArrivals)
+      ? approachLive.ichitsubo.matsuyamaPassengerArrivals : [];
+    const scheduledArrivals=inbound.filter(x=>
+      x?.source==='today_diagram' &&
+      ['north','south'].includes(x.side) &&
+      /^\d{1,5}[MD]$/i.test(String(x.trainNum||'')) &&
+      /^\d{1,2}:\d{2}$/.test(String(x.arrival||''))
+    ).slice(0,180).map(x=>({
+      trainNum:String(x.trainNum),trainClass:x.trainClass==='limited'?'limited':'local',
+      arrival:String(x.arrival),side:x.side,
+      origin:String(x.origin||'').slice(0,48),
+      destination:String(x.destination||'').slice(0,48),
+      terminating:x.terminating===true,
+      position:jrPositionUsable(x.position)?String(x.position).slice(0,48):'',
+      delayMinutes:jrPositionUsable(x.position)&&Number.isFinite(Number(x.delayMinutes))&&
+        Number(x.delayMinutes)>0&&Number(x.delayMinutes)<=60?Number(x.delayMinutes):0,
+      turnback:x.turnback&&/^\d{1,2}:\d{2}$/.test(String(x.turnback.departure||''))
+        ? {departure:String(x.turnback.departure),
+           destination:String(x.turnback.destination||'').slice(0,48),
+           trainNum:String(x.turnback.trainNum||'')} : null
+    }));
     const departures=[...scheduled,...joined].filter(x=>
       ['limited','local'].includes(x?.trainClass) &&
       ['south','north'].includes(x.direction) &&
@@ -3838,7 +3862,7 @@
     try {
       frame.contentWindow.postMessage({
         type:'matsuyama-led-arrivals',
-        iso:now.iso,arrivals,departures
+        iso:now.iso,arrivals,departures,scheduledArrivals
       },location.origin);
     } catch(e) {console.warn('JR LED arrival notice unavailable',e);}
   }
