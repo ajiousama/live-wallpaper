@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <meta name="color-scheme" content="dark">
-<title>JR松山駅｜独立型LED発車案内</title>
+<title>JR松山駅｜独立型LED発着案内</title>
 <style>
 /* JR松山駅・元シミュレーターのLED 1台分（284×116）に合わせた固定座標。
    親iframe 415×142 と交通壁紙の表示領域は変更しない。
@@ -24,16 +24,15 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
   white-space:nowrap;color:#efefef}
 .english-direction{font-size:10px;line-height:12px;font-weight:700;letter-spacing:.02em;
   white-space:nowrap;color:#dedede}
-.track-head{position:absolute;right:9px;top:28px;font-size:7px;color:#f5f5f5;font-weight:700}
 .clock{display:none}
 .rows{position:absolute;inset:0;pointer-events:none}
 .train,.ticker{position:absolute;left:13px;width:256px;height:16px;background:#000;
   overflow:hidden;outline:1px solid #222}
 .rows>.train:nth-child(1){top:39px}
 .rows>.train:nth-child(2){top:85px}
-.train{display:grid;grid-template-columns:32px 80px 64px 64px 16px;gap:0;
+.train{display:grid;grid-template-columns:32px 96px 60px 68px;gap:0;
   align-items:center;margin:0;padding:0}
-.kind,.service,.dep,.dest,.platform{height:16px;min-width:0;overflow:hidden;
+.kind,.service,.dep,.dest{height:16px;min-width:0;overflow:hidden;
   white-space:nowrap;display:flex;align-items:center;font-weight:900}
 .kind{color:#ff3030;font-size:11px;justify-content:center;line-height:16px}
 .limited .kind{background:#1e0000;color:#ff3030}
@@ -54,7 +53,6 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
 .dest.pair{flex-direction:column;justify-content:center;gap:0;font-size:8px;
   line-height:8px}
 .dest.pair span{display:block;height:8px;line-height:8px}
-.platform{color:#fff;font-size:11px;justify-content:center;line-height:16px}
 .status{display:none!important;position:absolute;left:112px;top:0;width:128px;
   height:16px;overflow:hidden;background:#000;color:#ffed36;font-size:12px;
   font-weight:900;align-items:center;justify-content:center;z-index:3;
@@ -86,8 +84,8 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
 </style>
 </head>
 <body>
-<main class="board" aria-label="JR松山駅 発車標">
- <header class="heading"><div class="direction" id="direction">八幡浜・宇和島方面 発車時刻</div><div class="english-direction" id="english-direction">for Yawatahama, Uwajima</div><span class="track-head">のりば</span></header>
+<main class="board" aria-label="JR松山駅 発着案内LED">
+ <header class="heading"><div class="direction" id="direction">八幡浜・宇和島方面 発車時刻</div><div class="english-direction" id="english-direction">for Yawatahama, Uwajima</div></header>
  <section class="rows" id="rows" aria-live="off">
    <article class="train empty"><span class="kind"></span><span class="service">列車情報取得中</span></article>
    <article class="train empty"><span class="kind"></span><span class="service">運行図を確認中</span></article>
@@ -115,7 +113,7 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
   window.addEventListener('resize',fitOriginalLedToFrame,{passive:true});
   var direction=new URLSearchParams(location.search).get('dir')==='north'?'north':'south';
   var timetable={};
-  var live={iso:'',at:0,departures:[],arrivals:[]};
+  var live={iso:'',at:0,departures:[],arrivals:[],scheduledArrivals:[]};
   var movements={north:{iso:'',rows:[]},south:{iso:'',rows:[]}};
   var rendered='',cycleLanguages=0,lastMinute='';
   var ticker={desiredKey:'',items:[],index:0,animation:null,currentKey:''};
@@ -196,6 +194,70 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
       return timeNumber(a.time)-timeNumber(b.time)||(a.passStatus?1:0)-(b.passStatus?1:0);
     });
   }
+
+  // Timetable arrivals already computed by the same daily JR diagram service.
+  // No guessed platforms. Never turn a simulated workplace clock into a claim
+  // about present-day live positions or future arrival times.
+  function todayArrivals(n){
+    if(ledTestClock()||live.iso!==n.iso||
+      Date.now()-live.at>90000||Date.now()-live.at< -15000)return [];
+    var rows=Array.isArray(live.scheduledArrivals)?live.scheduledArrivals:[];
+    return rows.filter(function(x){
+      var t=timeNumber(x.arrival);
+      if(x.side!==direction||!Number.isFinite(t))return false;
+      var delay=x.position&&Number.isFinite(Number(x.delayMinutes))
+        ?Math.max(0,Math.min(60,Number(x.delayMinutes))):0;
+      return t+delay>=n.minutes && t+delay<=n.minutes+180;
+    }).map(function(x){
+      var num=String(x.trainNum||''),match=num.match(/^(\d+)([MD])$/i);
+      var number=match?Number(match[1]):NaN;
+      var suffix=match?match[2].toUpperCase():'';
+      var name=x.trainClass==='limited'?'特急':'普通列車';
+      if(x.trainClass==='limited' && suffix==='M' && number>=1&&number<=40)
+        name='しおかぜ'+number+'号';
+      else if(x.trainClass==='limited' && suffix==='D' && number>=1051&&number<=1099)
+        name='宇和海'+(number-1050)+'号';
+      else if(x.trainClass==='limited' && suffix==='M' &&
+              [1042,1044,1046].includes(number))
+        name='いしづち'+(number-940)+'号';
+      else if(x.trainClass==='limited' && suffix==='M'&&number>=1000&&number<=1199)
+        name='いしづち'+(number-1000)+'号';
+      return {
+        id:'led-arrival-'+num+'-'+x.arrival,kind:x.trainClass==='limited'?'limited':'local',
+        trainNum:num,service:name,time:String(x.arrival),dest:String(x.origin||''),
+        arrivalOrigin:String(x.origin||''),arrivalDestination:String(x.destination||''),
+        terminating:!!x.terminating,turnback:x.turnback||null,
+        position:String(x.position||''),delayMinutes:Number(x.delayMinutes)||0,
+        _arrival:true
+      };
+    }).sort(function(a,b){
+      return timeNumber(a.time)-timeNumber(b.time)||String(a.trainNum).localeCompare(String(b.trainNum));
+    });
+  }
+  function ledArrivalTickerItems(rows,n){
+    if(!rows.length)return [{key:'arrivals-none',segments:[{type:'note',
+      text:'当日運行図の到着情報を確認しています'}]}];
+    return rows.slice(0,2).map(function(row){
+      var origin=row.arrivalOrigin||'出発駅未確認';
+      var seg=[{type:'title',text:row.time+'着　'+row.service+'　'+origin+'発 → 松山着'}];
+      if(row.terminating)seg.push({type:'note',text:'この列車は松山止まりです'});
+      else if(row.arrivalDestination&&row.arrivalDestination!=='松山')
+        seg.push({type:'note',text:'松山に停車後 '+row.arrivalDestination+'方面へ運転'});
+      if(row.position)seg.push({type:'stop',text:'現在位置 '+row.position+
+        (row.delayMinutes>0?'（'+row.delayMinutes+'分遅れ）':'')});
+      if(row.terminating&&row.turnback&&
+         Number.isFinite(timeNumber(row.turnback.departure))&&row.turnback.destination)
+        seg.push({type:'connection',text:'折り返し候補 '+row.turnback.departure+
+          '発　'+row.turnback.destination+'行（同一車両未確認）'});
+      return {key:row.id,segments:seg};
+    });
+  }
+  function arrivalViewActive(n,arrivals){
+    // The parent changes corridor every 15 seconds. A separate 12-second
+    // cycle ensures EACH corridor can show BOTH arrivals and departures.
+    return arrivals.length>0&&Math.floor(ledNow().getTime()/12000)%2===1;
+  }
+
   function splitService(row){
     var svc=String(row.service||''),info=String(row.info||'');
     var a=svc.match(/^しおかぜ(\d+)号$/),b=info.match(/いしづち(\d+)号/);
@@ -246,11 +308,14 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
       destEl.appendChild(el('span','','Saijo'));
     }else destEl.textContent=dest;
     box.appendChild(destEl);
-    var pm=String(row.info||'').match(/([1-3])番/);
-    box.appendChild(el('span','platform',pass?'':(pm?pm[1]:'')));
     var dep=timeNumber(row.time),rem=dep*60-n.minutes*60-n.seconds;
-    var urgent=!pass&&rem>0&&rem<=60;
-    var st=urgent?(lang==='en'?'DEPARTING SOON':'まもなく発車'):
+    // An arrival countdown is "soon" ONLY when the live position and
+    // today's diagram independently confirm this exact inbound train.
+    var confirmedInbound=row._arrival&&live.arrivals.some(function(x){
+      return x.trainNum===row.trainNum&&x.side===direction&&x.confirmedApproach===true;
+    });
+    var urgent=!pass&&rem>0&&rem<=60&&(!row._arrival||confirmedInbound);
+    var st=urgent?(lang==='en'?(row._arrival?'ARRIVING SOON':'DEPARTING SOON'):(row._arrival?'まもなく到着':'まもなく発車')):
       row.passStatus?(lang==='en'?'PASS SCHEDULE':row.passStatus):
       (row.kind==='limited'&&/岡山・高松/.test(String(row.dest||''))?
         (lang==='en'?'SPLITS AT UTAZU':'宇多津で分割'):'');
@@ -386,8 +451,10 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
     playTickerCycle();
   }
   function render(n,force){
-    var rows=todayRecords(n);
-    var identity=direction+'|'+lang+'|'+rows.slice(0,2).map(function(r){
+    var arrivals=todayArrivals(n);
+    var arrivalMode=arrivalViewActive(n,arrivals);
+    var rows=arrivalMode?arrivals:todayRecords(n);
+    var identity=(arrivalMode?'arr':'dep')+'|'+direction+'|'+lang+'|'+rows.slice(0,2).map(function(r){
       return [r.id,r.time,r.kind,r.dest,r.info].join(':');
     }).join('|');
     if(force||identity!==rendered){
@@ -398,17 +465,20 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
         var emp=el('article','train empty');
         emp.appendChild(el('span','kind','--'));
         emp.appendChild(el('span','service',rows.length===0?
-          (lang==='en'?'NO MORE DEPARTURES':'本日の発車案内は終了しました'):''));
+          (arrivalMode?(lang==='en'?'NO MORE ARRIVALS':'本日の到着案内は終了しました')
+            :(lang==='en'?'NO MORE DEPARTURES':'本日の発車案内は終了しました')):''));
         fragment.appendChild(emp);
       }
       rowsEl.replaceChildren(fragment);
       document.getElementById('direction').textContent=
-        (direction==='north'?'今治・高松・岡山方面':'八幡浜・宇和島方面')+' 発車時刻';
-      document.getElementById('english-direction').textContent=
-        direction==='north'?'for Imabari, Takamatsu, Okayama':'for Yawatahama, Uwajima';
-      tickerLabel.textContent='停車駅';
+        (direction==='north'?'今治・高松・岡山方面':'八幡浜・宇和島方面')+
+        (arrivalMode?' 到着時刻':' 発車時刻');
+      document.getElementById('english-direction').textContent=arrivalMode
+        ?(direction==='north'?'Arrivals from Imabari':'Arrivals from Uwajima')
+        :(direction==='north'?'for Imabari, Takamatsu, Okayama':'for Yawatahama, Uwajima');
+      tickerLabel.textContent=arrivalMode?'到着案内':'停車駅';
     }
-    syncTicker(tickerItems(rows.slice(0,2),n));
+    syncTicker(arrivalMode?ledArrivalTickerItems(rows.slice(0,2),n):tickerItems(rows.slice(0,2),n));
     updateAlerts(n,rows);
   }
   function updateAlerts(n,rows){
@@ -430,12 +500,16 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
       var node=rowsEl.children[i];if(!node||row.passStatus)return;
       var cell=node.querySelector('.status');if(!cell)return;
       var seconds=timeNumber(row.time)*60-n.minutes*60-n.seconds;
-      var urgent=seconds>0&&seconds<=60;
-      var value=urgent?(lang==='en'?'DEPARTING SOON':'まもなく発車'):'';
+      var confirmedArrival=row._arrival&&live.arrivals.some(function(x){
+        return x.trainNum===row.trainNum&&x.side===direction&&x.confirmedApproach===true;
+      });
+      var urgent=seconds>0&&seconds<=60&&(!row._arrival||confirmedArrival);
+      var value=urgent?(lang==='en'?(row._arrival?'ARRIVING SOON':'DEPARTING SOON'):
+        (row._arrival?'まもなく到着':'まもなく発車')):'';
       if(urgent){if(cell.textContent!==value)cell.textContent=value;cell.classList.add('flash','warning');}
       else{
         cell.classList.remove('flash','warning');
-        if(cell.textContent===('まもなく発車')||cell.textContent==='DEPARTING SOON')
+        if(['まもなく発車','DEPARTING SOON','まもなく到着','ARRIVING SOON'].includes(cell.textContent))
           cell.textContent='';
       }
     });
@@ -461,6 +535,12 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
       live.arrivals=d.arrivals.slice(0,24).filter(function(x){
         return x&&x.confirmedApproach===true&&['south','north'].includes(x.side);
       });
+      live.scheduledArrivals=(Array.isArray(d.scheduledArrivals)?d.scheduledArrivals:[]).slice(0,180)
+        .filter(function(x){
+          return x&&['south','north'].includes(x.side)&&
+            /^d{1,5}[MD]$/i.test(String(x.trainNum||''))&&
+            Number.isFinite(timeNumber(x.arrival));
+        });
       live.departures=(Array.isArray(d.departures)?d.departures:[]).slice(0,170)
         .filter(function(x){
           return x&&['south','north'].includes(x.direction)&&
@@ -476,14 +556,21 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
     node.onerror=function(){render(jst(),true);node.remove();};
     document.head.appendChild(node);
   }
+  var lastLedMode='';
   function heartbeat(){
     var n=jst();
     document.getElementById('clock').textContent=n.clock;
     var minute=n.iso+'|'+n.minutes;
     var language=(Date.now()%9000)<6000?'ja':'en';
-    var changed=language!==lang||minute!==lastMinute;
+    var arrivals=todayArrivals(n);
+    var mode=arrivalViewActive(n,arrivals)?'arrival':'departure';
+    var changed=language!==lang||minute!==lastMinute||mode!==lastLedMode;
+    lastLedMode=mode;
     if(changed){lang=language;lastMinute=minute;render(n,true);}
-    else updateAlerts(n,todayRecords(n));
+    else {
+      var arrivals=todayArrivals(n);
+      updateAlerts(n,arrivalViewActive(n,arrivals)?arrivals:todayRecords(n));
+    }
   }
   loadSchedule();
   heartbeat();
