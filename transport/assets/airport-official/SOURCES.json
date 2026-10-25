@@ -1,0 +1,89 @@
+{
+  "source_page": "https://www.matsuyama-airport.co.jp/flight/timetable.html",
+  "note": "Historical snapshot; the 8 approved originals in ../airlines remain unchanged.",
+  "logos": {
+    "ANA.png": {
+      "source": "https://www.matsuyama-airport.co.jp/img/logo/ANA.png",
+      "sha256": "3acd919da8e109deab21ad371d4b6554504ab4f34868e917c3684976fd1fadf4",
+      "bytes": 2641
+    },
+    "JAL.png": {
+      "source": "https://www.matsuyama-airport.co.jp/img/logo/JAL.png",
+      "sha256": "9ae177ea7ef230ae5f9276f692b44479ab1db324db5e4c78ca3f18f9777212f1",
+      "bytes": 5079
+    },
+    "IBX.png": {
+      "source": "https://www.matsuyama-airport.co.jp/img/logo/IBX.png",
+      "sha256": "952b5d5df523853b09b3b622fac15249cb102229a6b941ecb80c51b5f1b8b79f",
+      "bytes": 7806
+    },
+    "JJA.png": {
+      "source": "https://www.matsuyama-airport.co.jp/img/logo/JJA.png",
+      "sha256": "880721327f9db05830193d8cefbc494f5d77b5e8c8b6eb6fba1ef663fbe478bb",
+      "bytes": 3857
+    },
+    "EVA.png": {
+      "source": "https://www.matsuyama-airport.co.jp/img/logo/EVA.png",
+      "sha256": "d423a35cfb2f934ecdadb727a300e5f0a14d3c1a11372c82bc679897677308d6",
+      "bytes": 2896
+    },
+    "FDA.png": {
+      "source": "https://www.matsuyama-airport.co.jp/img/logo/FDA.png",
+      "sha256": "de030d30c2a437c6a5e2babadb0392683e3b958525553891534b7cbecab35d8e",
+      "bytes": 6105
+    },
+    "JJP.png": {
+      "source": "https://www.matsuyama-airport.co.jp/img/logo/JJP.png",
+      "sha256": "fe0cfffc93d4f883976f277f1849c05db9c1e6773c7ba7d698b709afd4f9c175",
+      "bytes": 3965
+    },
+    "EOK.png": {
+      "source": "https://www.matsuyama-airport.co.jp/img/logo/EOK.png",
+      "sha256": "343d1c5c546a66d11d1c6a8ca96463381dad43945596d37da991d5c07b6b9f6e",
+      "bytes": 2466
+    },
+    "ABL.png": {
+      "source": "https://www.matsuyama-airport.co.jp/img/logo/ABL.png",
+      "sha256": "f722a6d401a36742f078acf89b4bab2c8cb9a7743026fc954cfb97975b52f5d4",
+      "bytes": 4699
+    },
+    "9593.png": {
+      "source": "https://www.matsuyama-airport.co.jp/img/logo/9593.png",
+      "sha256": "0d15afcc1c3b71852ad032f6cf2e3f7c25a6eb3f2f38f27c13e678c674e1302f",
+      "bytes": 6698
+    },
+    "ANZ.png": {
+      "source": "https://www.matsuyama-airport.co.jp/img/logo/ANZ.png",
+      "sha256": "c5b8c5ba8b1c5ce35155be8a802bc55317189d7a8393bc75317c53176b3e272e",
+      "bytes": 3499
+    },
+    "THA.png": {
+      "source": "https://www.matsuyama-airport.co.jp/img/logo/THA.png",
+      "sha256": "fdbb9cf1520efd25ab8a188ede7478a58f349afefa488872e519e920952ab6e7",
+      "bytes": 3557
+    },
+    "AAR.png": {
+      "source": "https://www.matsuyama-airport.co.jp/img/logo/AAR.png",
+      "sha256": "f4cf7720b28d72522942870f2da5979b6fb6505734614f8081dd51613cddbba0",
+      "bytes": 2229
+    }
+  },
+  "unavailable_official_images": {
+    "6610.png": {
+      "source": "https://www.matsuyama-airport.co.jp/img/logo/6610.png",
+      "status": "HTTP 404 (official site)"
+    },
+    "4943.png": {
+      "source": "https://www.matsuyama-airport.co.jp/img/logo/4943.png",
+      "status": "HTTP 404 (official site)"
+    },
+    "6295.png": {
+      "source": "https://www.matsuyama-airport.co.jp/img/logo/6295.png",
+      "status": "HTTP 404 (official site)"
+    },
+    "9544.png": {
+      "source": "https://www.matsuyama-airport.co.jp/img/logo/9544.png",
+      "status": "HTTP 404 (official site)"
+    }
+  }
+}
