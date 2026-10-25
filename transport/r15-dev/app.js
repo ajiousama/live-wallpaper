@@ -5339,11 +5339,7 @@
     const dow=new Date(iso+'T12:00:00+09:00').getDay();
     const md=iso.slice(5);
     // The official PDF treats Dec29-Jan3 as holiday service.
-    return dow===0||dow===6||(md>='12-29'||md<='01-03') ||
-      // National holidays can be added here as the official calendar changes;
-      // no arbitrary weekday->holiday conversion for unknown dates.
-      !!(typeof NATIONAL_HOLIDAYS_2026!=='undefined'&&
-        Array.isArray(NATIONAL_HOLIDAYS_2026)&&NATIONAL_HOLIDAYS_2026.includes(iso));
+    return dow===0||dow===6||(md>='12-29'||md<='01-03')||ferryHoliday(iso);
   }
   function mitsuhamaBusConnection(record,now){
     if(!record||record.source==='matsuyama_city_cruise')return '';
