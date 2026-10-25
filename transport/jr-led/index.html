@@ -78,10 +78,17 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
 .segment.connection{color:#64d9ff}.segment.note{color:#ddd}
 .ticker-note{display:none}
 .arrival-alert{position:absolute;z-index:8;left:77px;top:62px;width:192px;height:16px;
-  display:flex;align-items:center;justify-content:center;background:#000;
-  color:#ffe52a;font-size:10px;font-weight:900;white-space:nowrap;
-   letter-spacing:-.04em;overflow:hidden;text-overflow:clip}
+  display:flex;align-items:center;justify-content:flex-start;background:#000;
+  color:#fff;font-size:11px;font-weight:900;white-space:nowrap;
+  letter-spacing:-.035em;overflow:hidden;isolation:isolate}
 .arrival-alert[hidden]{display:none}
+.arrival-alert-track{display:inline-flex;align-items:center;height:16px;
+  gap:0;flex:0 0 auto;white-space:nowrap;width:max-content;will-change:transform}
+.arrival-alert-track>span{display:inline-block;white-space:nowrap}
+.arrival-part-soon{color:#ffe52a}
+.arrival-part-service{color:#ff4b49}
+.arrival-part-origin{color:#64dcff}
+.arrival-part-ending{color:#f2f2f2}
 </style>
 </head>
 <body>
@@ -92,7 +99,7 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
    <article class="train empty"><span class="kind"></span><span class="service">運行図を確認中</span></article>
  </section>
  <div class="ticker"><div class="ticker-label" id="ticker-label">停車駅</div><div class="ticker-window" id="ticker-window"><div class="ticker-track" id="ticker-track">停車駅・接続を確認しています</div></div></div>
- <div class="arrival-alert" id="arrival-alert" hidden>まもなく列車が到着します</div>
+ <div class="arrival-alert" id="arrival-alert" hidden><div class="arrival-alert-track" id="arrival-alert-track"></div></div>
  <span class="clock" id="clock" hidden></span>
 </main>
 <script>
@@ -123,6 +130,8 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
   var tickerTrack=document.getElementById('ticker-track');
   var tickerLabel=document.getElementById('ticker-label');
   var alertEl=document.getElementById('arrival-alert');
+  var alertTrack=document.getElementById('arrival-alert-track');
+  var approachNoticeKey='',approachScrollAnimation=null;
   var lang='ja';
   var EN_DEST={'岡山':'Okayama','高松':'Takamatsu','宇和島':'Uwajima','八幡浜':'Yawatahama',
     '今治':'Imabari','伊予北条':'Iyo-Hojo','伊予西条':'Iyo-Saijo','新居浜':'Niihama',
@@ -275,15 +284,60 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
     if(activeApproach(n))return true;
     return arrivals.length>0&&Math.floor(ledNow().getTime()/12000)%2===1;
   }
-  function arrivalApproachText(approach,rows){
+  function arrivalApproachParts(approach,rows){
     var row=rows.find(function(x){return x._arrival&&x.trainNum===approach.trainNum;});
-    if(!row)return 'まもなく '+String(approach.trainNum||'').slice(0,10)+'列車が到着';
-    var name=row.kind==='local'?'普通列車':String(row.service||'特急');
-    var origin=String(row.arrivalOrigin||'');
-    // The separate LED row continues to display the origin even when this
-    // concise, non-blinking callout is visible.
-    if(row.kind==='local')return 'まもなく '+(origin?origin+'発の':'')+'普通列車が到着';
-    return 'まもなく '+name+(origin?'（'+origin+'発）':'')+'が到着';
+    var name=row?String(row.service||'普通列車'):'';
+    if(!name){
+      var train=String(approach.trainNum||'').match(/^(\d+)([MD])$/i);
+      var no=train?Number(train[1]):NaN,code=train?train[2].toUpperCase():'';
+      if(code==='M'&&no>=1&&no<=40)name='しおかぜ'+no+'号';
+      else if(code==='D'&&no>=1051&&no<=1099)name='宇和海'+(no-1050)+'号';
+      else name=approach.trainClass==='limited'?'特急 '+String(approach.trainNum||''):
+        String(approach.trainNum||'')+'列車';
+    }
+    var origin=row?String(row.arrivalOrigin||''):'';
+    return [
+      {cls:'arrival-part-soon',text:'まもなく '},
+      {cls:'arrival-part-service',text:name},
+      {cls:'arrival-part-origin',text:origin?'（'+origin+'発）':''},
+      {cls:'arrival-part-ending',text:' が到着します'}
+    ];
+  }
+  function drawArrivalApproach(approach,rows){
+    if(!approach){
+      alertEl.hidden=true;
+      approachNoticeKey='';
+      if(approachScrollAnimation){
+        approachScrollAnimation.cancel();approachScrollAnimation=null;
+      }
+      return;
+    }
+    var parts=arrivalApproachParts(approach,rows);
+    var key=direction+'|'+approach.trainNum+'|'+parts.map(function(p){return p.text;}).join('|');
+    alertEl.hidden=false;
+    // Refreshing live data every 10 seconds never resets or flashes this line.
+    if(key===approachNoticeKey)return;
+    approachNoticeKey=key;
+    if(approachScrollAnimation){
+      approachScrollAnimation.cancel();approachScrollAnimation=null;
+    }
+    alertTrack.replaceChildren();
+    parts.forEach(function(part){
+      if(part.text)alertTrack.appendChild(el('span',part.cls,part.text));
+    });
+    // Short messages stay still. Longer ones move gently without flashing.
+    var width=alertTrack.scrollWidth,view=alertEl.clientWidth;
+    if(width>view+2){
+      var duration=Math.max(9000,Math.min(26000,Math.round((width+view)*1000/42)));
+      alertEl.style.justifyContent='flex-start';
+      approachScrollAnimation=alertTrack.animate([
+        {transform:'translateX('+view+'px)'},
+        {transform:'translateX(-'+width+'px)'}
+      ],{duration:duration,iterations:Infinity,easing:'linear'});
+    }else{
+      alertTrack.style.transform='';
+      alertEl.style.justifyContent='center';
+    }
   }
 
   function splitService(row){
@@ -482,6 +536,16 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
     var arrivals=todayArrivals(n);
     var arrivalMode=arrivalViewActive(n,arrivals);
     var rows=arrivalMode?arrivals:todayRecords(n);
+    if(arrivalMode){
+      var approaching=activeApproach(n);
+      if(approaching){
+        rows=rows.slice().sort(function(a,b){
+          return Number(b.trainNum===approaching.trainNum)-
+            Number(a.trainNum===approaching.trainNum) ||
+            timeNumber(a.time)-timeNumber(b.time);
+        });
+      }
+    }
     var identity=(arrivalMode?'arr':'dep')+'|'+direction+'|'+lang+'|'+rows.slice(0,2).map(function(r){
       return [r.id,r.time,r.kind,r.dest,r.info].join(':');
     }).join('|');
@@ -511,11 +575,7 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
   }
   function updateAlerts(n,rows){
     var alert=activeApproach(n);
-    alertEl.hidden=!alert;
-    if(alert) {
-      alertEl.textContent=arrivalApproachText(alert,rows);
-      alertEl.classList.remove('flash');
-    }
+    drawArrivalApproach(alert,rows);
     rows.slice(0,2).forEach(function(row,i){
       var node=rowsEl.children[i];if(!node||row.passStatus)return;
       var cell=node.querySelector('.status');if(!cell)return;
