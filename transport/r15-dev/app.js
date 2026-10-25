@@ -5388,8 +5388,26 @@
       :'🚌 三津浜港から乗換｜伊予鉄56番・三津港→松山市駅（到着後の当日バス便なし／時刻表予定）';
   }
 
+  let previousPortRenderSignature='';
   function renderPort(rows) {
     const root = $('port-rows');
+    // Periodic feed refreshes often return the very same departures. Rebuilding
+    // identical rows every minute restarts a 60+ second ferry itinerary scroll
+    // forever, so preserve existing DOM/animation until displayed data changes.
+    const dir=currentDirection();
+    const signature=JSON.stringify({
+      dir,
+      rows:rows.map(r=>[
+        r.source,r.direction,r.port,r.arrivalPort,r.origin,r.dest,r.time,
+        r.service,r.shipName,r.info,r.status,r.delay,r.delayMinutes,
+        r.originDepartureTime,r.terminalArrivalTime,r.arrivalTime,
+        r.estimatedArrival,r.departureTimeUnconfirmed,
+        r.isFinal,r.calls,r.intermediateCalls,r.callTimes
+      ])
+    });
+    if(FREEWIFI_TV && root.classList.contains('freewifi-port-groups')
+       && signature===previousPortRenderSignature)return;
+    previousPortRenderSignature=signature;
     // Preserve the persistent ticker when the ferry rows are redrawn.
     for(const id of ['port-note','port-limousine-note']) {
       const ticker=$(id);
