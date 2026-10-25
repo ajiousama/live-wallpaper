@@ -1,0 +1,55 @@
+name: Snapshot official Matsuyama airline logos
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/sync_airport_logos.py"
+      - ".github/workflows/mirror_airport_logos.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: matsuyama-airport-logo-snapshot
+  cancel-in-progress: false
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Fetch original logo PNG snapshots (never touch locked originals)
+        run: python scripts/sync_airport_logos.py
+      - name: Commit images and source manifest to the same repository
+        if: success()
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add transport/assets/airport-official/
+          if git diff --cached --quiet; then
+            echo "Official logo snapshots already present"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "assets: save 17 original Matsuyama Airport airline logos"
+          for attempt in 1 2 3; do
+            git fetch origin main
+            if ! git rebase origin/main; then
+              git rebase --abort
+              echo "Unable to rebase logo snapshot; refusing to force-push"
+              exit 1
+            fi
+            if git push origin HEAD:main; then
+              echo "Official logo assets now committed to main"
+              exit 0
+            fi
+            sleep "$((attempt * 2))"
+          done
+          exit 1
