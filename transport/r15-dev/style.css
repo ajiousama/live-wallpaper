@@ -2281,3 +2281,33 @@ html.company-pc body.freewifi-tv .panel-bus .bus-logo-willer .willer-express-wor
    Individual rail/flight/bus/ferry delay badges remain enabled. */
 #transport-delay-alert,
 .live-system-status .transport-delay-global{display:none!important}
+
+
+/* 2026-10-26: fixed-size, legible 寄港便 operator-style badge.
+   Intermediate port names/times stay exclusively in the per-sailing ticker. */
+.panel-port .port-calling-badge{
+  display:inline-flex!important;
+  width:max-content!important;
+  max-width:100%!important;
+  flex:0 0 auto!important;
+  align-items:center!important;
+  justify-content:center!important;
+  align-self:flex-start!important;
+  margin:2px 0 0!important;
+  padding:2px 8px!important;
+  background:#123e50!important;
+  border:1px solid #67c9db!important;
+  border-radius:5px!important;
+  color:#d4f7ff!important;
+  font-size:11px!important;
+  font-weight:950!important;
+  line-height:1.08!important;
+  letter-spacing:.055em!important;
+  white-space:nowrap!important;
+  text-overflow:clip!important;
+  overflow:visible!important;
+  animation:none!important;
+}
+.panel-port .port-dest-wrap{
+  gap:1px;
+}
