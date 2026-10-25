@@ -2914,3 +2914,41 @@ body.freewifi-tv #panel-port .port-arrival-time {
   padding-top:2px!important;
   padding-bottom:2px!important;
 }
+
+
+/* 2026-10-25: Never race a long message against a fixed 7–12s timer.
+   The controller measures real rendered glyph width and writes the duration. */
+body.freewifi-tv .note .marquee-track,
+body.freewifi-tv #top-live-alert .marquee-track,
+body.freewifi-tv #rail-note .marquee-track,
+html.company-pc body.freewifi-tv .note .marquee-track{
+  animation-duration:var(--ticker-duration,30s)!important;
+}
+body.freewifi-tv .note.live-takeover .marquee-track,
+body.freewifi-tv .note.live-takeover.fast-scroll .marquee-track{
+  animation-duration:var(--ticker-duration,30s),.85s!important;
+}
+body.freewifi-tv .note.live-takeover.strong-live .marquee-track,
+body.freewifi-tv .note.live-takeover.strong-live.fast-scroll .marquee-track{
+  animation-duration:var(--ticker-duration,30s),.38s!important;
+}
+/* The two identical marquee copies must form an exact full-width loop. */
+body.freewifi-tv .note .marquee-track,
+body.freewifi-tv #top-live-alert .marquee-track{
+  gap:0!important;
+  column-gap:0!important;
+}
+body.freewifi-tv .note .marquee-track>span{
+  flex:0 0 auto!important;
+  min-width:max-content!important;
+  padding-right:42px!important;
+}
+body.freewifi-tv.air-board-page .air-bottom-scroll-alert,
+body.freewifi-tv.air-board-page .air-bottom-scroll-bus,
+html.company-pc body.freewifi-tv.air-board-page .air-bottom-scroll-alert,
+html.company-pc body.freewifi-tv.air-board-page .air-bottom-scroll-bus{
+  animation-name:airportBottomSeamlessLoop!important;
+  animation-duration:var(--airport-scroll-duration,20s)!important;
+  animation-timing-function:linear!important;
+  animation-iteration-count:infinite!important;
+}

@@ -3714,7 +3714,7 @@
     // station lists and transfers now get enough time for one complete loop.
     const distance=first.scrollWidth;
     if(distance<=32)return;
-    const duration=Math.max(16,Math.min(240,distance/40)).toFixed(1)+'s';
+    const duration=Math.max(16,distance/40).toFixed(1)+'s';
     if(track.style.getPropertyValue('--ticker-duration')!==duration)
       track.style.setProperty('--ticker-duration',duration);
   }
@@ -4348,8 +4348,10 @@
       }
       const gap=32;
       const distance=Math.ceil(copyWidth+gap);
+      // Readable, constant velocity regardless of text length. Never shrink
+      // a longer message into the old 22s window; it must reach its last glyph.
       const duration=box.classList.contains('port-guidance-scroll')
-        ? Math.max(12,distance/28) : Math.max(9,Math.min(22,distance/28));
+        ? Math.max(12,distance/28) : Math.max(9,distance/28);
       if(box.style.getPropertyValue('--overflow-distance')!==`${distance}px`) {
         box.style.setProperty('--overflow-distance',`${distance}px`);
       }

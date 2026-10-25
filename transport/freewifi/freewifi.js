@@ -74,8 +74,103 @@
     syncJrLed(pages[pageIndex]);
   });
 
+  // Measure rendered text rather than the character count. A 15-second
+  // display is a minimum, not a deadline that cuts off longer itineraries.
+  // Keep the scroll speed stable and extend the CURRENT page when necessary.
+  let observedScrolls = new WeakMap();
+  let scrollPageToken = 0;
+
+  function scanFullTickerCycles() {
+    const page=pages[pageIndex];
+    if(!page || page.cinema || page.shift || page.gamble) return;
+    const panel=document.getElementById(page.id);
+    if(!panel || !panel.classList.contains('freewifi-active')) return;
+    const activeRoot=[panel];
+    const globalAlert=document.getElementById('top-live-alert');
+    if(globalAlert && globalAlert.classList.contains('active'))activeRoot.push(globalAlert);
+    let extensionNeeded=false;
+
+    function checkTrack(track,signature,durationSeconds,property,value,restart) {
+      if(!(durationSeconds>0) || !Number.isFinite(durationSeconds))return;
+      const previous=observedScrolls.get(track);
+      if(property && track.style.getPropertyValue(property)!==value)
+        track.style.setProperty(property,value);
+      // Once per newly mounted/changed item, restart at the beginning.
+      // Never restart just because the 1-second countdown updates.
+      if(previous===signature)return;
+      observedScrolls.set(track,signature);
+      if(restart){
+        track.style.setProperty('animation','none','important');
+        void track.offsetWidth;
+        track.style.removeProperty('animation');
+      }
+      if(!autoRotationPaused){
+        const minimumEnd=Date.now()+Math.ceil(durationSeconds*1000)+400;
+        if(minimumEnd>nextPageAt){
+          nextPageAt=minimumEnd;
+          extensionNeeded=true;
+        }
+      }
+    }
+    for(const root of activeRoot){
+      root.querySelectorAll('.marquee-track').forEach(track=>{
+        const first=track.firstElementChild;
+        const box=track.closest('.marquee');
+        if(!first || !box || box.clientWidth<1)return;
+        const width=Math.ceil(first.scrollWidth);
+        if(width<=0)return;
+        // The first entire copy travels left, including its trailing margin.
+        const seconds=Math.max(12,width/40);
+        const duration=seconds.toFixed(2)+'s';
+        const signature=first.textContent+'|'+width+'|'+box.clientWidth;
+        // The top live alert is shared between screens; do not reset it
+        // when the lower board changes.
+        checkTrack(track,signature,seconds,'--ticker-duration',duration,
+                   !track.closest('#top-live-alert'));
+      });
+      root.querySelectorAll('.overflow-scroll.is-overflow > .overflow-scroll-track').forEach(track=>{
+        const box=track.closest('.overflow-scroll');
+        const copy=track.querySelector('.overflow-scroll-copy:not(.overflow-scroll-clone)');
+        if(!copy || !box || box.clientWidth<1)return;
+        const distance=Math.ceil(copy.scrollWidth+32);
+        const seconds=Math.max(box.classList.contains('port-guidance-scroll')?12:9,distance/28);
+        const duration=seconds.toFixed(1)+'s';
+        const signature=copy.textContent+'|'+distance+'|'+box.clientWidth;
+        if(box.style.getPropertyValue('--overflow-duration')!==duration)
+          box.style.setProperty('--overflow-duration',duration);
+        checkTrack(track,signature,seconds,null,null,true);
+      });
+      root.querySelectorAll('.air-bottom-scroll-track:not(.air-bottom-ended)').forEach(track=>{
+        const first=track.querySelector('.air-bottom-scroll-set');
+        const box=track.closest('.air-bottom-scroll');
+        if(!first || !box || box.clientWidth<1)return;
+        const distance=Math.ceil(first.scrollWidth);
+        const seconds=Math.max(12,distance/32);
+        const duration=seconds.toFixed(2)+'s';
+        const signature=first.textContent+'|'+distance+'|'+box.clientWidth;
+        checkTrack(track,signature,seconds,'--airport-scroll-duration',duration,true);
+      });
+    }
+    if(extensionNeeded){
+      document.documentElement.dataset.companyPageDue=String(nextPageAt);
+      updatePageCountdown();
+      scheduleNextPage();
+    }
+  }
+  function watchVisibleScrolls(){
+    // Wait for the transport renderer, image logos and layout to settle.
+    const token=scrollPageToken;
+    requestAnimationFrame(()=>{
+      if(token!==scrollPageToken)return;
+      scanFullTickerCycles();
+      setTimeout(()=>{if(token===scrollPageToken)scanFullTickerCycles();},220);
+    });
+  }
+
   function showPage(index){
     pageIndex = (index + pages.length) % pages.length;
+    scrollPageToken++;
+    observedScrolls = new WeakMap();
     const page = pages[pageIndex];
     if(testPagePicker) testPagePicker.value = String(pageIndex);
     if(autoRotationPaused && !testMode){
@@ -151,6 +246,7 @@
     document.documentElement.dataset.companyPageChanged = String(Date.now());
     updatePageCountdown();
     scheduleNextPage();
+    watchVisibleScrolls();
   }
 
   function scheduleNextPage(){
@@ -407,7 +503,10 @@
     }
   }
   showPage(initialPage);
-  setInterval(updatePageCountdown, 1000);
+  setInterval(()=>{
+    scanFullTickerCycles();
+    updatePageCountdown();
+  }, 1000);
   // Lively's WebView may throttle or drop a long setTimeout after sleeping.
   // This independent clock check restores page switching, even when the
   // queued timeout was lost. A hidden/resumed WebView advances one page.
