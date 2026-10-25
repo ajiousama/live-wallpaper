@@ -647,6 +647,18 @@
     }
     return false;
   }
+
+  // Official departure-complete tags must not linger as DELAY notices.
+  // A future departure time with a stale completion tag is not trusted,
+  // matching the airport board's own rollover protections.
+  function airportDepartureCompleted(item,now){
+    const text=[item?.status,item?.changeText,item?.departureStatus].map(x=>String(x||'')).join(' ');
+    if(!/出発済(?:み)?|離陸済(?:み)?|出発完了|離陸完了/.test(text))return false;
+    const actual=padTime(item?.actualDepartureTime||item?.actualDeparture||'');
+    const reference=/^\d{2}:\d{2}$/.test(actual)
+      ?actual:padTime(item?.changed||item?.scheduled||'');
+    return !/^\d{2}:\d{2}$/.test(reference)||toMinutes(reference)<=now.minutes+1;
+  }
   function airportArrivalBoardState(now) {
     const ap=slowLive.airport;
     if(!slowLive.ok||!ap?.ok||!Array.isArray(ap.arrivals)||boardDisplayIso('air',now)!==now.iso||airportLiveHasPreviousDayStatuses(now))return 'unverified';
@@ -2404,6 +2416,7 @@
           for(const direction of ['departures','arrivals']){
             const flights=slowLive.airport[direction];
             for(const x of (Array.isArray(flights)?flights:[])){
+              if(direction==='departures' && airportDepartureCompleted(x,now))continue;
               const time=padTime(x.changed||x.scheduled||'');
               if(!/^\d{2}:\d{2}$/.test(time)||toMinutes(time)<now.minutes-25)continue;
               const d=delayInfo(x,'air');if(!d)continue;
@@ -2999,6 +3012,7 @@
     const addDelayed=(rows,direction)=>{
       if(!Array.isArray(rows)) return;
       rows.forEach(x=>{
+        if(direction==='departure' && airportDepartureCompleted(x,now))return;
         if(direction==='arrival' && delayedArrivalNoticeExpired(x,now))return;
         if(direction==='arrival' && completedTurnaroundDeparted(x,airport.departures,now))return;
         const delta=Number(x?.deltaMinutes);
@@ -3051,6 +3065,7 @@
       : (Array.isArray(airport.departures)?airport.departures:[]);
     const items=[];
     rows.forEach(x=>{
+      if(!arrival && airportDepartureCompleted(x,now))return;
       if(arrival && delayedArrivalNoticeExpired(x,now))return;
       if(arrival && completedTurnaroundDeparted(x,airport.departures,now))return;
       const status=String(x?.status||'').trim();
