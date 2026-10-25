@@ -328,11 +328,16 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
     // Short messages stay still. Longer ones move gently without flashing.
     var width=alertTrack.scrollWidth,view=alertEl.clientWidth;
     if(width>view+2){
-      var duration=Math.max(9000,Math.min(26000,Math.round((width+view)*1000/42)));
+      var shift=width-view;
+      var duration=Math.max(11000,Math.min(30000,Math.round(shift*1000/34)+6000));
       alertEl.style.justifyContent='flex-start';
+      // Show "まもなく + train name" immediately, rather than entering
+      // from an empty right edge. Pause on the beginning and the ending.
       approachScrollAnimation=alertTrack.animate([
-        {transform:'translateX('+view+'px)'},
-        {transform:'translateX(-'+width+'px)'}
+        {transform:'translateX(0px)',offset:0},
+        {transform:'translateX(0px)',offset:.16},
+        {transform:'translateX(-'+shift+'px)',offset:.84},
+        {transform:'translateX(-'+shift+'px)',offset:1}
       ],{duration:duration,iterations:Infinity,easing:'linear'});
     }else{
       alertTrack.style.transform='';
