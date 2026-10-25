@@ -89,6 +89,15 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
 .arrival-part-service{color:#ff4b49}
 .arrival-part-origin{color:#64dcff}
 .arrival-part-ending{color:#f2f2f2}
+/* Real LED-style discrete blink: only the caution words blink, never the
+   train name, origin, background or whole board. Stable 1.4s rhythm. */
+.arrival-part-soon,.arrival-part-ending{
+  animation:led-approach-pulse 1.4s steps(1,end) infinite;
+}
+@keyframes led-approach-pulse{
+  0%,69%{opacity:1}
+  70%,100%{opacity:0}
+}
 </style>
 </head>
 <body>
@@ -325,7 +334,8 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
     parts.forEach(function(part){
       if(part.text)alertTrack.appendChild(el('span',part.cls,part.text));
     });
-    // Short messages stay still. Longer ones move gently without flashing.
+    // Short messages stay still. Longer ones move gently; yellow
+    // "まもなく" and white "到着します" blink at a regular LED cadence.
     var width=alertTrack.scrollWidth,view=alertEl.clientWidth;
     if(width>view+2){
       var shift=width-view;
@@ -408,7 +418,9 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
         (lang==='en'?'SPLITS AT UTAZU':'宇多津で分割'):'');
     var last=!!row._isFinal;
     if(!st&&last)st=lang==='en'?'LAST TRAIN':'最終';
-    box.appendChild(el('span','status'+(urgent?(row._arrival?' warning':' flash warning'):last?' final':''),st));
+    // Arrival rows keep the train name and origin visible at all times.
+    // The separate color-coded arrival callout handles the flashing warning.
+    box.appendChild(el('span','status'+(urgent&&!row._arrival?' flash warning':last?' final':''),row._arrival?'':st));
     return box;
   }
   function exactRoute(row,dest,trainNumber,n){
@@ -584,6 +596,13 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
     rows.slice(0,2).forEach(function(row,i){
       var node=rowsEl.children[i];if(!node||row.passStatus)return;
       var cell=node.querySelector('.status');if(!cell)return;
+      // Never overlay the arrival train's own name/time with blinking text:
+      // the yellow/white portions of the separate notice blink instead.
+      if(row._arrival){
+        cell.classList.remove('flash','warning');
+        cell.textContent='';
+        return;
+      }
       var seconds=timeNumber(row.time)*60-n.minutes*60-n.seconds;
       var confirmedArrival=row._arrival&&!!activeApproach(n,row.trainNum);
       if(row._arrival&&row.position&&row.delayMinutes>0)
