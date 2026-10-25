@@ -79,7 +79,8 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
 .ticker-note{display:none}
 .arrival-alert{position:absolute;z-index:8;left:77px;top:62px;width:192px;height:16px;
   display:flex;align-items:center;justify-content:center;background:#000;
-  color:#ffe52a;font-size:12px;font-weight:900;white-space:nowrap}
+  color:#ffe52a;font-size:10px;font-weight:900;white-space:nowrap;
+   letter-spacing:-.04em;overflow:hidden;text-overflow:clip}
 .arrival-alert[hidden]{display:none}
 </style>
 </head>
@@ -91,7 +92,7 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
    <article class="train empty"><span class="kind"></span><span class="service">運行図を確認中</span></article>
  </section>
  <div class="ticker"><div class="ticker-label" id="ticker-label">停車駅</div><div class="ticker-window" id="ticker-window"><div class="ticker-track" id="ticker-track">停車駅・接続を確認しています</div></div></div>
- <div class="arrival-alert flash" id="arrival-alert" hidden>まもなく列車が到着します</div>
+ <div class="arrival-alert" id="arrival-alert" hidden>まもなく列車が到着します</div>
  <span class="clock" id="clock" hidden></span>
 </main>
 <script>
@@ -252,10 +253,37 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
       return {key:row.id,segments:seg};
     });
   }
+  // Arrival attention is based on a positive train-number match in the
+  // real-time location + TODAY's operating diagram, not a timetable alone.
+  function activeApproach(n,number){
+    if(ledTestClock()||live.iso!==n.iso||Date.now()-live.at>90000||
+      Date.now()-live.at< -15000)return null;
+    return live.arrivals.filter(function(x){
+      if(x.side!==direction||x.confirmedApproach!==true||
+         (number&&x.trainNum!==number))return false;
+      var t=timeNumber(x.arrival),delay=Number(x.delayMinutes)||0;
+      var seconds=(t+Math.max(0,Math.min(60,delay)))*60-n.minutes*60-n.seconds;
+      return Number.isFinite(t)&&seconds>0&&seconds<=240;
+    }).sort(function(a,b){
+      return (timeNumber(a.arrival)+(Number(a.delayMinutes)||0))-
+        (timeNumber(b.arrival)+(Number(b.delayMinutes)||0));
+    })[0]||null;
+  }
   function arrivalViewActive(n,arrivals){
-    // The parent changes corridor every 15 seconds. A separate 12-second
-    // cycle ensures EACH corridor can show BOTH arrivals and departures.
+    // A genuinely approaching train takes precedence and stays on the
+    // arrival screen instead of flickering back to departures every 12 sec.
+    if(activeApproach(n))return true;
     return arrivals.length>0&&Math.floor(ledNow().getTime()/12000)%2===1;
+  }
+  function arrivalApproachText(approach,rows){
+    var row=rows.find(function(x){return x._arrival&&x.trainNum===approach.trainNum;});
+    if(!row)return 'まもなく '+String(approach.trainNum||'').slice(0,10)+'列車が到着';
+    var name=row.kind==='local'?'普通列車':String(row.service||'特急');
+    var origin=String(row.arrivalOrigin||'');
+    // The separate LED row continues to display the origin even when this
+    // concise, non-blinking callout is visible.
+    if(row.kind==='local')return 'まもなく '+(origin?origin+'発の':'')+'普通列車が到着';
+    return 'まもなく '+name+(origin?'（'+origin+'発）':'')+'が到着';
   }
 
   function splitService(row){
@@ -311,17 +339,17 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
     var dep=timeNumber(row.time),rem=dep*60-n.minutes*60-n.seconds;
     // An arrival countdown is "soon" ONLY when the live position and
     // today's diagram independently confirm this exact inbound train.
-    var confirmedInbound=row._arrival&&live.arrivals.some(function(x){
-      return x.trainNum===row.trainNum&&x.side===direction&&x.confirmedApproach===true;
-    });
-    var urgent=!pass&&rem>0&&rem<=60&&(!row._arrival||confirmedInbound);
+    var confirmedInbound=row._arrival&&!!activeApproach(n,row.trainNum);
+    if(row._arrival&&row.position&&row.delayMinutes>0)
+      rem+=Math.min(60,row.delayMinutes)*60;
+    var urgent=!pass&&rem>0&&rem<=240&&(!row._arrival||confirmedInbound);
     var st=urgent?(lang==='en'?(row._arrival?'ARRIVING SOON':'DEPARTING SOON'):(row._arrival?'まもなく到着':'まもなく発車')):
       row.passStatus?(lang==='en'?'PASS SCHEDULE':row.passStatus):
       (row.kind==='limited'&&/岡山・高松/.test(String(row.dest||''))?
         (lang==='en'?'SPLITS AT UTAZU':'宇多津で分割'):'');
     var last=!!row._isFinal;
     if(!st&&last)st=lang==='en'?'LAST TRAIN':'最終';
-    box.appendChild(el('span','status'+(urgent?' flash warning':last?' final':''),st));
+    box.appendChild(el('span','status'+(urgent?(row._arrival?' warning':' flash warning'):last?' final':''),st));
     return box;
   }
   function exactRoute(row,dest,trainNumber,n){
@@ -482,31 +510,28 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
     updateAlerts(n,rows);
   }
   function updateAlerts(n,rows){
-    var alert=null;
-    if(!ledTestClock()&&live.iso===n.iso&&Date.now()-live.at<=90000){
-      alert=live.arrivals.filter(function(x){
-        var arr=timeNumber(x.arrival),delay=Number(x.delayMinutes)||0;
-        var secs=(arr+delay)*60-n.minutes*60-n.seconds;
-        return x.side===direction&&x.confirmedApproach===true&&
-          Number.isFinite(arr)&&secs>0&&secs<=60;
-      }).sort(function(a,b){
-        return Number(b.plannedTurnback)-Number(a.plannedTurnback)||
-          timeNumber(a.arrival)-timeNumber(b.arrival);
-      })[0]||null;
-    }
+    var alert=activeApproach(n);
     alertEl.hidden=!alert;
-    if(alert)alertEl.textContent=lang==='en'?'TRAIN ARRIVING SHORTLY':'まもなく列車が到着します';
+    if(alert) {
+      alertEl.textContent=arrivalApproachText(alert,rows);
+      alertEl.classList.remove('flash');
+    }
     rows.slice(0,2).forEach(function(row,i){
       var node=rowsEl.children[i];if(!node||row.passStatus)return;
       var cell=node.querySelector('.status');if(!cell)return;
       var seconds=timeNumber(row.time)*60-n.minutes*60-n.seconds;
-      var confirmedArrival=row._arrival&&live.arrivals.some(function(x){
-        return x.trainNum===row.trainNum&&x.side===direction&&x.confirmedApproach===true;
-      });
-      var urgent=seconds>0&&seconds<=60&&(!row._arrival||confirmedArrival);
+      var confirmedArrival=row._arrival&&!!activeApproach(n,row.trainNum);
+      if(row._arrival&&row.position&&row.delayMinutes>0)
+        seconds+=Math.min(60,row.delayMinutes)*60;
+      var urgent=seconds>0&&seconds<=(row._arrival?240:60)&&
+        (!row._arrival||confirmedArrival);
       var value=urgent?(lang==='en'?(row._arrival?'ARRIVING SOON':'DEPARTING SOON'):
         (row._arrival?'まもなく到着':'まもなく発車')):'';
-      if(urgent){if(cell.textContent!==value)cell.textContent=value;cell.classList.add('flash','warning');}
+      if(urgent){
+        if(cell.textContent!==value)cell.textContent=value;
+        cell.classList.add('warning');
+        cell.classList.toggle('flash',!row._arrival);
+      }
       else{
         cell.classList.remove('flash','warning');
         if(['まもなく発車','DEPARTING SOON','まもなく到着','ARRIVING SOON'].includes(cell.textContent))
@@ -538,7 +563,7 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
       live.scheduledArrivals=(Array.isArray(d.scheduledArrivals)?d.scheduledArrivals:[]).slice(0,180)
         .filter(function(x){
           return x&&['south','north'].includes(x.side)&&
-            /^d{1,5}[MD]$/i.test(String(x.trainNum||''))&&
+            /^\d{1,5}[MD]$/i.test(String(x.trainNum||''))&&
             Number.isFinite(timeNumber(x.arrival));
         });
       live.departures=(Array.isArray(d.departures)?d.departures:[]).slice(0,170)
