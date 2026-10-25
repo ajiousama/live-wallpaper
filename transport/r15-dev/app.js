@@ -2327,7 +2327,7 @@
   function highwayLiveItems() {
     const rows=slowLive.highway?.items;
     if (!Array.isArray(rows)||!rows.length) return [];
-    return rows.map(x=>`高速バスLIVE｜${x.operator} ${x.route}｜${x.status}`);
+    return rows.map(x=>`高速バスLIVE｜${x.operator} ${x.route}｜${delayBadge(x,'bus')}${x.status}`);
   }
   function busTickerItems(now) {
     const takeover=madonnaTakeover(now);
@@ -2862,7 +2862,7 @@
       const badge=railApproachBadgeHtml({...x,kind});
       const dest=cleanStation(x?.destination||'');
       const delay=Number(x?.delayMinutes)||0;
-      const delayText=delay>0?`｜${delay}分遅れ`:'';
+      const delayText=delay>0?'｜'+delayBadge({delayMinutes:delay},'rail'):'';
       const destText=dest?`｜${dest}行`:'';
       out.push(`<span class="rail-position-live">📍 現在位置 ${position}｜${badge}${destText}${delayText}</span>`);
     };
@@ -3050,7 +3050,7 @@
     const disruption=airportDisruptionItems(now,direction);
     const bus=airportNextTimes(now);
     const ended=disruption.length===1 && disruption[0]?.type==='ended';
-    const disruptionHtml=disruption.map(x=>`<span class="air-bottom-alert air-bottom-${x.type}">${x.text}</span>`).join('<span class="air-bottom-dot">・</span>');
+    const disruptionHtml=disruption.map(x=>`<span class="air-bottom-alert air-bottom-${x.type}">${x.type==='delay'?delayBadge({status:x.text},'air'):''}${x.text}</span>`).join('<span class="air-bottom-dot">・</span>');
     const twoDepartureText=(times)=>{
       if(!times.length) return '本日運行終了';
       const first=times[0];
@@ -3468,7 +3468,7 @@
       <div class="rail-primary">
         <div class="cell rail-service ${info.kind}"><span class="kindtxt">${serviceBadge}</span></div>
         <div class="cell time">${x.arrival}</div>
-        <div class="cell main"><span class="rail-terminal-label" title="松山駅止まり・ここから先へは発車しません">松山止</span>${x.isOfficialScheduled ? ( /臨時列車/.test(String(x.serviceName||'')) ? ` ${x.serviceName}` : ` 伊予灘ものがたり ${x.specialName}` ) : ''}${arrivalRoute?`［${arrivalRoute}］`:``}</div>
+        <div class="cell main"><span class="rail-terminal-label" title="松山駅止まり・ここから先へは発車しません">松山止</span>${x.isOfficialScheduled ? ( /臨時列車/.test(String(x.serviceName||'')) ? ` ${x.serviceName}` : ` 伊予灘ものがたり ${x.specialName}` ) : ''}${arrivalRoute?`［${arrivalRoute}］`:``}${delayBadge(x,'rail')}</div>
       </div>
       <div class="rail-detail">${tickerHtml(details)}</div>`;
     root.appendChild(row);
@@ -3550,7 +3550,7 @@
       '<div class="cell rail-service '+kind+'"><span class="kindtxt">'+
       railVehicleIconHtml(x)+railServiceBadgeHtml(kind)+'<span class="rail-name-badge">'+railSpecialText(x.trainNum)+'</span></span></div>'+
       '<div class="cell time">'+railSpecialText(time)+'</div>'+
-      '<div class="cell main">'+event+'</div></div>'+
+      '<div class="cell main">'+event+delayBadge(x,'rail')+'</div></div>'+
       '<div class="rail-detail">'+tickerHtml(details)+'</div>';
     root.appendChild(row);
   }
@@ -3566,7 +3566,7 @@
       <div class="rail-primary">
         <div class="cell rail-service deadhead"><span class="kindtxt">${railVehicleIconHtml(x)}${railServiceBadgeHtml('deadhead')}</span></div>
         <div class="cell time">${x.arrival}</div>
-        <div class="cell main">松山　到着</div>
+        <div class="cell main">松山　到着${delayBadge(x,'rail')}</div>
       </div>
       <div class="rail-detail">${tickerHtml(details)}</div>`;
     root.appendChild(row);
@@ -3587,7 +3587,7 @@
       <div class="rail-primary">
         <div class="cell rail-service freight"><span class="kindtxt">${railVehicleIconHtml(x)}${railServiceBadgeHtml('freight')}<span class="rail-name-badge">${x.trainNum||''}レ</span></span></div>
         <div class="cell time">${x.displayTime||x.passTime||'時刻確認中'}</div>
-        <div class="cell main">松山　${x.timetableOnly?'通過予定':'通過'}</div>
+        <div class="cell main">松山　${x.timetableOnly?'通過予定':'通過'}${delayBadge(x,'rail')}</div>
       </div>
       <div class="rail-detail">${tickerHtml(details)}</div>`;
     root.appendChild(row);
@@ -3775,7 +3775,7 @@
         const confirmed=nextLimited.railPositionConfirmed && nextLimited.livePosition;
         const status=confirmed?'現在位置 '+nextLimited.livePosition:'時刻表予定・位置未確認';
         const details=railRowDetailItems(nextLimited);
-        nextCard.innerHTML=`<div class="rail-next-main"><span class="rail-next-label">次の特急は？</span><span class="rail-next-service">${railVehicleIconHtml(nextLimited)}${railServiceBadgeHtml('limited',nextLimited.service,nextLimited.info)}</span><span class="rail-next-time">${nextLimited.time}発</span><span class="rail-next-dest">${railDestLabel(nextLimited)}行</span></div><div class="rail-next-details">${tickerHtml(details.length?details:[status])}</div>`;
+        nextCard.innerHTML=`<div class="rail-next-main"><span class="rail-next-label">次の特急は？</span><span class="rail-next-service">${railVehicleIconHtml(nextLimited)}${railServiceBadgeHtml('limited',nextLimited.service,nextLimited.info)}</span><span class="rail-next-time">${nextLimited.time}発</span><span class="rail-next-dest">${railDestLabel(nextLimited)}行</span>${delayBadge(nextLimited,'rail')}</div><div class="rail-next-details">${tickerHtml(details.length?details:[status])}</div>`;
       } else {
         nextCard.innerHTML='<span class="rail-next-label">次の特急は？</span><span class="rail-next-status">この方面の本日の特急は終了しました</span>';
       }
@@ -3787,7 +3787,7 @@
       const localCard=document.getElementById('rail-next-local');
       if(nextLocal){
         const details=railRowDetailItems(nextLocal);
-        localCard.innerHTML=`<div class="rail-next-main"><span class="rail-next-label">次の普通列車は？</span><span class="rail-next-service">${railVehicleIconHtml(nextLocal)}${railServiceBadgeHtml('local',nextLocal.service)}</span><span class="rail-next-time">${nextLocal.time}発</span><span class="rail-next-dest">${railDestLabel(nextLocal)}行</span></div><div class="rail-next-details">${tickerHtml(details)}</div>`;
+        localCard.innerHTML=`<div class="rail-next-main"><span class="rail-next-label">次の普通列車は？</span><span class="rail-next-service">${railVehicleIconHtml(nextLocal)}${railServiceBadgeHtml('local',nextLocal.service)}</span><span class="rail-next-time">${nextLocal.time}発</span><span class="rail-next-dest">${railDestLabel(nextLocal)}行</span>${delayBadge(nextLocal,'rail')}</div><div class="rail-next-details">${tickerHtml(details)}</div>`;
       } else {
         localCard.innerHTML='<span class="rail-next-label">次の普通列車は？</span><span class="rail-next-status">この方面の本日の普通列車は終了しました</span>';
       }
@@ -3943,7 +3943,7 @@
           <div class="rail-primary">
             <div class="cell rail-service ${kind}"><span class="kindtxt">${serviceBadge}</span></div>
             <div class="cell time">${r.time}</div>
-            <div class="cell main">${departureMark}${railDestLabel(r)}行 ${badges}</div>
+            <div class="cell main">${departureMark}${railDestLabel(r)}行 ${badges}${delayBadge(r,'rail')}</div>
           </div>
           <div class="rail-detail">${tickerHtml(railRowDetailItems(r))}</div>`;
         root.appendChild(row);
@@ -4104,7 +4104,7 @@
         </div>
         <div class="cell main air-place">${placeHtml}</div>
         <div class="cell time air-board-time">${timeHtml}</div>
-        <div class="${statusClass}">${overflowScrollHtml(guidance,'air-status-scroll')}</div>`;
+        <div class="${statusClass}">${delayBadge(r,'air')}${overflowScrollHtml(guidance,'air-status-scroll')}</div>`;
       root.appendChild(row);
       });
     }
@@ -5219,7 +5219,7 @@
         const departurePosition=busDeparturePosition(r,japanNow());
         row.innerHTML = `
           <div class="cell time bus-time-stack"><span class="primary-time">${r.time}</span>${terminal?`<span class="bus-terminal-time">${terminal}</span>`:''}</div>
-          <div class="cell main bus-dest-cell"><span class="bus-dest-main">${busDestinationHtml(r,`${firstBadge}${finalBadge}`)}</span>${ferryExtra}</div>
+          <div class="cell main bus-dest-cell"><span class="bus-dest-main">${busDestinationHtml(r,`${firstBadge}${finalBadge}`)}${delayBadge(r,'bus')}</span>${ferryExtra}</div>
           <div class="cell sub bus-departure-position-cell"><span class="bus-departure-position">${departurePosition||'—'}</span></div>
           <div class="cell sub bus-boarding-cell"><div class="service-wrap"><span class="name bus-place-logo">${rightTop}</span><span class="code bus-ehime-route">${rightBottom?overflowScrollHtml(rightBottom,'bus-ehime-route-scroll'):''}</span></div></div>
           <div class="cell service">${busOperatorHtml(r)}</div>`;
@@ -5237,7 +5237,7 @@
             <span class="arrival-departure-time">${depDay}${r.originDepartureTime || '—'}出発</span>
           </div>
           <div class="cell sub bus-estimated-position-cell">
-            <span class="bus-estimated-position">${estimatedPosition}</span>
+            <span class="bus-estimated-position">${delayBadge(r,'bus')}${estimatedPosition}</span>
           </div>
           <div class="cell sub arrival-terminal-wrap">
             <span class="arrival-terminal">${overflowScrollHtml(terminal,'bus-terminal-scroll')}</span>
@@ -5299,7 +5299,7 @@
           ? `大型クルーズ船 ${r.shipName}｜${r.info||'松山市公式の出港予定'}`
           : detailTimetable || [routeGuidance==='—'?'':routeGuidance,arrivalGuide].filter(Boolean).join(' ｜ ');
         row.innerHTML = `
-          <div class="cell main port-route port-route-main">${portDepartureDestinationHtml(r,`${firstBadge}${finalBadge}`)}</div>
+          <div class="cell main port-route port-route-main">${portDepartureDestinationHtml(r,`${firstBadge}${finalBadge}`)}${delayBadge(r,'port')}</div>
           <div class="cell sub port-route-guidance">${overflowScrollHtml(departureGuidance,'port-guidance-scroll')}</div>
           <div class="cell service">${service}</div>
           <div class="cell time port-departure-time">${r.time}発${r.departureTimeUnconfirmed?' ※':''}</div>`;
@@ -5314,7 +5314,7 @@
         const detailTimetable=ferryDetailTimetable(r);
         const routeGuidance=detailTimetable || [arrivalDepartureLabel,baseGuidance==='—'?'':baseGuidance].filter(Boolean).join(' ｜ ')||'—';
         row.innerHTML = `
-          <div class="cell main port-route port-route-main"><span class="port-arrival-route-line">${arrivalRoute}</span></div>
+          <div class="cell main port-route port-route-main"><span class="port-arrival-route-line">${arrivalRoute}</span>${delayBadge(r,'port')}</div>
           <div class="cell sub port-route-guidance">${overflowScrollHtml(routeGuidance,'port-guidance-scroll')}</div>
           <div class="cell service">${service}</div>
           <div class="cell time port-arrival-time">${rMinutes(r)>=1440 ? '翌日 ' : ''}${r.time}${r.estimatedArrival?'頃（推定）':'着予定'}</div>`;
@@ -5492,7 +5492,7 @@
   }
   function ferryTickerItems(now=japanNow()) {
     const rows=slowLive.ferry?.items; const items=[];
-    if(Array.isArray(rows)&&rows.length){rows.forEach(x=>{const st=String(x.status||'');const cls=/欠航|休航/.test(st)?'ferry-cancel':/減便|一部/.test(st)?'ferry-reduced':'ferry-normal';items.push(`<span class="${cls}">フェリーLIVE｜${x.name}｜${st}</span>`);});}
+    if(Array.isArray(rows)&&rows.length){rows.forEach(x=>{const st=String(x.status||'');const cls=/欠航|休航/.test(st)?'ferry-cancel':/減便|一部/.test(st)?'ferry-reduced':'ferry-normal';items.push(`<span class="${cls}">フェリーLIVE｜${x.name}｜${delayBadge(x,'port')}${st}</span>`);});}
     items.unshift(...specialVesselEventNotices(now));
     items.unshift(...berthedCruiseNotices(now));
     if(!items.length)items.push('フェリーLIVE｜公式運航情報を取得中');
