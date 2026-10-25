@@ -2331,6 +2331,50 @@
     const next=toMinutes(t)<toMinutes(record.time);
     return [[portDestinationName(record.dest), `${next?'翌':''}${t}`]];
   }
+  // A calling vessel keeps only its start and terminal in the fixed cell.
+  // All intermediate calling-port arrival clocks belong to THIS sailing's
+  // scrolling detail, never to the page-wide ferry ticker.
+  function ferryIntermediatePorts(record) {
+    const origin=record.direction==='arrival'
+      ?String(record.origin||''):String(record.port||'');
+    const calls=portDepartureCalls(record);
+    const terminal=record.direction==='arrival'
+      ?String(record.arrivalPort||record.port||record.dest||'')
+      :String(calls.at(-1)?.[0]||portDestinationName(record.dest)||'');
+    const normalize=p=>String(p||'').replace(/[\s（）()]/g,'').replace(/港$/,'');
+    const start=normalize(origin),end=normalize(terminal),seen=new Set();
+    return calls.filter(c=>{
+      if(!Array.isArray(c)||!c[0])return false;
+      const name=normalize(c[0]);
+      if(!name||name===start||name===end||seen.has(name))return false;
+      seen.add(name);return true;
+    }).map(c=>String(c[0]));
+  }
+  function ferryHasIntermediateCalls(record) {
+    if(ferryIntermediatePorts(record).length)return true;
+    // Some published route descriptions identify a port call without its
+    // time. Keep the badge, but do NOT invent intermediate arrival clocks.
+    const text=String(record.info||'');
+    if(/(?:寄港なし|寄港しない|寄港せず)/.test(text))return false;
+    return /寄港|経由/.test(text) ||
+      portRouteParts(record,record.direction||'departure').length>2;
+  }
+  function ferryCallingBadge(record) {
+    return ferryHasIntermediateCalls(record)
+      ?'<span class="port-calling-badge" aria-label="寄港便">寄港便</span>':'';
+  }
+  function ferryTerminalRouteHtml(record,direction='departure') {
+    // Two fixed endpoints only. It is the scrolling per-sailing detail that
+    // publishes every intermediate port and the full arrival time.
+    const parts=portRouteParts(record,direction).filter(Boolean);
+    const origin=parts[0]||String(record.port||record.origin||'出発港');
+    const terminal=parts.at(-1)||String(record.dest||record.arrivalPort||'到着港');
+    const formatter=/ジャンボフェリー/.test(String(record.service||''))
+      ?jumboPortHtml:ehimePortHtml;
+    return formatter(origin)+'<span class="route-arrow"> → </span>'+
+      formatter(terminal);
+  }
+
   function compactPortName(name) {
     const n=String(name||'');
     if (n==='松山観光港') return '観光港';
@@ -2350,25 +2394,9 @@
     return `<span class="primary-time">${record.time}</span>${lines.map(x=>`<span class="port-arrival-line">${x}</span>`).join('')}`;
   }
   function portDepartureDestinationHtml(record, badges='') {
-    if (isHiroshimaKureVia(record)) return portKureUnifiedHtml(record,'departure',badges);
-    const calls=portDepartureCalls(record);
-    const terminal=(calls.length ? calls[calls.length-1][0] : portDestinationName(record.dest)) || portDestinationName(record.dest);
-    const via=calls.slice(0,-1).map(x=>x[0]);
-    const displayTerminal=/中島/.test(String(record.service||'')) && /大浦/.test(String(record.dest||'')) ? '中島（大浦）' : terminal;
-    const start=record.port || '出発港';
-    const jumbo=/ジャンボフェリー/.test(String(record.service||''));
-    const startHtml=jumbo?jumboPortHtml(start):`<span class="route-port">${start}</span>`;
-    const terminalHtml=jumbo?jumboPortHtml(displayTerminal):`<span class="route-port">${displayTerminal}</span>`;
-    const viaNames=via.map(compactPortName);
-    const viaLines=[];
-    if (viaNames.length===1) viaLines.push(`${viaNames[0]}寄港`);
-    else if (viaNames.length===2) viaLines.push(`${viaNames.join('・')}寄港`);
-    else if (viaNames.length>=3) {
-      const split=Math.ceil(viaNames.length/2);
-      viaLines.push(`${viaNames.slice(0,split).join('・')}寄港`);
-      viaLines.push(`${viaNames.slice(split).join('・')}寄港`);
-    }
-    return `<div class="port-dest-wrap"><span class="port-dest-main">${startHtml}<span class="route-arrow"> → </span>${terminalHtml} ${badges}</span>${viaLines.map(x=>`<span class="port-via-line">${x}</span>`).join('')}</div>`;
+    const route=ferryTerminalRouteHtml(record,'departure');
+    const badge=ferryCallingBadge(record);
+    return `<div class="port-dest-wrap"><span class="port-dest-main">${route}${badges?' '+badges:''}</span>${badge}</div>`;
   }
 
   function liveAlertSpan(text, cls, strong=false) {
@@ -5524,9 +5552,8 @@
           <div class="cell service">${service}</div>
           <div class="cell time port-departure-time">${r.time}発${r.departureTimeUnconfirmed?' ※':''}</div>`;
       } else {
-        const arrivalRoute = isHiroshimaKureVia(r)
-          ? portKureUnifiedHtml(r,'arrival',`${firstBadge}${finalBadge}`)
-          : `${route} ${firstBadge}${finalBadge}`;
+        const arrivalRoute = ferryTerminalRouteHtml(r,'arrival')+
+          (firstBadge||finalBadge ? ' '+firstBadge+finalBadge : '');
         const departureTime=padTime(r.originDepartureTime||r.reverseTime||'');
         const arrivalDepartureLabel=/^\d{2}:\d{2}$/.test(departureTime)
           ? `${String(r.origin||'出発港')} ${departureTime}発` : '';
@@ -5535,7 +5562,7 @@
         const routeGuidance=detailTimetable ||
           [arrivalDepartureLabel,baseGuidance==='—'?'':baseGuidance].filter(Boolean).join(' ｜ ')||'—';
         row.innerHTML = `
-          <div class="cell main port-route port-route-main"><span class="port-arrival-route-line">${arrivalRoute}</span>${delayBadge(r,'port')}</div>
+          <div class="cell main port-route port-route-main"><span class="port-arrival-route-line">${arrivalRoute}</span>${ferryCallingBadge(r)}${delayBadge(r,'port')}</div>
           <div class="cell sub port-route-guidance">${overflowScrollHtml(routeGuidance,'port-guidance-scroll')}</div>
           <div class="cell service">${service}</div>
           <div class="cell time port-arrival-time">${rMinutes(r)>=1440 ? '翌日 ' : ''}${r.time}${r.estimatedArrival?'頃（推定）':'着予定'}</div>`;
@@ -5701,7 +5728,7 @@
       if(minute<previous)day++;
       previous=minute;
       const dateTag=day>0?'翌':day<0?'前日':'';
-      const action=type==='発'?'発':i===stops.length-1?'着':type==='寄港'?'寄港':'着';
+      const action=type==='発'?'発':i===stops.length-1?'着':'着';
       return compact(port)+' '+dateTag+time+action;
     });
     const startTag=r.originDepartureDay==='前日'?'前日':'';
