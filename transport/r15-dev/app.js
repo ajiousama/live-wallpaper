@@ -2367,6 +2367,29 @@
     return `<span class="first-badge">${label || '翌日始発'}</span>`;
   }
 
+
+  function delayInfo(record,kind=''){
+    if(!record||typeof record!=='object')return null;
+    const s=[record.liveStatus,record.status,record.delayStatus,record.liveRaw?.status].filter(x=>typeof x==='string').join(' ');
+    if(/欠航|運休|休航|取消|キャンセル|遅れなし|遅延なし|遅れ情報なし|遅延情報なし/.test(s))return null;
+    const numbers=kind==='air'
+      ?[record.liveDelta,record.liveRaw?.deltaMinutes,record.deltaMinutes]
+      :[record.liveDelayMinutes,record.delayMinutes,record.delay];
+    for(const val of numbers){
+      if(val===undefined||val===null||String(val)==='')continue;
+      const min=Number(val);
+      if(Number.isFinite(min)&&min>0&&min<=1440)return {minutes:Math.round(min)};
+    }
+    const m=s.match(/(?:遅れ|遅延|遅着|遅発)\s*(?:約\s*)?[+＋]?\s*(\d{1,3})分|(?:約\s*)?(\d{1,3})分\s*(?:遅れ|遅延|遅着|遅発)/);
+    if(m&&Number(m[1]||m[2])>0)return {minutes:Number(m[1]||m[2])};
+    return /遅れ|遅延|遅着|遅発/.test(s)?{minutes:null}:null;
+  }
+  function delayText(info){return info?'遅れ'+(info.minutes!=null?' '+info.minutes+'分':''):'';}
+  function delayBadge(record,kind=''){
+    const info=delayInfo(record,kind);
+    return info?'<span class="transport-delay-badge">'+delayText(info)+'</span>':'';
+  }
+
   function tickerHtml(items) {
     const content=items.join('<span class="ticker-sep">◆</span>');
     const plainLen=items.join(' ◆ ').replace(/<[^>]+>/g,'').length;
