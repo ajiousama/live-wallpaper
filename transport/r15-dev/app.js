@@ -424,21 +424,25 @@
     if(/台北|桃園/.test(route)&&/^(109|110)$/.test(n))return 'エバー航空';
     return '';
   }
-  // Added official logos; all pre-approved GitHub artwork stays untouched.
+  // Official airport PNG snapshots are stored SEPARATELY from the eight
+  // immutable, pre-approved airline logos. This never replaces that artwork.
+  // The official site linked four numbered codeshare images that now return
+  // HTTP 404; those are displayed as honest codeshare text, not false logos.
   const AIRPORT_OFFICIAL_EXTRA_LOGOS=Object.freeze({
-    FDA:'FDA.png',EOK:'EOK.png',
-    '6610':'6610.png','6611':'6610.png',
-    '4942':'4943.png','4943':'4943.png',
-    '6294':'6295.png','6295':'6295.png',
-    '9544':'9544.png'
+    FDA:'FDA.png',EOK:'EOK.png','9593':'9593.png'
   });
+  const AIRPORT_OFFICIAL_MISSING_CODES=new Set([
+    '6610','6611','4942','4943','6294','6295','9544'
+  ]);
+  const AIRPORT_OFFICIAL_LOGO_BASE=new URL('../assets/airport-official/',
+    document.currentScript?.src||location.href).href;
   const airportOfficialExtraLogo=(key,label)=>{
     const file=AIRPORT_OFFICIAL_EXTRA_LOGOS[String(key||'')];
     if(!file)return '';
     const caption=String(label||'共同運航').replace(/[<>"'&]/g,'');
     return '<span class="air-mini-logo air-mini-logo-official" aria-label="'+caption+
-      '"><span class="air-logo-fallback">'+caption+'</span><img src="https://www.matsuyama-airport.co.jp/img/logo/'+file+
-      '" alt="'+caption+'" loading="eager" referrerpolicy="no-referrer" onerror="this.remove()"></span>';
+      '"><span class="air-logo-fallback">'+caption+'</span><img src="'+AIRPORT_OFFICIAL_LOGO_BASE+file+
+      '?snapshot=20261025" alt="'+caption+'" loading="eager" onerror="this.remove()"></span>';
   }
 
   const JETSTAR_JAL_CODESHARE = {
@@ -468,7 +472,9 @@
       const airline=index===0?primary:
         (airportCarrierByFlight(number,place)||primary);
       const extraLogo=index>0&&AIRPORT_OFFICIAL_EXTRA_LOGOS[number]
-        ?airportOfficialExtraLogo(number,'共同運航 '+number):'';
+        ?airportOfficialExtraLogo(number,'共同運航 '+number)
+        :index>0&&AIRPORT_OFFICIAL_MISSING_CODES.has(number)
+        ?'<span class="airline-text-logo">共同運航 '+number+'</span>':'';
       return {airline,number,extraLogo};
     });
   }
