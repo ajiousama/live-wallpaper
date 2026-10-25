@@ -581,50 +581,66 @@
         dep.changed||dep.scheduled||''));
       if(Number.isFinite(depClock)&&depClock>=arrivalClock&&depClock<=now.minutes+1)return true;
     }
-    const flightRecords=data.records.filter(row=>row.board==='air' &&
-      validRecord(row,now.iso));
-    const matchingStatic=(item,dir)=>{
-      const nums=(Array.isArray(item?.numbers)?item.numbers:[]).map(String);
-      const at=padTime(item?.scheduled||'');
-      const possible=flightRecords.filter(row=>row.direction===dir &&
-        nums.includes(String(parseAirService(row.service).number)));
-      const exact=possible.filter(row=>padTime(effectiveTime(row,now))===at);
-      return exact.length===1?exact[0]:null;
+    // The seasonal schedule may have expired TODAY (notably the Oct 25
+    // timetable change). Instead, match operating flights on the same-day
+    // official Matsuyama ARRIVAL + DEPARTURE boards. A board departure marked
+    // "出発済み" is the required proof the outbound service has left;
+    // proximity of timetable times alone is NEVER enough.
+    const arrivals=Array.isArray(slowLive.airport?.arrivals)
+      ?slowLive.airport.arrivals:[];
+    const normalizePlace=x=>String(x||'').normalize('NFKC')
+      .replace(/[\s()（）・\/／-]/g,'').toUpperCase();
+    const carrierOf=item=>{
+      const nums=Array.isArray(item?.numbers)?item.numbers:[];
+      return airportCarrierByFlight(nums[0],item?.place);
     };
-    const a=matchingStatic(arrival,'arrival');
-    if(!a)return false;
-    const signature=row=>{
-      const x=String(row.service||'').trim().split(/\s+/)[0];
-      const destination=String(row.dest||'').replace(/[\s（）()・]/g,'');
-      return x+'|'+destination;
-    };
-    const route=signature(a),aMin=flightClock(padTime(effectiveTime(a,now)));
-    const sameRoute=flightRecords.filter(x=>signature(x)===route);
-    const inbound=sameRoute.filter(x=>x.direction==='arrival');
-    const outbound=sameRoute.filter(x=>x.direction==='departure');
-    const turnbackCandidate=outbound
-      .filter(x=>{
-        const t=flightClock(padTime(effectiveTime(x,now)));
-        return t-aMin>=12&&t-aMin<=150;
-      }).sort((x,y)=>flightClock(padTime(effectiveTime(x,now)))-
-        flightClock(padTime(effectiveTime(y,now))))[0];
-    if(!turnbackCandidate)return false;
-    const depScheduled=flightClock(padTime(effectiveTime(turnbackCandidate,now)));
-    // A closer arrival of this carrier/route belongs to the later departure;
-    // never clear a preceding unrelated inbound flight.
-    if(inbound.some(x=>{
-      if(x===a)return false;
-      const t=flightClock(padTime(effectiveTime(x,now)));
-      return t>aMin&&t<depScheduled;
-    }))return false;
-    return departed.some(dep=>{
-      const d=matchingStatic(dep,'departure');
-      if(!d||d!==turnbackCandidate)return false;
-      const depClock=flightClock(padTime(dep.actualDepartureTime||dep.actualDeparture||
-        dep.changed||dep.scheduled||''));
-      return Number.isFinite(depClock)&&depClock>=arrivalClock &&
-        depClock<=now.minutes+1;
-    });
+    const carrier=carrierOf(arrival),route=normalizePlace(arrival.place);
+    if(!carrier||!route||!arrivals.length||
+       !/到着済み|ただいま到着|着陸済み|到着完了/.test(String(arrival.status||'')))return false;
+    // We do not know aircraft registration for most public board rows.
+    // Only an unambiguous, nearest same-carrier/same-route turnaround is
+    // a candidate; another landing before takeoff prevents a guessed link.
+    const sameArrivals=arrivals.filter(x=>
+      carrierOf(x)===carrier && normalizePlace(x.place)===route &&
+      !/欠航|運休|取消/.test(String(x.status||'')));
+    const sameDepartures=departed.filter(x=>
+      carrierOf(x)===carrier && normalizePlace(x.place)===route);
+    const clockOf=item=>flightClock(padTime(item?.actualDepartureTime||
+      item?.actualDeparture||item?.actualArrivalTime||item?.actualArrival||
+      item?.changed||item?.scheduled||''));
+    const originalTime=clockOf(arrival);
+    if(!Number.isFinite(originalTime))return false;
+    const candidates=sameDepartures.filter(x=>{
+      const minute=clockOf(x);
+      return Number.isFinite(minute)&&minute<=now.minutes+1 &&
+        minute-originalTime>=12&&minute-originalTime<=180;
+    }).sort((a,b)=>clockOf(a)-clockOf(b));
+    for(const dep of candidates){
+      const outboundMinute=clockOf(dep);
+      const lastInbound=sameArrivals.filter(x=>{
+        const inboundMinute=clockOf(x);
+        return Number.isFinite(inboundMinute)&&
+          outboundMinute-inboundMinute>=12&&
+          outboundMinute-inboundMinute<=180;
+      }).sort((a,b)=>clockOf(b)-clockOf(a));
+      if(lastInbound.length!==1 ||
+         lastInbound[0]!==arrival){
+        // For multiple inbound flights, only the uniquely latest arrival
+        // can be linked to this outbound. Compare by flight numbers too:
+        // two flights landing at one minute are necessarily ambiguous.
+        if(!lastInbound.length||lastInbound[0]!==arrival)return false;
+        if(lastInbound.length>1 &&
+           clockOf(lastInbound[0])===clockOf(lastInbound[1]))return false;
+      }
+      const otherOutbound=sameDepartures.filter(x=>{
+        const minute=clockOf(x);
+        return Number.isFinite(minute) &&
+          minute>=originalTime+12 && minute<outboundMinute;
+      });
+      if(otherOutbound.length)return false;
+      return true;
+    }
+    return false;
   }
   const AIRPORT_ARRIVAL_CURFEW_MINUTES=22*60;
 
