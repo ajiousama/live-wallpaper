@@ -2276,3 +2276,8 @@ html.company-pc body.freewifi-tv .panel-bus .bus-logo-willer .willer-express-wor
 @media(prefers-reduced-motion:reduce){
   .transport-delay-badge,.transport-delay-global{animation:none!important;background:#c71524!important;color:#fff!important;text-decoration:underline}
 }
+
+/* The shared 交通・防災 LIVE header never shows a global delay notice.
+   Individual rail/flight/bus/ferry delay badges remain enabled. */
+#transport-delay-alert,
+.live-system-status .transport-delay-global{display:none!important}

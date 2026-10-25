@@ -2403,46 +2403,6 @@
   }
 
 
-  // Display a fresh confirmed delay on EVERY wallpaper page.
-  function renderTransportDelayGlobal(now){
-    const el=$('transport-delay-alert');if(!el)return;
-    const notices=[];
-    if(!workplaceTestClock.hasOverride()){
-      // JR市坪駅の遅れは、その列車自身のテロップにだけ添える。
-      // 共通ヘッダーへは集計しない（別の列車を案内中にも出続けるため）。
-      const age=Date.now()-Date.parse(String(slowLive.generatedAtJst||''));
-      if(slowLive.ok&&Number.isFinite(age)&&age>=-15000&&age<=150000){
-        if(slowLive.airport?.ok&&!airportLiveHasPreviousDayStatuses(now)){
-          for(const direction of ['departures','arrivals']){
-            const flights=slowLive.airport[direction];
-            for(const x of (Array.isArray(flights)?flights:[])){
-              if(direction==='departures' && airportDepartureCompleted(x,now))continue;
-              const time=padTime(x.changed||x.scheduled||'');
-              if(!/^\d{2}:\d{2}$/.test(time)||toMinutes(time)<now.minutes-25)continue;
-              const d=delayInfo(x,'air');if(!d)continue;
-              const no=String(x.numbers?.[0]||'').replace(/[^0-9A-Z]/gi,'').slice(0,7);
-              notices.push({label:'空港'+(no?' '+no+'便':''),delay:d});
-            }
-          }
-        }
-        for(const [kind,label,items] of [
-          ['bus','高速バス',slowLive.highway?.items],
-          ['port','フェリー',slowLive.ferry?.items]
-        ]){
-          for(const x of (Array.isArray(items)?items:[])){
-            const d=delayInfo(x,kind);
-            if(d)notices.push({label,delay:d});
-          }
-        }
-      }
-    }
-    el.hidden=notices.length===0;
-    el.textContent=notices.length
-      ?notices[0].label+' '+delayText(notices[0].delay)+
-        (notices.length>1?'　ほか'+(notices.length-1)+'件':'')
-      :'';
-  }
-
   function tickerHtml(items) {
     const content=items.join('<span class="ticker-sep">◆</span>');
     const plainLen=items.join(' ◆ ').replace(/<[^>]+>/g,'').length;
@@ -6064,7 +6024,6 @@
     $('clock-label').innerHTML = `${now.time}<span>:${now.sec}</span>`;
     renderDisaster(now);
     renderTopLiveAlert(now);
-    renderTransportDelayGlobal(now);
 
     applyModes();
     const railRows = nextRows('rail', now);
