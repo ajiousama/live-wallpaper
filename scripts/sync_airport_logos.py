@@ -22,6 +22,9 @@ FILES = (
     "FDA.png", "JJP.png", "EOK.png", "ABL.png",
     "9593.png", "ANZ.png", "THA.png", "AAR.png",
 )
+# These four links are embedded in the source page but currently return 404.
+# Record them as unavailable rather than inventing or substituting a logo.
+KNOWN_OFFICIAL_404 = frozenset(("6610.png", "4943.png", "6295.png", "9544.png"))
 PNG = bytes.fromhex("89504e470d0a1a0a")
 MAX_BYTES = 2_000_000
 
@@ -54,6 +57,7 @@ def main() -> None:
     DEST.mkdir(parents=True, exist_ok=True)
     results = {}
     failed = []
+    unavailable = {}
     for name in FILES:
         local = DEST / name
         try:
@@ -72,17 +76,22 @@ def main() -> None:
                 "bytes": len(data),
             }
         except Exception as exc:
-            failed.append(f"{name}: {exc}")
-            print(f"FAILED {name}: {exc}")
+            if name in KNOWN_OFFICIAL_404 and "HTTP Error 404" in str(exc):
+                unavailable[name] = {"source": ORIGIN + name, "status": "HTTP 404 (official site)"}
+                print(f"UNAVAILABLE {name}: official site responds 404")
+            else:
+                failed.append(f"{name}: {exc}")
+                print(f"FAILED {name}: {exc}")
     if results:
         (DEST / "SOURCES.json").write_text(
             json.dumps(
                 {"source_page": "https://www.matsuyama-airport.co.jp/flight/timetable.html",
                  "note": "Historical snapshot; the 8 approved originals in ../airlines remain unchanged.",
-                 "logos": results}, ensure_ascii=False, indent=2
+                 "logos": results,
+                 "unavailable_official_images": unavailable}, ensure_ascii=False, indent=2
             ) + "\n", encoding="utf-8"
         )
-    print(f"Valid PNG snapshots: {len(results)} / {len(FILES)}")
+    print(f"Valid PNG snapshots: {len(results)} / {len(FILES)}; official 404: {len(unavailable)}")
     if failed:
         # Existing valid files remain available, and missing files retain
         # their original official-URL fallback in the wallboard.
