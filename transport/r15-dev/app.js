@@ -5562,7 +5562,7 @@
         const routeGuidance=detailTimetable ||
           [arrivalDepartureLabel,baseGuidance==='—'?'':baseGuidance].filter(Boolean).join(' ｜ ')||'—';
         row.innerHTML = `
-          <div class="cell main port-route port-route-main"><span class="port-arrival-route-line">${arrivalRoute}</span>${ferryCallingBadge(r)}${delayBadge(r,'port')}</div>
+          <div class="cell main port-route port-route-main"><div class="port-dest-wrap"><span class="port-dest-main port-arrival-route-line">${arrivalRoute}</span>${ferryCallingBadge(r)}</div>${delayBadge(r,'port')}</div>
           <div class="cell sub port-route-guidance">${overflowScrollHtml(routeGuidance,'port-guidance-scroll')}</div>
           <div class="cell service">${service}</div>
           <div class="cell time port-arrival-time">${rMinutes(r)>=1440 ? '翌日 ' : ''}${r.time}${r.estimatedArrival?'頃（推定）':'着予定'}</div>`;
