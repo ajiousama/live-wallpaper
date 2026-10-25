@@ -2396,15 +2396,8 @@
     const el=$('transport-delay-alert');if(!el)return;
     const notices=[];
     if(!workplaceTestClock.hasOverride()){
-      if(jrPositionFeedFresh()){
-        const trains=approachLive.ichitsubo?.matsuyamaActiveTrains;
-        for(const t of (Array.isArray(trains)?trains:[])){
-          if(!jrPositionUsable(t?.position))continue;
-          const d=delayInfo(t,'rail');if(!d)continue;
-          const no=String(t.trainNum||'').replace(/[^0-9A-Z]/gi,'').slice(0,8);
-          notices.push({label:'JR'+(no?' '+no+'レ':''),delay:d});
-        }
-      }
+      // JR市坪駅の遅れは、その列車自身のテロップにだけ添える。
+      // 共通ヘッダーへは集計しない（別の列車を案内中にも出続けるため）。
       const age=Date.now()-Date.parse(String(slowLive.generatedAtJst||''));
       if(slowLive.ok&&Number.isFinite(age)&&age>=-15000&&age<=150000){
         if(slowLive.airport?.ok&&!airportLiveHasPreviousDayStatuses(now)){
@@ -2663,6 +2656,15 @@
         text=(Number.isFinite(mins)&&mins<=2)
           ?`${serviceLogo} まもなく市坪駅から${dir}へ${prefix}${x.destination||''}行が発車します。`
           :`${serviceLogo} まもなく市坪駅 ${dir}に${prefix}${x.destination||''}行がまいります。`;
+      }
+      // Delay status belongs to THIS approaching train only.  Put its red
+      // flashing badge inside the same moving ticker item, never in the
+      // persistent shared header or in an unrelated train's message.
+      const delayed=delayInfo(x,'rail');
+      if(delayed){
+        const number=String(x.trainNum||'').trim().replace(/[^0-9A-Z]/gi,'').slice(0,9);
+        if(number)text+='｜'+railSpecialText(number)+'レ';
+        text+=' '+delayBadge(x,'rail');
       }
       return {text,mode,strong};
     });
