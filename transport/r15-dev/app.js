@@ -5303,6 +5303,78 @@
     }
     activatePanelOverflow(root);
   }
+
+  // 三津浜港フェリー ⇔ 伊予鉄バス56番（三津吉田線）。
+  // Published Izutetsu bus book April 2026, North-Yoshida/Item-Ehime/Mitsuko,
+  // timetable pp36-37; city departure stop A1 since 2026-10-01.
+  // https://www.iyotetsu.co.jp/rosen/bus/time202604/all.pdf
+  // https://www.iyotetsu.co.jp/whatsnew/2026/1001shieki.html
+  // Bus stop "三津港" is at the ferry terminal, NOT 松山観光港 or 高浜港.
+  const MITSUHAMA_BUS_TO_PORT_WEEKDAY=[
+    ['06:40','07:13'],['07:15','07:48'],['08:05','08:38'],['08:35','09:08'],
+    ['09:05','09:36'],['09:35','10:06'],['10:05','10:36'],['10:35','11:06'],
+    ['11:05','11:36'],['11:35','12:06'],['12:05','12:36'],['12:35','13:06'],
+    ['13:05','13:36'],['13:35','14:06'],['14:05','14:36'],['14:35','15:06'],
+    ['15:05','15:36'],['15:35','16:08'],['16:05','16:38'],['16:35','17:08'],
+    ['17:05','17:38']
+  ];
+  const MITSUHAMA_BUS_TO_PORT_HOLIDAY=MITSUHAMA_BUS_TO_PORT_WEEKDAY.slice(1);
+  const MITSUHAMA_BUS_FROM_PORT_WEEKDAY=[
+    ['07:20','07:59'],['08:10','08:48'],['08:43','09:18'],['09:16','09:49'],
+    ['09:46','10:19'],['10:16','10:49'],['10:46','11:19'],['11:16','11:49'],
+    ['11:46','12:19'],['12:16','12:49'],['12:46','13:19'],['13:16','13:49'],
+    ['13:46','14:19'],['14:16','14:49'],['14:46','15:19'],['15:16','15:49'],
+    ['15:46','16:21'],['16:16','16:51'],['16:46','17:21'],['17:16','17:51'],
+    ['17:46','18:21']
+  ];
+  const MITSUHAMA_BUS_FROM_PORT_HOLIDAY=[
+    ['08:13','08:45'],['08:43','09:15'],...MITSUHAMA_BUS_FROM_PORT_WEEKDAY.slice(3)
+  ];
+  function mitsuhamaBusServiceDate(record,now){
+    const mins=Number(record?.minutes);
+    return Number.isFinite(mins)&&mins>=1440?shiftIso(now.iso,1):
+      (String(record?._serviceIso||'')===shiftIso(now.iso,1)?shiftIso(now.iso,1):now.iso);
+  }
+  function mitsuhamaBusHoliday(iso){
+    const dow=new Date(iso+'T12:00:00+09:00').getDay();
+    const md=iso.slice(5);
+    // The official PDF treats Dec29-Jan3 as holiday service.
+    return dow===0||dow===6||(md>='12-29'||md<='01-03') ||
+      // National holidays can be added here as the official calendar changes;
+      // no arbitrary weekday->holiday conversion for unknown dates.
+      !!(typeof NATIONAL_HOLIDAYS_2026!=='undefined'&&
+        Array.isArray(NATIONAL_HOLIDAYS_2026)&&NATIONAL_HOLIDAYS_2026.includes(iso));
+  }
+  function mitsuhamaBusConnection(record,now){
+    if(!record||record.source==='matsuyama_city_cruise')return '';
+    const direction=record.direction==='arrival'?'arrival':'departure';
+    const place=direction==='arrival'
+      ?[record.arrivalPort,record.port,record.dest]
+      :[record.port];
+    if(!place.some(x=>/三津浜港|^三津港$/.test(String(x||''))))return '';
+    const date=mitsuhamaBusServiceDate(record,now);
+    const weekend=mitsuhamaBusHoliday(date);
+    const time=padTime(record.time||'');
+    if(!/^\d{2}:\d{2}$/.test(time))return '';
+    const stamp=toMinutes(time);
+    const toPort=weekend?MITSUHAMA_BUS_TO_PORT_HOLIDAY:MITSUHAMA_BUS_TO_PORT_WEEKDAY;
+    const fromPort=weekend?MITSUHAMA_BUS_FROM_PORT_HOLIDAY:MITSUHAMA_BUS_FROM_PORT_WEEKDAY;
+    if(direction==='departure'){
+      // Present the latest bus ARRIVING >=20 min before ferry departure
+      // as a conservative timetable suggestion, never as a guaranteed connection.
+      const safe=toPort.filter(pair=>toMinutes(pair[1])<=stamp-20);
+      if(!safe.length)return '🚌 三津浜港アクセス｜伊予鉄56番・松山市駅A1のりば発 → 三津港（この出航便に余裕のある接続バスなし／時刻表予定）';
+      const bus=safe.at(-1);
+      return '🚌 三津浜港アクセス｜伊予鉄56番 松山市駅A1 '+bus[0]+'発 → 三津港 '+bus[1]+'着 → フェリー '+time+'発（接続目安・乗船手続要確認）';
+    }
+    // For arrivals, allow time to disembark and reach the stop. Do not call
+    // tight or no-service cases an actual guaranteed transfer.
+    const usable=fromPort.find(pair=>toMinutes(pair[0])>=stamp+10);
+    return usable
+      ?'🚌 三津浜港から乗換｜伊予鉄56番 三津港 '+usable[0]+'発 → 松山市駅 '+usable[1]+'着（下船後の接続目安・保証なし）'
+      :'🚌 三津浜港から乗換｜伊予鉄56番・三津港→松山市駅（到着後の当日バス便なし／時刻表予定）';
+  }
+
   function renderPort(rows) {
     const root = $('port-rows');
     // Preserve the persistent ticker when the ferry rows are redrawn.
@@ -5344,9 +5416,13 @@
         const arrivalPort=String(lastCall?.[0]||r.dest||'目的港').trim();
         const arrivalGuide=`${arrivalPort} ${arrivalDay}${arrivalClock}${arrivalIsEstimate?'頃着（見込）':'着予定'}`;
         const detailTimetable=ferryDetailTimetable(r);
-        const departureGuidance=r.source==='matsuyama_city_cruise'
-          ? `大型クルーズ船 ${r.shipName}｜${r.info||'松山市公式の出港予定'}`
-          : detailTimetable || [routeGuidance==='—'?'':routeGuidance,arrivalGuide].filter(Boolean).join(' ｜ ');
+        const transfer=mitsuhamaBusConnection(r,now);
+        const departureGuidance=[
+          r.source==='matsuyama_city_cruise'
+            ? `大型クルーズ船 ${r.shipName}｜${r.info||'松山市公式の出港予定'}`
+            : detailTimetable || [routeGuidance==='—'?'':routeGuidance,arrivalGuide].filter(Boolean).join(' ｜ '),
+          transfer
+        ].filter(Boolean).join(' ｜ ');
         row.innerHTML = `
           <div class="cell main port-route port-route-main">${portDepartureDestinationHtml(r,`${firstBadge}${finalBadge}`)}${delayBadge(r,'port')}</div>
           <div class="cell sub port-route-guidance">${overflowScrollHtml(departureGuidance,'port-guidance-scroll')}</div>
@@ -5361,7 +5437,11 @@
           ? `${String(r.origin||'出発港')} ${departureTime}発` : '';
         const baseGuidance=ferryRouteGuidance(r,'arrival',japanNow());
         const detailTimetable=ferryDetailTimetable(r);
-        const routeGuidance=detailTimetable || [arrivalDepartureLabel,baseGuidance==='—'?'':baseGuidance].filter(Boolean).join(' ｜ ')||'—';
+        const transfer=mitsuhamaBusConnection(r,now);
+        const routeGuidance=[
+          detailTimetable || [arrivalDepartureLabel,baseGuidance==='—'?'':baseGuidance].filter(Boolean).join(' ｜ ')||'—',
+          transfer
+        ].filter(Boolean).join(' ｜ ');
         row.innerHTML = `
           <div class="cell main port-route port-route-main"><span class="port-arrival-route-line">${arrivalRoute}</span>${delayBadge(r,'port')}</div>
           <div class="cell sub port-route-guidance">${overflowScrollHtml(routeGuidance,'port-guidance-scroll')}</div>
