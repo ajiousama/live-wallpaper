@@ -5412,13 +5412,11 @@
         const arrivalPort=String(lastCall?.[0]||r.dest||'目的港').trim();
         const arrivalGuide=`${arrivalPort} ${arrivalDay}${arrivalClock}${arrivalIsEstimate?'頃着（見込）':'着予定'}`;
         const detailTimetable=ferryDetailTimetable(r);
-        const transfer=mitsuhamaBusConnection(r,now);
-        const departureGuidance=[
-          r.source==='matsuyama_city_cruise'
-            ? `大型クルーズ船 ${r.shipName}｜${r.info||'松山市公式の出港予定'}`
-            : detailTimetable || [routeGuidance==='—'?'':routeGuidance,arrivalGuide].filter(Boolean).join(' ｜ '),
-          transfer
-        ].filter(Boolean).join(' ｜ ');
+        // Connections are announced in the Mitsuhama/Kanko access ticker
+        // immediately ABOVE the Takahama port section, not per-ferry rows.
+        const departureGuidance=r.source==='matsuyama_city_cruise'
+          ? `大型クルーズ船 ${r.shipName}｜${r.info||'松山市公式の出港予定'}`
+          : detailTimetable || [routeGuidance==='—'?'':routeGuidance,arrivalGuide].filter(Boolean).join(' ｜ ');
         row.innerHTML = `
           <div class="cell main port-route port-route-main">${portDepartureDestinationHtml(r,`${firstBadge}${finalBadge}`)}${delayBadge(r,'port')}</div>
           <div class="cell sub port-route-guidance">${overflowScrollHtml(departureGuidance,'port-guidance-scroll')}</div>
@@ -5433,11 +5431,8 @@
           ? `${String(r.origin||'出発港')} ${departureTime}発` : '';
         const baseGuidance=ferryRouteGuidance(r,'arrival',japanNow());
         const detailTimetable=ferryDetailTimetable(r);
-        const transfer=mitsuhamaBusConnection(r,now);
-        const routeGuidance=[
-          detailTimetable || [arrivalDepartureLabel,baseGuidance==='—'?'':baseGuidance].filter(Boolean).join(' ｜ ')||'—',
-          transfer
-        ].filter(Boolean).join(' ｜ ');
+        const routeGuidance=detailTimetable ||
+          [arrivalDepartureLabel,baseGuidance==='—'?'':baseGuidance].filter(Boolean).join(' ｜ ')||'—';
         row.innerHTML = `
           <div class="cell main port-route port-route-main"><span class="port-arrival-route-line">${arrivalRoute}</span>${delayBadge(r,'port')}</div>
           <div class="cell sub port-route-guidance">${overflowScrollHtml(routeGuidance,'port-guidance-scroll')}</div>
@@ -5626,6 +5621,43 @@
   // 伊予鉄バス：観光港連絡バス（2026-04-01公式時刻表、平日／土日祝）。
   // Daytime transfers are port -> Takahama Station -> Iyotetsu Railway.
   // Only publish paired train times shown by the official timetable.
+
+  // Dedicated upper port-access marquee, between "三津浜・松山観光港"
+  // and "高浜港・興居島・中島航路". Never put bus transfers into the
+  // horizontally scrolling itinerary of an individual ferry row.
+  function mitsuhamaTransferTickerItems(now,portRows){
+    const dep=currentDirection()==='departure';
+    const list=Array.isArray(portRows)?portRows:[];
+    const candidates=list.filter(r=>{
+      const loc=dep?String(r.port||''):String(r.arrivalPort||r.port||'');
+      return /三津浜港|^三津港$/.test(loc) &&
+        String(r.direction)===(dep?'departure':'arrival') &&
+        Number.isFinite(rMinutes(r)) &&
+        rMinutes(r)>=now.minutes && rMinutes(r)<=now.minutes+360;
+    }).sort((a,b)=>rMinutes(a)-rMinutes(b));
+    for(const r of candidates){
+      const notice=mitsuhamaBusConnection(r,now);
+      if(!notice||/接続バスなし|当日バス便なし/.test(notice))continue;
+      // On departure pages, do not recommend a bus that has ALREADY left
+      // 松山市駅 even if the ferry is still in the future.
+      if(dep && mitsuhamaBusServiceDate(r,now)===now.iso){
+        const busDepart=notice.match(/松山市駅A1\s+(\d{2}:\d{2})発/);
+        if(!busDepart||toMinutes(busDepart[1])<now.minutes)continue;
+      }
+      return [notice];
+    }
+    const holiday=mitsuhamaBusHoliday(now.iso);
+    const table=dep
+      ? (holiday?MITSUHAMA_BUS_TO_PORT_HOLIDAY:MITSUHAMA_BUS_TO_PORT_WEEKDAY)
+      : (holiday?MITSUHAMA_BUS_FROM_PORT_HOLIDAY:MITSUHAMA_BUS_FROM_PORT_WEEKDAY);
+    const next=table.find(pair=>toMinutes(pair[0])>=now.minutes);
+    if(dep)return next
+      ? ['🚌 三津浜港アクセス｜伊予鉄56番 松山市駅A1 '+next[0]+'発 → 三津港 '+next[1]+'着（次のバス・フェリー接続未確認）']
+      : ['🚌 三津浜港アクセス｜伊予鉄56番・松山市駅→三津港　本日バス運行終了'];
+    return next
+      ? ['🚌 三津浜港から市内へ｜伊予鉄56番 三津港 '+next[0]+'発 → 松山市駅 '+next[1]+'着（次のバス・フェリー接続未確認）']
+      : ['🚌 三津浜港から市内へ｜伊予鉄56番・三津港→松山市駅　本日バス運行終了'];
+  }
   function portLimousineTickerItems(now=japanNow()) {
     const mins=now.minutes;
     const weekend=now.dow===0||now.dow===6;
@@ -5664,6 +5696,7 @@
     const items=[];
     if(outgoing)items.push(`🚃 伊予鉄電車⇒伊予鉄バス｜松山市駅${outgoing[0]}発 ⇒ 高浜${outgoing[1]}着 ⇒ 松山観光港${outgoing[3]}着（時刻表予定）`);
     if(incoming)items.push(`🚌 伊予鉄バス→伊予鉄電車｜松山観光港 ${incoming[0]}発 → 高浜駅前 ${incoming[1]}着 → 電車 ${incoming[2]}発 → 松山市駅 ${incoming[3]}着（時刻表予定）`);
+    items.unshift(...mitsuhamaTransferTickerItems(now,cachedPortRows));
     if(items.length)return items;
     if(mins<=22*60+22){
       return ['🚌 伊予鉄バス・松山観光港リムジン｜広島フェリー22:12着に接続｜観光港22:22発 → JR松山駅前22:42 → 愛媛新聞社前22:44 → 松山市駅22:50着（時刻表予定）'];
@@ -5989,6 +6022,7 @@
   }
 
   let cachedNotes = { rail:[''], air:[''], bus:[''], port:[''] };
+  let cachedPortRows=[];
   function renderAll() {
     const now = japanNow();
     $('date-label').textContent = now.date;
@@ -6019,6 +6053,7 @@
     const busRows=showingBusDepartures && primaryBus.length<BUS_MIN_DEPARTURES
       ? futureBus.slice(0,BUS_MIN_DEPARTURES) : primaryBus;
     const portRows = nextRows('port', now);
+    cachedPortRows=portRows;
     renderRail(railRows); renderAir(airRows); renderBus(busRows); renderPort(portRows);
     cachedNotes = {
       rail: railTickerItems(now),
