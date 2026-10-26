@@ -2311,3 +2311,18 @@ html.company-pc body.freewifi-tv .panel-bus .bus-logo-willer .willer-express-wor
 .panel-port .port-dest-wrap{
   gap:1px;
 }
+
+
+/* 2026-10-26: generic transport tickers in both standalone R15 and FreeWiFi
+   must have two contiguous equal-width copies to wrap without a blank jump.
+   Existing multi-animation warning pulses remain intact. */
+.marquee > .marquee-track{
+  gap:0!important;
+  column-gap:0!important;
+  animation-iteration-count:infinite!important;
+}
+.marquee > .marquee-track > span{
+  flex:0 0 auto!important;
+  min-width:max-content!important;
+  white-space:nowrap!important;
+}
