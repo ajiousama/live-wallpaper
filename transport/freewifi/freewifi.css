@@ -2962,8 +2962,7 @@ body.freewifi-tv .marquee > .marquee-track{
   width:max-content!important;
   gap:0!important;
   column-gap:0!important;
-  animation-name:ticker-scroll!important;
-  animation-timing-function:linear!important;
+  /* Keep takeover warnings' existing secondary pulse animation intact. */
   animation-iteration-count:infinite!important;
   animation-direction:normal!important;
   animation-play-state:running!important;
