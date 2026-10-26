@@ -2987,3 +2987,38 @@ body.freewifi-tv.air-board-page .air-bottom-scroll-track:not(.air-bottom-ended){
 body.freewifi-tv.air-board-page .air-bottom-scroll-track.air-bottom-ended{
   animation:none!important;
 }
+
+/* Bus overview: departure and confirmed arrival timetables simultaneously. */
+body.freewifi-tv #panel-bus .table-head{display:none!important}
+body.freewifi-tv #bus-rows.bus-dual-board{
+  display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+  gap:8px!important;align-items:stretch;overflow:hidden!important;
+  padding:6px!important;min-height:0!important;
+}
+body.freewifi-tv .bus-dual-side{
+  min-width:0;overflow:hidden;display:flex;flex-direction:column;gap:4px;
+  border:1px solid rgba(120,175,188,.25);border-radius:5px;padding:5px;
+}
+body.freewifi-tv .bus-dual-heading{
+  font-size:14px;font-weight:900;text-align:center;color:#b7f2ff;
+  background:#183742;border-radius:3px;padding:4px;
+}
+body.freewifi-tv .bus-dual-line{
+  min-width:0;display:flex;gap:5px;align-items:center;
+  border-bottom:1px solid rgba(140,185,195,.18);padding:5px 2px;
+}
+body.freewifi-tv .bus-dual-time{
+  font-size:17px;font-weight:900;color:#fff;white-space:nowrap;flex:0 0 auto;
+}
+body.freewifi-tv .bus-dual-detail{min-width:0;display:flex;flex-wrap:wrap;align-items:center;gap:2px 4px}
+body.freewifi-tv .bus-dual-route{
+  font-size:12px;font-weight:800;color:#ecf8fd;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis;max-width:100%;
+}
+body.freewifi-tv .bus-dual-badge{display:inline-flex;align-items:center}
+body.freewifi-tv .bus-dual-badge:empty{display:none}
+body.freewifi-tv .bus-dual-stop{
+  font-size:9px;color:#a9c5d0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  max-width:100%;
+}
+body.freewifi-tv .bus-dual-empty{font-size:11px;color:#adc5cf;padding:12px 4px;text-align:center}
