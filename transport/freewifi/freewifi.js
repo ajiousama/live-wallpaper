@@ -106,7 +106,14 @@
         track.style.removeProperty('animation');
       }
       if(!autoRotationPaused){
-        const minimumEnd=Date.now()+Math.ceil(durationSeconds*1000)+400;
+        // A JR train list can have several cyclic six-row pages. Each new
+        // set has new animation nodes: without a cap, every 12s page flip
+        // adds another 60s and traps the entire wallpaper on JR forever.
+        // Give ample time to read, but guarantee the NEXT transport page.
+        const railPages=page.id==='panel-rail'
+          ?Math.min(40,Math.max(1,Number(panel.dataset.railLoopPages)||1)):1;
+        const limit=pageStartedAt+Math.max(180000,railPages*12000+30000);
+        const minimumEnd=Math.min(limit,Date.now()+Math.ceil(durationSeconds*1000)+400);
         if(minimumEnd>nextPageAt){
           nextPageAt=minimumEnd;
           extensionNeeded=true;
