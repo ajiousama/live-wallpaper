@@ -5489,99 +5489,6 @@
     regional+=Math.min(remaining,Math.max(0,regionalCount-regional));
     return {express,regional,regionalHeight:header+regional*pitch,capacity};
   }
-  // Keep departure and arrival visible together in the FreeWiFi bus panel.
-  // This compact overview does not fabricate inbound buses from outbound times.
-  function renderBusDual(now) {
-    const root=$('bus-rows');
-    if(!root)return;
-    const originalMode=state.modeIndex;
-    let outbound=[],inbound=[];
-    try {
-      state.modeIndex=0;
-      outbound=getBoardRecords('bus',now);
-      state.modeIndex=1;
-      inbound=getBoardRecords('bus',now);
-    } finally {state.modeIndex=originalMode;}
-    const routeName=(r,arriving)=>{
-      const text=String(arriving?(r.origin||r.dest):(r.dest||'')).trim();
-      if(/大阪|京都|USJ|梅田|なんば/.test(text))return '大阪・京都方面';
-      if(/神戸|三宮/.test(text))return '神戸';
-      if(/高知|はりまや橋/.test(text))return '高知';
-      return text||'行先確認中';
-    };
-    const keyOf=(r,arriving)=>
-      String(arriving?(r.arrivalTerminal||r.stop||'松山市駅'):(r.stop||'松山市駅')).trim()+
-      '|'+routeName(r,arriving);
-    const timeOf=(r,arriving)=>padTime(arriving?(r.arrivalTerminalTime||r.time):r.time);
-    const regional=r=>r.kind==='midbus'||r.kind==='ferrybus'||
-      /kumakogen|misaki|uwajima_bus|setouchi_omishima|iyotetsu_niihama|orange_ferry_shuttle/.test(String(r.source||''));
-    const badgesFor=(all,arriving)=>{
-      const groups=new Map();
-      for(const r of all.filter(x=>!regional(x))){
-        const key=keyOf(r,arriving),time=timeOf(r,arriving);
-        if(!groups.has(key))groups.set(key,new Set());
-        groups.get(key).add(time);
-      }
-      const edges=new Map();
-      for(const [key,times] of groups){
-        const sorted=[...times].sort((a,b)=>toMinutes(a)-toMinutes(b));
-        if(sorted.length>=3)edges.set(key,[sorted[0],sorted[sorted.length-1]]);
-      }
-      return r=>{
-        const bounds=edges.get(keyOf(r,arriving));
-        const time=timeOf(r,arriving);
-        return !bounds?'':time===bounds[0]?badgeHtml('first','始発'):
-          time===bounds[1]?badgeHtml('final','最終'):'';
-      };
-    };
-    const firstOut=badgesFor(outbound,false);
-    const firstIn=badgesFor(inbound,true);
-    const makeSide=(label,all,arriving,badges)=>{
-      const upcoming=all.filter(r=>!regional(r)&&
-        Number.isFinite(toMinutes(timeOf(r,arriving)))&&
-        toMinutes(timeOf(r,arriving))>=now.minutes)
-        .sort((a,b)=>toMinutes(timeOf(a,arriving))-toMinutes(timeOf(b,arriving)))
-        .slice(0,4);
-      const section=document.createElement('section');
-      section.className='bus-dual-side';
-      const heading=document.createElement('div');
-      heading.className='bus-dual-heading';
-      heading.textContent=label;
-      section.appendChild(heading);
-      if(!upcoming.length){
-        const empty=document.createElement('div');
-        empty.className='bus-dual-empty';
-        empty.textContent='現在表示できる便はありません';
-        section.appendChild(empty);
-      }
-      for(const r of upcoming){
-        const line=document.createElement('div');
-        line.className='bus-dual-line';
-        const clock=document.createElement('span');
-        clock.className='bus-dual-time';
-        clock.textContent=timeOf(r,arriving);
-        const detail=document.createElement('span');
-        detail.className='bus-dual-detail';
-        const route=document.createElement('span');
-        route.className='bus-dual-route';
-        route.textContent=routeName(r,arriving);
-        const badge=document.createElement('span');
-        badge.className='bus-dual-badge';
-        badge.innerHTML=badges(r);
-        const stop=document.createElement('span');
-        stop.className='bus-dual-stop';
-        stop.textContent=String(arriving?(r.arrivalTerminal||r.stop||'松山市駅'):(r.stop||'松山市駅'));
-        detail.append(route,badge,stop);
-        line.append(clock,detail);
-        section.appendChild(line);
-      }
-      return section;
-    };
-    root.replaceChildren(makeSide('出発',outbound,false,firstOut),
-      makeSide('到着',inbound,true,firstIn));
-    root.classList.add('bus-dual-board');
-  }
-
   function renderBus(rows) {
     const now=japanNow();
     const root = $('bus-rows');
@@ -5940,7 +5847,7 @@
   function applyModes() {
     const dep = currentDirection() === 'departure';
     $('air-badge').textContent = dep ? '出発案内' : '到着案内';
-    $('bus-badge').textContent = FREEWIFI_TV ? '出発・到着' : (dep ? '出発案内' : '到着案内');
+    $('bus-badge').textContent = dep ? '出発案内' : '到着案内';
     $('port-badge').textContent = dep ? '出航案内' : '到着案内';
     $('rail-badge').textContent = currentRailDir() === 'south' ? '宇和島方面' : '今治方面';
 
@@ -6489,7 +6396,7 @@
       ? futureBus.slice(0,BUS_MIN_DEPARTURES) : primaryBus;
     const portRows = nextRows('port', now);
     cachedPortRows=portRows;
-    renderRail(railRows); renderAir(airRows); if(FREEWIFI_TV)renderBusDual(now); else renderBus(busRows); renderPort(portRows);
+    renderRail(railRows); renderAir(airRows); renderBus(busRows); renderPort(portRows);
     cachedNotes = {
       rail: railTickerItems(now),
       air: airportAccessTickerItems(now),
