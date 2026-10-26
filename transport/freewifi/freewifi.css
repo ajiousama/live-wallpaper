@@ -3014,3 +3014,5 @@ body.freewifi-tv .rail-dual-detail strong{
 }
 body.freewifi-tv .rail-dual-detail small{font-size:9px;color:#b8d3da}
 body.freewifi-tv .rail-dual-empty{font-size:10px;color:#abc4ce;padding:10px 2px}
+
+body.freewifi-tv #panel-rail:has(.rail-dual-board) .rail-head{display:none!important}
