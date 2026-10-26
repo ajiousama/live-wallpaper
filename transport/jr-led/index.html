@@ -568,7 +568,11 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
           var active=(tickerTrack.getAnimations?.()||[]).find(function(a){
             return a.animationName==='jr-led-ribbon';
           });
-          if(active)active.currentTime=saved.time;
+          if(active){
+            var duration=Number(active.effect?.getComputedTiming?.().duration);
+            active.currentTime=Number.isFinite(duration)&&duration>0
+              ? ((saved.time%duration)+duration)%duration : saved.time;
+          }
         }catch(e){}
       });
     }
@@ -679,7 +683,12 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
     var d=event.data,n=jst();
     if(d.type==='matsuyama-led-direction'){
       if(d.dir!=='north'&&d.dir!=='south')return;
-      if(direction!==d.dir){direction=d.dir;rendered='';render(n,true);}
+      if(direction!==d.dir){
+        // Store the outgoing corridor's ribbon position before changing keys.
+        // Otherwise a direction switch discards a partially-read long ticker.
+        rememberTickerPhase();
+        direction=d.dir;rendered='';render(n,true);
+      }
       return;
     }
     if(d.type==='matsuyama-led-movements'){
