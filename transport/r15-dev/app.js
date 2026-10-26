@@ -4179,8 +4179,8 @@
     // come before later times, including specials/terminal arrivals.
     const allUpcoming=[...candidates,...untimedLiveExtras];
     const loop=railLoopStates[currentRailDir()];
-    loop.total=FREEWIFI_TV?Math.max(1,Math.ceil(allUpcoming.length/limit)):1;
-    loop.page%=loop.total;
+    loop.total=1;
+    loop.page=0; // Show only the next visible services; no forced paging.
     // Expose only a count: the page rotation controller can finish a full
     // tour of all Matsuyama rows before switching to another transport mode.
     if(FREEWIFI_TV)document.getElementById('panel-rail')?.setAttribute(
