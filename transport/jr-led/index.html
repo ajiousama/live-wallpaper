@@ -36,7 +36,7 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
   white-space:nowrap;display:flex;align-items:center;font-weight:900}
 .kind{color:#ff3030;font-size:11px;justify-content:center;line-height:16px}
 .limited .kind{background:#1e0000;color:#ff3030}
-.local .kind{color:#fff}
+.local .kind{background:#198754;color:#fff;border:1px solid #65ba8c;font-size:10px}
 .extra .kind,.sightseeing .kind{color:#fff06f}
 .freight .kind,.pass .kind{color:#77d0de}
 .service{font-size:10px;color:#ff3434;line-height:16px;letter-spacing:-.035em;padding-left:1px}
@@ -398,9 +398,9 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
   function trainRow(row,n){
     var kind=row.kind||'local',pass=!!row.passStatus;
     var name=splitService(row),box=el('article','train '+kind);
-    var kindJP=kind==='local'?'':pass?(kind==='freight'?'貨物':'通過'):
+    var kindJP=kind==='local'?'普通':pass?(kind==='freight'?'貨物':'通過'):
       ({limited:'特急',local:'普通',extra:'臨時',sightseeing:'観光',freight:'貨物',pass:'通過'}[kind]||'列車');
-    var kindEN=kind==='local'?'':pass?(kind==='freight'?'Freight':'Pass'):
+    var kindEN=kind==='local'?'普通':pass?(kind==='freight'?'Freight':'Pass'):
       ({limited:'Ltd.',local:'',extra:'Extra',sightseeing:'Tour',freight:'Frt.',pass:'Pass'}[kind]||'Train');
     box.appendChild(el('span','kind',lang==='en'?kindEN:kindJP));
     var nameEl=el('div','service'+(name.pair?' pair':''));
