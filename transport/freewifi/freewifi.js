@@ -51,6 +51,7 @@
 
   let pageIndex = 0;
   let nextPageAt = Date.now() + pages[0].duration;
+  let pageStartedAt = Date.now();
   let pageTimer = null;
   let testPagePicker = null;
 
@@ -95,11 +96,11 @@
       const previous=observedScrolls.get(track);
       if(property && track.style.getPropertyValue(property)!==value)
         track.style.setProperty(property,value);
-      // Once per newly mounted/changed item, restart at the beginning.
-      // Never restart just because the 1-second countdown updates.
+      // Re-entering a transport screen must NOT restart an existing ticker.
+      // Only changed text in a previously observed DOM node may restart.
       if(previous===signature)return;
       observedScrolls.set(track,signature);
-      if(restart){
+      if(restart && previous!==undefined){
         track.style.setProperty('animation','none','important');
         void track.offsetWidth;
         track.style.removeProperty('animation');
@@ -151,6 +152,17 @@
         checkTrack(track,signature,seconds,'--airport-scroll-duration',duration,true);
       });
     }
+    // Include all JR six-row pages in the visible direction before leaving
+    // Matsuyama. A 15s page otherwise shows page two for ~3s and drops every
+    // subsequent train even though their ticker animations are looped.
+    if(page.id==='panel-rail'){
+      const total=Math.min(40,Math.max(1,Number(panel.dataset.railLoopPages)||1));
+      const end=pageStartedAt+Math.max(page.duration,total*12000+750);
+      if(!autoRotationPaused && end>nextPageAt){
+        nextPageAt=end;
+        extensionNeeded=true;
+      }
+    }
     if(extensionNeeded){
       document.documentElement.dataset.companyPageDue=String(nextPageAt);
       updatePageCountdown();
@@ -168,6 +180,7 @@
   }
 
   function showPage(index){
+    pageStartedAt=Date.now();
     pageIndex = (index + pages.length) % pages.length;
     scrollPageToken++;
     observedScrolls = new WeakMap();
