@@ -4050,7 +4050,7 @@
     const incoming=fresh && Array.isArray(approachLive.ichitsubo?.matsuyamaPassengerArrivals)
       ? approachLive.ichitsubo.matsuyamaPassengerArrivals.filter(x=>
           x?.source==='today_diagram' && x.side===side &&
-          /^\\d{1,2}:\\d{2}$/.test(String(x.arrival||'')) &&
+          /^\d{1,2}:\d{2}$/.test(String(x.arrival||'')) &&
           toMinutes(x.arrival)>=now.minutes)
           .sort((a,b)=>toMinutes(a.arrival)-toMinutes(b.arrival))
       : [];
