@@ -207,8 +207,16 @@
         <div class="jr-led-strip" id="jr-led-embed" aria-label="JR松山駅 LED発車標・表示方面に連動">
           <iframe
             id="jr-led-frame"
-            src="../jr-led/index.html?v=__BUILD_ID__&amp;dir=south"
+            src="../jr-led/index.html?v=__BUILD_ID__&amp;dir=south&amp;view=departure"
             title="JR松山駅 LED発車標（表示方面に連動）"
+            loading="eager"
+            referrerpolicy="no-referrer"
+            tabindex="-1"
+          ></iframe>
+          <iframe
+            id="jr-led-frame-arr"
+            src="../jr-led/index.html?v=__BUILD_ID__&amp;dir=south&amp;view=arrival"
+            title="JR松山駅 LED到着案内（表示方面に連動）"
             loading="eager"
             referrerpolicy="no-referrer"
             tabindex="-1"
