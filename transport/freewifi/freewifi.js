@@ -62,18 +62,21 @@
   // Direction is owned by the existing two JR pages, not by the LED itself.
   // Message-based switching keeps both original board engines alive without
   // reloading the simulator every 15 seconds.
+  const jrArrivalFrame=document.getElementById('jr-led-frame-arr');
   function syncJrLed(page){
-    if(!jrLedFrame || page?.id!=='panel-rail')return;
+    if(page?.id!=='panel-rail')return;
     const dir=page.mode===1?'north':'south';
-    try {
-      jrLedFrame.contentWindow?.postMessage(
-        {type:'matsuyama-led-direction',dir},location.origin
-      );
-    } catch(e) { console.warn('JR LED direction sync failed',e); }
+    for(const frame of [jrLedFrame,jrArrivalFrame]){
+      try {
+        frame?.contentWindow?.postMessage(
+          {type:'matsuyama-led-direction',dir},location.origin
+        );
+      } catch(e) { console.warn('JR LED direction sync failed',e); }
+    }
   }
-  if(jrLedFrame)jrLedFrame.addEventListener('load',()=>{
-    syncJrLed(pages[pageIndex]);
-  });
+  for(const frame of [jrLedFrame,jrArrivalFrame]){
+    frame?.addEventListener('load',()=>syncJrLed(pages[pageIndex]));
+  }
 
   // Measure rendered text rather than the character count. A 15-second
   // display is a minimum, not a deadline that cuts off longer itineraries.
