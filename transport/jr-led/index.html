@@ -585,9 +585,15 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
       document.getElementById('english-direction').textContent=arrivalMode
         ?(direction==='north'?'Arrivals from Imabari':'Arrivals from Uwajima')
         :(direction==='north'?'for Imabari, Takamatsu, Okayama':'for Yawatahama, Uwajima');
-      tickerLabel.textContent=arrivalMode?'到着案内':'停車駅';
+      tickerLabel.textContent='発着案内';
     }
-    syncTicker(arrivalMode?ledArrivalTickerItems(rows.slice(0,2),n):tickerItems(rows.slice(0,2),n));
+    // The moving ticker is INDEPENDENT of the 12-second display-mode flash.
+    // It continuously cycles both directions of information for this corridor
+    // so switching the two big train rows never throws away a half-read list.
+    const departuresForRibbon=todayRecords(n).slice(0,2);
+    const departureRibbon=tickerItems(departuresForRibbon,n);
+    const arrivalRibbon=arrivals.length?ledArrivalTickerItems(arrivals.slice(0,2),n):[];
+    syncTicker(departureRibbon.concat(arrivalRibbon));
     updateAlerts(n,rows);
   }
   function updateAlerts(n,rows){
