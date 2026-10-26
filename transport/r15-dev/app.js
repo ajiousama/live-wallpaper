@@ -3917,6 +3917,59 @@
     } catch(e) {console.warn('JR LED arrival notice unavailable',e);}
   }
 
+  // Loop all Matsuyama rows instead of permanently truncating the list at 6.
+  // The two rail directions have independent page counters and timers.
+  const railLoopStates={south:{page:0,total:1,clock:0},north:{page:0,total:1,clock:0}};
+  const RAIL_LOOP_PAGE_MS=12000;
+  const railFeaturedPending=new WeakMap();
+  function reconcileRailFeaturedCard(card,markup) {
+    if(!card)return;
+    const newer=document.createElement('div');
+    newer.innerHTML=markup;
+    const oldDetails=card.querySelector('.rail-next-details');
+    const nextDetails=newer.querySelector('.rail-next-details');
+    const oldPrimary=card.querySelector('.rail-next-main');
+    const nextPrimary=newer.querySelector('.rail-next-main');
+    if(!oldDetails||!nextDetails||!oldPrimary||!nextPrimary){
+      if(card.innerHTML!==markup)card.innerHTML=markup;
+      return;
+    }
+    if(oldPrimary.innerHTML!==nextPrimary.innerHTML)
+      oldPrimary.innerHTML=nextPrimary.innerHTML;
+    const content=box=>box.querySelector('.marquee-track > span:first-child')?.innerHTML||box.innerHTML;
+    if(content(oldDetails)===content(nextDetails)){
+      railFeaturedPending.delete(oldDetails);
+      return;
+    }
+    railFeaturedPending.set(oldDetails,nextDetails.innerHTML);
+    const track=oldDetails.querySelector('.marquee-track');
+    if(!track||!getComputedStyle(track).animationName.includes('ticker-scroll')){
+      oldDetails.innerHTML=nextDetails.innerHTML;
+      railFeaturedPending.delete(oldDetails);
+      return;
+    }
+    if(track.dataset.updateAtLoopEnd==='1')return;
+    track.dataset.updateAtLoopEnd='1';
+    track.addEventListener('animationiteration',event=>{
+      if(event.animationName!=='ticker-scroll')return;
+      delete track.dataset.updateAtLoopEnd;
+      const pending=railFeaturedPending.get(oldDetails);
+      if(typeof pending==='string')oldDetails.innerHTML=pending;
+      railFeaturedPending.delete(oldDetails);
+    },{once:true});
+  }
+  function advanceRailLoop(now=japanNow()) {
+    if(!FREEWIFI_TV||
+       !document.getElementById('panel-rail')?.classList.contains('freewifi-active'))return;
+    const loop=railLoopStates[currentRailDir()];
+    const stamp=Date.now();
+    if(!loop.clock){loop.clock=stamp;return;}
+    if(stamp-loop.clock<RAIL_LOOP_PAGE_MS)return;
+    loop.clock=stamp;
+    if(loop.total<2)return;
+    loop.page=(loop.page+1)%loop.total;
+    renderRail(nextRows('rail',now));
+  }
   function renderRail(rows) {
     const visibleRoot = $('rail-rows');
     const root=document.createElement('div');
@@ -3933,9 +3986,9 @@
         const confirmed=nextLimited.railPositionConfirmed && nextLimited.livePosition;
         const status=confirmed?'現在位置 '+nextLimited.livePosition:'時刻表予定・位置未確認';
         const details=railRowDetailItems(nextLimited);
-        nextCard.innerHTML=`<div class="rail-next-main"><span class="rail-next-label">次の特急は？</span><span class="rail-next-service">${railVehicleIconHtml(nextLimited)}${railServiceBadgeHtml('limited',nextLimited.service,nextLimited.info)}</span><span class="rail-next-time">${nextLimited.time}発</span><span class="rail-next-dest">${railDestLabel(nextLimited)}行</span>${delayBadge(nextLimited,'rail')}</div><div class="rail-next-details">${tickerHtml(details.length?details:[status])}</div>`;
+        reconcileRailFeaturedCard(nextCard,`<div class="rail-next-main"><span class="rail-next-label">次の特急は？</span><span class="rail-next-service">${railVehicleIconHtml(nextLimited)}${railServiceBadgeHtml('limited',nextLimited.service,nextLimited.info)}</span><span class="rail-next-time">${nextLimited.time}発</span><span class="rail-next-dest">${railDestLabel(nextLimited)}行</span>${delayBadge(nextLimited,'rail')}</div><div class="rail-next-details">${tickerHtml(details.length?details:[status])}</div>`);
       } else {
-        nextCard.innerHTML='<span class="rail-next-label">次の特急は？</span><span class="rail-next-status">この方面の本日の特急は終了しました</span>';
+        reconcileRailFeaturedCard(nextCard,'<span class="rail-next-label">次の特急は？</span><span class="rail-next-status">この方面の本日の特急は終了しました</span>');
       }
       // Details remain confined to their independent panel.
 
@@ -3945,9 +3998,9 @@
       const localCard=document.getElementById('rail-next-local');
       if(nextLocal){
         const details=railRowDetailItems(nextLocal);
-        localCard.innerHTML=`<div class="rail-next-main"><span class="rail-next-label">次の普通列車は？</span><span class="rail-next-service">${railVehicleIconHtml(nextLocal)}${railServiceBadgeHtml('local',nextLocal.service)}</span><span class="rail-next-time">${nextLocal.time}発</span><span class="rail-next-dest">${railDestLabel(nextLocal)}行</span>${delayBadge(nextLocal,'rail')}</div><div class="rail-next-details">${tickerHtml(details)}</div>`;
+        reconcileRailFeaturedCard(localCard,`<div class="rail-next-main"><span class="rail-next-label">次の普通列車は？</span><span class="rail-next-service">${railVehicleIconHtml(nextLocal)}${railServiceBadgeHtml('local',nextLocal.service)}</span><span class="rail-next-time">${nextLocal.time}発</span><span class="rail-next-dest">${railDestLabel(nextLocal)}行</span>${delayBadge(nextLocal,'rail')}</div><div class="rail-next-details">${tickerHtml(details)}</div>`);
       } else {
-        localCard.innerHTML='<span class="rail-next-label">次の普通列車は？</span><span class="rail-next-status">この方面の本日の普通列車は終了しました</span>';
+        reconcileRailFeaturedCard(localCard,'<span class="rail-next-label">次の普通列車は？</span><span class="rail-next-status">この方面の本日の普通列車は終了しました</span>');
       }
       // The featured card stays in its separate HTML container.
     }
@@ -4055,7 +4108,16 @@
     // JR departures, arrivals, freight and deadheads use ONE timeline.
     // Never reserve priority slots by train category: earlier times always
     // come before later times, including specials/terminal arrivals.
-    const visible=[...candidates,...untimedLiveExtras].slice(0,limit);
+    const allUpcoming=[...candidates,...untimedLiveExtras];
+    const loop=railLoopStates[currentRailDir()];
+    loop.total=FREEWIFI_TV?Math.max(1,Math.ceil(allUpcoming.length/limit)):1;
+    loop.page%=loop.total;
+    const visible=allUpcoming.slice(loop.page*limit,(loop.page+1)*limit);
+    const badge=document.getElementById('rail-badge');
+    if(FREEWIFI_TV&&badge){
+      badge.textContent=(currentRailDir()==='south'?'宇和島方面':'今治方面')+
+        (loop.total>1?' '+(loop.page+1)+' / '+loop.total:'');
+    }
     // Departure order is independent of train type and the upper summary cards.
     // Use the full future passenger departure list, not just visible rows:
     // arrivals, freight and deadheads never receive departure-order marks.
@@ -6323,7 +6385,7 @@
         renderAirportBottomInfo(now);
       }
     }
-    cachedNotes.rail=railTickerItems(now);cachedNotes.air=airportAccessTickerItems(now);cachedNotes.bus=busTickerItems(now);updateNotes();updateModeCountdown();},1000);
+    cachedNotes.rail=railTickerItems(now);cachedNotes.air=airportAccessTickerItems(now);cachedNotes.bus=busTickerItems(now);updateNotes();updateModeCountdown();advanceRailLoop(now);},1000);
   if (!FREEWIFI_TV) {
     setInterval(()=>{
       ['rail','air','bus','port'].forEach(rememberScroll);
