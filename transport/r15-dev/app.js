@@ -4238,8 +4238,52 @@
     return `${label}（時刻表による見込）`;
   }
 
+  // Capture CSS animation phase before a LIVE row rebuild, so the same
+  // airport/bus message does not jump to its first character once a minute.
+  // A truly changed message is allowed to begin a fresh, infinite loop.
+  function captureTransportScrollPhases(root) {
+    const saved=new Map();
+    if(!root)return saved;
+    root.querySelectorAll('.overflow-scroll-track').forEach(track=>{
+      const content=track.querySelector('.overflow-scroll-copy:not(.overflow-scroll-clone)');
+      if(!content)return;
+      const key=track.className+'|'+content.textContent;
+      try{
+        const animation=[...(track.getAnimations?.()||[])].find(a=>
+          a.playState==='running' && Number.isFinite(Number(a.currentTime)));
+        if(animation){
+          if(!saved.has(key))saved.set(key,[]);
+          saved.get(key).push(Number(animation.currentTime));
+        }
+      }catch(e){}
+    });
+    return saved;
+  }
+  function restoreTransportScrollPhases(root,saved) {
+    if(!saved?.size)return;
+    // The overflow observer attaches/recalculates widths on this frame.
+    requestAnimationFrame(()=>{
+      if(!root.isConnected)return;
+      root.querySelectorAll('.overflow-scroll-track').forEach(track=>{
+        const content=track.querySelector('.overflow-scroll-copy:not(.overflow-scroll-clone)');
+        if(!content)return;
+        const times=saved.get(track.className+'|'+content.textContent);
+        if(!times?.length)return;
+        const phase=times.shift();
+        try{
+          const animation=[...(track.getAnimations?.()||[])].find(a=>
+            a.playState==='running' && Number.isFinite(Number(a.currentTime)));
+          if(animation)animation.currentTime=phase;
+        }catch(e){}
+      });
+    });
+  }
+
   function renderAir(rows) {
-    const root=$('air-rows'); root.innerHTML=''; const dep=currentDirection()==='departure';
+    const root=$('air-rows');
+    const oldScrollPhases=captureTransportScrollPhases(root);
+    root.innerHTML='';
+    const dep=currentDirection()==='departure';
     root.classList.remove('air-end');
     if(!rows.length){
       const now=japanNow(); const last=dep?lastAirMovement(now,true):null;
@@ -4333,6 +4377,7 @@
       });
     }
     activatePanelOverflow(root); restoreScroll('air'); attachScrollMemory('air');
+    restoreTransportScrollPhases(root,oldScrollPhases);
   }
 
   const BUS_JOINT_OPERATORS = {
@@ -5379,6 +5424,7 @@
   function renderBus(rows) {
     const now=japanNow();
     const root = $('bus-rows');
+    const oldScrollPhases=captureTransportScrollPhases(root);
     root.innerHTML = '';
     const dep = currentDirection() === 'departure';
     root.classList.remove('bus-end');
@@ -5479,6 +5525,7 @@
       }
     }
     activatePanelOverflow(root);
+    restoreTransportScrollPhases(root,oldScrollPhases);
   }
 
   // 三津浜港フェリー ⇔ 伊予鉄バス56番（三津吉田線）。
