@@ -4049,8 +4049,8 @@
     const list=approachLive.ichitsubo.matsuyamaPassengerArrivals;
     if(!Array.isArray(list))return [];
     return list.filter(x=>x?.source==='today_diagram'&&
-        x.side===currentRailDir()&&/^\\d{1,5}[MD]$/i.test(String(x.trainNum||''))&&
-        /^\\d{1,2}:\\d{2}$/.test(String(x.arrival||''))&&
+        x.side===currentRailDir()&&/^\d{1,5}[MD]$/i.test(String(x.trainNum||''))&&
+        /^\d{1,2}:\d{2}$/.test(String(x.arrival||''))&&
         toMinutes(x.arrival)>=now.minutes&&toMinutes(x.arrival)<=now.minutes+180)
       .sort((a,b)=>toMinutes(a.arrival)-toMinutes(b.arrival));
   }
