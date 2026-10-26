@@ -138,6 +138,19 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
   var movements={north:{iso:'',rows:[]},south:{iso:'',rows:[]}};
   var rendered='',cycleLanguages=0,lastMinute='';
   var ticker={desiredKey:'',items:[],index:0,animation:null,currentKey:''};
+  // A 15-second JR page may hide the iframe in the middle of a long route
+  // ticker. Save per-corridor animation phases so both lines eventually loop
+  // fully across multiple visits instead of always restarting at the front.
+  var tickerPhases={south:null,north:null};
+  function rememberTickerPhase(){
+    if(tickerTrack?.clientWidth<1||!ticker.desiredKey)return;
+    try{
+      var anim=(tickerTrack.getAnimations?.()||[]).find(function(a){
+        return a.animationName==='jr-led-ribbon'&&Number.isFinite(Number(a.currentTime));
+      });
+      if(anim)tickerPhases[direction]={key:ticker.desiredKey,time:Number(anim.currentTime)};
+    }catch(e){}
+  }
   var rowsEl=document.getElementById('rows');
   var tickerWindow=document.getElementById('ticker-window');
   var tickerTrack=document.getElementById('ticker-track');
@@ -548,6 +561,17 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
     // Reflow once on content change; NEVER on each 1-second clock heartbeat.
     void tickerTrack.offsetWidth;
     tickerTrack.classList.add('is-looping');
+    var saved=tickerPhases[direction];
+    if(saved&&saved.key===ticker.desiredKey){
+      requestAnimationFrame(function(){
+        try{
+          var active=(tickerTrack.getAnimations?.()||[]).find(function(a){
+            return a.animationName==='jr-led-ribbon';
+          });
+          if(active)active.currentTime=saved.time;
+        }catch(e){}
+      });
+    }
   }
   tickerTrack.addEventListener('animationiteration',function(e){
     if(e.animationName!=='jr-led-ribbon'||!ticker.nextItems)return;
@@ -707,6 +731,7 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
       var arrivals=todayArrivals(n);
       updateAlerts(n,arrivalViewActive(n,arrivals)?arrivals:todayRecords(n));
     }
+    rememberTickerPhase();
   }
   loadSchedule();
   heartbeat();
