@@ -4188,8 +4188,7 @@
     const visible=allUpcoming.slice(loop.page*limit,(loop.page+1)*limit);
     const badge=document.getElementById('rail-badge');
     if(FREEWIFI_TV&&badge){
-      badge.textContent=(currentRailDir()==='south'?'宇和島方面':'今治方面')+
-        (loop.total>1?' '+(loop.page+1)+' / '+loop.total:'');
+      badge.textContent=currentRailDir()==='south'?'宇和島方面':'今治方面';
     }
     // Departure order is independent of train type and the upper summary cards.
     // Use the full future passenger departure list, not just visible rows:
