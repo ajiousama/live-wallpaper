@@ -2988,3 +2988,29 @@ body.freewifi-tv.air-board-page .air-bottom-scroll-track.air-bottom-ended{
   animation:none!important;
 }
 
+
+/* JR Matsuyama: simultaneous departures and timetable-confirmed arrivals. */
+body.freewifi-tv #rail-rows.rail-dual-board{
+  display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+  gap:6px!important;overflow:hidden!important;padding:5px!important;
+  min-height:0!important;align-items:stretch;
+}
+body.freewifi-tv .rail-dual-side{
+  display:flex;flex-direction:column;gap:4px;min-width:0;overflow:hidden;
+  border:1px solid rgba(128,181,193,.3);border-radius:5px;padding:4px;
+}
+body.freewifi-tv .rail-dual-heading{
+  padding:4px;text-align:center;background:#183541;
+  color:#c8f2ff;font-size:14px;font-weight:900;
+}
+body.freewifi-tv .rail-dual-line{
+  display:flex;align-items:center;min-width:0;gap:5px;
+  border-bottom:1px solid rgba(130,175,190,.2);padding:5px 0;
+}
+body.freewifi-tv .rail-dual-time{font-size:17px;font-weight:900;white-space:nowrap;color:#fff}
+body.freewifi-tv .rail-dual-detail{min-width:0;display:flex;flex-direction:column;line-height:1.15}
+body.freewifi-tv .rail-dual-detail strong{
+  font-size:12px;color:#f4f7ff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+body.freewifi-tv .rail-dual-detail small{font-size:9px;color:#b8d3da}
+body.freewifi-tv .rail-dual-empty{font-size:10px;color:#abc4ce;padding:10px 2px}
