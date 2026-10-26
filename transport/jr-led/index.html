@@ -74,6 +74,10 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
   font-size:16px;color:#fff;line-height:16px;font-weight:900;will-change:transform;
   pointer-events:none}
 .segment{display:inline-block;white-space:nowrap;padding-right:32px}
+.ticker-track.is-looping{animation:jr-led-ribbon var(--ticker-loop-duration,36s) linear infinite}
+.ticker-copy{display:inline-flex;align-items:center;white-space:nowrap;
+  width:max-content;min-width:max-content;flex:0 0 auto;padding-right:32px}
+@keyframes jr-led-ribbon{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 .segment.title{color:#f33}.segment.stop{color:#ffed30}
 .segment.connection{color:#64d9ff}.segment.note{color:#ddd}
 .ticker-note{display:none}
@@ -506,47 +510,64 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
       return {key:String(r.id||r.service||'')+'|'+r.time,segments:displayParts(r,n)};
     });
   }
-  function makeTickerItem(item){
+  // Continuous two-copy LED ribbon: no empty right-edge entry, no one-shot
+  // animation, and no restart when the big departure/arrival rows flip.
+  function makeTickerCopies(items){
     tickerTrack.replaceChildren();
-    item.segments.forEach(function(s){
-      tickerTrack.appendChild(el('span','segment '+s.type,s.text));
-    });
+    function copy(hidden){
+      var group=el('span','ticker-copy','');
+      if(hidden)group.setAttribute('aria-hidden','true');
+      items.forEach(function(item,i){
+        item.segments.forEach(function(segment){
+          group.appendChild(el('span','segment '+segment.type,segment.text));
+        });
+        if(i<items.length-1)group.appendChild(el('span','segment note','◆'));
+      });
+      return group;
+    }
+    tickerTrack.appendChild(copy(false));
+    tickerTrack.appendChild(copy(true));
   }
   function playTickerCycle(){
-    if(ticker.animation){ticker.animation.onfinish=null;ticker.animation.cancel();}
-    if(!ticker.items.length)return;
-    var item=ticker.items[ticker.index%ticker.items.length];
-    makeTickerItem(item);
-    var width=tickerTrack.scrollWidth,view=tickerWindow.clientWidth;
-    // Iframe may be temporarily hidden during another wallpaper page.
-    // Keep one complete cycle instead of restarting on every polling update.
-    if(width<20)width=tickerTrack.textContent.length*15;
-    if(view<100)view=Math.max(window.innerWidth-120,300);
-    var duration=Math.max(8000,Math.min(220000,1000*(width+view)/90));
-    var anim=tickerTrack.animate([{transform:'translateX('+view+'px)'},
-      {transform:'translateX(-'+width+'px)'}],
-      {duration:duration,iterations:1,easing:'linear',fill:'forwards'});
-    ticker.animation=anim;
-    anim.onfinish=function(){
-      if(ticker.animation!==anim)return;
-      ticker.items=ticker.nextItems||ticker.items;
-      ticker.nextItems=null;
-      ticker.index=(ticker.index+1)%ticker.items.length;
-      playTickerCycle();
-    };
+    if(!ticker.items.length){
+      tickerTrack.classList.remove('is-looping');
+      tickerTrack.replaceChildren();
+      return;
+    }
+    tickerTrack.classList.remove('is-looping');
+    makeTickerCopies(ticker.items);
+    var first=tickerTrack.firstElementChild;
+    var distance=first?first.scrollWidth:0;
+    // Hidden iframe may report zero. Use a conservative width estimate until
+    // the containing Matsuyama screen has a real rendered box.
+    if(distance<40)distance=ticker.items.reduce(function(total,item){
+      return total+item.segments.reduce(function(n,part){return n+part.text.length*14;},0)+60;
+    },0);
+    var seconds=Math.max(10,Math.min(360,distance/45));
+    tickerTrack.style.setProperty('--ticker-loop-duration',seconds.toFixed(2)+'s');
+    // Reflow once on content change; NEVER on each 1-second clock heartbeat.
+    void tickerTrack.offsetWidth;
+    tickerTrack.classList.add('is-looping');
   }
+  tickerTrack.addEventListener('animationiteration',function(e){
+    if(e.animationName!=='jr-led-ribbon'||!ticker.nextItems)return;
+    ticker.items=ticker.nextItems;
+    ticker.nextItems=null;
+    playTickerCycle();
+  });
   function syncTicker(items){
     var sig=JSON.stringify(items);
     if(sig===ticker.desiredKey)return;
     ticker.desiredKey=sig;
-    // New departure list: change immediately. Merely refreshed stop/transfer
-    // data for the same trains: finish the running sentence first.
     var keys=items.map(function(x){return x.key;}).join('|');
-    if(keys===ticker.currentKey&&ticker.animation){
-      ticker.nextItems=items;return;
+    if(keys===ticker.currentKey&&tickerTrack.classList.contains('is-looping')){
+      // Refresh route/transfer text on a FULL lap, not halfway through.
+      ticker.nextItems=items;
+      return;
     }
-    ticker.currentKey=keys;ticker.nextItems=null;
-    ticker.items=items;ticker.index=0;
+    ticker.currentKey=keys;
+    ticker.nextItems=null;
+    ticker.items=items;
     playTickerCycle();
   }
   function render(n,force){
