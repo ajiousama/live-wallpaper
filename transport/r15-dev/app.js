@@ -3888,8 +3888,8 @@
 
   function syncJrLedArrivals(now) {
     if(!FREEWIFI_TV)return;
-    const frame=document.getElementById('jr-led-frame');
-    if(!frame?.contentWindow)return;
+    const frames=['jr-led-frame','jr-led-frame-arr'].map(id=>document.getElementById(id)).filter(frame=>frame?.contentWindow);
+    if(!frames.length)return;
     // Live position + the operating diagram are both required. Never trigger
     // an approach alert using today's theoretical arrivals by themselves.
     const fresh=jrPositionFeedFresh();
@@ -3979,10 +3979,10 @@
       }))
     })).filter(x=>x.stops.length>0);
     try {
-      frame.contentWindow.postMessage({
+      frames.forEach(frame=>frame.contentWindow.postMessage({
         type:'matsuyama-led-arrivals',
         iso:now.iso,arrivals,departures,scheduledArrivals
-      },location.origin);
+      },location.origin));
     } catch(e) {console.warn('JR LED arrival notice unavailable',e);}
   }
 
@@ -4141,8 +4141,8 @@
     // Share ONLY real, time-bearing pass-through movements verified by the
     // SAME live feed as this six-row list. No guessed freight passage times.
     if(FREEWIFI_TV){
-      const frame=document.getElementById('jr-led-frame');
-      if(frame?.contentWindow){
+      const frames=['jr-led-frame','jr-led-frame-arr'].map(id=>document.getElementById(id)).filter(frame=>frame?.contentWindow);
+      if(frames.length){
         const side=currentRailDir();
         const knownFreight=freights.filter(v=>
           v.data?.direction===side &&
@@ -4166,11 +4166,11 @@
           timetableOnly:false,confirmed:true
         }));
         try{
-          frame.contentWindow.postMessage({
+          frames.forEach(frame=>frame.contentWindow.postMessage({
             type:'matsuyama-led-movements',
             direction:side,iso:now.iso,
             movements:[...knownFreight,...observedPasses]
-          },location.origin);
+          },location.origin));
         }catch(e){console.warn('JR LED passage data unavailable',e);}
       }
     }
