@@ -3727,6 +3727,63 @@
     root.appendChild(row);
   }
 
+  // When Matsuyama's six-row timetable pages turn, preserve the progress
+  // of EACH train's detail ribbon. The scrolling CSS itself is infinite,
+  // but replacing a paged-out DOM node previously reset a long itinerary
+  // to its first station on every visit.
+  const railTickerPhaseCache=new Map();
+  function railTickerAnimation(track){
+    if(!track||typeof track.getAnimations!=='function')return null;
+    return [...track.getAnimations()].find(animation=>
+      animation.animationName==='ticker-scroll'&&
+      (!animation.effect?.target||animation.effect.target===track))||null;
+  }
+  function railTickerPhaseKey(row){
+    const identity=railRowIdentity(row);
+    const first=row.querySelector(':scope > .rail-detail .marquee-track > span:first-child');
+    const details=first?.textContent?.trim()||'';
+    return identity&&details
+      ?japanNow().iso+'|'+currentRailDir()+'|'+identity+'|'+details:'';
+  }
+  function captureRailTickerProgress(root){
+    for(const row of root.querySelectorAll(':scope > .rail-row')){
+      const key=railTickerPhaseKey(row);
+      const track=row.querySelector(':scope > .rail-detail .marquee-track');
+      const anim=railTickerAnimation(track);
+      const ms=Number(anim?.currentTime);
+      const duration=Number(anim?.effect?.getComputedTiming?.().duration)||
+        parseFloat(track?.style?.getPropertyValue('--ticker-duration')||'')*1000;
+      if(!key||!Number.isFinite(ms)||!Number.isFinite(duration)||duration<=0)continue;
+      railTickerPhaseCache.set(key,{
+        fraction:((ms%duration)+duration)%duration/duration,at:Date.now()
+      });
+    }
+    // Finished, removed and prior-day trains cannot grow this cache forever.
+    if(railTickerPhaseCache.size>400){
+      const old=[...railTickerPhaseCache.entries()]
+        .sort((a,b)=>a[1].at-b[1].at);
+      old.slice(0,railTickerPhaseCache.size-300)
+        .forEach(([key])=>railTickerPhaseCache.delete(key));
+    }
+  }
+  function restoreRailTickerProgress(rows){
+    if(!rows.length)return;
+    requestAnimationFrame(()=>{
+      for(const row of rows){
+        if(!row.isConnected)continue;
+        const key=railTickerPhaseKey(row),saved=railTickerPhaseCache.get(key);
+        if(!saved||Date.now()-saved.at>30*60*1000)continue;
+        const track=row.querySelector(':scope > .rail-detail .marquee-track');
+        const anim=railTickerAnimation(track);
+        const duration=Number(anim?.effect?.getComputedTiming?.().duration)||
+          parseFloat(track?.style?.getPropertyValue('--ticker-duration')||'')*1000;
+        if(anim&&Number.isFinite(duration)&&duration>0){
+          try{anim.currentTime=saved.fraction*duration;}catch(e){}
+        }
+      }
+    });
+  }
+
   // Preserve the active six independent JR ticker DOMs between each
   // ten-second train-location poll. No whole-board innerHTML clearing.
   const railTickerPending = new WeakMap();
@@ -3789,8 +3846,11 @@
       track.style.setProperty('--ticker-duration',duration);
   }
   function reconcileRailRows(visibleRoot,renderedRoot) {
+    // Capture BEFORE page rotation replaces or removes the previous six rows.
+    captureRailTickerProgress(visibleRoot);
     visibleRoot.classList.toggle('rail-end',renderedRoot.classList.contains('rail-end'));
     const next=[...renderedRoot.children];
+    const newlyMounted=[];
     for(let i=0;i<next.length;i++){
       const upcoming=next[i];
       const existing=visibleRoot.children[i];
@@ -3807,14 +3867,19 @@
         updateRailTickerAtCycleEnd(existing,upcoming);
       }else if(existing){
         visibleRoot.replaceChild(upcoming,existing);
+        newlyMounted.push(upcoming);
       }else {
         visibleRoot.appendChild(upcoming);
+        newlyMounted.push(upcoming);
       }
     }
     while(visibleRoot.children.length>next.length)visibleRoot.lastElementChild.remove();
     activatePanelOverflow(visibleRoot);
     [...visibleRoot.querySelectorAll(':scope > .rail-row')]
       .forEach(calibrateRailTicker);
+    // Newly visible page resumes where it last stopped, including when a
+    // 60-second stopping-station list spans several twelve-second visits.
+    restoreRailTickerProgress(newlyMounted);
   }
 
   function syncJrLedArrivals(now) {
