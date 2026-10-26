@@ -3738,16 +3738,19 @@
       animation.animationName==='ticker-scroll'&&
       (!animation.effect?.target||animation.effect.target===track))||null;
   }
-  function railTickerPhaseKey(row){
+  function railTickerPhaseKey(row,side=currentRailDir()){
     const identity=railRowIdentity(row);
     const first=row.querySelector(':scope > .rail-detail .marquee-track > span:first-child');
     const details=first?.textContent?.trim()||'';
     return identity&&details
-      ?japanNow().iso+'|'+currentRailDir()+'|'+identity+'|'+details:'';
+      ?japanNow().iso+'|'+side+'|'+identity+'|'+details:'';
   }
   function captureRailTickerProgress(root){
+    // During a corridor switch currentRailDir() already points at the NEW
+    // page; capture the OLD rows under their last rendered corridor.
+    const previousSide=root.dataset.railTickerDirection||currentRailDir();
     for(const row of root.querySelectorAll(':scope > .rail-row')){
-      const key=railTickerPhaseKey(row);
+      const key=railTickerPhaseKey(row,previousSide);
       const track=row.querySelector(':scope > .rail-detail .marquee-track');
       const anim=railTickerAnimation(track);
       const ms=Number(anim?.currentTime);
@@ -3879,6 +3882,7 @@
       .forEach(calibrateRailTicker);
     // Newly visible page resumes where it last stopped, including when a
     // 60-second stopping-station list spans several twelve-second visits.
+    visibleRoot.dataset.railTickerDirection=currentRailDir();
     restoreRailTickerProgress(newlyMounted);
   }
 
