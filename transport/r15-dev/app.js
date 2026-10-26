@@ -4112,6 +4112,10 @@
     const loop=railLoopStates[currentRailDir()];
     loop.total=FREEWIFI_TV?Math.max(1,Math.ceil(allUpcoming.length/limit)):1;
     loop.page%=loop.total;
+    // Expose only a count: the page rotation controller can finish a full
+    // tour of all Matsuyama rows before switching to another transport mode.
+    if(FREEWIFI_TV)document.getElementById('panel-rail')?.setAttribute(
+      'data-rail-loop-pages',String(loop.total));
     const visible=allUpcoming.slice(loop.page*limit,(loop.page+1)*limit);
     const badge=document.getElementById('rail-badge');
     if(FREEWIFI_TV&&badge){
@@ -6314,6 +6318,11 @@
     setMode(index, durationMs) {
       ['rail','air','bus','port'].forEach(rememberScroll);
       state.modeIndex = Number(index) % 2;
+      if(FREEWIFI_TV&&document.getElementById('panel-rail')?.classList.contains('freewifi-active')){
+        // A direction just entered from another page gets its full 12s slot.
+        // Keep its cyclic page index, not a stale timer from the last visit.
+        railLoopStates[currentRailDir()].clock=Date.now();
+      }
       const duration = Number(durationMs) > 0 ? Number(durationMs) : MODE_SWITCH_MS;
       nextModeSwitchAt = Date.now() + duration;
       renderAll();
