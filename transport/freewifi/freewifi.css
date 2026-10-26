@@ -2989,3 +2989,13 @@ body.freewifi-tv.air-board-page .air-bottom-scroll-track.air-bottom-ended{
 }
 
 
+
+/* Only position the two authentic JR LED frames; their internal palette stays untouched. */
+body.freewifi-tv #panel-rail .jr-led-strip:has(#jr-led-frame-arr){
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+  gap:4px!important;
+}
+body.freewifi-tv #panel-rail .jr-led-strip:has(#jr-led-frame-arr) iframe{
+  display:block!important;width:100%!important;height:100%!important;min-width:0;
+}
