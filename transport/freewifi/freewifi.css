@@ -2952,3 +2952,39 @@ html.company-pc body.freewifi-tv.air-board-page .air-bottom-scroll-bus{
   animation-timing-function:linear!important;
   animation-iteration-count:infinite!important;
 }
+
+
+/* 2026-10-26: all existing scrolling text has a continuous, seamless loop.
+   Scope to text tracks only; fixed station names/logos and intentionally
+   stationary bus service grids are NOT turned into scrolling elements. */
+body.freewifi-tv .marquee > .marquee-track{
+  display:flex!important;
+  width:max-content!important;
+  gap:0!important;
+  column-gap:0!important;
+  animation-name:ticker-scroll!important;
+  animation-timing-function:linear!important;
+  animation-iteration-count:infinite!important;
+  animation-direction:normal!important;
+  animation-play-state:running!important;
+}
+body.freewifi-tv .marquee > .marquee-track > span{
+  flex:0 0 auto!important;
+  min-width:max-content!important;
+  box-sizing:content-box!important;
+  white-space:nowrap!important;
+}
+/* Two matching copies with zero inter-copy gap keep -50% pixel-perfect. */
+body.freewifi-tv .overflow-scroll.is-overflow > .overflow-scroll-track{
+  animation-iteration-count:infinite!important;
+  animation-play-state:running!important;
+}
+body.freewifi-tv.air-board-page .air-bottom-scroll-track:not(.air-bottom-ended){
+  animation-fill-mode:none!important;
+  animation-iteration-count:infinite!important;
+  animation-play-state:running!important;
+}
+/* Never animate a status explicitly marked as ended. */
+body.freewifi-tv.air-board-page .air-bottom-scroll-track.air-bottom-ended{
+  animation:none!important;
+}
