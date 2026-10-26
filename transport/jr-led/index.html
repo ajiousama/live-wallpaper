@@ -133,6 +133,7 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
   fitOriginalLedToFrame();
   window.addEventListener('resize',fitOriginalLedToFrame,{passive:true});
   var direction=new URLSearchParams(location.search).get('dir')==='north'?'north':'south';
+  var forcedView=new URLSearchParams(location.search).get('view')||'auto';
   var timetable={};
   var live={iso:'',at:0,departures:[],arrivals:[],scheduledArrivals:[]};
   var movements={north:{iso:'',rows:[]},south:{iso:'',rows:[]}};
@@ -600,7 +601,7 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
   }
   function render(n,force){
     var arrivals=todayArrivals(n);
-    var arrivalMode=arrivalViewActive(n,arrivals);
+    var arrivalMode=forcedView==='arrival'?true:forcedView==='departure'?false:arrivalViewActive(n,arrivals);
     var rows=arrivalMode?arrivals:todayRecords(n);
     if(arrivalMode){
       var approaching=activeApproach(n);
@@ -642,7 +643,7 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
     const departuresForRibbon=todayRecords(n).slice(0,2);
     const departureRibbon=tickerItems(departuresForRibbon,n);
     const arrivalRibbon=arrivals.length?ledArrivalTickerItems(arrivals.slice(0,2),n):[];
-    syncTicker(departureRibbon.concat(arrivalRibbon));
+    syncTicker(forcedView==='arrival'?arrivalRibbon:forcedView==='departure'?departureRibbon:departureRibbon.concat(arrivalRibbon));
     updateAlerts(n,rows);
   }
   function updateAlerts(n,rows){
@@ -732,7 +733,7 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
     var minute=n.iso+'|'+n.minutes;
     var language=(Date.now()%9000)<6000?'ja':'en';
     var arrivals=todayArrivals(n);
-    var mode=arrivalViewActive(n,arrivals)?'arrival':'departure';
+    var mode=(forcedView==='arrival'||(forcedView!=='departure'&&arrivalViewActive(n,arrivals)))?'arrival':'departure';
     var changed=language!==lang||minute!==lastMinute||mode!==lastLedMode;
     lastLedMode=mode;
     if(changed){lang=language;lastMinute=minute;render(n,true);}
