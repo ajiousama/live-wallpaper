@@ -4039,6 +4039,45 @@
     loop.page=(loop.page+1)%loop.total;
     renderRail(nextRows('rail',now));
   }
+  // Match the arrival LED's today's-diagram feed also in the lower timeline.
+  // Do not imply that a through train terminates at Matsuyama.
+  function matsuyamaDiagramArrivalRows(now){
+    const stamp=Date.parse(String(approachLive.generatedAtJst||''));
+    if(workplaceTestClock.hasOverride()||!approachLive.ok||
+       approachLive.ichitsubo?.ok!==true||!Number.isFinite(stamp)||
+       Date.now()-stamp< -15000||Date.now()-stamp>90000)return [];
+    const list=approachLive.ichitsubo.matsuyamaPassengerArrivals;
+    if(!Array.isArray(list))return [];
+    return list.filter(x=>x?.source==='today_diagram'&&
+        x.side===currentRailDir()&&/^\\d{1,5}[MD]$/i.test(String(x.trainNum||''))&&
+        /^\\d{1,2}:\\d{2}$/.test(String(x.arrival||''))&&
+        toMinutes(x.arrival)>=now.minutes&&toMinutes(x.arrival)<=now.minutes+180)
+      .sort((a,b)=>toMinutes(a.arrival)-toMinutes(b.arrival));
+  }
+  function appendMatsuyamaDiagramArrivalRow(root,x){
+    const row=document.createElement('div');
+    row.className='row rail-row terminal-arrival-row';
+    const info=railLiveTrainLabel(x);
+    const kind=x.trainClass==='limited'?'limited':'local';
+    const label=kind==='limited'
+      ?railServiceBadgeHtml('limited',info.service):railServiceBadgeHtml('local');
+    const origin=railSpecialText(cleanStation(x.origin||'')||'発駅確認中');
+    const time=padTime(x.arrival);
+    const onward=x.terminating===true?'この列車は松山止まりです':
+      x.destination&&cleanStation(x.destination)!=='松山'
+        ?'松山から'+railSpecialText(cleanStation(x.destination))+'方面へ運転':'松山到着予定';
+    const details=[origin+'発・松山 '+time+'着',onward];
+    if(jrPositionUsable(x.position))details.push('現在位置 '+railSpecialText(cleanStation(x.position)));
+    else details.push('時刻表予定・現在位置未確認');
+    row.innerHTML='<div class="rail-primary">'+
+      '<div class="cell rail-service '+kind+'"><span class="kindtxt">'+label+'</span></div>'+
+      '<div class="cell time">'+time+'</div>'+
+      '<div class="cell main">'+origin+'発 → 松山着'+
+      (Number(x.delayMinutes)>0&&jrPositionUsable(x.position)?delayBadge({delayMinutes:x.delayMinutes},'rail'):'')+
+      '</div></div><div class="rail-detail">'+tickerHtml(details)+'</div>';
+    root.appendChild(row);
+  }
+
   function renderRail(rows) {
     const visibleRoot = $('rail-rows');
     const root=document.createElement('div');
@@ -4103,6 +4142,9 @@
         : Number.POSITIVE_INFINITY,
       data:x
     })).filter(x=>x._sortMinutes>=now.minutes);
+    const diagramArrivals=matsuyamaDiagramArrivalRows(now).map(x=>({
+      _diagramArrival:true,_sortMinutes:toMinutes(x.arrival),data:x
+    }));
     const terminalArrivals = matsuyamaTerminatingArrivals(now).map(x => ({
       _deadhead: false,
       _freight: false,
@@ -4121,7 +4163,12 @@
     // Six visible rows below the authentic JR LED board, including deadheads/freight.
     const sixRowLedView=FREEWIFI_TV && !!document.getElementById('jr-led-embed');
     const limit=sixRowLedView ? 6 : (FREEWIFI_TV ? (document.documentElement.classList.contains('company-pc') ? 9 : 8) : 3);
-    const candidates=[...services, ...terminalArrivals, ...deadheads, ...freights, ...observedSpecials]
+    const diagramKeys=new Set(diagramArrivals.map(item=>
+      padTime(item.data.arrival)+'|'+String(item.data.trainNum||'')));
+    const uniqueTerminalArrivals=terminalArrivals.filter(item=>
+      !diagramArrivals.some(other=>padTime(other.data.arrival)===padTime(item.data.arrival) &&
+        (!other.data.trainNum||!item.data.trainNum||String(other.data.trainNum)===String(item.data.trainNum))));
+    const candidates=[...services,...diagramArrivals,...uniqueTerminalArrivals, ...deadheads, ...freights, ...observedSpecials]
       // Departures, arrivals and passes are removed as soon as their actual
       // displayed minute has elapsed. Stale live positions NEVER keep an
       // already-passed train on the six-row board. Unconfirmed times omitted.
@@ -4204,6 +4251,7 @@
       root.insertAdjacentHTML('beforeend',`<div class="rail-end-state"><div class="rail-end-mode">🚆 ${mode}</div><div class="rail-end-message">現在表示できる列車はありません</div></div>`);
     } else {
       visible.forEach(item => {
+        if(item._diagramArrival){appendMatsuyamaDiagramArrivalRow(root,item.data);return;}
         if(item._special){
           appendObservedSpecialTrainRow(root,item.data);
           return;
