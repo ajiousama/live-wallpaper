@@ -5505,6 +5505,40 @@
       // Ferry-shuttle buses bound for/from Toyo Port are REGIONAL buses.
       // They are bus services (not the ferry itself), on both directions.
       const isRegional=r=>r.kind==='midbus' || (r.kind==='ferrybus' && /東予港|orange_ferry_shuttle/.test(String(r.dest||'')+' '+String(r.origin||'')+' '+String(r.source||''))) || /kumakogen|misaki|uwajima_bus|setouchi_omishima|iyotetsu_niihama|orange_ferry_shuttle/.test(String(r.source||'')) || /久万高原|三崎港口|宇和島|城辺|大三島|宮浦港|新居浜|東予港/.test(String(r.origin||r.dest||''));
+      // Badges only on outbound long-distance/highway routes with >=3
+      // scheduled departures on this operating day. Group by boarding stop
+      // AND destination so JR松山駅/松山市駅 do not count the same trip twice.
+      const routeName=r=>{
+        const name=String(r.dest||'').trim();
+        if(/大阪|京都|USJ|梅田|なんば/.test(name))return '大阪・京都方面';
+        if(/高知|はりまや橋/.test(name))return '高知';
+        if(/神戸|三宮/.test(name))return '神戸';
+        return name;
+      };
+      const busRouteKey=r=>String(r.stop||'松山市駅').trim()+'|'+routeName(r);
+      const dayBusRows=dep
+        ? normalizeBusDepartures(recordsForDay('bus',boardDisplayIso('bus',now))
+            .filter(r=>r.direction!=='arrival')).filter(r=>!isRegional(r))
+        : [];
+      const busRouteGroups=new Map();
+      for(const service of dayBusRows){
+        const key=busRouteKey(service);
+        if(!busRouteGroups.has(key))busRouteGroups.set(key,[]);
+        const group=busRouteGroups.get(key);
+        // One timetable departure at the same stop/time/route is one bus,
+        // regardless of duplicate operator/source records.
+        if(!group.some(x=>padTime(x.time)===padTime(service.time)))group.push(service);
+      }
+      for(const group of busRouteGroups.values())
+        group.sort((a,b)=>toMinutes(a.time)-toMinutes(b.time));
+      const busBoundaryBadges=r=>{
+        if(!dep||isRegional(r))return '';
+        const group=busRouteGroups.get(busRouteKey(r));
+        if(!group||group.length<3)return '';
+        const time=padTime(r.time);
+        return (time===padTime(group[0].time)?badgeHtml('first','始発'):'')+
+          (time===padTime(group[group.length-1].time)?badgeHtml('final','最終'):'');
+      };
       const regional=rows.filter(isRegional);
       const longDistance=rows.filter(r=>!isRegional(r));
       const grouped=FREEWIFI_TV;
@@ -5549,8 +5583,7 @@
         .sort((a,b)=>rMinutes(a)-rMinutes(b));
       selected.forEach(r => {
       const row = document.createElement('div'); row.className = `row${dep && isDepartSoon(r, japanNow()) ? ' depart-soon' : ''}`;
-      const firstBadge = r.isNextDayStart ? badgeHtml('first','翌日') : '';
-      const finalBadge = r.isFinal ? badgeHtml('final','最終バス') : '';
+      const busBadge = busBoundaryBadges(r);
       if (dep) {
         const rightTop = busBoardingPlaceHtml(r);
         const rightBottom = busBoardingSubline(r);
@@ -5559,7 +5592,7 @@
         const departurePosition=busDeparturePosition(r,japanNow());
         row.innerHTML = `
           <div class="cell time bus-time-stack"><span class="primary-time">${r.time}</span>${terminal?`<span class="bus-terminal-time">${terminal}</span>`:''}</div>
-          <div class="cell main bus-dest-cell"><span class="bus-dest-main">${busDestinationHtml(r,`${firstBadge}${finalBadge}`)}${delayBadge(r,'bus')}</span>${ferryExtra}</div>
+          <div class="cell main bus-dest-cell"><span class="bus-dest-main">${busDestinationHtml(r,busBadge)}${delayBadge(r,'bus')}</span>${ferryExtra}</div>
           <div class="cell sub bus-departure-position-cell"><span class="bus-departure-position">${departurePosition||'—'}</span></div>
           <div class="cell sub bus-boarding-cell"><div class="service-wrap"><span class="name bus-place-logo">${rightTop}</span><span class="code bus-ehime-route">${rightBottom?overflowScrollHtml(rightBottom,'bus-ehime-route-scroll'):''}</span></div></div>
           <div class="cell service">${busOperatorHtml(r)}</div>`;
@@ -5573,7 +5606,7 @@
         const estimatedPosition = busArrivalStatus(r,japanNow());
         row.innerHTML = `
           <div class="cell main arrival-origin">
-            <span class="arrival-place">${overflowScrollHtml(origin,'bus-origin-scroll')} ${firstBadge}${finalBadge}</span>
+            <span class="arrival-place">${overflowScrollHtml(origin,'bus-origin-scroll')}</span>
             <span class="arrival-departure-time">${depDay}${r.originDepartureTime || '—'}出発</span>
           </div>
           <div class="cell sub bus-estimated-position-cell">
