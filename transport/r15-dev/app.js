@@ -5508,36 +5508,37 @@
       // Badges only on outbound long-distance/highway routes with >=3
       // scheduled departures on this operating day. Group by boarding stop
       // AND destination so JR松山駅/松山市駅 do not count the same trip twice.
+      // Evaluate departure and arrival boards separately. An arrival is
+      // counted only when the inbound timetable actually lists that service.
       const routeName=r=>{
-        const name=String(r.dest||'').trim();
+        const name=String(dep?r.dest:(r.origin||r.dest)||'').trim();
         if(/大阪|京都|USJ|梅田|なんば/.test(name))return '大阪・京都方面';
         if(/高知|はりまや橋/.test(name))return '高知';
         if(/神戸|三宮/.test(name))return '神戸';
         return name;
       };
-      const busRouteKey=r=>String(r.stop||'松山市駅').trim()+'|'+routeName(r);
+      const busRouteKey=r=>String(dep?r.stop:(r.arrivalTerminal||r.stop)||'松山市駅').trim()+'|'+routeName(r);
+      const serviceTime=r=>padTime(dep?r.time:(r.arrivalTerminalTime||r.time));
       const dayBusRows=dep
         ? normalizeBusDepartures(recordsForDay('bus',boardDisplayIso('bus',now))
             .filter(r=>r.direction!=='arrival')).filter(r=>!isRegional(r))
-        : [];
+        : rows.filter(r=>!isRegional(r));
       const busRouteGroups=new Map();
       for(const service of dayBusRows){
         const key=busRouteKey(service);
         if(!busRouteGroups.has(key))busRouteGroups.set(key,[]);
         const group=busRouteGroups.get(key);
-        // One timetable departure at the same stop/time/route is one bus,
-        // regardless of duplicate operator/source records.
-        if(!group.some(x=>padTime(x.time)===padTime(service.time)))group.push(service);
+        if(!group.some(x=>serviceTime(x)===serviceTime(service)))group.push(service);
       }
       for(const group of busRouteGroups.values())
-        group.sort((a,b)=>toMinutes(a.time)-toMinutes(b.time));
+        group.sort((a,b)=>toMinutes(serviceTime(a))-toMinutes(serviceTime(b)));
       const busBoundaryBadges=r=>{
-        if(!dep||isRegional(r))return '';
+        if(isRegional(r))return '';
         const group=busRouteGroups.get(busRouteKey(r));
         if(!group||group.length<3)return '';
-        const time=padTime(r.time);
-        return (time===padTime(group[0].time)?badgeHtml('first','始発'):'')+
-          (time===padTime(group[group.length-1].time)?badgeHtml('final','最終'):'');
+        const time=serviceTime(r);
+        return (time===serviceTime(group[0])?badgeHtml('first','始発'):'')+
+          (time===serviceTime(group[group.length-1])?badgeHtml('final','最終'):'');
       };
       const regional=rows.filter(isRegional);
       const longDistance=rows.filter(r=>!isRegional(r));
@@ -5606,7 +5607,7 @@
         const estimatedPosition = busArrivalStatus(r,japanNow());
         row.innerHTML = `
           <div class="cell main arrival-origin">
-            <span class="arrival-place">${overflowScrollHtml(origin,'bus-origin-scroll')}</span>
+            <span class="arrival-place">${overflowScrollHtml(origin,'bus-origin-scroll')} ${busBadge}</span>
             <span class="arrival-departure-time">${depDay}${r.originDepartureTime || '—'}出発</span>
           </div>
           <div class="cell sub bus-estimated-position-cell">
