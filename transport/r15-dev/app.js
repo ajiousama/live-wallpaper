@@ -4039,68 +4039,11 @@
     loop.page=(loop.page+1)%loop.total;
     renderRail(nextRows('rail',now));
   }
-  function renderRailDual(rows,now){
-    const root=$('rail-rows');
-    if(!root)return;
-    const side=currentRailDir();
-    const fetched=Date.parse(String(approachLive.generatedAtJst||''));
-    const fresh=approachLive.ok && approachLive.ichitsubo?.ok===true &&
-      Number.isFinite(fetched) && Date.now()-fetched>=-15000 &&
-      Date.now()-fetched<=90000 && !workplaceTestClock.hasOverride();
-    const incoming=fresh && Array.isArray(approachLive.ichitsubo?.matsuyamaPassengerArrivals)
-      ? approachLive.ichitsubo.matsuyamaPassengerArrivals.filter(x=>
-          x?.source==='today_diagram' && x.side===side &&
-          /^\d{1,2}:\d{2}$/.test(String(x.arrival||'')) &&
-          toMinutes(x.arrival)>=now.minutes)
-          .sort((a,b)=>toMinutes(a.arrival)-toMinutes(b.arrival))
-      : [];
-    const outgoing=rows.filter(x=>toMinutes(x.time)>=now.minutes)
-      .sort((a,b)=>toMinutes(a.time)-toMinutes(b.time));
-    const make=(label,records,isArrival)=>{
-      const section=document.createElement('section');
-      section.className='rail-dual-side';
-      const title=document.createElement('div');
-      title.className='rail-dual-heading';
-      title.textContent=label;
-      section.appendChild(title);
-      for(const r of records.slice(0,4)){
-        const line=document.createElement('div');
-        line.className='rail-dual-line';
-        const time=document.createElement('span');
-        time.className='rail-dual-time';
-        time.textContent=isArrival?padTime(r.arrival):padTime(r.time);
-        const detail=document.createElement('span');
-        detail.className='rail-dual-detail';
-        const destination=document.createElement('strong');
-        destination.textContent=isArrival
-          ? String(r.origin||'発駅確認中')+'発'
-          : String(r.dest||'行先確認中')+'行';
-        const classification=document.createElement('small');
-        classification.textContent=isArrival
-          ? (r.trainClass==='limited'?'特急':'普通')
-          : (r.kind==='limited'?'特急':r.kind==='local'?'普通':String(r.service||'列車'));
-        detail.append(destination,classification);
-        line.append(time,detail);
-        section.appendChild(line);
-      }
-      if(!records.length){
-        const empty=document.createElement('div');
-        empty.className='rail-dual-empty';
-        empty.textContent=isArrival&&!fresh?'当日到着時刻を確認中':'現在表示できる列車はありません';
-        section.appendChild(empty);
-      }
-      return section;
-    };
-    root.replaceChildren(make('発車',outgoing,false),make('到着',incoming,true));
-    root.classList.add('rail-dual-board');
-  }
-
   function renderRail(rows) {
     const visibleRoot = $('rail-rows');
     const root=document.createElement('div');
     const now = japanNow();
     syncJrLedArrivals(now);
-    if(FREEWIFI_TV){renderRailDual(rows,now);return;}
 
     // Separate next-limited-express indicator for the currently shown direction.
     // Timetable entries remain valid even when live positioning is unavailable.
