@@ -4059,8 +4059,18 @@
     row.className='row rail-row terminal-arrival-row';
     const info=railLiveTrainLabel(x);
     const kind=x.trainClass==='limited'?'limited':'local';
-    const label=kind==='limited'
-      ?railServiceBadgeHtml('limited',info.service):railServiceBadgeHtml('local');
+    const active=Array.isArray(approachLive.ichitsubo?.matsuyamaActiveTrains)
+      ?approachLive.ichitsubo.matsuyamaActiveTrains:[];
+    // Train-number equality is required. Never borrow another arrival's vehicle.
+    const matches=active.filter(v=>String(v.trainNum||'')===String(x.trainNum||''));
+    const matched=matches.length===1?matches[0]:null;
+    const vehicle={
+      ...x,
+      vehicleImageNorth:String(x.vehicleImageNorth||matched?.vehicleImageNorth||''),
+      vehicleImageSouth:String(x.vehicleImageSouth||matched?.vehicleImageSouth||'')
+    };
+    const label=railVehicleIconHtml(vehicle)+(kind==='limited'
+      ?railServiceBadgeHtml('limited',info.service):railServiceBadgeHtml('local'));
     const origin=railSpecialText(cleanStation(x.origin||'')||'発駅確認中');
     const time=padTime(x.arrival);
     const onward=x.terminating===true?'この列車は松山止まりです':
