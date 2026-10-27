@@ -58,7 +58,7 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
   font-weight:900;align-items:center;justify-content:center;z-index:3;
   white-space:nowrap}
 .status.warning{display:flex!important}
-.status.final{display:none!important}
+.status.final{display:flex!important;left:auto;right:2px;top:0;width:42px;height:15px;background:#7b1010;color:#ffef55;font-size:10px;z-index:4}
 .flash{animation:led-blink .9s steps(1,end) infinite}
 @keyframes led-blink{0%,49%{opacity:1}50%,100%{opacity:0}}
 .train.empty .service{color:#a0a0a0}
@@ -221,12 +221,33 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
         passStatus:r.timetableOnly?'通過予定':'通過',info:''};
     });
   }
+  function ledRouteVia(row){
+    if(direction!=='south'||row._arrival||row.passStatus)return '';
+    var info=String(row.info||'');
+    if(/伊予長浜経由|長浜経由/.test(info))return '長浜経由';
+    if(/内子経由/.test(info))return '内子経由';
+    return '';
+  }
+  function lastScheduledTrain(n){
+    if(!window.MATSUYAMA_DATA?.records)return null;
+    var all=window.MATSUYAMA_DATA.records.filter(function(r){
+      return r.board==='rail'&&r.direction===direction&&available(r,n)&&
+        ['local','limited','extra','sightseeing'].includes(r.kind);
+    }).map(function(r){return depRecord(r,n);}).filter(function(r){
+      return Number.isFinite(timeNumber(r.time));
+    }).sort(function(a,b){return timeNumber(a.time)-timeNumber(b.time);});
+    return all.length?all[all.length-1]:null;
+  }
   function todayRecords(n){
     if(n.minutes<270||!Array.isArray(window.MATSUYAMA_DATA&&window.MATSUYAMA_DATA.records))return [];
     var scheduled=window.MATSUYAMA_DATA.records.filter(function(r){
       return r.board==='rail'&&r.direction===direction&&available(r,n);
     }).map(function(r){return depRecord(r,n);})
     .filter(function(r){return Number.isFinite(timeNumber(r.time))&&timeNumber(r.time)>=n.minutes;});
+    var final=lastScheduledTrain(n);
+    scheduled.forEach(function(r){
+      r._isFinal=!!final && r.id===final.id && r.time===final.time;
+    });
     return scheduled.concat(readMovements(n)).sort(function(a,b){
       return timeNumber(a.time)-timeNumber(b.time)||(a.passStatus?1:0)-(b.passStatus?1:0);
     });
@@ -423,6 +444,8 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
       destEl.appendChild(el('span','','Saijo'));
     }else destEl.textContent=dest;
     box.appendChild(destEl);
+    var via=ledRouteVia(row);
+    if(via)box.setAttribute('title',via);
     var dep=timeNumber(row.time),rem=dep*60-n.minutes*60-n.seconds;
     // An arrival countdown is "soon" ONLY when the live position and
     // today's diagram independently confirm this exact inbound train.
@@ -480,6 +503,9 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
     portions(row).forEach(function(p){
       var route=exactRoute(row,p.destination,p.num,n);
       addPart(segments,'title',String(row.time)+'発　'+p.name+'　'+p.destination+'行');
+      if(row._isFinal)addPart(segments,'title','最終列車');
+      var via=ledRouteVia(row);
+      if(via)addPart(segments,'note',via);
       if(!route){
         addPart(segments,'note','当日運行図の停車駅・時刻・接続を確認中');
         return;
