@@ -835,10 +835,9 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
     var changed=language!==lang||minute!==lastMinute||mode!==lastLedMode;
     lastLedMode=mode;
     if(changed){lang=language;lastMinute=minute;render(n,true);}
-    else showArrivalRouteBar(mode==='arrival'?arrivals:[],n,mode==='arrival');
     else {
-      var arrivals=todayArrivals(n);
-      updateAlerts(n,arrivalViewActive(n,arrivals)?arrivals:todayRecords(n));
+      showArrivalRouteBar(mode==='arrival'?arrivals:[],n,mode==='arrival');
+      updateAlerts(n,mode==='arrival'?arrivals:todayRecords(n));
     }
     rememberTickerPhase();
   }
