@@ -110,6 +110,10 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
   0%,69%{opacity:1}
   70%,100%{opacity:0}
 }
+.arrival-route-bar{position:absolute;z-index:7;top:62px;left:13px;width:256px;height:16px;background:#000;color:#ffed30;display:flex;align-items:center;justify-content:center;overflow:hidden;white-space:nowrap;font-size:11px;font-weight:900;gap:3px}
+.arrival-route-bar[hidden]{display:none}
+.arrival-route-bar .current{color:#ffe640;background:#5b2900;animation:arrival-station-blink 1.2s steps(1,end) infinite}
+.arrival-route-bar span{flex:none}
 </style>
 </head>
 <body>
@@ -120,6 +124,7 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
    <article class="train empty"><span class="kind"></span><span class="service">運行図を確認中</span></article>
  </section>
  <div class="ticker"><div class="ticker-label" id="ticker-label">停車駅</div><div class="ticker-window" id="ticker-window"><div class="ticker-track" id="ticker-track">停車駅・接続を確認しています</div></div></div>
+ <div class="arrival-route-bar" id="arrival-route-bar" hidden aria-label="到着列車の駅順"></div>
  <div class="arrival-alert" id="arrival-alert" hidden><div class="arrival-alert-track" id="arrival-alert-track"></div></div>
  <span class="clock" id="clock" hidden></span>
 </main>
@@ -667,10 +672,35 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
     ticker.items=items;
     playTickerCycle();
   }
+  var arrivalRouteBar=document.getElementById('arrival-route-bar');
+  function showArrivalRouteBar(rows,n,arrivalMode){
+    if(!arrivalMode){arrivalRouteBar.hidden=true;return;}
+    var stationList=direction==='north'
+      ?['三津浜','伊予和気','堀江','光洋台','粟井','柳原','伊予北条','大浦','浅海','菊間','伊予亀岡','大西','波方','波止浜','今治']
+      :['市坪','北伊予','南伊予','伊予市','鳥ノ木','向井原','伊予大平','伊予中山','伊予立川','内子','新谷','伊予大洲'];
+    var row=rows.find(function(x){return !!x._arrival && x.position;})||rows[0];
+    var raw=String(row?.position||'').trim();
+    var station=stationList.find(function(name){
+      return raw===name||raw===name+'駅'||raw===name+'停車中'||raw===name+'駅停車中';
+    })||'';
+    // Keep at least the first three approaching stations visible at all times.
+    // For a confirmed position farther away, center the short strip there.
+    var pos=station?stationList.indexOf(station):0;
+    var start=Math.max(0,pos-1);
+    var display=stationList.slice(start,start+3);
+    var words=['松山'].concat(start>0?['…']:[]).concat(display);
+    arrivalRouteBar.replaceChildren();
+    words.forEach(function(name,i){
+      if(i)arrivalRouteBar.appendChild(el('span','', '←'));
+      arrivalRouteBar.appendChild(el('span',name===station?'current':'',name));
+    });
+    arrivalRouteBar.hidden=false;
+  }
   function render(n,force){
     var arrivals=todayArrivals(n);
     var arrivalMode=forcedView==='arrival'?true:forcedView==='departure'?false:arrivalViewActive(n,arrivals);
     var rows=arrivalMode?arrivals:todayRecords(n);
+    showArrivalRouteBar(rows,n,arrivalMode);
     if(arrivalMode){
       var approaching=activeApproach(n);
       if(approaching){
@@ -805,6 +835,7 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
     var changed=language!==lang||minute!==lastMinute||mode!==lastLedMode;
     lastLedMode=mode;
     if(changed){lang=language;lastMinute=minute;render(n,true);}
+    else showArrivalRouteBar(mode==='arrival'?arrivals:[],n,mode==='arrival');
     else {
       var arrivals=todayArrivals(n);
       updateAlerts(n,arrivalViewActive(n,arrivals)?arrivals:todayRecords(n));
