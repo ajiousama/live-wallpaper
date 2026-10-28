@@ -297,12 +297,25 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
       return timeNumber(a.time)-timeNumber(b.time)||String(a.trainNum).localeCompare(String(b.trainNum));
     });
   }
+  // Inbound south corridor station order. This is geographical guidance,
+  // never a fabricated train position or an inferred station passage.
+  function arrivalStationTrail(row){
+    if(direction!=='south'||!row._arrival)return '';
+    var stations=['南伊予','北伊予','市坪'];
+    var origin=String(row.arrivalOrigin||'').replace(/駅$/,'');
+    var start=stations.indexOf(origin);
+    var trail=start>=0?stations.slice(start):stations;
+    return '松山駅 ←←← '+trail.slice().reverse().join(' ←←← ');
+  }
   function ledArrivalTickerItems(rows,n){
     if(!rows.length)return [{key:'arrivals-none',segments:[{type:'note',
       text:'当日運行図の到着情報を確認しています'}]}];
     return rows.slice(0,2).map(function(row){
       var origin=row.arrivalOrigin||'出発駅未確認';
-      var seg=[{type:'title',text:row.time+'着　'+row.service+'　'+origin+'発 → 松山着'}];
+      var seg=[];
+      var trail=arrivalStationTrail(row);
+      if(trail)seg.push({type:'stop',text:'到着方向・駅順　'+trail});
+      seg.push({type:'title',text:row.time+'着　'+row.service+'　'+origin+'発 → 松山着'});
       if(row.terminating)seg.push({type:'note',text:'この列車は松山止まりです'});
       else if(row.arrivalDestination&&row.arrivalDestination!=='松山')
         seg.push({type:'note',text:'松山に停車後 '+row.arrivalDestination+'方面へ運転'});
