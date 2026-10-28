@@ -305,14 +305,18 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
   // Exact station observation only. An interval such as 市坪～松山 is NOT
   // silently treated as a confirmed arrival at either station.
   function arrivalStationTrail(row){
-    if(direction!=='south'||!row._arrival)return [];
-    var stations=['南伊予','北伊予','市坪'];
+    if(!row._arrival)return [];
+    var stations=direction==='north'
+      ?['今治','波止浜','波方','大西','伊予亀岡','菊間','浅海','大浦','伊予北条','柳原','粟井','光洋台','堀江','伊予和気','三津浜']
+      :['南伊予','北伊予','市坪'];
     var origin=String(row.arrivalOrigin||'').replace(/駅$/,'');
     var start=stations.indexOf(origin);
     var trail=start>=0?stations.slice(start):stations;
     var raw=String(row.position||'').trim();
-    var current=/^(南伊予|北伊予|市坪)(?:駅)?(?:付近|構内|停車中)?$/.test(raw)
-      ?raw.replace(/駅|付近|構内|停車中/g,''):'';
+    // Only exact station identifiers in the displayed corridor may blink.
+    // "三津浜～松山" or other interval descriptions remain unlit.
+    var matched=raw.match(/^(.+?)(?:駅)?(?:付近|構内|停車中)?$/);
+    var current=matched&&stations.includes(matched[1])?matched[1]:'';
     var parts=[{type:'stop',text:'到着方向・駅順　松山駅'}];
     trail.slice().reverse().forEach(function(station){
       parts.push({type:'stop',text:' ←←← '});
