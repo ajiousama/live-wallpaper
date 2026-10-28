@@ -432,8 +432,12 @@
     FDA:'FDA.png',EOK:'EOK.png','9593':'9593.png'
   });
   const AIRPORT_OFFICIAL_MISSING_CODES=new Set([
-    '6610','6611','4942','4943','6294','6295','9544'
+    '4942','4943','6294','6295','9544'
   ]);
+  // ANA codeshare numbers for EVA Air flights: use the approved ANA logo.
+  const AIRPORT_KNOWN_CODESHARE_CARRIERS=Object.freeze({
+    '6610':'ANA','6611':'ANA'
+  });
   const AIRPORT_OFFICIAL_LOGO_BASE=new URL('../assets/airport-official/',
     document.currentScript?.src||location.href).href;
   const airportOfficialExtraLogo=(key,label)=>{
@@ -470,7 +474,8 @@
       ?(recognized||'航空会社確認中'):p.airline;
     return nums.map((number,index)=>{
       const airline=index===0?primary:
-        (airportCarrierByFlight(number,place)||primary);
+        (AIRPORT_KNOWN_CODESHARE_CARRIERS[number]||
+         airportCarrierByFlight(number,place)||primary);
       const extraLogo=index>0&&AIRPORT_OFFICIAL_EXTRA_LOGOS[number]
         ?airportOfficialExtraLogo(number,'共同運航 '+number)
         :index>0&&AIRPORT_OFFICIAL_MISSING_CODES.has(number)
