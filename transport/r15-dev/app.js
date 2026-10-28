@@ -3555,7 +3555,7 @@
     const row=document.createElement('div');
     row.className='row rail-row terminal-arrival-row';
     const info=railLiveTrainLabel(x);
-    const serviceBadge=railVehicleIconHtml(x)+(x.isOfficialScheduled && /臨時列車/.test(String(x.serviceName||''))
+    const serviceBadge=railVehicleIconHtml(arrivalVehicleImages(x))+(x.isOfficialScheduled && /臨時列車/.test(String(x.serviceName||''))
       ? railServiceBadgeHtml('extra')
       : x.isOfficialScheduled
       ? '<span class="rail-kind-badge rail-kind-tourist">伊予灘ものがたり</span>'
@@ -4054,22 +4054,31 @@
         toMinutes(x.arrival)>=now.minutes&&toMinutes(x.arrival)<=now.minutes+180)
       .sort((a,b)=>toMinutes(a.arrival)-toMinutes(b.arrival));
   }
+  function arrivalVehicleImages(x){
+    // The diagram itself, terminating feed, active train log and train-number
+    // schedule can independently carry vehicle illustrations. Only accept
+    // exact train-number matches; never infer rolling stock from service type.
+    const source=approachLive.ichitsubo||{};
+    const sources=['matsuyamaPassengerArrivals','matsuyamaTerminatingArrivals',
+      'matsuyamaActiveTrains','matsuyamaSchedule'];
+    const num=String(x.trainNum||'').trim();
+    if(!num)return x;
+    const candidates=[x,...sources.flatMap(key=>Array.isArray(source[key])?source[key]:[])]
+      .filter(v=>String(v?.trainNum||'').trim()===num);
+    const pick=key=>{
+      const vals=[...new Set(candidates.map(v=>String(v?.[key]||'').trim()).filter(Boolean))];
+      // Ambiguous vehicle evidence is not a reason to show a potentially wrong train.
+      return vals.length===1?vals[0]:'';
+    };
+    return {...x,vehicleImageNorth:pick('vehicleImageNorth'),
+      vehicleImageSouth:pick('vehicleImageSouth')};
+  }
   function appendMatsuyamaDiagramArrivalRow(root,x){
     const row=document.createElement('div');
     row.className='row rail-row terminal-arrival-row';
     const info=railLiveTrainLabel(x);
     const kind=x.trainClass==='limited'?'limited':'local';
-    const active=Array.isArray(approachLive.ichitsubo?.matsuyamaActiveTrains)
-      ?approachLive.ichitsubo.matsuyamaActiveTrains:[];
-    // Train-number equality is required. Never borrow another arrival's vehicle.
-    const matches=active.filter(v=>String(v.trainNum||'')===String(x.trainNum||''));
-    const matched=matches.length===1?matches[0]:null;
-    const vehicle={
-      ...x,
-      vehicleImageNorth:String(x.vehicleImageNorth||matched?.vehicleImageNorth||''),
-      vehicleImageSouth:String(x.vehicleImageSouth||matched?.vehicleImageSouth||'')
-    };
-    const label=railVehicleIconHtml(vehicle)+(kind==='limited'
+    const label=railVehicleIconHtml(arrivalVehicleImages(x))+(kind==='limited'
       ?railServiceBadgeHtml('limited',info.service):railServiceBadgeHtml('local'));
     const origin=railSpecialText(cleanStation(x.origin||'')||'発駅確認中');
     const time=padTime(x.arrival);
