@@ -45,6 +45,11 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
 .service.pair span{display:block;width:100%;height:8px;line-height:8px;overflow:hidden;
   white-space:nowrap}
 .local .service{color:#fff;font-size:10px}
+/* Only a verified southbound route gets a second, visible line. */
+.service.route-via{flex-direction:column;align-items:flex-start;justify-content:center;gap:0;line-height:8px;font-size:8px}
+.service.route-via .service-main,.service.route-via .via-line{display:block;height:8px;line-height:8px;white-space:nowrap}
+.service.route-via .via-line{color:#f2ea28;font-size:9px}
+
 .freight .service,.pass .service{color:#f5e15c}
 .dep{font-size:13px;color:#fff;letter-spacing:-.045em;justify-content:center;
   line-height:16px}
@@ -428,7 +433,14 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
     (lang==='en'?name.en:name.ja).forEach(function(label){
       if(name.pair)nameEl.appendChild(el('span','',label));
       else nameEl.textContent=label;
-    });box.appendChild(nameEl);
+    });
+    var visibleVia=ledRouteVia(row);
+    if(visibleVia&&!row._arrival){
+      nameEl.classList.add('route-via');
+      var mainText=nameEl.textContent||'Local Train';
+      nameEl.replaceChildren(el('span','service-main',mainText),el('span','via-line',visibleVia));
+    }
+    box.appendChild(nameEl);
     box.appendChild(el('span','dep',String(row.time||'--:--').padStart(5,'0')));
     var dest=pass?(lang==='en'?'PASS':'通過'):
       (lang==='en'?englishDest(row.dest):String(row.dest||''));
