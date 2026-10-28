@@ -4485,8 +4485,7 @@
         ? `<span class="air-place-primary">${place} ${firstBadge}${finalBadge}</span><span class="air-arrival-scheduled">到着予定 ${arrivalForDisplay}${arrivalTimeBasis}</span>`
         : `${place} ${firstBadge}${finalBadge}`;
       const airlineName=airServiceHtml(r,p);
-      const aircraftNo=verifiedAircraftRegistration(r);
-      const aircraftNoHtml=aircraftNo?'<span class="air-aircraft-registration" style="display:block;font-size:11px;line-height:1.2;color:#aec3cd;white-space:nowrap">機体記号 '+aircraftNo+'</span>':'';
+
       const airlineKey=/ANA/i.test(p.airline)?'ana':/JAL/i.test(p.airline)?'jal':/IBEX/i.test(p.airline)?'ibex':/Jetstar/i.test(p.airline)?'jetstar':/チェジュ/i.test(p.airline)?'jeju':/エアプサン/i.test(p.airline)?'busan':/エバー/i.test(p.airline)?'eva':'other';
       row.classList.add(`airline-${airlineKey}`);
       const status=r.liveRaw?String(r.liveStatus||r.info||'').trim()
@@ -4532,7 +4531,7 @@
       row.innerHTML=`
         <div class="cell air-service-cell">
           <span class="airline-strip" aria-hidden="true"></span>
-          <div class="service-wrap airline-service-wrap">${airlineName}${aircraftNoHtml}</div>
+          <div class="service-wrap airline-service-wrap">${airlineName}</div>
         </div>
         <div class="cell main air-place">${placeHtml}</div>
         <div class="cell time air-board-time">${timeHtml}</div>
