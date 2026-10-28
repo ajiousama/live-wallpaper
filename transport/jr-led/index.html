@@ -85,6 +85,9 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
 @keyframes jr-led-ribbon{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 .segment.title{color:#f33}.segment.stop{color:#ffed30}
 .segment.connection{color:#64d9ff}.segment.note{color:#ddd}
+.segment.station-current{color:#ffeb31;background:#51200b;animation:arrival-station-blink 1.2s steps(1,end) infinite}
+@keyframes arrival-station-blink{0%,49%{color:#ffeb31;background:#51200b}50%,100%{color:#ffeb31;background:transparent}}
+
 .ticker-note{display:none}
 .arrival-alert{position:absolute;z-index:8;left:77px;top:62px;width:192px;height:16px;
   display:flex;align-items:center;justify-content:flex-start;background:#000;
@@ -299,13 +302,23 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
   }
   // Inbound south corridor station order. This is geographical guidance,
   // never a fabricated train position or an inferred station passage.
+  // Exact station observation only. An interval such as 市坪～松山 is NOT
+  // silently treated as a confirmed arrival at either station.
   function arrivalStationTrail(row){
-    if(direction!=='south'||!row._arrival)return '';
+    if(direction!=='south'||!row._arrival)return [];
     var stations=['南伊予','北伊予','市坪'];
     var origin=String(row.arrivalOrigin||'').replace(/駅$/,'');
     var start=stations.indexOf(origin);
     var trail=start>=0?stations.slice(start):stations;
-    return '松山駅 ←←← '+trail.slice().reverse().join(' ←←← ');
+    var raw=String(row.position||'').trim();
+    var current=/^(南伊予|北伊予|市坪)(?:駅)?(?:付近|構内|停車中)?$/.test(raw)
+      ?raw.replace(/駅|付近|構内|停車中/g,''):'';
+    var parts=[{type:'stop',text:'到着方向・駅順　松山駅'}];
+    trail.slice().reverse().forEach(function(station){
+      parts.push({type:'stop',text:' ←←← '});
+      parts.push({type:station===current?'station-current':'stop',text:station});
+    });
+    return parts;
   }
   function ledArrivalTickerItems(rows,n){
     if(!rows.length)return [{key:'arrivals-none',segments:[{type:'note',
@@ -314,7 +327,7 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
       var origin=row.arrivalOrigin||'出発駅未確認';
       var seg=[];
       var trail=arrivalStationTrail(row);
-      if(trail)seg.push({type:'stop',text:'到着方向・駅順　'+trail});
+      if(trail.length)seg.push.apply(seg,trail);
       seg.push({type:'title',text:row.time+'着　'+row.service+'　'+origin+'発 → 松山着'});
       if(row.terminating)seg.push({type:'note',text:'この列車は松山止まりです'});
       else if(row.arrivalDestination&&row.arrivalDestination!=='松山')
