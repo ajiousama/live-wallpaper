@@ -4414,6 +4414,22 @@
     });
   }
 
+  // Only an explicitly reported registration identifies a special-livery aircraft.
+  // Timetable aircraft type, flight number and airline are NOT sufficient.
+  const SPECIAL_AIRCRAFT_LIVERIES=Object.freeze({
+    JA609A:'ちいかわジェット',
+    JA819A:'ポケモンジェット（赤）'
+  });
+  function confirmedSpecialAircraftGuidance(r){
+    const raw=r.liveRaw||{};
+    const identifiers=[raw.aircraftRegistration,raw.registration,raw.tailNumber,
+      r.aircraftRegistration,r.registration].map(v=>String(v||'').trim().toUpperCase())
+      .filter(v=>/^[A-Z0-9-]{4,12}$/.test(v));
+    const unique=[...new Set(identifiers)];
+    if(unique.length!==1)return '';
+    const name=SPECIAL_AIRCRAFT_LIVERIES[unique[0]];
+    return name?'特別塗装機「'+name+'」で運航':'';
+  }
   function renderAir(rows) {
     const root=$('air-rows');
     const oldScrollPhases=captureTransportScrollPhases(root);
@@ -4492,6 +4508,9 @@
           guidance = guidance && guidance!=='—' ? `${guidance}　｜　${originInfo}` : originInfo;
         }
       }
+      const specialLivery=confirmedSpecialAircraftGuidance(r);
+      if(specialLivery)guidance=guidance&&guidance!=='—'
+        ?guidance+'　｜　'+specialLivery:specialLivery;
       const approx=airportApproximatePosition(r,dep,japanNow());
       if(approx) guidance=guidance && guidance!=='—' ? `${guidance}　｜　${approx}` : approx;
       const guidanceAlert=/遅|欠航|運休|変更|受付|保安|搭乗|まもなく|到着/.test(guidance);
