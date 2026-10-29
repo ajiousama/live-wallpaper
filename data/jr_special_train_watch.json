@@ -1,5 +1,5 @@
 {
-  "checked_at_utc": "2026-10-28T00:32:57.908011+00:00",
+  "checked_at_utc": "2026-10-29T01:00:46.742800+00:00",
   "source_urls": {
     "jr_shikoku_press": "https://www.jr-shikoku.co.jp/03_news/press/info/",
     "jr_shikoku_home": "https://www.jr-shikoku.co.jp/",
@@ -35,16 +35,6 @@
       "source": "jr_shikoku_home",
       "title": "「第５回にし阿波の花火」観覧に便利な臨時列車を運転します",
       "url": "https://www.jr-shikoku.co.jp/03_news/pdf/20261009_20261114_awahanabi_fireworks.pdf"
-    },
-    {
-      "source": "jr_shikoku_home",
-      "title": "～鉄道の日記念～「松山駅わくわく鉄道フェスタ」イベントでの「瀬戸内駅弁フェア」開催について",
-      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/10/16/20261016%2003.pdf"
-    },
-    {
-      "source": "jr_shikoku_home",
-      "title": "冬の臨時列車運転のお知らせ",
-      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/10/22/20261022%2001.pdf"
     },
     {
       "source": "jr_shikoku_press",
@@ -1018,11 +1008,6 @@
     }
   ],
   "new_announcements": [],
-  "fetch_errors": [
-    {
-      "source": "iyonada_calendar",
-      "reason": "503 Server Error: Service Unavailable for url: https://iyonadamonogatari.com/timetable/"
-    }
-  ],
+  "fetch_errors": [],
   "note": "候補発見のみ。松山駅の発着時刻・運転日・経路を確認できるまで列車としては表示しない。"
 }
