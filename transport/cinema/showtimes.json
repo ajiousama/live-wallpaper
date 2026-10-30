@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-10-30T08:33:35.710165+00:00",
+  "generatedAt": "2026-10-30T16:40:46.711599+00:00",
   "timezone": "Asia/Tokyo",
-  "date": "2026-10-30",
+  "date": "2026-10-31",
   "source": "crank-in.net (third-party listing; verify with the theater)",
   "theaters": {
     "shigenobu": {
@@ -9,237 +9,6 @@
       "officialUrl": "https://www.cinemasunshine.co.jp/theater/shigenobu/",
       "listingUrl": "https://www.crank-in.net/theater/search/all/38/70088",
       "shows": [
-        {
-          "date": "2026-10-30",
-          "time": "10:15",
-          "title": "ラブ・アクチュアリー 4Kデジタルリマスター",
-          "durationMinutes": 135,
-          "releaseDate": "2024-12-06"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "10:20",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "10:25",
-          "title": "わたしの知らない子どもたち",
-          "durationMinutes": 150,
-          "releaseDate": "2026-10-16"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "10:30",
-          "title": "映画 ひつじのショーン かぼちゃ畑の怪物！",
-          "durationMinutes": 81,
-          "releaseDate": "2026-10-23"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "10:35",
-          "title": "ママがもうこの世界にいなくても 私の命の日記",
-          "durationMinutes": 124,
-          "releaseDate": "2026-10-02"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "10:40",
-          "title": "RYUJI 竜二",
-          "durationMinutes": 92,
-          "releaseDate": "2026-10-30"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "10:50",
-          "title": "映画ちいかわ 人魚の島のひみつ",
-          "durationMinutes": 99,
-          "releaseDate": "2026-07-24"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "12:30",
-          "title": "映画名探偵プリキュア！不思議な庭と2人の秘密",
-          "durationMinutes": 71,
-          "releaseDate": "2026-09-18"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "12:45",
-          "title": "踊る大捜査線 N.E.W. メトロポリスを駆け抜けろ！",
-          "durationMinutes": 142,
-          "releaseDate": "2026-09-18"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "13:00",
-          "title": "ハート・オブ・ビースト《字幕版》",
-          "durationMinutes": 101,
-          "releaseDate": "2026-09-25"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "13:05",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "13:10",
-          "title": "バイオハザード《吹替版》",
-          "durationMinutes": 94,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "13:15",
-          "title": "影を売る女",
-          "durationMinutes": 98,
-          "releaseDate": "2026-10-16"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "13:30",
-          "title": "映画 ひつじのショーン かぼちゃ畑の怪物！",
-          "durationMinutes": 81,
-          "releaseDate": "2026-10-23"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "15:00",
-          "title": "DIGGER／ディガー《字幕版》",
-          "durationMinutes": 129,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "15:15",
-          "title": "ディスクロージャー・デイ《字幕版》",
-          "durationMinutes": 145,
-          "releaseDate": "2026-10-01"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "15:20",
-          "title": "わたしの知らない子どもたち",
-          "durationMinutes": 150,
-          "releaseDate": "2026-10-16"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "15:30",
-          "title": "ママがもうこの世界にいなくても 私の命の日記",
-          "durationMinutes": 124,
-          "releaseDate": "2026-10-02"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "15:40",
-          "title": "RYUJI 竜二",
-          "durationMinutes": 92,
-          "releaseDate": "2026-10-30"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "15:40",
-          "title": "映画ちいかわ 人魚の島のひみつ",
-          "durationMinutes": 99,
-          "releaseDate": "2026-07-24"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "15:50",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "17:40",
-          "title": "RYUJI 竜二",
-          "durationMinutes": 92,
-          "releaseDate": "2026-10-30"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "17:50",
-          "title": "クジラに落ちた男《字幕版》",
-          "durationMinutes": 106,
-          "releaseDate": "2026-10-16"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "18:00",
-          "title": "バイオハザード《吹替版》",
-          "durationMinutes": 94,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "18:05",
-          "title": "ママがもうこの世界にいなくても 私の命の日記",
-          "durationMinutes": 124,
-          "releaseDate": "2026-10-02"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "18:20",
-          "title": "POCA PON ポカポン",
-          "durationMinutes": 94,
-          "releaseDate": "2026-05-09"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "18:20",
-          "title": "映画ちいかわ 人魚の島のひみつ",
-          "durationMinutes": 99,
-          "releaseDate": "2026-07-24"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "20:00",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "20:10",
-          "title": "踊る大捜査線 N.E.W. メトロポリスを駆け抜けろ！",
-          "durationMinutes": 142,
-          "releaseDate": "2026-09-18"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "20:20",
-          "title": "DIGGER／ディガー《字幕版》",
-          "durationMinutes": 129,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "20:30",
-          "title": "RYUJI 竜二",
-          "durationMinutes": 92,
-          "releaseDate": "2026-10-30"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "20:40",
-          "title": "ママがもうこの世界にいなくても 私の命の日記",
-          "durationMinutes": 124,
-          "releaseDate": "2026-10-02"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "20:45",
-          "title": "バイオハザード《吹替版》",
-          "durationMinutes": 94,
-          "releaseDate": "2026-10-09"
-        },
         {
           "date": "2026-10-31",
           "time": "10:15",
@@ -1166,6 +935,244 @@
         },
         {
           "date": "2026-11-03",
+          "time": "20:45",
+          "title": "バイオハザード《吹替版》",
+          "durationMinutes": 94,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "09:35",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "09:45",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "10:00",
+          "title": "わたしの知らない子どもたち",
+          "durationMinutes": 150,
+          "releaseDate": "2026-10-16"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "10:10",
+          "title": "RYUJI 竜二",
+          "durationMinutes": 92,
+          "releaseDate": "2026-10-30"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "10:15",
+          "title": "ラブ・アクチュアリー 4Kデジタルリマスター",
+          "durationMinutes": 135,
+          "releaseDate": "2024-12-06"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "10:25",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "10:30",
+          "title": "映画ちいかわ 人魚の島のひみつ",
+          "durationMinutes": 99,
+          "releaseDate": "2026-07-24"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "12:20",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "12:25",
+          "title": "踊る大捜査線 N.E.W. メトロポリスを駆け抜けろ！",
+          "durationMinutes": 142,
+          "releaseDate": "2026-09-18"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "12:30",
+          "title": "影を売る女",
+          "durationMinutes": 98,
+          "releaseDate": "2026-10-16"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "12:50",
+          "title": "映画 ひつじのショーン かぼちゃ畑の怪物！",
+          "durationMinutes": 81,
+          "releaseDate": "2026-10-23"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "13:00",
+          "title": "映画名探偵プリキュア！不思議な庭と2人の秘密",
+          "durationMinutes": 71,
+          "releaseDate": "2026-09-18"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "13:05",
+          "title": "ママがもうこの世界にいなくても 私の命の日記",
+          "durationMinutes": 124,
+          "releaseDate": "2026-10-02"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "13:10",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "14:35",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "14:45",
+          "title": "DIGGER／ディガー《字幕版》",
+          "durationMinutes": 129,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "14:50",
+          "title": "わたしの知らない子どもたち",
+          "durationMinutes": 150,
+          "releaseDate": "2026-10-16"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "15:05",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "15:20",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "15:40",
+          "title": "バイオハザード《吹替版》",
+          "durationMinutes": 94,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "15:55",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "17:20",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "17:30",
+          "title": "映画ちいかわ 人魚の島のひみつ",
+          "durationMinutes": 99,
+          "releaseDate": "2026-07-24"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "17:50",
+          "title": "RYUJI 竜二",
+          "durationMinutes": 92,
+          "releaseDate": "2026-10-30"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "17:50",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "18:05",
+          "title": "ママがもうこの世界にいなくても 私の命の日記",
+          "durationMinutes": 124,
+          "releaseDate": "2026-10-02"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "18:10",
+          "title": "クジラに落ちた男《字幕版》",
+          "durationMinutes": 106,
+          "releaseDate": "2026-10-16"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "20:00",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "20:10",
+          "title": "ディスクロージャー・デイ《字幕版》",
+          "durationMinutes": 145,
+          "releaseDate": "2026-10-01"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "20:15",
+          "title": "ママがもうこの世界にいなくても 私の命の日記",
+          "durationMinutes": 124,
+          "releaseDate": "2026-10-02"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "20:20",
+          "title": "RYUJI 竜二",
+          "durationMinutes": 92,
+          "releaseDate": "2026-10-30"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "20:30",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "20:35",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
           "time": "20:45",
           "title": "バイオハザード《吹替版》",
           "durationMinutes": 94,
@@ -2592,6 +2599,363 @@
           "title": "ゴジラ-0.0",
           "durationMinutes": 135,
           "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "08:45",
+          "title": "映画名探偵プリキュア！不思議な庭と2人の秘密",
+          "durationMinutes": 71,
+          "releaseDate": "2026-09-18"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "08:50",
+          "title": "劇場シリーズ【第1部】メイドインアビス 目覚める神秘",
+          "durationMinutes": 76,
+          "releaseDate": "2026-10-23"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "09:00",
+          "title": "バッド・ルーテナント：トウキョウ",
+          "durationMinutes": 108,
+          "releaseDate": "2026-10-23"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "09:00",
+          "title": "劇場版 進撃の巨人 前編～紅蓮の弓矢～ [ScreenX]",
+          "durationMinutes": 119,
+          "releaseDate": "2014-11-22"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "09:10",
+          "title": "踊る大捜査線 N.E.W. メトロポリスを駆け抜けろ！",
+          "durationMinutes": 142,
+          "releaseDate": "2026-09-18"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "09:20",
+          "title": "ガールズ＆パンツァー 最終章 第5話",
+          "durationMinutes": 56,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "09:30",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "09:40",
+          "title": "クレイフェイス《字幕版》 [4DX]",
+          "durationMinutes": 108,
+          "releaseDate": "2026-10-30"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "10:00",
+          "title": "劇場アニメ「青春ブタ野郎はディアフレンドの夢を見ない」",
+          "durationMinutes": 118,
+          "releaseDate": "2026-10-16"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "10:30",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "10:45",
+          "title": "影を売る女",
+          "durationMinutes": 98,
+          "releaseDate": "2026-10-16"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "10:45",
+          "title": "映画ちいかわ 人魚の島のひみつ",
+          "durationMinutes": 99,
+          "releaseDate": "2026-07-24"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "11:15",
+          "title": "うるわしの宵の月",
+          "durationMinutes": 119,
+          "releaseDate": "2026-10-23"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "11:35",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "11:55",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "12:00",
+          "title": "映画「ラブライブ！蓮ノ空女学院スクールアイドルクラブ Bloom Garden Party」 [4DX]",
+          "durationMinutes": 75,
+          "releaseDate": "2026-05-08"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "12:15",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "12:25",
+          "title": "DIGGER／ディガー《字幕版》",
+          "durationMinutes": 129,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "12:50",
+          "title": "バイオハザード《吹替版》",
+          "durationMinutes": 94,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "12:55",
+          "title": "ママがもうこの世界にいなくても 私の命の日記",
+          "durationMinutes": 124,
+          "releaseDate": "2026-10-02"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "13:15",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "13:40",
+          "title": "クレイフェイス《字幕版》",
+          "durationMinutes": 108,
+          "releaseDate": "2026-10-30"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "13:45",
+          "title": "劇場版 進撃の巨人 前編～紅蓮の弓矢～ [4DX]",
+          "durationMinutes": 119,
+          "releaseDate": "2014-11-22"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "14:30",
+          "title": "クレイフェイス《字幕版》 [ScreenX]",
+          "durationMinutes": 108,
+          "releaseDate": "2026-10-30"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "14:40",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "14:50",
+          "title": "劇場シリーズ【第1部】メイドインアビス 目覚める神秘",
+          "durationMinutes": 76,
+          "releaseDate": "2026-10-23"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "15:00",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "15:05",
+          "title": "劇場アニメ「青春ブタ野郎はディアフレンドの夢を見ない」",
+          "durationMinutes": 118,
+          "releaseDate": "2026-10-16"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "15:45",
+          "title": "ママがもうこの世界にいなくても 私の命の日記",
+          "durationMinutes": 124,
+          "releaseDate": "2026-10-02"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "16:00",
+          "title": "劇場版 前橋ウィッチーズ ～魔女見習いのエモエモリーズ～",
+          "durationMinutes": 117,
+          "releaseDate": "2026-10-23"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "16:05",
+          "title": "映画ちいかわ 人魚の島のひみつ",
+          "durationMinutes": 99,
+          "releaseDate": "2026-07-24"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "16:15",
+          "title": "クレイフェイス《字幕版》 [4DX]",
+          "durationMinutes": 108,
+          "releaseDate": "2026-10-30"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "16:35",
+          "title": "ストリートファイター／ザ・ムービー《吹替版》",
+          "durationMinutes": 120,
+          "releaseDate": "2026-10-16"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "16:55",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "17:25",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "17:30",
+          "title": "劇場版 魔法少女まどか☆マギカ〈ワルプルギスの廻天〉",
+          "durationMinutes": 119,
+          "releaseDate": "2026-08-28"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "17:45",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "18:15",
+          "title": "クレイフェイス《字幕版》",
+          "durationMinutes": 108,
+          "releaseDate": "2026-10-30"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "18:20",
+          "title": "ママがもうこの世界にいなくても 私の命の日記",
+          "durationMinutes": 124,
+          "releaseDate": "2026-10-02"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "18:25",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "18:45",
+          "title": "バイオハザード《吹替版》 [4DX]",
+          "durationMinutes": 94,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "19:00",
+          "title": "劇場シリーズ【第1部】メイドインアビス 目覚める神秘",
+          "durationMinutes": 76,
+          "releaseDate": "2026-10-23"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "20:00",
+          "title": "クレイフェイス《字幕版》 [ScreenX]",
+          "durationMinutes": 108,
+          "releaseDate": "2026-10-30"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "20:20",
+          "title": "劇場アニメ「青春ブタ野郎はディアフレンドの夢を見ない」",
+          "durationMinutes": 118,
+          "releaseDate": "2026-10-16"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "20:20",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "20:30",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "20:40",
+          "title": "ディスクロージャー・デイ《字幕版》",
+          "durationMinutes": 145,
+          "releaseDate": "2026-10-01"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "20:45",
+          "title": "うるわしの宵の月",
+          "durationMinutes": 119,
+          "releaseDate": "2026-10-23"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "20:50",
+          "title": "劇場版 進撃の巨人 前編～紅蓮の弓矢～ [4DX]",
+          "durationMinutes": 119,
+          "releaseDate": "2014-11-22"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "20:55",
+          "title": "ママがもうこの世界にいなくても 私の命の日記",
+          "durationMinutes": 124,
+          "releaseDate": "2026-10-02"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "21:10",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
         }
       ],
       "status": "ok"
@@ -2601,300 +2965,6 @@
       "officialUrl": "https://www.cinemasunshine.co.jp/theater/kinuyama/",
       "listingUrl": "https://www.crank-in.net/theater/search/all/38/70073",
       "shows": [
-        {
-          "date": "2026-10-30",
-          "time": "09:20",
-          "title": "ディスクロージャー・デイ《字幕版》",
-          "durationMinutes": 145,
-          "releaseDate": "2026-10-01"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "09:20",
-          "title": "映画名探偵プリキュア！不思議な庭と2人の秘密",
-          "durationMinutes": 71,
-          "releaseDate": "2026-09-18"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "09:30",
-          "title": "DIGGER／ディガー《字幕版》",
-          "durationMinutes": 129,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "09:35",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "09:40",
-          "title": "バッド・ルーテナント：トウキョウ",
-          "durationMinutes": 108,
-          "releaseDate": "2026-10-23"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "09:40",
-          "title": "昨夜は殺れたかも",
-          "durationMinutes": 93,
-          "releaseDate": "2026-10-23"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "09:50",
-          "title": "Michael／マイケル《吹替版》",
-          "durationMinutes": 128,
-          "releaseDate": "2026-06-12"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "09:50",
-          "title": "クジラに落ちた男《字幕版》",
-          "durationMinutes": 106,
-          "releaseDate": "2026-10-16"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "11:05",
-          "title": "うるわしの宵の月",
-          "durationMinutes": 119,
-          "releaseDate": "2026-10-23"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "11:40",
-          "title": "ヤマトよ永遠に REBEL3199 第七章 虹色の輪廻",
-          "durationMinutes": 103,
-          "releaseDate": "2026-10-30"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "11:55",
-          "title": "バイオハザード《吹替版》",
-          "durationMinutes": 94,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "12:10",
-          "title": "ママがもうこの世界にいなくても 私の命の日記",
-          "durationMinutes": 124,
-          "releaseDate": "2026-10-02"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "12:15",
-          "title": "ストリートファイター／ザ・ムービー《吹替版》",
-          "durationMinutes": 120,
-          "releaseDate": "2026-10-16"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "12:20",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "13:25",
-          "title": "我々は宇宙人",
-          "durationMinutes": 118,
-          "releaseDate": "2026-09-25"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "13:35",
-          "title": "ママがもうこの世界にいなくても 私の命の日記",
-          "durationMinutes": 124,
-          "releaseDate": "2026-10-02"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "13:50",
-          "title": "映画ちいかわ 人魚の島のひみつ",
-          "durationMinutes": 99,
-          "releaseDate": "2026-07-24"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "14:05",
-          "title": "バッド・ルーテナント：トウキョウ",
-          "durationMinutes": 108,
-          "releaseDate": "2026-10-23"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "14:45",
-          "title": "うるわしの宵の月",
-          "durationMinutes": 119,
-          "releaseDate": "2026-10-23"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "14:50",
-          "title": "ママがもうこの世界にいなくても 私の命の日記",
-          "durationMinutes": 124,
-          "releaseDate": "2026-10-02"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "15:05",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "15:55",
-          "title": "白鳥とコウモリ",
-          "durationMinutes": 145,
-          "releaseDate": "2026-09-04"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "16:00",
-          "title": "ヤマトよ永遠に REBEL3199 第七章 虹色の輪廻",
-          "durationMinutes": 103,
-          "releaseDate": "2026-10-30"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "16:10",
-          "title": "映画ちいかわ 人魚の島のひみつ",
-          "durationMinutes": 99,
-          "releaseDate": "2026-07-24"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "16:20",
-          "title": "バイオハザード《字幕版》",
-          "durationMinutes": 94,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "16:50",
-          "title": "ガールズ＆パンツァー 最終章 第5話",
-          "durationMinutes": 56,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "17:15",
-          "title": "踊る大捜査線 N.E.W. メトロポリスを駆け抜けろ！",
-          "durationMinutes": 142,
-          "releaseDate": "2026-09-18"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "17:25",
-          "title": "ママがもうこの世界にいなくても 私の命の日記",
-          "durationMinutes": 124,
-          "releaseDate": "2026-10-02"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "17:50",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "18:10",
-          "title": "バイオハザード《字幕版》 [IMAXレーザー]",
-          "durationMinutes": 94,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "18:10",
-          "title": "昨夜は殺れたかも",
-          "durationMinutes": 93,
-          "releaseDate": "2026-10-23"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "18:15",
-          "title": "劇場版 魔法少女まどか☆マギカ〈ワルプルギスの廻天〉",
-          "durationMinutes": 119,
-          "releaseDate": "2026-08-28"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "18:20",
-          "title": "うるわしの宵の月",
-          "durationMinutes": 119,
-          "releaseDate": "2026-10-23"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "18:25",
-          "title": "ママがもうこの世界にいなくても 私の命の日記",
-          "durationMinutes": 124,
-          "releaseDate": "2026-10-02"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "20:05",
-          "title": "ストリートファイター／ザ・ムービー《吹替版》",
-          "durationMinutes": 120,
-          "releaseDate": "2026-10-16"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "20:05",
-          "title": "ヤマトよ永遠に REBEL3199 第七章 虹色の輪廻",
-          "durationMinutes": 103,
-          "releaseDate": "2026-10-30"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "20:15",
-          "title": "オデュッセイア《字幕版》 [IMAXレーザー]",
-          "durationMinutes": 172,
-          "releaseDate": "2026-09-11"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "20:15",
-          "title": "ママがもうこの世界にいなくても 私の命の日記",
-          "durationMinutes": 124,
-          "releaseDate": "2026-10-02"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "20:35",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "20:45",
-          "title": "映画ちいかわ 人魚の島のひみつ",
-          "durationMinutes": 99,
-          "releaseDate": "2026-07-24"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "20:50",
-          "title": "うるわしの宵の月",
-          "durationMinutes": 119,
-          "releaseDate": "2026-10-23"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "21:00",
-          "title": "バイオハザード《吹替版》",
-          "durationMinutes": 94,
-          "releaseDate": "2026-10-09"
-        },
         {
           "date": "2026-10-31",
           "time": "09:20",
@@ -4063,6 +4133,321 @@
           "title": "ゴジラ-0.0",
           "durationMinutes": 135,
           "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "09:20",
+          "title": "DIGGER／ディガー《字幕版》",
+          "durationMinutes": 129,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "09:20",
+          "title": "うるわしの宵の月",
+          "durationMinutes": 119,
+          "releaseDate": "2026-10-23"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "09:20",
+          "title": "ディスクロージャー・デイ《字幕版》",
+          "durationMinutes": 145,
+          "releaseDate": "2026-10-01"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "09:30",
+          "title": "ゴジラ-0.0 [IMAXレーザー]",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "09:40",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "09:50",
+          "title": "映画ちいかわ 人魚の島のひみつ",
+          "durationMinutes": 99,
+          "releaseDate": "2026-07-24"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "09:50",
+          "title": "映画名探偵プリキュア！不思議な庭と2人の秘密",
+          "durationMinutes": 71,
+          "releaseDate": "2026-09-18"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "10:00",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "10:30",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "11:35",
+          "title": "バッド・ルーテナント：トウキョウ",
+          "durationMinutes": 108,
+          "releaseDate": "2026-10-23"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "11:50",
+          "title": "我々は宇宙人",
+          "durationMinutes": 118,
+          "releaseDate": "2026-09-25"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "12:00",
+          "title": "ママがもうこの世界にいなくても 私の命の日記",
+          "durationMinutes": 124,
+          "releaseDate": "2026-10-02"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "12:00",
+          "title": "ヤマトよ永遠に REBEL3199 第七章 虹色の輪廻",
+          "durationMinutes": 103,
+          "releaseDate": "2026-10-30"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "12:15",
+          "title": "うるわしの宵の月",
+          "durationMinutes": 119,
+          "releaseDate": "2026-10-23"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "12:15",
+          "title": "ゴジラ-0.0 [IMAXレーザー]",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "12:25",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "12:45",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "13:15",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "14:10",
+          "title": "バイオハザード《吹替版》",
+          "durationMinutes": 94,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "14:20",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "14:35",
+          "title": "ママがもうこの世界にいなくても 私の命の日記",
+          "durationMinutes": 124,
+          "releaseDate": "2026-10-02"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "14:45",
+          "title": "踊る大捜査線 N.E.W. メトロポリスを駆け抜けろ！",
+          "durationMinutes": 142,
+          "releaseDate": "2026-09-18"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "15:00",
+          "title": "ゴジラ-0.0 [IMAXレーザー]",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "15:10",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "15:30",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "16:10",
+          "title": "クジラに落ちた男《字幕版》",
+          "durationMinutes": 106,
+          "releaseDate": "2026-10-16"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "16:15",
+          "title": "映画ちいかわ 人魚の島のひみつ",
+          "durationMinutes": 99,
+          "releaseDate": "2026-07-24"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "17:05",
+          "title": "バイオハザード《字幕版》",
+          "durationMinutes": 94,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "17:10",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "17:35",
+          "title": "うるわしの宵の月",
+          "durationMinutes": 119,
+          "releaseDate": "2026-10-23"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "17:50",
+          "title": "ゴジラ-0.0 [IMAXレーザー]",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "17:55",
+          "title": "ママがもうこの世界にいなくても 私の命の日記",
+          "durationMinutes": 124,
+          "releaseDate": "2026-10-02"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "18:15",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "18:15",
+          "title": "ストリートファイター／ザ・ムービー《吹替版》",
+          "durationMinutes": 120,
+          "releaseDate": "2026-10-16"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "18:25",
+          "title": "昨夜は殺れたかも",
+          "durationMinutes": 93,
+          "releaseDate": "2026-10-23"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "19:20",
+          "title": "ガールズ＆パンツァー 最終章 第5話",
+          "durationMinutes": 56,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "20:00",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "20:15",
+          "title": "ママがもうこの世界にいなくても 私の命の日記",
+          "durationMinutes": 124,
+          "releaseDate": "2026-10-02"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "20:20",
+          "title": "劇場版 魔法少女まどか☆マギカ〈ワルプルギスの廻天〉",
+          "durationMinutes": 119,
+          "releaseDate": "2026-08-28"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "20:25",
+          "title": "ヤマトよ永遠に REBEL3199 第七章 虹色の輪廻",
+          "durationMinutes": 103,
+          "releaseDate": "2026-10-30"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "20:30",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "20:35",
+          "title": "ゴジラ-0.0 [IMAXレーザー]",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "20:45",
+          "title": "Michael／マイケル《吹替版》",
+          "durationMinutes": 128,
+          "releaseDate": "2026-06-12"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "20:45",
+          "title": "バイオハザード《吹替版》",
+          "durationMinutes": 94,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "21:00",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
         }
       ],
       "status": "ok"
@@ -4073,55 +4458,6 @@
       "listingUrl": "https://www.crank-in.net/theater/search/all/38/70097",
       "secondaryListingUrl": "https://eiga.com/theater/38/380101/6058/",
       "shows": [
-        {
-          "date": "2026-10-30",
-          "time": "10:00",
-          "title": "この場所",
-          "durationMinutes": 86,
-          "releaseDate": "2026-02-28"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "11:40",
-          "title": "ハッシュ！",
-          "durationMinutes": 135,
-          "releaseDate": null
-        },
-        {
-          "date": "2026-10-30",
-          "time": "11:40",
-          "title": "ハッシュ！〈4Kリマスター版〉",
-          "durationMinutes": 135,
-          "releaseDate": "2026-07-24"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "14:10",
-          "title": "ぐるりのこと。",
-          "durationMinutes": 140,
-          "releaseDate": null
-        },
-        {
-          "date": "2026-10-30",
-          "time": "14:10",
-          "title": "ぐるりのこと。〈4Kリマスター版〉",
-          "durationMinutes": 140,
-          "releaseDate": "2026-07-24"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "16:45",
-          "title": "光射す教室―足型をはめられた子どもたち―",
-          "durationMinutes": null,
-          "releaseDate": null
-        },
-        {
-          "date": "2026-10-30",
-          "time": "18:30",
-          "title": "もしもの愛",
-          "durationMinutes": 164,
-          "releaseDate": null
-        },
         {
           "date": "2026-10-31",
           "time": "10:50",
@@ -4226,6 +4562,41 @@
           "title": "身も心も",
           "durationMinutes": 126,
           "releaseDate": null
+        },
+        {
+          "date": "2026-11-04",
+          "time": "11:10",
+          "title": "MR.ジレンマン 色情狂い",
+          "durationMinutes": 70,
+          "releaseDate": null
+        },
+        {
+          "date": "2026-11-04",
+          "time": "13:00",
+          "title": "新宿乱れ街 いくまで待って",
+          "durationMinutes": 82,
+          "releaseDate": null
+        },
+        {
+          "date": "2026-11-04",
+          "time": "14:50",
+          "title": "赫い髪の女",
+          "durationMinutes": 73,
+          "releaseDate": null
+        },
+        {
+          "date": "2026-11-04",
+          "time": "16:30",
+          "title": "嗚呼!おんなたち 猥歌",
+          "durationMinutes": 83,
+          "releaseDate": null
+        },
+        {
+          "date": "2026-11-04",
+          "time": "18:20",
+          "title": "母娘監禁 牝<めす>",
+          "durationMinutes": 75,
+          "releaseDate": null
         }
       ],
       "status": "ok"
@@ -4235,272 +4606,6 @@
       "officialUrl": "https://theater.aeoncinema.com/theaters/imabari/",
       "listingUrl": "https://www.crank-in.net/theater/search/all/38/70121",
       "shows": [
-        {
-          "date": "2026-10-30",
-          "time": "09:15",
-          "title": "映画名探偵プリキュア！不思議な庭と2人の秘密",
-          "durationMinutes": 71,
-          "releaseDate": "2026-09-18"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "09:20",
-          "title": "ママがもうこの世界にいなくても 私の命の日記",
-          "durationMinutes": 124,
-          "releaseDate": "2026-10-02"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "09:25",
-          "title": "バッド・ルーテナント：トウキョウ",
-          "durationMinutes": 108,
-          "releaseDate": "2026-10-23"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "09:25",
-          "title": "映画 ひつじのショーン かぼちゃ畑の怪物！《吹替版》",
-          "durationMinutes": 81,
-          "releaseDate": "2026-10-23"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "09:30",
-          "title": "うるわしの宵の月",
-          "durationMinutes": 119,
-          "releaseDate": "2026-10-23"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "09:30",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "09:35",
-          "title": "影を売る女",
-          "durationMinutes": 98,
-          "releaseDate": "2026-10-16"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "11:00",
-          "title": "RYUJI 竜二",
-          "durationMinutes": 92,
-          "releaseDate": "2026-10-30"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "11:20",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "11:45",
-          "title": "映画ちいかわ 人魚の島のひみつ",
-          "durationMinutes": 99,
-          "releaseDate": "2026-07-24"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "11:55",
-          "title": "ママがもうこの世界にいなくても 私の命の日記",
-          "durationMinutes": 124,
-          "releaseDate": "2026-10-02"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "12:00",
-          "title": "映画 ひつじのショーン かぼちゃ畑の怪物！《吹替版》",
-          "durationMinutes": 81,
-          "releaseDate": "2026-10-23"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "12:15",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "13:05",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "13:50",
-          "title": "DIGGER／ディガー《吹替版》",
-          "durationMinutes": 129,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "13:55",
-          "title": "影を売る女",
-          "durationMinutes": 98,
-          "releaseDate": "2026-10-16"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "14:05",
-          "title": "踊る大捜査線 N.E.W. メトロポリスを駆け抜けろ！",
-          "durationMinutes": 142,
-          "releaseDate": "2026-09-18"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "14:30",
-          "title": "ママがもうこの世界にいなくても 私の命の日記",
-          "durationMinutes": 124,
-          "releaseDate": "2026-10-02"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "15:00",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "15:50",
-          "title": "RYUJI 竜二",
-          "durationMinutes": 92,
-          "releaseDate": "2026-10-30"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "15:50",
-          "title": "うるわしの宵の月",
-          "durationMinutes": 119,
-          "releaseDate": "2026-10-23"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "16:10",
-          "title": "バイオハザード《吹替版》",
-          "durationMinutes": 94,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "16:30",
-          "title": "ストリートファイター／ザ・ムービー《吹替版》",
-          "durationMinutes": 120,
-          "releaseDate": "2026-10-16"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "17:00",
-          "title": "映画 ひつじのショーン かぼちゃ畑の怪物！《吹替版》",
-          "durationMinutes": 81,
-          "releaseDate": "2026-10-23"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "17:05",
-          "title": "クジラに落ちた男《字幕版》",
-          "durationMinutes": 106,
-          "releaseDate": "2026-10-16"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "17:45",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "18:15",
-          "title": "映画ちいかわ 人魚の島のひみつ",
-          "durationMinutes": 99,
-          "releaseDate": "2026-07-24"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "18:20",
-          "title": "うるわしの宵の月",
-          "durationMinutes": 119,
-          "releaseDate": "2026-10-23"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "18:50",
-          "title": "影を売る女",
-          "durationMinutes": 98,
-          "releaseDate": "2026-10-16"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "19:00",
-          "title": "RYUJI 竜二",
-          "durationMinutes": 92,
-          "releaseDate": "2026-10-30"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "19:20",
-          "title": "バイオハザード《字幕版》",
-          "durationMinutes": 94,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "20:25",
-          "title": "バッド・ルーテナント：トウキョウ",
-          "durationMinutes": 108,
-          "releaseDate": "2026-10-23"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "20:30",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "20:45",
-          "title": "うるわしの宵の月",
-          "durationMinutes": 119,
-          "releaseDate": "2026-10-23"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "20:55",
-          "title": "ディスクロージャー・デイ《字幕版》",
-          "durationMinutes": 145,
-          "releaseDate": "2026-10-01"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "21:00",
-          "title": "Michael／マイケル《吹替版》",
-          "durationMinutes": 128,
-          "releaseDate": "2026-06-12"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "21:20",
-          "title": "ママがもうこの世界にいなくても 私の命の日記",
-          "durationMinutes": 124,
-          "releaseDate": "2026-10-02"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "21:35",
-          "title": "RYUJI 竜二",
-          "durationMinutes": 92,
-          "releaseDate": "2026-10-30"
-        },
         {
           "date": "2026-10-31",
           "time": "09:20",
@@ -5543,6 +5648,265 @@
           "title": "RYUJI 竜二",
           "durationMinutes": 92,
           "releaseDate": "2026-10-30"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "09:25",
+          "title": "映画 ひつじのショーン かぼちゃ畑の怪物！《吹替版》",
+          "durationMinutes": 81,
+          "releaseDate": "2026-10-23"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "09:30",
+          "title": "うるわしの宵の月",
+          "durationMinutes": 119,
+          "releaseDate": "2026-10-23"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "09:30",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "09:40",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "09:45",
+          "title": "バッド・ルーテナント：トウキョウ",
+          "durationMinutes": 108,
+          "releaseDate": "2026-10-23"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "09:45",
+          "title": "影を売る女",
+          "durationMinutes": 98,
+          "releaseDate": "2026-10-16"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "10:10",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "11:15",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "11:55",
+          "title": "映画 ひつじのショーン かぼちゃ畑の怪物！《吹替版》",
+          "durationMinutes": 81,
+          "releaseDate": "2026-10-23"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "12:00",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "12:00",
+          "title": "ママがもうこの世界にいなくても 私の命の日記",
+          "durationMinutes": 124,
+          "releaseDate": "2026-10-02"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "12:15",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "12:30",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "13:00",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "13:50",
+          "title": "影を売る女",
+          "durationMinutes": 98,
+          "releaseDate": "2026-10-16"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "14:05",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "14:35",
+          "title": "うるわしの宵の月",
+          "durationMinutes": 119,
+          "releaseDate": "2026-10-23"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "14:50",
+          "title": "RYUJI 竜二",
+          "durationMinutes": 92,
+          "releaseDate": "2026-10-30"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "15:00",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "15:20",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "15:50",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "15:55",
+          "title": "影を売る女",
+          "durationMinutes": 98,
+          "releaseDate": "2026-10-16"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "16:50",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "16:50",
+          "title": "ストリートファイター／ザ・ムービー《吹替版》",
+          "durationMinutes": 120,
+          "releaseDate": "2026-10-16"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "17:05",
+          "title": "ママがもうこの世界にいなくても 私の命の日記",
+          "durationMinutes": 124,
+          "releaseDate": "2026-10-02"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "17:45",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "18:05",
+          "title": "バイオハザード《吹替版》",
+          "durationMinutes": 94,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "18:10",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "18:40",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "19:40",
+          "title": "映画ちいかわ 人魚の島のひみつ",
+          "durationMinutes": 99,
+          "releaseDate": "2026-07-24"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "20:10",
+          "title": "踊る大捜査線 N.E.W. メトロポリスを駆け抜けろ！",
+          "durationMinutes": 142,
+          "releaseDate": "2026-09-18"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "20:30",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "21:00",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "21:20",
+          "title": "DIGGER／ディガー《吹替版》",
+          "durationMinutes": 129,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "21:30",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "21:40",
+          "title": "うるわしの宵の月",
+          "durationMinutes": 119,
+          "releaseDate": "2026-10-23"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "21:50",
+          "title": "RYUJI 竜二",
+          "durationMinutes": 92,
+          "releaseDate": "2026-10-30"
         }
       ],
       "status": "ok"
@@ -5552,258 +5916,6 @@
       "officialUrl": "https://www.tohotheater.jp/theater/048/",
       "listingUrl": "https://www.crank-in.net/theater/search/all/38/70086",
       "shows": [
-        {
-          "date": "2026-10-30",
-          "time": "09:15",
-          "title": "映画名探偵プリキュア！不思議な庭と2人の秘密",
-          "durationMinutes": 71,
-          "releaseDate": "2026-09-18"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "09:20",
-          "title": "ハート・オブ・ビースト《字幕版》",
-          "durationMinutes": 101,
-          "releaseDate": "2026-09-25"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "09:25",
-          "title": "劇場版 魔法少女まどか☆マギカ〈ワルプルギスの廻天〉",
-          "durationMinutes": 119,
-          "releaseDate": "2026-08-28"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "09:25",
-          "title": "白鳥とコウモリ",
-          "durationMinutes": 145,
-          "releaseDate": "2026-09-04"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "09:30",
-          "title": "ママがもうこの世界にいなくても 私の命の日記",
-          "durationMinutes": 124,
-          "releaseDate": "2026-10-02"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "09:45",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "10:05",
-          "title": "うるわしの宵の月",
-          "durationMinutes": 119,
-          "releaseDate": "2026-10-23"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "11:10",
-          "title": "バイオハザード《吹替版》",
-          "durationMinutes": 94,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "11:40",
-          "title": "バッド・ルーテナント：トウキョウ",
-          "durationMinutes": 108,
-          "releaseDate": "2026-10-23"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "12:10",
-          "title": "踊る大捜査線 N.E.W. メトロポリスを駆け抜けろ！",
-          "durationMinutes": 142,
-          "releaseDate": "2026-09-18"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "12:15",
-          "title": "ママがもうこの世界にいなくても 私の命の日記",
-          "durationMinutes": 124,
-          "releaseDate": "2026-10-02"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "12:30",
-          "title": "映画ちいかわ 人魚の島のひみつ",
-          "durationMinutes": 99,
-          "releaseDate": "2026-07-24"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "12:40",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "12:45",
-          "title": "うるわしの宵の月",
-          "durationMinutes": 119,
-          "releaseDate": "2026-10-23"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "14:10",
-          "title": "mentor",
-          "durationMinutes": 115,
-          "releaseDate": "2026-10-16"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "14:45",
-          "title": "映画ちいかわ 人魚の島のひみつ",
-          "durationMinutes": 99,
-          "releaseDate": "2026-07-24"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "15:00",
-          "title": "ママがもうこの世界にいなくても 私の命の日記",
-          "durationMinutes": 124,
-          "releaseDate": "2026-10-02"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "15:10",
-          "title": "DIGGER／ディガー《吹替版》",
-          "durationMinutes": 129,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "15:25",
-          "title": "うるわしの宵の月",
-          "durationMinutes": 119,
-          "releaseDate": "2026-10-23"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "15:35",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "15:50",
-          "title": "Michael／マイケル《吹替版》",
-          "durationMinutes": 128,
-          "releaseDate": "2026-06-12"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "16:40",
-          "title": "バイオハザード《吹替版》",
-          "durationMinutes": 94,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "17:00",
-          "title": "バッド・ルーテナント：トウキョウ",
-          "durationMinutes": 108,
-          "releaseDate": "2026-10-23"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "17:45",
-          "title": "ママがもうこの世界にいなくても 私の命の日記",
-          "durationMinutes": 124,
-          "releaseDate": "2026-10-02"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "17:55",
-          "title": "オデュッセイア《字幕版》",
-          "durationMinutes": 172,
-          "releaseDate": "2026-09-11"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "18:05",
-          "title": "うるわしの宵の月",
-          "durationMinutes": 119,
-          "releaseDate": "2026-10-23"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "18:35",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "18:40",
-          "title": "ストリートファイター／ザ・ムービー《吹替版》",
-          "durationMinutes": 120,
-          "releaseDate": "2026-10-16"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "18:50",
-          "title": "mentor",
-          "durationMinutes": 115,
-          "releaseDate": "2026-10-16"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "19:30",
-          "title": "映画ちいかわ 人魚の島のひみつ",
-          "durationMinutes": 99,
-          "releaseDate": "2026-07-24"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "20:30",
-          "title": "ママがもうこの世界にいなくても 私の命の日記",
-          "durationMinutes": 124,
-          "releaseDate": "2026-10-02"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "20:45",
-          "title": "うるわしの宵の月",
-          "durationMinutes": 119,
-          "releaseDate": "2026-10-23"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "21:20",
-          "title": "バッド・ルーテナント：トウキョウ",
-          "durationMinutes": 108,
-          "releaseDate": "2026-10-23"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "21:25",
-          "title": "ディスクロージャー・デイ《字幕版》",
-          "durationMinutes": 145,
-          "releaseDate": "2026-10-01"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "21:30",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-10-30",
-          "time": "21:45",
-          "title": "バイオハザード《字幕版》",
-          "durationMinutes": 94,
-          "releaseDate": "2026-10-09"
-        },
         {
           "date": "2026-10-31",
           "time": "09:15",
@@ -6800,6 +6912,272 @@
         },
         {
           "date": "2026-11-03",
+          "time": "21:55",
+          "title": "バイオハザード《字幕版》",
+          "durationMinutes": 94,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "08:20",
+          "title": "映画名探偵プリキュア！不思議な庭と2人の秘密",
+          "durationMinutes": 71,
+          "releaseDate": "2026-09-18"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "08:25",
+          "title": "DIGGER／ディガー《吹替版》",
+          "durationMinutes": 129,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "08:30",
+          "title": "バッド・ルーテナント：トウキョウ",
+          "durationMinutes": 108,
+          "releaseDate": "2026-10-23"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "08:40",
+          "title": "ストリートファイター／ザ・ムービー《吹替版》",
+          "durationMinutes": 120,
+          "releaseDate": "2026-10-16"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "08:50",
+          "title": "踊る大捜査線 N.E.W. メトロポリスを駆け抜けろ！",
+          "durationMinutes": 142,
+          "releaseDate": "2026-09-18"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "09:00",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "09:30",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "10:15",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "11:00",
+          "title": "ママがもうこの世界にいなくても 私の命の日記",
+          "durationMinutes": 124,
+          "releaseDate": "2026-10-02"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "11:10",
+          "title": "映画ちいかわ 人魚の島のひみつ",
+          "durationMinutes": 99,
+          "releaseDate": "2026-07-24"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "11:20",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "11:50",
+          "title": "うるわしの宵の月",
+          "durationMinutes": 119,
+          "releaseDate": "2026-10-23"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "12:00",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "12:30",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "13:10",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "13:25",
+          "title": "バイオハザード《吹替版》",
+          "durationMinutes": 94,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "13:40",
+          "title": "ママがもうこの世界にいなくても 私の命の日記",
+          "durationMinutes": 124,
+          "releaseDate": "2026-10-02"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "14:20",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "14:30",
+          "title": "mentor",
+          "durationMinutes": 115,
+          "releaseDate": "2026-10-16"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "15:00",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "15:30",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "15:40",
+          "title": "劇場版 魔法少女まどか☆マギカ〈ワルプルギスの廻天〉",
+          "durationMinutes": 119,
+          "releaseDate": "2026-08-28"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "16:10",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "16:20",
+          "title": "ママがもうこの世界にいなくても 私の命の日記",
+          "durationMinutes": 124,
+          "releaseDate": "2026-10-02"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "17:00",
+          "title": "映画ちいかわ 人魚の島のひみつ",
+          "durationMinutes": 99,
+          "releaseDate": "2026-07-24"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "17:20",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "18:00",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "18:25",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "18:30",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "19:05",
+          "title": "ママがもうこの世界にいなくても 私の命の日記",
+          "durationMinutes": 124,
+          "releaseDate": "2026-10-02"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "19:15",
+          "title": "うるわしの宵の月",
+          "durationMinutes": 119,
+          "releaseDate": "2026-10-23"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "20:20",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "21:00",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "21:25",
+          "title": "ディスクロージャー・デイ《字幕版》",
+          "durationMinutes": 145,
+          "releaseDate": "2026-10-01"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "21:30",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "21:35",
+          "title": "Michael／マイケル《字幕版》",
+          "durationMinutes": 128,
+          "releaseDate": "2026-06-12"
+        },
+        {
+          "date": "2026-11-04",
+          "time": "21:45",
+          "title": "ママがもうこの世界にいなくても 私の命の日記",
+          "durationMinutes": 124,
+          "releaseDate": "2026-10-02"
+        },
+        {
+          "date": "2026-11-04",
           "time": "21:55",
           "title": "バイオハザード《字幕版》",
           "durationMinutes": 94,
