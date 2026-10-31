@@ -4160,6 +4160,74 @@
     root.appendChild(row);
   }
 
+  // New JR panorama strip: spans the entire pair of LEDs, NOT their
+  // second-line scrolling areas. Use only actual upcoming timeline data.
+  function updateRailPanoramaTicker(allUpcoming,now) {
+    const container=document.getElementById('jr-panorama-ticker');
+    const track=document.getElementById('jr-panorama-track');
+    if(!container||!track)return;
+    const side=currentRailDir()==='south'?'宇和島方面':'今治方面';
+    const events=allUpcoming.filter(item=>Number.isFinite(item._sortMinutes))
+      .slice(0,6).map(item=>{
+        const x=item.data||{};
+        const minutes=((Math.floor(item._sortMinutes)%1440)+1440)%1440;
+        const time=String(Math.floor(minutes/60)).padStart(2,'0')+':'+
+          String(minutes%60).padStart(2,'0');
+        if(item._diagramArrival){
+          const name=x.trainClass==='limited'
+            ? '特急 '+railLiveTrainLabel(x).service:'普通列車';
+          const origin=cleanStation(x.origin||'');
+          return time+'　'+name+'　'+(origin?origin+'発 → ':'')+'松山着';
+        }
+        if(item._terminalArrival){
+          const name=String(x.serviceName||x.service||'列車').trim();
+          return time+'　'+name+'　松山到着予定';
+        }
+        if(item._deadhead){
+          const from=cleanStation(x.origin||'');
+          return time+'　回送列車　'+(from?from+'発 → ':'')+'松山到着予定';
+        }
+        if(item._freight){
+          return time+'　貨物列車　松山通過予定'+
+            (x.timetableOnly?'（当日ダイヤ・運行未確認）':'');
+        }
+        if(item._special){
+          const kind=x.kind==='deadhead'?'回送列車':
+            x.kind==='test'?'試運転列車':x.kind==='extra'?'臨時列車':'列車';
+          const action=x.stationEvent==='pass'?'通過予定':
+            x.stationEvent==='arrival'?'到着予定':
+            x.stationEvent==='departure'?'発車予定':'発着予定';
+          return time+'　'+kind+'　松山'+action;
+        }
+        const name=x.kind==='limited'
+          ? '特急 '+railPassengerServiceName(x.service||'特急',x.info||'')
+          : x.kind==='local'?'普通列車':String(x.service||'列車');
+        const dest=cleanStation(x.dest||'');
+        return time+'　'+name+'　'+(dest?dest+'行 ':'')+'松山発';
+      });
+    const message=events.length
+      ? 'JR松山駅　'+side+'　◆　'+events.join('　◆　')
+      : 'JR松山駅　'+side+'　列車の発着情報を確認しています';
+    const key=now.iso+'|'+side+'|'+message;
+    if(container.dataset.key===key)return; // no scroll reset on live polls
+    container.dataset.key=key;
+    track.classList.remove('is-looping');
+    track.replaceChildren();
+    for(let i=0;i<2;i++){
+      const copy=document.createElement('span');
+      copy.className='jr-panorama-copy';
+      copy.textContent=message;
+      if(i)copy.setAttribute('aria-hidden','true');
+      track.appendChild(copy);
+    }
+    const first=track.firstElementChild;
+    const distance=first?.scrollWidth||message.length*17+90;
+    const seconds=Math.max(25,Math.min(300,distance/40));
+    track.style.setProperty('--jr-panorama-duration',seconds.toFixed(2)+'s');
+    void track.offsetWidth;
+    track.classList.add('is-looping');
+  }
+
   function renderRail(rows) {
     const visibleRoot = $('rail-rows');
     const root=document.createElement('div');
@@ -4307,6 +4375,7 @@
     // Never reserve priority slots by train category: earlier times always
     // come before later times, including specials/terminal arrivals.
     const allUpcoming=[...candidates,...untimedLiveExtras];
+    updateRailPanoramaTicker(allUpcoming,now);
     const loop=railLoopStates[currentRailDir()];
     loop.total=1;
     loop.page=0; // Show only the next visible services; no forced paging.
