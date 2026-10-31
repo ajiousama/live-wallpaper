@@ -4160,12 +4160,95 @@
     root.appendChild(row);
   }
 
+  // The identical approach warning was previously drawn inside BOTH LED
+  // iframes. Use the exact live-position + TODAY-diagram conditions here and
+  // present the warning once in the attached, full-width panorama strip.
+  function railPanoramaConfirmedApproach(now){
+    if(!FREEWIFI_TV||workplaceTestClock.hasOverride()||!jrPositionFeedFresh()||
+       !approachLive.ok||approachLive.ichitsubo?.ok!==true||
+       String(approachLive.generatedAtJst||'').slice(0,10)!==now.iso)return null;
+    const side=currentRailDir();
+    const alerts=Array.isArray(approachLive.ichitsubo?.matsuyamaInboundArrivalAlerts)
+      ?approachLive.ichitsubo.matsuyamaInboundArrivalAlerts:[];
+    const inbound=Array.isArray(approachLive.ichitsubo?.matsuyamaPassengerArrivals)
+      ?approachLive.ichitsubo.matsuyamaPassengerArrivals:[];
+    const sec=Number(now.sec)||0;
+    return alerts.filter(x=>
+      x?.confirmedApproach===true&&
+      x.source==='live_position_and_today_diagram'&&
+      x.side===side&&jrPositionUsable(x.position)&&
+      /^\\d{1,2}:\\d{2}$/.test(String(x.arrival||''))&&
+      /^\\d{1,5}[MD]$/i.test(String(x.trainNum||''))
+    ).map(x=>{
+      const delay=Number.isFinite(Number(x.delayMinutes))
+        ?Math.max(0,Math.min(60,Number(x.delayMinutes))):0;
+      const remaining=(toMinutes(x.arrival)+delay-now.minutes)*60-sec;
+      return {x,remaining};
+    }).filter(v=>v.remaining>0&&v.remaining<=240)
+      .sort((a,b)=>a.remaining-b.remaining)
+      .map(({x})=>{
+        // Exact inbound train-number, date/side and Matsuyama arrival time;
+        // never use a nearby departure's identity for this arrival notice.
+        const candidates=inbound.filter(r=>
+          r?.source==='today_diagram'&&r.side===side&&
+          String(r.trainNum||'')===String(x.trainNum||'')&&
+          padTime(r.arrival)===padTime(x.arrival));
+        const matched=candidates.length===1?candidates[0]:null;
+        const trainClass=matched?.trainClass||x.trainClass||'';
+        const label=railLiveTrainLabel({trainNum:x.trainNum,trainClass});
+        const name=trainClass==='limited'?(label.kind==='limited'
+          ? '特急 '+label.service:'特急列車'):
+          trainClass==='local'?'普通列車':'列車';
+        const origin=cleanStation(matched?.origin||x.origin||'');
+        return {trainNum:String(x.trainNum),time:padTime(x.arrival),name,
+          origin:origin&&origin!=='松山'?origin:''};
+      })[0]||null;
+  }
+  function syncRailPanoramaApproachAlert(container,now){
+    const node=document.getElementById('jr-panorama-alert');
+    if(!node)return;
+    const active=railPanoramaConfirmedApproach(now);
+    const key=active?[now.iso,currentRailDir(),active.trainNum,active.time,
+      active.name,active.origin].join('|'):'';
+    if(!active){
+      if(container.dataset.alertKey){
+        container.dataset.alertKey='';
+        node.replaceChildren();
+      }
+      node.hidden=true;
+      container.classList.remove('is-arrival-alert');
+      return;
+    }
+    if(container.dataset.alertKey!==key){
+      container.dataset.alertKey=key;
+      node.replaceChildren();
+      const parts=[
+        ['jr-alert-soon','まもなく　'],
+        ['jr-alert-name',active.name],
+        ['jr-alert-origin',active.origin?'（'+active.origin+'発）':''],
+        ['jr-alert-ending',' が到着します']
+      ];
+      parts.forEach(([cls,label])=>{
+        if(!label)return;
+        const part=document.createElement('span');
+        part.className=cls;
+        part.textContent=label;
+        node.appendChild(part);
+      });
+    }
+    node.hidden=false;
+    container.classList.add('is-arrival-alert');
+  }
+
   // New JR panorama strip: spans the entire pair of LEDs, NOT their
   // second-line scrolling areas. Use only actual upcoming timeline data.
   function updateRailPanoramaTicker(allUpcoming,now) {
     const container=document.getElementById('jr-panorama-ticker');
     const track=document.getElementById('jr-panorama-track');
     if(!container||!track)return;
+    // Sync before the unchanged-message fast path. The warning expires by
+    // current time even if the normal panorama content did not change.
+    syncRailPanoramaApproachAlert(container,now);
     const side=currentRailDir()==='south'?'宇和島方面':'今治方面';
     const events=allUpcoming.filter(item=>Number.isFinite(item._sortMinutes))
       .slice(0,6).map(item=>{
