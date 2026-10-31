@@ -38,6 +38,8 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
 .limited .kind{background:#1e0000;color:#ff3030}
 .local .kind{color:#198754}
 .extra .kind,.sightseeing .kind{color:#fff06f}
+.deadhead .kind,.deadhead .service{color:#f1f4f8}
+.pass .kind,.pass .service{color:#ffdf65}
 .freight .kind,.pass .kind{color:#77d0de}
 .service{font-size:10px;color:#ff3434;line-height:16px;letter-spacing:-.035em;padding-left:1px}
 .service.pair{flex-direction:column;justify-content:center;align-items:flex-start;
@@ -164,7 +166,7 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
   var direction=new URLSearchParams(location.search).get('dir')==='north'?'north':'south';
   var forcedView=new URLSearchParams(location.search).get('view')||'auto';
   var timetable={};
-  var live={iso:'',at:0,departures:[],arrivals:[],scheduledArrivals:[]};
+  var live={iso:'',at:0,departures:[],arrivals:[],scheduledArrivals:[],nonPassengerArrivals:[]};
   var movements={north:{iso:'',rows:[]},south:{iso:'',rows:[]}};
   var rendered='',cycleLanguages=0,lastMinute='';
   var ticker={desiredKey:'',items:[],index:0,animation:null,currentKey:''};
@@ -336,7 +338,9 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
       var number=match?Number(match[1]):NaN;
       var suffix=match?match[2].toUpperCase():'';
       var name=x.trainClass==='limited'?'特急':'普通列車';
-      if(x.trainClass==='limited' && suffix==='M' && number>=1&&number<=40)
+      if(x.trainClass==='limited' && num.toUpperCase()==='1091M')
+        name='モーニングEXP松山';
+      else if(x.trainClass==='limited' && suffix==='M' && number>=1&&number<=40)
         name='しおかぜ'+number+'号';
       else if(x.trainClass==='limited' && suffix==='D' && number>=1051&&number<=1099)
         name='宇和海'+(number-1050)+'号';
@@ -353,8 +357,32 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
         position:String(x.position||''),delayMinutes:Number(x.delayMinutes)||0,
         _arrival:true
       };
-    }).sort(function(a,b){
-      return timeNumber(a.time)-timeNumber(b.time)||String(a.trainNum).localeCompare(String(b.trainNum));
+    });
+    // The feed can distinguish confirmed arrival of an empty stock train
+    // from a timed passage. Neither needs a fabricated passenger train name.
+    var specials=(Array.isArray(live.nonPassengerArrivals)?live.nonPassengerArrivals:[])
+      .filter(function(x){
+        var t=timeNumber(x.time);
+        return x.side===direction&&Number.isFinite(t)&&t>=n.minutes&&t<=n.minutes+180&&
+          ['deadhead','freight','pass'].includes(x.kind)&&
+          ['arrival','pass'].includes(x.event)&&
+          (x.event!=='arrival'||x.kind==='deadhead')&&
+          (x.kind!=='freight'||x.event==='pass');
+      }).map(function(x){
+        var passing=x.event==='pass',num=String(x.trainNum||'');
+        return {
+          id:'led-movement-'+x.kind+'-'+x.event+'-'+num+'-'+x.time,
+          kind:x.kind,trainNum:num,time:String(x.time),_arrival:true,
+          _specialMovement:true,passStatus:passing?'通過予定':'',
+          timetableOnly:!!x.timetableOnly,position:String(x.position||''),
+          arrivalOrigin:String(x.origin||''),arrivalDestination:String(x.destination||''),
+          service:x.kind==='deadhead'?'回送列車':x.kind==='freight'?'貨物列車':'通過列車',
+          dest:passing?'通過':'松山'
+        };
+      });
+    return passengers.concat(specials).sort(function(a,b){
+      return timeNumber(a.time)-timeNumber(b.time)||
+        String(a.trainNum).localeCompare(String(b.trainNum));
     });
   }
   // Inbound south corridor station order. This is geographical guidance,
@@ -362,7 +390,7 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
   // Exact station observation only. An interval such as 市坪～松山 is NOT
   // silently treated as a confirmed arrival at either station.
   function arrivalStationTrail(row){
-    if(!row._arrival)return [];
+    if(!row._arrival||row._specialMovement)return [];
     var stations=direction==='north'
       ?['今治','波止浜','波方','大西','伊予亀岡','菊間','浅海','大浦','伊予北条','柳原','粟井','光洋台','堀江','伊予和気','三津浜']
       :['南伊予','北伊予','市坪'];
@@ -389,10 +417,22 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
       var seg=[];
       var trail=arrivalStationTrail(row);
       if(trail.length)seg.push.apply(seg,trail);
-      seg.push({type:'title',text:row.time+'着　'+row.service+'　'+origin+'発 → 松山着'});
-      if(row.terminating)seg.push({type:'note',text:'この列車は松山止まりです'});
-      else if(row.arrivalDestination&&row.arrivalDestination!=='松山')
-        seg.push({type:'note',text:'松山に停車後 '+row.arrivalDestination+'方面へ運転'});
+      if(row._specialMovement){
+        if(row.passStatus){
+          seg.push({type:'title',text:row.time+'　松山駅を'+row.service+'が通過予定'+
+            (row.trainNum?'（'+row.trainNum+'）':'')});
+          if(row.timetableOnly)seg.push({type:'note',
+            text:'当日運行図の通過予定・現在位置未確認'});
+        }else{
+          seg.push({type:'title',text:row.time+'　回送列車が松山駅に到着予定'+
+            (row.trainNum?'（'+row.trainNum+'）':'')});
+        }
+      }else{
+        seg.push({type:'title',text:row.time+'着　'+row.service+'　'+origin+'発 → 松山着'});
+        if(row.terminating)seg.push({type:'note',text:'この列車は松山止まりです'});
+        else if(row.arrivalDestination&&row.arrivalDestination!=='松山')
+          seg.push({type:'note',text:'松山に停車後 '+row.arrivalDestination+'方面へ運転'});
+      }
       if(row.position)seg.push({type:'stop',text:'現在位置 '+row.position+
         (row.delayMinutes>0?'（'+row.delayMinutes+'分遅れ）':'')});
       if(row.terminating&&row.turnback&&
@@ -432,6 +472,8 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
       var no=train?Number(train[1]):NaN,code=train?train[2].toUpperCase():'';
       if(code==='M'&&no>=1&&no<=40)name='しおかぜ'+no+'号';
       else if(code==='D'&&no>=1051&&no<=1099)name='宇和海'+(no-1050)+'号';
+      else if(String(approach.trainNum||'').toUpperCase()==='1091M')
+        name='モーニングEXP松山';
       else name=approach.trainClass==='limited'?'特急 '+String(approach.trainNum||''):
         String(approach.trainNum||'')+'列車';
     }
@@ -499,6 +541,7 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
     if(m)return {pair:false,ja:[svc],en:['Shiokaze '+m[1]]};
     m=svc.match(/^いしづち(\d+)号$/);
     if(m)return {pair:false,ja:[svc],en:['Ishizuchi '+m[1]]};
+    if(row.kind==='deadhead')return {pair:false,ja:['回送'],en:['Out of Service']};
     if(row.kind==='local')return {pair:false,ja:['普通列車'],en:['Local Train']};
     if(row.kind==='freight')return {pair:false,ja:['貨物 '+String(row.trainNum||'')+'レ'],en:['FREIGHT '+String(row.trainNum||'')]};
     if(row.kind==='pass')return {pair:false,ja:['通過 '+String(row.trainNum||'')],en:['PASSING '+String(row.trainNum||'')]};
@@ -512,9 +555,9 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
     var kind=row.kind||'local',pass=!!row.passStatus;
     var name=splitService(row),box=el('article','train '+kind);
     var kindJP=kind==='local'?'':pass?(kind==='freight'?'貨物':'通過'):
-      ({limited:'特急',local:'普通',extra:'臨時',sightseeing:'観光',freight:'貨物',pass:'通過'}[kind]||'列車');
+      ({limited:'特急',local:'普通',extra:'臨時',sightseeing:'観光',freight:'貨物',pass:'通過',deadhead:'回送'}[kind]||'列車');
     var kindEN=kind==='local'?'':pass?(kind==='freight'?'Freight':'Pass'):
-      ({limited:'Ltd.',local:'',extra:'Extra',sightseeing:'Tour',freight:'Frt.',pass:'Pass'}[kind]||'Train');
+      ({limited:'Ltd.',local:'',extra:'Extra',sightseeing:'Tour',freight:'Frt.',pass:'Pass',deadhead:'Empty'}[kind]||'Train');
     box.appendChild(el('span','kind',lang==='en'?kindEN:kindJP));
     var nameEl=el('div','service'+(name.pair?' pair':''));
     (lang==='en'?name.en:name.ja).forEach(function(label){
@@ -871,6 +914,12 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
       live.arrivals=d.arrivals.slice(0,24).filter(function(x){
         return x&&x.confirmedApproach===true&&['south','north'].includes(x.side);
       });
+      live.nonPassengerArrivals=(Array.isArray(d.nonPassengerArrivals)?d.nonPassengerArrivals:[])
+        .slice(0,80).filter(function(x){
+          return x&&['south','north'].includes(x.side)&&
+            ['deadhead','freight','pass'].includes(x.kind)&&
+            ['pass','arrival'].includes(x.event)&&Number.isFinite(timeNumber(x.time));
+        });
       live.scheduledArrivals=(Array.isArray(d.scheduledArrivals)?d.scheduledArrivals:[]).slice(0,180)
         .filter(function(x){
           return x&&['south','north'].includes(x.side)&&
