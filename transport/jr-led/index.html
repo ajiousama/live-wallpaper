@@ -158,6 +158,9 @@ body{display:flex;align-items:flex-end;justify-content:center;font-variant-numer
   window.addEventListener('resize',fitOriginalLedToFrame,{passive:true});
   var direction=new URLSearchParams(location.search).get('dir')==='north'?'north':'south';
   var forcedView=new URLSearchParams(location.search).get('view')||'auto';
+  // In the paired wallpaper, the confirmed arrival warning belongs to the
+  // NEW shared lower ticker only. Standalone boards retain their old alert.
+  var sharedPanorama=new URLSearchParams(location.search).get('sharedticker')==='1';
   var timetable={};
   var live={iso:'',at:0,departures:[],arrivals:[],scheduledArrivals:[],nonPassengerArrivals:[]};
   var movements={north:{iso:'',rows:[]},south:{iso:'',rows:[]}};
@@ -847,7 +850,9 @@ body{display:flex;align-items:flex-end;justify-content:center;font-variant-numer
   }
   function updateAlerts(n,rows){
     var alert=activeApproach(n);
-    drawArrivalApproach(alert,rows);
+    // Never render the same approach banner inside BOTH embedded LEDs.
+    // The parent verifies and shows it once in the shared lower strip.
+    drawArrivalApproach(sharedPanorama?null:alert,rows);
     rows.slice(0,2).forEach(function(row,i){
       var node=rowsEl.children[i];if(!node||row.passStatus)return;
       var cell=node.querySelector('.status');if(!cell)return;
