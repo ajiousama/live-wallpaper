@@ -4006,7 +4006,7 @@
     if(scheduleFresh && !workplaceTestClock.hasOverride()){
       const push=(x,kind,time,event,scheduledOnly=false)=>{
         const side=inboundSide(x);
-        if(!side||!/^\\d{1,2}:\\d{2}$/.test(String(time||'')))return;
+        if(!side||!/^\d{1,2}:\d{2}$/.test(String(time||'')))return;
         if(toMinutes(padTime(time))<now.minutes-2)return;
         nonPassengerArrivals.push({
           side,kind,event,trainNum:String(x.trainNum||'').slice(0,12),
