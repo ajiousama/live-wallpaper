@@ -85,146 +85,6 @@ window.MATSUYAMA_DATA = {
       "id": "iyonada-dogo-in"
     },
     {
-      "board": "air",
-      "time": "09:35",
-      "service": "7C 1702",
-      "dest": "ソウル（仁川）",
-      "info": "国際線",
-      "kind": "flight",
-      "source": "air_int",
-      "start": "2026-09-01",
-      "end": "2026-10-24",
-      "id": "air-008",
-      "direction": "departure"
-    },
-    {
-      "board": "air",
-      "time": "11:25",
-      "service": "BR 109",
-      "dest": "台北（桃園）",
-      "info": "国際線・水木日",
-      "kind": "flight",
-      "days": [
-        0,
-        3,
-        4
-      ],
-      "source": "air_int",
-      "start": "2026-09-01",
-      "end": "2026-10-24",
-      "id": "air-014",
-      "direction": "departure"
-    },
-    {
-      "board": "air",
-      "time": "12:05",
-      "service": "7C 1772",
-      "dest": "ソウル（仁川）",
-      "info": "国際線・増便",
-      "kind": "flight",
-      "start": "2026-10-01",
-      "end": "2026-10-12",
-      "source": "air_int",
-      "id": "air-017",
-      "direction": "departure"
-    },
-    {
-      "board": "air",
-      "time": "15:50",
-      "service": "7C 1704",
-      "dest": "ソウル（仁川）",
-      "info": "国際線",
-      "kind": "flight",
-      "source": "air_int",
-      "start": "2026-09-01",
-      "end": "2026-10-24",
-      "id": "air-025",
-      "direction": "departure"
-    },
-    {
-      "board": "air",
-      "time": "18:35",
-      "service": "BX 133",
-      "dest": "釜山",
-      "info": "国際線",
-      "kind": "flight",
-      "source": "air_int",
-      "start": "2026-09-01",
-      "end": "2026-10-24",
-      "id": "air-033",
-      "direction": "departure"
-    },
-    {
-      "id": "air-int-arr-1701",
-      "board": "air",
-      "time": "08:35",
-      "service": "7C 1701",
-      "dest": "ソウル（仁川）",
-      "info": "国際線",
-      "kind": "flight",
-      "direction": "arrival",
-      "start": "2026-10-01",
-      "end": "2026-10-24",
-      "source": "matsuyama_airport_arrivals"
-    },
-    {
-      "id": "air-int-arr-1771",
-      "board": "air",
-      "time": "11:05",
-      "service": "7C 1771",
-      "dest": "ソウル（仁川）",
-      "info": "国際線・増便",
-      "kind": "flight",
-      "direction": "arrival",
-      "start": "2026-10-01",
-      "end": "2026-10-12",
-      "source": "matsuyama_airport_arrivals"
-    },
-    {
-      "id": "air-int-arr-br110",
-      "board": "air",
-      "time": "10:15",
-      "service": "BR 110",
-      "dest": "台北（桃園）",
-      "info": "国際線・水木日",
-      "kind": "flight",
-      "direction": "arrival",
-      "days": [
-        0,
-        3,
-        4
-      ],
-      "start": "2026-10-01",
-      "end": "2026-10-24",
-      "source": "matsuyama_airport_arrivals"
-    },
-    {
-      "id": "air-int-arr-1703",
-      "board": "air",
-      "time": "14:50",
-      "service": "7C 1703",
-      "dest": "ソウル（仁川）",
-      "info": "国際線",
-      "kind": "flight",
-      "direction": "arrival",
-      "start": "2026-10-01",
-      "end": "2026-10-24",
-      "source": "matsuyama_airport_arrivals"
-    },
-    {
-      "id": "air-int-arr-bx134",
-      "board": "air",
-      "time": "17:40",
-      "service": "BX 134",
-      "dest": "釜山",
-      "info": "国際線",
-      "kind": "flight",
-      "direction": "arrival",
-      "start": "2026-10-01",
-      "end": "2026-10-24",
-      "source": "matsuyama_airport_arrivals"
-    },
-    {
       "board": "bus",
       "time": "05:40",
       "service": "JR四国/西日本JR",
@@ -9801,6 +9661,120 @@ window.MATSUYAMA_DATA = {
       "source": "matsuyama_airport_arrivals",
       "id": "air-nov-arr-032",
       "direction": "arrival"
+    },
+    {
+      "board": "air",
+      "time": "09:35",
+      "service": "7C 1722",
+      "dest": "ソウル（仁川）",
+      "info": "国際線",
+      "kind": "flight",
+      "source": "air_int",
+      "start": "2026-10-25",
+      "end": "2026-11-30",
+      "id": "air-nov-int-dep-00",
+      "direction": "departure"
+    },
+    {
+      "board": "air",
+      "time": "15:40",
+      "service": "7C 1704",
+      "dest": "ソウル（仁川）",
+      "info": "国際線",
+      "kind": "flight",
+      "source": "air_int",
+      "start": "2026-10-25",
+      "end": "2026-11-30",
+      "id": "air-nov-int-dep-01",
+      "direction": "departure"
+    },
+    {
+      "board": "air",
+      "time": "18:40",
+      "service": "BX 704",
+      "dest": "釜山",
+      "info": "国際線",
+      "kind": "flight",
+      "source": "air_int",
+      "start": "2026-10-25",
+      "end": "2026-11-30",
+      "id": "air-nov-int-dep-02",
+      "direction": "departure"
+    },
+    {
+      "board": "air",
+      "time": "11:05",
+      "service": "BR 109",
+      "dest": "台北（桃園）",
+      "info": "国際線・水木日",
+      "kind": "flight",
+      "source": "air_int",
+      "start": "2026-10-25",
+      "end": "2026-11-30",
+      "id": "air-nov-int-dep-03",
+      "direction": "departure",
+      "days": [
+        0,
+        3,
+        4
+      ]
+    },
+    {
+      "board": "air",
+      "time": "08:35",
+      "service": "7C 1721",
+      "dest": "ソウル（仁川）",
+      "info": "国際線",
+      "kind": "flight",
+      "source": "matsuyama_airport_arrivals",
+      "start": "2026-10-25",
+      "end": "2026-11-30",
+      "id": "air-nov-int-arr-04",
+      "direction": "arrival"
+    },
+    {
+      "board": "air",
+      "time": "14:40",
+      "service": "7C 1703",
+      "dest": "ソウル（仁川）",
+      "info": "国際線",
+      "kind": "flight",
+      "source": "matsuyama_airport_arrivals",
+      "start": "2026-10-25",
+      "end": "2026-11-30",
+      "id": "air-nov-int-arr-05",
+      "direction": "arrival"
+    },
+    {
+      "board": "air",
+      "time": "17:40",
+      "service": "BX 703",
+      "dest": "釜山",
+      "info": "国際線",
+      "kind": "flight",
+      "source": "matsuyama_airport_arrivals",
+      "start": "2026-10-25",
+      "end": "2026-11-30",
+      "id": "air-nov-int-arr-06",
+      "direction": "arrival"
+    },
+    {
+      "board": "air",
+      "time": "09:45",
+      "service": "BR 110",
+      "dest": "台北（桃園）",
+      "info": "国際線・水木日",
+      "kind": "flight",
+      "source": "matsuyama_airport_arrivals",
+      "start": "2026-10-25",
+      "end": "2026-11-30",
+      "id": "air-nov-int-arr-07",
+      "direction": "arrival",
+      "days": [
+        0,
+        3,
+        4
+      ]
     }
   ],
   "sources": {
@@ -9892,6 +9866,20 @@ window.MATSUYAMA_DATA = {
       ],
       "source": "https://39a04ddf36e9ebd674d7beee680543ee.cdnext.stream.ne.jp/01_trainbus/event_train/seat_info/iyonadamonogatari"
     },
-    "wholeSchedule": "Not fully audited; verifiedMonth remains 2026-10 until international flights, bus, ferry, and JR are checked."
+    "wholeSchedule": "Not fully audited; verifiedMonth remains 2026-10 until international flights, bus, ferry, and JR are checked.",
+    "internationalAirport": {
+      "checked": "2026-11-01",
+      "validFrom": "2026-10-25",
+      "validTo": "2026-11-30",
+      "sourceStatus": "Winter schedule cross-checked against 2026-10-31 Matsuyama airport flight display, recent Nov flight schedules, and carrier route data; carrier-specific operational changes may apply.",
+      "sources": [
+        "https://www.matsuyama-airport.co.jp/",
+        "https://www.flight.info/BR109",
+        "https://www.flight.info/BR110",
+        "https://www.flight.info/BX704",
+        "https://www.flight.info/7C1722",
+        "https://www.flight.info/7C1703"
+      ]
+    }
   }
 };
