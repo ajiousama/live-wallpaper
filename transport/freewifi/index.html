@@ -207,7 +207,7 @@
         <div class="jr-led-strip" id="jr-led-embed" aria-label="JR松山駅 LED発車標・表示方面に連動">
           <iframe
             id="jr-led-frame"
-            src="../jr-led/index.html?v=__BUILD_ID__&amp;dir=south&amp;view=departure"
+            src="../jr-led/index.html?v=__BUILD_ID__&amp;dir=south&amp;view=departure&amp;sharedticker=1"
             title="JR松山駅 LED発車標（表示方面に連動）"
             loading="eager"
             referrerpolicy="no-referrer"
@@ -215,7 +215,7 @@
           ></iframe>
           <iframe
             id="jr-led-frame-arr"
-            src="../jr-led/index.html?v=__BUILD_ID__&amp;dir=south&amp;view=arrival"
+            src="../jr-led/index.html?v=__BUILD_ID__&amp;dir=south&amp;view=arrival&amp;sharedticker=1"
             title="JR松山駅 LED到着案内（表示方面に連動）"
             loading="eager"
             referrerpolicy="no-referrer"
@@ -227,6 +227,8 @@
             <div class="jr-panorama-track" id="jr-panorama-track">
               <span class="jr-panorama-copy">JR松山駅　列車の発着情報を確認しています</span>
             </div>
+            <div class="jr-panorama-alert" id="jr-panorama-alert"
+                 role="status" aria-atomic="true" hidden></div>
           </div>
         </div>
         <div class="table-head rail-head">
