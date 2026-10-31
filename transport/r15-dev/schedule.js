@@ -795,7 +795,7 @@ window.MATSUYAMA_DATA = {
       "info": "駅東発・東京等へ乗換",
       "kind": "bus",
       "source": "koto",
-      "end": "2026-10-31",
+      "end": "2026-11-30",
       "id": "bus-096",
       "stop": "JR松山駅"
     },
@@ -9866,7 +9866,7 @@ window.MATSUYAMA_DATA = {
       ],
       "source": "https://39a04ddf36e9ebd674d7beee680543ee.cdnext.stream.ne.jp/01_trainbus/event_train/seat_info/iyonadamonogatari"
     },
-    "wholeSchedule": "Not fully audited; verifiedMonth remains 2026-10 until international flights, bus, ferry, and JR are checked.",
+    "wholeSchedule": "Not fully audited; verifiedMonth remains 2026-10 until JR, ferry and remaining highway bus schedule are cross-checked.",
     "internationalAirport": {
       "checked": "2026-11-01",
       "validFrom": "2026-10-25",
@@ -9880,6 +9880,11 @@ window.MATSUYAMA_DATA = {
         "https://www.flight.info/7C1722",
         "https://www.flight.info/7C1703"
       ]
+    },
+    "kotobusNovember": {
+      "checked": "2026-11-01",
+      "validTo": "2026-11-30",
+      "source": "https://travel.rakuten.co.jp/bus/bin_page/103337043.html"
     }
   }
 };
