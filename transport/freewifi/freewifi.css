@@ -2990,29 +2990,38 @@ body.freewifi-tv.air-board-page .air-bottom-scroll-track.air-bottom-ended{
 
 
 
-/* Only position the two authentic JR LED frames; their internal palette stays untouched. */
+/* Unified JR LED assembly: the bottom information ribbon is attached to
+   both signs inside ONE parent strip, not an independent panel-grid row. */
 body.freewifi-tv #panel-rail .jr-led-strip:has(#jr-led-frame-arr){
   display:grid!important;
-  grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
-  gap:4px!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  grid-template-rows:minmax(0,1fr) 30px!important;
+  row-gap:0!important;
+  column-gap:0!important;
+  border:1px solid #d6e1e4!important;
+  border-radius:0!important;
+  background:#393939!important;
+  overflow:hidden!important;
 }
 body.freewifi-tv #panel-rail .jr-led-strip:has(#jr-led-frame-arr) iframe{
-  display:block!important;width:100%!important;height:100%!important;min-width:0;
+  display:block!important;width:100%!important;height:100%!important;
+  min-width:0;min-height:0;grid-row:1;border:0!important;
 }
-
-/* JR panorama ticker — a NEW independent full-width strip underneath BOTH
-   Japanese-only LED boards. Reclaim its height from the now-shorter LEDs;
-   keep the six-row timetable and bottom safety ticker in their own tracks. */
+body.freewifi-tv #panel-rail #jr-led-frame{grid-column:1}
+body.freewifi-tv #panel-rail #jr-led-frame-arr{grid-column:2}
+/* Retain the original TWO-panel + six-row footprint: the 30px new ticker
+   lives INSIDE the existing LED row instead of using an extra grid row. */
 body.freewifi-tv #panel-rail{
-  grid-template-rows:58px 152px 30px 26px minmax(0,1fr) 32px!important;
+  grid-template-rows:58px 182px 26px minmax(0,1fr) 32px!important;
 }
 html.company-pc body.freewifi-tv #panel-rail{
-  grid-template-rows:44px 178px 30px 26px minmax(0,1fr) 32px!important;
+  grid-template-rows:44px 208px 26px minmax(0,1fr) 32px!important;
 }
 body.freewifi-tv #panel-rail .jr-panorama-ticker{
   display:block;position:relative;min-width:0;min-height:0;width:100%;
-  height:30px;overflow:hidden;background:#061c25;
-  border-top:1px solid #477988;border-bottom:1px solid #477988;
+  height:30px;grid-column:1/-1;grid-row:2;
+  overflow:hidden;background:#061c25;
+  border-top:1px solid #d6e1e4;border-bottom:0;
   isolation:isolate;color:#f7eee0;
 }
 body.freewifi-tv #panel-rail .jr-panorama-track{
