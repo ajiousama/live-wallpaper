@@ -838,7 +838,17 @@ body{display:flex;align-items:flex-end;justify-content:center;font-variant-numer
   }
   function showArrivalPositionBar(rows,n,arrivalMode){
     if(!arrivalMode){arrivalPositionBar.hidden=true;return;}
-    var parts=arrivalPositionParts(rows,n);
+    // A confirmed inbound train takes precedence. Never show another train's
+    // station simply because that record happens to have a valid position.
+    var approach=activeApproach(n);
+    var shown=rows;
+    if(approach){
+      var match=rows.find(function(r){
+        return r._arrival&&!r._specialMovement&&r.trainNum===approach.trainNum;
+      });
+      shown=match?[match]:[];
+    }
+    var parts=arrivalPositionParts(shown,n);
     var signature=direction+'|'+parts.map(function(p){
       return p.cls+':'+p.txt;
     }).join('|');
@@ -870,7 +880,6 @@ body{display:flex;align-items:flex-end;justify-content:center;font-variant-numer
     var arrivals=todayArrivals(n);
     var arrivalMode=forcedView==='arrival'?true:forcedView==='departure'?false:arrivalViewActive(n,arrivals);
     var rows=arrivalMode?arrivals:todayRecords(n);
-    showArrivalPositionBar(rows,n,arrivalMode);
     if(arrivalMode){
       var approaching=activeApproach(n);
       if(approaching){
@@ -881,6 +890,7 @@ body{display:flex;align-items:flex-end;justify-content:center;font-variant-numer
         });
       }
     }
+    showArrivalPositionBar(rows,n,arrivalMode);
     var displayRows=displayedTrainRows(arrivalMode,rows);
     setExpressNoticeRow(arrivalMode?null:displayRows[1]);
     updateExpressNotice();
