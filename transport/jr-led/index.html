@@ -799,7 +799,12 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
   // Arrival LED continues to show its two chronological arrival rows.
   function displayedTrainRows(arrivalMode,rows){
     if(arrivalMode)return [rows[0]||null,rows[1]||null];
-    return [rows[0]||null,rows.find(function(r){return r.kind==='limited';})||null];
+    var nextExpress=rows.find(function(r){return r.kind==='limited';})||null;
+    // When the very next departure is the express already pinned below,
+    // show the following (next-next) train above instead of duplicating it.
+    // In all other cases, the upper row remains the next chronological train.
+    var firstLine=rows[0]===nextExpress?rows[1]||null:rows[0]||null;
+    return [firstLine,nextExpress];
   }
   function render(n,force){
     var arrivals=todayArrivals(n);
