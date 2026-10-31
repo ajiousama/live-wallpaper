@@ -3433,6 +3433,11 @@
         return {kind:'limited',service:joined?name+`・いしづち${n}号`:name};
       }
       if (suffix==='D' && n>=1051 && n<=1099) return {kind:'limited',service:`宇和海${n-1050}号`};
+      // JR West's published 2026 timetable identifies 1091M as the
+      // named Morning EXP Matsuyama. The generic 1000-series "Ishizuchi"
+      // arithmetic below would incorrectly call it Ishizuchi 91.
+      if (suffix==='M' && n===1091)
+        return {kind:'limited',service:'モーニングEXP松山'};
       // Matsuyama-originating Ishizuchi 102/104/106 have 1042M/1044M/1046M
       // in the actual operating diagram, not 1102M/1104M/1106M.
       if (suffix==='M' && [1042,1044,1046].includes(n))
