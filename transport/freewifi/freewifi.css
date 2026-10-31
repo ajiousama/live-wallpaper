@@ -3044,3 +3044,31 @@ body.freewifi-tv #panel-rail .jr-panorama-track.is-looping{
   from{transform:translateX(0)}
   to{transform:translateX(-50%)}
 }
+
+/* Confirmed inbound approach PREEMPTS the shared scrolling line.
+   One warning across both LEDs; never duplicate it inside either iframe.
+   The regular panorama animation is paused, not reset, and resumes afterward. */
+body.freewifi-tv #panel-rail .jr-panorama-ticker.is-arrival-alert{
+  background:#43120d!important;
+  border-top-color:#ffb433!important;
+}
+body.freewifi-tv #panel-rail .jr-panorama-ticker.is-arrival-alert .jr-panorama-track{
+  visibility:hidden!important;
+  animation-play-state:paused!important;
+}
+body.freewifi-tv #panel-rail .jr-panorama-alert{
+  position:absolute;z-index:5;inset:0;display:flex;align-items:center;
+  justify-content:center;gap:0;overflow:hidden;white-space:nowrap;
+  color:#f7f7f7;font-size:clamp(11px,1.55vw,18px);font-weight:900;
+  line-height:29px;letter-spacing:-.025em;
+  animation:jr-panorama-arrival-blink 1.4s steps(1,end) infinite;
+}
+body.freewifi-tv #panel-rail .jr-panorama-alert[hidden]{display:none!important}
+body.freewifi-tv #panel-rail .jr-panorama-alert .jr-alert-soon{color:#ffeb30}
+body.freewifi-tv #panel-rail .jr-panorama-alert .jr-alert-name{color:#ff6565}
+body.freewifi-tv #panel-rail .jr-panorama-alert .jr-alert-origin{color:#65dfff}
+body.freewifi-tv #panel-rail .jr-panorama-alert .jr-alert-ending{color:#f9f9f9}
+@keyframes jr-panorama-arrival-blink{
+  0%,69%{opacity:1}
+  70%,100%{opacity:.16}
+}
