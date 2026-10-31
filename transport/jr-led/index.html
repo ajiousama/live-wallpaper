@@ -84,8 +84,8 @@ body{display:flex;align-items:flex-end;justify-content:center;font-variant-numer
 .next-express-destination{color:#ffeb31}
 .next-express-service{color:#64d9ff}
 .ticker{top:45px;display:block;isolation:isolate}
-/* Both departure and arrival center strips are ONE full-width scrolling
-   surface. The old stationary "発着案内"/"松山" blocks obscured moving text. */
+/* Departure middle row scrolls. Arrival middle row is a FIXED current-position
+   station display; only the observed station blinks. No route-intro marquee. */
 .ticker-label{display:none}
 .ticker-window{position:relative;z-index:1;width:256px;height:16px;
   overflow:hidden;clip-path:inset(0);isolation:isolate;background:#000}
@@ -101,6 +101,21 @@ body{display:flex;align-items:flex-end;justify-content:center;font-variant-numer
 .segment.title{color:#f33}.segment.stop{color:#ffed30}
 .segment.connection{color:#64d9ff}.segment.note{color:#ddd}
 .segment.station-current{color:#ffeb31;background:#51200b;animation:arrival-station-blink 1.2s steps(1,end) infinite}
+/* Static arrival position display over the middle ticker, on arrival only. */
+.arrival-position-bar{position:absolute;z-index:7;left:13px;top:45px;width:256px;
+ height:16px;display:flex;align-items:center;justify-content:center;overflow:hidden;
+ white-space:nowrap;background:#000;color:#ffe33e;font-size:10px;font-weight:900;
+ line-height:16px;gap:2px;isolation:isolate;pointer-events:none}
+.arrival-position-bar[hidden]{display:none!important}
+.arrival-position-bar span{display:inline-block;flex:none;white-space:nowrap}
+.arrival-position-bar .station-terminal{color:#ff6f58}
+.arrival-position-bar .station-arrow{color:#f0d45b}
+.arrival-position-bar .station-uncertain{color:#dadada}
+.arrival-position-bar .station-current{color:#ffeb31;background:#5b2900;
+ animation:arrival-position-blink 1.2s steps(1,end) infinite}
+@keyframes arrival-position-blink{
+  0%,49%{opacity:1}50%,100%{opacity:.12}
+}
 @keyframes arrival-station-blink{0%,49%{color:#ffeb31;background:#51200b}50%,100%{color:#ffeb31;background:transparent}}
 
 .ticker-note{display:none}
@@ -138,6 +153,7 @@ body{display:flex;align-items:flex-end;justify-content:center;font-variant-numer
    <div class="next-express-track" id="next-express-track"></div>
  </div>
  <div class="ticker"><div class="ticker-label" id="ticker-label">停車駅</div><div class="ticker-window" id="ticker-window"><div class="ticker-track" id="ticker-track">停車駅・接続を確認しています</div></div></div>
+ <div class="arrival-position-bar" id="arrival-position-bar" hidden aria-label="到着列車の現在位置"></div>
  <div class="arrival-alert" id="arrival-alert" hidden><div class="arrival-alert-track" id="arrival-alert-track"></div></div>
  <span class="clock" id="clock" hidden></span>
 </main>
@@ -783,6 +799,58 @@ body{display:flex;align-items:flex-end;justify-content:center;font-variant-numer
     ticker.items=items;
     playTickerCycle();
   }
+  var arrivalPositionBar=document.getElementById('arrival-position-bar');
+  // Ordered from Matsuyama outward. These names establish the route layout,
+  // never a supposed live train position: the source must confirm one.
+  var ARRIVAL_STATIONS={
+    south:['市坪','北伊予','南伊予','伊予市','鳥ノ木','向井原',
+      '伊予大平','伊予中山','伊予立川','内子','新谷','伊予大洲','八幡浜','宇和島'],
+    north:['三津浜','伊予和気','堀江','光洋台','粟井','柳原','伊予北条',
+      '大浦','浅海','菊間','伊予亀岡','大西','波方','波止浜','今治']
+  };
+  function arrivalPositionParts(rows,n){
+    // Only position fixes attached to today's fresh inbound trains are used.
+    var chosen=(rows||[]).find(function(r){
+      return r&&r._arrival&&!r._specialMovement&&String(r.position||'').trim();
+    })||(rows||[]).find(function(r){
+      return r&&r._arrival&&String(r.position||'').trim()&&!r.timetableOnly;
+    });
+    var raw=String(chosen?.position||'').trim();
+    if(!raw)return [{cls:'station-uncertain',txt:'現在位置を確認中'}];
+    var known=ARRIVAL_STATIONS[direction];
+    // Blink ONLY a station reported as an exact stop/current station.
+    // A range (市坪～松山), nearby, or "passing" is NOT a confirmed stop.
+    var station=known.find(function(st){
+      return raw===st||raw===st+'駅'||
+        raw===st+'停車中'||raw===st+'駅停車中';
+    });
+    if(!station)return [{cls:'station-uncertain',txt:'現在位置　'+raw}];
+    var idx=known.indexOf(station);
+    var start=Math.max(0,idx-1);
+    var part=known.slice(start,start+3);
+    var pieces=[{cls:'station-terminal',txt:'松山'}];
+    if(start>0)pieces.push({cls:'station-arrow',txt:'←…'});
+    part.forEach(function(st){
+      pieces.push({cls:'station-arrow',txt:'←'});
+      pieces.push({cls:st===station?'station-current':'',txt:st});
+    });
+    return pieces;
+  }
+  function showArrivalPositionBar(rows,n,arrivalMode){
+    if(!arrivalMode){arrivalPositionBar.hidden=true;return;}
+    var parts=arrivalPositionParts(rows,n);
+    var signature=direction+'|'+parts.map(function(p){
+      return p.cls+':'+p.txt;
+    }).join('|');
+    if(arrivalPositionBar.dataset.signature!==signature){
+      arrivalPositionBar.dataset.signature=signature;
+      arrivalPositionBar.replaceChildren();
+      parts.forEach(function(p){
+        arrivalPositionBar.appendChild(el('span',p.cls,p.txt));
+      });
+    }
+    arrivalPositionBar.hidden=false;
+  }
   // Departure LED only: upper line is the next train by time; the third
   // physical line (lower train slot) is ALWAYS the next limited express.
   // The middle scrolling service-information line remains unchanged.
@@ -802,6 +870,7 @@ body{display:flex;align-items:flex-end;justify-content:center;font-variant-numer
     var arrivals=todayArrivals(n);
     var arrivalMode=forcedView==='arrival'?true:forcedView==='departure'?false:arrivalViewActive(n,arrivals);
     var rows=arrivalMode?arrivals:todayRecords(n);
+    showArrivalPositionBar(rows,n,arrivalMode);
     if(arrivalMode){
       var approaching=activeApproach(n);
       if(approaching){
@@ -949,6 +1018,7 @@ body{display:flex;align-items:flex-end;justify-content:center;font-variant-numer
     if(changed){lang=language;lastMinute=minute;render(n,true);}
     else {
       var alertRows=mode==='arrival'?arrivals:todayRecords(n);
+      showArrivalPositionBar(alertRows,n,mode==='arrival');
       updateAlerts(n,displayedTrainRows(mode==='arrival',alertRows).filter(Boolean));
     }
     rememberTickerPhase();
