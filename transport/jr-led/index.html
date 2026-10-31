@@ -465,19 +465,39 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
     return arrivals.length>0&&Math.floor(ledNow().getTime()/12000)%2===1;
   }
   function arrivalApproachParts(approach,rows){
-    var row=rows.find(function(x){return x._arrival&&x.trainNum===approach.trainNum;});
-    var name=row?String(row.service||'普通列車'):'';
+    // The approach alert can refer to a train outside the two visible rows.
+    // Resolve its identity from the full TODAY diagram before falling back.
+    var number=String(approach.trainNum||'').toUpperCase();
+    var row=rows.find(function(x){
+      return x._arrival&&!x._specialMovement&&String(x.trainNum||'').toUpperCase()===number;
+    });
+    var matches=(Array.isArray(live.scheduledArrivals)?live.scheduledArrivals:[])
+      .filter(function(x){
+        return String(x.trainNum||'').toUpperCase()===number&&x.side===direction&&
+          timeNumber(x.arrival)===timeNumber(approach.arrival);
+      });
+    var scheduled=matches.length===1?matches[0]:null;
+    var trainClass=row?.kind==='limited'?'limited':row?.kind==='local'?'local':
+      (scheduled?.trainClass||approach.trainClass||'');
+    var name=row?String(row.service||''):'';
     if(!name){
-      var train=String(approach.trainNum||'').match(/^(\d+)([MD])$/i);
+      var train=number.match(/^(\d+)([MD])$/i);
       var no=train?Number(train[1]):NaN,code=train?train[2].toUpperCase():'';
-      if(code==='M'&&no>=1&&no<=40)name='しおかぜ'+no+'号';
-      else if(code==='D'&&no>=1051&&no<=1099)name='宇和海'+(no-1050)+'号';
-      else if(String(approach.trainNum||'').toUpperCase()==='1091M')
-        name='モーニングEXP松山';
-      else name=approach.trainClass==='limited'?'特急 '+String(approach.trainNum||''):
-        String(approach.trainNum||'')+'列車';
+      if(number==='1091M')name='モーニングEXP松山';
+      else if(trainClass==='limited'&&code==='M'&&no>=1&&no<=40)
+        name='しおかぜ'+no+'号';
+      else if(trainClass==='limited'&&code==='D'&&no>=1051&&no<=1099)
+        name='宇和海'+(no-1050)+'号';
+      else if(trainClass==='limited'&&code==='M'&&[1042,1044,1046].includes(no))
+        name='いしづち'+(no-940)+'号';
+      else if(trainClass==='limited'&&code==='M'&&no>=1000&&no<=1199)
+        name='いしづち'+(no-1000)+'号';
+      else if(trainClass==='limited')name='特急列車';
+      else if(trainClass==='local'||number==='5513M')name='普通列車';
+      else name='列車'; // no unverified identity and no raw train number
     }
-    var origin=row?String(row.arrivalOrigin||''):'';
+    var origin=String((row&&row.arrivalOrigin)||
+      (scheduled&&scheduled.origin)||approach.origin||'');
     return [
       {cls:'arrival-part-soon',text:'まもなく '},
       {cls:'arrival-part-service',text:name},
