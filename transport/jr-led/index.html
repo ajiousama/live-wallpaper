@@ -696,6 +696,16 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
     });
     arrivalRouteBar.hidden=false;
   }
+  // Departure LED only: upper line is the next train by time; the third
+  // physical line (lower train slot) is ALWAYS the next limited express.
+  // The middle scrolling service-information line remains unchanged.
+  // If no further limited express is scheduled, keep the lower slot empty of
+  // ordinary trains instead of inventing an express or substituting a local.
+  // Arrival LED continues to show its two chronological arrival rows.
+  function displayedTrainRows(arrivalMode,rows){
+    if(arrivalMode)return [rows[0]||null,rows[1]||null];
+    return [rows[0]||null,rows.find(function(r){return r.kind==='limited';})||null];
+  }
   function render(n,force){
     var arrivals=todayArrivals(n);
     var arrivalMode=forcedView==='arrival'?true:forcedView==='departure'?false:arrivalViewActive(n,arrivals);
@@ -711,21 +721,25 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
         });
       }
     }
-    var identity=(arrivalMode?'arr':'dep')+'|'+direction+'|'+lang+'|'+rows.slice(0,2).map(function(r){
-      return [r.id,r.time,r.kind,r.dest,r.info].join(':');
+    var displayRows=displayedTrainRows(arrivalMode,rows);
+    var identity=(arrivalMode?'arr':'dep')+'|'+direction+'|'+lang+'|'+displayRows.map(function(r){
+      return r?[r.id,r.time,r.kind,r.dest,r.info].join(':'):'empty';
     }).join('|');
     if(force||identity!==rendered){
       rendered=identity;
       var fragment=document.createDocumentFragment();
-      rows.slice(0,2).forEach(function(r){fragment.appendChild(trainRow(r,n));});
-      while(fragment.childNodes.length<2){
-        var emp=el('article','train empty');
-        emp.appendChild(el('span','kind','--'));
-        emp.appendChild(el('span','service',rows.length===0?
-          (arrivalMode?(lang==='en'?'NO MORE ARRIVALS':'本日の到着案内は終了しました')
-            :(lang==='en'?'NO MORE DEPARTURES':'本日の発車案内は終了しました')):''));
+      displayRows.forEach(function(r,slot){
+        if(r){fragment.appendChild(trainRow(r,n));return;}
+        var expressOnly=!arrivalMode&&slot===1;
+        var emp=el('article','train empty'+(expressOnly?' limited':''));
+        emp.appendChild(el('span','kind',expressOnly?(lang==='en'?'Ltd.':'特急'):'--'));
+        emp.appendChild(el('span','service',expressOnly?
+          (lang==='en'?'NO EXPRESS':'特急案内なし'):
+          (rows.length===0?
+            (arrivalMode?(lang==='en'?'NO MORE ARRIVALS':'本日の到着案内は終了しました')
+              :(lang==='en'?'NO MORE DEPARTURES':'本日の発車案内は終了しました')):'')));
         fragment.appendChild(emp);
-      }
+      });
       rowsEl.replaceChildren(fragment);
       document.getElementById('direction').textContent=
         (direction==='north'?'今治・高松・岡山方面':'八幡浜・宇和島方面')+
@@ -742,7 +756,7 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
     const departureRibbon=tickerItems(departuresForRibbon,n);
     const arrivalRibbon=arrivals.length?ledArrivalTickerItems(arrivals.slice(0,2),n):[];
     syncTicker(forcedView==='arrival'?arrivalRibbon:forcedView==='departure'?departureRibbon:departureRibbon.concat(arrivalRibbon));
-    updateAlerts(n,rows);
+    updateAlerts(n,displayRows.filter(Boolean));
   }
   function updateAlerts(n,rows){
     var alert=activeApproach(n);
@@ -837,7 +851,8 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
     if(changed){lang=language;lastMinute=minute;render(n,true);}
     else {
       showArrivalRouteBar(mode==='arrival'?arrivals:[],n,mode==='arrival');
-      updateAlerts(n,mode==='arrival'?arrivals:todayRecords(n));
+      var alertRows=mode==='arrival'?arrivals:todayRecords(n);
+      updateAlerts(n,displayedTrainRows(mode==='arrival',alertRows).filter(Boolean));
     }
     rememberTickerPhase();
   }
