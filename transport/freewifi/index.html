@@ -222,6 +222,14 @@
             tabindex="-1"
           ></iframe>
         </div>
+        <!-- Independent wide JR ticker: spans both departure and arrival LEDs.
+             This is NOT either LED's built-in second-line scrolling area. -->
+        <div class="jr-panorama-ticker" id="jr-panorama-ticker"
+             aria-label="JR松山駅 発着列車の横断案内" aria-live="off">
+          <div class="jr-panorama-track" id="jr-panorama-track">
+            <span class="jr-panorama-copy">JR松山駅　列車の発着情報を確認しています</span>
+          </div>
+        </div>
         <div class="table-head rail-head">
           <span>列車</span><span>時刻</span><span>行先</span>
         </div>
