@@ -327,7 +327,7 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
     if(ledTestClock()||live.iso!==n.iso||
       Date.now()-live.at>90000||Date.now()-live.at< -15000)return [];
     var rows=Array.isArray(live.scheduledArrivals)?live.scheduledArrivals:[];
-    return rows.filter(function(x){
+    var passengers=rows.filter(function(x){
       var t=timeNumber(x.arrival);
       if(x.side!==direction||!Number.isFinite(t))return false;
       var delay=x.position&&Number.isFinite(Number(x.delayMinutes))
