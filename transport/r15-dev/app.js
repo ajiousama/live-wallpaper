@@ -4177,8 +4177,8 @@
       x?.confirmedApproach===true&&
       x.source==='live_position_and_today_diagram'&&
       x.side===side&&jrPositionUsable(x.position)&&
-      /^\\d{1,2}:\\d{2}$/.test(String(x.arrival||''))&&
-      /^\\d{1,5}[MD]$/i.test(String(x.trainNum||''))
+      /^\d{1,2}:\d{2}$/.test(String(x.arrival||''))&&
+      /^\d{1,5}[MD]$/i.test(String(x.trainNum||''))
     ).map(x=>{
       const delay=Number.isFinite(Number(x.delayMinutes))
         ?Math.max(0,Math.min(60,Number(x.delayMinutes))):0;
