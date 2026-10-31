@@ -2999,3 +2999,39 @@ body.freewifi-tv #panel-rail .jr-led-strip:has(#jr-led-frame-arr){
 body.freewifi-tv #panel-rail .jr-led-strip:has(#jr-led-frame-arr) iframe{
   display:block!important;width:100%!important;height:100%!important;min-width:0;
 }
+
+/* JR panorama ticker — a NEW independent full-width strip underneath BOTH
+   Japanese-only LED boards. Reclaim its height from the now-shorter LEDs;
+   keep the six-row timetable and bottom safety ticker in their own tracks. */
+body.freewifi-tv #panel-rail{
+  grid-template-rows:58px 152px 30px 26px minmax(0,1fr) 32px!important;
+}
+html.company-pc body.freewifi-tv #panel-rail{
+  grid-template-rows:44px 178px 30px 26px minmax(0,1fr) 32px!important;
+}
+body.freewifi-tv #panel-rail .jr-panorama-ticker{
+  display:block;position:relative;min-width:0;min-height:0;width:100%;
+  height:30px;overflow:hidden;background:#061c25;
+  border-top:1px solid #477988;border-bottom:1px solid #477988;
+  isolation:isolate;color:#f7eee0;
+}
+body.freewifi-tv #panel-rail .jr-panorama-track{
+  position:absolute;left:0;top:0;display:inline-flex;align-items:center;
+  width:max-content;min-width:max-content;height:28px;white-space:nowrap;
+  font-family:'ＭＳ ゴシック','MS Gothic','Yu Gothic',Meiryo,monospace;
+  font-weight:900;font-size:15px;line-height:28px;will-change:transform;
+}
+html.company-pc body.freewifi-tv #panel-rail .jr-panorama-track{
+  font-size:18px;
+}
+body.freewifi-tv #panel-rail .jr-panorama-copy{
+  display:inline-block;flex:none;width:max-content;min-width:max-content;
+  white-space:nowrap;padding-right:90px;color:#f5edcb;
+}
+body.freewifi-tv #panel-rail .jr-panorama-track.is-looping{
+  animation:jr-panorama-ribbon var(--jr-panorama-duration,65s) linear infinite;
+}
+@keyframes jr-panorama-ribbon{
+  from{transform:translateX(0)}
+  to{transform:translateX(-50%)}
+}
