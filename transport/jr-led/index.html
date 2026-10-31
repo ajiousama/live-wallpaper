@@ -6,30 +6,28 @@
 <meta name="color-scheme" content="dark">
 <title>JR松山駅｜独立型LED発着案内</title>
 <style>
-/* JR松山駅・元シミュレーターのLED 1台分（284×116）に合わせた固定座標。
-   親iframe 415×142 と交通壁紙の表示領域は変更しない。
-   元の表示列は 13px / 256px、1本目 y39、案内 y62、2本目 y85。 */
+/* JR松山駅 LED 1台分の幅284pxは維持。英語見出しを省いて
+   全高90pxに短縮し、外側の独立した全幅テロップに表示領域を渡す。
+   表示列は 13px / 256px、1段目 y22、案内 y45、3段目 y68。 */
 :root{color-scheme:dark}
 *{box-sizing:border-box}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#090b0d;
   color:#fff;font-family:'ＭＳ ゴシック','MS Gothic','Yu Gothic',Meiryo,monospace}
 body{display:flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums}
-.board{position:relative;flex:none;width:284px;height:116px;overflow:hidden;
+.board{position:relative;flex:none;width:284px;height:90px;overflow:hidden;
   background:#393939;border:1px solid #fff;color:#fff;
   transform:scale(var(--led-scale,1));transform-origin:center center}
-.heading{position:absolute;top:0;left:0;right:0;height:39px;display:flex;
+.heading{position:absolute;top:0;left:0;right:0;height:21px;display:flex;
   flex-direction:column;align-items:center;justify-content:center;gap:1px;
   text-align:center;overflow:hidden;background:#393939}
 .direction{font-size:13px;font-weight:900;line-height:16px;letter-spacing:0;
   white-space:nowrap;color:#efefef}
-.english-direction{font-size:10px;line-height:12px;font-weight:700;letter-spacing:.02em;
-  white-space:nowrap;color:#dedede}
 .clock{display:none}
 .rows{position:absolute;inset:0;pointer-events:none}
 .train,.ticker{position:absolute;left:13px;width:256px;height:16px;background:#000;
   overflow:hidden;outline:1px solid #222}
-.rows>.train:nth-child(1){top:39px}
-.rows>.train:nth-child(2){top:85px}
+.rows>.train:nth-child(1){top:22px}
+.rows>.train:nth-child(2){top:68px}
 .train{display:grid;grid-template-columns:32px 96px 60px 68px;gap:0;
   align-items:center;margin:0;padding:0}
 .kind,.service,.dep,.dest{height:16px;min-width:0;overflow:hidden;
@@ -72,7 +70,7 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
 .train.empty .kind{color:#aaa}
 /* Only the departure LED's THIRD line can briefly scroll this announcement.
    The normal express row and middle-row ticker remain unchanged. */
-.next-express-notice{position:absolute;left:13px;top:85px;width:256px;height:16px;
+.next-express-notice{position:absolute;left:13px;top:68px;width:256px;height:16px;
   z-index:6;background:#000;overflow:hidden;isolation:isolate;pointer-events:none}
 .next-express-notice[hidden]{display:none!important}
 .next-express-track{position:absolute;left:0;top:0;display:inline-flex;align-items:center;
@@ -83,7 +81,7 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
 .next-express-time{color:#f5f5f5}
 .next-express-destination{color:#ffeb31}
 .next-express-service{color:#64d9ff}
-.ticker{top:62px;display:block;isolation:isolate}
+.ticker{top:45px;display:block;isolation:isolate}
 /* Both departure and arrival center strips are ONE full-width scrolling
    surface. The old stationary "発着案内"/"松山" blocks obscured moving text. */
 .ticker-label{display:none}
@@ -104,7 +102,7 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
 @keyframes arrival-station-blink{0%,49%{color:#ffeb31;background:#51200b}50%,100%{color:#ffeb31;background:transparent}}
 
 .ticker-note{display:none}
-.arrival-alert{position:absolute;z-index:8;left:13px;top:62px;width:256px;height:16px;
+.arrival-alert{position:absolute;z-index:8;left:13px;top:45px;width:256px;height:16px;
   display:flex;align-items:center;justify-content:flex-start;background:#000;
   color:#fff;font-size:11px;font-weight:900;white-space:nowrap;
   letter-spacing:-.035em;overflow:hidden;isolation:isolate}
@@ -129,7 +127,7 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
 </head>
 <body>
 <main class="board" aria-label="JR松山駅 発着案内LED">
- <header class="heading"><div class="direction" id="direction">八幡浜・宇和島方面 発車時刻</div><div class="english-direction" id="english-direction">for Yawatahama, Uwajima</div></header>
+ <header class="heading"><div class="direction" id="direction">八幡浜・宇和島方面 発車時刻</div></header>
  <section class="rows" id="rows" aria-live="off">
    <article class="train empty"><span class="kind"></span><span class="service">列車情報取得中</span></article>
    <article class="train empty"><span class="kind"></span><span class="service">運行図を確認中</span></article>
@@ -146,14 +144,12 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
   'use strict';
   // Standalone display: no external image atlas, simulator JS or font dependency.
   // Parent messages retain their existing names and same-origin validation.
-  // The source bitmap geometry stays at 284x116, but the full-width parent
-  // reserves a 192px (public) or 216px (workplace) LED strip. Fit the REAL
-  // board to the available height with a uniform scale; no parent layout
-  // dimensions or train/ticker coordinates change.
+  // Width 284px is preserved; the Japanese-only 90px board fits within
+  // the shorter iframe. The separate panorama ticker belongs to the parent.
   function fitOriginalLedToFrame(){
     var width=Math.max(0,window.innerWidth-20);
     var height=Math.max(0,window.innerHeight-10);
-    var factor=Math.max(0.45,Math.min(width/284,height/116,2.75));
+    var factor=Math.max(0.45,Math.min(width/284,height/90,2.75));
     document.documentElement.style.setProperty('--led-scale',String(factor));
   }
   fitOriginalLedToFrame();
@@ -836,9 +832,6 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
       document.getElementById('direction').textContent=
         (direction==='north'?'今治・高松・岡山方面':'八幡浜・宇和島方面')+
         (arrivalMode?' 到着時刻':' 発車時刻');
-      document.getElementById('english-direction').textContent=arrivalMode
-        ?(direction==='north'?'Arrivals from Imabari':'Arrivals from Uwajima')
-        :(direction==='north'?'for Imabari, Takamatsu, Okayama':'for Yawatahama, Uwajima');
       tickerLabel.textContent='発着案内';
     }
     // The moving ticker is INDEPENDENT of the 12-second display-mode flash.
@@ -941,7 +934,7 @@ body{display:flex;align-items:center;justify-content:center;font-variant-numeric
     var n=jst();
     document.getElementById('clock').textContent=n.clock;
     var minute=n.iso+'|'+n.minutes;
-    var language=(Date.now()%9000)<6000?'ja':'en';
+    var language='ja'; // Japanese-only JR LEDs; not a bilingual alternating header.
     var arrivals=todayArrivals(n);
     var mode=(forcedView==='arrival'||(forcedView!=='departure'&&arrivalViewActive(n,arrivals)))?'arrival':'departure';
     var changed=language!==lang||minute!==lastMinute||mode!==lastLedMode;
