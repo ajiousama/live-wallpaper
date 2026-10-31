@@ -3984,10 +3984,62 @@
         trainNum:String(t.trainNum||'').slice(0,12),source:'today_diagram'
       }))
     })).filter(x=>x.stops.length>0);
+    // The arrival LED also receives time-verified non-passenger movements.
+    // x.direction is the RUNNING direction; the LED's side is the INBOUND
+    // corridor. Keep them opposite (northbound from south / southbound from
+    // north), or use an explicitly supplied inbound side. Unknown sides are
+    // omitted rather than displaying a train on the wrong approach.
+    const inboundSide=x=>{
+      if(['north','south'].includes(x?.side))return x.side;
+      const from=cleanStation(x?.origin||'').replace(/駅$/,'');
+      const northStations=['今治','波止浜','波方','大西','菊間','伊予北条','柳原',
+        '粟井','光洋台','堀江','伊予和気','三津浜','新居浜','伊予西条','高松','岡山'];
+      const southStations=['市坪','北伊予','南伊予','伊予市','鳥ノ木','向井原',
+        '伊予大平','伊予中山','伊予立川','内子','新谷','伊予大洲','八幡浜','宇和島'];
+      if(northStations.includes(from))return 'north';
+      if(southStations.includes(from))return 'south';
+      if(x?.direction==='north')return 'south';
+      if(x?.direction==='south')return 'north';
+      return '';
+    };
+    const nonPassengerArrivals=[];
+    if(scheduleFresh && !workplaceTestClock.hasOverride()){
+      const push=(x,kind,time,event,scheduledOnly=false)=>{
+        const side=inboundSide(x);
+        if(!side||!/^\\d{1,2}:\\d{2}$/.test(String(time||'')))return;
+        if(toMinutes(padTime(time))<now.minutes-2)return;
+        nonPassengerArrivals.push({
+          side,kind,event,trainNum:String(x.trainNum||'').slice(0,12),
+          time:padTime(time),origin:cleanStation(x.origin||'').slice(0,48),
+          destination:cleanStation(x.destination||'').slice(0,48),
+          position:jrPositionUsable(x.position)?cleanStation(x.position).slice(0,48):'',
+          timetableOnly:scheduledOnly,
+          source:scheduledOnly?'today_diagram':'verified_live_and_diagram'
+        });
+      };
+      // A deadhead is inbound only with a current observed position and a
+      // specific arrival time (matsuyamaDeadheadArrivals already checks both).
+      matsuyamaDeadheadArrivals(now).forEach(x=>push(x,'deadhead',x.arrival,'arrival'));
+      // Freight passing Matsuyama is NOT an arrival/stop. Officially inferred
+      // station passage from the day's diagram is labeled schedule-only.
+      matsuyamaFreightPasses(now).forEach(x=>
+        push(x,'freight',x.passTime,'pass',!!x.timetableOnly));
+      // Exceptional train movements appear only if the live source positively
+      // confirms the Matsuyama station passage and its actual diagram time.
+      const specials=Array.isArray(approachLive.ichitsubo?.matsuyamaSpecialTrains)
+        ?approachLive.ichitsubo.matsuyamaSpecialTrains:[];
+      specials.filter(x=>x?.stationConfirmed===true&&x.stationEvent==='pass'&&
+        jrPositionUsable(x.position)).forEach(x=>
+          push(x,x.kind==='deadhead'?'deadhead':'pass',x.stationTime,'pass'));
+    }
+    const uniqueMovements=[...new Map(nonPassengerArrivals.map(x=>[
+      [x.side,x.event,x.trainNum,x.time].join('|'),x
+    ])).values()].slice(0,80);
     try {
       frames.forEach(frame=>frame.contentWindow.postMessage({
         type:'matsuyama-led-arrivals',
-        iso:now.iso,arrivals,departures,scheduledArrivals
+        iso:now.iso,arrivals,departures,scheduledArrivals,
+        nonPassengerArrivals:uniqueMovements
       },location.origin));
     } catch(e) {console.warn('JR LED arrival notice unavailable',e);}
   }
