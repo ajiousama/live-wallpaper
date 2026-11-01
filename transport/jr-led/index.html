@@ -46,6 +46,20 @@ body{display:flex;align-items:flex-end;justify-content:center;font-variant-numer
   gap:0;font-size:8px;line-height:8px;letter-spacing:-.025em}
 .service.pair span{display:block;width:100%;height:8px;line-height:8px;overflow:hidden;
   white-space:nowrap}
+/* Combined Shiokaze/Ishizuchi departures: both names scroll at full row
+   height inside ONLY the 96px service cell. Time/destination stay fixed. */
+.service.pair-scroll{display:block;position:relative;overflow:hidden;padding-left:0;
+  font-size:11px;line-height:16px;letter-spacing:-.035em}
+.service.pair-scroll .pair-track{position:absolute;left:0;top:0;height:16px;
+  display:inline-flex;align-items:center;width:max-content;min-width:max-content;
+  white-space:nowrap;will-change:transform;
+  animation:jr-led-service-pair-scroll 13s linear infinite}
+.service.pair-scroll .pair-copy{display:inline-block;flex:none;white-space:nowrap;
+  width:max-content;padding-right:32px;height:16px;line-height:16px;color:#ff4a43}
+@keyframes jr-led-service-pair-scroll{
+  0%,8%{transform:translateX(0)}
+  92%,100%{transform:translateX(-50%)}
+}
 .local .service{color:#fff;font-size:10px}
 /* Show local service and verified southbound route SIDE BY SIDE.
    The previous 8px-high two-line stack was unreadable in scaled LED frames.
@@ -601,11 +615,27 @@ body{display:flex;align-items:flex-end;justify-content:center;font-variant-numer
     var kindEN=kind==='local'?'':pass?(kind==='freight'?'Freight':'Pass'):
       ({limited:'Ltd.',local:'',extra:'Extra',sightseeing:'Tour',freight:'Frt.',pass:'Pass',deadhead:'Empty'}[kind]||'Train');
     box.appendChild(el('span','kind',lang==='en'?kindEN:kindJP));
-    var nameEl=el('div','service'+(name.pair?' pair':''));
-    (lang==='en'?name.en:name.ja).forEach(function(label){
-      if(name.pair)nameEl.appendChild(el('span','',label));
-      else nameEl.textContent=label;
-    });
+    var scrollPair=name.pair&&kind==='limited'&&!row._arrival;
+    var nameEl=el('div','service'+(scrollPair?' pair-scroll':name.pair?' pair':''));
+    if(scrollPair){
+      // Show BOTH linked train names at 11px, continuously and seamlessly.
+      // This is separate from the middle station ticker and the lower
+      // occasional next-express notice.
+      var pairText=(lang==='en'?name.en:name.ja).join('・');
+      var track=el('span','pair-track');
+      for(var pairCopy=0;pairCopy<2;pairCopy++){
+        var copy=el('span','pair-copy',pairText);
+        if(pairCopy)copy.setAttribute('aria-hidden','true');
+        track.appendChild(copy);
+      }
+      nameEl.appendChild(track);
+      nameEl.setAttribute('aria-label',pairText);
+    }else{
+      (lang==='en'?name.en:name.ja).forEach(function(label){
+        if(name.pair)nameEl.appendChild(el('span','',label));
+        else nameEl.textContent=label;
+      });
+    }
     if(localVia){
       // Two independently legible 16px-high labels, never an 8px stack.
       nameEl.classList.add('via-label');
