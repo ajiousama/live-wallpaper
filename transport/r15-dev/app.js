@@ -2062,9 +2062,10 @@
     if (/福岡/.test(d)) return '余戸南インター → 松山インター口 → 川内インター → 今治 → 小倉 → 博多';
     return record.info || '主要経由地の案内はありません';
   }
-  // Published ferry ship roster. Add a new month only after checking its
-  // official dated roster; never carry October's alternating pattern forward.
-  // Source: https://setonaikaikisen.co.jp/wp-content/uploads/2026/06/202610seapaseo.pdf
+  // Official dated monthly ship rosters, not extrapolated patterns.
+  // October: https://setonaikaikisen.co.jp/wp-content/uploads/2026/06/202610seapaseo.pdf
+  // November: https://setonaikaikisen.co.jp/wp-content/uploads/2026/06/202611seapaseo.pdf
+  // Vessel substitution is possible: all roster assignments are labelled 予定.
   // Timings below are lookup keys, not a substitute for the operator timetable.
   const HIROSHIMA_FERRY_SHIPS={
     '2026-10':{
@@ -2077,6 +2078,21 @@
         times:['06:20','08:25','09:40','11:00','12:10','14:15','15:30','16:35','18:00','20:10'],
         odd: ['A','P','P2','S','A','P','P2','S','A','P'],
         even:['S','P2','P','A','S','P2','P','A','S','P2']
+      }
+    },
+    '2026-11':{
+      // Read from the 2026-09-18 issue of the official NOVEMBER roster.
+      // Odd and even days happen to reverse October's assignments; verified
+      // against the November table independently, not inferred.
+      fromHiroshima:{
+        times:['05:45','06:45','08:05','09:15','11:20','12:35','13:40','15:05','17:15','19:30'],
+        odd: ['P2','P','A','S','P2','P','A','S','P2','A'],
+        even:['P','P2','S','A','P','P2','S','A','P','S']
+      },
+      fromMatsuyama:{
+        times:['06:20','08:25','09:40','11:00','12:10','14:15','15:30','16:35','18:00','20:10'],
+        odd: ['S','P2','P','A','S','P2','P','A','S','P2'],
+        even:['A','P','P2','S','A','P','P2','S','A','P']
       }
     }
   };
@@ -2136,8 +2152,13 @@
       : /^(?:旭洋丸|翔洋丸|シーマックス|SEA\s*MAX)$/i.test(vessel)
       ? '石崎汽船' : '';
     const byOperator=/^(?:瀬戸内海汽船|石崎汽船)$/.test(stated)?stated:'';
-    if ((byVessel&&byOperator&&byVessel!==byOperator) || (!byVessel&&!byOperator))
-      return {name:'船社未確認',type:type+'・共同運航'};
+    if (byVessel&&byOperator&&byVessel!==byOperator)
+      return {name:'運航情報不一致',type:type+'・個別船社の再確認が必要'};
+    // The route companies ARE confirmed; only the particular vessel/operator
+    // for this sailing may be unspecified. Show both verified joint operators,
+    // without claiming either one operates this particular departure.
+    if(!byVessel&&!byOperator)
+      return {name:'共同運航',type:type+'・使用船未確認'};
     return {name:byVessel||byOperator,
       type:vessel?vessel+(scheduled&&!explicitlyNamed?'（予定）':''):type};
   }
@@ -2178,7 +2199,7 @@
     if(n==='芸予汽船') return '<span class="ferry-mini-logo ferry-logo-geiyo">芸予汽船</span>';
     if(n==='瀬戸内海汽船') return '<span class="ferry-mini-logo ferry-logo-setouchi">瀬戸内海汽船</span>';
     if(n==='石崎汽船') return '<span class="ferry-mini-logo ferry-logo-ishizaki">石崎汽船</span>';
-    if(n==='船社未確認') return '<span class="ferry-mini-logo ferry-logo-unknown">船社未確認</span>';
+    if(n==='共同運航') return '<span class="ferry-logo-pair" title="広島・呉～松山航路は2社共同運航（当便の担当船社は未特定）"><span class="ferry-mini-logo ferry-logo-setouchi">瀬戸内海汽船</span><span class="ferry-mini-logo ferry-logo-ishizaki">石崎汽船</span></span>';
     if(n==='青島海運') return '<span class="ferry-mini-logo ferry-logo-aoshima">青島海運</span>';
     if(n==='新居浜市営') return '<span class="ferry-mini-logo ferry-logo-niihama">新居浜市営</span>';
     return '';
