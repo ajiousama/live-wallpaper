@@ -906,6 +906,9 @@ async function getIchitsubo(now: { minutes: number }) {
           station,arrival:padHHMM(arrival),departure:padHHMM(departure),
           dwellMinutes:dwell,counterTrainNum:candidate.trainNum,
           counterTrainClass:candidate.kind,
+          // The actual diagram route supplies the other train's terminal.
+          // Never infer a destination from train number or running direction.
+          counterDestination:String(candidate.route.destination || "").trim(),
           counterEvent:candidate.event,counterTime:padHHMM(candidate.time),
           movement:candidate.relation,source:"today_diagram",
           platformConfirmed:false,actualHoldConfirmed:false
@@ -1065,6 +1068,61 @@ async function getIchitsubo(now: { minutes: number }) {
   // or that the service is actually still using that rolling stock.
   const mappedInboundTurnbacks=new Map(matsuyamaTerminatingArrivals
     .filter(x=>x.turnback).map(x=>[x.trainNum,x.turnback]));
+
+  // All *scheduled* passenger arrivals at JR Matsuyama from today's EXISTING
+  // operating diagram. This includes through trains as well as terminators:
+  // never invent arrival times, platform numbers, or live position fixes.
+  // IMPORTANT route.passOnly means 市坪 pass-through, NOT 松山 non-stop.
+  // Require explicit "松山 着" event below instead of filtering on passOnly.
+  const matsuyamaPassengerArrivals=[...diagram.values()].flatMap(route=>{
+    const trainNum=String(route.trainNum||"").trim();
+    if(!/^\d{1,5}[MD]$/i.test(trainNum)||
+       /^(?:3072|3073)$/i.test(trainNum))return [];
+    const terminal=routeTerminatesAtMatsuyama(route);
+    if(Number(trainNum.replace(/\D/g,""))>=8000 && !terminal)return [];
+    const side=matsuyamaInboundSide(route);
+    if(!side)return [];
+    const actualArrival=route.points.find((p,i)=>i>=route.matsuyamaIndex &&
+      normalizeStationName(p.station)==="松山" &&
+      /着/.test(p.event)&&!/通/.test(p.event)&&
+      /^\d{1,2}:\d{2}$/.test(p.time));
+    if(!actualArrival)return [];
+    const num=String(trainNum);
+    const live=positionByTrain.get(num);
+    if(live&&(isDeadhead(live,route)||isFreight(live,route)))return [];
+    const pos=normalizeStationName(String(live?.Pos??""));
+    const positionConfirmed=!!pos&&!/^(?:松山|松山駅|松山基地|—|-|不明|未取得|取得中|確認中)$/.test(pos);
+    const delay=Number(live?.delay);
+    return [{
+      trainNum:num,trainClass:matsuyamaTrainClass(num),side,
+      arrival:String(actualArrival.time),origin:String(route.origin||""),
+      destination:String(route.destination||""),terminating:terminal,
+      position:positionConfirmed?pos:"",
+      delayMinutes:positionConfirmed&&Number.isFinite(delay)&&delay>0&&delay<=60?delay:0,
+      turnback:terminal?(mappedInboundTurnbacks.get(num)||null):null,
+      source:"today_diagram",platform:""
+    }];
+  });
+  // Conflicting timetable variants with identical unconfirmed arrival and
+  // turnback information are one service, not two confirmed trains.
+  const ledArrivalKey=(x:Record<string,any>)=>[
+    x.side,x.arrival,x.trainClass,x.origin,x.destination,
+    x.terminating,x.turnback?.departure||"",x.turnback?.destination||""
+  ].join("|");
+  // Prefer position-confirmed train when the diagram has an unobserved
+  // alternate code for the same service (e.g. 8094D / 9094D).
+  const confirmedLedArrivalKeys=new Set(matsuyamaPassengerArrivals
+    .filter(x=>!!x.position).map(ledArrivalKey));
+  const seenUnconfirmedLedArrivals=new Set<string>();
+  const uniqueMatsuyamaPassengerArrivals=matsuyamaPassengerArrivals
+    .filter(x=>{
+      if(x.position)return true;
+      const key=ledArrivalKey(x);
+      if(confirmedLedArrivalKeys.has(key)||seenUnconfirmedLedArrivals.has(key))
+        return false;
+      seenUnconfirmedLedArrivals.add(key);return true;
+    }).sort((a,b)=>toMinutes(a.arrival)-toMinutes(b.arrival));
+
   // Live-confirmed approach only. Timetable-only services are never announced
   // as "まもなく到着します", and a train already at Matsuyama is excluded.
   const matsuyamaInboundArrivalAlerts=[...diagram.values()].flatMap(route=>{
@@ -1138,6 +1196,7 @@ async function getIchitsubo(now: { minutes: number }) {
     matsuyamaFreights: matsuyamaFreights.map(x=>withVehicleImage(x as Record<string,any>,vehicleImages)),
     matsuyamaFreightSchedules,
     matsuyamaInboundArrivalAlerts,
+    matsuyamaPassengerArrivals:uniqueMatsuyamaPassengerArrivals,
     matsuyamaSpecialTrains: matsuyamaSpecialTrains.map(x=>withVehicleImage(x as Record<string,any>,vehicleImages)),
     positionFeedOk: positionResult.ok,
     matsuyamaSchedule: matsuyamaSchedule.map(x=>withVehicleImage(x as Record<string,any>,vehicleImages)),
@@ -1449,6 +1508,7 @@ async function loadMatsuyamaAdsbAircraft() {
           && Number.isFinite(seenPos)&&seenPos>=0&&seenPos<=30;
       }).map((a:any)=>({
         flight:String(a.flight).trim().toUpperCase().replace(/\s+/g,""),
+        registration:String(a?.r||"").trim().toUpperCase(),
         hex:String(a.hex||"").slice(0,12),
         lat:Number(a.lat),lon:Number(a.lon),
         track:Number(a.track),groundSpeedKt:Number(a.gs),
@@ -1503,7 +1563,7 @@ async function fetchMatsuyamaArrivalsByCallsign(callsigns:string[]) {
         if(!callsigns.includes(callsign))continue;
         const lat=Number(a?.lat),lon=Number(a?.lon),seen=Number(a?.seen_pos);
         if(!Number.isFinite(lat)||!Number.isFinite(lon)||!Number.isFinite(seen)||seen<0||seen>35)continue;
-        const flight={flight:callsign,hex:String(a?.hex||""),lat,lon,seenPosSeconds:seen,
+        const flight={flight:callsign,registration:String(a?.r||"").trim().toUpperCase(),hex:String(a?.hex||""),lat,lon,seenPosSeconds:seen,
           altBaro:a?.alt_baro,gs:Number(a?.gs),track:Number(a?.track)};
         const previous=unique.get(callsign);
         if(!previous||seen<previous.seenPosSeconds)unique.set(callsign,flight);
@@ -1521,7 +1581,7 @@ async function fetchMatsuyamaArrivalsByCallsign(callsigns:string[]) {
   const nearby=await loadMatsuyamaAdsbAircraft();
   const matches=(nearby.aircraft||[]).filter((x:any)=>callsigns.includes(x.flight))
     .map((x:any)=>({
-      flight:x.flight,hex:x.hex,lat:x.lat,lon:x.lon,
+      flight:x.flight,registration:x.registration,hex:x.hex,lat:x.lat,lon:x.lon,
       seenPosSeconds:x.seenPosSeconds,altBaro:x.altitudeFt,
       gs:x.groundSpeedKt,track:x.track
     }));
@@ -1564,6 +1624,15 @@ async function enrichArrivalsWithAdsb(arrivals:any[]) {
     if(before< -720)before+=1440;
     if(before>720)before-=1440;
     if(!Number.isFinite(before)||before< -20||before>260)return item;
+    // Flight identity and registration do not depend on whether the aircraft
+    // is airborne, pointed at Matsuyama, or still at its origin airport.
+    // The callsign is uniquely matched above; never infer a registration.
+    const registration=/^[A-Z]{1,3}[A-Z0-9-]{2,9}$/.test(String(a.registration||""))
+      ?String(a.registration):"";
+    const aircraftFields=registration?{aircraftRegistration:registration,
+      aircraftCallsign:spec.callsign,aircraftObservedAt:adsb.observedAt,
+      aircraftRegistrationSource:adsb.source}:{};
+    const identified={...item,...aircraftFields};
     const atOrigin=flightKm(a.lat,a.lon,spec.lat,spec.lon);
     const atMatsuyama=flightKm(a.lat,a.lon,MATSUGYAMA_LAT,MATSUGYAMA_LON);
     const speed=Number(a.gs),alt=Number(a.altBaro);
@@ -1572,21 +1641,21 @@ async function enrichArrivalsWithAdsb(arrivals:any[]) {
     const sourceText=(adsb.source||"ADS-B")+" 機体位置";
     // Waiting only when the plane is physically at its named origin airport.
     if(atOrigin<=5 && onGround && before>=0){
-      return {...item,aircraftFlightPhase:"waiting",aircraftPositionConfirmed:true,
+      return {...identified,aircraftFlightPhase:"waiting",aircraftPositionConfirmed:true,
         aircraftObservedAt:adsb.observedAt,aircraftCallsign:spec.callsign,
         aircraftPositionText:spec.name+"地上（離陸未確認）",aircraftDataSource:sourceText};
     }
-    if(!Number.isFinite(alt)||alt<500||!Number.isFinite(speed)||speed<85||atMatsuyama>1650)return item;
-    if(!Number.isFinite(a.track))return item;
+    if(!Number.isFinite(alt)||alt<500||!Number.isFinite(speed)||speed<85||atMatsuyama>1650)return identified;
+    if(!Number.isFinite(a.track))return identified;
     const bearingToMatsuyama=flightBearing(a.lat,a.lon,MATSUGYAMA_LAT,MATSUGYAMA_LON);
     const deviation=Math.abs(((a.track-bearingToMatsuyama+540)%360)-180);
-    if(atMatsuyama>30&&deviation>85)return item;
+    if(atMatsuyama>30&&deviation>85)return identified;
     const direction=compassFromAirport(flightBearing(MATSUGYAMA_LAT,MATSUGYAMA_LON,a.lat,a.lon));
     const distance=Math.max(5,Math.round(atMatsuyama/5)*5);
     const place=atMatsuyama<55
       ? "松山空港へ接近中（約"+distance+"km）"
       : "現在 松山空港の"+direction+" 約"+distance+"kmを航行中";
-    return {...item,originDepartureConfirmed:true,aircraftFlightPhase:atMatsuyama<55?"approaching":"airborne",
+    return {...identified,originDepartureConfirmed:true,aircraftFlightPhase:atMatsuyama<55?"approaching":"airborne",
       aircraftPositionConfirmed:true,aircraftObservedAt:adsb.observedAt,
       aircraftCallsign:spec.callsign,aircraftPositionText:place,aircraftDataSource:sourceText};
   });
@@ -1594,6 +1663,38 @@ async function enrichArrivalsWithAdsb(arrivals:any[]) {
   return {arrivals:output,adsb:{ok:adsb.ok,source:adsb.source,observedAt:adsb.observedAt,matchedFlights:output.filter(x=>x.aircraftPositionConfirmed).length}};
 }
 
+
+// Identify outbound ANA aircraft only from a current ADS-B callsign and
+// registration observed near Matsuyama. Flight schedules cannot identify a jet.
+const MATSUGYAMA_ANA_DEPARTURES=new Set([
+  "582","584","586","588","590","592","594","596","598","600",
+  "1634","1636","1638","1640","1642","1644","1646","1648","1650","1883"
+]);
+async function enrichDeparturesWithRegistration(departures:any[]) {
+  const now=jstNow().minutes;
+  const calls=departures.map((item:any)=>{
+    const nums=(Array.isArray(item.numbers)?item.numbers:[]).map(String);
+    const ana=nums.filter((n:string)=>MATSUGYAMA_ANA_DEPARTURES.has(n));
+    const minute=toMinutes(item.changed||item.scheduled);
+    return ana.length===1 && Number.isFinite(minute) &&
+      minute-now>=-35 && minute-now<=100 ? `ANA${ana[0]}` : "";
+  });
+  const unique=[...new Set(calls.filter(Boolean))];
+  if(!unique.length)return departures;
+  const adsb=await fetchMatsuyamaArrivalsByCallsign(unique);
+  const matches=new Map<string,any>();
+  for(const a of adsb.aircraft||[]){
+    if(matches.has(a.flight))matches.set(a.flight,null);
+    else matches.set(a.flight,a);
+  }
+  return departures.map((item:any,index:number)=>{
+    const a=matches.get(calls[index]);
+    if(!a || !/^JA[A-Z0-9]{4,6}$/.test(a.registration||"") ||
+       flightKm(a.lat,a.lon,MATSUGYAMA_LAT,MATSUGYAMA_LON)>110)return item;
+    return {...item,aircraftRegistration:a.registration,
+      aircraftRegistrationSource:adsb.source,aircraftObservedAt:adsb.observedAt};
+  });
+}
 
 const ITAMI_DEPARTURE_BOARD_URL="https://www.osaka-airport.co.jp/flight/search?direction=DEP&duration=all";
 async function getItamiDepartures() {
@@ -1975,6 +2076,7 @@ async function getAirportLive() {
     }));
   }
   parsed.arrivals=linked.arrivals;
+  parsed.departures=await enrichDeparturesWithRegistration(parsed.departures);
   return {
     source: "松山空港公式",
     ...parsed,
