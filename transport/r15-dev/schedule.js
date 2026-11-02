@@ -1,5 +1,5 @@
 window.MATSUYAMA_DATA = {
-  "version": "2026.11.01.R15-partial",
+  "version": "2026.11.03.R15-partial",
   "checked": "2026-10-01",
   "airportValidTo": "2026-11-30",
   "records": [
@@ -9832,6 +9832,20 @@ window.MATSUYAMA_DATA = {
   "verifiedMonth": "2026-10",
   "ferryChecked": "2026-10-21",
   "partialUpdates": {
+    "airportLimousineNovember": {
+      "checked": "2026-11-03",
+      "validFrom": "2026-10-25",
+      "validTo": "2026-11-30",
+      "verification": "40 distinct airport departures matched against 43 operator-listed sailings/bus departures, three coincident departures are listed once by next-bus display",
+      "source": "https://www.iyotetsu.co.jp/railbus/limousine/airport/?t=202611"
+    },
+    "hiroshimaFerryNovemberVessels": {
+      "checked": "2026-11-01",
+      "validFrom": "2026-11-01",
+      "validTo": "2026-11-30",
+      "scope": "Dated planned vessel roster, not a full audit of all port routes. Vessel substitutions may occur.",
+      "source": "https://setonaikaikisen.co.jp/wp-content/uploads/2026/06/202611seapaseo.pdf"
+    },
     "domesticAirport": {
       "checked": "2026-11-01",
       "validFrom": "2026-10-25",
@@ -9866,7 +9880,7 @@ window.MATSUYAMA_DATA = {
       ],
       "source": "https://39a04ddf36e9ebd674d7beee680543ee.cdnext.stream.ne.jp/01_trainbus/event_train/seat_info/iyonadamonogatari"
     },
-    "wholeSchedule": "Not fully audited; verifiedMonth remains 2026-10 until JR, ferry and remaining highway bus schedule are cross-checked.",
+    "wholeSchedule": "2026-11 partial update only: aviation and airport limousine are validated for the posted November validity window, Iyo-nada November operating dates and Hiroshima cruise-ferry planned vessel roster are included. JR regular services, remaining ferry routes and highway/regional buses are NOT fully rechecked; verifiedMonth remains 2026-10.",
     "internationalAirport": {
       "checked": "2026-11-01",
       "validFrom": "2026-10-25",
