@@ -10051,6 +10051,33 @@ window.MATSUYAMA_DATA = {
       "source": "https://www.jr-shikoku.co.jp/01_trainbus/jikoku/pdf/ichitsubo.pdf",
       "scope": "Both directions and all 50 listed times and destination names reviewed against JR Shikoku posted station PDF (25 north, 25 south). PDF marked 2025-03-15; later alterations cannot be ruled out without updated dated notice.",
       "recordsChecked": 50
+    },
+    "portBroaderNovember": {
+      "checked": "2026-11-03",
+      "scope": "Reviewed 153 stored port records by source: Hiroshima cruise 10+10 and high speed 8+8, Uwajima Beppu/Usuki, Boyo maintenance Nov4, Koku94 extras Nov21/23, Imabari Blue Line ferry, Geiyo weekday/holiday, Nakajima east/west with 19:05/19:10 discrepancy, Sekizen weekly closure and Tobishima unaffected. Scheduled ship substitutions and unannounced live cancellations cannot be certified.",
+      "sources": [
+        "https://www.kankoko.com/contents/timetable.html",
+        "https://www.uwajimaunyu.co.jp/timetable/",
+        "https://www.boyoferry.co.jp/c_timetable.html",
+        "https://www.koku94.jp/operation",
+        "https://www.city.imabari.ehime.jp/kotsus/tosen/sekizen/",
+        "https://omishima-bl.net/",
+        "https://geiyokisen.com/",
+        "https://www.pref.ehime.jp/site/chuyo/4786.html"
+      ],
+      "recordsReviewed": 153
+    },
+    "busBroaderNovember": {
+      "checked": "2026-11-03",
+      "scope": "Reviewed the 177 stored bus records by provider, including 10 JR Matsuyama-Osaka, 12 Takamatsu and 6 Tokushima JR departures, city departures, 4 Okayama, Kobe, Kirara suspensions, Tokyo Nov operating calendar, JR Kumakogen, 6 Omishima and 7 Niihama (corrected 08:45 operator). Selected individual route/terminal times and some seasonal services still await authoritative November confirmation.",
+      "recordsReviewed": 177,
+      "sources": [
+        "https://www.jr-shikokubus.co.jp/businfo/matsuyama_ex/osaka.html",
+        "https://www.iyotetsu.co.jp/kousoku/takamatsu.html",
+        "https://www.iyotetsu.co.jp/kousoku/okayama.html",
+        "https://www.setouchibus.co.jp/rosen/niihama.html",
+        "https://www.setouchibus.co.jp/rosen/omishima.html"
+      ]
     }
   }
 };
