@@ -229,6 +229,13 @@
     return [0,6].includes(new Date(iso+'T12:00:00Z').getUTCDay()) || ferryHoliday(iso);
   }
   function ferryCalendarAllows(r,iso) {
+    // 今治市営フェリー「第二せきぜん」: 2026-04-01 onwards all
+    // Monday/Thursday sailings suspended due to crew shortage, until
+    // further notice. Passenger boat 「とびしま」 continues as normal.
+    // https://www.city.imabari.ehime.jp/kotsus/tosen/sekizen/
+    if(iso>='2026-04-01' &&
+       ['imabari_sekizen','imabari_sekizen_official_in'].includes(r.source) &&
+       [1,4].includes(new Date(iso+'T12:00:00+09:00').getDay()))return false;
     const inward=r.direction==='arrival';
     const departure=inward?r.originDepartureTime:r.time;
     // Operator notice 2026-10-14; the entry/exit days have exceptions.
