@@ -2951,7 +2951,7 @@
     },
     {
       "board": "port",
-      "time": "19:05",
+      "time": "19:10",
       "service": "中島汽船フェリー",
       "dest": "中島・大浦（観光港経由便）",
       "info": "睦月経由・高浜寄港なし（野忽那の寄港条件は要確認）",
@@ -2976,11 +2976,11 @@
           "着"
         ]
       ],
-      "timetableReference": "https://www.kankoko.com/contents/timetable.html",
+      "timetableReference": "https://www.pref.ehime.jp/site/chuyo/4786.html",
       "timetableChecked": "2026-11-03",
       "terminalArrivalTime": "20:14",
       "departureTimeUnconfirmed": true,
-      "timetableCaution": "松山観光港の案内ページ19:05／愛媛県・松山市の中島航路資料19:10。三津浜発の正確な出航時刻は中島汽船へ要確認。"
+      "timetableCaution": "愛媛県・松山市・経路案内は三津浜19:10、松山観光港ターミナルは19:05で食い違い。運航会社直接確認までは確定しない"
     },
     {
       "board": "port",
@@ -9965,7 +9965,9 @@
       "sources": [
         "https://www.kankoko.com/contents/timetable.html",
         "https://www.pref.ehime.jp/site/chuyo/4786.html"
-      ]
+      ],
+      "displayTime": "19:10 (provisional)",
+      "reason": "Two municipal/prefectural and route-data sources report 19:10, Kanko Port Terminal publishes 19:05; display provisional time with caution."
     },
     "kumakogenNovember": {
       "checked": "2026-11-03",
