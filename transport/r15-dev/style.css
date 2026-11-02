@@ -228,6 +228,8 @@ html,body{margin:0;height:100%;background:radial-gradient(circle at 20% 20%, #10
 .port-route .route-port{font-weight:700}
 .row.placeholder.blank{opacity:.35}
 .update-modal{position:absolute;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;background:rgba(1,8,11,.78);backdrop-filter:blur(3px)}
+/* The author display:flex rule must not override the hidden attribute. */
+.update-modal[hidden]{display:none!important}
 .update-card{width:560px;max-width:calc(100% - 48px);padding:24px 26px 22px;border:1px solid #31515e;border-radius:12px;background:#091a22;box-shadow:0 22px 60px rgba(0,0,0,.6)}
 .update-kicker{font-size:10px;letter-spacing:.18em;color:#e0b179;font-weight:800}
 .update-card h3{margin:7px 0 8px;font-size:25px}
