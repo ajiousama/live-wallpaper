@@ -199,7 +199,7 @@
     if (Array.isArray(r.exclude) && r.exclude.includes(iso)) return false;
     if (Array.isArray(r.dates) && !r.dates.includes(iso)) return false;
     if (r.board==='port' && !ferryCalendarAllows(r,iso)) return false;
-    if (Array.isArray(r.days) && !['weekday','holiday'].includes(r.ferryCalendar)) {
+    if (Array.isArray(r.days) && !['weekday','holiday','geiyoHoliday','geiyoWeekday'].includes(r.ferryCalendar)) {
       const dow = r.board==='port' ? new Date(iso+'T12:00:00Z').getUTCDay()
         : new Date(`${iso}T12:00:00+09:00`).getDay();
       if (!r.days.includes(dow)) return false;
@@ -269,6 +269,8 @@
     if(r.source==='boyo'&&iso>='2026-12-08'&&iso<='2026-12-23'&&
       (r.calls||[]).some(c=>c[0]==='伊保田港'))return false;
     const cal=r.ferryCalendar;
+    if(cal==='geiyoHoliday')return ferryWeekend(iso);
+    if(cal==='geiyoWeekday')return !ferryWeekend(iso);
     if(cal==='weekday'||cal==='holiday') {
       const special=/-(?:08-(?:1[2-6])|12-(?:29|30|31)|01-0[1-4])$/.test(iso);
       return (ferryWeekend(iso)||special)===(cal==='holiday');
