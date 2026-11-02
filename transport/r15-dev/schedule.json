@@ -6218,7 +6218,8 @@
         3,
         4,
         5
-      ]
+      ],
+      "busCalendar": "weekdayOnly"
     },
     {
       "board": "bus",
@@ -6242,7 +6243,8 @@
         3,
         4,
         5
-      ]
+      ],
+      "busCalendar": "weekdayOnly"
     },
     {
       "id": "orange-niihama-dock-202610",
@@ -9936,6 +9938,11 @@
       "source": "https://www.kankoko.com/contents/timetable.html",
       "correctedDeparture": "19:05",
       "note": "Corrected from provisional 19:10 to port terminal's published departure."
+    },
+    "kumakogenNovember": {
+      "checked": "2026-11-03",
+      "source": "https://www.jr-shikokubus.co.jp/businfo/rosen/kumakogen.html",
+      "scope": "All eight outbound and inbound listed departure/arrival times matched; last 19:00 outbound and 21:00 inbound trips are weekdays excluding weekends and national holidays."
     }
   }
 }
