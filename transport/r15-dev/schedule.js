@@ -1,5 +1,5 @@
 window.MATSUYAMA_DATA = {
-  "version": "2026.11.03.R15-partial",
+  "version": "2026.11.03.R15-audit-in-progress",
   "checked": "2026-10-01",
   "airportValidTo": "2026-11-30",
   "records": [
@@ -2951,7 +2951,7 @@ window.MATSUYAMA_DATA = {
     },
     {
       "board": "port",
-      "time": "19:10",
+      "time": "19:05",
       "service": "中島汽船フェリー",
       "dest": "中島・大浦（観光港経由便）",
       "info": "睦月経由・高浜寄港なし（野忽那の寄港条件は要確認）",
@@ -2976,10 +2976,8 @@ window.MATSUYAMA_DATA = {
           "着"
         ]
       ],
-      "timetableReference": "https://www.pref.ehime.jp/uploaded/attachment/183017.pdf#page=18",
-      "timetableChecked": "2026-10-21",
-      "timetableCaution": "公式資料で三津浜発19:05／19:10の差異あり・出発時刻要確認",
-      "departureTimeUnconfirmed": true,
+      "timetableReference": "https://www.kankoko.com/contents/timetable.html",
+      "timetableChecked": "2026-11-03",
       "terminalArrivalTime": "20:14"
     },
     {
@@ -3944,7 +3942,8 @@ window.MATSUYAMA_DATA = {
       "kind": "bus",
       "source": "iyotetsu_kobe_202609",
       "id": "bus-kobe-00",
-      "stop": "松山市駅"
+      "stop": "松山市駅",
+      "busCalendar": "weekendHoliday"
     },
     {
       "board": "bus",
@@ -3966,7 +3965,8 @@ window.MATSUYAMA_DATA = {
       "kind": "bus",
       "source": "iyotetsu_kobe_202609",
       "id": "bus-kobe-02",
-      "stop": "松山市駅"
+      "stop": "松山市駅",
+      "suspended": true
     },
     {
       "board": "bus",
@@ -3988,7 +3988,8 @@ window.MATSUYAMA_DATA = {
       "kind": "bus",
       "source": "iyotetsu_kobe_202609",
       "id": "bus-kobe-04",
-      "stop": "松山市駅"
+      "stop": "松山市駅",
+      "busCalendar": "weekendHoliday"
     },
     {
       "board": "bus",
@@ -4010,7 +4011,8 @@ window.MATSUYAMA_DATA = {
       "kind": "bus",
       "source": "iyotetsu_kobe_202609",
       "id": "bus-kobe-06",
-      "stop": "松山市駅"
+      "stop": "松山市駅",
+      "suspended": true
     },
     {
       "board": "bus",
@@ -9899,6 +9901,41 @@ window.MATSUYAMA_DATA = {
       "checked": "2026-11-01",
       "validTo": "2026-11-30",
       "source": "https://travel.rakuten.co.jp/bus/bin_page/103337043.html"
+    },
+    "harbouredBusKobeNovember": {
+      "checked": "2026-11-03",
+      "source": "https://www.iyotetsu.co.jp/kousoku/kobe.html",
+      "details": "Kobe 06:00 and 14:20 Matsuyama-city departures on weekends and national holidays; 09:00 and 16:30 suspended. Other four daily."
+    },
+    "boyoNovember4": {
+      "checked": "2026-11-03",
+      "source": "https://www.boyoferry.co.jp/c_todays.html",
+      "date": "2026-11-04",
+      "outboundCanceled": [
+        "11:50",
+        "17:35"
+      ],
+      "inboundCanceledOriginDepartures": [
+        "09:00",
+        "14:45"
+      ],
+      "implementedIn": "r15-dev/app.js ferryCalendarAllows"
+    },
+    "koku94NovemberExtras": {
+      "checked": "2026-11-03",
+      "source": "https://www.koku94.jp/operation",
+      "dates": [
+        "2026-11-21",
+        "2026-11-23"
+      ],
+      "departure": "13:30",
+      "note": "Already present in schedule; verified no change needed."
+    },
+    "nakajimaNovember": {
+      "checked": "2026-11-03",
+      "source": "https://www.kankoko.com/contents/timetable.html",
+      "correctedDeparture": "19:05",
+      "note": "Corrected from provisional 19:10 to port terminal's published departure."
     }
   }
 };
