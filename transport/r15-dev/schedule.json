@@ -4034,7 +4034,8 @@
       "kind": "bus",
       "source": "kirara_202609",
       "id": "bus-kirara-00",
-      "stop": "松山市駅"
+      "stop": "松山市駅",
+      "suspended": true
     },
     {
       "board": "bus",
@@ -4056,7 +4057,8 @@
       "kind": "bus",
       "source": "kirara_202609",
       "id": "bus-kirara-02",
-      "stop": "松山市駅"
+      "stop": "松山市駅",
+      "suspended": true
     },
     {
       "board": "bus",
@@ -9943,6 +9945,11 @@
       "checked": "2026-11-03",
       "source": "https://www.jr-shikokubus.co.jp/businfo/rosen/kumakogen.html",
       "scope": "All eight outbound and inbound listed departure/arrival times matched; last 19:00 outbound and 21:00 inbound trips are weekdays excluding weekends and national holidays."
+    },
+    "kiraraNovember": {
+      "checked": "2026-11-03",
+      "source": "https://www.iyotetsu.co.jp/kousoku/hiroshima.html",
+      "note": "07:40 and 14:10 Matsuyama city departure marked suspended. 10:20 and 16:35 remain active."
     }
   }
 }
