@@ -9910,7 +9910,7 @@ window.MATSUYAMA_DATA = {
       ],
       "source": "https://39a04ddf36e9ebd674d7beee680543ee.cdnext.stream.ne.jp/01_trainbus/event_train/seat_info/iyonadamonogatari"
     },
-    "wholeSchedule": "2026-11 partial update only: aviation and airport limousine are validated for the posted November validity window, Iyo-nada November operating dates and Hiroshima cruise-ferry planned vessel roster are included. JR regular services, remaining ferry routes and highway/regional buses are NOT fully rechecked; verifiedMonth remains 2026-10.",
+    "wholeSchedule": "2026-11-03: 558 source records reviewed by transport category, 30 November service dates validation-tested (16,740 date/record cases). Source-checked sections include 74 air, 88 JR Matsuyama, 50 JR Ichitsubo, 177 bus, 153 ferry, 6 Iyo-nada special arrivals, 10 Madonna bus times. Operator corrections for Okayama and Niihama, and Monday/Thursday Sekizen cancellation, applied. Exception: individual date-specific international services, JR posted PDF date 2025-03-15, special-day JR Osaka 15:30 bus calendar, Nakajima 19:05 vs 19:10 conflicting official listings, occasional vessel substitution, and unannounced service changes cannot yet be certified across all November dates. Preserve verifiedMonth=2026-10 until full authoritative resolution; month UI states partly checked.",
     "internationalAirport": {
       "checked": "2026-11-01",
       "validFrom": "2026-10-25",
