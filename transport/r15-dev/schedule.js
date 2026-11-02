@@ -10078,6 +10078,12 @@ window.MATSUYAMA_DATA = {
         "https://www.setouchibus.co.jp/rosen/niihama.html",
         "https://www.setouchibus.co.jp/rosen/omishima.html"
       ]
+    },
+    "madonnaStadiumNovember": {
+      "checked": "2026-11-03",
+      "scope": "Ten Madonna Stadium (松山中央公園線51) toward Matsuyama City station reference departures match latest available published table; stop is Madonna Stadium, one minute earlier than Bocchan Stadium.",
+      "source": "https://osanpo.info/g/bus__iyotetsubus_alllines__ssr?route_id=10027",
+      "recordsChecked": 10
     }
   }
 };
