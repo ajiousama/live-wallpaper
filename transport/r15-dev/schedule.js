@@ -10016,6 +10016,28 @@ window.MATSUYAMA_DATA = {
       "checked": "2026-11-03",
       "source": "https://www.setouchibus.co.jp/rosen/niihama.html",
       "scope": "7 JR Matsuyama departure times and operating companies. 08:45 by 伊予鉄バス; 10:15,11:15,13:15,15:15,17:15,19:05 by せとうちバス."
+    },
+    "sekizenNovember": {
+      "checked": "2026-11-03",
+      "source": "https://www.city.imabari.ehime.jp/kotsus/tosen/sekizen/",
+      "validFrom": "2026-04-01",
+      "scope": "Second Sekizen ferry all departures and inbound trips do not run Mondays and Thursdays until further notice. Tobishima passenger service unaffected.",
+      "implementedIn": "transport/r15-dev/app.js ferryCalendarAllows"
+    },
+    "blueLineNovember": {
+      "checked": "2026-11-03",
+      "source": "https://omishima-bl.net/",
+      "scope": "Imabari 06:30 and 13:05 to Munakata/Kie; Kie-to-Imabari 12:05,19:55 arrivals. Other departures in the official table originate at Munakata and are not Imabari departures."
+    },
+    "internationalAirportNovemberRecheck": {
+      "checked": "2026-11-03",
+      "source": "https://www.matsuyama-airport.co.jp/",
+      "scope": "November 1/2 live airport flight board 7C1704 15:40 and 7C1703 14:40 confirmed, unlike older summer table. Full recurring November airline schedule still unverified."
+    },
+    "jrExpressNovember": {
+      "checked": "2026-11-03",
+      "source": "https://www.jorudan.co.jp/time/timetable/%E6%9D%BE%E5%B1%B1%EF%BC%88%E6%84%9B%E5%AA%9B%EF%BC%89/%E3%81%97%E3%81%8A%E3%81%8B%E3%81%9C/%E4%BC%8A%E4%BA%88%E5%8C%97%E6%9D%A1/?Ddd=07&Dhh=18&Dmn=39&Dym=202611",
+      "scope": "All fourteen Shiokaze 4 through 30 departure time and train-number pairs match current 2026-11-07 timetable, valid Sep18-Feb28. JR ordinary and Uchiko line require further specific cross-check."
     }
   }
 };
