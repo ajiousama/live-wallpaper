@@ -93,7 +93,9 @@
       if (!r.ok) return;
       const x = await r.json();
       const next = String(x.build || '');
-      if (next && CURRENT_BUILD && CURRENT_BUILD !== '__BUILD_ID__' && next !== CURRENT_BUILD) {
+      if (next && CURRENT_BUILD && CURRENT_BUILD !== '__BUILD_ID__' &&
+          next !== CURRENT_BUILD &&
+          new URLSearchParams(location.search).get('v') !== next) {
         const u = new URL(location.href);
         u.searchParams.set('v', next);
         if(document.documentElement.classList.contains('company-pc')){
@@ -6649,6 +6651,13 @@
     const vm = data.verifiedMonth || String(data.checked || '').slice(0,7) || '未確認';
     const formatted = vm === '未確認' ? vm : `${vm.replace('-', '年')}月`;
     if (vm === now.month) return `ダイヤ確認 ${formatted}`;
+    // Partial monthly updates are real, but NOT an all-transport audit.
+    const partial = data.partialUpdates || {};
+    const checkedThisMonth = Object.values(partial).some(item =>
+      item && typeof item === 'object' &&
+      [item.checked,item.validTo].some(value =>
+        String(value||'').slice(0,7)===now.month));
+    if (checkedThisMonth) return `ダイヤ ${now.month.replace('-', '年')}月版（一部確認済）`;
     const continuing = localStorage.getItem('matsuyama.skipMonth') === now.month;
     return `ダイヤ確認 ${formatted}${continuing ? '（継続使用）' : '（要更新）'}`;
   }
@@ -6657,6 +6666,13 @@
     const now = japanNow();
     $('data-status').textContent = verifiedMonthLabel(now);
     const modal = $('update-modal');
+    if(!modal)return;
+    // Unattended workplace wallpaper: never show a monthly modal. Continue
+    // showing verified/partial status quietly in the header.
+    if(document.documentElement.classList.contains('company-pc')){
+      modal.hidden=true;
+      return;
+    }
     const verified = data.verifiedMonth || String(data.checked || '').slice(0,7);
     const skipMonth = localStorage.getItem('matsuyama.skipMonth') || '';
     const snoozeUntil = localStorage.getItem('matsuyama.snoozeUntil') || '';
@@ -6669,9 +6685,9 @@
       let copied = true;
       try { await navigator.clipboard.writeText(request); } catch(e) { copied = false; }
       $('update-help').textContent = copied
-        ? '更新依頼文をコピーしました。このFINAL版ZIPと一緒にChatGPTへ渡してください。明日また確認します。'
+        ? '更新依頼文をコピーしました。このFINAL版ZIPと一緒にChatGPTへ渡してください。7日後に再確認します。'
         : `このFINAL版ZIPと一緒にChatGPTへ依頼してください：${request}`;
-      const d = new Date(`${now.iso}T12:00:00+09:00`); d.setDate(d.getDate()+1);
+      const d = new Date(`${now.iso}T12:00:00+09:00`); d.setDate(d.getDate()+7);
       const y=d.getFullYear(), m=String(d.getMonth()+1).padStart(2,'0'), day=String(d.getDate()).padStart(2,'0');
       localStorage.setItem('matsuyama.snoozeUntil', `${y}-${m}-${day}`);
       setTimeout(()=>{ modal.hidden=true; }, 4200);
@@ -6683,7 +6699,7 @@
       modal.hidden = true;
     };
     $('update-later').onclick = () => {
-      const d = new Date(`${now.iso}T12:00:00+09:00`); d.setDate(d.getDate()+1);
+      const d = new Date(`${now.iso}T12:00:00+09:00`); d.setDate(d.getDate()+7);
       const y=d.getFullYear(), m=String(d.getMonth()+1).padStart(2,'0'), day=String(d.getDate()).padStart(2,'0');
       localStorage.setItem('matsuyama.snoozeUntil', `${y}-${m}-${day}`);
       modal.hidden = true;
