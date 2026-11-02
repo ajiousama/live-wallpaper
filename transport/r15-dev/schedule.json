@@ -9836,7 +9836,7 @@
       "checked": "2026-11-03",
       "validFrom": "2026-10-25",
       "validTo": "2026-11-30",
-      "verification": "40 distinct airport departures matched against 43 operator-listed sailings/bus departures, three coincident departures are listed once by next-bus display",
+      "verification": "43 airport-to-city bus departure slots in the 2026-10-25 to 2026-11-30 official timetable; 3 time duplicates yield 40 distinct times, matching the next-bus display",
       "source": "https://www.iyotetsu.co.jp/railbus/limousine/airport/?t=202611"
     },
     "hiroshimaFerryNovemberVessels": {
