@@ -4314,7 +4314,7 @@ window.MATSUYAMA_DATA = {
       "id": "midbus-017",
       "board": "bus",
       "time": "08:45",
-      "service": "せとうちバス",
+      "service": "伊予鉄バス",
       "dest": "新居浜駅前",
       "info": "松山市駅・四国がんセンター・西条経由",
       "kind": "midbus",
@@ -10011,6 +10011,11 @@ window.MATSUYAMA_DATA = {
       "checked": "2026-11-03",
       "source": "https://geiyokisen.com/",
       "note": "Holiday/weekday actual ship departures matched, including Nov 3 and Nov 23 public holidays; Saturday/Sunday/holiday operates 06:20,09:15,14:30,17:20, weekdays 06:00,08:00,14:30,17:20."
+    },
+    "niihamaNovember": {
+      "checked": "2026-11-03",
+      "source": "https://www.setouchibus.co.jp/rosen/niihama.html",
+      "scope": "7 JR Matsuyama departure times and operating companies. 08:45 by 伊予鉄バス; 10:15,11:15,13:15,15:15,17:15,19:05 by せとうちバス."
     }
   }
 };
