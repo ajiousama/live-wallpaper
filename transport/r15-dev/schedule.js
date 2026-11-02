@@ -4080,7 +4080,29 @@ window.MATSUYAMA_DATA = {
       "kind": "bus",
       "source": "iyotetsu_tokyo_202609",
       "id": "bus-tokyo-00",
-      "stop": "松山市駅"
+      "stop": "松山市駅",
+      "dates": [
+        "2026-11-01",
+        "2026-11-02",
+        "2026-11-03",
+        "2026-11-04",
+        "2026-11-06",
+        "2026-11-07",
+        "2026-11-08",
+        "2026-11-09",
+        "2026-11-13",
+        "2026-11-14",
+        "2026-11-15",
+        "2026-11-16",
+        "2026-11-20",
+        "2026-11-21",
+        "2026-11-22",
+        "2026-11-23",
+        "2026-11-27",
+        "2026-11-28",
+        "2026-11-29",
+        "2026-11-30"
+      ]
     },
     {
       "id": "midbus-000",
@@ -9950,6 +9972,34 @@ window.MATSUYAMA_DATA = {
       "checked": "2026-11-03",
       "source": "https://www.iyotetsu.co.jp/kousoku/hiroshima.html",
       "note": "07:40 and 14:10 Matsuyama city departure marked suspended. 10:20 and 16:35 remain active."
+    },
+    "tokyoNovember": {
+      "checked": "2026-11-03",
+      "source": "https://www.iyotetsu.co.jp/kousoku/cal/mt202611.png",
+      "sourcePage": "https://www.iyotetsu.co.jp/kousoku/tokyo.html",
+      "note": "Matsuyama departure dates transcribed from November official colored calendar; slash cells not operated.",
+      "operatingDates": [
+        "2026-11-01",
+        "2026-11-02",
+        "2026-11-03",
+        "2026-11-04",
+        "2026-11-06",
+        "2026-11-07",
+        "2026-11-08",
+        "2026-11-09",
+        "2026-11-13",
+        "2026-11-14",
+        "2026-11-15",
+        "2026-11-16",
+        "2026-11-20",
+        "2026-11-21",
+        "2026-11-22",
+        "2026-11-23",
+        "2026-11-27",
+        "2026-11-28",
+        "2026-11-29",
+        "2026-11-30"
+      ]
     }
   }
 };
