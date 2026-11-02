@@ -111,7 +111,7 @@ window.MATSUYAMA_DATA = {
     {
       "board": "bus",
       "time": "07:40",
-      "service": "伊予鉄バス",
+      "service": "JR四国バス",
       "dest": "岡山",
       "info": "JR松山駅",
       "kind": "bus",
@@ -2582,7 +2582,7 @@ window.MATSUYAMA_DATA = {
     {
       "board": "bus",
       "time": "07:48",
-      "service": "伊予鉄バス",
+      "service": "JR四国バス",
       "dest": "岡山",
       "info": "松山市駅",
       "kind": "bus",
