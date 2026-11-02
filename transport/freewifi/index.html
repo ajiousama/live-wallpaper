@@ -34,7 +34,8 @@
           if(!response.ok)return;
           const json=await response.json();
           const latest=String(json.build||'').trim();
-          if(!latest||latest===current||latest==='__BUILD_ID__')return;
+          if(!latest||latest===current||latest==='__BUILD_ID__'||
+              new URLSearchParams(location.search).get('v')===latest)return;
           // A WebView may cache the old document despite redirects. Retry
           // slowly with a different URL rather than looping uncontrollably.
           if(Date.now()-lastAttempt<60000)return;
