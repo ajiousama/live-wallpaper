@@ -2978,7 +2978,9 @@
       ],
       "timetableReference": "https://www.kankoko.com/contents/timetable.html",
       "timetableChecked": "2026-11-03",
-      "terminalArrivalTime": "20:14"
+      "terminalArrivalTime": "20:14",
+      "departureTimeUnconfirmed": true,
+      "timetableCaution": "松山観光港の案内ページ19:05／愛媛県・松山市の中島航路資料19:10。三津浜発の正確な出航時刻は中島汽船へ要確認。"
     },
     {
       "board": "port",
@@ -5227,7 +5229,7 @@
       "noSyntheticArrival": true,
       "timetableReference": "https://geiyokisen.com/",
       "timetableChecked": "2026-10-21",
-      "ferryCalendar": "holiday",
+      "ferryCalendar": "geiyoHoliday",
       "terminalArrivalTime": "07:40"
     },
     {
@@ -5284,7 +5286,7 @@
       "noSyntheticArrival": true,
       "timetableReference": "https://geiyokisen.com/",
       "timetableChecked": "2026-10-21",
-      "ferryCalendar": "holiday",
+      "ferryCalendar": "geiyoHoliday",
       "terminalArrivalTime": "10:35"
     },
     {
@@ -5341,7 +5343,7 @@
       "noSyntheticArrival": true,
       "timetableReference": "https://geiyokisen.com/",
       "timetableChecked": "2026-10-21",
-      "ferryCalendar": "all",
+      "ferryCalendar": "geiyoHoliday",
       "terminalArrivalTime": "15:50"
     },
     {
@@ -5398,7 +5400,7 @@
       "noSyntheticArrival": true,
       "timetableReference": "https://geiyokisen.com/",
       "timetableChecked": "2026-10-21",
-      "ferryCalendar": "all",
+      "ferryCalendar": "geiyoHoliday",
       "terminalArrivalTime": "18:35"
     },
     {
@@ -5458,7 +5460,7 @@
       "noSyntheticArrival": true,
       "timetableReference": "https://geiyokisen.com/",
       "timetableChecked": "2026-10-21",
-      "ferryCalendar": "weekday",
+      "ferryCalendar": "geiyoWeekday",
       "terminalArrivalTime": "07:10"
     },
     {
@@ -5518,7 +5520,7 @@
       "noSyntheticArrival": true,
       "timetableReference": "https://geiyokisen.com/",
       "timetableChecked": "2026-10-21",
-      "ferryCalendar": "weekday",
+      "ferryCalendar": "geiyoWeekday",
       "terminalArrivalTime": "09:20"
     },
     {
@@ -5578,7 +5580,7 @@
       "noSyntheticArrival": true,
       "timetableReference": "https://geiyokisen.com/",
       "timetableChecked": "2026-10-21",
-      "ferryCalendar": "all",
+      "ferryCalendar": "geiyoWeekday",
       "terminalArrivalTime": "15:50"
     },
     {
@@ -5638,7 +5640,7 @@
       "noSyntheticArrival": true,
       "timetableReference": "https://geiyokisen.com/",
       "timetableChecked": "2026-10-21",
-      "ferryCalendar": "all",
+      "ferryCalendar": "geiyoWeekday",
       "terminalArrivalTime": "18:35"
     },
     {
@@ -9959,9 +9961,11 @@
     },
     "nakajimaNovember": {
       "checked": "2026-11-03",
-      "source": "https://www.kankoko.com/contents/timetable.html",
-      "correctedDeparture": "19:05",
-      "note": "Corrected from provisional 19:10 to port terminal's published departure."
+      "warning": "19:05 Matsuyama Kanko terminal versus 19:10 Ehime Prefecture and Matsuyama City materials. DepartureTimeUnconfirmed=true; do not claim confirmed.",
+      "sources": [
+        "https://www.kankoko.com/contents/timetable.html",
+        "https://www.pref.ehime.jp/site/chuyo/4786.html"
+      ]
     },
     "kumakogenNovember": {
       "checked": "2026-11-03",
@@ -10000,6 +10004,11 @@
         "2026-11-29",
         "2026-11-30"
       ]
+    },
+    "geiyoNovember": {
+      "checked": "2026-11-03",
+      "source": "https://geiyokisen.com/",
+      "note": "Holiday/weekday actual ship departures matched, including Nov 3 and Nov 23 public holidays; Saturday/Sunday/holiday operates 06:20,09:15,14:30,17:20, weekdays 06:00,08:00,14:30,17:20."
     }
   }
 }
