@@ -189,6 +189,7 @@
     // filters. Weekend/holiday bus service must also run on national holidays.
     if(r.suspended===true)return false;
     if(r.busCalendar==='weekendHoliday' && !ferryWeekend(iso))return false;
+    if(r.busCalendar==='weekdayOnly' && ferryWeekend(iso))return false;
     // If the monthly aviation data has expired, keep the last verified recurring
     // timetable visible as a clearly dated fallback until the user updates it.
     const verifiedMonth = data.verifiedMonth || String(data.checked || '').slice(0,7);
