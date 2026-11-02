@@ -10038,6 +10038,19 @@ window.MATSUYAMA_DATA = {
       "checked": "2026-11-03",
       "source": "https://www.jorudan.co.jp/time/timetable/%E6%9D%BE%E5%B1%B1%EF%BC%88%E6%84%9B%E5%AA%9B%EF%BC%89/%E3%81%97%E3%81%8A%E3%81%8B%E3%81%9C/%E4%BC%8A%E4%BA%88%E5%8C%97%E6%9D%A1/?Ddd=07&Dhh=18&Dmn=39&Dym=202611",
       "scope": "All fourteen Shiokaze 4 through 30 departure time and train-number pairs match current 2026-11-07 timetable, valid Sep18-Feb28. JR ordinary and Uchiko line require further specific cross-check."
+    },
+    "jrMatsuyamaStationNovember": {
+      "checked": "2026-11-03",
+      "officialPostedPdf": "https://www.jr-shikoku.co.jp/01_trainbus/jikoku/pdf/matsuyama.pdf",
+      "currentCrosscheck": "https://www.jorudan.co.jp/time/timetable/%E6%9D%BE%E5%B1%B1%EF%BC%88%E6%84%9B%E5%AA%9B%EF%BC%89/%E3%81%97%E3%81%8A%E3%81%8B%E3%81%9C/%E4%BC%8A%E4%BA%88%E5%8C%97%E6%9D%A1/?Ddd=07&Dhh=18&Dmn=39&Dym=202611",
+      "scope": "All 88 stored rail records reviewed against currently published JR Shikoku departure board (39 north, 49 south including dated special services). Ordinary train, direction, time, destination and route match; named limited expresses crosschecked with 2026 date-valid timetable. Note JR's posted PDF is labelled 2025-03-15; this alone does not certify no November timetable amendments.",
+      "recordsChecked": 88
+    },
+    "jrIchitsuboNovember": {
+      "checked": "2026-11-03",
+      "source": "https://www.jr-shikoku.co.jp/01_trainbus/jikoku/pdf/ichitsubo.pdf",
+      "scope": "Both directions and all 50 listed times and destination names reviewed against JR Shikoku posted station PDF (25 north, 25 south). PDF marked 2025-03-15; later alterations cannot be ruled out without updated dated notice.",
+      "recordsChecked": 50
     }
   }
 };
