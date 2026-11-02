@@ -185,6 +185,10 @@
     return d >= 0 && d <= 3;
   }
   function validRecord(r, iso) {
+    // Use explicit operator-specific business rules before generic weekday
+    // filters. Weekend/holiday bus service must also run on national holidays.
+    if(r.suspended===true)return false;
+    if(r.busCalendar==='weekendHoliday' && !ferryWeekend(iso))return false;
     // If the monthly aviation data has expired, keep the last verified recurring
     // timetable visible as a clearly dated fallback until the user updates it.
     const verifiedMonth = data.verifiedMonth || String(data.checked || '').slice(0,7);
@@ -251,6 +255,12 @@
         if(!allowed.includes(departure))return false;
       }
     }
+    // Operator's Oct 30 notice: Nov 4 vessel maintenance cancellations.
+    // Match actual departing ports, never hide unrelated ferries.
+    if(r.source==='boyo'&&iso==='2026-11-04'&&(
+      (!inward&&['11:50','17:35'].includes(departure))||
+      (inward&&['09:00','14:45'].includes(departure))
+    ))return false;
     if(r.source==='boyo'&&iso>='2026-12-08'&&iso<='2026-12-23'&&
       (r.calls||[]).some(c=>c[0]==='伊保田港'))return false;
     const cal=r.ferryCalendar;
