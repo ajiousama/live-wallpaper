@@ -119,6 +119,12 @@
   </script>
   <!-- Keep this essential workplace size in HTML: Lively may run with stale
        external CSS/JS, or the application script may fail before scaling. -->
+  <!-- Belt-and-suspenders: hide the monthly prompt in passive workplace
+       wallpaper mode, even when its external stylesheet/script was cached. -->
+  <style id="workplace-update-dialog-safety">
+    .update-modal[hidden]{display:none!important}
+    html.company-pc body.freewifi-tv #update-modal{display:none!important}
+  </style>
   <style id="force-workplace-wallpaper-size">
     html.company-pc body.freewifi-tv #wall {
       --company-wall-scale: 0.80;
