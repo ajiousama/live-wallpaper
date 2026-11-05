@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-05T02:21:40.793733+00:00",
+  "generatedAt": "2026-11-05T14:32:57.575489+00:00",
   "timezone": "Asia/Tokyo",
   "date": "2026-11-05",
   "source": "crank-in.net (third-party listing; verify with the theater)",
@@ -4607,6 +4607,20 @@
         },
         {
           "date": "2026-11-07",
+          "time": "11:50",
+          "title": "殺し屋ネルスン",
+          "durationMinutes": 85,
+          "releaseDate": null
+        },
+        {
+          "date": "2026-11-07",
+          "time": "13:30",
+          "title": "罠（1949）",
+          "durationMinutes": null,
+          "releaseDate": null
+        },
+        {
+          "date": "2026-11-07",
           "time": "15:05",
           "title": "セーラー服と機関銃",
           "durationMinutes": 112,
@@ -4628,6 +4642,20 @@
         },
         {
           "date": "2026-11-08",
+          "time": "10:00",
+          "title": "最後の億万長者",
+          "durationMinutes": 92,
+          "releaseDate": null
+        },
+        {
+          "date": "2026-11-08",
+          "time": "11:50",
+          "title": "進めオリンピック",
+          "durationMinutes": null,
+          "releaseDate": null
+        },
+        {
+          "date": "2026-11-08",
           "time": "13:10",
           "title": "我輩はカモである",
           "durationMinutes": null,
@@ -4642,6 +4670,13 @@
         },
         {
           "date": "2026-11-08",
+          "time": "17:05",
+          "title": "Wの悲劇",
+          "durationMinutes": 108,
+          "releaseDate": null
+        },
+        {
+          "date": "2026-11-08",
           "time": "19:30",
           "title": "愛し合ってるかい？　忌野清志郎が教えてくれた",
           "durationMinutes": 124,
@@ -4649,9 +4684,23 @@
         },
         {
           "date": "2026-11-09",
+          "time": "10:00",
+          "title": "逃亡者(1947・アメリカ)",
+          "durationMinutes": null,
+          "releaseDate": null
+        },
+        {
+          "date": "2026-11-09",
           "time": "11:55",
           "title": "忘れられた人々",
           "durationMinutes": 81,
+          "releaseDate": null
+        },
+        {
+          "date": "2026-11-09",
+          "time": "13:35",
+          "title": "青い青い海",
+          "durationMinutes": 71,
           "releaseDate": null
         },
         {
