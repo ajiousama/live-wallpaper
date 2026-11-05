@@ -1,5 +1,5 @@
 {
-  "checked_at_utc": "2026-11-04T01:26:19.125045+00:00",
+  "checked_at_utc": "2026-11-05T01:29:36.378768+00:00",
   "source_urls": {
     "jr_shikoku_press": "https://www.jr-shikoku.co.jp/03_news/press/info/",
     "jr_shikoku_home": "https://www.jr-shikoku.co.jp/",
@@ -18,16 +18,6 @@
     },
     {
       "source": "jr_shikoku_home",
-      "title": "伊予灘ものがたり",
-      "url": "https://www.jr-shikoku.co.jp/01_trainbus/event_train/seat_info/iyonadamonogatari"
-    },
-    {
-      "source": "jr_shikoku_home",
-      "title": "伊予灘ものがたり （フィオーレスイート）",
-      "url": "https://www.jr-shikoku.co.jp/01_trainbus/event_train/seat_info/iyonadasuite"
-    },
-    {
-      "source": "jr_shikoku_home",
       "title": "「RE：MEDIA FESTIVAL2026」ご来場に便利な臨時列車を運転します",
       "url": "https://www.jr-shikoku.co.jp/03_news/pdf/20261005_20261018_re_mediafes2026.pdf"
     },
@@ -35,6 +25,11 @@
       "source": "jr_shikoku_home",
       "title": "「第５回にし阿波の花火」観覧に便利な臨時列車を運転します",
       "url": "https://www.jr-shikoku.co.jp/03_news/pdf/20261009_20261114_awahanabi_fireworks.pdf"
+    },
+    {
+      "source": "jr_shikoku_home",
+      "title": "観光列車の予約",
+      "url": "https://www.jr-shikoku.co.jp/5489/#purchase05"
     },
     {
       "source": "jr_shikoku_press",
@@ -1007,7 +1002,13 @@
       "url": "https://www.jr-shikoku.co.jp/03_news/press/ec892776475f77919205413ed13987427003fc89.pdf"
     }
   ],
-  "new_announcements": [],
+  "new_announcements": [
+    {
+      "source": "jr_shikoku_home",
+      "title": "観光列車の予約",
+      "url": "https://www.jr-shikoku.co.jp/5489/#purchase05"
+    }
+  ],
   "fetch_errors": [],
   "note": "候補発見のみ。松山駅の発着時刻・運転日・経路を確認できるまで列車としては表示しない。"
 }
