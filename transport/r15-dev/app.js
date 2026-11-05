@@ -1210,7 +1210,32 @@
     return [label,'高速道路上','愛媛県内','松山IC',terminal];
   }
 
+  // Orange Ferry morning connection: timetable-based checkpoint intervals.
+  // These are estimated sections, NOT live GPS positions.
+  function orangeFerryEstimatedPosition(record, now) {
+    if(!/orange_ferry_shuttle/.test(String(record.source||'')) ||
+       !/東予港/.test(String(record.origin||'')) ||
+       String(record.direction||'')!=='arrival') return null;
+    const checkpoints=[
+      {name:'東予港',minute:6*60+20},
+      {name:'川内IC',minute:6*60+58},
+      {name:'松山IC口',minute:7*60+8},
+      {name:'松山市駅前',minute:7*60+23},
+      {name:'JR松山駅前',minute:7*60+33},
+      {name:'道後温泉',minute:7*60+48}
+    ];
+    const cur=Number(now?.minutes);
+    if(!Number.isFinite(cur) || cur<checkpoints[0].minute) return '';
+    for(let i=0;i<checkpoints.length-1;i++){
+      if(cur<checkpoints[i+1].minute)
+        return checkpoints[i].name+'～'+checkpoints[i+1].name+'間（推定）';
+    }
+    return '';
+  }
+
   function busEstimatedPosition(record, now) {
+    const orange=orangeFerryEstimatedPosition(record, now);
+    if(orange!==null) return orange;
     const arrival=padTime(record.arrivalTerminalTime||record.time||'');
     let departure=padTime(record.originDepartureTime||'');
     let departureDay=String(record.originDepartureDay||'');
