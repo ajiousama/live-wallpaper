@@ -1226,6 +1226,8 @@
     ];
     const cur=Number(now?.minutes);
     if(!Number.isFinite(cur) || cur<checkpoints[0].minute) return '';
+    const terminalMinute=toMinutes(padTime(record.arrivalTerminalTime||record.time||'07:33'));
+    if(Number.isFinite(terminalMinute) && cur>=terminalMinute) return '';
     for(let i=0;i<checkpoints.length-1;i++){
       if(cur<checkpoints[i+1].minute)
         return checkpoints[i].name+'～'+checkpoints[i+1].name+'間（推定）';
