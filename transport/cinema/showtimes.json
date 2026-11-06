@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-06T02:22:52.444797+00:00",
+  "generatedAt": "2026-11-06T14:11:15.433974+00:00",
   "timezone": "Asia/Tokyo",
   "date": "2026-11-06",
   "source": "crank-in.net (third-party listing; verify with the theater)",
@@ -74,6 +74,13 @@
         },
         {
           "date": "2026-11-06",
+          "time": "12:55",
+          "title": "男ともだち",
+          "durationMinutes": 131,
+          "releaseDate": "2026-11-06"
+        },
+        {
+          "date": "2026-11-06",
           "time": "13:00",
           "title": "クジラに落ちた男《字幕版》",
           "durationMinutes": 106,
@@ -207,6 +214,13 @@
         },
         {
           "date": "2026-11-06",
+          "time": "20:25",
+          "title": "男ともだち",
+          "durationMinutes": 131,
+          "releaseDate": "2026-11-06"
+        },
+        {
+          "date": "2026-11-06",
           "time": "20:30",
           "title": "汝、星のごとく",
           "durationMinutes": 135,
@@ -295,6 +309,13 @@
           "title": "わたしの知らない子どもたち",
           "durationMinutes": 150,
           "releaseDate": "2026-10-16"
+        },
+        {
+          "date": "2026-11-07",
+          "time": "12:55",
+          "title": "男ともだち",
+          "durationMinutes": 131,
+          "releaseDate": "2026-11-06"
         },
         {
           "date": "2026-11-07",
@@ -431,6 +452,13 @@
         },
         {
           "date": "2026-11-07",
+          "time": "20:25",
+          "title": "男ともだち",
+          "durationMinutes": 131,
+          "releaseDate": "2026-11-06"
+        },
+        {
+          "date": "2026-11-07",
           "time": "20:30",
           "title": "汝、星のごとく",
           "durationMinutes": 135,
@@ -519,6 +547,13 @@
           "title": "わたしの知らない子どもたち",
           "durationMinutes": 150,
           "releaseDate": "2026-10-16"
+        },
+        {
+          "date": "2026-11-08",
+          "time": "12:55",
+          "title": "男ともだち",
+          "durationMinutes": 131,
+          "releaseDate": "2026-11-06"
         },
         {
           "date": "2026-11-08",
@@ -655,6 +690,13 @@
         },
         {
           "date": "2026-11-08",
+          "time": "20:25",
+          "title": "男ともだち",
+          "durationMinutes": 131,
+          "releaseDate": "2026-11-06"
+        },
+        {
+          "date": "2026-11-08",
           "time": "20:30",
           "title": "汝、星のごとく",
           "durationMinutes": 135,
@@ -743,6 +785,13 @@
           "title": "わたしの知らない子どもたち",
           "durationMinutes": 150,
           "releaseDate": "2026-10-16"
+        },
+        {
+          "date": "2026-11-09",
+          "time": "12:55",
+          "title": "男ともだち",
+          "durationMinutes": 131,
+          "releaseDate": "2026-11-06"
         },
         {
           "date": "2026-11-09",
@@ -879,6 +928,13 @@
         },
         {
           "date": "2026-11-09",
+          "time": "20:25",
+          "title": "男ともだち",
+          "durationMinutes": 131,
+          "releaseDate": "2026-11-06"
+        },
+        {
+          "date": "2026-11-09",
           "time": "20:30",
           "title": "汝、星のごとく",
           "durationMinutes": 135,
@@ -967,6 +1023,13 @@
           "title": "わたしの知らない子どもたち",
           "durationMinutes": 150,
           "releaseDate": "2026-10-16"
+        },
+        {
+          "date": "2026-11-10",
+          "time": "12:55",
+          "title": "男ともだち",
+          "durationMinutes": 131,
+          "releaseDate": "2026-11-06"
         },
         {
           "date": "2026-11-10",
@@ -1100,6 +1163,13 @@
           "title": "DIGGER／ディガー《字幕版》",
           "durationMinutes": 129,
           "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-11-10",
+          "time": "20:25",
+          "title": "男ともだち",
+          "durationMinutes": 131,
+          "releaseDate": "2026-11-06"
         },
         {
           "date": "2026-11-10",
@@ -4537,13 +4607,6 @@
       "shows": [
         {
           "date": "2026-11-06",
-          "time": "11:10",
-          "title": "嗚呼!おんなたち 猥歌",
-          "durationMinutes": 83,
-          "releaseDate": null
-        },
-        {
-          "date": "2026-11-06",
           "time": "13:00",
           "title": "母娘監禁 牝<めす>",
           "durationMinutes": 75,
@@ -4575,13 +4638,6 @@
           "time": "10:00",
           "title": "恐怖の土曜日",
           "durationMinutes": null,
-          "releaseDate": null
-        },
-        {
-          "date": "2026-11-07",
-          "time": "11:50",
-          "title": "殺し屋ネルスン",
-          "durationMinutes": 85,
           "releaseDate": null
         },
         {
