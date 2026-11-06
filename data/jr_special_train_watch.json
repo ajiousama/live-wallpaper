@@ -1,5 +1,5 @@
 {
-  "checked_at_utc": "2026-11-05T01:29:36.378768+00:00",
+  "checked_at_utc": "2026-11-06T01:35:47.483865+00:00",
   "source_urls": {
     "jr_shikoku_press": "https://www.jr-shikoku.co.jp/03_news/press/info/",
     "jr_shikoku_home": "https://www.jr-shikoku.co.jp/",
@@ -40,11 +40,6 @@
       "source": "jr_shikoku_press",
       "title": "観光列車の 空席情報",
       "url": "https://www.jr-shikoku.co.jp/01_trainbus/event_train/seat_info/"
-    },
-    {
-      "source": "jr_shikoku_press",
-      "title": "「伊予灘ものがたり」ご乗車１４万人達成イベントの実施について",
-      "url": "https://www.jr-shikoku.co.jp/03_news/press/2021%2010%2027%2003.pdf"
     },
     {
       "source": "jr_shikoku_press",
@@ -1002,13 +997,7 @@
       "url": "https://www.jr-shikoku.co.jp/03_news/press/ec892776475f77919205413ed13987427003fc89.pdf"
     }
   ],
-  "new_announcements": [
-    {
-      "source": "jr_shikoku_home",
-      "title": "観光列車の予約",
-      "url": "https://www.jr-shikoku.co.jp/5489/#purchase05"
-    }
-  ],
+  "new_announcements": [],
   "fetch_errors": [],
   "note": "候補発見のみ。松山駅の発着時刻・運転日・経路を確認できるまで列車としては表示しない。"
 }
