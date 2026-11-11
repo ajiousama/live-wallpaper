@@ -4123,6 +4123,23 @@
       arrival:String(x.arrival),side:x.side,
       origin:String(x.origin||'').slice(0,48),
       destination:String(x.destination||'').slice(0,48),
+      // Preserve verified timetable checkpoints for the same inbound train.
+      // The LED may interpolate a *scheduled* segment, never a live position.
+      stops:(()=>{
+        const sameTrain=[x,
+          ...['matsuyamaActiveTrains','matsuyamaTerminatingArrivals']
+            .flatMap(key=>Array.isArray(approachLive.ichitsubo?.[key])
+              ?approachLive.ichitsubo[key]:[])
+            .filter(v=>String(v?.trainNum||'')===String(x.trainNum||'') &&
+              (!v.arrival||String(v.arrival)===String(x.arrival)))
+        ];
+        const source=sameTrain.find(v=>Array.isArray(v?.stops)&&v.stops.length);
+        if(!source)return [];
+        return source.stops.filter(st=>st&&typeof st.station==='string'&&
+          /^\d{1,2}:\d{2}$/.test(String(st.time||''))).slice(0,60)
+          .map(st=>({station:String(st.station).trim().slice(0,30),
+            time:String(st.time),event:String(st.event||'timetable')}));
+      })(),
       terminating:x.terminating===true,
       position:jrPositionUsable(x.position)?String(x.position).slice(0,48):'',
       delayMinutes:jrPositionUsable(x.position)&&Number.isFinite(Number(x.delayMinutes))&&
