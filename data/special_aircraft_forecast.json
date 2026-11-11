@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtJst": "2026-11-12T06:43:53+09:00",
+  "generatedAtJst": "2026-11-12T06:45:17+09:00",
   "lookaheadDays": 7,
   "sourceChecks": {
     "jal": {
@@ -15,7 +15,7 @@
     "anaOperations": {
       "status": "checked_type_only_not_tail_assignment",
       "sourceUrl": "https://www.tsuitachimochi.net/flights/operations?airline=ANA",
-      "siteUpdatedAt": "2026-11-12T06:42:46.579140+09:00",
+      "siteUpdatedAt": "2026-11-12T06:44:28.042103+09:00",
       "note": "機種別棒ダイヤは機体記号の確定割当ではない"
     },
     "anaLocations": {
