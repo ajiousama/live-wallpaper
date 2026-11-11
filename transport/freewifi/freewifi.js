@@ -156,9 +156,9 @@
         const box=track.closest('.air-bottom-scroll');
         if(!first || !box || box.clientWidth<1)return;
         const distance=Math.ceil(first.scrollWidth);
-        // Airport lower tickers: approximately 25% faster, retaining a
-        // minimum readable cycle and the existing seamless-loop behaviour.
-        const seconds=Math.max(10,distance/40);
+        // Airport lower tickers: 60 CSS pixels/second (up from 40).
+        // Preserve the two-copy seamless loop and readable minimum duration.
+        const seconds=Math.max(7,distance/60);
         const duration=seconds.toFixed(2)+'s';
         const signature=first.textContent+'|'+distance+'|'+box.clientWidth;
         checkTrack(track,signature,seconds,'--airport-scroll-duration',duration,true);
