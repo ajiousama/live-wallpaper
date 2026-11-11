@@ -4113,6 +4113,21 @@
     // to the replica LED without guessing any platform number.
     const inbound=scheduleFresh && Array.isArray(approachLive.ichitsubo?.matsuyamaPassengerArrivals)
       ? approachLive.ichitsubo.matsuyamaPassengerArrivals : [];
+    // Inbound diagram entries can lack a position while the separate
+    // active-train feed has one. Match by train number and inbound side.
+    const inboundLive=Array.isArray(approachLive.ichitsubo?.matsuyamaActiveTrains)
+      ?approachLive.ichitsubo.matsuyamaActiveTrains:[];
+    const inboundPosition=x=>{
+      if(jrPositionUsable(x.position))return String(x.position);
+      const matches=inboundLive.filter(v=>
+        String(v?.trainNum||'').trim()===String(x.trainNum||'').trim() &&
+        jrPositionUsable(v?.position) &&
+        (!['north','south'].includes(v?.direction) ||
+          v.direction!==(x.side||'')) &&
+        (!v.arrival||padTime(v.arrival)===padTime(x.arrival)));
+      const distinct=[...new Set(matches.map(v=>cleanStation(v.position)))];
+      return distinct.length===1?distinct[0]:'';
+    };
     const scheduledArrivals=inbound.filter(x=>
       x?.source==='today_diagram' &&
       ['north','south'].includes(x.side) &&
@@ -4141,7 +4156,7 @@
             time:String(st.time),event:String(st.event||'timetable')}));
       })(),
       terminating:x.terminating===true,
-      position:jrPositionUsable(x.position)?String(x.position).slice(0,48):'',
+      position:inboundPosition(x).slice(0,48),
       delayMinutes:jrPositionUsable(x.position)&&Number.isFinite(Number(x.delayMinutes))&&
         Number(x.delayMinutes)>0&&Number(x.delayMinutes)<=60?Number(x.delayMinutes):0,
       turnback:x.turnback&&/^\d{1,2}:\d{2}$/.test(String(x.turnback.departure||''))
