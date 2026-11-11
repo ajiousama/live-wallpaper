@@ -893,23 +893,23 @@ body{display:flex;align-items:flex-end;justify-content:center;font-variant-numer
         if(!points.some(function(st){return st.station==='松山';}))
           points.push({station:'松山',minute:arrivalMinute,event:'arrival'});
         points.sort(function(a,b){return a.minute-b.minute;});
-        // Use only future checkpoints of this exact train. A station with both
-        // arrival and departure entries is allowed to show each in order.
-        var next=points.find(function(st){return st.minute>n.minutes;});
-        if(next){
-          var hh=String(Math.floor(next.minute/60)).padStart(2,'0');
-          var mm=String(next.minute%60).padStart(2,'0');
-          // Some diagram feeds provide a station time without an event type.
-          // Preserve the time, but never claim a pass or departure without evidence.
-          var ev=next.event;
-          var action=(ev==='departure'||ev==='depart'||ev==='発'||ev==='発車')?'発車予定':
-            (ev==='arrival'||ev==='arrive'||ev==='着'||ev==='到着')?'到着予定':
-            (ev==='pass'||ev==='passage'||ev==='through'||ev==='通過')?'通過予定':
-            '到達予定';
+        // Position is the question: use the surrounding station checkpoints,
+        // not simply the Matsuyama arrival time. Do not claim an actual fix.
+        var before=null,after=null;
+        points.forEach(function(p){
+          if(p.minute<=n.minutes)before=p;
+          if(!after&&p.minute>n.minutes)after=p;
+        });
+        if(before&&after&&before.station!==after.station){
           return [{cls:'station-uncertain',txt:
-            next.station+' '+hh+':'+mm+' '+action+
-            (action==='到達予定'?'（発着種別未確認）':'（時刻表）')}];
+            '推定 '+before.station+'～'+after.station+'間（時刻表）'}];
         }
+        if(before&&after&&before.station===after.station){
+          return [{cls:'station-uncertain',txt:
+            '推定 '+before.station+'駅停車時間帯（時刻表）'}];
+        }
+        // An arrival ETA alone cannot locate a train. Do not fabricate an
+        // approach segment when there is no earlier timetable checkpoint.
         var remaining=arrivalMinute-n.minutes;
         if(remaining>=0&&remaining<=180)
           return [{cls:'station-uncertain',txt:'時刻表推定 松山まで約'+remaining+'分'}];
