@@ -2823,13 +2823,43 @@
       '号 東京行きに接続（接続'+wait+'分・運行変更要確認）'];
   }
 
+  // Position text for the independent six-row JR card tickers.
+  // Only a train-number-specific live fix may claim a yard or a station.
+  // Timetable checkpoints provide an explicitly labelled estimated interval.
+  function railArrivalLocationText(x,now){
+    const live=String(x.position||'').trim();
+    if(live)return '現在位置 '+live;
+    if(x.scheduledPreDeparture)return String(x.scheduledPreDeparture);
+    const arrival=toMinutes(padTime(x.arrival||''));
+    const points=(Array.isArray(x.stops)?x.stops:[])
+      .filter(st=>st?.station&&Number.isFinite(toMinutes(padTime(st.time||''))))
+      .map(st=>({station:cleanStation(st.station),
+        minute:toMinutes(padTime(st.time))}))
+      .filter(st=>Number.isFinite(arrival)&&st.minute<=arrival)
+      .sort((a,b)=>a.minute-b.minute);
+    const before=points.filter(st=>st.minute<=now.minutes).at(-1);
+    const after=points.find(st=>st.minute>now.minutes);
+    if(before&&after&&before.station!==after.station)
+      return '時刻表推定 '+before.station+'～'+after.station+'間';
+    if(before&&after&&before.station===after.station)
+      return '時刻表推定 '+before.station+'駅停車時間帯';
+    return '途中駅の位置データ照合中';
+  }
+  function railDepartureLocationText(record){
+    if(record.railPositionConfirmed&&record.livePosition)
+      return '現在位置 '+record.livePosition;
+    const now=japanNow();
+    const departure=toMinutes(padTime(record.time||''));
+    if(Number.isFinite(departure)&&now.minutes<departure)
+      return '松山駅 発車前（所在未確認）';
+    return '現在位置の照合中';
+  }
+
   function railRowDetailItems(record) {
     const items = [];
     const route=railSouthRoute(record);
     if(route) items.push('運転経路：'+route);
-    if(record.railTimetableOnly) items.push('時刻表予定・現在位置未確認');
-    else if(record.railPositionConfirmed && record.livePosition)
-      items.push('現在位置 '+record.livePosition);
+    items.push(railDepartureLocationText(record));
     const stops = railStops(record).filter(Boolean);
     const timedStops = railTimedStops(record).filter(Boolean);
     const terminalArrival = railTerminalArrivalText(record);
@@ -4357,8 +4387,7 @@
       x.destination&&cleanStation(x.destination)!=='松山'
         ?'松山から'+railSpecialText(cleanStation(x.destination))+'方面へ運転':'松山到着予定';
     const details=[origin+'発・松山 '+time+'着',onward];
-    if(jrPositionUsable(x.position))details.push('現在位置 '+railSpecialText(cleanStation(x.position)));
-    else details.push('時刻表予定・現在位置未確認');
+    details.push(railArrivalLocationText(x,japanNow()));
     row.innerHTML='<div class="rail-primary">'+
       '<div class="cell rail-service '+kind+'"><span class="kindtxt">'+label+'</span></div>'+
       '<div class="cell time">'+time+'</div>'+
@@ -4533,7 +4562,7 @@
       const nextCard=document.getElementById('rail-next-express');
       if(nextLimited){
         const confirmed=nextLimited.railPositionConfirmed && nextLimited.livePosition;
-        const status=confirmed?'現在位置 '+nextLimited.livePosition:'時刻表予定・位置未確認';
+        const status=railDepartureLocationText(nextLimited);
         const details=railRowDetailItems(nextLimited);
         reconcileRailFeaturedCard(nextCard,`<div class="rail-next-main"><span class="rail-next-label">次の特急は？</span><span class="rail-next-service">${railVehicleIconHtml(nextLimited)}${railServiceBadgeHtml('limited',nextLimited.service,nextLimited.info)}</span><span class="rail-next-time">${nextLimited.time}発</span><span class="rail-next-dest">${railDestLabel(nextLimited)}行</span>${delayBadge(nextLimited,'rail')}</div><div class="rail-next-details">${tickerHtml(details.length?details:[status])}</div>`);
       } else {
