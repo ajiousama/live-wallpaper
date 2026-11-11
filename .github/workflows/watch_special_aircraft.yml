@@ -1,0 +1,48 @@
+name: Matsuyama special-aircraft observation archive
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/watch_special_aircraft.yml"
+      - "scripts/watch_special_aircraft.py"
+      - "transport/r15-dev/app.js"
+  schedule:
+    # Check frequently while airport flights are active; GitHub may delay runs.
+    - cron: "3,18,33,48 * * * *"
+permissions:
+  contents: write
+concurrency:
+  group: special-aircraft-archive
+  cancel-in-progress: false
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify strict evidence and duplicate suppression
+        run: python scripts/watch_special_aircraft.py --self-test
+      - name: Check live Matsuyama flight board and archive verified registrations
+        run: python scripts/watch_special_aircraft.py
+      - name: Persist only new observation / confirmed-flight transitions
+        run: |
+          if git diff --quiet -- data/special_aircraft_watch.json; then
+            echo "No new special-aircraft observations"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/special_aircraft_watch.json
+          git commit -m "data: archive verified Matsuyama special-aircraft flight [skip ci]"
+          for attempt in 1 2 3; do
+            git fetch origin main
+            if ! git rebase origin/main; then git rebase --abort; exit 1; fi
+            if git push origin HEAD:main; then exit 0; fi
+            sleep "$((attempt * 2))"
+          done
+          exit 1
