@@ -3390,7 +3390,6 @@
   // liveries while the second line keeps airport bus schedules unchanged.
   function airportSpecialLiveryBottomItems(now){
     const active=liveFlightRows(now) || nextRows('air',now);
-    if(!Array.isArray(active)||!active.length)return [];
     const seen=new Set(), output=[];
     // Forecasts for TOMORROW and beyond must appear BEFORE arrival day.
     // Only records with an exact registration + dated published flight qualify.
@@ -3409,7 +3408,7 @@
         SPECIAL_AIRCRAFT_LIVERIES[e.registration]+'（'+e.registration+
         '）｜非公式な機材予定・変更あり');
     }
-    for(const r of active){
+    for(const r of (Array.isArray(active)?active:[])){
       const verified=confirmedSpecialAircraftGuidance(r);
       const possible=verified?'':possibleSpecialAircraftGuidance(r,now);
       if(!verified&&!possible)continue;
@@ -3446,6 +3445,9 @@
       '<span class="air-bottom-livery-notice">'+item+'</span>'
     ).join('<span class="air-bottom-dot">◆</span>');
     const specialLead=specialHtml?specialHtml+'<span class="air-bottom-dot">◆</span>':'';
+    // A future verified forecast must keep scrolling even after today's
+    // flight-board rows have ended.
+    const endedForScroll=ended&&!specialHtml;
     const twoDepartureText=(times)=>{
       if(!times.length) return '本日運行終了';
       const first=times[0];
@@ -3473,9 +3475,9 @@
     el.className='note air-bottom-info';
     el.innerHTML=`
       <div class="air-bottom-disruption">
-        <div class="air-bottom-scroll"><div class="air-bottom-scroll-track air-bottom-scroll-alert${ended?' air-bottom-ended':''}">
+        <div class="air-bottom-scroll"><div class="air-bottom-scroll-track air-bottom-scroll-alert${endedForScroll?' air-bottom-ended':''}">
           <span class="air-bottom-scroll-set">${specialLead}<b class="air-bottom-direction">${directionMark} ${disruptionLabel}</b><span class="air-bottom-sep">◆</span>${disruptionHtml}</span>
-          ${ended?'':`<span class="air-bottom-scroll-set" aria-hidden="true">${specialLead}<b class="air-bottom-direction">${directionMark} ${disruptionLabel}</b><span class="air-bottom-sep">◆</span>${disruptionHtml}</span>`}
+          ${endedForScroll?'':`<span class="air-bottom-scroll-set" aria-hidden="true">${specialLead}<b class="air-bottom-direction">${directionMark} ${disruptionLabel}</b><span class="air-bottom-sep">◆</span>${disruptionHtml}</span>`}
         </div></div>
       </div>
       <div class="air-bottom-buses">
