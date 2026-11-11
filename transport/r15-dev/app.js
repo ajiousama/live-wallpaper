@@ -2813,7 +2813,7 @@
     const now=japanNow();
     if(now.iso<'2026-11-11'||now.iso>'2026-12-15'||
       (record.displayIso&&record.displayIso!==now.iso))return [];
-    const m=String(record.service||'').match(/しおかぜ\\s*(\\d+)号/);
+    const m=String(record.service||'').match(/しおかぜ\s*(\d+)号/);
     if(!m)return [];
     const connection=VERIFIED_OKAYAMA_NOZOMI_2026[Number(m[1])];
     if(!connection || padTime(record.time)!==connection.matsuyama ||
