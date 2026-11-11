@@ -2787,6 +2787,54 @@
     return output;
   }
 
+  // Show an Okayama Shinkansen connection ONLY when the day's matched
+  // timetable explicitly supplies the Shinkansen train, its times and
+  // destination. JR Shikoku local transfers are not evidence for this.
+  function railShinkansenConnectionItems(record) {
+    if(record?.kind!=='limited'||record.direction!=='north'||
+       !/しおかぜ/.test(String(record.service||'')))return [];
+    const feed=approachLive.ichitsubo;
+    const generated=Date.parse(String(approachLive.generatedAtJst||''));
+    const now=japanNow();
+    if(!feed?.ok||!Array.isArray(feed.matsuyamaSchedule)||
+      !Number.isFinite(generated)||Date.now()-generated>120000||
+      Date.now()-generated < -15000 ||
+      (record.displayIso&&record.displayIso!==now.iso))return [];
+    const possible=feed.matsuyamaSchedule.filter(x=>
+      x?.trainClass==='limited'&&x?.direction==='north'&&
+      padTime(x.departure||'')===padTime(record.time||''));
+    const number=String(record.liveTrainNum||'');
+    let matched=number?possible.filter(x=>String(x.trainNum||'')===number):[];
+    if(matched.length!==1)matched=possible.filter(x=>
+      railScheduledServiceMatches(railLiveTrainLabel(x).service,record.service));
+    if(matched.length!==1)return [];
+
+    const raw=Array.isArray(matched[0].shinkansenConnections)
+      ?matched[0].shinkansenConnections:[];
+    const hits=raw.filter(x=>{
+      const station=cleanStation(x?.station||'');
+      const arrival=padTime(x?.limitedArrival||x?.arrival||'');
+      const departure=padTime(x?.shinkansenDeparture||x?.departure||'');
+      const service=String(x?.service||'').trim();
+      const destination=cleanStation(x?.destination||'');
+      if(station!=='岡山'||!/^\\d{2}:\\d{2}$/.test(arrival)||
+        !/^\\d{2}:\\d{2}$/.test(departure)||
+        !/^のぞみ\\d+号$/.test(service)||destination!=='東京'||
+        !['official_shinkansen_timetable','verified_shinkansen_connection'].includes(x?.source)||
+        x?.date!==now.iso)return false;
+      const diff=toMinutes(departure)-toMinutes(arrival);
+      return diff>=5&&diff<=60&&Number(x?.minutes)===diff;
+    });
+    // One explicit connection only; ambiguity must not show a guessed train.
+    if(hits.length!==1)return [];
+    const x=hits[0];
+    const arrival=padTime(x.limitedArrival||x.arrival);
+    const departure=padTime(x.shinkansenDeparture||x.departure);
+    return ['新大阪方面 新幹線：岡山'+arrival+'着 → '+departure+'発 '+
+      railSpecialText(String(x.service))+' 東京行きに接続（接続'+
+      (toMinutes(departure)-toMinutes(arrival))+'分）'];
+  }
+
   function railRowDetailItems(record) {
     const items = [];
     const route=railSouthRoute(record);
@@ -2802,6 +2850,7 @@
       else if (stops.length) items.push(`停車駅：${stops.join(' → ')}`);
       if (terminalArrival) items.push(`終点着 ${terminalArrival}`);
       items.push(...railRegionalConnectionItems(record));
+      items.push(...railShinkansenConnectionItems(record));
       const info = String(record.info || '');
       const coupled = info.match(/(いしづち\d+号)/);
       if (coupled) items.push(`${coupled[1]}を併結予定（当日の分離運転は未確認）`);
