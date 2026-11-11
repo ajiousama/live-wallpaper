@@ -1,0 +1,5 @@
+{
+  "source": "https://ihhiymkepuydykrhmzwo.supabase.co/functions/v1/approach?scope=slow",
+  "records": [],
+  "note": "candidate=機体番号と当該便の照合済み（松山到着未確認）。confirmed=松山空港公式発着案内の完了表示と機体番号を照合。confirmedAtJstは確認時刻であり、実際の着陸/離陸時刻とは限らない。"
+}
