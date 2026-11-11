@@ -3072,3 +3072,27 @@ body.freewifi-tv #panel-rail .jr-panorama-alert .jr-alert-ending{color:#f9f9f9}
   0%,69%{opacity:1}
   70%,100%{opacity:.16}
 }
+
+/* Flash verified / tentative special-aircraft news in the EXISTING
+   first airport lower ticker. The airport bus row is unchanged. */
+body.freewifi-tv.air-board-page #air-note .air-bottom-livery-notice{
+  display:inline-block;
+  flex:0 0 auto;
+  color:#ff3b42!important;
+  font-size:13px!important;
+  font-weight:1000!important;
+  white-space:nowrap!important;
+  text-shadow:0 0 8px rgba(255,35,45,.55);
+  animation:air-bottom-livery-blink 1.1s steps(1,end) infinite!important;
+}
+@keyframes air-bottom-livery-blink{
+  0%,45%,100%{color:#ff444c;opacity:1}
+  46%,83%{color:#970f19;opacity:.23}
+}
+@media(prefers-reduced-motion:reduce){
+  body.freewifi-tv.air-board-page #air-note .air-bottom-livery-notice{
+    animation:none!important;
+    opacity:1!important;
+    text-decoration:underline;
+  }
+}
