@@ -2328,3 +2328,23 @@ html.company-pc body.freewifi-tv .panel-bus .bus-logo-willer .willer-express-wor
   min-width:max-content!important;
   white-space:nowrap!important;
 }
+
+/* Unconfirmed special-livery possibility ONLY: gently blink this label
+   without flashing the whole flight row or confusing it with confirmed status. */
+#air-rows .air-livery-possible{
+  color:#ffe29a!important;
+  font-weight:900!important;
+  text-shadow:0 0 6px rgba(255,197,76,.5);
+  animation:air-livery-possible-pulse 1.6s ease-in-out infinite;
+}
+@keyframes air-livery-possible-pulse{
+  0%,100%{opacity:1;filter:brightness(1.12)}
+  50%{opacity:.32;filter:brightness(.92)}
+}
+@media(prefers-reduced-motion:reduce){
+  #air-rows .air-livery-possible{
+    animation:none!important;
+    opacity:1!important;
+    text-decoration:underline;
+  }
+}
