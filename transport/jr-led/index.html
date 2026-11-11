@@ -86,7 +86,11 @@ body{display:flex;align-items:flex-end;justify-content:center;font-variant-numer
   font-weight:900;align-items:center;justify-content:center;z-index:3;
   white-space:nowrap}
 .status.warning{display:flex!important}
-.status.final{display:flex!important;left:auto;right:2px;top:0;width:42px;height:15px;background:#7b1010;color:#ffef55;font-size:10px;z-index:4}
+/* Reserve separate space for the last-train marker inside the 68px destination cell.
+   Never overlay the destination name (e.g. 伊予市). */
+.train.is-last .dest{width:39px;justify-content:flex-start;padding-left:1px;font-size:10px;letter-spacing:-.06em}
+.status.final{display:flex!important;left:auto;right:0;top:0;width:29px;height:16px;
+  background:#7b1010;color:#ffef55;font-size:9px;z-index:4}
 .flash{animation:led-blink .9s steps(1,end) infinite}
 @keyframes led-blink{0%,49%{opacity:1}50%,100%{opacity:0}}
 .train.empty .service{color:#a0a0a0}
@@ -675,6 +679,7 @@ body{display:flex;align-items:flex-end;justify-content:center;font-variant-numer
       (row.kind==='limited'&&/岡山・高松/.test(String(row.dest||''))?
         (lang==='en'?'SPLITS AT UTAZU':'宇多津で分割'):'');
     var last=!!row._isFinal;
+    if(last&&!row._arrival)box.classList.add('is-last');
     if(!st&&last)st=lang==='en'?'LAST TRAIN':'最終';
     // Arrival rows keep the train name and origin visible at all times.
     // The separate color-coded arrival callout handles the flashing warning.
