@@ -3386,6 +3386,34 @@
     };
   }
 
+  // Cautious bottom-line news. The existing first ticker includes special
+  // liveries while the second line keeps airport bus schedules unchanged.
+  function airportSpecialLiveryBottomItems(now){
+    const active=liveFlightRows(now) || nextRows('air',now);
+    if(!Array.isArray(active)||!active.length)return [];
+    const seen=new Set(), output=[];
+    for(const r of active){
+      const verified=confirmedSpecialAircraftGuidance(r);
+      const possible=verified?'':possibleSpecialAircraftGuidance(r,now);
+      if(!verified&&!possible)continue;
+      const p=parseAirService(r.service);
+      if(!p.number)continue;
+      const key=r.direction+'|'+p.airline+'|'+p.number;
+      if(seen.has(key))continue;
+      seen.add(key);
+      const dir=r.direction==='arrival'?'到着':'出発';
+      const time=padTime(r.liveChangedTime||r.time||'');
+      const place=String(r.dest||'').replace(/[<>&"'\x60]/g,'').trim();
+      const label=possible
+        ?possible.replace(/^特別塗装機「|」/g,'').replace(/（機体未確認・非公式予測）$/,'｜機体未確認・非公式予測')
+        :verified.replace(/^特別塗装機「|」で運航$/g,'')+'｜機体番号照合済み（到着・出発完了は未確認）';
+      output.push('特別塗装機情報｜'+p.airline+' '+p.number+'便｜'
+        +(place?place+(r.direction==='arrival'?'発':'行')+'｜':'')
+        +(time?time+' '+dir+'予定｜':'')+label);
+    }
+    return output.slice(0,3);
+  }
+
   let airportBottomSignature='';
   function renderAirportBottomInfo(now) {
     const el=$('air-note');
@@ -3396,6 +3424,11 @@
     const bus=airportNextTimes(now);
     const ended=disruption.length===1 && disruption[0]?.type==='ended';
     const disruptionHtml=disruption.map(x=>`<span class="air-bottom-alert air-bottom-${x.type}">${x.type==='delay'?delayBadge({status:x.text},'air'):''}${x.text}</span>`).join('<span class="air-bottom-dot">・</span>');
+    const specialItems=airportSpecialLiveryBottomItems(now);
+    const specialHtml=specialItems.map(item=>
+      '<span class="air-bottom-livery-notice">'+item+'</span>'
+    ).join('<span class="air-bottom-dot">◆</span>');
+    const specialLead=specialHtml?specialHtml+'<span class="air-bottom-dot">◆</span>':'';
     const twoDepartureText=(times)=>{
       if(!times.length) return '本日運行終了';
       const first=times[0];
@@ -3416,7 +3449,7 @@
       <span class="air-bottom-sep">◆</span>
       <span class="air-bottom-stops"><b>普通便 主な停留所</b><span>${bus.ordinaryStops}</span></span>`;
 
-    const sig=[directionMark,disruptionLabel,disruptionHtml,limoText,ordinaryText,bus.ordinaryStops].join('||');
+    const sig=[directionMark,disruptionLabel,disruptionHtml,specialHtml,limoText,ordinaryText,bus.ordinaryStops].join('||');
     if(airportBottomSignature===sig && el.classList.contains('air-bottom-info')) return;
     airportBottomSignature=sig;
 
@@ -3424,8 +3457,8 @@
     el.innerHTML=`
       <div class="air-bottom-disruption">
         <div class="air-bottom-scroll"><div class="air-bottom-scroll-track air-bottom-scroll-alert${ended?' air-bottom-ended':''}">
-          <span class="air-bottom-scroll-set"><b class="air-bottom-direction">${directionMark} ${disruptionLabel}</b><span class="air-bottom-sep">◆</span>${disruptionHtml}</span>
-          ${ended?'':`<span class="air-bottom-scroll-set" aria-hidden="true"><b class="air-bottom-direction">${directionMark} ${disruptionLabel}</b><span class="air-bottom-sep">◆</span>${disruptionHtml}</span>`}
+          <span class="air-bottom-scroll-set">${specialLead}<b class="air-bottom-direction">${directionMark} ${disruptionLabel}</b><span class="air-bottom-sep">◆</span>${disruptionHtml}</span>
+          ${ended?'':`<span class="air-bottom-scroll-set" aria-hidden="true">${specialLead}<b class="air-bottom-direction">${directionMark} ${disruptionLabel}</b><span class="air-bottom-sep">◆</span>${disruptionHtml}</span>`}
         </div></div>
       </div>
       <div class="air-bottom-buses">
@@ -4883,7 +4916,13 @@
     JA923A:'ポケモンジェット（緑）',
     JA339J:'JAL Jubilee Express',
     JA344J:'JAL トゥンクトゥンクJET',
-    JA228J:'J-AIR創立30周年記念JET'
+    JA228J:'J-AIR創立30周年記念JET',
+    JA58AN:'ふるさとJET',
+    JA880A:'スターアライアンス塗装',
+    JA868J:'JAL CONTRAIL 特別塗装機',
+    JA869J:'JAL oneworld塗装',
+    JA07RK:'結ジンベエジェット',
+    JA10RJ:'ベガルタ仙台ジェット'
   });
   function verifiedAircraftRegistration(r){
     const raw=r.liveRaw||{};
