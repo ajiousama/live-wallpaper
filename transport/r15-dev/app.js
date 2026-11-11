@@ -4898,6 +4898,42 @@
     const name=SPECIAL_AIRCRAFT_LIVERIES[number];
     return name?'特別塗装機「'+name+'」で運航':'';
   }
+  // Cautious, DATE-BOUNDED visual hints from the 2026-11-12 06:23 JST
+  // third-party aircraft-type schedule. These are NOT confirmed allocations.
+  // Do not infer a specific registration from the type code alone.
+  // Sources: https://www.tsuitachimochi.net/flights/operations?airline=ANA
+  //          https://www.flightradar24.com/data/aircraft/ja609a
+  //          https://www.flightradar24.com/data/aircraft/ja819a
+  //          https://www.matsuyama-airport.co.jp/flight/haneda/
+  // This hint expires after 2026-11-12 automatically. To extend it,
+  // verify fresh model, origin position and flight schedule first.
+  const SPECIAL_AIRCRAFT_POSSIBLE_FLIGHTS=Object.freeze({
+    '2026-11-12':Object.freeze({
+      'arrival':Object.freeze({
+        '583':'JA609A', '593':'JA609A', // ANA 76P / Boeing 767
+        '585':'JA819A', '589':'JA819A', '595':'JA819A', '599':'JA819A' // ANA 78P / Boeing 787-8
+      }),
+      'departure':Object.freeze({
+        '584':'JA609A', '596':'JA609A',
+        '590':'JA819A', '592':'JA819A', '598':'JA819A'
+      })
+    })
+  });
+  function possibleSpecialAircraftGuidance(r,now){
+    if(!r || !now || r.isNextDayStart || verifiedAircraftRegistration(r))return '';
+    const raw=r.liveRaw||{};
+    // Even an unrecognized reported registration overrides type-only speculation.
+    if([raw.aircraftRegistration,raw.registration,raw.tailNumber,
+      r.aircraftRegistration,r.registration].some(v=>String(v||'').trim()))return '';
+    if(/欠航|運休|取消|キャンセル|到着済み|出発済み/.test(
+      [r.liveStatus,r.info,raw.status,raw.changeText].map(v=>String(v||'')).join(' ')))return '';
+    const p=parseAirService(r.service);
+    if(p.airline!=='ANA')return '';
+    const byDay=SPECIAL_AIRCRAFT_POSSIBLE_FLIGHTS[now.iso];
+    const registration=byDay?.[r.direction]?.[String(Number(p.number))];
+    const name=SPECIAL_AIRCRAFT_LIVERIES[registration];
+    return name?'特別塗装機「'+name+'」（'+registration+'）の可能性あり（機体未確認・非公式予測）':'';
+  }
   function renderAir(rows) {
     const root=$('air-rows');
     const oldScrollPhases=captureTransportScrollPhases(root);
@@ -4977,7 +5013,8 @@
           guidance = guidance && guidance!=='—' ? `${guidance}　｜　${originInfo}` : originInfo;
         }
       }
-      const specialLivery=confirmedSpecialAircraftGuidance(r);
+      const specialLivery=confirmedSpecialAircraftGuidance(r) ||
+        possibleSpecialAircraftGuidance(r,japanNow());
       if(specialLivery)guidance=guidance&&guidance!=='—'
         ?guidance+'　｜　'+specialLivery:specialLivery;
       const approx=airportApproximatePosition(r,dep,japanNow());
