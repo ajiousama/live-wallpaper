@@ -4153,7 +4153,7 @@
         return source.stops.filter(st=>st&&typeof st.station==='string'&&
           /^\d{1,2}:\d{2}$/.test(String(st.time||''))).slice(0,60)
           .map(st=>({station:String(st.station).trim().slice(0,30),
-            time:String(st.time),event:String(st.event||'timetable')}));
+            time:String(st.time),event:['arrival','departure','pass','passage','through'].includes(String(st.event))?String(st.event):'timetable'}));
       })(),
       terminating:x.terminating===true,
       position:inboundPosition(x).slice(0,48),
