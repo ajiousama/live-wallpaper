@@ -2726,24 +2726,65 @@
 
   // Regional route guidance is not a guaranteed same-day connection.
   // Never invent a transfer departure/arrival time from a route name.
+  // Display actual connection times only when the same-day diagram supplies
+  // an exact, unambiguous train and a timed onward connection.
   function railRegionalConnectionItems(record) {
     if(record?.kind!=='limited')return [];
-    const service=String(record.service||'');
-    if(record.direction==='north'){
-      const okayama=/しおかぜ/.test(service)
-        ? '岡山方面：この特急で岡山へ直通（当日の運転変更は要確認）'
-        : '岡山方面：宇多津で岡山方面の列車に乗換（接続時刻は要確認）';
-      return [
-        okayama,
-        '徳島方面：高松で特急うずしお等に乗換（接続時刻は要確認）',
-        '高知方面：多度津で特急南風に乗換（接続時刻は要確認）',
-        '阿波池田方面：多度津で特急南風等に乗換（接続時刻は要確認）'
-      ];
+    const feed=approachLive.ichitsubo;
+    const fetched=Date.parse(String(approachLive.generatedAtJst||''));
+    const now=japanNow();
+    if(!feed?.ok||!Array.isArray(feed.matsuyamaSchedule)||
+      !Number.isFinite(fetched)||Date.now()-fetched>120000||
+      Date.now()-fetched < -15000||
+      (record.displayIso&&record.displayIso!==now.iso))return [];
+    const departure=padTime(record.time||'');
+    const matches=feed.matsuyamaSchedule.filter(x=>
+      padTime(x?.departure||'')===departure &&
+      x?.direction===record.direction &&
+      x?.trainClass==='limited');
+    const numbered=String(record.liveTrainNum||'');
+    let selected=numbered?matches.filter(x=>String(x.trainNum||'')===numbered):[];
+    if(selected.length!==1){
+      selected=matches.filter(x=>railScheduledServiceMatches(
+        railLiveTrainLabel(x).service,record.service));
     }
-    if(record.direction==='south'){
-      return ['予土線方面：宇和島で窪川方面の予土線列車に乗換（接続時刻は要確認）'];
+    if(selected.length!==1 && matches.length===1)selected=matches;
+    if(selected.length!==1)return [];
+
+    const connections=Array.isArray(selected[0].transfers)?selected[0].transfers:[];
+    const areas=[
+      {name:'徳島',stations:['高松'],match:/徳島|うずしお/},
+      {name:'岡山',stations:['宇多津','多度津','坂出'],match:/岡山|しおかぜ|快速マリンライナー/},
+      {name:'高知',stations:['多度津','宇多津'],match:/高知|南風|しまんと/},
+      {name:'阿波池田',stations:['多度津','宇多津'],match:/阿波池田|南風|しまんと/},
+      {name:'予土線',stations:['宇和島'],match:/窪川|予土線|江川崎/}
+    ];
+    const output=[];
+    const seen=new Set();
+    for(const t of connections){
+      const station=cleanStation(t?.station||'');
+      const arrival=padTime(t?.arrival||'');
+      const departure2=padTime(t?.departure||'');
+      const destination=cleanStation(t?.destination||'');
+      const service=String(t?.service||t?.serviceName||'');
+      const mins=Number(t?.minutes);
+      if(t?.source!=='today_diagram'||
+        !/^\\d{2}:\\d{2}$/.test(arrival)||
+        !/^\\d{2}:\\d{2}$/.test(departure2)||
+        !Number.isFinite(mins)||mins<4||mins>40||!station)continue;
+      for(const area of areas){
+        if(seen.has(area.name)||!area.stations.includes(station)||
+          !area.match.test(destination+' '+service))continue;
+        // Merely matching the transfer station is not enough to assert a
+        // specific destination is served; require an explicit destination hint.
+        if(!destination&&!service)continue;
+        output.push(area.name+'方面：'+railSpecialText(station)+' '+
+          arrival+'着 → '+departure2+'発（接続'+Math.round(mins)+'分）'+
+          (destination?' '+railSpecialText(destination)+'行':''));
+        seen.add(area.name);
+      }
     }
-    return [];
+    return output;
   }
 
   function railRowDetailItems(record) {
