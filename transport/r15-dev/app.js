@@ -2787,52 +2787,42 @@
     return output;
   }
 
-  // Show an Okayama Shinkansen connection ONLY when the day's matched
-  // timetable explicitly supplies the Shinkansen train, its times and
-  // destination. JR Shikoku local transfers are not evidence for this.
+  // Verified regular timetable candidates, 2026-11-11 through 2026-12-15.
+  // JR Shikoku upbound limited-express table (2026-10 edition) and JR West
+  // Okayama eastbound station timetable dated 2026-11-11 (revised Oct 3).
+  // Only regular Tokyo-bound Nozomi services, with >=8 min standard transfer.
+  // These are SCHEDULED connections, not live delay/hold guarantees.
+  const VERIFIED_OKAYAMA_NOZOMI_2026={
+    2:{matsuyama:'05:05',okayama:'06:43',shinkansen:'07:06',nozomi:76},
+    4:{matsuyama:'06:13',okayama:'07:51',shinkansen:'08:07',nozomi:82},
+    6:{matsuyama:'07:20',okayama:'09:00',shinkansen:'09:20',nozomi:8},
+    8:{matsuyama:'08:10',okayama:'10:00',shinkansen:'10:20',nozomi:14},
+    10:{matsuyama:'09:15',okayama:'10:58',shinkansen:'11:20',nozomi:18},
+    12:{matsuyama:'10:21',okayama:'12:11',shinkansen:'12:20',nozomi:22},
+    14:{matsuyama:'11:23',okayama:'13:11',shinkansen:'13:20',nozomi:26},
+    16:{matsuyama:'12:21',okayama:'14:11',shinkansen:'14:20',nozomi:30},
+    18:{matsuyama:'13:26',okayama:'15:11',shinkansen:'15:20',nozomi:34},
+    20:{matsuyama:'14:23',okayama:'16:11',shinkansen:'16:20',nozomi:38},
+    22:{matsuyama:'15:28',okayama:'17:11',shinkansen:'17:20',nozomi:44},
+    24:{matsuyama:'16:27',okayama:'18:11',shinkansen:'18:20',nozomi:50},
+    26:{matsuyama:'17:37',okayama:'19:11',shinkansen:'19:20',nozomi:56},
+    28:{matsuyama:'18:39',okayama:'20:12',shinkansen:'20:20',nozomi:62}
+  };
   function railShinkansenConnectionItems(record) {
-    if(record?.kind!=='limited'||record.direction!=='north'||
-       !/しおかぜ/.test(String(record.service||'')))return [];
-    const feed=approachLive.ichitsubo;
-    const generated=Date.parse(String(approachLive.generatedAtJst||''));
+    if(record?.kind!=='limited'||record.direction!=='north')return [];
     const now=japanNow();
-    if(!feed?.ok||!Array.isArray(feed.matsuyamaSchedule)||
-      !Number.isFinite(generated)||Date.now()-generated>120000||
-      Date.now()-generated < -15000 ||
+    if(now.iso<'2026-11-11'||now.iso>'2026-12-15'||
       (record.displayIso&&record.displayIso!==now.iso))return [];
-    const possible=feed.matsuyamaSchedule.filter(x=>
-      x?.trainClass==='limited'&&x?.direction==='north'&&
-      padTime(x.departure||'')===padTime(record.time||''));
-    const number=String(record.liveTrainNum||'');
-    let matched=number?possible.filter(x=>String(x.trainNum||'')===number):[];
-    if(matched.length!==1)matched=possible.filter(x=>
-      railScheduledServiceMatches(railLiveTrainLabel(x).service,record.service));
-    if(matched.length!==1)return [];
-
-    const raw=Array.isArray(matched[0].shinkansenConnections)
-      ?matched[0].shinkansenConnections:[];
-    const hits=raw.filter(x=>{
-      const station=cleanStation(x?.station||'');
-      const arrival=padTime(x?.limitedArrival||x?.arrival||'');
-      const departure=padTime(x?.shinkansenDeparture||x?.departure||'');
-      const service=String(x?.service||'').trim();
-      const destination=cleanStation(x?.destination||'');
-      if(station!=='岡山'||!/^\\d{2}:\\d{2}$/.test(arrival)||
-        !/^\\d{2}:\\d{2}$/.test(departure)||
-        !/^のぞみ\\d+号$/.test(service)||destination!=='東京'||
-        !['official_shinkansen_timetable','verified_shinkansen_connection'].includes(x?.source)||
-        x?.date!==now.iso)return false;
-      const diff=toMinutes(departure)-toMinutes(arrival);
-      return diff>=5&&diff<=60&&Number(x?.minutes)===diff;
-    });
-    // One explicit connection only; ambiguity must not show a guessed train.
-    if(hits.length!==1)return [];
-    const x=hits[0];
-    const arrival=padTime(x.limitedArrival||x.arrival);
-    const departure=padTime(x.shinkansenDeparture||x.departure);
-    return ['新大阪方面 新幹線：岡山'+arrival+'着 → '+departure+'発 '+
-      railSpecialText(String(x.service))+' 東京行きに接続（接続'+
-      (toMinutes(departure)-toMinutes(arrival))+'分）'];
+    const m=String(record.service||'').match(/しおかぜ\\s*(\\d+)号/);
+    if(!m)return [];
+    const connection=VERIFIED_OKAYAMA_NOZOMI_2026[Number(m[1])];
+    if(!connection || padTime(record.time)!==connection.matsuyama ||
+      !/岡山/.test(String(record.dest||'')))return [];
+    const wait=toMinutes(connection.shinkansen)-toMinutes(connection.okayama);
+    if(wait<8||wait>60)return [];
+    return ['新大阪方面 新幹線（定刻予定）：岡山'+connection.okayama+
+      '着 → '+connection.shinkansen+'発 のぞみ'+connection.nozomi+
+      '号 東京行きに接続（接続'+wait+'分・運行変更要確認）'];
   }
 
   function railRowDetailItems(record) {
