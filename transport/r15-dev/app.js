@@ -2728,6 +2728,7 @@
   // Never invent a transfer departure/arrival time from a route name.
   // Display actual connection times only when the same-day diagram supplies
   // an exact, unambiguous train and a timed onward connection.
+
   function railRegionalConnectionItems(record) {
     if(record?.kind!=='limited')return [];
     const feed=approachLive.ichitsubo;
@@ -2735,54 +2736,48 @@
     const now=japanNow();
     if(!feed?.ok||!Array.isArray(feed.matsuyamaSchedule)||
       !Number.isFinite(fetched)||Date.now()-fetched>120000||
-      Date.now()-fetched < -15000||
+      Date.now()-fetched < -15000 ||
       (record.displayIso&&record.displayIso!==now.iso))return [];
     const departure=padTime(record.time||'');
     const matches=feed.matsuyamaSchedule.filter(x=>
       padTime(x?.departure||'')===departure &&
       x?.direction===record.direction &&
-      x?.trainClass==='limited');
+      x?.trainClass===record.kind);
     const numbered=String(record.liveTrainNum||'');
-    let selected=numbered?matches.filter(x=>String(x.trainNum||'')===numbered):[];
+    let selected=numbered
+      ?matches.filter(x=>String(x.trainNum||'')===numbered):[];
     if(selected.length!==1){
       selected=matches.filter(x=>railScheduledServiceMatches(
         railLiveTrainLabel(x).service,record.service));
     }
-    if(selected.length!==1 && matches.length===1)selected=matches;
-    if(selected.length!==1)return [];
+    if(selected.length!==1&&matches.length===1)selected=matches;
+    if(selected.length!==1)return []; // Never attach another train's transfers.
 
-    const connections=Array.isArray(selected[0].transfers)?selected[0].transfers:[];
-    const areas=[
-      {name:'徳島',stations:['高松'],match:/徳島|うずしお/},
-      {name:'岡山',stations:['宇多津','多度津','坂出'],match:/岡山|しおかぜ|快速マリンライナー/},
-      {name:'高知',stations:['多度津','宇多津'],match:/高知|南風|しまんと/},
-      {name:'阿波池田',stations:['多度津','宇多津'],match:/阿波池田|南風|しまんと/},
-      {name:'予土線',stations:['宇和島'],match:/窪川|予土線|江川崎/}
-    ];
-    const output=[];
+    const areas=new Set(['徳島','岡山','高知','阿波池田','予土線']);
+    const entries=Array.isArray(selected[0].regionalTransfers)
+      ?selected[0].regionalTransfers:[];
     const seen=new Set();
-    for(const t of connections){
+    const output=[];
+    for(const t of entries){
+      const area=String(t?.area||'');
       const station=cleanStation(t?.station||'');
       const arrival=padTime(t?.arrival||'');
-      const departure2=padTime(t?.departure||'');
-      const destination=cleanStation(t?.destination||'');
-      const service=String(t?.service||t?.serviceName||'');
+      const onward=padTime(t?.departure||'');
       const mins=Number(t?.minutes);
-      if(t?.source!=='today_diagram'||
-        !/^\\d{2}:\\d{2}$/.test(arrival)||
-        !/^\\d{2}:\\d{2}$/.test(departure2)||
-        !Number.isFinite(mins)||mins<4||mins>40||!station)continue;
-      for(const area of areas){
-        if(seen.has(area.name)||!area.stations.includes(station)||
-          !area.match.test(destination+' '+service))continue;
-        // Merely matching the transfer station is not enough to assert a
-        // specific destination is served; require an explicit destination hint.
-        if(!destination&&!service)continue;
-        output.push(area.name+'方面：'+railSpecialText(station)+' '+
-          arrival+'着 → '+departure2+'発（接続'+Math.round(mins)+'分）'+
-          (destination?' '+railSpecialText(destination)+'行':''));
-        seen.add(area.name);
-      }
+      const dest=cleanStation(t?.destination||'');
+      if(t?.source!=='today_diagram'||!areas.has(area)||seen.has(area)||
+        !station||!/^\d{2}:\d{2}$/.test(arrival)||
+        !/^\d{2}:\d{2}$/.test(onward)||
+        !Number.isInteger(mins)||mins<5||mins>60||
+        (toMinutes(onward)-toMinutes(arrival))!==mins)continue;
+      seen.add(area);
+      const trainLabel=area==='予土線'?'予土線普通列車':
+        area==='徳島'?'徳島方面列車':
+        (area==='高知'||area==='阿波池田')?'土讃線方面列車':'岡山方面列車';
+      output.push(area+'方面：'+railSpecialText(station)+' '+arrival+
+        '着 → '+onward+'発 '+trainLabel+
+        (dest?'（'+railSpecialText(dest)+'行）':'')+
+        'に乗換（接続'+mins+'分・当日ダイヤ予定）');
     }
     return output;
   }
