@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "generatedAtJst": "2026-11-12T06:43:53+09:00",
+  "lookaheadDays": 7,
+  "sourceChecks": {
+    "jal": {
+      "status": "checked",
+      "sourceUrl": "https://oyaji-photo.club/category/jal/",
+      "publishedDates": [
+        "2026-11-12"
+      ],
+      "articleErrors": [],
+      "nextDayPublished": false
+    },
+    "anaOperations": {
+      "status": "checked_type_only_not_tail_assignment",
+      "sourceUrl": "https://www.tsuitachimochi.net/flights/operations?airline=ANA",
+      "siteUpdatedAt": "2026-11-12T06:42:46.579140+09:00",
+      "note": "機種別棒ダイヤは機体記号の確定割当ではない"
+    },
+    "anaLocations": {
+      "status": "no_monitored_aircraft_listed",
+      "sourceUrl": "https://www.tsuitachimochi.net/flights/aircraft-locations",
+      "siteUpdatedAt": "2026-11-12 06:35:01",
+      "registrationsSeen": [],
+      "nextVerified": false,
+      "note": "Nextはレジ番と便名が同一レコードで照合できる場合のみ採用"
+    }
+  },
+  "events": [],
+  "note": "JAL日別記事は非公式な機材予定。ANA機種予測から特定の機体番号を推測しない。機体番号付きADS-B照合は別の監視システムで確認する。"
+}
