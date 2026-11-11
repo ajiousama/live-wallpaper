@@ -4156,7 +4156,8 @@
             time:String(st.time),event:['arrival','departure','pass','passage','through'].includes(String(st.event))?String(st.event):'timetable'}));
       })(),
       terminating:x.terminating===true,
-      position:inboundPosition(x).slice(0,48),
+      scheduledPreDeparture:String(x.scheduledPreDeparture||'').slice(0,64),
+      position:inboundPosition(x).slice(0,64),
       delayMinutes:jrPositionUsable(x.position)&&Number.isFinite(Number(x.delayMinutes))&&
         Number(x.delayMinutes)>0&&Number(x.delayMinutes)<=60?Number(x.delayMinutes):0,
       turnback:x.turnback&&/^\d{1,2}:\d{2}$/.test(String(x.turnback.departure||''))
