@@ -3078,7 +3078,7 @@ body.freewifi-tv #panel-rail .jr-panorama-alert .jr-alert-ending{color:#f9f9f9}
 body.freewifi-tv.air-board-page #air-note .air-bottom-livery-notice{
   display:inline-block;
   flex:0 0 auto;
-  color:#4df6ff!important;
+  color:#4df6ff;
   font-size:13px!important;
   font-weight:1000!important;
   white-space:nowrap!important;
