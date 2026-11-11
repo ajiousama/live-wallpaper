@@ -2788,20 +2788,19 @@
   // Only regular Tokyo-bound Nozomi services, with >=8 min standard transfer.
   // These are SCHEDULED connections, not live delay/hold guarantees.
   const VERIFIED_OKAYAMA_NOZOMI_2026={
-    2:{matsuyama:'05:05',okayama:'06:43',shinkansen:'07:06',nozomi:76},
-    4:{matsuyama:'06:13',okayama:'07:51',shinkansen:'08:07',nozomi:82},
-    6:{matsuyama:'07:20',okayama:'09:00',shinkansen:'09:20',nozomi:8},
-    8:{matsuyama:'08:10',okayama:'10:00',shinkansen:'10:20',nozomi:14},
-    10:{matsuyama:'09:15',okayama:'10:58',shinkansen:'11:20',nozomi:18},
-    12:{matsuyama:'10:21',okayama:'12:11',shinkansen:'12:20',nozomi:22},
-    14:{matsuyama:'11:23',okayama:'13:11',shinkansen:'13:20',nozomi:26},
-    16:{matsuyama:'12:21',okayama:'14:11',shinkansen:'14:20',nozomi:30},
-    18:{matsuyama:'13:26',okayama:'15:11',shinkansen:'15:20',nozomi:34},
-    20:{matsuyama:'14:23',okayama:'16:11',shinkansen:'16:20',nozomi:38},
-    22:{matsuyama:'15:28',okayama:'17:11',shinkansen:'17:20',nozomi:44},
-    24:{matsuyama:'16:27',okayama:'18:11',shinkansen:'18:20',nozomi:50},
-    26:{matsuyama:'17:37',okayama:'19:11',shinkansen:'19:20',nozomi:56},
-    28:{matsuyama:'18:39',okayama:'20:12',shinkansen:'20:20',nozomi:62}
+    4:{matsuyama:'05:05',okayama:'07:51',shinkansen:'08:07',nozomi:82},
+    6:{matsuyama:'06:13',okayama:'09:00',shinkansen:'09:20',nozomi:8},
+    8:{matsuyama:'07:20',okayama:'10:00',shinkansen:'10:20',nozomi:14},
+    10:{matsuyama:'08:10',okayama:'10:58',shinkansen:'11:20',nozomi:18},
+    12:{matsuyama:'09:15',okayama:'12:11',shinkansen:'12:20',nozomi:22},
+    14:{matsuyama:'10:21',okayama:'13:11',shinkansen:'13:20',nozomi:26},
+    16:{matsuyama:'11:23',okayama:'14:11',shinkansen:'14:20',nozomi:30},
+    18:{matsuyama:'12:21',okayama:'15:11',shinkansen:'15:20',nozomi:34},
+    20:{matsuyama:'13:26',okayama:'16:11',shinkansen:'16:20',nozomi:38},
+    22:{matsuyama:'14:23',okayama:'17:11',shinkansen:'17:20',nozomi:44},
+    24:{matsuyama:'15:28',okayama:'18:11',shinkansen:'18:20',nozomi:50},
+    26:{matsuyama:'16:27',okayama:'19:11',shinkansen:'19:20',nozomi:56},
+    28:{matsuyama:'17:37',okayama:'20:12',shinkansen:'20:20',nozomi:62}
   };
   function railShinkansenConnectionItems(record) {
     if(record?.kind!=='limited'||record.direction!=='north')return [];
