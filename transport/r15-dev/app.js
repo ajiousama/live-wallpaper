@@ -765,12 +765,23 @@
   // A future departure time with a stale completion tag is not trusted,
   // matching the airport board's own rollover protections.
   function airportDepartureCompleted(item,now){
-    const text=[item?.status,item?.changeText,item?.departureStatus].map(x=>String(x||'')).join(' ');
-    if(!/出発済(?:み)?|離陸済(?:み)?|出発完了|離陸完了/.test(text))return false;
+    // A delayed outbound flight disappears from BOTH airport delay tickers
+    // once there is affirmative evidence it has left Matsuyama. A passed
+    // scheduled/revised time alone is NOT proof of departure.
+    const text=[item?.status,item?.changeText,item?.departureStatus]
+      .map(x=>String(x||'').trim()).join(' ');
+    const explicitCompleted=/出発済(?:み)?|離陸済(?:み)?|出発完了|離陸完了|出発しました|離陸しました/.test(text)
+      || [item?.status,item?.departureStatus].some(x=>/^(出発|離陸)$/.test(String(x||'').trim()))
+      || item?.departureVerified===true || item?.departed===true;
     const actual=padTime(item?.actualDepartureTime||item?.actualDeparture||'');
-    const reference=/^\d{2}:\d{2}$/.test(actual)
-      ?actual:padTime(item?.changed||item?.scheduled||'');
-    return !/^\d{2}:\d{2}$/.test(reference)||toMinutes(reference)<=now.minutes+1;
+    const validTime=t=>/^([01]\d|2[0-3]):[0-5]\d$/.test(t);
+    // An actual-departure timestamp is positive evidence even if the status
+    // text still says '遅れ'. Do not use 'changed' as an actual clock.
+    if(validTime(actual))return toMinutes(actual)<=now.minutes+1;
+    if(!explicitCompleted)return false;
+    const scheduled=padTime(item?.changed||item?.scheduled||'');
+    // Ignore prematurely inherited completion tags from an old schedule.
+    return !validTime(scheduled)||toMinutes(scheduled)<=now.minutes+1;
   }
   function airportArrivalBoardState(now) {
     const ap=slowLive.airport;
