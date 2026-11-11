@@ -3392,13 +3392,30 @@
     const active=liveFlightRows(now) || nextRows('air',now);
     if(!Array.isArray(active)||!active.length)return [];
     const seen=new Set(), output=[];
+    // Forecasts for TOMORROW and beyond must appear BEFORE arrival day.
+    // Only records with an exact registration + dated published flight qualify.
+    const upcoming=currentSpecialAircraftForecast(now)
+      .filter(e=>e.direction==='arrival')
+      .filter(e=>{
+        const at=Date.parse(e.date+'T'+e.arrivalScheduled+':00+09:00');
+        return Number.isFinite(at)&&at>=effectiveClockMs()-15*60000;
+      })
+      .sort((a,b)=>(a.date+a.arrivalScheduled).localeCompare(b.date+b.arrivalScheduled));
+    for(const e of upcoming){
+      const key=e.date+'|'+e.direction+'|'+e.airline+'|'+e.flightNumber;
+      seen.add(key);
+      output.push('特別塗装機情報｜'+e.date.slice(5).replace('-','/')+
+        '｜'+e.airline+' '+e.flightNumber+'便 '+e.arrivalScheduled+' 松山着予定｜'+
+        SPECIAL_AIRCRAFT_LIVERIES[e.registration]+'（'+e.registration+
+        '）｜非公式な機材予定・変更あり');
+    }
     for(const r of active){
       const verified=confirmedSpecialAircraftGuidance(r);
       const possible=verified?'':possibleSpecialAircraftGuidance(r,now);
       if(!verified&&!possible)continue;
       const p=parseAirService(r.service);
       if(!p.number)continue;
-      const key=r.direction+'|'+p.airline+'|'+p.number;
+      const key=now.iso+'|'+r.direction+'|'+p.airline+'|'+p.number;
       if(seen.has(key))continue;
       seen.add(key);
       const dir=r.direction==='arrival'?'到着':'出発';
@@ -4958,9 +4975,57 @@
       })
     })
   });
+  // Daily seven-day plans are a separate, nonofficial data source.
+  // Never turn a generic aircraft type (76P/78P) into an aircraft registration.
+  const specialAircraftForecast={events:[],generatedAtJst:'',sourceChecks:{}};
+  const SPECIAL_AIRCRAFT_FORECAST_URL=new URL(
+    '../../data/special_aircraft_forecast.json',
+    document.currentScript?.src || location.href).href;
+  function currentSpecialAircraftForecast(now){
+    const ts=Date.parse(String(specialAircraftForecast.generatedAtJst||''));
+    const age=effectiveClockMs()-ts;
+    if(!Number.isFinite(ts)||age< -86400000 || age>30*3600000)return [];
+    return (Array.isArray(specialAircraftForecast.events)?specialAircraftForecast.events:[])
+      .filter(e=>e && /^20\d\d-\d\d-\d\d$/.test(String(e.date||'')) &&
+        e.date>=now.iso && e.evidence==='unofficial_aircraft_plan' &&
+        String(e.sourceUrl||'').startsWith('https://oyaji-photo.club/') &&
+        SPECIAL_AIRCRAFT_LIVERIES[e.registration]===e.livery);
+  }
+  function specialForecastMatchesRow(e,r){
+    if(e.direction!==r.direction)return false;
+    const p=parseAirService(r.service);
+    if(p.airline!==e.airline||String(Number(p.number))!==String(Number(e.flightNumber)))return false;
+    // Flight-number matching is not enough if the actual airport board
+    // explicitly reports a different route than the published plan.
+    const rawPlace=String(r.dest||'').trim();
+    const expected=String(r.direction==='arrival'?e.origin:e.destination);
+    const normal=x=>String(x||'').replace(/[()（）\s・]/g,'');
+    const observed=normal(rawPlace), planned=normal(expected);
+    if(observed && planned && !observed.includes(planned)&&!planned.includes(observed)){
+      const alias=[['東京羽田','羽田'],['大阪伊丹','伊丹'],['札幌新千歳','新千歳']];
+      if(!alias.some(([full,short])=>observed.includes(short)&&planned.includes(full) ||
+          planned.includes(short)&&observed.includes(full)))return false;
+    }
+    return true;
+  }
+  function loadSpecialAircraftForecast(){
+    return fetch(SPECIAL_AIRCRAFT_FORECAST_URL+'?t='+Date.now(),{cache:'no-store'})
+      .then(res=>{if(!res.ok)throw new Error('Special forecast HTTP '+res.status);return res.json();})
+      .then(json=>{
+        if(json?.schemaVersion!==1||!Array.isArray(json.events))return;
+        specialAircraftForecast.events=json.events;
+        specialAircraftForecast.generatedAtJst=String(json.generatedAtJst||'');
+        specialAircraftForecast.sourceChecks=json.sourceChecks||{};
+        renderAll();
+      }).catch(err=>{console.warn('Special-aircraft forecast unavailable',err);});
+  }
   function possibleSpecialAircraftGuidance(r,now){
     if(!r || !now || r.isNextDayStart || verifiedAircraftRegistration(r))return '';
     const raw=r.liveRaw||{};
+    const published=currentSpecialAircraftForecast(now).find(e=>e.date===now.iso &&
+      specialForecastMatchesRow(e,r));
+    if(published)return '特別塗装機「'+published.livery+'」（'+published.registration+
+      '）飛来予定（非公式な機材予定・変更あり）';
     // Even an unrecognized reported registration overrides type-only speculation.
     if([raw.aircraftRegistration,raw.registration,raw.tailNumber,
       r.aircraftRegistration,r.registration].some(v=>String(v||'').trim()))return '';
@@ -7160,6 +7225,10 @@
     updateNotes();
   });},10000);
   setInterval(()=>{loadSlowLive().then(()=>renderAll());},60000);
+  // Forecast crawler commits the data file independently; poll for updates
+  // without a full wallpaper reload. Date and age checks prevent stale hints.
+  loadSpecialAircraftForecast();
+  setInterval(loadSpecialAircraftForecast,600000);
   setInterval(()=>{loadDisasterLive().then(()=>renderDisaster(japanNow()));},10000);
   renderAll(); setupMonthlyUpdatePrompt();
   checkDeployment();
