@@ -79,7 +79,7 @@ function renderCalendar(today,tomorrow){
  const el=$('calendar');el.replaceChildren();
  const dows=['月','火','水','木','金','土','日'];
  dows.forEach((w,i)=>{const e=document.createElement('div');e.className='dow'+(i===5?' sat':i===6?' sun':'');e.textContent=w+'曜日';el.appendChild(e)});
- const begin=data.range.from;
+ const begin=(today<'2026-11-16' && today>='2026-11-11')?'2026-11-09':data.range.from;
  const offset=(dow(begin)+6)%7;
  for(let i=0;i<35;i++){
   const iso=dateAdd(begin,i-offset);
@@ -107,7 +107,7 @@ function renderPick(slot,iso){
   rows.appendChild(row);
  }
 }
-function tick(){if(!data)return;const today=shiftToday();if(today===lastKey)return;lastKey=today;const tomorrow=dateAdd(today,1);renderCalendar(today,tomorrow);renderPick('today',today);renderPick('tomorrow',tomorrow)}
+function tick(){if(!data)return;const today=shiftToday();if(today===lastKey)return;lastKey=today;$('month-title').textContent=(today<'2026-11-16' && today>='2026-11-11'?'11月度':data.period)+' 勤務予定';const tomorrow=dateAdd(today,1);renderCalendar(today,tomorrow);renderPick('today',today);renderPick('tomorrow',tomorrow)}
 async function fetchSchedule(){try{const response=await fetch('./schedule.json?t='+Date.now(),{cache:'no-store'});if(!response.ok)throw Error('HTTP '+response.status);data=await response.json();$('month-title').textContent=(data.period||'11月度')+' 勤務予定';lastKey='';tick()}catch(err){console.error('shift schedule load failed:',err)}}
 fetchSchedule();setInterval(tick,1000);setInterval(fetchSchedule,60000);
 
