@@ -4820,7 +4820,8 @@
     JA819A:'ポケモンジェット（赤）',
     JA923A:'ポケモンジェット（緑）',
     JA339J:'JAL Jubilee Express',
-    JA344J:'JAL トゥンクトゥンクJET'
+    JA344J:'JAL トゥンクトゥンクJET',
+    JA228J:'J-AIR創立30周年記念JET'
   });
   function verifiedAircraftRegistration(r){
     const raw=r.liveRaw||{};
