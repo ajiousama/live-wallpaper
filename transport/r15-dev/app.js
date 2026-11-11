@@ -2771,12 +2771,16 @@
         !Number.isInteger(mins)||mins<5||mins>60||
         (toMinutes(onward)-toMinutes(arrival))!==mins)continue;
       seen.add(area);
-      const trainLabel=area==='予土線'?'予土線普通列車':
-        area==='徳島'?'徳島方面列車':
-        (area==='高知'||area==='阿波池田')?'土讃線方面列車':'岡山方面列車';
+      const isRegionalExpress=['高知','阿波池田','徳島'].includes(area);
+      const service=String(t?.service||'');
+      if(isRegionalExpress && (t?.trainClass!=='limited' ||
+          !/^(?:南風|しまんと|うずしお)\d+号$/.test(service)))continue;
+      const trainLabel=isRegionalExpress
+        ?'特急 '+railSpecialText(service)
+        :area==='予土線'?'予土線普通列車':'岡山方面列車';
       output.push(area+'方面：'+railSpecialText(station)+' '+arrival+
         '着 → '+onward+'発 '+trainLabel+
-        (dest?'（'+railSpecialText(dest)+'行）':'')+
+        (dest?' '+railSpecialText(dest)+'行':'')+
         'に乗換（接続'+mins+'分・当日ダイヤ予定）');
     }
     return output;
