@@ -108,7 +108,24 @@ function renderPick(slot,iso){
  }
 }
 function tick(){if(!data)return;const today=shiftToday();if(today===lastKey)return;lastKey=today;$('month-title').textContent=(today<'2026-11-16' && today>='2026-11-11'?'11月度':data.period)+' 勤務予定';const tomorrow=dateAdd(today,1);renderCalendar(today,tomorrow);renderPick('today',today);renderPick('tomorrow',tomorrow)}
-async function fetchSchedule(){try{const response=await fetch('./schedule.json?t='+Date.now(),{cache:'no-store'});if(!response.ok)throw Error('HTTP '+response.status);data=await response.json();$('month-title').textContent=(data.period||'11月度')+' 勤務予定';lastKey='';tick()}catch(err){console.error('shift schedule load failed:',err)}}
+async function fetchSchedule(){
+ const stamp=Date.now();
+ const sources=[
+  'https://raw.githubusercontent.com/ajiousama/live-wallpaper/main/shift/schedule.json?t='+stamp,
+  './schedule.json?t='+stamp
+ ];
+ let lastErr=null;
+ for(const url of sources){
+  try{
+   const response=await fetch(url,{cache:'no-store'});
+   if(!response.ok)throw Error('HTTP '+response.status);
+   data=await response.json();
+   $('month-title').textContent=(data.period||'11月度')+' 勤務予定';
+   lastKey='';tick();return;
+  }catch(err){lastErr=err}
+ }
+ console.error('shift schedule load failed:',lastErr);
+}
 fetchSchedule();setInterval(tick,1000);setInterval(fetchSchedule,60000);
 
 
