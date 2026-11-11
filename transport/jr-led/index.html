@@ -899,12 +899,16 @@ body{display:flex;align-items:flex-end;justify-content:center;font-variant-numer
         if(next){
           var hh=String(Math.floor(next.minute/60)).padStart(2,'0');
           var mm=String(next.minute%60).padStart(2,'0');
-          var action=next.event==='departure'?'発車予定':
-            next.event==='arrival'?'到着予定':
-            (next.event==='pass'||next.event==='passage'||next.event==='through')?
-              '通過予定':'時刻表予定';
+          // Some diagram feeds provide a station time without an event type.
+          // Preserve the time, but never claim a pass or departure without evidence.
+          var ev=next.event;
+          var action=(ev==='departure'||ev==='depart'||ev==='発'||ev==='発車')?'発車予定':
+            (ev==='arrival'||ev==='arrive'||ev==='着'||ev==='到着')?'到着予定':
+            (ev==='pass'||ev==='passage'||ev==='through'||ev==='通過')?'通過予定':
+            '到達予定';
           return [{cls:'station-uncertain',txt:
-            next.station+' '+hh+':'+mm+' '+action+'（時刻表）'}];
+            next.station+' '+hh+':'+mm+' '+action+
+            (action==='到達予定'?'（発着種別未確認）':'（時刻表）')}];
         }
         var remaining=arrivalMinute-n.minutes;
         if(remaining>=0&&remaining<=180)
