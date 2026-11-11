@@ -720,7 +720,8 @@ body{display:flex;align-items:flex-end;justify-content:center;font-variant-numer
     portions(row).forEach(function(p){
       var route=exactRoute(row,p.destination,p.num,n);
       addPart(segments,'title',String(row.time)+'発　'+p.name+'　'+p.destination+'行');
-      if(row._isFinal)addPart(segments,'title','最終列車');
+      // Final-train status stays in the compact row badge and the parent
+      // full-width rail ticker. Never inject it into this 256px route ribbon.
       var via=ledRouteVia(row);
       if(via)addPart(segments,'note',via);
       if(!route){
