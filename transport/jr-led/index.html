@@ -903,7 +903,8 @@ body{display:flex;align-items:flex-end;justify-content:center;font-variant-numer
         if(remaining>=0&&remaining<=180)
           return [{cls:'station-uncertain',txt:'時刻表推定 松山まで約'+remaining+'分'}];
       }
-      return [{cls:'station-uncertain',txt:'現在位置未確認'}];
+      return [{cls:'station-uncertain',txt:(rows||[]).length
+        ?'当日の駅別時刻を照合中':'到着列車の案内なし'}];
     }
     var known=ARRIVAL_STATIONS[direction];
     // Blink ONLY a station reported as an exact stop/current station.
@@ -934,7 +935,18 @@ body{display:flex;align-items:flex-end;justify-content:center;font-variant-numer
       var match=rows.find(function(r){
         return r._arrival&&!r._specialMovement&&r.trainNum===approach.trainNum;
       });
-      shown=match?[match]:[];
+      // A confirmed approach can arrive before its scheduled row is present.
+      // Do not throw away the live position just because row matching fails.
+      var same=(Array.isArray(live.scheduledArrivals)?live.scheduledArrivals:[])
+        .filter(function(r){return r.side===direction&&r.trainNum===approach.trainNum&&
+          timeNumber(r.arrival)===timeNumber(approach.arrival);});
+      var planned=same.length===1?same[0]:null;
+      shown=match?[match]:[{
+        _arrival:true,trainNum:approach.trainNum,
+        time:approach.arrival,
+        position:String(approach.position||planned?.position||''),
+        stops:planned?.stops||[]
+      }];
     }
     var parts=arrivalPositionParts(shown,n);
     var signature=direction+'|'+parts.map(function(p){
