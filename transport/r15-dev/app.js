@@ -2724,6 +2724,28 @@
     });
   }
 
+  // Regional route guidance is not a guaranteed same-day connection.
+  // Never invent a transfer departure/arrival time from a route name.
+  function railRegionalConnectionItems(record) {
+    if(record?.kind!=='limited')return [];
+    const service=String(record.service||'');
+    if(record.direction==='north'){
+      const okayama=/しおかぜ/.test(service)
+        ? '岡山方面：この特急で岡山へ直通（当日の運転変更は要確認）'
+        : '岡山方面：宇多津で岡山方面の列車に乗換（接続時刻は要確認）';
+      return [
+        okayama,
+        '徳島方面：高松で特急うずしお等に乗換（接続時刻は要確認）',
+        '高知方面：多度津で特急南風に乗換（接続時刻は要確認）',
+        '阿波池田方面：多度津で特急南風等に乗換（接続時刻は要確認）'
+      ];
+    }
+    if(record.direction==='south'){
+      return ['予土線方面：宇和島で窪川方面の予土線列車に乗換（接続時刻は要確認）'];
+    }
+    return [];
+  }
+
   function railRowDetailItems(record) {
     const items = [];
     const route=railSouthRoute(record);
@@ -2738,6 +2760,7 @@
       if (timedStops.length) items.push(`停車駅：${timedStops.join(' → ')}`);
       else if (stops.length) items.push(`停車駅：${stops.join(' → ')}`);
       if (terminalArrival) items.push(`終点着 ${terminalArrival}`);
+      items.push(...railRegionalConnectionItems(record));
       const info = String(record.info || '');
       const coupled = info.match(/(いしづち\d+号)/);
       if (coupled) items.push(`${coupled[1]}を併結予定（当日の分離運転は未確認）`);
