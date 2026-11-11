@@ -4808,9 +4808,21 @@
 
   // Only an explicitly reported registration identifies a special-livery aircraft.
   // Timetable aircraft type, flight number and airline are NOT sufficient.
+  // Registration must come from a positively identified aircraft, never a
+  // route or schedule.  Only add aircraft with a published active livery.
+  // References (checked 2026-11-11):
+  // https://www.ana.co.jp/ja/jp/promotion/pokemonjet/
+  // https://cad.www.ana.co.jp/ja/jp/domestic/theme/chiikawa-jet/
+  // https://press.jal.co.jp/en/release/202604/009483.html
+  // https://press.jal.co.jp/ja/release/202611/009804.html
+  // Planned but NOT yet in service: JA56AN (Pokemon Blue). Do not label it
+  // until the airline confirms service has started.
   const SPECIAL_AIRCRAFT_LIVERIES=Object.freeze({
     JA609A:'ちいかわジェット',
-    JA819A:'ポケモンジェット（赤）'
+    JA819A:'ポケモンジェット（赤）',
+    JA923A:'ポケモンジェット（緑）',
+    JA339J:'JAL Jubilee Express',
+    JA344J:'JAL トゥンクトゥンクJET'
   });
   function verifiedAircraftRegistration(r){
     const raw=r.liveRaw||{};
