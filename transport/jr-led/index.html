@@ -910,9 +910,8 @@ body{display:flex;align-items:flex-end;justify-content:center;font-variant-numer
         }
         // An arrival ETA alone cannot locate a train. Do not fabricate an
         // approach segment when there is no earlier timetable checkpoint.
-        var remaining=arrivalMinute-n.minutes;
-        if(remaining>=0&&remaining<=180)
-          return [{cls:'station-uncertain',txt:'時刻表推定 松山まで約'+remaining+'分'}];
+        return [{cls:'station-uncertain',txt:
+          '途中駅の時刻データ不足（位置推定不可）'}];
       }
       return [{cls:'station-uncertain',txt:(rows||[]).length
         ?'当日の駅別時刻を照合中':'到着列車の案内なし'}];
