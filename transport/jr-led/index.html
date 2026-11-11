@@ -399,6 +399,7 @@ body{display:flex;align-items:flex-end;justify-content:center;font-variant-numer
         arrivalOrigin:String(x.origin||''),arrivalDestination:String(x.destination||''),
         terminating:!!x.terminating,turnback:x.turnback||null,
         position:String(x.position||''),delayMinutes:Number(x.delayMinutes)||0,
+        scheduledPreDeparture:String(x.scheduledPreDeparture||''),
         stops:(Array.isArray(x.stops)?x.stops:[]).filter(v=>v &&
           typeof v.station==='string' && Number.isFinite(timeNumber(v.time))).slice(0,60),
         _arrival:true
@@ -875,6 +876,12 @@ body{display:flex;align-items:flex-end;justify-content:center;font-variant-numer
     });
     var raw=String(chosen?.position||'').trim();
     if(!raw){
+      var waiting=(rows||[]).find(function(r){
+        return r&&r._arrival&&!r._specialMovement&&
+          String(r.scheduledPreDeparture||'').trim();
+      });
+      if(waiting)return [{cls:'station-uncertain',
+        txt:String(waiting.scheduledPreDeparture)}];
       var target=(rows||[]).find(function(r){
         return r&&r._arrival&&!r._specialMovement&&Number.isFinite(timeNumber(r.time));
       });
@@ -955,6 +962,7 @@ body{display:flex;align-items:flex-end;justify-content:center;font-variant-numer
         _arrival:true,trainNum:approach.trainNum,
         time:approach.arrival,
         position:String(approach.position||planned?.position||''),
+        scheduledPreDeparture:String(planned?.scheduledPreDeparture||''),
         stops:planned?.stops||[]
       }];
     }
