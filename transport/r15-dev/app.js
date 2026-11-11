@@ -5013,12 +5013,19 @@
           guidance = guidance && guidance!=='—' ? `${guidance}　｜　${originInfo}` : originInfo;
         }
       }
-      const specialLivery=confirmedSpecialAircraftGuidance(r) ||
-        possibleSpecialAircraftGuidance(r,japanNow());
+      const confirmedLivery=confirmedSpecialAircraftGuidance(r);
+      const possibleLivery=confirmedLivery?'':possibleSpecialAircraftGuidance(r,japanNow());
+      const specialLivery=confirmedLivery||possibleLivery;
       if(specialLivery)guidance=guidance&&guidance!=='—'
         ?guidance+'　｜　'+specialLivery:specialLivery;
       const approx=airportApproximatePosition(r,dep,japanNow());
       if(approx) guidance=guidance && guidance!=='—' ? `${guidance}　｜　${approx}` : approx;
+      // Only the unconfirmed special-livery hint blinks. All ordinary flight
+      // status text and verified livery messages remain stable.
+      const guidanceHtml=possibleLivery
+        ? guidance.replace(possibleLivery,
+            '<span class="air-livery-possible">'+possibleLivery+'</span>')
+        : guidance;
       const guidanceAlert=/遅|欠航|運休|変更|受付|保安|搭乗|まもなく|到着/.test(guidance);
       const statusClass=`cell air-guidance${guidanceAlert?' air-guidance-alert':''}${guidance.length>14?' long-status':''}`;
       const deltaHtml=Number.isFinite(delta)&&delta!==0?`<span class="air-delay-minutes ${delta<0?'air-early':''}">${delta>0?'+':''}${delta}分</span>`:'';
@@ -5032,7 +5039,7 @@
         </div>
         <div class="cell main air-place">${placeHtml}</div>
         <div class="cell time air-board-time">${timeHtml}</div>
-        <div class="${statusClass}">${delayBadge(r,'air')}${overflowScrollHtml(guidance,'air-status-scroll')}</div>`;
+        <div class="${statusClass}">${delayBadge(r,'air')}${overflowScrollHtml(guidanceHtml,'air-status-scroll')}</div>`;
       root.appendChild(row);
       });
     }
