@@ -884,21 +884,28 @@ body{display:flex;align-items:flex-end;justify-content:center;font-variant-numer
         var arrivalMinute=timeNumber(target.time);
         var points=(Array.isArray(target.stops)?target.stops:[])
           .filter(function(st){return st&&st.station&&Number.isFinite(timeNumber(st.time));})
-          .map(function(st){return {station:String(st.station).replace(/駅$/,''),
-            minute:timeNumber(st.time)};})
+          .map(function(st){return {
+            station:String(st.station).replace(/駅$/,''),
+            minute:timeNumber(st.time),
+            event:String(st.event||'timetable').toLowerCase()
+          };})
           .filter(function(st){return st.minute<=arrivalMinute;});
         if(!points.some(function(st){return st.station==='松山';}))
-          points.push({station:'松山',minute:arrivalMinute});
+          points.push({station:'松山',minute:arrivalMinute,event:'arrival'});
         points.sort(function(a,b){return a.minute-b.minute;});
-        var previous=null,next=null;
-        points.forEach(function(st){
-          if(st.minute<=n.minutes)previous=st;
-          else if(!next)next=st;
-        });
-        if(previous&&next&&previous.station!==next.station)
-          return [{cls:'station-uncertain',txt:'時刻表推定 '+previous.station+'～'+next.station+'間'}];
-        if(!previous&&next&&points.length>1)
-          return [{cls:'station-uncertain',txt:'時刻表推定 '+next.station+'到着前'}];
+        // Use only future checkpoints of this exact train. A station with both
+        // arrival and departure entries is allowed to show each in order.
+        var next=points.find(function(st){return st.minute>n.minutes;});
+        if(next){
+          var hh=String(Math.floor(next.minute/60)).padStart(2,'0');
+          var mm=String(next.minute%60).padStart(2,'0');
+          var action=next.event==='departure'?'発車予定':
+            next.event==='arrival'?'到着予定':
+            (next.event==='pass'||next.event==='passage'||next.event==='through')?
+              '通過予定':'時刻表予定';
+          return [{cls:'station-uncertain',txt:
+            next.station+' '+hh+':'+mm+' '+action+'（時刻表）'}];
+        }
         var remaining=arrivalMinute-n.minutes;
         if(remaining>=0&&remaining<=180)
           return [{cls:'station-uncertain',txt:'時刻表推定 松山まで約'+remaining+'分'}];
