@@ -37,13 +37,14 @@ jobs:
       - name: Publish refreshed forecast for wallpaper
         run: |
           set -e
-          if git diff --quiet -- data/special_aircraft_forecast.json; then
+          # git diff ignores a brand-new untracked data file. Stage first.
+          git add data/special_aircraft_forecast.json
+          if git diff --cached --quiet -- data/special_aircraft_forecast.json; then
             echo "No forecast update"
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/special_aircraft_forecast.json
           git commit -m "data: update Matsuyama special aircraft forecast [skip ci]"
           for attempt in 1 2 3; do
             git fetch origin main
