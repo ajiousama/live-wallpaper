@@ -480,8 +480,18 @@ body{display:flex;align-items:flex-end;justify-content:center;font-variant-numer
         else if(row.arrivalDestination&&row.arrivalDestination!=='松山')
           seg.push({type:'note',text:'松山に停車後 '+row.arrivalDestination+'方面へ運転'});
       }
-      if(row.position)seg.push({type:'stop',text:'現在位置 '+row.position+
-        (row.delayMinutes>0?'（'+row.delayMinutes+'分遅れ）':'')});
+      // The lower ticker must describe the SAME train's whereabouts as the
+      // upper arrival-position strip, never just repeat its Matsuyama ETA.
+      // Resolve each row independently to avoid borrowing another train's fix.
+      if(row.position){
+        seg.push({type:'stop',text:'現在位置 '+row.position+
+          (row.delayMinutes>0?'（'+row.delayMinutes+'分遅れ）':'')});
+      }else if(!row._specialMovement){
+        var positionParts=arrivalPositionParts([row],n);
+        var positionText=positionParts.map(function(p){return p.txt;}).join('');
+        if(positionText&&positionText!=='到着列車の案内なし')
+          seg.push({type:'stop',text:'現在位置案内 '+positionText});
+      }
       if(row.terminating&&row.turnback&&
          Number.isFinite(timeNumber(row.turnback.departure))&&row.turnback.destination)
         seg.push({type:'connection',text:'折り返し候補 '+row.turnback.departure+
