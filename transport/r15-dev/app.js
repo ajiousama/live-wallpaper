@@ -4577,9 +4577,18 @@
         const dest=cleanStation(x.dest||'');
         return time+'　'+name+'　'+(dest?dest+'行 ':'')+'松山発';
       });
-    const message=events.length
-      ? 'JR松山駅　'+side+'　◆　'+events.join('　◆　')
-      : 'JR松山駅　'+side+'　列車の発着情報を確認しています';
+    // On the upper JR panorama ribbon, do not scroll empty "checking"
+    // placeholders. Keep the separately verified approaching-train alert.
+    if(!events.length){
+      const key=now.iso+'|'+side+'|empty';
+      if(container.dataset.key!==key || track.childElementCount){
+        container.dataset.key=key;
+        track.classList.remove('is-looping');
+        track.replaceChildren();
+      }
+      return;
+    }
+    const message='JR松山駅　'+side+'　◆　'+events.join('　◆　');
     const key=now.iso+'|'+side+'|'+message;
     if(container.dataset.key===key)return; // no scroll reset on live polls
     container.dataset.key=key;
