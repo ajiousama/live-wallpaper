@@ -399,6 +399,8 @@ body{display:flex;align-items:flex-end;justify-content:center;font-variant-numer
         arrivalOrigin:String(x.origin||''),arrivalDestination:String(x.destination||''),
         terminating:!!x.terminating,turnback:x.turnback||null,
         position:String(x.position||''),delayMinutes:Number(x.delayMinutes)||0,
+        stops:(Array.isArray(x.stops)?x.stops:[]).filter(v=>v &&
+          typeof v.station==='string' && Number.isFinite(timeNumber(v.time))).slice(0,60),
         _arrival:true
       };
     });
@@ -873,16 +875,33 @@ body{display:flex;align-items:flex-end;justify-content:center;font-variant-numer
     });
     var raw=String(chosen?.position||'').trim();
     if(!raw){
-      // The daily diagram gives the Matsuyama arrival time, but not a
-      // verified intermediate-station passage. Estimate time remaining only;
-      // never light up an invented station or call this a live position.
       var target=(rows||[]).find(function(r){
         return r&&r._arrival&&!r._specialMovement&&Number.isFinite(timeNumber(r.time));
       });
       if(target){
-        var remaining=timeNumber(target.time)-n.minutes;
+        // Match checkpoints from this train's same-day diagram only.
+        // These are estimated intervals, not observed live station positions.
+        var arrivalMinute=timeNumber(target.time);
+        var points=(Array.isArray(target.stops)?target.stops:[])
+          .filter(function(st){return st&&st.station&&Number.isFinite(timeNumber(st.time));})
+          .map(function(st){return {station:String(st.station).replace(/駅$/,''),
+            minute:timeNumber(st.time)};})
+          .filter(function(st){return st.minute<=arrivalMinute;});
+        if(!points.some(function(st){return st.station==='松山';}))
+          points.push({station:'松山',minute:arrivalMinute});
+        points.sort(function(a,b){return a.minute-b.minute;});
+        var previous=null,next=null;
+        points.forEach(function(st){
+          if(st.minute<=n.minutes)previous=st;
+          else if(!next)next=st;
+        });
+        if(previous&&next&&previous.station!==next.station)
+          return [{cls:'station-uncertain',txt:'時刻表推定 '+previous.station+'～'+next.station+'間'}];
+        if(!previous&&next&&points.length>1)
+          return [{cls:'station-uncertain',txt:'時刻表推定 '+next.station+'到着前'}];
+        var remaining=arrivalMinute-n.minutes;
         if(remaining>=0&&remaining<=180)
-          return [{cls:'station-uncertain',txt:'時刻表推定　松山まで約'+remaining+'分（位置未確認）'}];
+          return [{cls:'station-uncertain',txt:'時刻表推定 松山まで約'+remaining+'分'}];
       }
       return [{cls:'station-uncertain',txt:'現在位置未確認'}];
     }
