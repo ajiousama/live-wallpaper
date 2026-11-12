@@ -1,0 +1,44 @@
+name: Nationwide special-livery aircraft observations
+on:
+  workflow_dispatch:
+  schedule:
+    # GitHub Actions schedules are best effort, not real-time guarantees.
+    - cron: "7,22,37,52 * * * *"
+permissions:
+  contents: write
+concurrency:
+  group: special-aircraft-nationwide
+  cancel-in-progress: false
+jobs:
+  observe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify registration and freshness checks
+        run: python scripts/watch_special_aircraft_nationwide.py --self-test
+      - name: Observe monitored registrations
+        run: python scripts/watch_special_aircraft_nationwide.py
+      - name: Commit only changed observations
+        run: |
+          if git diff --quiet -- data/special_aircraft_positions.json && ! test -f data/special_aircraft_positions.json; then
+            echo "No observations"
+            exit 0
+          fi
+          git add data/special_aircraft_positions.json
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "data: update nationwide special-aircraft observations [skip ci]"
+          for attempt in 1 2 3; do
+            git fetch origin main
+            if ! git rebase origin/main; then git rebase --abort; exit 1; fi
+            if git push origin HEAD:main; then exit 0; fi
+            sleep "$((attempt * 2))"
+          done
+          exit 1
