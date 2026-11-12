@@ -4985,7 +4985,11 @@
   //          https://www.matsuyama-airport.co.jp/flight/haneda/
   // This hint expires after 2026-11-12 automatically. To extend it,
   // verify fresh model, origin position and flight schedule first.
-  // Aircraft type alone cannot identify a special-livery registration.\n  // Removed type-only guesses after ANA585 was identified as JA811A on 2026-11-12.\n  // Verified live registrations and independently sourced dated plans still work.\n  const SPECIAL_AIRCRAFT_POSSIBLE_FLIGHTS=Object.freeze({});\n  // Daily seven-day plans are a separate, nonofficial data source.
+  // Aircraft type alone cannot identify a special-livery registration.
+  // Removed type-only guesses after ANA585 was identified as JA811A on 2026-11-12.
+  // Verified live registrations and independently sourced dated plans still work.
+  const SPECIAL_AIRCRAFT_POSSIBLE_FLIGHTS=Object.freeze({});
+  // Daily seven-day plans are a separate, nonofficial data source.
   // Never turn a generic aircraft type (76P/78P) into an aircraft registration.
   const specialAircraftForecast={events:[],generatedAtJst:'',sourceChecks:{}};
   const SPECIAL_AIRCRAFT_FORECAST_URL=new URL(
