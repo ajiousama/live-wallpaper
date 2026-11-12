@@ -6751,7 +6751,26 @@
         ?'｜便名 '+a.callsign:'';
       const region=a?specialAircraftRegion(a.latitude,a.longitude)+'を飛行中（行先未確認）'
         :'現在位置未確認';
-      items.push('✈ 本日の特別塗装機情報｜'+name+'（'+reg+'）｜'+region+flight);
+      // Match a verified, fresh aircraft registration against the official
+      // Matsuyama arrival board. Direction/heading alone is NOT evidence.
+      const board=slowLive.airport;
+      const arrivalRows=board?.ok&&Array.isArray(board.arrivals)?board.arrivals:[];
+      const verifiedArrival=a&&arrivalRows.find(row=>
+        String(row.aircraftRegistration||'').toUpperCase()===reg &&
+        /ADS|AIRPLANES/i.test(String(row.aircraftRegistrationSource||'')) &&
+        Number.isFinite(Date.parse(row.aircraftObservedAt||'')) &&
+        Math.abs(effectiveClockMs()-Date.parse(row.aircraftObservedAt))<20*60000 &&
+        !/欠航|取消|到着済み|着陸済み/.test(String(row.status||'')+' '+String(row.changeText||'')));
+      // An independently sourced dated flight assignment is a possibility,
+      // not proof that the monitored aircraft is heading to Matsuyama.
+      const forecast=currentSpecialAircraftForecast(now).find(e=>
+        e.date===now.iso && e.direction==='arrival' && e.registration===reg);
+      const level=verifiedArrival?'confirmed':forecast?'possible':'normal';
+      const prefix=level==='confirmed'?'【松山行き・機体番号照合済み】'
+        :level==='possible'?'【松山飛来の可能性あり・未確定】':'';
+      const safeText='✈ 本日の特別塗装機情報｜'+name+'（'+reg+'）｜'+prefix+region+flight;
+      items.push(level==='normal'?safeText:
+        '<span class="special-aircraft-'+level+'">'+safeText+'</span>');
     }
     return items;
   }
