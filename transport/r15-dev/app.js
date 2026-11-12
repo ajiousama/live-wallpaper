@@ -6714,6 +6714,46 @@
       ? ['🚌 三津浜港から市内へ｜伊予鉄56番 三津港 '+next[0]+'発 → 松山市駅 '+next[1]+'着（次のバス・フェリー接続未確認）']
       : ['🚌 三津浜港から市内へ｜伊予鉄56番・三津港→松山市駅　本日バス運行終了'];
   }
+  // Nationwide special-livery observations share the lower port-limousine ticker.
+  // Coordinates are observed ADS-B positions, not a predicted destination.
+  const nationwideSpecialAircraft={generatedAtUtc:'',aircraft:[]};
+  const NATIONWIDE_SPECIAL_AIRCRAFT_URL=new URL(
+    '../../data/special_aircraft_positions.json',
+    document.currentScript?.src || location.href).href;
+  const NATIONWIDE_REGISTRATIONS=Object.keys(SPECIAL_AIRCRAFT_LIVERIES);
+  function nationwideSpecialAircraftTickerItems(now=japanNow()){
+    const age=effectiveClockMs()-Date.parse(nationwideSpecialAircraft.generatedAtUtc||'');
+    const fresh=Number.isFinite(age)&&age>=-60000&&age<=40*60000;
+    const seen=fresh&&Array.isArray(nationwideSpecialAircraft.aircraft)
+      ? nationwideSpecialAircraft.aircraft:[];
+    const byReg=new Map(seen.filter(a=>a&&NATIONWIDE_REGISTRATIONS.includes(a.registration)
+      && Number.isFinite(Number(a.latitude))&&Number.isFinite(Number(a.longitude))
+      && Number(a.positionAgeSeconds)>=0&&Number(a.positionAgeSeconds)<=90)
+      .map(a=>[a.registration,a]));
+    const items=[];
+    for(const reg of NATIONWIDE_REGISTRATIONS){
+      const a=byReg.get(reg);
+      const name=SPECIAL_AIRCRAFT_LIVERIES[reg];
+      const position=a
+        ?'北緯'+Number(a.latitude).toFixed(2)+'° 東経'+Number(a.longitude).toFixed(2)+'°'
+        :'現在位置未確認';
+      const flight=a&&/^[A-Z0-9]{3,10}$/.test(String(a.callsign||''))
+        ?'｜'+a.callsign:'';
+      items.push('✈ 本日の特別塗装機情報｜'+name+'（'+reg+'）｜'+position+flight+
+        (a?'｜ADS-B観測（目的地未確認）':'｜欠測は運航停止を意味しません'));
+    }
+    return items;
+  }
+  function loadNationwideSpecialAircraft(){
+    return fetch(NATIONWIDE_SPECIAL_AIRCRAFT_URL+'?t='+Date.now(),{cache:'no-store'})
+      .then(r=>{if(!r.ok)throw new Error('Nationwide ADS-B HTTP '+r.status);return r.json();})
+      .then(j=>{
+        if(j?.schemaVersion!==1||!Array.isArray(j.aircraft))return;
+        nationwideSpecialAircraft.generatedAtUtc=String(j.generatedAtUtc||'');
+        nationwideSpecialAircraft.aircraft=j.aircraft;
+        updateNotes();
+      }).catch(()=>{nationwideSpecialAircraft.generatedAtUtc='';nationwideSpecialAircraft.aircraft=[];});
+  }
   function portLimousineTickerItems(now=japanNow()) {
     const mins=now.minutes;
     const weekend=now.dow===0||now.dow===6;
@@ -6753,6 +6793,7 @@
     if(outgoing)items.push(`🚃 伊予鉄電車⇒伊予鉄バス｜松山市駅${outgoing[0]}発 ⇒ 高浜${outgoing[1]}着 ⇒ 松山観光港${outgoing[3]}着（時刻表予定）`);
     if(incoming)items.push(`🚌 伊予鉄バス→伊予鉄電車｜松山観光港 ${incoming[0]}発 → 高浜駅前 ${incoming[1]}着 → 電車 ${incoming[2]}発 → 松山市駅 ${incoming[3]}着（時刻表予定）`);
     items.unshift(...mitsuhamaTransferTickerItems(now,cachedPortRows));
+    items.push(...nationwideSpecialAircraftTickerItems(now));
     if(items.length)return items;
     if(mins<=22*60+22){
       return ['🚌 伊予鉄バス・松山観光港リムジン｜広島フェリー22:12着に接続｜観光港22:22発 → JR松山駅前22:42 → 愛媛新聞社前22:44 → 松山市駅22:50着（時刻表予定）'];
@@ -7239,6 +7280,8 @@
   // without a full wallpaper reload. Date and age checks prevent stale hints.
   loadSpecialAircraftForecast();
   setInterval(loadSpecialAircraftForecast,600000);
+  loadNationwideSpecialAircraft();
+  setInterval(loadNationwideSpecialAircraft,300000);
   setInterval(()=>{loadDisasterLive().then(()=>renderDisaster(japanNow()));},10000);
   renderAll(); setupMonthlyUpdatePrompt();
   checkDeployment();
