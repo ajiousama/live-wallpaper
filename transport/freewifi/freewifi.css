@@ -3074,20 +3074,20 @@ body.freewifi-tv #panel-rail .jr-panorama-alert .jr-alert-ending{color:#f9f9f9}
 }
 
 /* Special-aircraft news in the existing first lower airport ticker.
-   Blink CYAN <-> MAGENTA, reserving red for genuine disruption alerts. */
+   Red blinking text; disruption messages remain in their own styling. */
 body.freewifi-tv.air-board-page #air-note .air-bottom-livery-notice{
   display:inline-block;
   flex:0 0 auto;
-  color:#4df6ff;
+  color:#ff3838;
   font-size:13px!important;
   font-weight:1000!important;
   white-space:nowrap!important;
-  text-shadow:0 0 9px rgba(42,224,255,.75);
+  text-shadow:0 0 9px rgba(255,45,45,.8);
   animation:air-bottom-livery-blink 1.1s steps(1,end) infinite!important;
 }
 @keyframes air-bottom-livery-blink{
-  0%,49%,100%{color:#4df6ff;text-shadow:0 0 9px rgba(42,224,255,.75);opacity:1}
-  50%,99%{color:#ff80ff;text-shadow:0 0 9px rgba(230,74,255,.75);opacity:1}
+  0%,49%,100%{color:#ff3838;text-shadow:0 0 9px rgba(255,45,45,.8);opacity:1}
+  50%,99%{color:#ff3838;text-shadow:0 0 3px rgba(255,45,45,.2);opacity:.18}
 }
 @media(prefers-reduced-motion:reduce){
   body.freewifi-tv.air-board-page #air-note .air-bottom-livery-notice{
