@@ -6721,6 +6721,20 @@
     '../../data/special_aircraft_positions.json',
     document.currentScript?.src || location.href).href;
   const NATIONWIDE_REGISTRATIONS=Object.keys(SPECIAL_AIRCRAFT_LIVERIES);
+  // Region labels are geographic approximations, not airport identities.
+  const AIRCRAFT_REGION_LABELS=[
+    ['北海道',41.3,45.6,139.2,146.2],['東北',37.0,41.3,139.0,142.5],
+    ['関東',34.8,37.1,138.3,141.0],['中部',34.4,37.8,136.0,139.0],
+    ['近畿',33.8,35.9,134.0,136.8],['中国地方',33.8,35.7,130.8,134.7],
+    ['四国',32.7,34.5,132.0,134.8],['九州',30.5,34.2,129.4,132.2],
+    ['沖縄',24.0,27.5,122.0,129.0]
+  ];
+  function specialAircraftRegion(lat,lon){
+    const y=Number(lat),x=Number(lon);
+    if(!Number.isFinite(y)||!Number.isFinite(x))return '位置未確認';
+    const match=AIRCRAFT_REGION_LABELS.find(r=>y>=r[1]&&y<=r[2]&&x>=r[3]&&x<=r[4]);
+    return match?match[0]+'付近':'日本周辺の上空';
+  }
   function nationwideSpecialAircraftTickerItems(now=japanNow()){
     const age=effectiveClockMs()-Date.parse(nationwideSpecialAircraft.generatedAtUtc||'');
     const fresh=Number.isFinite(age)&&age>=-60000&&age<=40*60000;
@@ -6732,15 +6746,12 @@
       .map(a=>[a.registration,a]));
     const items=[];
     for(const reg of NATIONWIDE_REGISTRATIONS){
-      const a=byReg.get(reg);
-      const name=SPECIAL_AIRCRAFT_LIVERIES[reg];
-      const position=a
-        ?'北緯'+Number(a.latitude).toFixed(2)+'° 東経'+Number(a.longitude).toFixed(2)+'°'
-        :'現在位置未確認';
+      const a=byReg.get(reg),name=SPECIAL_AIRCRAFT_LIVERIES[reg];
       const flight=a&&/^[A-Z0-9]{3,10}$/.test(String(a.callsign||''))
-        ?'｜'+a.callsign:'';
-      items.push('✈ 本日の特別塗装機情報｜'+name+'（'+reg+'）｜'+position+flight+
-        (a?'｜ADS-B観測（目的地未確認）':'｜欠測は運航停止を意味しません'));
+        ?'｜便名 '+a.callsign:'';
+      const region=a?specialAircraftRegion(a.latitude,a.longitude)+'を飛行中（行先未確認）'
+        :'現在位置未確認';
+      items.push('✈ 本日の特別塗装機情報｜'+name+'（'+reg+'）｜'+region+flight);
     }
     return items;
   }
