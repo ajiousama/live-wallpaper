@@ -4958,9 +4958,6 @@
     JA228J:'J-AIR創立30周年記念JET',
     JA58AN:'ふるさとJET',
     JA880A:'スターアライアンス塗装',
-    JA868J:'JAL CONTRAIL 特別塗装機',
-    JA869J:'JAL oneworld塗装',
-    JA07RK:'結ジンベエジェット',
     JA10RJ:'ベガルタ仙台ジェット'
   });
   function verifiedAircraftRegistration(r){
