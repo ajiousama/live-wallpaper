@@ -4961,7 +4961,35 @@
     JA868J:'JAL CONTRAIL 特別塗装機',
     JA869J:'JAL oneworld塗装',
     JA07RK:'結ジンベエジェット',
-    JA10RJ:'ベガルタ仙台ジェット'
+    JA10RJ:'ベガルタ仙台ジェット',
+    // Expanded domestic monitoring candidates. A registration match alone
+    // never establishes a Matsuyama flight or current livery status.
+    JA894A:'ピカチュウジェットNH',
+    JA784A:'イーブイジェットNH',
+    JA871A:'ANA Future Promise Jet',
+    JA874A:'ANA Future Promise Jet',
+    JA461A:'ANA Future Promise Prop',
+    JA872A:'スターアライアンス塗装',
+    JA875A:'スターアライアンス塗装',
+    JA899A:'スターアライアンス塗装',
+    JA614A:'スターアライアンス塗装',
+    JA882A:'B787 50機記念塗装',
+    JA245J:'USJ JET 2',
+    JA01XJ:'A350 挑戦のレッド',
+    JA02XJ:'A350 革新のシルバー',
+    JA03XJ:'A350 エコのグリーン',
+    JA15XJ:'JAL oneworld塗装',
+    JA861J:'JAL oneworld塗装',
+    JA73AB:'ピカチュウジェットBC1',
+    JA73NG:'ピカチュウジェットBC2',
+    JA803X:'ナッシージェット宮崎',
+    JA607A:'ロコンジェット北海道',
+    JA05RK:'ジンベエジェット',
+    JA06RK:'サクラジンベエジェット',
+    JA10RK:'世界自然遺産',
+    JA823P:'Peach 特別塗装候補',
+    JA13FJ:'FDA 特別塗装候補',
+    JA01AM:'みぞか号'
   });
   function verifiedAircraftRegistration(r){
     const raw=r.liveRaw||{};
