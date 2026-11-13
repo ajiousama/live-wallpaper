@@ -1,48 +1,7 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-11-13T11:29:54.514117+00:00",
-  "status": "observed",
-  "aircraft": [
-    {
-      "registration": "JA228J",
-      "livery": "J-AIR創立30周年記念JET",
-      "callsign": "JAL2378",
-      "latitude": 34.672334,
-      "longitude": 135.572674,
-      "positionAgeSeconds": 2.561,
-      "source": "https://api.adsb.lol/v2/registration/",
-      "flightToMatsuyamaConfirmed": false
-    },
-    {
-      "registration": "JA880A",
-      "livery": "スターアライアンス塗装",
-      "callsign": "ANA204",
-      "latitude": 48.553757,
-      "longitude": 12.653715,
-      "positionAgeSeconds": 0.337,
-      "source": "https://api.adsb.lol/v2/registration/",
-      "flightToMatsuyamaConfirmed": false
-    },
-    {
-      "registration": "JA869J",
-      "livery": "JAL oneworld塗装",
-      "callsign": "JAL47",
-      "latitude": 66.223618,
-      "longitude": 22.050018,
-      "positionAgeSeconds": 0.0,
-      "source": "https://api.adsb.lol/v2/registration/",
-      "flightToMatsuyamaConfirmed": false
-    },
-    {
-      "registration": "JA07RK",
-      "livery": "結ジンベエジェット",
-      "callsign": "JTA49",
-      "latitude": 32.842837,
-      "longitude": 135.619158,
-      "positionAgeSeconds": 0.182,
-      "source": "https://api.adsb.lol/v2/registration/",
-      "flightToMatsuyamaConfirmed": false
-    }
-  ],
+  "generatedAtUtc": "2026-11-13T18:44:12.376386+00:00",
+  "status": "no_fresh_positions",
+  "aircraft": [],
   "note": "全国ADS-Bの観測。便の目的地・次便・松山到着は未確認。欠測は飛行停止を意味しない。"
 }
