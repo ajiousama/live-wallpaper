@@ -1,5 +1,5 @@
 {
-  "checked_at_utc": "2026-11-12T02:17:52.065705+00:00",
+  "checked_at_utc": "2026-11-13T01:53:00.395371+00:00",
   "source_urls": {
     "jr_shikoku_press": "https://www.jr-shikoku.co.jp/03_news/press/info/",
     "jr_shikoku_home": "https://www.jr-shikoku.co.jp/",
@@ -1007,18 +1007,7 @@
       "url": "https://www.jr-shikoku.co.jp/03_news/press/ec892776475f77919205413ed13987427003fc89.pdf"
     }
   ],
-  "new_announcements": [
-    {
-      "source": "jr_shikoku_home",
-      "title": "「予讃線８０００系アンパンマン列車」 リニューアル記念出発式の実施について",
-      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/11/11/20261111.pdf"
-    },
-    {
-      "source": "jr_shikoku_press",
-      "title": "「予讃線８０００系アンパンマン列車」 リニューアル記念出発式の実施について",
-      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/11/11/20261111.pdf"
-    }
-  ],
+  "new_announcements": [],
   "fetch_errors": [],
   "note": "候補発見のみ。松山駅の発着時刻・運転日・経路を確認できるまで列車としては表示しない。"
 }
