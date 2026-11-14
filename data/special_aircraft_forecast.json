@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtJst": "2026-11-14T09:27:41+09:00",
+  "generatedAtJst": "2026-11-14T09:52:16+09:00",
   "lookaheadDays": 7,
   "sourceChecks": {
     "jal": {
@@ -13,51 +13,20 @@
       "nextDayPublished": false
     },
     "anaOperations": {
-      "status": "registration_flight_prediction_observed",
+      "status": "checked_type_only_not_tail_assignment",
       "sourceUrl": "https://www.tsuitachimochi.net/flights/operations?airline=ANA",
-      "siteUpdatedAt": "2026-11-14T09:27:41+09:00",
-      "note": "同一レーンの登録番号と松山便名が一致。予測でありADS-B実機照合なし。"
+      "siteUpdatedAt": "2026-11-14T09:52:11.297793+09:00",
+      "note": "機種別棒ダイヤは機体記号の確定割当ではない"
     },
     "anaLocations": {
       "status": "no_monitored_aircraft_listed",
       "sourceUrl": "https://www.tsuitachimochi.net/flights/aircraft-locations",
-      "siteUpdatedAt": "2026-11-14 01:55:44",
+      "siteUpdatedAt": "2026-11-14 09:48:43",
       "registrationsSeen": [],
       "nextVerified": false,
       "note": "Nextはレジ番と便名が同一レコードで照合できる場合のみ採用"
     }
   },
-  "events": [
-    {
-      "date": "2026-11-14",
-      "direction": "arrival",
-      "airline": "ANA",
-      "flightNumber": "593",
-      "registration": "JA609A",
-      "livery": "ちいかわジェット",
-      "origin": "羽田",
-      "destination": "松山",
-      "arrivalScheduled": "",
-      "evidence": "registration_flight_operations_prediction",
-      "sourceUrl": "https://www.tsuitachimochi.net/flights/operations?airline=ANA",
-      "confidence": "tentative",
-      "note": "同一レーンでJA609AとNH593 HND-MYJ。到着時刻未確認、実機照合なし。"
-    },
-    {
-      "date": "2026-11-14",
-      "direction": "arrival",
-      "airline": "ANA",
-      "flightNumber": "599",
-      "registration": "JA819A",
-      "livery": "ポケモンジェット（赤）",
-      "origin": "羽田",
-      "destination": "松山",
-      "arrivalScheduled": "21:15",
-      "evidence": "registration_flight_operations_prediction",
-      "sourceUrl": "https://www.tsuitachimochi.net/flights/operations?airline=ANA",
-      "confidence": "tentative",
-      "note": "同一レーンでJA819AとNH599 HND-MYJ、終着MYJ21:15。実機照合なし。"
-    }
-  ],
-  "note": "ANA登録番号付き運用予測は黄色相当の暫定候補。実機割当の確定ではない。予測が変われば再検証し、古い候補を継続表示しない。"
+  "events": [],
+  "note": "JAL日別記事は非公式な機材予定。ANA機種予測から特定の機体番号を推測しない。機体番号付きADS-B照合は別の監視システムで確認する。"
 }
