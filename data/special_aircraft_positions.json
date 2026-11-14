@@ -1,7 +1,48 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-11-14T13:41:21.877796+00:00",
-  "status": "no_fresh_positions",
-  "aircraft": [],
+  "generatedAtUtc": "2026-11-14T22:56:38.895270+00:00",
+  "status": "observed",
+  "aircraft": [
+    {
+      "registration": "JA819A",
+      "livery": "ポケモンジェット（赤）",
+      "callsign": "ANA582",
+      "latitude": 33.79888,
+      "longitude": 136.340675,
+      "positionAgeSeconds": 0.193,
+      "source": "https://api.adsb.lol/v2/registration/",
+      "flightToMatsuyamaConfirmed": false
+    },
+    {
+      "registration": "JA923A",
+      "livery": "ポケモンジェット（緑）",
+      "callsign": "ANA879",
+      "latitude": -33.697303,
+      "longitude": 151.111622,
+      "positionAgeSeconds": 0.191,
+      "source": "https://api.adsb.lol/v2/registration/",
+      "flightToMatsuyamaConfirmed": false
+    },
+    {
+      "registration": "JA344J",
+      "livery": "JAL トゥンクトゥンクJET",
+      "callsign": "JAL573",
+      "latitude": 35.547821,
+      "longitude": 139.796805,
+      "positionAgeSeconds": 14.999,
+      "source": "https://api.adsb.lol/v2/registration/",
+      "flightToMatsuyamaConfirmed": false
+    },
+    {
+      "registration": "JA10RJ",
+      "livery": "ベガルタ仙台ジェット",
+      "callsign": "IBX33",
+      "latitude": 34.903931,
+      "longitude": 135.032398,
+      "positionAgeSeconds": 0.081,
+      "source": "https://api.adsb.lol/v2/registration/",
+      "flightToMatsuyamaConfirmed": false
+    }
+  ],
   "note": "全国ADS-Bの観測。便の目的地・次便・松山到着は未確認。欠測は飛行停止を意味しない。"
 }
