@@ -1,57 +1,56 @@
 #!/usr/bin/env python3
-"""Read public EBC YouTube live chat and store special-livery leads (not confirmed flights).
-Requires YOUTUBE_API_KEY; does not scrape YouTube or claim chat is available when it isn't.
+"""Collect public EBC Matsuyama airport chat leads without a personal API key.
+
+Uses the unofficial pytchat client. Failure is explicit, never treated as an empty chat.
+Messages are unverified leads, not confirmed aircraft assignments.
 """
-import json, os, re, sys, urllib.parse, urllib.request
+import json, re, sys, time
 from datetime import datetime, timezone
 from pathlib import Path
+import pytchat
 
 VIDEO_ID = "L9OqeSJgzKA"
 OUT = Path("data/ebc_aircraft_chat_leads.json")
-PATTERN = re.compile(r"ちいかわ|ポケモン|特別塗装|JA609A|JA819A|JA923A|NH\s*593|NH\s*599|飛来|ステイ", re.I)
-
-def api(path, params):
-    params["key"] = os.environ["YOUTUBE_API_KEY"]
-    url = "https://www.googleapis.com/youtube/v3/" + path + "?" + urllib.parse.urlencode(params)
-    req = urllib.request.Request(url, headers={"User-Agent": "Matsuyama-aircraft-chat-watch/1.0"})
-    with urllib.request.urlopen(req, timeout=25) as response:
-        return json.load(response)
+PATTERN = re.compile(r"ちいかわ|ポケモン|特別塗装|JA609A|JA819A|JA923A|NH\\s*593|NH\\s*599|飛来|ステイ", re.I)
 
 def main():
-    if not os.getenv("YOUTUBE_API_KEY"):
-        print("NOT_CONFIGURED: YOUTUBE_API_KEY is missing", file=sys.stderr)
-        return 2
     try:
-        info = api("videos", {"part":"liveStreamingDetails", "id":VIDEO_ID})
-        items = info.get("items", [])
-        chat_id = items[0].get("liveStreamingDetails", {}).get("activeLiveChatId") if items else None
-        if not chat_id:
-            print("UNAVAILABLE: activeLiveChatId not provided (offline, restricted, or chat disabled)")
-            return 3
-        messages = api("liveChat/messages", {"part":"snippet,authorDetails", "liveChatId":chat_id, "maxResults":200})
-        previous = json.loads(OUT.read_text(encoding="utf-8")) if OUT.exists() else {"leads":[]}
-        leads = {item["message_id"]:item for item in previous.get("leads", [])}
-        for item in messages.get("items", []):
-            snippet = item.get("snippet", {})
-            body = snippet.get("displayMessage", "")
-            if not PATTERN.search(body): continue
-            leads[item["id"]] = {
-                "message_id":item["id"], "published_at":snippet.get("publishedAt"),
-                "author":item.get("authorDetails",{}).get("displayName",""),
-                "text":body, "video_id":VIDEO_ID,
-                "status":"unverified_chat_lead", "verified_flight":False
-            }
+        chat = pytchat.create(video_id=VIDEO_ID, interruptable=False)
+        found = []
+        deadline = time.monotonic() + 22
+        while time.monotonic() < deadline and chat.is_alive():
+            for item in chat.get().sync_items():
+                body = getattr(item, "message", "")
+                if not PATTERN.search(body):
+                    continue
+                found.append({
+                    "message_id": getattr(item, "id", ""),
+                    "published_at": getattr(item, "datetime", ""),
+                    "author": getattr(getattr(item, "author", None), "name", ""),
+                    "text": body, "video_id": VIDEO_ID,
+                    "status": "unverified_chat_lead", "verified_flight": False,
+                })
+            time.sleep(1)
+        chat.terminate()
+        if not found:
+            print("NO_MATCH: no matching messages observed in short polling window; chat availability not guaranteed")
+            return 0
+        previous = json.loads(OUT.read_text(encoding="utf-8")) if OUT.exists() else {"leads": []}
+        leads = {x["message_id"]: x for x in previous.get("leads", []) if x.get("message_id")}
+        for x in found:
+            if x["message_id"]: leads[x["message_id"]] = x
         OUT.parent.mkdir(parents=True, exist_ok=True)
         OUT.write_text(json.dumps({
-            "source":"EBC Matsuyama Airport YouTube live chat",
-            "video_url":"https://www.youtube.com/watch?v="+VIDEO_ID,
-            "checked_at":datetime.now(timezone.utc).isoformat(),
-            "status":"retrieved", "leads":list(leads.values())[-300:]
-        }, ensure_ascii=False, indent=2)+"\n", encoding="utf-8")
-        print("OK: matching messages", len(leads))
+            "source": "EBC Matsuyama Airport YouTube live chat",
+            "video_url": "https://www.youtube.com/watch?v=" + VIDEO_ID,
+            "checked_at": datetime.now(timezone.utc).isoformat(),
+            "status": "unverified_leads_only", "leads": list(leads.values())[-300:]
+        }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        print("OK: matched", len(found), "messages")
         return 0
     except Exception as exc:
-        print("UNAVAILABLE: chat retrieval failed:",str(exc),file=sys.stderr)
+        print("UNAVAILABLE: live chat retrieval failed:", repr(exc), file=sys.stderr)
         return 1
 
-if __name__=="__main__": sys.exit(main())
+if __name__ == "__main__":
+    sys.exit(main())
