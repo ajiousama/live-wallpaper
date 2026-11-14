@@ -3407,7 +3407,8 @@
     const upcoming=currentSpecialAircraftForecast(now)
       .filter(e=>e.direction==='arrival')
       .filter(e=>{
-        const at=Date.parse(e.date+'T'+e.arrivalScheduled+':00+09:00');
+        const time=/^\d{2}:\d{2}$/.test(String(e.arrivalScheduled||''))?e.arrivalScheduled:'23:59';
+        const at=Date.parse(e.date+'T'+time+':00+09:00');
         return Number.isFinite(at)&&at>=effectiveClockMs()-15*60000;
       })
       .sort((a,b)=>(a.date+a.arrivalScheduled).localeCompare(b.date+b.arrivalScheduled));
@@ -3415,9 +3416,9 @@
       const key=e.date+'|'+e.direction+'|'+e.airline+'|'+e.flightNumber;
       seen.add(key);
       output.push('特別塗装機情報｜'+e.date.slice(5).replace('-','/')+
-        '｜'+e.airline+' '+e.flightNumber+'便 '+e.arrivalScheduled+' 松山着予定｜'+
+        '｜'+e.airline+' '+e.flightNumber+'便 '+(e.arrivalScheduled||'時刻未確認')+' 松山着予定｜'+
         SPECIAL_AIRCRAFT_LIVERIES[e.registration]+'（'+e.registration+
-        '）｜非公式な機材予定・変更あり');
+        '）｜'+(e.evidence==='registration_flight_operations_prediction'?'登録番号付き運用予測・未確定':'非公式な機材予定・変更あり'));
     }
     for(const r of (Array.isArray(active)?active:[])){
       const verified=confirmedSpecialAircraftGuidance(r);
@@ -4998,8 +4999,11 @@
     if(!Number.isFinite(ts)||age< -86400000 || age>30*3600000)return [];
     return (Array.isArray(specialAircraftForecast.events)?specialAircraftForecast.events:[])
       .filter(e=>e && /^20\d\d-\d\d-\d\d$/.test(String(e.date||'')) &&
-        e.date>=now.iso && e.evidence==='unofficial_aircraft_plan' &&
-        String(e.sourceUrl||'').startsWith('https://oyaji-photo.club/') &&
+        e.date>=now.iso && (
+          (e.evidence==='unofficial_aircraft_plan' && String(e.sourceUrl||'').startsWith('https://oyaji-photo.club/')) ||
+          (e.evidence==='registration_flight_operations_prediction' && e.airline==='ANA' &&
+           String(e.sourceUrl||'').startsWith('https://www.tsuitachimochi.net/flights/operations'))
+        ) &&
         SPECIAL_AIRCRAFT_LIVERIES[e.registration]===e.livery);
   }
   function specialForecastMatchesRow(e,r){
