@@ -1,25 +1,25 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-11-15T17:03:04.642274+00:00",
+  "generatedAtUtc": "2026-11-15T21:44:31.291380+00:00",
   "status": "observed",
   "aircraft": [
     {
-      "registration": "JA868J",
-      "livery": "JAL CONTRAIL 特別塗装機",
-      "callsign": "JAL8",
-      "latitude": 64.877759,
-      "longitude": -146.173439,
-      "positionAgeSeconds": 0.503,
+      "registration": "JA880A",
+      "livery": "スターアライアンス塗装",
+      "callsign": "ANA208",
+      "latitude": 35.344391,
+      "longitude": 139.800339,
+      "positionAgeSeconds": 0.12,
       "source": "https://api.adsb.lol/v2/registration/",
       "flightToMatsuyamaConfirmed": false
     },
     {
-      "registration": "JA869J",
-      "livery": "JAL oneworld塗装",
-      "callsign": "JAL48",
-      "latitude": 54.278581,
-      "longitude": 18.300756,
-      "positionAgeSeconds": 5.185,
+      "registration": "JA868J",
+      "livery": "JAL CONTRAIL 特別塗装機",
+      "callsign": "JAL8",
+      "latitude": 46.81307,
+      "longitude": -79.849594,
+      "positionAgeSeconds": 0.332,
       "source": "https://api.adsb.lol/v2/registration/",
       "flightToMatsuyamaConfirmed": false
     }
