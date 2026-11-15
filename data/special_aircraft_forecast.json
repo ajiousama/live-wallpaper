@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtJst": "2026-11-16T01:18:12+09:00",
+  "generatedAtJst": "2026-11-16T08:56:18+09:00",
   "lookaheadDays": 7,
   "sourceChecks": {
     "jal": {
@@ -15,13 +15,13 @@
     "anaOperations": {
       "status": "checked_type_only_not_tail_assignment",
       "sourceUrl": "https://www.tsuitachimochi.net/flights/operations?airline=ANA",
-      "siteUpdatedAt": "2026-11-16T01:17:20.591811+09:00",
+      "siteUpdatedAt": "2026-11-16T08:55:28.038475+09:00",
       "note": "機種別棒ダイヤは機体記号の確定割当ではない"
     },
     "anaLocations": {
       "status": "no_monitored_aircraft_listed",
       "sourceUrl": "https://www.tsuitachimochi.net/flights/aircraft-locations",
-      "siteUpdatedAt": "2026-11-16 00:53:37",
+      "siteUpdatedAt": "2026-11-16 08:51:14",
       "registrationsSeen": [],
       "nextVerified": false,
       "note": "Nextはレジ番と便名が同一レコードで照合できる場合のみ採用"
