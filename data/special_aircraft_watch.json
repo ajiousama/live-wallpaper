@@ -1,5 +1,21 @@
 {
   "source": "https://ihhiymkepuydykrhmzwo.supabase.co/functions/v1/approach?scope=slow",
-  "records": [],
+  "records": [
+    {
+      "key": "2026-11-17|arrival|595|19:00|JA819A",
+      "date": "2026-11-17",
+      "direction": "arrival",
+      "flightNumbers": [
+        "595"
+      ],
+      "scheduled": "19:00",
+      "registration": "JA819A",
+      "livery": "ポケモンジェット（赤）",
+      "firstObservedAtJst": "2026-11-17T17:56:25+09:00",
+      "registrationSource": "ADSB.lol",
+      "state": "candidate",
+      "flightBoardSource": "松山空港公式"
+    }
+  ],
   "note": "candidate=機体番号と当該便の照合済み（松山到着未確認）。confirmed=松山空港公式発着案内の完了表示と機体番号を照合。confirmedAtJstは確認時刻であり、実際の着陸/離陸時刻とは限らない。"
 }
