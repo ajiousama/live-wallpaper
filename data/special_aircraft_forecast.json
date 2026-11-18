@@ -1,64 +1,33 @@
 {
   "schemaVersion": 1,
-  "generatedAtJst": "2026-11-18T11:22:32+09:00",
+  "generatedAtJst": "2026-11-19T02:58:24+09:00",
   "lookaheadDays": 7,
   "sourceChecks": {
     "jal": {
       "status": "checked",
       "sourceUrl": "https://oyaji-photo.club/category/jal/",
       "publishedDates": [
-        "2026-11-18",
         "2026-11-19"
       ],
       "articleErrors": [],
-      "nextDayPublished": true
+      "nextDayPublished": false
     },
     "anaOperations": {
       "status": "checked_type_only_not_tail_assignment",
       "sourceUrl": "https://www.tsuitachimochi.net/flights/operations?airline=ANA",
-      "siteUpdatedAt": "2026-11-18T11:21:52.470472+09:00",
+      "siteUpdatedAt": "2026-11-19T02:57:31.449553+09:00",
       "note": "機種別棒ダイヤは機体記号の確定割当ではない"
     },
     "anaLocations": {
       "status": "no_monitored_aircraft_listed",
       "sourceUrl": "https://www.tsuitachimochi.net/flights/aircraft-locations",
-      "siteUpdatedAt": "2026-11-18 11:19:46",
+      "siteUpdatedAt": "2026-11-19 02:56:30",
       "registrationsSeen": [],
       "nextVerified": false,
       "note": "Nextはレジ番と便名が同一レコードで照合できる場合のみ採用"
     }
   },
   "events": [
-    {
-      "date": "2026-11-18",
-      "direction": "arrival",
-      "airline": "JAL",
-      "flightNumber": "2301",
-      "flightDisplay": "JL2301",
-      "registration": "JA228J",
-      "livery": "J-AIR創立30周年記念JET",
-      "origin": "伊丹",
-      "destination": "松山",
-      "departureScheduled": "09:35",
-      "arrivalScheduled": "10:25",
-      "evidence": "unofficial_aircraft_plan",
-      "sourceUrl": "https://oyaji-photo.club/20261118jl/"
-    },
-    {
-      "date": "2026-11-18",
-      "direction": "departure",
-      "airline": "JAL",
-      "flightNumber": "2300",
-      "flightDisplay": "JL2300",
-      "registration": "JA228J",
-      "livery": "J-AIR創立30周年記念JET",
-      "origin": "松山",
-      "destination": "伊丹",
-      "departureScheduled": "10:55",
-      "arrivalScheduled": "11:45",
-      "evidence": "unofficial_aircraft_plan",
-      "sourceUrl": "https://oyaji-photo.club/20261118jl/"
-    },
     {
       "date": "2026-11-19",
       "direction": "arrival",
