@@ -1,45 +1,15 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-11-19T08:42:24.194017+00:00",
+  "generatedAtUtc": "2026-11-19T17:44:36.660986+00:00",
   "status": "observed",
   "aircraft": [
     {
-      "registration": "JA609A",
-      "livery": "ちいかわジェット",
-      "callsign": "ANA777",
-      "latitude": 42.462799,
-      "longitude": 141.773758,
-      "positionAgeSeconds": 0.06,
-      "source": "https://api.adsb.lol/v2/registration/",
-      "flightToMatsuyamaConfirmed": false
-    },
-    {
-      "registration": "JA819A",
-      "livery": "ポケモンジェット（赤）",
-      "callsign": "ANA265",
-      "latitude": 35.564312,
-      "longitude": 139.785719,
-      "positionAgeSeconds": 0.017,
-      "source": "https://api.adsb.lol/v2/registration/",
-      "flightToMatsuyamaConfirmed": false
-    },
-    {
-      "registration": "JA923A",
-      "livery": "ポケモンジェット（緑）",
-      "callsign": "ANA865",
-      "latitude": 35.865054,
-      "longitude": 138.339142,
-      "positionAgeSeconds": 0.0,
-      "source": "https://api.adsb.lol/v2/registration/",
-      "flightToMatsuyamaConfirmed": false
-    },
-    {
-      "registration": "JA07RK",
-      "livery": "結ジンベエジェット",
-      "callsign": "JTA61",
-      "latitude": 27.448177,
-      "longitude": 128.36505,
-      "positionAgeSeconds": 8.692,
+      "registration": "JA869J",
+      "livery": "JAL oneworld塗装",
+      "callsign": "JAL48",
+      "latitude": 50.201528,
+      "longitude": 20.508714,
+      "positionAgeSeconds": 0.979,
       "source": "https://api.adsb.lol/v2/registration/",
       "flightToMatsuyamaConfirmed": false
     }
