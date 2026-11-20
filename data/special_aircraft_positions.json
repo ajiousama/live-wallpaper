@@ -1,7 +1,18 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-11-20T16:06:38.829573+00:00",
-  "status": "no_fresh_positions",
-  "aircraft": [],
+  "generatedAtUtc": "2026-11-20T22:39:51.620528+00:00",
+  "status": "observed",
+  "aircraft": [
+    {
+      "registration": "JA344J",
+      "livery": "JAL トゥンクトゥンクJET",
+      "callsign": "JAL565",
+      "latitude": 36.824775,
+      "longitude": 140.219207,
+      "positionAgeSeconds": 0.321,
+      "source": "https://api.adsb.lol/v2/registration/",
+      "flightToMatsuyamaConfirmed": false
+    }
+  ],
   "note": "全国ADS-Bの観測。便の目的地・次便・松山到着は未確認。欠測は飛行停止を意味しない。"
 }
