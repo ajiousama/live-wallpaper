@@ -1,5 +1,5 @@
 {
-  "checked_at_utc": "2026-11-20T02:22:12.263010+00:00",
+  "checked_at_utc": "2026-11-21T02:23:00.864860+00:00",
   "source_urls": {
     "jr_shikoku_press": "https://www.jr-shikoku.co.jp/03_news/press/info/",
     "jr_shikoku_home": "https://www.jr-shikoku.co.jp/",
@@ -1008,11 +1008,6 @@
     }
   ],
   "new_announcements": [],
-  "fetch_errors": [
-    {
-      "source": "iyonada_calendar",
-      "reason": "HTTPSConnectionPool(host='www.jr-shikoku.co.jp', port=443): Read timed out. (read timeout=20)"
-    }
-  ],
+  "fetch_errors": [],
   "note": "候補発見のみ。松山駅の発着時刻・運転日・経路を確認できるまで列車としては表示しない。"
 }
