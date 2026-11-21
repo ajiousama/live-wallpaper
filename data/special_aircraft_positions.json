@@ -1,55 +1,25 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-11-21T11:45:50.603295+00:00",
+  "generatedAtUtc": "2026-11-21T18:18:45.777551+00:00",
   "status": "observed",
   "aircraft": [
     {
-      "registration": "JA819A",
-      "livery": "ポケモンジェット（赤）",
-      "callsign": "ANA39",
-      "latitude": 34.78616,
-      "longitude": 135.436893,
-      "positionAgeSeconds": 0.021,
-      "source": "https://api.adsb.lol/v2/registration/",
-      "flightToMatsuyamaConfirmed": false
-    },
-    {
-      "registration": "JA344J",
-      "livery": "JAL トゥンクトゥンクJET",
-      "callsign": "JAL158",
-      "latitude": 36.51241,
-      "longitude": 140.303416,
-      "positionAgeSeconds": 0.017,
-      "source": "https://api.adsb.lol/v2/registration/",
-      "flightToMatsuyamaConfirmed": false
-    },
-    {
-      "registration": "JA880A",
-      "livery": "スターアライアンス塗装",
-      "callsign": "ANA218",
-      "latitude": 40.121704,
-      "longitude": 34.230408,
-      "positionAgeSeconds": 0.079,
+      "registration": "JA923A",
+      "livery": "ポケモンジェット（緑）",
+      "callsign": "ANA856",
+      "latitude": 14.912451,
+      "longitude": 121.022791,
+      "positionAgeSeconds": 0.619,
       "source": "https://api.adsb.lol/v2/registration/",
       "flightToMatsuyamaConfirmed": false
     },
     {
       "registration": "JA869J",
       "livery": "JAL oneworld塗装",
-      "callsign": "JAL47",
-      "latitude": 62.875671,
-      "longitude": 24.516296,
-      "positionAgeSeconds": 0.27,
-      "source": "https://api.adsb.lol/v2/registration/",
-      "flightToMatsuyamaConfirmed": false
-    },
-    {
-      "registration": "JA07RK",
-      "livery": "結ジンベエジェット",
-      "callsign": "JTA128",
-      "latitude": 26.778854,
-      "longitude": 128.380167,
-      "positionAgeSeconds": 0.547,
+      "callsign": "JAL48",
+      "latitude": 45.481979,
+      "longitude": 26.268049,
+      "positionAgeSeconds": 0.403,
       "source": "https://api.adsb.lol/v2/registration/",
       "flightToMatsuyamaConfirmed": false
     }
