@@ -1,65 +1,35 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-11-21T23:30:13.379316+00:00",
+  "generatedAtUtc": "2026-11-22T03:28:36.303697+00:00",
   "status": "observed",
   "aircraft": [
     {
+      "registration": "JA609A",
+      "livery": "ちいかわジェット",
+      "callsign": "ANA250",
+      "latitude": 33.636459,
+      "longitude": 132.235394,
+      "positionAgeSeconds": 0.184,
+      "source": "https://api.adsb.lol/v2/registration/",
+      "flightToMatsuyamaConfirmed": false
+    },
+    {
       "registration": "JA819A",
       "livery": "ポケモンジェット（赤）",
-      "callsign": "ANA771",
-      "latitude": 34.788185,
-      "longitude": 135.440364,
-      "positionAgeSeconds": 1.799,
+      "callsign": "ANA774",
+      "latitude": 36.079514,
+      "longitude": 136.179543,
+      "positionAgeSeconds": 0.233,
       "source": "https://api.adsb.lol/v2/registration/",
       "flightToMatsuyamaConfirmed": false
     },
     {
-      "registration": "JA339J",
-      "livery": "JAL Jubilee Express",
-      "callsign": "JAL573",
-      "latitude": 38.641523,
-      "longitude": 140.735474,
-      "positionAgeSeconds": 0.186,
-      "source": "https://api.adsb.lol/v2/registration/",
-      "flightToMatsuyamaConfirmed": false
-    },
-    {
-      "registration": "JA344J",
-      "livery": "JAL トゥンクトゥンクJET",
-      "callsign": "JAL551",
-      "latitude": 39.698914,
-      "longitude": 140.785974,
-      "positionAgeSeconds": 0.168,
-      "source": "https://api.adsb.lol/v2/registration/",
-      "flightToMatsuyamaConfirmed": false
-    },
-    {
-      "registration": "JA58AN",
-      "livery": "ふるさとJET",
-      "callsign": "ANA782",
-      "latitude": 33.778702,
-      "longitude": 134.084716,
-      "positionAgeSeconds": 0.21,
-      "source": "https://api.adsb.lol/v2/registration/",
-      "flightToMatsuyamaConfirmed": false
-    },
-    {
-      "registration": "JA868J",
-      "livery": "JAL CONTRAIL 特別塗装機",
-      "callsign": "JAL408",
-      "latitude": 43.530113,
-      "longitude": 52.537602,
-      "positionAgeSeconds": 0.179,
-      "source": "https://api.adsb.lol/v2/registration/",
-      "flightToMatsuyamaConfirmed": false
-    },
-    {
-      "registration": "JA07RK",
-      "livery": "結ジンベエジェット",
-      "callsign": "JTA121",
-      "latitude": 32.069046,
-      "longitude": 131.820337,
-      "positionAgeSeconds": 1.382,
+      "registration": "JA10RJ",
+      "livery": "ベガルタ仙台ジェット",
+      "callsign": "IBX36",
+      "latitude": 33.575522,
+      "longitude": 133.423233,
+      "positionAgeSeconds": 4.024,
       "source": "https://api.adsb.lol/v2/registration/",
       "flightToMatsuyamaConfirmed": false
     }
