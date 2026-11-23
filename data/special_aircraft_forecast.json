@@ -1,63 +1,31 @@
 {
   "schemaVersion": 1,
-  "generatedAtJst": "2026-11-23T09:47:59+09:00",
+  "generatedAtJst": "2026-11-24T06:15:21+09:00",
   "lookaheadDays": 7,
   "sourceChecks": {
     "jal": {
       "status": "checked",
       "sourceUrl": "https://oyaji-photo.club/category/jal/",
       "publishedDates": [
-        "2026-11-23"
+        "2026-11-24"
       ],
       "articleErrors": [],
       "nextDayPublished": false
     },
     "anaOperations": {
-      "status": "checked_type_only_not_tail_assignment",
+      "status": "unavailable",
       "sourceUrl": "https://www.tsuitachimochi.net/flights/operations?airline=ANA",
-      "siteUpdatedAt": "2026-11-23T09:46:32.765267+09:00",
-      "note": "機種別棒ダイヤは機体記号の確定割当ではない"
+      "error": "IncompleteRead(194510 bytes read)"
     },
     "anaLocations": {
       "status": "no_monitored_aircraft_listed",
       "sourceUrl": "https://www.tsuitachimochi.net/flights/aircraft-locations",
-      "siteUpdatedAt": "2026-11-23 09:46:45",
+      "siteUpdatedAt": "2026-11-24 06:04:35",
       "registrationsSeen": [],
       "nextVerified": false,
       "note": "Nextはレジ番と便名が同一レコードで照合できる場合のみ採用"
     }
   },
-  "events": [
-    {
-      "date": "2026-11-23",
-      "direction": "arrival",
-      "airline": "JAL",
-      "flightNumber": "439",
-      "flightDisplay": "JL439",
-      "registration": "JA339J",
-      "livery": "JAL Jubilee Express",
-      "origin": "羽田",
-      "destination": "松山",
-      "departureScheduled": "16:10",
-      "arrivalScheduled": "17:45",
-      "evidence": "unofficial_aircraft_plan",
-      "sourceUrl": "https://oyaji-photo.club/20261123jl/"
-    },
-    {
-      "date": "2026-11-23",
-      "direction": "departure",
-      "airline": "JAL",
-      "flightNumber": "440",
-      "flightDisplay": "JL440",
-      "registration": "JA339J",
-      "livery": "JAL Jubilee Express",
-      "origin": "松山",
-      "destination": "羽田",
-      "departureScheduled": "18:35",
-      "arrivalScheduled": "19:55",
-      "evidence": "unofficial_aircraft_plan",
-      "sourceUrl": "https://oyaji-photo.club/20261123jl/"
-    }
-  ],
+  "events": [],
   "note": "JAL日別記事は非公式な機材予定。ANA機種予測から特定の機体番号を推測しない。機体番号付きADS-B照合は別の監視システムで確認する。"
 }
