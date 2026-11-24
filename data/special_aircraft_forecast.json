@@ -1,31 +1,63 @@
 {
   "schemaVersion": 1,
-  "generatedAtJst": "2026-11-24T06:15:21+09:00",
+  "generatedAtJst": "2026-11-25T05:06:31+09:00",
   "lookaheadDays": 7,
   "sourceChecks": {
     "jal": {
       "status": "checked",
       "sourceUrl": "https://oyaji-photo.club/category/jal/",
       "publishedDates": [
-        "2026-11-24"
+        "2026-11-25"
       ],
       "articleErrors": [],
       "nextDayPublished": false
     },
     "anaOperations": {
-      "status": "unavailable",
+      "status": "checked_type_only_not_tail_assignment",
       "sourceUrl": "https://www.tsuitachimochi.net/flights/operations?airline=ANA",
-      "error": "IncompleteRead(194510 bytes read)"
+      "siteUpdatedAt": "2026-11-25T05:05:36.881162+09:00",
+      "note": "機種別棒ダイヤは機体記号の確定割当ではない"
     },
     "anaLocations": {
       "status": "no_monitored_aircraft_listed",
       "sourceUrl": "https://www.tsuitachimochi.net/flights/aircraft-locations",
-      "siteUpdatedAt": "2026-11-24 06:04:35",
+      "siteUpdatedAt": "2026-11-25 04:56:30",
       "registrationsSeen": [],
       "nextVerified": false,
       "note": "Nextはレジ番と便名が同一レコードで照合できる場合のみ採用"
     }
   },
-  "events": [],
+  "events": [
+    {
+      "date": "2026-11-25",
+      "direction": "arrival",
+      "airline": "JAL",
+      "flightNumber": "2309",
+      "flightDisplay": "JL2309",
+      "registration": "JA228J",
+      "livery": "J-AIR創立30周年記念JET",
+      "origin": "伊丹",
+      "destination": "松山",
+      "departureScheduled": "18:05",
+      "arrivalScheduled": "18:55",
+      "evidence": "unofficial_aircraft_plan",
+      "sourceUrl": "https://oyaji-photo.club/20261125jl/"
+    },
+    {
+      "date": "2026-11-25",
+      "direction": "departure",
+      "airline": "JAL",
+      "flightNumber": "2310",
+      "flightDisplay": "JL2310",
+      "registration": "JA228J",
+      "livery": "J-AIR創立30周年記念JET",
+      "origin": "松山",
+      "destination": "伊丹",
+      "departureScheduled": "19:25",
+      "arrivalScheduled": "20:20",
+      "evidence": "unofficial_aircraft_plan",
+      "sourceUrl": "https://oyaji-photo.club/20261125jl/"
+    }
+  ],
   "note": "JAL日別記事は非公式な機材予定。ANA機種予測から特定の機体番号を推測しない。機体番号付きADS-B照合は別の監視システムで確認する。"
 }
