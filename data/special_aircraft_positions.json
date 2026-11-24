@@ -1,48 +1,7 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-11-24T04:57:49.457420+00:00",
-  "status": "observed",
-  "aircraft": [
-    {
-      "registration": "JA609A",
-      "livery": "ちいかわジェット",
-      "callsign": "ANA664",
-      "latitude": 33.924088,
-      "longitude": 134.1656,
-      "positionAgeSeconds": 0.169,
-      "source": "https://api.adsb.lol/v2/registration/",
-      "flightToMatsuyamaConfirmed": false
-    },
-    {
-      "registration": "JA819A",
-      "livery": "ポケモンジェット（赤）",
-      "callsign": "ANA1080",
-      "latitude": 34.253586,
-      "longitude": 139.072957,
-      "positionAgeSeconds": 0.0,
-      "source": "https://api.adsb.lol/v2/registration/",
-      "flightToMatsuyamaConfirmed": false
-    },
-    {
-      "registration": "JA339J",
-      "livery": "JAL Jubilee Express",
-      "callsign": "JAL3512",
-      "latitude": 42.787834,
-      "longitude": 141.688224,
-      "positionAgeSeconds": 18.25,
-      "source": "https://api.adsb.lol/v2/registration/",
-      "flightToMatsuyamaConfirmed": false
-    },
-    {
-      "registration": "JA07RK",
-      "livery": "結ジンベエジェット",
-      "callsign": "JTA42",
-      "latitude": 34.57338,
-      "longitude": 136.710168,
-      "positionAgeSeconds": 0.641,
-      "source": "https://api.adsb.lol/v2/registration/",
-      "flightToMatsuyamaConfirmed": false
-    }
-  ],
+  "generatedAtUtc": "2026-11-24T15:47:41.976443+00:00",
+  "status": "no_fresh_positions",
+  "aircraft": [],
   "note": "全国ADS-Bの観測。便の目的地・次便・松山到着は未確認。欠測は飛行停止を意味しない。"
 }
