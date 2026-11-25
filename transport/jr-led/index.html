@@ -88,7 +88,15 @@ body{display:flex;align-items:flex-end;justify-content:center;font-variant-numer
 .status.warning{display:flex!important}
 /* Reserve separate space for the last-train marker inside the 68px destination cell.
    Never overlay the destination name (e.g. 伊予市). */
-.train.is-last .dest{width:39px;justify-content:flex-start;padding-left:1px;font-size:10px;letter-spacing:-.06em}
+.train.is-last:not(.local) .dest{width:39px;justify-content:flex-start;padding-left:1px;font-size:10px;letter-spacing:-.06em}
+/* Final local: keep the full destination column and put the marker next to
+   普通列車, not over the destination. Via rows retain their route label. */
+.train.local.is-last .final-local-label{flex:none;display:inline-flex;align-items:center;
+  justify-content:center;margin-left:3px;padding:0 2px;height:14px;line-height:14px;
+  background:#7b1010;color:#ffef55;font-size:10px;letter-spacing:0}
+.train.local.is-last.has-route-via{grid-template-columns:77px 51px 60px 68px}
+.train.local.is-last.has-route-via .kind{justify-content:flex-start;padding-left:1px}
+.train.local.is-last.has-route-via .service.via-label{font-size:11px}
 .status.final{display:flex!important;left:auto;right:0;top:0;width:29px;height:16px;
   background:#7b1010;color:#ffef55;font-size:9px;z-index:4}
 .flash{animation:led-blink .9s steps(1,end) infinite}
@@ -638,7 +646,8 @@ body{display:flex;align-items:flex-end;justify-content:center;font-variant-numer
       ({limited:'特急',local:'普通',extra:'臨時',sightseeing:'観光',freight:'貨物',pass:'通過',deadhead:'回送'}[kind]||'列車');
     var kindEN=kind==='local'?'':pass?(kind==='freight'?'Freight':'Pass'):
       ({limited:'Ltd.',local:'',extra:'Extra',sightseeing:'Tour',freight:'Frt.',pass:'Pass',deadhead:'Empty'}[kind]||'Train');
-    box.appendChild(el('span','kind',lang==='en'?kindEN:kindJP));
+    var kindEl=el('span','kind',lang==='en'?kindEN:kindJP);
+    box.appendChild(kindEl);
     var scrollPair=name.pair&&kind==='limited'&&!row._arrival;
     var nameEl=el('div','service'+(scrollPair?' pair-scroll':name.pair?' pair':''));
     if(scrollPair){
@@ -699,11 +708,15 @@ body{display:flex;align-items:flex-end;justify-content:center;font-variant-numer
       (row.kind==='limited'&&/岡山・高松/.test(String(row.dest||''))?
         (lang==='en'?'SPLITS AT UTAZU':'宇多津で分割'):'');
     var last=!!row._isFinal;
+    var finalLocal=last&&!row._arrival&&kind==='local';
     if(last&&!row._arrival)box.classList.add('is-last');
-    if(!st&&last)st=lang==='en'?'LAST TRAIN':'最終';
+    if(finalLocal){
+      (localVia?kindEl:nameEl).appendChild(el('span','final-local-label',lang==='en'?'LAST':'最終'));
+    }
+    if(!st&&last&&!finalLocal)st=lang==='en'?'LAST TRAIN':'最終';
     // Arrival rows keep the train name and origin visible at all times.
     // The separate color-coded arrival callout handles the flashing warning.
-    box.appendChild(el('span','status'+(urgent&&!row._arrival?' flash warning':last?' final':''),row._arrival?'':st));
+    box.appendChild(el('span','status'+(urgent&&!row._arrival?' flash warning':last&&!finalLocal&&!row._arrival?' final':''),row._arrival?'':st));
     return box;
   }
   function exactRoute(row,dest,trainNumber,n){
