@@ -1,7 +1,38 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-11-25T19:10:43.645958+00:00",
-  "status": "no_fresh_positions",
-  "aircraft": [],
+  "generatedAtUtc": "2026-11-26T02:18:34.661198+00:00",
+  "status": "observed",
+  "aircraft": [
+    {
+      "registration": "JA923A",
+      "livery": "ポケモンジェット（緑）",
+      "callsign": "ANA855",
+      "latitude": 34.014696,
+      "longitude": 136.596394,
+      "positionAgeSeconds": 0.269,
+      "source": "https://api.adsb.lol/v2/registration/",
+      "flightToMatsuyamaConfirmed": false
+    },
+    {
+      "registration": "JA339J",
+      "livery": "JAL Jubilee Express",
+      "callsign": "JAL570",
+      "latitude": 36.589554,
+      "longitude": 140.317955,
+      "positionAgeSeconds": 0.304,
+      "source": "https://api.adsb.lol/v2/registration/",
+      "flightToMatsuyamaConfirmed": false
+    },
+    {
+      "registration": "JA880A",
+      "livery": "スターアライアンス塗装",
+      "callsign": "ANA207",
+      "latitude": 51.920223,
+      "longitude": 6.534903,
+      "positionAgeSeconds": 0.136,
+      "source": "https://api.adsb.lol/v2/registration/",
+      "flightToMatsuyamaConfirmed": false
+    }
+  ],
   "note": "全国ADS-Bの観測。便の目的地・次便・松山到着は未確認。欠測は飛行停止を意味しない。"
 }
