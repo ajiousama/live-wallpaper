@@ -1,5 +1,5 @@
 {
-  "checked_at_utc": "2026-11-25T04:16:20.879735+00:00",
+  "checked_at_utc": "2026-11-26T03:36:33.226443+00:00",
   "source_urls": {
     "jr_shikoku_press": "https://www.jr-shikoku.co.jp/03_news/press/info/",
     "jr_shikoku_home": "https://www.jr-shikoku.co.jp/",
@@ -1007,13 +1007,7 @@
       "url": "https://www.jr-shikoku.co.jp/03_news/press/ec892776475f77919205413ed13987427003fc89.pdf"
     }
   ],
-  "new_announcements": [
-    {
-      "source": "jr_shikoku_home",
-      "title": "ＪＲ松山駅「クリスマスツリー」の飾り付けについて",
-      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/11/25/20261125%2002.pdf"
-    }
-  ],
+  "new_announcements": [],
   "fetch_errors": [],
   "note": "候補発見のみ。松山駅の発着時刻・運転日・経路を確認できるまで列車としては表示しない。"
 }
