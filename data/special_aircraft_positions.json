@@ -1,25 +1,15 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-11-27T12:05:18.177647+00:00",
+  "generatedAtUtc": "2026-11-27T21:11:20.240525+00:00",
   "status": "observed",
   "aircraft": [
     {
-      "registration": "JA07RK",
-      "livery": "結ジンベエジェット",
-      "callsign": "JTA308",
-      "latitude": 24.983871,
-      "longitude": 123.52005,
-      "positionAgeSeconds": 0.0,
-      "source": "https://api.adsb.lol/v2/registration/",
-      "flightToMatsuyamaConfirmed": false
-    },
-    {
-      "registration": "JA10RJ",
-      "livery": "ベガルタ仙台ジェット",
-      "callsign": "IBX50",
-      "latitude": 38.166687,
-      "longitude": 141.076199,
-      "positionAgeSeconds": 55.401,
+      "registration": "JA880A",
+      "livery": "スターアライアンス塗装",
+      "callsign": "ANA126",
+      "latitude": 35.067947,
+      "longitude": -119.60098,
+      "positionAgeSeconds": 0.16,
       "source": "https://api.adsb.lol/v2/registration/",
       "flightToMatsuyamaConfirmed": false
     }
