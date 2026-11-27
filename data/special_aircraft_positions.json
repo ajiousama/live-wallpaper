@@ -1,15 +1,55 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-11-26T20:19:18.586368+00:00",
+  "generatedAtUtc": "2026-11-27T02:59:47.214394+00:00",
   "status": "observed",
   "aircraft": [
     {
-      "registration": "JA868J",
-      "livery": "JAL CONTRAIL 特別塗装機",
-      "callsign": "JAL753",
-      "latitude": 13.265671,
-      "longitude": 79.136842,
-      "positionAgeSeconds": 0.218,
+      "registration": "JA609A",
+      "livery": "ちいかわジェット",
+      "callsign": "ANA710",
+      "latitude": 39.423461,
+      "longitude": 139.453979,
+      "positionAgeSeconds": 0.736,
+      "source": "https://api.adsb.lol/v2/registration/",
+      "flightToMatsuyamaConfirmed": false
+    },
+    {
+      "registration": "JA819A",
+      "livery": "ポケモンジェット（赤）",
+      "callsign": "ANA248",
+      "latitude": 33.538048,
+      "longitude": 132.201513,
+      "positionAgeSeconds": 0.5,
+      "source": "https://api.adsb.lol/v2/registration/",
+      "flightToMatsuyamaConfirmed": false
+    },
+    {
+      "registration": "JA923A",
+      "livery": "ポケモンジェット（緑）",
+      "callsign": "ANA837",
+      "latitude": 34.032166,
+      "longitude": 132.093668,
+      "positionAgeSeconds": 0.48,
+      "source": "https://api.adsb.lol/v2/registration/",
+      "flightToMatsuyamaConfirmed": false
+    },
+    {
+      "registration": "JA344J",
+      "livery": "JAL トゥンクトゥンクJET",
+      "callsign": "JAL144",
+      "latitude": 37.551498,
+      "longitude": 140.578834,
+      "positionAgeSeconds": 0.21,
+      "source": "https://api.adsb.lol/v2/registration/",
+      "flightToMatsuyamaConfirmed": false
+    },
+    {
+      "registration": "JA228J",
+      "livery": "J-AIR創立30周年記念JET",
+      "callsign": "JAL2183",
+      "latitude": 34.985965,
+      "longitude": 136.356896,
+      "positionAgeSeconds": 1.927,
       "source": "https://api.adsb.lol/v2/registration/",
       "flightToMatsuyamaConfirmed": false
     }
