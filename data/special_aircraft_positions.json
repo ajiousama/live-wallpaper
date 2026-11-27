@@ -1,55 +1,25 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-11-27T02:59:47.214394+00:00",
+  "generatedAtUtc": "2026-11-27T12:05:18.177647+00:00",
   "status": "observed",
   "aircraft": [
     {
-      "registration": "JA609A",
-      "livery": "ちいかわジェット",
-      "callsign": "ANA710",
-      "latitude": 39.423461,
-      "longitude": 139.453979,
-      "positionAgeSeconds": 0.736,
+      "registration": "JA07RK",
+      "livery": "結ジンベエジェット",
+      "callsign": "JTA308",
+      "latitude": 24.983871,
+      "longitude": 123.52005,
+      "positionAgeSeconds": 0.0,
       "source": "https://api.adsb.lol/v2/registration/",
       "flightToMatsuyamaConfirmed": false
     },
     {
-      "registration": "JA819A",
-      "livery": "ポケモンジェット（赤）",
-      "callsign": "ANA248",
-      "latitude": 33.538048,
-      "longitude": 132.201513,
-      "positionAgeSeconds": 0.5,
-      "source": "https://api.adsb.lol/v2/registration/",
-      "flightToMatsuyamaConfirmed": false
-    },
-    {
-      "registration": "JA923A",
-      "livery": "ポケモンジェット（緑）",
-      "callsign": "ANA837",
-      "latitude": 34.032166,
-      "longitude": 132.093668,
-      "positionAgeSeconds": 0.48,
-      "source": "https://api.adsb.lol/v2/registration/",
-      "flightToMatsuyamaConfirmed": false
-    },
-    {
-      "registration": "JA344J",
-      "livery": "JAL トゥンクトゥンクJET",
-      "callsign": "JAL144",
-      "latitude": 37.551498,
-      "longitude": 140.578834,
-      "positionAgeSeconds": 0.21,
-      "source": "https://api.adsb.lol/v2/registration/",
-      "flightToMatsuyamaConfirmed": false
-    },
-    {
-      "registration": "JA228J",
-      "livery": "J-AIR創立30周年記念JET",
-      "callsign": "JAL2183",
-      "latitude": 34.985965,
-      "longitude": 136.356896,
-      "positionAgeSeconds": 1.927,
+      "registration": "JA10RJ",
+      "livery": "ベガルタ仙台ジェット",
+      "callsign": "IBX50",
+      "latitude": 38.166687,
+      "longitude": 141.076199,
+      "positionAgeSeconds": 55.401,
       "source": "https://api.adsb.lol/v2/registration/",
       "flightToMatsuyamaConfirmed": false
     }
