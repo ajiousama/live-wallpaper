@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-11-27T04:11:58.578048+00:00",
+  "generatedAt": "2026-11-27T16:33:24.197940+00:00",
   "timezone": "Asia/Tokyo",
-  "date": "2026-11-27",
+  "date": "2026-11-28",
   "source": "crank-in.net (third-party listing; verify with the theater)",
   "theaters": {
     "shigenobu": {
@@ -10,244 +10,6 @@
       "listingUrl": "https://www.crank-in.net/theater/search/all/38/70088",
       "shows": [
         {
-          "date": "2026-11-27",
-          "time": "10:20",
-          "title": "君の話",
-          "durationMinutes": 121,
-          "releaseDate": "2026-11-27"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "10:25",
-          "title": "ゴジラ-0.0",
-          "durationMinutes": 135,
-          "releaseDate": "2026-11-03"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "10:30",
-          "title": "マタンゴ〈4K版〉",
-          "durationMinutes": 89,
-          "releaseDate": "2026-11-27"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "10:30",
-          "title": "魔法使いの夜",
-          "durationMinutes": 129,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "10:35",
-          "title": "あなたが母親の手料理を食べられる回数は、あとどれくらい残ってますか？《字幕版》",
-          "durationMinutes": 105,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "10:40",
-          "title": "このごにおよんで愛など",
-          "durationMinutes": 128,
-          "releaseDate": "2026-11-27"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "10:50",
-          "title": "映画ちいかわ 人魚の島のひみつ",
-          "durationMinutes": 99,
-          "releaseDate": "2026-07-24"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "12:30",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "12:50",
-          "title": "君の話",
-          "durationMinutes": 121,
-          "releaseDate": "2026-11-27"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "12:55",
-          "title": "世界で最後の愛しい娘！《字幕版》",
-          "durationMinutes": 113,
-          "releaseDate": "2026-11-13"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "13:05",
-          "title": "ママがもうこの世界にいなくても 私の命の日記",
-          "durationMinutes": 124,
-          "releaseDate": "2026-10-02"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "13:10",
-          "title": "ゴジラ-0.0",
-          "durationMinutes": 135,
-          "releaseDate": "2026-11-03"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "13:15",
-          "title": "南極料理人 4Kリマスター",
-          "durationMinutes": 125,
-          "releaseDate": "2026-11-13"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "13:20",
-          "title": "ファーザー マザー シスター ブラザー《字幕版》",
-          "durationMinutes": 111,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "15:10",
-          "title": "大富豪になるための正しい殺し方《字幕版》",
-          "durationMinutes": 105,
-          "releaseDate": "2026-11-13"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "15:15",
-          "title": "踊る大捜査線 N.E.W. メトロポリスを駆け抜けろ！",
-          "durationMinutes": 142,
-          "releaseDate": "2026-09-18"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "15:20",
-          "title": "君の話",
-          "durationMinutes": 121,
-          "releaseDate": "2026-11-27"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "15:40",
-          "title": "このごにおよんで愛など",
-          "durationMinutes": 128,
-          "releaseDate": "2026-11-27"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "15:45",
-          "title": "バイオハザード《吹替版》",
-          "durationMinutes": 94,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "15:50",
-          "title": "魔法使いの夜",
-          "durationMinutes": 129,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "15:55",
-          "title": "ゴジラ-0.0",
-          "durationMinutes": 135,
-          "releaseDate": "2026-11-03"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "17:40",
-          "title": "あなたが母親の手料理を食べられる回数は、あとどれくらい残ってますか？《字幕版》",
-          "durationMinutes": 105,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "17:50",
-          "title": "南極料理人 4Kリマスター",
-          "durationMinutes": 125,
-          "releaseDate": "2026-11-13"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "17:50",
-          "title": "君の話",
-          "durationMinutes": 121,
-          "releaseDate": "2026-11-27"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "18:05",
-          "title": "魔法使いの夜",
-          "durationMinutes": 129,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "18:15",
-          "title": "ファーザー マザー シスター ブラザー《字幕版》",
-          "durationMinutes": 111,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "18:30",
-          "title": "1971、ハイジャック事件《字幕版》",
-          "durationMinutes": 100,
-          "releaseDate": "2026-11-13"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "20:00",
-          "title": "ゴジラ-0.0",
-          "durationMinutes": 135,
-          "releaseDate": "2026-11-03"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "20:10",
-          "title": "ヴェリティ／真実《字幕版》",
-          "durationMinutes": 116,
-          "releaseDate": "2026-11-06"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "20:20",
-          "title": "君の話",
-          "durationMinutes": 121,
-          "releaseDate": "2026-11-27"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "20:30",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "20:35",
-          "title": "このごにおよんで愛など",
-          "durationMinutes": 128,
-          "releaseDate": "2026-11-27"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "20:40",
-          "title": "魔法使いの夜",
-          "durationMinutes": 129,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "20:45",
-          "title": "ムカデ人間 4K《字幕版》",
-          "durationMinutes": 92,
-          "releaseDate": "2026-08-21"
-        },
-        {
           "date": "2026-11-28",
           "time": "10:20",
           "title": "君の話",
@@ -1194,6 +956,244 @@
         },
         {
           "date": "2026-12-01",
+          "time": "20:45",
+          "title": "ムカデ人間 4K《字幕版》",
+          "durationMinutes": 92,
+          "releaseDate": "2026-08-21"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "10:20",
+          "title": "君の話",
+          "durationMinutes": 121,
+          "releaseDate": "2026-11-27"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "10:25",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "10:30",
+          "title": "マタンゴ〈4K版〉",
+          "durationMinutes": 89,
+          "releaseDate": "2026-11-27"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "10:30",
+          "title": "魔法使いの夜",
+          "durationMinutes": 129,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "10:35",
+          "title": "あなたが母親の手料理を食べられる回数は、あとどれくらい残ってますか？《字幕版》",
+          "durationMinutes": 105,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "10:40",
+          "title": "このごにおよんで愛など",
+          "durationMinutes": 128,
+          "releaseDate": "2026-11-27"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "10:50",
+          "title": "映画ちいかわ 人魚の島のひみつ",
+          "durationMinutes": 99,
+          "releaseDate": "2026-07-24"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "12:30",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "12:50",
+          "title": "君の話",
+          "durationMinutes": 121,
+          "releaseDate": "2026-11-27"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "12:55",
+          "title": "世界で最後の愛しい娘！《字幕版》",
+          "durationMinutes": 113,
+          "releaseDate": "2026-11-13"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "13:05",
+          "title": "ママがもうこの世界にいなくても 私の命の日記",
+          "durationMinutes": 124,
+          "releaseDate": "2026-10-02"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "13:10",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "13:15",
+          "title": "南極料理人 4Kリマスター",
+          "durationMinutes": 125,
+          "releaseDate": "2026-11-13"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "13:20",
+          "title": "ファーザー マザー シスター ブラザー《字幕版》",
+          "durationMinutes": 111,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "15:10",
+          "title": "大富豪になるための正しい殺し方《字幕版》",
+          "durationMinutes": 105,
+          "releaseDate": "2026-11-13"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "15:15",
+          "title": "踊る大捜査線 N.E.W. メトロポリスを駆け抜けろ！",
+          "durationMinutes": 142,
+          "releaseDate": "2026-09-18"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "15:20",
+          "title": "君の話",
+          "durationMinutes": 121,
+          "releaseDate": "2026-11-27"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "15:40",
+          "title": "このごにおよんで愛など",
+          "durationMinutes": 128,
+          "releaseDate": "2026-11-27"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "15:45",
+          "title": "バイオハザード《吹替版》",
+          "durationMinutes": 94,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "15:50",
+          "title": "魔法使いの夜",
+          "durationMinutes": 129,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "15:55",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "17:40",
+          "title": "あなたが母親の手料理を食べられる回数は、あとどれくらい残ってますか？《字幕版》",
+          "durationMinutes": 105,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "17:50",
+          "title": "南極料理人 4Kリマスター",
+          "durationMinutes": 125,
+          "releaseDate": "2026-11-13"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "17:50",
+          "title": "君の話",
+          "durationMinutes": 121,
+          "releaseDate": "2026-11-27"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "18:05",
+          "title": "魔法使いの夜",
+          "durationMinutes": 129,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "18:15",
+          "title": "ファーザー マザー シスター ブラザー《字幕版》",
+          "durationMinutes": 111,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "18:30",
+          "title": "1971、ハイジャック事件《字幕版》",
+          "durationMinutes": 100,
+          "releaseDate": "2026-11-13"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "20:00",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "20:10",
+          "title": "ヴェリティ／真実《字幕版》",
+          "durationMinutes": 116,
+          "releaseDate": "2026-11-06"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "20:20",
+          "title": "君の話",
+          "durationMinutes": 121,
+          "releaseDate": "2026-11-27"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "20:30",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "20:35",
+          "title": "このごにおよんで愛など",
+          "durationMinutes": 128,
+          "releaseDate": "2026-11-27"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "20:40",
+          "title": "魔法使いの夜",
+          "durationMinutes": 129,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
           "time": "20:45",
           "title": "ムカデ人間 4K《字幕版》",
           "durationMinutes": 92,
@@ -1208,321 +1208,6 @@
       "listingUrl": "https://www.crank-in.net/theater/search/all/38/70115",
       "shows": [
         {
-          "date": "2026-11-27",
-          "time": "08:45",
-          "title": "GROTESQQQUE -グロテスク-",
-          "durationMinutes": 106,
-          "releaseDate": "2026-11-06"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "08:50",
-          "title": "ゴジラ-0.0",
-          "durationMinutes": 135,
-          "releaseDate": "2026-11-03"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "08:55",
-          "title": "すべて真夜中の恋人たち",
-          "durationMinutes": 139,
-          "releaseDate": "2026-11-13"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "09:10",
-          "title": "魔法使いの夜 [ScreenX]",
-          "durationMinutes": 129,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "09:20",
-          "title": "映画ちいかわ 人魚の島のひみつ",
-          "durationMinutes": 99,
-          "releaseDate": "2026-07-24"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "09:30",
-          "title": "君の話",
-          "durationMinutes": 121,
-          "releaseDate": "2026-11-27"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "09:35",
-          "title": "ゴジラ-0.0 [4DX]",
-          "durationMinutes": 135,
-          "releaseDate": "2026-11-03"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "09:40",
-          "title": "踊る大捜査線 N.E.W. メトロポリスを駆け抜けろ！",
-          "durationMinutes": 142,
-          "releaseDate": "2026-09-18"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "09:50",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "11:00",
-          "title": "またまたあぶない刑事〈4K版〉",
-          "durationMinutes": 95,
-          "releaseDate": "2026-11-27"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "11:30",
-          "title": "君の話",
-          "durationMinutes": 121,
-          "releaseDate": "2026-11-27"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "11:35",
-          "title": "装甲騎兵ボトムズ 灰色の魔女 第1作",
-          "durationMinutes": 100,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "11:45",
-          "title": "タコピーの原罪 -ありがとう、また明日-",
-          "durationMinutes": 153,
-          "releaseDate": "2026-11-27"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "12:10",
-          "title": "ゴジラ-0.0",
-          "durationMinutes": 135,
-          "releaseDate": "2026-11-03"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "12:20",
-          "title": "魔法使いの夜 [4DX]",
-          "durationMinutes": 129,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "12:30",
-          "title": "呪いのスマホ",
-          "durationMinutes": 102,
-          "releaseDate": "2026-11-13"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "12:35",
-          "title": "楽園追放 心のレゾナンス",
-          "durationMinutes": 127,
-          "releaseDate": "2026-11-13"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "13:10",
-          "title": "映画ちいかわ 人魚の島のひみつ",
-          "durationMinutes": 99,
-          "releaseDate": "2026-07-24"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "13:45",
-          "title": "ママがもうこの世界にいなくても 私の命の日記",
-          "durationMinutes": 124,
-          "releaseDate": "2026-10-02"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "14:00",
-          "title": "魔法使いの夜",
-          "durationMinutes": 129,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "14:40",
-          "title": "劇場版 アイドルマスター SideM F＠NTASTIC BATTLE FES ～Who goes first～",
-          "durationMinutes": 65,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "14:50",
-          "title": "タコピーの原罪 -ありがとう、また明日-",
-          "durationMinutes": 153,
-          "releaseDate": "2026-11-27"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "15:00",
-          "title": "魔法使いの夜 [4DX]",
-          "durationMinutes": 129,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "15:10",
-          "title": "ゴジラ-0.0",
-          "durationMinutes": 135,
-          "releaseDate": "2026-11-03"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "15:15",
-          "title": "君の話",
-          "durationMinutes": 121,
-          "releaseDate": "2026-11-27"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "15:20",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "16:15",
-          "title": "クリスマス・キャロル／3人のゴーストたち《字幕版》",
-          "durationMinutes": 116,
-          "releaseDate": "2026-11-13"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "16:25",
-          "title": "装甲騎兵ボトムズ 灰色の魔女 第1作",
-          "durationMinutes": 100,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "16:40",
-          "title": "魔法使いの夜",
-          "durationMinutes": 129,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "17:45",
-          "title": "負けへんで",
-          "durationMinutes": 130,
-          "releaseDate": "2026-11-13"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "17:50",
-          "title": "魔法使いの夜 [ScreenX]",
-          "durationMinutes": 129,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "17:55",
-          "title": "君の話",
-          "durationMinutes": 121,
-          "releaseDate": "2026-11-27"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "18:05",
-          "title": "うるわしの宵の月",
-          "durationMinutes": 119,
-          "releaseDate": "2026-10-23"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "18:35",
-          "title": "ママがもうこの世界にいなくても 私の命の日記",
-          "durationMinutes": 124,
-          "releaseDate": "2026-10-02"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "18:40",
-          "title": "呪いのスマホ",
-          "durationMinutes": 102,
-          "releaseDate": "2026-11-13"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "19:00",
-          "title": "ゴジラ-0.0",
-          "durationMinutes": 135,
-          "releaseDate": "2026-11-03"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "19:20",
-          "title": "劇場版 アイドルマスター SideM F＠NTASTIC BATTLE FES ～Who goes first～",
-          "durationMinutes": 65,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "20:25",
-          "title": "タコピーの原罪 -ありがとう、また明日-",
-          "durationMinutes": 153,
-          "releaseDate": "2026-11-27"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "20:30",
-          "title": "ゴジラ-0.0",
-          "durationMinutes": 135,
-          "releaseDate": "2026-11-03"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "20:35",
-          "title": "君の話",
-          "durationMinutes": 121,
-          "releaseDate": "2026-11-27"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "20:40",
-          "title": "魔法使いの夜 [4DX]",
-          "durationMinutes": 129,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "20:45",
-          "title": "劇場アニメ「青春ブタ野郎はディアフレンドの夢を見ない」",
-          "durationMinutes": 118,
-          "releaseDate": "2026-10-16"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "20:50",
-          "title": "ヴェリティ／真実《字幕版》",
-          "durationMinutes": 116,
-          "releaseDate": "2026-11-06"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "20:55",
-          "title": "バイオハザード《吹替版》",
-          "durationMinutes": 94,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "21:10",
-          "title": "装甲騎兵ボトムズ 灰色の魔女 第1作",
-          "durationMinutes": 100,
-          "releaseDate": "2026-11-20"
-        },
-        {
           "date": "2026-11-28",
           "time": "08:45",
           "title": "GROTESQQQUE -グロテスク-",
@@ -2774,6 +2459,321 @@
           "title": "装甲騎兵ボトムズ 灰色の魔女 第1作",
           "durationMinutes": 100,
           "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "08:45",
+          "title": "GROTESQQQUE -グロテスク-",
+          "durationMinutes": 106,
+          "releaseDate": "2026-11-06"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "08:50",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "08:55",
+          "title": "すべて真夜中の恋人たち",
+          "durationMinutes": 139,
+          "releaseDate": "2026-11-13"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "09:10",
+          "title": "魔法使いの夜 [ScreenX]",
+          "durationMinutes": 129,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "09:20",
+          "title": "映画ちいかわ 人魚の島のひみつ",
+          "durationMinutes": 99,
+          "releaseDate": "2026-07-24"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "09:30",
+          "title": "君の話",
+          "durationMinutes": 121,
+          "releaseDate": "2026-11-27"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "09:35",
+          "title": "ゴジラ-0.0 [4DX]",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "09:40",
+          "title": "踊る大捜査線 N.E.W. メトロポリスを駆け抜けろ！",
+          "durationMinutes": 142,
+          "releaseDate": "2026-09-18"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "09:50",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "11:00",
+          "title": "またまたあぶない刑事〈4K版〉",
+          "durationMinutes": 95,
+          "releaseDate": "2026-11-27"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "11:30",
+          "title": "君の話",
+          "durationMinutes": 121,
+          "releaseDate": "2026-11-27"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "11:35",
+          "title": "装甲騎兵ボトムズ 灰色の魔女 第1作",
+          "durationMinutes": 100,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "11:45",
+          "title": "タコピーの原罪 -ありがとう、また明日-",
+          "durationMinutes": 153,
+          "releaseDate": "2026-11-27"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "12:10",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "12:20",
+          "title": "魔法使いの夜 [4DX]",
+          "durationMinutes": 129,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "12:30",
+          "title": "呪いのスマホ",
+          "durationMinutes": 102,
+          "releaseDate": "2026-11-13"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "12:35",
+          "title": "楽園追放 心のレゾナンス",
+          "durationMinutes": 127,
+          "releaseDate": "2026-11-13"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "13:10",
+          "title": "映画ちいかわ 人魚の島のひみつ",
+          "durationMinutes": 99,
+          "releaseDate": "2026-07-24"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "13:45",
+          "title": "ママがもうこの世界にいなくても 私の命の日記",
+          "durationMinutes": 124,
+          "releaseDate": "2026-10-02"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "14:00",
+          "title": "魔法使いの夜",
+          "durationMinutes": 129,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "14:40",
+          "title": "劇場版 アイドルマスター SideM F＠NTASTIC BATTLE FES ～Who goes first～",
+          "durationMinutes": 65,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "14:50",
+          "title": "タコピーの原罪 -ありがとう、また明日-",
+          "durationMinutes": 153,
+          "releaseDate": "2026-11-27"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "15:00",
+          "title": "魔法使いの夜 [4DX]",
+          "durationMinutes": 129,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "15:10",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "15:15",
+          "title": "君の話",
+          "durationMinutes": 121,
+          "releaseDate": "2026-11-27"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "15:20",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "16:15",
+          "title": "クリスマス・キャロル／3人のゴーストたち《字幕版》",
+          "durationMinutes": 116,
+          "releaseDate": "2026-11-13"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "16:25",
+          "title": "装甲騎兵ボトムズ 灰色の魔女 第1作",
+          "durationMinutes": 100,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "16:40",
+          "title": "魔法使いの夜",
+          "durationMinutes": 129,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "17:45",
+          "title": "負けへんで",
+          "durationMinutes": 130,
+          "releaseDate": "2026-11-13"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "17:50",
+          "title": "魔法使いの夜 [ScreenX]",
+          "durationMinutes": 129,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "17:55",
+          "title": "君の話",
+          "durationMinutes": 121,
+          "releaseDate": "2026-11-27"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "18:05",
+          "title": "うるわしの宵の月",
+          "durationMinutes": 119,
+          "releaseDate": "2026-10-23"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "18:35",
+          "title": "ママがもうこの世界にいなくても 私の命の日記",
+          "durationMinutes": 124,
+          "releaseDate": "2026-10-02"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "18:40",
+          "title": "呪いのスマホ",
+          "durationMinutes": 102,
+          "releaseDate": "2026-11-13"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "19:00",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "19:20",
+          "title": "劇場版 アイドルマスター SideM F＠NTASTIC BATTLE FES ～Who goes first～",
+          "durationMinutes": 65,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "20:25",
+          "title": "タコピーの原罪 -ありがとう、また明日-",
+          "durationMinutes": 153,
+          "releaseDate": "2026-11-27"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "20:30",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "20:35",
+          "title": "君の話",
+          "durationMinutes": 121,
+          "releaseDate": "2026-11-27"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "20:40",
+          "title": "魔法使いの夜 [4DX]",
+          "durationMinutes": 129,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "20:45",
+          "title": "劇場アニメ「青春ブタ野郎はディアフレンドの夢を見ない」",
+          "durationMinutes": 118,
+          "releaseDate": "2026-10-16"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "20:50",
+          "title": "ヴェリティ／真実《字幕版》",
+          "durationMinutes": 116,
+          "releaseDate": "2026-11-06"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "20:55",
+          "title": "バイオハザード《吹替版》",
+          "durationMinutes": 94,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "21:10",
+          "title": "装甲騎兵ボトムズ 灰色の魔女 第1作",
+          "durationMinutes": 100,
+          "releaseDate": "2026-11-20"
         }
       ],
       "status": "ok"
@@ -2783,321 +2783,6 @@
       "officialUrl": "https://www.cinemasunshine.co.jp/theater/kinuyama/",
       "listingUrl": "https://www.crank-in.net/theater/search/all/38/70073",
       "shows": [
-        {
-          "date": "2026-11-27",
-          "time": "09:15",
-          "title": "ないものねだりの君に光の花束を",
-          "durationMinutes": 106,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "09:20",
-          "title": "ヴェリティ／真実《字幕版》",
-          "durationMinutes": 116,
-          "releaseDate": "2026-11-06"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "09:30",
-          "title": "ゴジラ-0.0 [IMAXレーザー]",
-          "durationMinutes": 135,
-          "releaseDate": "2026-11-03"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "09:30",
-          "title": "君の話",
-          "durationMinutes": 121,
-          "releaseDate": "2026-11-27"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "09:30",
-          "title": "装甲騎兵ボトムズ 灰色の魔女 第1作",
-          "durationMinutes": 100,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "09:40",
-          "title": "プラクティカル・マジック／魔女たちの秘密《字幕版》",
-          "durationMinutes": 130,
-          "releaseDate": "2026-11-27"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "09:45",
-          "title": "魔法使いの夜",
-          "durationMinutes": 129,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "10:00",
-          "title": "ゴジラ-0.0",
-          "durationMinutes": 135,
-          "releaseDate": "2026-11-03"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "11:30",
-          "title": "負けへんで",
-          "durationMinutes": 130,
-          "releaseDate": "2026-11-13"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "11:40",
-          "title": "呪いのスマホ",
-          "durationMinutes": 102,
-          "releaseDate": "2026-11-13"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "11:45",
-          "title": "ワンダンス",
-          "durationMinutes": 126,
-          "releaseDate": "2026-11-27"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "12:00",
-          "title": "君の話",
-          "durationMinutes": 121,
-          "releaseDate": "2026-11-27"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "12:15",
-          "title": "魔法使いの夜 [IMAXレーザー]",
-          "durationMinutes": 129,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "12:20",
-          "title": "劇場版 遊☆戯☆王 THE DARK SIDE OF DIMENSIONS",
-          "durationMinutes": 130,
-          "releaseDate": "2016-04-23"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "12:25",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "12:35",
-          "title": "ママがもうこの世界にいなくても 私の命の日記",
-          "durationMinutes": 124,
-          "releaseDate": "2026-10-02"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "12:45",
-          "title": "ゴジラ-0.0",
-          "durationMinutes": 135,
-          "releaseDate": "2026-11-03"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "13:50",
-          "title": "装甲騎兵ボトムズ 灰色の魔女 第1作",
-          "durationMinutes": 100,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "14:20",
-          "title": "ワンダンス",
-          "durationMinutes": 126,
-          "releaseDate": "2026-11-27"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "14:30",
-          "title": "君の話",
-          "durationMinutes": 121,
-          "releaseDate": "2026-11-27"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "14:55",
-          "title": "ゴジラ-0.0 [IMAXレーザー]",
-          "durationMinutes": 135,
-          "releaseDate": "2026-11-03"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "15:00",
-          "title": "プラクティカル・マジック／魔女たちの秘密《字幕版》",
-          "durationMinutes": 130,
-          "releaseDate": "2026-11-27"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "15:10",
-          "title": "楽園追放 心のレゾナンス",
-          "durationMinutes": 127,
-          "releaseDate": "2026-11-13"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "15:10",
-          "title": "魔法使いの夜",
-          "durationMinutes": 129,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "15:30",
-          "title": "ゴジラ-0.0",
-          "durationMinutes": 135,
-          "releaseDate": "2026-11-03"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "16:00",
-          "title": "呪いのスマホ",
-          "durationMinutes": 102,
-          "releaseDate": "2026-11-13"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "16:45",
-          "title": "ないものねだりの君に光の花束を",
-          "durationMinutes": 106,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "16:55",
-          "title": "バイオハザード《吹替版》",
-          "durationMinutes": 94,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "17:00",
-          "title": "Vシネクスト「仮面ライダーカブト20th 天を継ぐもの」",
-          "durationMinutes": 61,
-          "releaseDate": "2026-11-06"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "17:40",
-          "title": "踊る大捜査線 N.E.W. メトロポリスを駆け抜けろ！",
-          "durationMinutes": 142,
-          "releaseDate": "2026-09-18"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "17:40",
-          "title": "魔法使いの夜 [IMAXレーザー]",
-          "durationMinutes": 129,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "18:00",
-          "title": "魔法使いの夜",
-          "durationMinutes": 129,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "18:10",
-          "title": "クリスマス・キャロル／3人のゴーストたち《字幕版》",
-          "durationMinutes": 116,
-          "releaseDate": "2026-11-13"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "18:15",
-          "title": "映画ちいかわ 人魚の島のひみつ",
-          "durationMinutes": 99,
-          "releaseDate": "2026-07-24"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "18:25",
-          "title": "君の話",
-          "durationMinutes": 121,
-          "releaseDate": "2026-11-27"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "18:55",
-          "title": "装甲騎兵ボトムズ 灰色の魔女 第1作",
-          "durationMinutes": 100,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "19:00",
-          "title": "日曜のあと",
-          "durationMinutes": 82,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "20:20",
-          "title": "ザ・ファーザー・ミスアドベンチャー・オブ・クリフ・ブース《字幕版》 [IMAXレーザー]",
-          "durationMinutes": 141,
-          "releaseDate": "2026-11-25"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "20:25",
-          "title": "ゴジラ-0.0",
-          "durationMinutes": 135,
-          "releaseDate": "2026-11-03"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "20:30",
-          "title": "プラクティカル・マジック／魔女たちの秘密《字幕版》",
-          "durationMinutes": 130,
-          "releaseDate": "2026-11-27"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "20:35",
-          "title": "ママがもうこの世界にいなくても 私の命の日記",
-          "durationMinutes": 124,
-          "releaseDate": "2026-10-02"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "20:35",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "20:40",
-          "title": "魔法使いの夜",
-          "durationMinutes": 129,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "20:45",
-          "title": "ワンダンス",
-          "durationMinutes": 126,
-          "releaseDate": "2026-11-27"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "20:50",
-          "title": "君の話",
-          "durationMinutes": 121,
-          "releaseDate": "2026-11-27"
-        },
         {
           "date": "2026-11-28",
           "time": "09:15",
@@ -4350,6 +4035,321 @@
           "title": "君の話",
           "durationMinutes": 121,
           "releaseDate": "2026-11-27"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "09:15",
+          "title": "ないものねだりの君に光の花束を",
+          "durationMinutes": 106,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "09:20",
+          "title": "ヴェリティ／真実《字幕版》",
+          "durationMinutes": 116,
+          "releaseDate": "2026-11-06"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "09:30",
+          "title": "ゴジラ-0.0 [IMAXレーザー]",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "09:30",
+          "title": "君の話",
+          "durationMinutes": 121,
+          "releaseDate": "2026-11-27"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "09:30",
+          "title": "装甲騎兵ボトムズ 灰色の魔女 第1作",
+          "durationMinutes": 100,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "09:40",
+          "title": "プラクティカル・マジック／魔女たちの秘密《字幕版》",
+          "durationMinutes": 130,
+          "releaseDate": "2026-11-27"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "09:45",
+          "title": "魔法使いの夜",
+          "durationMinutes": 129,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "10:00",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "11:30",
+          "title": "負けへんで",
+          "durationMinutes": 130,
+          "releaseDate": "2026-11-13"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "11:40",
+          "title": "呪いのスマホ",
+          "durationMinutes": 102,
+          "releaseDate": "2026-11-13"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "11:45",
+          "title": "ワンダンス",
+          "durationMinutes": 126,
+          "releaseDate": "2026-11-27"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "12:00",
+          "title": "君の話",
+          "durationMinutes": 121,
+          "releaseDate": "2026-11-27"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "12:15",
+          "title": "魔法使いの夜 [IMAXレーザー]",
+          "durationMinutes": 129,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "12:20",
+          "title": "劇場版 遊☆戯☆王 THE DARK SIDE OF DIMENSIONS",
+          "durationMinutes": 130,
+          "releaseDate": "2016-04-23"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "12:25",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "12:35",
+          "title": "ママがもうこの世界にいなくても 私の命の日記",
+          "durationMinutes": 124,
+          "releaseDate": "2026-10-02"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "12:45",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "13:50",
+          "title": "装甲騎兵ボトムズ 灰色の魔女 第1作",
+          "durationMinutes": 100,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "14:20",
+          "title": "ワンダンス",
+          "durationMinutes": 126,
+          "releaseDate": "2026-11-27"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "14:30",
+          "title": "君の話",
+          "durationMinutes": 121,
+          "releaseDate": "2026-11-27"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "14:55",
+          "title": "ゴジラ-0.0 [IMAXレーザー]",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "15:00",
+          "title": "プラクティカル・マジック／魔女たちの秘密《字幕版》",
+          "durationMinutes": 130,
+          "releaseDate": "2026-11-27"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "15:10",
+          "title": "楽園追放 心のレゾナンス",
+          "durationMinutes": 127,
+          "releaseDate": "2026-11-13"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "15:10",
+          "title": "魔法使いの夜",
+          "durationMinutes": 129,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "15:30",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "16:00",
+          "title": "呪いのスマホ",
+          "durationMinutes": 102,
+          "releaseDate": "2026-11-13"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "16:45",
+          "title": "ないものねだりの君に光の花束を",
+          "durationMinutes": 106,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "16:55",
+          "title": "バイオハザード《吹替版》",
+          "durationMinutes": 94,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "17:00",
+          "title": "Vシネクスト「仮面ライダーカブト20th 天を継ぐもの」",
+          "durationMinutes": 61,
+          "releaseDate": "2026-11-06"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "17:40",
+          "title": "踊る大捜査線 N.E.W. メトロポリスを駆け抜けろ！",
+          "durationMinutes": 142,
+          "releaseDate": "2026-09-18"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "17:40",
+          "title": "魔法使いの夜 [IMAXレーザー]",
+          "durationMinutes": 129,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "18:00",
+          "title": "魔法使いの夜",
+          "durationMinutes": 129,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "18:10",
+          "title": "クリスマス・キャロル／3人のゴーストたち《字幕版》",
+          "durationMinutes": 116,
+          "releaseDate": "2026-11-13"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "18:15",
+          "title": "映画ちいかわ 人魚の島のひみつ",
+          "durationMinutes": 99,
+          "releaseDate": "2026-07-24"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "18:25",
+          "title": "君の話",
+          "durationMinutes": 121,
+          "releaseDate": "2026-11-27"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "18:55",
+          "title": "装甲騎兵ボトムズ 灰色の魔女 第1作",
+          "durationMinutes": 100,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "19:00",
+          "title": "日曜のあと",
+          "durationMinutes": 82,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "20:20",
+          "title": "ザ・ファーザー・ミスアドベンチャー・オブ・クリフ・ブース《字幕版》 [IMAXレーザー]",
+          "durationMinutes": 141,
+          "releaseDate": "2026-11-25"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "20:25",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "20:30",
+          "title": "プラクティカル・マジック／魔女たちの秘密《字幕版》",
+          "durationMinutes": 130,
+          "releaseDate": "2026-11-27"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "20:35",
+          "title": "ママがもうこの世界にいなくても 私の命の日記",
+          "durationMinutes": 124,
+          "releaseDate": "2026-10-02"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "20:35",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "20:40",
+          "title": "魔法使いの夜",
+          "durationMinutes": 129,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "20:45",
+          "title": "ワンダンス",
+          "durationMinutes": 126,
+          "releaseDate": "2026-11-27"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "20:50",
+          "title": "君の話",
+          "durationMinutes": 121,
+          "releaseDate": "2026-11-27"
         }
       ],
       "status": "ok"
@@ -4359,265 +4359,6 @@
       "officialUrl": "https://theater.aeoncinema.com/theaters/imabari/",
       "listingUrl": "https://www.crank-in.net/theater/search/all/38/70121",
       "shows": [
-        {
-          "date": "2026-11-27",
-          "time": "09:30",
-          "title": "ゴジラ-0.0",
-          "durationMinutes": 135,
-          "releaseDate": "2026-11-03"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "09:30",
-          "title": "ラブル＆クルー IN シアター 2026《吹替版》",
-          "durationMinutes": 55,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "09:30",
-          "title": "日曜のあと",
-          "durationMinutes": 82,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "09:35",
-          "title": "ワンダンス",
-          "durationMinutes": 126,
-          "releaseDate": "2026-11-27"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "09:35",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "09:50",
-          "title": "魔法使いの夜",
-          "durationMinutes": 129,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "09:55",
-          "title": "君の話",
-          "durationMinutes": 121,
-          "releaseDate": "2026-11-27"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "10:55",
-          "title": "映画ちいかわ 人魚の島のひみつ",
-          "durationMinutes": 99,
-          "releaseDate": "2026-07-24"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "11:25",
-          "title": "ママがもうこの世界にいなくても 私の命の日記",
-          "durationMinutes": 124,
-          "releaseDate": "2026-10-02"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "12:15",
-          "title": "ワンダンス",
-          "durationMinutes": 126,
-          "releaseDate": "2026-11-27"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "12:20",
-          "title": "ゴジラ-0.0",
-          "durationMinutes": 135,
-          "releaseDate": "2026-11-03"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "12:25",
-          "title": "君の話",
-          "durationMinutes": 121,
-          "releaseDate": "2026-11-27"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "12:30",
-          "title": "劇場版 魔法少女まどか☆マギカ〈ワルプルギスの廻天〉",
-          "durationMinutes": 119,
-          "releaseDate": "2026-08-28"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "12:35",
-          "title": "魔法使いの夜",
-          "durationMinutes": 129,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "13:05",
-          "title": "ラブル＆クルー IN シアター 2026《吹替版》",
-          "durationMinutes": 55,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "14:30",
-          "title": "映画ちいかわ 人魚の島のひみつ",
-          "durationMinutes": 99,
-          "releaseDate": "2026-07-24"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "14:50",
-          "title": "ラブル＆クルー IN シアター 2026《吹替版》",
-          "durationMinutes": 55,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "14:55",
-          "title": "君の話",
-          "durationMinutes": 121,
-          "releaseDate": "2026-11-27"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "15:00",
-          "title": "魔法使いの夜",
-          "durationMinutes": 129,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "15:10",
-          "title": "ゴジラ-0.0",
-          "durationMinutes": 135,
-          "releaseDate": "2026-11-03"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "15:15",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "16:15",
-          "title": "ママがもうこの世界にいなくても 私の命の日記",
-          "durationMinutes": 124,
-          "releaseDate": "2026-10-02"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "16:20",
-          "title": "南極料理人 4Kリマスター",
-          "durationMinutes": 125,
-          "releaseDate": "2026-11-13"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "16:40",
-          "title": "サッカー日本代表 FIFAワールドカップ2026 「最高の景色」への挑戦 ONE CREATURE 2nd Leg",
-          "durationMinutes": 124,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "17:30",
-          "title": "劇場版 魔法少女まどか☆マギカ〈ワルプルギスの廻天〉",
-          "durationMinutes": 119,
-          "releaseDate": "2026-08-28"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "17:40",
-          "title": "君の話",
-          "durationMinutes": 121,
-          "releaseDate": "2026-11-27"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "18:00",
-          "title": "ゴジラ-0.0",
-          "durationMinutes": 135,
-          "releaseDate": "2026-11-03"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "18:05",
-          "title": "魔法使いの夜",
-          "durationMinutes": 129,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "18:55",
-          "title": "ワンダンス",
-          "durationMinutes": 126,
-          "releaseDate": "2026-11-27"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "19:10",
-          "title": "映画ちいかわ 人魚の島のひみつ",
-          "durationMinutes": 99,
-          "releaseDate": "2026-07-24"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "20:00",
-          "title": "君の話",
-          "durationMinutes": 121,
-          "releaseDate": "2026-11-27"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "20:15",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "20:45",
-          "title": "魔法使いの夜",
-          "durationMinutes": 129,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "20:50",
-          "title": "ゴジラ-0.0",
-          "durationMinutes": 135,
-          "releaseDate": "2026-11-03"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "21:05",
-          "title": "踊る大捜査線 N.E.W. メトロポリスを駆け抜けろ！",
-          "durationMinutes": 142,
-          "releaseDate": "2026-09-18"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "21:20",
-          "title": "すべて真夜中の恋人たち",
-          "durationMinutes": 139,
-          "releaseDate": "2026-11-13"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "21:30",
-          "title": "Creepy Nuts - North America Tour: LIVE in NY & Documentary Film",
-          "durationMinutes": 135,
-          "releaseDate": "2026-11-20"
-        },
         {
           "date": "2026-11-28",
           "time": "09:30",
@@ -5618,6 +5359,265 @@
           "title": "Creepy Nuts - North America Tour: LIVE in NY & Documentary Film",
           "durationMinutes": 135,
           "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "09:30",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "09:30",
+          "title": "ラブル＆クルー IN シアター 2026《吹替版》",
+          "durationMinutes": 55,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "09:30",
+          "title": "日曜のあと",
+          "durationMinutes": 82,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "09:35",
+          "title": "ワンダンス",
+          "durationMinutes": 126,
+          "releaseDate": "2026-11-27"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "09:35",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "09:50",
+          "title": "魔法使いの夜",
+          "durationMinutes": 129,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "09:55",
+          "title": "君の話",
+          "durationMinutes": 121,
+          "releaseDate": "2026-11-27"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "10:55",
+          "title": "映画ちいかわ 人魚の島のひみつ",
+          "durationMinutes": 99,
+          "releaseDate": "2026-07-24"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "11:25",
+          "title": "ママがもうこの世界にいなくても 私の命の日記",
+          "durationMinutes": 124,
+          "releaseDate": "2026-10-02"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "12:15",
+          "title": "ワンダンス",
+          "durationMinutes": 126,
+          "releaseDate": "2026-11-27"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "12:20",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "12:25",
+          "title": "君の話",
+          "durationMinutes": 121,
+          "releaseDate": "2026-11-27"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "12:30",
+          "title": "劇場版 魔法少女まどか☆マギカ〈ワルプルギスの廻天〉",
+          "durationMinutes": 119,
+          "releaseDate": "2026-08-28"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "12:35",
+          "title": "魔法使いの夜",
+          "durationMinutes": 129,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "13:05",
+          "title": "ラブル＆クルー IN シアター 2026《吹替版》",
+          "durationMinutes": 55,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "14:30",
+          "title": "映画ちいかわ 人魚の島のひみつ",
+          "durationMinutes": 99,
+          "releaseDate": "2026-07-24"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "14:50",
+          "title": "ラブル＆クルー IN シアター 2026《吹替版》",
+          "durationMinutes": 55,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "14:55",
+          "title": "君の話",
+          "durationMinutes": 121,
+          "releaseDate": "2026-11-27"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "15:00",
+          "title": "魔法使いの夜",
+          "durationMinutes": 129,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "15:10",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "15:15",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "16:15",
+          "title": "ママがもうこの世界にいなくても 私の命の日記",
+          "durationMinutes": 124,
+          "releaseDate": "2026-10-02"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "16:20",
+          "title": "南極料理人 4Kリマスター",
+          "durationMinutes": 125,
+          "releaseDate": "2026-11-13"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "16:40",
+          "title": "サッカー日本代表 FIFAワールドカップ2026 「最高の景色」への挑戦 ONE CREATURE 2nd Leg",
+          "durationMinutes": 124,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "17:30",
+          "title": "劇場版 魔法少女まどか☆マギカ〈ワルプルギスの廻天〉",
+          "durationMinutes": 119,
+          "releaseDate": "2026-08-28"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "17:40",
+          "title": "君の話",
+          "durationMinutes": 121,
+          "releaseDate": "2026-11-27"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "18:00",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "18:05",
+          "title": "魔法使いの夜",
+          "durationMinutes": 129,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "18:55",
+          "title": "ワンダンス",
+          "durationMinutes": 126,
+          "releaseDate": "2026-11-27"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "19:10",
+          "title": "映画ちいかわ 人魚の島のひみつ",
+          "durationMinutes": 99,
+          "releaseDate": "2026-07-24"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "20:00",
+          "title": "君の話",
+          "durationMinutes": 121,
+          "releaseDate": "2026-11-27"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "20:15",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "20:45",
+          "title": "魔法使いの夜",
+          "durationMinutes": 129,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "20:50",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "21:05",
+          "title": "踊る大捜査線 N.E.W. メトロポリスを駆け抜けろ！",
+          "durationMinutes": 142,
+          "releaseDate": "2026-09-18"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "21:20",
+          "title": "すべて真夜中の恋人たち",
+          "durationMinutes": 139,
+          "releaseDate": "2026-11-13"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "21:30",
+          "title": "Creepy Nuts - North America Tour: LIVE in NY & Documentary Film",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-20"
         }
       ],
       "status": "ok"
@@ -5627,251 +5627,6 @@
       "officialUrl": "https://www.tohotheater.jp/theater/048/",
       "listingUrl": "https://www.crank-in.net/theater/search/all/38/70086",
       "shows": [
-        {
-          "date": "2026-11-27",
-          "time": "09:15",
-          "title": "装甲騎兵ボトムズ 灰色の魔女 第1作",
-          "durationMinutes": 100,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "09:20",
-          "title": "魔法使いの夜",
-          "durationMinutes": 129,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "09:25",
-          "title": "ママがもうこの世界にいなくても 私の命の日記",
-          "durationMinutes": 124,
-          "releaseDate": "2026-10-02"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "09:30",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "09:40",
-          "title": "ゴジラ-0.0",
-          "durationMinutes": 135,
-          "releaseDate": "2026-11-03"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "10:20",
-          "title": "踊る大捜査線 N.E.W. メトロポリスを駆け抜けろ！",
-          "durationMinutes": 142,
-          "releaseDate": "2026-09-18"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "10:30",
-          "title": "映画ちいかわ 人魚の島のひみつ",
-          "durationMinutes": 99,
-          "releaseDate": "2026-07-24"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "11:40",
-          "title": "ゴジラ-0.0",
-          "durationMinutes": 135,
-          "releaseDate": "2026-11-03"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "12:05",
-          "title": "ママがもうこの世界にいなくても 私の命の日記",
-          "durationMinutes": 124,
-          "releaseDate": "2026-10-02"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "12:15",
-          "title": "魔法使いの夜",
-          "durationMinutes": 129,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "12:25",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "12:40",
-          "title": "ゴジラ-0.0",
-          "durationMinutes": 135,
-          "releaseDate": "2026-11-03"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "12:50",
-          "title": "クリスマス・キャロル／3人のゴーストたち《字幕版》",
-          "durationMinutes": 116,
-          "releaseDate": "2026-11-13"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "13:25",
-          "title": "装甲騎兵ボトムズ 灰色の魔女 第1作",
-          "durationMinutes": 100,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "14:40",
-          "title": "4アウト ─もう一度、プレイボール─",
-          "durationMinutes": 124,
-          "releaseDate": "2026-11-06"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "14:50",
-          "title": "ママがもうこの世界にいなくても 私の命の日記",
-          "durationMinutes": 124,
-          "releaseDate": "2026-10-02"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "15:10",
-          "title": "魔法使いの夜",
-          "durationMinutes": 129,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "15:20",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "15:30",
-          "title": "映画ちいかわ 人魚の島のひみつ",
-          "durationMinutes": 99,
-          "releaseDate": "2026-07-24"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "15:40",
-          "title": "ゴジラ-0.0",
-          "durationMinutes": 135,
-          "releaseDate": "2026-11-03"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "15:50",
-          "title": "装甲騎兵ボトムズ 灰色の魔女 第1作",
-          "durationMinutes": 100,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "17:25",
-          "title": "ゴジラ-0.0",
-          "durationMinutes": 135,
-          "releaseDate": "2026-11-03"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "17:30",
-          "title": "ママがもうこの世界にいなくても 私の命の日記",
-          "durationMinutes": 124,
-          "releaseDate": "2026-10-02"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "17:45",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "18:05",
-          "title": "楽園追放 心のレゾナンス",
-          "durationMinutes": 127,
-          "releaseDate": "2026-11-13"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "18:10",
-          "title": "魔法使いの夜",
-          "durationMinutes": 129,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "18:15",
-          "title": "mentor",
-          "durationMinutes": 115,
-          "releaseDate": "2026-10-16"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "18:40",
-          "title": "うるわしの宵の月",
-          "durationMinutes": 119,
-          "releaseDate": "2026-10-23"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "20:10",
-          "title": "ママがもうこの世界にいなくても 私の命の日記",
-          "durationMinutes": 124,
-          "releaseDate": "2026-10-02"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "20:20",
-          "title": "ゴジラ-0.0",
-          "durationMinutes": 135,
-          "releaseDate": "2026-11-03"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "20:40",
-          "title": "クリスマス・キャロル／3人のゴーストたち《字幕版》",
-          "durationMinutes": 116,
-          "releaseDate": "2026-11-13"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "20:50",
-          "title": "汝、星のごとく",
-          "durationMinutes": 135,
-          "releaseDate": "2026-10-09"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "20:55",
-          "title": "魔法使いの夜",
-          "durationMinutes": 129,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "21:00",
-          "title": "装甲騎兵ボトムズ 灰色の魔女 第1作",
-          "durationMinutes": 100,
-          "releaseDate": "2026-11-20"
-        },
-        {
-          "date": "2026-11-27",
-          "time": "21:15",
-          "title": "バイオハザード《吹替版》",
-          "durationMinutes": 94,
-          "releaseDate": "2026-10-09"
-        },
         {
           "date": "2026-11-28",
           "time": "09:15",
@@ -6844,6 +6599,237 @@
           "title": "バイオハザード《吹替版》",
           "durationMinutes": 94,
           "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "09:15",
+          "title": "装甲騎兵ボトムズ 灰色の魔女 第1作",
+          "durationMinutes": 100,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "09:25",
+          "title": "ママがもうこの世界にいなくても 私の命の日記",
+          "durationMinutes": 124,
+          "releaseDate": "2026-10-02"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "09:30",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "09:40",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "09:55",
+          "title": "魔法使いの夜",
+          "durationMinutes": 129,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "10:20",
+          "title": "踊る大捜査線 N.E.W. メトロポリスを駆け抜けろ！",
+          "durationMinutes": 142,
+          "releaseDate": "2026-09-18"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "11:40",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "12:05",
+          "title": "ママがもうこの世界にいなくても 私の命の日記",
+          "durationMinutes": 124,
+          "releaseDate": "2026-10-02"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "12:15",
+          "title": "魔法使いの夜",
+          "durationMinutes": 129,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "12:25",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "12:40",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "12:50",
+          "title": "クリスマス・キャロル／3人のゴーストたち《字幕版》",
+          "durationMinutes": 116,
+          "releaseDate": "2026-11-13"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "13:25",
+          "title": "装甲騎兵ボトムズ 灰色の魔女 第1作",
+          "durationMinutes": 100,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "14:40",
+          "title": "4アウト ─もう一度、プレイボール─",
+          "durationMinutes": 124,
+          "releaseDate": "2026-11-06"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "14:50",
+          "title": "ママがもうこの世界にいなくても 私の命の日記",
+          "durationMinutes": 124,
+          "releaseDate": "2026-10-02"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "15:10",
+          "title": "魔法使いの夜",
+          "durationMinutes": 129,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "15:20",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "15:30",
+          "title": "映画ちいかわ 人魚の島のひみつ",
+          "durationMinutes": 99,
+          "releaseDate": "2026-07-24"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "15:40",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "15:50",
+          "title": "装甲騎兵ボトムズ 灰色の魔女 第1作",
+          "durationMinutes": 100,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "17:25",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "17:45",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "18:05",
+          "title": "楽園追放 心のレゾナンス",
+          "durationMinutes": 127,
+          "releaseDate": "2026-11-13"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "18:10",
+          "title": "魔法使いの夜",
+          "durationMinutes": 129,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "18:15",
+          "title": "ママがもうこの世界にいなくても 私の命の日記",
+          "durationMinutes": 124,
+          "releaseDate": "2026-10-02"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "18:40",
+          "title": "うるわしの宵の月",
+          "durationMinutes": 119,
+          "releaseDate": "2026-10-23"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "20:20",
+          "title": "ゴジラ-0.0",
+          "durationMinutes": 135,
+          "releaseDate": "2026-11-03"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "20:40",
+          "title": "クリスマス・キャロル／3人のゴーストたち《字幕版》",
+          "durationMinutes": 116,
+          "releaseDate": "2026-11-13"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "20:55",
+          "title": "汝、星のごとく",
+          "durationMinutes": 135,
+          "releaseDate": "2026-10-09"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "20:55",
+          "title": "魔法使いの夜",
+          "durationMinutes": 129,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "21:00",
+          "title": "装甲騎兵ボトムズ 灰色の魔女 第1作",
+          "durationMinutes": 100,
+          "releaseDate": "2026-11-20"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "21:10",
+          "title": "ママがもうこの世界にいなくても 私の命の日記",
+          "durationMinutes": 124,
+          "releaseDate": "2026-10-02"
+        },
+        {
+          "date": "2026-12-02",
+          "time": "21:10",
+          "title": "映画ちいかわ 人魚の島のひみつ",
+          "durationMinutes": 99,
+          "releaseDate": "2026-07-24"
         }
       ],
       "status": "ok"
