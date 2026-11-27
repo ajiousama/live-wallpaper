@@ -1,28 +1,27 @@
 {
   "schemaVersion": 1,
-  "generatedAtJst": "2026-11-27T11:47:36+09:00",
+  "generatedAtJst": "2026-11-28T03:53:17+09:00",
   "lookaheadDays": 7,
   "sourceChecks": {
     "jal": {
       "status": "checked",
       "sourceUrl": "https://oyaji-photo.club/category/jal/",
       "publishedDates": [
-        "2026-11-27",
         "2026-11-28"
       ],
       "articleErrors": [],
-      "nextDayPublished": true
+      "nextDayPublished": false
     },
     "anaOperations": {
       "status": "checked_type_only_not_tail_assignment",
       "sourceUrl": "https://www.tsuitachimochi.net/flights/operations?airline=ANA",
-      "siteUpdatedAt": "2026-11-27T11:46:03.697931+09:00",
+      "siteUpdatedAt": "2026-11-28T03:52:25.269750+09:00",
       "note": "機種別棒ダイヤは機体記号の確定割当ではない"
     },
     "anaLocations": {
       "status": "no_monitored_aircraft_listed",
       "sourceUrl": "https://www.tsuitachimochi.net/flights/aircraft-locations",
-      "siteUpdatedAt": "2026-11-27 11:39:43",
+      "siteUpdatedAt": "2026-11-28 03:29:32",
       "registrationsSeen": [],
       "nextVerified": false,
       "note": "Nextはレジ番と便名が同一レコードで照合できる場合のみ採用"
