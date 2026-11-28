@@ -1,15 +1,45 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-11-27T21:11:20.240525+00:00",
+  "generatedAtUtc": "2026-11-28T03:23:07.384725+00:00",
   "status": "observed",
   "aircraft": [
     {
-      "registration": "JA880A",
-      "livery": "スターアライアンス塗装",
-      "callsign": "ANA126",
-      "latitude": 35.067947,
-      "longitude": -119.60098,
-      "positionAgeSeconds": 0.16,
+      "registration": "JA609A",
+      "livery": "ちいかわジェット",
+      "callsign": "ANA664",
+      "latitude": 34.70723,
+      "longitude": 138.702337,
+      "positionAgeSeconds": 0.142,
+      "source": "https://api.adsb.lol/v2/registration/",
+      "flightToMatsuyamaConfirmed": false
+    },
+    {
+      "registration": "JA819A",
+      "livery": "ポケモンジェット（赤）",
+      "callsign": "ANA774",
+      "latitude": 37.978958,
+      "longitude": 137.832603,
+      "positionAgeSeconds": 0.306,
+      "source": "https://api.adsb.lol/v2/registration/",
+      "flightToMatsuyamaConfirmed": false
+    },
+    {
+      "registration": "JA228J",
+      "livery": "J-AIR創立30周年記念JET",
+      "callsign": "JAL2162",
+      "latitude": 35.270265,
+      "longitude": 137.134081,
+      "positionAgeSeconds": 18.871,
+      "source": "https://api.adsb.lol/v2/registration/",
+      "flightToMatsuyamaConfirmed": false
+    },
+    {
+      "registration": "JA58AN",
+      "livery": "ふるさとJET",
+      "callsign": "ANA506",
+      "latitude": 34.788115,
+      "longitude": 135.440741,
+      "positionAgeSeconds": 24.734,
       "source": "https://api.adsb.lol/v2/registration/",
       "flightToMatsuyamaConfirmed": false
     }
