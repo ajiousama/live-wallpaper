@@ -1,5 +1,5 @@
 {
-  "checked_at_utc": "2026-11-27T03:39:28.248027+00:00",
+  "checked_at_utc": "2026-11-28T03:20:34.858317+00:00",
   "source_urls": {
     "jr_shikoku_press": "https://www.jr-shikoku.co.jp/03_news/press/info/",
     "jr_shikoku_home": "https://www.jr-shikoku.co.jp/",
@@ -28,11 +28,6 @@
     },
     {
       "source": "jr_shikoku_home",
-      "title": "ＪＲ松山駅「クリスマスツリー」の飾り付けについて",
-      "url": "https://www.jr-shikoku.co.jp/03_news/press/assets/2026/11/25/20261125%2002.pdf"
-    },
-    {
-      "source": "jr_shikoku_home",
       "title": "観光列車の予約",
       "url": "https://www.jr-shikoku.co.jp/5489/#purchase05"
     },
@@ -45,11 +40,6 @@
       "source": "jr_shikoku_press",
       "title": "観光列車の 空席情報",
       "url": "https://www.jr-shikoku.co.jp/01_trainbus/event_train/seat_info/"
-    },
-    {
-      "source": "jr_shikoku_press",
-      "title": "冬期間臨時列車の追加運転のお知らせ",
-      "url": "https://www.jr-shikoku.co.jp/03_news/press/2021%2011%2019.pdf"
     },
     {
       "source": "jr_shikoku_press",
